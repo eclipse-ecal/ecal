@@ -213,7 +213,7 @@ namespace eCAL
     {
       int32_t                             registration_clock = 0;                   // registration clock
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         pname;                        // process name
+      std::string                         process_name;                        // process name
       std::string                         uname;                        // unit name
       std::string                         pparam;                       // process parameter
       ProcessState                        state;                        // process state info
@@ -227,7 +227,7 @@ namespace eCAL
       bool operator==(const Process& other) const {
         return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
-          pname == other.pname &&
+          process_name == other.process_name &&
           uname == other.uname &&
           pparam == other.pparam &&
           state == other.state &&
@@ -243,7 +243,7 @@ namespace eCAL
       {
         registration_clock = 0;
         shm_transport_domain.clear();
-        pname.clear();
+        process_name.clear();
         uname.clear();
         pparam.clear();
         state.clear();
@@ -261,7 +261,7 @@ namespace eCAL
     {
       int32_t                             registration_clock = 0;                   // registration clock (heart beat)
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         pname;                        // process name
+      std::string                         process_name;                        // process name
       std::string                         uname;                        // unit name
       std::string                         tname;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
@@ -283,7 +283,7 @@ namespace eCAL
       bool operator==(const Topic& other) const {
         return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
-          pname == other.pname &&
+          process_name == other.process_name &&
           uname == other.uname &&
           tname == other.tname &&
           direction == other.direction &&
@@ -303,7 +303,7 @@ namespace eCAL
       {
         registration_clock = 0;
         shm_transport_domain.clear();
-        pname.clear();
+        process_name.clear();
         uname.clear();
         tname.clear();
         direction.clear();

@@ -60,7 +60,7 @@ void InitializeAllSamples()
   pub_foo_process_a_unregister.identifier.process_id = 1000;
   pub_foo_process_a_unregister.identifier.entity_id = getUniqueId();
   pub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
-  pub_foo_process_a_unregister.topic.pname = "process_a";
+  pub_foo_process_a_unregister.topic.process_name = "process_a";
   pub_foo_process_a_unregister.topic.tname = "foo";
   pub_foo_process_a_register_1.topic.uname = "abc";
 
@@ -85,7 +85,7 @@ void InitializeAllSamples()
   sub_foo_process_a_unregister.identifier.process_id = 1000;
   sub_foo_process_a_unregister.identifier.entity_id = getUniqueId();
   sub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
-  sub_foo_process_a_unregister.topic.pname = "process_a";
+  sub_foo_process_a_unregister.topic.process_name = "process_a";
   sub_foo_process_a_unregister.topic.tname = "foo";
   sub_foo_process_a_register_1.topic.uname = "abc";
 
@@ -110,7 +110,7 @@ void InitializeAllSamples()
   sub_foo_process_b_unregister.identifier.process_id = 1000;
   sub_foo_process_b_unregister.identifier.entity_id = getUniqueId();
   sub_foo_process_b_unregister.topic.shm_transport_domain = "host0";
-  sub_foo_process_b_unregister.topic.pname = "process_b";
+  sub_foo_process_b_unregister.topic.process_name = "process_b";
   sub_foo_process_b_unregister.topic.tname = "foo";
   sub_foo_process_b_register_1.topic.uname = "abc";
 

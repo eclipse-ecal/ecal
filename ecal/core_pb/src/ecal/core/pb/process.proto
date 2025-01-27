@@ -63,7 +63,7 @@ message Process                                           // process
   string                    host_name            =  2;    // host name
   string                    shm_transport_domain = 18;    // shm transport domain
   int32                     pid                  =  3;    // process id
-  string                    pname                =  4;    // process name
+  string                    process_name                =  4;    // process name
   string                    uname                =  5;    // unit name
   string                    pparam               =  6;    // process parameter
                                                           // 10 = data write bytes per sec

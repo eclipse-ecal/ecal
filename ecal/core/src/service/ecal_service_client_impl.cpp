@@ -362,7 +362,7 @@ namespace eCAL
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname = Process::GetProcessName();
+    service_client.process_name = Process::GetProcessName();
     service_client.uname = Process::GetUnitName();
     service_client.sname = m_service_name;
 
@@ -408,7 +408,7 @@ namespace eCAL
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname = Process::GetProcessName();
+    service_client.process_name = Process::GetProcessName();
     service_client.uname = Process::GetUnitName();
     service_client.sname = m_service_name;
 

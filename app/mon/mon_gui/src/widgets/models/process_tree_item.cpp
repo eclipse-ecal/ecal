@@ -69,9 +69,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.pid();
     }
-    else if (column == Columns::PNAME)
+    else if (column == Columns::PROCESS_NAME)
     {
-      return process_.pname().c_str();
+      return process_.process_name().c_str();
     }
     else if (column == Columns::UNAME)
     {
@@ -119,7 +119,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME))
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
@@ -158,7 +158,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME))
     {
       return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
@@ -204,9 +204,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
       QStringList list{ process_.host_name().c_str(), QString::number(process_.pid()) };
       return list;
     }
-    if (column == Columns::PNAME)
+    if (column == Columns::PROCESS_NAME)
     {
-      QStringList list{process_.host_name().c_str(), process_.pname().c_str()};
+      QStringList list{process_.host_name().c_str(), process_.process_name().c_str()};
       return list;
     }
     else if (column == Columns::UNAME)
@@ -244,7 +244,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME))
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016

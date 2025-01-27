@@ -51,7 +51,7 @@ namespace eCAL
     {
       Service::Service service;
       service.registration_clock      = rand() % 1000;
-      service.pname       = GenerateString(10);
+      service.process_name       = GenerateString(10);
       service.uname       = GenerateString(5);
       service.sname       = GenerateString(8);
       service.methods.push_back(GenerateMethod());
@@ -68,7 +68,7 @@ namespace eCAL
     {
       Service::Client client;
       client.registration_clock  = rand() % 1000;
-      client.pname   = GenerateString(10);
+      client.process_name   = GenerateString(10);
       client.uname   = GenerateString(5);
       client.sname   = GenerateString(8);
       client.methods.push_back(GenerateMethod());
@@ -105,7 +105,7 @@ namespace eCAL
       Topic topic;
       topic.registration_clock               = rand() % 1000;
       topic.shm_transport_domain = GenerateString(6);
-      topic.pname                = GenerateString(10);
+      topic.process_name                = GenerateString(10);
       topic.uname                = GenerateString(5);
       topic.tname                = GenerateString(8);
       topic.direction            = GenerateString(5);
@@ -127,7 +127,7 @@ namespace eCAL
       Process process;
       process.registration_clock               = rand() % 1000;
       process.shm_transport_domain = GenerateString(6);
-      process.pname                = GenerateString(10);
+      process.process_name                = GenerateString(10);
       process.uname                = GenerateString(5);
       process.pparam               = GenerateString(12);
       process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));

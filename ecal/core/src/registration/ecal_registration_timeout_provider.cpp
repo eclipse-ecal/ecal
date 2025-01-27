@@ -52,7 +52,7 @@ namespace eCAL
       {
         const auto& sample_process = sample_.process;
         auto& unregister_sample_process = unregister_sample.process;
-        unregister_sample_process.pname = sample_process.pname;
+        unregister_sample_process.process_name = sample_process.process_name;
         unregister_sample_process.uname = sample_process.uname;
       }
 
@@ -61,7 +61,7 @@ namespace eCAL
         const auto& sample_topic                     = sample_.topic;
         auto& unregister_sample_topic                = unregister_sample.topic;
         unregister_sample_topic.shm_transport_domain = sample_topic.shm_transport_domain;
-        unregister_sample_topic.pname                = sample_topic.pname;
+        unregister_sample_topic.process_name                = sample_topic.process_name;
         unregister_sample_topic.tname                = sample_topic.tname;
         unregister_sample_topic.uname                = sample_topic.uname;
       }
@@ -70,7 +70,7 @@ namespace eCAL
       {
         const auto& sample_service = sample_.service;
         auto& unregister_sample_service = unregister_sample.service;
-        unregister_sample_service.pname = sample_service.pname;
+        unregister_sample_service.process_name = sample_service.process_name;
         unregister_sample_service.sname = sample_service.sname;
         unregister_sample_service.uname = sample_service.uname;
         unregister_sample_service.version = sample_service.version;
@@ -81,7 +81,7 @@ namespace eCAL
         const auto& sample_client = sample_.client;
         auto& unregister_sample_client = unregister_sample.client;
 
-        unregister_sample_client.pname = sample_client.pname;
+        unregister_sample_client.process_name = sample_client.process_name;
         unregister_sample_client.sname = sample_client.sname;
         unregister_sample_client.uname = sample_client.uname;
         unregister_sample_client.version = sample_client.version;

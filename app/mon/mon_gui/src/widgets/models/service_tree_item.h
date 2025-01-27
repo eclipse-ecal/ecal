@@ -48,7 +48,7 @@ public:
   {
     REGISTRATION_CLOCK,
     HOST_NAME,
-    PNAME,
+    PROCESS_NAME,
     UNAME,
     PID,
     SNAME,
@@ -88,9 +88,9 @@ public:
       {
         return service_.host_name().c_str();
       }
-      else if (column == Columns::PNAME)
+      else if (column == Columns::PROCESS_NAME)
       {
-        return service_.pname().c_str();
+        return service_.process_name().c_str();
       }
       else if (column == Columns::UNAME)
       {
@@ -136,7 +136,7 @@ public:
     else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
     {
       if ((column == Columns::HOST_NAME)
-        || (column == Columns::PNAME)
+        || (column == Columns::PROCESS_NAME)
         || (column == Columns::UNAME)
         || (column == Columns::SNAME)
         || (column == Columns::MNAME)
@@ -180,9 +180,9 @@ public:
 
     else if (role == ItemDataRoles::GroupRole) //-V547
     {
-        if (column == Columns::PNAME)
+        if (column == Columns::PROCESS_NAME)
         {
-          QStringList list{ service_.host_name().c_str(), service_.pname().c_str() };
+          QStringList list{ service_.host_name().c_str(), service_.process_name().c_str() };
           return list;
         }
         else if (column == Columns::PID)
@@ -209,7 +209,7 @@ public:
     else if (role == Qt::ItemDataRole::FontRole)
     {
       if ((column == Columns::HOST_NAME)
-        || (column == Columns::PNAME)
+        || (column == Columns::PROCESS_NAME)
         || (column == Columns::UNAME)
         || (column == Columns::SNAME)
         || (column == Columns::STYPE)

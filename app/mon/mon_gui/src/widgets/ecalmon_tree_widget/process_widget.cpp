@@ -111,7 +111,7 @@ void ProcessWidget::autoSizeColumns()
   example_process_pb.set_registration_clock(999999);
   example_process_pb.set_host_name("HNAME00____");
   example_process_pb.set_pid(999999);
-  example_process_pb.set_pname("");
+  example_process_pb.set_process_name("");
   example_process_pb.set_uname("eCALProcessUnitNameABCDE___");
   example_process_pb.set_pparam("");
 

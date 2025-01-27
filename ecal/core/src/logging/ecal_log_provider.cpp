@@ -249,7 +249,7 @@ namespace eCAL
           log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
           log_message.host_name   = m_attributes.host_name;
           log_message.pid     = m_attributes.process_id;
-          log_message.pname   = m_attributes.process_name;
+          log_message.process_name   = m_attributes.process_name;
           log_message.uname   = m_attributes.unit_name;
           log_message.level   = level_;
           log_message.content = msg_;

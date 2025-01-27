@@ -32,7 +32,7 @@ namespace eCAL
       logMessage.time    = rand() % 1000;
       logMessage.host_name   = GenerateString(10);
       logMessage.pid     = rand() % 1000;
-      logMessage.pname   = GenerateString(8);
+      logMessage.process_name   = GenerateString(8);
       logMessage.uname   = GenerateString(6);
       logMessage.level   = static_cast<eLogLevel>(rand() % 2);
       logMessage.content = GenerateString(50);

@@ -26,7 +26,7 @@ message LogMessage                                // eCAL log message
   int64                 time           =  1;      // time
   string                host_name      =  2;      // host name
   int32                 pid            =  3;      // process id
-  string                pname          =  4;      // process name
+  string                process_name          =  4;      // process name
   string                uname          =  5;      // unit name
   int32                 level          =  6;      // message level
   string                content        =  7;      // message content

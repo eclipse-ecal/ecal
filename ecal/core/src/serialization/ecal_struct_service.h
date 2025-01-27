@@ -158,7 +158,7 @@ namespace eCAL
     struct Service
     {
       int32_t                         registration_clock = 0;       // Registration clock
-      std::string                     pname;            // Process name
+      std::string                     process_name;            // Process name
       std::string                     uname;            // Unit name
       std::string                     sname;            // Service name
       Util::CExpandingVector<Method>  methods;          // List of methods
@@ -168,7 +168,7 @@ namespace eCAL
 
       bool operator==(const Service& other) const {
         return registration_clock == other.registration_clock &&
-          pname == other.pname &&
+          process_name == other.process_name &&
           uname == other.uname &&
           sname == other.sname &&
           methods == other.methods &&
@@ -180,7 +180,7 @@ namespace eCAL
       void clear()
       {
         registration_clock = 0;
-        pname.clear();
+        process_name.clear();
         uname.clear();
         sname.clear();
         methods.clear();
@@ -194,7 +194,7 @@ namespace eCAL
     struct Client
     {
       int32_t                         registration_clock = 0;       // Registration clock
-      std::string                     pname;            // Process name
+      std::string                     process_name;            // Process name
       std::string                     uname;            // Unit name
       std::string                     sname;            // Service name
       Util::CExpandingVector<Method>  methods;          // List of methods
@@ -202,7 +202,7 @@ namespace eCAL
 
       bool operator==(const Client& other) const {
         return registration_clock == other.registration_clock &&
-          pname == other.pname &&
+          process_name == other.process_name &&
           uname == other.uname &&
           sname == other.sname &&
           methods == other.methods &&
@@ -212,7 +212,7 @@ namespace eCAL
       void clear()
       {
         registration_clock = 0;
-        pname.clear();
+        process_name.clear();
         uname.clear();
         sname.clear();
         methods.clear();

@@ -69,8 +69,8 @@ namespace eCAL
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
-        const std::string pname = process.pname;
-        if ( (pname         == process_name_)
+        const std::string process_name = process.process_name;
+        if ( (process_name         == process_name_)
           && (process.host_name == host_name)
           )
         {

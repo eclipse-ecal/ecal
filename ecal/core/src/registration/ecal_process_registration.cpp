@@ -44,7 +44,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
 
   auto& process_sample_process                = process_sample.process;
   process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
-  process_sample_process.pname                = eCAL::Process::GetProcessName();
+  process_sample_process.process_name                = eCAL::Process::GetProcessName();
   process_sample_process.uname                = eCAL::Process::GetUnitName();
   process_sample_process.pparam               = eCAL::Process::GetProcessParameter();
   process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
@@ -107,7 +107,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessUnregisterSample()
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
 
   auto& process_sample_process = process_sample.process;
-  process_sample_process.pname = eCAL::Process::GetProcessName();
+  process_sample_process.process_name = eCAL::Process::GetProcessName();
   process_sample_process.uname = eCAL::Process::GetUnitName();
 
   return process_sample;

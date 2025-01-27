@@ -29,7 +29,7 @@ namespace eCAL
       return (message1.time    == message2.time &&
               message1.host_name   == message2.host_name &&
               message1.pid     == message2.pid &&
-              message1.pname   == message2.pname &&
+              message1.process_name   == message2.process_name &&
               message1.uname   == message2.uname &&
               message1.level   == message2.level &&
               message1.content == message2.content);

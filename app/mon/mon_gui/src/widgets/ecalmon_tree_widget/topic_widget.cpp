@@ -221,7 +221,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_registration_clock(999999);
   example_topic_pb.set_host_name("HOSTNAME____");
   example_topic_pb.set_pid(999999);
-  example_topic_pb.set_pname("");
+  example_topic_pb.set_process_name("");
   example_topic_pb.set_uname("ATypicalLongUnitName___");
   example_topic_pb.set_tid("");
   example_topic_pb.set_tname("ATypicalLongTopicName___");

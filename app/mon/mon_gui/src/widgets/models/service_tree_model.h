@@ -100,7 +100,7 @@ private:
     { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::REGISTRATION_CLOCK },
     { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HOST_NAME },
     { Columns::PID,                  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PID },
-    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PNAME },
+    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PROCESS_NAME },
     { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::UNAME },
     { Columns::SERVICE_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::SNAME },
     { Columns::SERVICE_TYPE,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::STYPE },

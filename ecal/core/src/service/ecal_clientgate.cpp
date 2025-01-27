@@ -97,7 +97,7 @@ namespace eCAL
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
     service.host_name = ecal_sample_identifier.host_name;
-    service.pname = ecal_sample_service.pname;
+    service.process_name = ecal_sample_service.process_name;
     service.uname = ecal_sample_service.uname;
     service.sname = ecal_sample_service.sname;
     service.sid   = ecal_sample_identifier.entity_id;

@@ -33,7 +33,7 @@ message Topic                                      // eCAL topic
   string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
   int32               pid                   =  3;  // process id
-  string              pname                 =  4;  // process name
+  string              process_name                 =  4;  // process name
   string              uname                 =  5;  // unit name
   string              tid                   =  6;  // topic id
   string              tname                 =  7;  // topic name

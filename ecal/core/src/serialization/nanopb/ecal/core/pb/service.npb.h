@@ -57,7 +57,7 @@ typedef struct _eCAL_pb_Method {
 typedef struct _eCAL_pb_Service {
     int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
-    pb_callback_t pname; /* process name */
+    pb_callback_t process_name; /* process name */
     pb_callback_t uname; /* unit name */
     int32_t pid; /* process id */
     pb_callback_t sname; /* service name */
@@ -72,7 +72,7 @@ typedef struct _eCAL_pb_Service {
 typedef struct _eCAL_pb_Client {
     int32_t registration_clock; /* registration clock */
     pb_callback_t host_name; /* host name */
-    pb_callback_t pname; /* process name */
+    pb_callback_t process_name; /* process name */
     pb_callback_t uname; /* unit name */
     int32_t pid; /* process id */
     pb_callback_t sname; /* service name */
@@ -137,7 +137,7 @@ extern "C" {
 #define eCAL_pb_Method_resp_datatype_tag         8
 #define eCAL_pb_Service_registration_clock_tag   1
 #define eCAL_pb_Service_host_name_tag            2
-#define eCAL_pb_Service_pname_tag                3
+#define eCAL_pb_Service_process_name_tag         3
 #define eCAL_pb_Service_uname_tag                4
 #define eCAL_pb_Service_pid_tag                  5
 #define eCAL_pb_Service_sname_tag                6
@@ -148,7 +148,7 @@ extern "C" {
 #define eCAL_pb_Service_tcp_port_v1_tag          11
 #define eCAL_pb_Client_registration_clock_tag    1
 #define eCAL_pb_Client_host_name_tag             2
-#define eCAL_pb_Client_pname_tag                 3
+#define eCAL_pb_Client_process_name_tag          3
 #define eCAL_pb_Client_uname_tag                 4
 #define eCAL_pb_Client_pid_tag                   5
 #define eCAL_pb_Client_sname_tag                 6
@@ -200,7 +200,7 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
 #define eCAL_pb_Service_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
-X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
+X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
@@ -216,7 +216,7 @@ X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v1,      11)
 #define eCAL_pb_Client_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
-X(a, CALLBACK, SINGULAR, STRING,   pname,             3) \
+X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             4) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               5) \
 X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \

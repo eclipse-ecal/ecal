@@ -60,9 +60,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.pid();
     }
-    else if (column == Columns::PNAME)
+    else if (column == Columns::PROCESS_NAME)
     {
-      return topic_.pname().c_str();
+      return topic_.process_name().c_str();
     }
     else if (column == Columns::UNAME)
     {
@@ -135,7 +135,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
   {
     if ((column == Columns::HOST_NAME)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
@@ -235,7 +235,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)
@@ -279,9 +279,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       const QStringList list{ topic_.host_name().c_str(), QString::number(topic_.pid()) };
       return list;
     }
-    else if (column == Columns::PNAME)
+    else if (column == Columns::PROCESS_NAME)
     {
-      const QStringList list{topic_.host_name().c_str(), topic_.pname().c_str()};
+      const QStringList list{topic_.host_name().c_str(), topic_.process_name().c_str()};
       return list;
     }
     else if (column == Columns::UNAME)
@@ -300,7 +300,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
     if ((column == Columns::HOST_NAME)
       || (column == Columns::SHM_TRANSPORT_DOMAIN)
-      || (column == Columns::PNAME)
+      || (column == Columns::PROCESS_NAME)
       || (column == Columns::UNAME)
       || (column == Columns::TNAME)
       || (column == Columns::DIRECTION)

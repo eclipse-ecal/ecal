@@ -362,7 +362,7 @@ namespace eCAL
 
     auto& service = ecal_reg_sample.service;
     service.version = m_server_version;
-    service.pname = Process::GetProcessName();
+    service.process_name = Process::GetProcessName();
     service.uname = Process::GetUnitName();
     service.sname = m_service_name;
     service.tcp_port_v0 = 0;
@@ -405,7 +405,7 @@ namespace eCAL
 
     auto& service = ecal_reg_sample.service;
     service.version = m_server_version;
-    service.pname = Process::GetProcessName();
+    service.process_name = Process::GetProcessName();
     service.uname = Process::GetUnitName();
     service.sname = m_service_name;
 

@@ -116,7 +116,7 @@ private:
     { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN,   (int)TopicTreeItem::Columns::SHM_TRANSPORT_DOMAIN },
     { Columns::PID,                    (int)TopicTreeItem::Columns::PID },
-    { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PNAME },
+    { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PROCESS_NAME },
     { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNAME },
     { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TID },
     { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TNAME },

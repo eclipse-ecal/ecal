@@ -53,8 +53,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, registration_process_.shm_transport_domain);
     // pid
     pb_process_.pid = registration_identifier_.process_id;
-    // pname
-    eCAL::nanopb::encode_string(pb_process_.pname, registration_process_.pname);
+    // process_name
+    eCAL::nanopb::encode_string(pb_process_.process_name, registration_process_.process_name);
     // uname
     eCAL::nanopb::encode_string(pb_process_.uname, registration_process_.uname);
     // pparam
@@ -94,8 +94,8 @@ namespace
     pb_service_.registration_clock = registration_service_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_service_.host_name, registration_identifier_.host_name);
-    // pname
-    eCAL::nanopb::encode_string(pb_service_.pname, registration_service_.pname);
+    // process_name
+    eCAL::nanopb::encode_string(pb_service_.process_name, registration_service_.process_name);
     // uname
     eCAL::nanopb::encode_string(pb_service_.uname, registration_service_.uname);
     // pid
@@ -126,8 +126,8 @@ namespace
     pb_client_.registration_clock = registration_client_.registration_clock;
     // host_name
     eCAL::nanopb::encode_string(pb_client_.host_name, registration_producer_.host_name);
-    // pname
-    eCAL::nanopb::encode_string(pb_client_.pname, registration_client_.pname);
+    // process_name
+    eCAL::nanopb::encode_string(pb_client_.process_name, registration_client_.process_name);
     // uname
     eCAL::nanopb::encode_string(pb_client_.uname, registration_client_.uname);
     // pid
@@ -158,8 +158,8 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, registration_topic_.shm_transport_domain);
     // pid
     pb_topic_.pid = registration_identifier_.process_id;
-    // pname
-    eCAL::nanopb::encode_string(pb_topic_.pname, registration_topic_.pname);
+    // process_name
+    eCAL::nanopb::encode_string(pb_topic_.process_name, registration_topic_.process_name);
     // uname
     eCAL::nanopb::encode_string(pb_topic_.uname, registration_topic_.uname);
     // tid
@@ -318,8 +318,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.process.host_name, registration_.identifier.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_sample_.process.shm_transport_domain, registration_.process.shm_transport_domain);
-    // pname
-    eCAL::nanopb::decode_string(pb_sample_.process.pname, registration_.process.pname);
+    // process_name
+    eCAL::nanopb::decode_string(pb_sample_.process.process_name, registration_.process.process_name);
     // uname
     eCAL::nanopb::decode_string(pb_sample_.process.uname, registration_.process.uname);
     // pparam
@@ -340,8 +340,8 @@ namespace
     ///////////////////////////////////////////////
     // host_name
     eCAL::nanopb::decode_string(pb_sample_.service.host_name, registration_.identifier.host_name);
-    // pname
-    eCAL::nanopb::decode_string(pb_sample_.service.pname, registration_.service.pname);
+    // process_name
+    eCAL::nanopb::decode_string(pb_sample_.service.process_name, registration_.service.process_name);
     // uname
     eCAL::nanopb::decode_string(pb_sample_.service.uname, registration_.service.uname);
     // sname
@@ -356,8 +356,8 @@ namespace
     ///////////////////////////////////////////////
     // host_name
     eCAL::nanopb::decode_string(pb_sample_.client.host_name, registration_.identifier.host_name);
-    // pname
-    eCAL::nanopb::decode_string(pb_sample_.client.pname, registration_.client.pname);
+    // process_name
+    eCAL::nanopb::decode_string(pb_sample_.client.process_name, registration_.client.process_name);
     // uname
     eCAL::nanopb::decode_string(pb_sample_.client.uname, registration_.client.uname);
     // sname
@@ -374,8 +374,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.host_name, registration_.identifier.host_name);
     // shm_transport_domain
     eCAL::nanopb::decode_string(pb_sample_.topic.shm_transport_domain, registration_.topic.shm_transport_domain);
-    // pname
-    eCAL::nanopb::decode_string(pb_sample_.topic.pname, registration_.topic.pname);
+    // process_name
+    eCAL::nanopb::decode_string(pb_sample_.topic.process_name, registration_.topic.process_name);
     // uname
     eCAL::nanopb::decode_string(pb_sample_.topic.uname, registration_.topic.uname);
     // tid

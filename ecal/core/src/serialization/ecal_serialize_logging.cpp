@@ -48,8 +48,8 @@ namespace
     eCAL::nanopb::encode_string(pb_log_message_.host_name, log_message_.host_name);
     // pid
     pb_log_message_.pid = log_message_.pid;
-    // pname
-    eCAL::nanopb::encode_string(pb_log_message_.pname, log_message_.pname);
+    // process_name
+    eCAL::nanopb::encode_string(pb_log_message_.process_name, log_message_.process_name);
     // uname
     eCAL::nanopb::encode_string(pb_log_message_.uname, log_message_.uname);
     // level
@@ -115,8 +115,8 @@ namespace
 
     // host_name
     eCAL::nanopb::decode_string(pb_log_message_.host_name, log_message_.host_name);
-    // pname
-    eCAL::nanopb::decode_string(pb_log_message_.pname, log_message_.pname);
+    // process_name
+    eCAL::nanopb::decode_string(pb_log_message_.process_name, log_message_.process_name);
     // uname
     eCAL::nanopb::decode_string(pb_log_message_.uname, log_message_.uname);
     // content

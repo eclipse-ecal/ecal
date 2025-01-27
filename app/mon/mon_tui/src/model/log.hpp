@@ -100,7 +100,7 @@ class LogModel
       val.host_name(),
       val.pid(),
       val.uname(),
-      val.pname(),
+      val.process_name(),
       ToLogLevel(val.level()),
       val.content()
     };

@@ -275,7 +275,7 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
   for (const auto& monitor_process : m_monitoring_pb.processes())
   {
     std::string monitor_process_name = EcalUtils::String::Trim(monitor_process.uname());
-    std::string monitor_process_path = EcalUtils::String::Trim(monitor_process.pname());
+    std::string monitor_process_path = EcalUtils::String::Trim(monitor_process.process_name());
     std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.pparam());
     std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.host_name());
     int pid                          = monitor_process.pid();

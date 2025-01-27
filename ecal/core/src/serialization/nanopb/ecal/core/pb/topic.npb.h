@@ -17,7 +17,7 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     int32_t registration_clock; /* registration clock (heart beat) */
     pb_callback_t host_name; /* host name */
     int32_t pid; /* process id */
-    pb_callback_t pname; /* process name */
+    pb_callback_t process_name; /* process name */
     pb_callback_t uname; /* unit name */
     pb_callback_t tid; /* topic id */
     pb_callback_t tname; /* topic name */
@@ -58,7 +58,7 @@ extern "C" {
 #define eCAL_pb_Topic_registration_clock_tag     1
 #define eCAL_pb_Topic_host_name_tag              2
 #define eCAL_pb_Topic_pid_tag                    3
-#define eCAL_pb_Topic_pname_tag                  4
+#define eCAL_pb_Topic_process_name_tag           4
 #define eCAL_pb_Topic_uname_tag                  5
 #define eCAL_pb_Topic_tid_tag                    6
 #define eCAL_pb_Topic_tname_tag                  7
@@ -82,7 +82,7 @@ extern "C" {
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
-X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \
+X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
 X(a, CALLBACK, SINGULAR, STRING,   tid,               6) \
 X(a, CALLBACK, SINGULAR, STRING,   tname,             7) \

@@ -171,7 +171,7 @@ namespace eCAL
       // common infos
       const std::string& host_name            = sample_.identifier.host_name;
       const std::string& shm_transport_domain = sample_topic.shm_transport_domain;
-      const std::string& process_name         = sample_topic.pname;
+      const std::string& process_name         = sample_topic.process_name;
       const std::string& unit_name            = sample_topic.uname;
       const auto&        topic_id             = sample_.identifier.entity_id;
       std::string        direction;
@@ -199,7 +199,7 @@ namespace eCAL
       TopicInfo.host_name                = host_name;
       TopicInfo.shm_transport_domain = shm_transport_domain;
       TopicInfo.pid                  = process_id;
-      TopicInfo.pname                = process_name;
+      TopicInfo.process_name                = process_name;
       TopicInfo.uname                = unit_name;
       TopicInfo.tname                = topic_name;
       TopicInfo.direction            = direction;
@@ -273,7 +273,7 @@ namespace eCAL
     const auto& sample_process = sample_.process;
     const std::string&    host_name                    = sample_.identifier.host_name;
     const std::string&    shm_transport_domain         = sample_process.shm_transport_domain;
-    const std::string&    process_name                 = sample_process.pname;
+    const std::string&    process_name                 = sample_process.process_name;
     const int             process_id                   = sample_.identifier.process_id;
     const std::string&    process_param                = sample_process.pparam;
     const std::string&    unit_name                    = sample_process.uname;
@@ -300,7 +300,7 @@ namespace eCAL
     // set static content
     ProcessInfo.host_name                = host_name;
     ProcessInfo.shm_transport_domain = shm_transport_domain;
-    ProcessInfo.pname                = process_name;
+    ProcessInfo.process_name                = process_name;
     ProcessInfo.uname                = unit_name;
     ProcessInfo.pid                  = process_id;
     ProcessInfo.pparam               = process_param;
@@ -342,7 +342,7 @@ namespace eCAL
 
     const auto& sample_service = sample_.service;
     const std::string& service_name = sample_service.sname;
-    const std::string& process_name = sample_service.pname;
+    const std::string& process_name = sample_service.process_name;
     const std::string& unit_name    = sample_service.uname;
 
     const uint32_t     tcp_port_v0  = sample_service.tcp_port_v0;
@@ -361,7 +361,7 @@ namespace eCAL
     ServerInfo.host_name       = host_name;
     ServerInfo.sname       = service_name;
     ServerInfo.sid         = service_id;
-    ServerInfo.pname       = process_name;
+    ServerInfo.process_name       = process_name;
     ServerInfo.uname       = unit_name;
     ServerInfo.pid         = process_id;
     ServerInfo.tcp_port_v0 = tcp_port_v0;
@@ -408,7 +408,7 @@ namespace eCAL
 
     const auto& sample_client = sample_.client;
     const std::string& service_name = sample_client.sname;
-    const std::string& process_name = sample_client.pname;
+    const std::string& process_name = sample_client.process_name;
     const std::string& unit_name    = sample_client.uname;
 
     // create map key
@@ -424,7 +424,7 @@ namespace eCAL
     ClientInfo.host_name = host_name;
     ClientInfo.sname = service_name;
     ClientInfo.sid   = service_id;
-    ClientInfo.pname = process_name;
+    ClientInfo.process_name = process_name;
     ClientInfo.uname = unit_name;
     ClientInfo.pid   = process_id;
 

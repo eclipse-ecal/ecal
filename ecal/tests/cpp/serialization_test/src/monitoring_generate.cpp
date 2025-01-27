@@ -36,7 +36,7 @@ namespace eCAL
       process.host_name            = GenerateString(10);
       process.shm_transport_domain = GenerateString(8);
       process.pid                  = rand() % 1000;
-      process.pname                = GenerateString(8);
+      process.process_name                = GenerateString(8);
       process.uname                = GenerateString(6);
       process.pparam               = GenerateString(20);
       process.state_severity       = rand() % 5;
@@ -59,7 +59,7 @@ namespace eCAL
       topic.host_name            = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
       topic.pid                  = rand() % 1000;
-      topic.pname                = GenerateString(8);
+      topic.process_name                = GenerateString(8);
       topic.uname                = GenerateString(6);
       topic.tid                  = rand();
       topic.tname                = GenerateString(10);
@@ -95,7 +95,7 @@ namespace eCAL
       SServerMon server;
       server.registration_clock = rand() % 1000;
       server.host_name          = GenerateString(10);
-      server.pname       = GenerateString(8);
+      server.process_name       = GenerateString(8);
       server.uname       = GenerateString(6);
       server.pid         = rand() % 1000;
       server.sname       = GenerateString(10);
@@ -116,7 +116,7 @@ namespace eCAL
       SClientMon client;
       client.registration_clock  = rand() % 1000;
       client.host_name   = GenerateString(10);
-      client.pname   = GenerateString(8);
+      client.process_name   = GenerateString(8);
       client.uname   = GenerateString(6);
       client.pid     = rand() % 1000;
       client.sname   = GenerateString(10);

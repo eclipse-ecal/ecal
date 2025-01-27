@@ -336,9 +336,9 @@ namespace eCAL
     {
       if (g_process_name.empty())
       {
-        WCHAR pname[1024] = { 0 };
-        GetModuleFileNameExW(GetCurrentProcess(), nullptr, pname, 1024);
-        g_process_name = EcalUtils::StrConvert::WideToUtf8(pname);
+        WCHAR process_name[1024] = { 0 };
+        GetModuleFileNameExW(GetCurrentProcess(), nullptr, process_name, 1024);
+        g_process_name = EcalUtils::StrConvert::WideToUtf8(process_name);
       }
       return(g_process_name);
     }

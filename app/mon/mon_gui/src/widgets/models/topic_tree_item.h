@@ -41,7 +41,7 @@ public:
     HOST_NAME,
     SHM_TRANSPORT_DOMAIN,
     PID,
-    PNAME,
+    PROCESS_NAME,
     UNAME,
     TID,
     TNAME,

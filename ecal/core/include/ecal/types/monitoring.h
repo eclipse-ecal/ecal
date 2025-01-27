@@ -75,7 +75,7 @@ namespace eCAL
       std::string                         host_name;                //!< host name
       std::string                         shm_transport_domain; //!< shm transport domain
       int32_t                             pid{0};               //!< process id
-      std::string                         pname;                //!< process name
+      std::string                         process_name;                //!< process name
       std::string                         uname;                //!< unit name
       EntityIdT             tid{0};               //!< topic id
       std::string                         tname;                //!< topic name
@@ -102,7 +102,7 @@ namespace eCAL
       std::string    host_name;                                     //!< host name
       std::string    shm_transport_domain;                      //!< shm transport domain
       int32_t        pid{0};                                    //!< process id
-      std::string    pname;                                     //!< process name
+      std::string    process_name;                                     //!< process name
       std::string    uname;                                     //!< unit name
       std::string    pparam;                                    //!< process parameter
 
@@ -146,7 +146,7 @@ namespace eCAL
     {
       int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
-      std::string              pname;                           //<! process name
+      std::string              process_name;                           //<! process name
       std::string              uname;                           //<! unit name
       int32_t                  pid{0};                          //<! process id
 
@@ -164,7 +164,7 @@ namespace eCAL
     {
       int32_t                  registration_clock{0};                       //<! registration clock
       std::string              host_name;                           //<! host name
-      std::string              pname;                           //<! process name
+      std::string              process_name;                           //<! process name
       std::string              uname;                           //<! unit name
       int32_t                  pid{0};                          //<! process id
 

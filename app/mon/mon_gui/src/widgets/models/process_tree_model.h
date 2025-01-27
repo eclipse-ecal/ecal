@@ -106,7 +106,7 @@ private:
     { Columns::HOST_NAME,            (int)ProcessTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN, (int)ProcessTreeItem::Columns::SHM_TRANSPORT_DOMAIN},
     { Columns::PID,                  (int)ProcessTreeItem::Columns::PID },
-    { Columns::PROCESS_NAME,         (int)ProcessTreeItem::Columns::PNAME },
+    { Columns::PROCESS_NAME,         (int)ProcessTreeItem::Columns::PROCESS_NAME },
     { Columns::PARAMETERS,           (int)ProcessTreeItem::Columns::PPARAM },
     { Columns::STATE,                (int)ProcessTreeItem::Columns::SEVERITY },
     { Columns::INFO,                 (int)ProcessTreeItem::Columns::INFO },

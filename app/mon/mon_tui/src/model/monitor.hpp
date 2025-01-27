@@ -158,7 +158,7 @@ class MonitorModel
       }
       auto &process = processes.emplace_back();
       process.pid = p.pid();
-      process.name = std::move(*p.mutable_pname());
+      process.name = std::move(*p.mutable_process_name());
       process.host_name = std::move(*p.mutable_host_name());
       process.unit_name = std::move(*p.mutable_uname());
       process.params = std::move(*p.mutable_pparam());
@@ -194,7 +194,7 @@ class MonitorModel
       topic.registration_clock = t.registration_clock();
       topic.host_name = std::move(*t.mutable_host_name());
       topic.pid = t.pid();
-      topic.process_name = std::move(*t.mutable_pname());
+      topic.process_name = std::move(*t.mutable_process_name());
       topic.unit_name = std::move(*t.mutable_uname());
       topic.id = std::move(*t.mutable_tid());
       topic.name = std::move(*t.mutable_tname());
@@ -232,7 +232,7 @@ class MonitorModel
       service.id = s.sid();
       service.name = std::move(*s.mutable_sname());
       service.host_name = std::move(*s.mutable_host_name());
-      service.process_name = std::move(*s.mutable_pname());
+      service.process_name = std::move(*s.mutable_process_name());
       service.unit_name = std::move(*s.mutable_uname());
       service.registration_clock = s.registration_clock();
       service.tcp_port = s.tcp_port_v1();

@@ -68,7 +68,7 @@ namespace eCAL
     {
       std::string             key;              //!< unique service key (internal)
       std::string             host_name;            //!< host name
-      std::string             pname;            //!< process name
+      std::string             process_name;            //!< process name
       std::string             uname;            //!< process unit name
       std::string             sname;            //!< service name
       EntityIdT sid = 0;  //!< service id
@@ -97,7 +97,7 @@ namespace eCAL
     {
       std::string    key;           //!< unique service key (internal)
       std::string    host_name;         //!< host name
-      std::string    pname;         //!< process name
+      std::string    process_name;         //!< process name
       std::string    uname;         //!< process unit name
       std::string    sname;         //!< service name
       std::string    sid;           //!< service id

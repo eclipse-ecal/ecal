@@ -73,7 +73,7 @@ int main()
       && (process.host_name == host_name)
       )
     {
-      std::cout << "Stopping process " << process.pname << " (" << process.pid << ")" << std::endl;
+      std::cout << "Stopping process " << process.process_name << " (" << process.pid << ")" << std::endl;
       eCAL::Util::ShutdownProcess(process.pid);
     }
   }

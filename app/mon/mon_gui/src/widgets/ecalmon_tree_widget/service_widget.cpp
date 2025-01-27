@@ -112,7 +112,7 @@ void ServiceWidget::autoSizeColumns()
 
   example_service_pb.set_registration_clock(999999);
   example_service_pb.set_host_name("CARPC00____");
-  example_service_pb.set_pname("");
+  example_service_pb.set_process_name("");
   example_service_pb.set_uname("eCALRPCService____");
   example_service_pb.set_pid(999999);
   example_service_pb.set_sname("eCALRPCService____");

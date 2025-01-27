@@ -96,7 +96,7 @@ int main()
         // print process details
         std::cout << "host_name       : " << process.host_name() << std::endl;   // host name
         std::cout << "pid             : " << process.pid() << std::endl;   // process id
-        std::cout << "pname           : " << process.pname() << std::endl;   // process name
+        std::cout << "process_name           : " << process.process_name() << std::endl;   // process name
         std::cout << "uname           : " << process.uname() << std::endl;   // unit name
         std::cout << "pparam          : " << process.pparam() << std::endl;   // process parameter
         std::cout << "severity        : " << process.state().severity() << std::endl;   // process state severity
@@ -164,7 +164,7 @@ int main()
         std::cout << "registration_clock          : " << topic.registration_clock() << std::endl;   // registration clock
         std::cout << "host_name       : " << topic.host_name() << std::endl;   // host name
         std::cout << "pid             : " << topic.pid() << std::endl;   // process id
-        std::cout << "pname           : " << topic.pname() << std::endl;   // process name
+        std::cout << "process_name           : " << topic.process_name() << std::endl;   // process name
         std::cout << "uname           : " << topic.uname() << std::endl;   // unit name
         std::cout << "tid             : " << topic.tid() << std::endl;   // topic id
         std::cout << "tname           : " << topic.tname() << std::endl;   // topic name

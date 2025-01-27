@@ -954,8 +954,8 @@ namespace
       val = Py_BuildValue("i", topic.pid);
       PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.pname.c_str());
-      PyDict_SetItemString(topicDict, "pname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", topic.process_name.c_str());
+      PyDict_SetItemString(topicDict, "process_name", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.uname.c_str());
       PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
@@ -1066,8 +1066,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("i", process.pid);
         PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.pname.c_str());
-        PyDict_SetItemString(processDict, "pname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.process_name.c_str());
+        PyDict_SetItemString(processDict, "process_name", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", process.uname.c_str());
         PyDict_SetItemString(processDict, "uname", val); Py_DECREF(val);
@@ -1117,8 +1117,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.host_name.c_str());
         PyDict_SetItemString(serviceDict, "host_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", service.pname.c_str());
-        PyDict_SetItemString(serviceDict, "pname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", service.process_name.c_str());
+        PyDict_SetItemString(serviceDict, "process_name", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", service.uname.c_str());
         PyDict_SetItemString(serviceDict, "uname", val); Py_DECREF(val);
@@ -1189,8 +1189,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", client.host_name.c_str());
         PyDict_SetItemString(clientDict, "host_name", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", client.pname.c_str());
-        PyDict_SetItemString(clientDict, "pname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", client.process_name.c_str());
+        PyDict_SetItemString(clientDict, "process_name", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", client.uname.c_str());
         PyDict_SetItemString(clientDict, "uname", val); Py_DECREF(val);
@@ -1280,8 +1280,8 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
       val = Py_BuildValue("i", log.pid);
       PyDict_SetItemString(logDict, "pid", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", log.pname.c_str());
-      PyDict_SetItemString(logDict, "pname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", log.process_name.c_str());
+      PyDict_SetItemString(logDict, "process_name", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", log.level);
       PyDict_SetItemString(logDict, "level", val); Py_DECREF(val);

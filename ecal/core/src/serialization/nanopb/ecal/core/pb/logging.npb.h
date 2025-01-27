@@ -14,7 +14,7 @@ typedef struct _eCAL_pb_LogMessage {
     int64_t time; /* time */
     pb_callback_t host_name; /* host name */
     int32_t pid; /* process id */
-    pb_callback_t pname; /* process name */
+    pb_callback_t process_name; /* process name */
     pb_callback_t uname; /* unit name */
     int32_t level; /* message level */
     pb_callback_t content; /* message content */
@@ -39,7 +39,7 @@ extern "C" {
 #define eCAL_pb_LogMessage_time_tag              1
 #define eCAL_pb_LogMessage_host_name_tag         2
 #define eCAL_pb_LogMessage_pid_tag               3
-#define eCAL_pb_LogMessage_pname_tag             4
+#define eCAL_pb_LogMessage_process_name_tag      4
 #define eCAL_pb_LogMessage_uname_tag             5
 #define eCAL_pb_LogMessage_level_tag             6
 #define eCAL_pb_LogMessage_content_tag           7
@@ -50,7 +50,7 @@ extern "C" {
 X(a, STATIC,   SINGULAR, INT64,    time,              1) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
-X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \
+X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
 X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
 X(a, STATIC,   SINGULAR, INT32,    level,             6) \
 X(a, CALLBACK, SINGULAR, STRING,   content,           7)
