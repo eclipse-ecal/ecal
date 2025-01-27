@@ -82,8 +82,6 @@ ecal_add_shared_library(${PROJECT_NAME}
     ${ecal_c_sources}
 )
 
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

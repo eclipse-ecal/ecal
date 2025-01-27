@@ -181,6 +181,7 @@ target_link_libraries (${PROJECT_NAME} PRIVATE
     CustomTclap
     tclap::tclap
     eCAL::core
+    eCAL::protobuf_core
     eCAL::sys_core
     protobuf::libprotobuf
     EcalParser

@@ -67,7 +67,6 @@ set(ecalhdf5_header_base
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE .

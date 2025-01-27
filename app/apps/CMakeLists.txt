@@ -23,7 +23,6 @@ set(ecal_apps_header
 )
 
 ecal_add_interface_library(${PROJECT_NAME} ${ecal_apps_header})
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} INTERFACE 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 #  $<INSTALL_INTERFACE:include>

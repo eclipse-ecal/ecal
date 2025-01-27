@@ -75,7 +75,6 @@ set(ecalsyscore_src
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalsyscore_src})
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -87,15 +86,18 @@ target_compile_definitions(${PROJECT_NAME}
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
-  Threads::Threads
-  tinyxml2::tinyxml2
+  PUBLIC
+  eCAL::core
   spdlog::spdlog
-  protobuf::libprotobuf
-  eCAL::protobuf_core
+  eCAL::sys_client_core
   eCAL::core_pb
   eCAL::app_pb
+  PRIVATE
+  Threads::Threads
+  tinyxml2::tinyxml2
+  protobuf::libprotobuf
+  eCAL::protobuf_core
   EcalParser
-  eCAL::sys_client_core
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)

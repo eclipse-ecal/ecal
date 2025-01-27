@@ -25,8 +25,6 @@ ecal_add_library(${PROJECT_NAME}
   src/writer.cpp
 )
 
-add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
 target_include_directories(${PROJECT_NAME} PUBLIC 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
