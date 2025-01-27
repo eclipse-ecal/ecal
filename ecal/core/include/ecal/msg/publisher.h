@@ -47,8 +47,7 @@ namespace eCAL
   {
   public:
     /**
-     * @brief  Constructor, that automatically intializes the Publisher. 
-     *         This should be the preferred constructor.
+     * @brief  Constructor.
      *
      * @param topic_name_      Unique topic name.
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
@@ -59,8 +58,7 @@ namespace eCAL
     }
 
     /**
-     * @brief  Constructor, that automatically intializes the Publisher. 
-     *         This should be the preferred constructor.
+     * @brief  Constructor.
      *
      * @param topic_name_      Unique topic name.
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).

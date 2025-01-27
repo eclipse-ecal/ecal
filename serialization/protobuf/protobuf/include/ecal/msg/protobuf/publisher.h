@@ -95,15 +95,17 @@ namespace eCAL
        * @param topic_name_  Unique topic name.
        * @param config_      Optional configuration parameters.
       **/
-
-      // call the function via its class because it's a virtual function that is called in constructor/destructor,-
-      // where the vtable is not created yet, or it's destructed.
-      // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
-      // descriptor information.
       explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
       {
       }
 
+      /**
+       * @brief  Constructor.
+       *
+       * @param topic_name_      Unique topic name.
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
+      **/
       explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), event_callback_, config_)
       {
       }

@@ -86,13 +86,25 @@ namespace eCAL
 
     public:
       /**
-      * @brief  Constructor.
-      *
-      * @param topic_name_  Unique topic name.
-      * @param config_      Optional configuration parameters.
+       * @brief  Constructor.
+       *
+       * @param topic_name_  Unique topic name.
+       * @param config_      Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
-        : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
+        , builder(std::make_unique<capnp::MallocMessageBuilder>())
+        , root_builder(builder->initRoot<message_type>())
+      {
+      }
+
+      /**
+       * @brief  Constructor.
+       *
+       * @param topic_name_      Unique topic name.
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
+      **/
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), event_callback_, config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
