@@ -220,7 +220,6 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
             const eCAL::SDataTypeInformation & /*data_type_info_*/,
             const eCAL::SReceiveCallbackData & /*data_*/) {
           {
-            std::cerr << "Callback received message\n";
             std::lock_guard<std::mutex> lk(cv_m);
             data_received = true;
           }
@@ -236,7 +235,7 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
     cv.wait_for(cv_lk, RECEIVE_TIMEOUT,
                 [&data_received]() { return data_received; });
 
-    EXPECT_TRUE(data_received);
+    EXPECT_TRUE(data_received) << "No messages received within the timeout";
   };
 
   // 1 - Subscribe to topic and receive a message
