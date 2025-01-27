@@ -83,7 +83,7 @@ target_compile_definitions(${PROJECT_NAME}
 
 create_targets_protobuf()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   tclap::tclap
   termcolor::termcolor
   eCAL::rec_server_core

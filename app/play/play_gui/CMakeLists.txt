@@ -139,7 +139,7 @@ ecal_add_app_qt(${PROJECT_NAME}
 )
 
 create_targets_protobuf()
-target_link_libraries (${PROJECT_NAME}
+target_link_libraries (${PROJECT_NAME} PRIVATE
     tclap::tclap
     CustomTclap
     eCAL::play_core

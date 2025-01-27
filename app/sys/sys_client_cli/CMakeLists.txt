@@ -39,7 +39,7 @@ ecal_add_app_console(${PROJECT_NAME} ${source_files} ${win_src})
 
 create_targets_protobuf()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   spdlog::spdlog
   tclap::tclap
   protobuf::libprotobuf

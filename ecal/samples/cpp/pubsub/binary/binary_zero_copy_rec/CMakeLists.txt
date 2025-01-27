@@ -31,7 +31,7 @@ find_package(eCAL REQUIRED)
 # add and configure sample project
 ecal_add_sample(${PROJECT_NAME} ${binary_zero_copy_rec_src})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 
 # install and set properties
 ecal_install_sample(${PROJECT_NAME})

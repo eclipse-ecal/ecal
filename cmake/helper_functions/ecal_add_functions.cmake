@@ -16,6 +16,10 @@
 #
 # ========================= eCAL LICENSE =================================
 
+include_guard(GLOBAL)
+
+include("${CMAKE_CURRENT_LIST_DIR}/ecal_compiler_warnings.cmake")
+
 # This function will set the output names of the target according to eCAL conventions.
 function(ecal_add_app_console TARGET_NAME)
   add_executable(${TARGET_NAME} ${ARGN})
@@ -24,6 +28,7 @@ function(ecal_add_app_console TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 # This helper function automatically adds a gtest to ecal.
@@ -50,6 +55,7 @@ function(ecal_add_gtest TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_app_gui TARGET_NAME)
@@ -59,6 +65,7 @@ function(ecal_add_app_gui TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_app_qt TARGET_NAME)
@@ -70,6 +77,7 @@ function(ecal_add_app_qt TARGET_NAME)
   if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
   endif()
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_mon_plugin TARGET_NAME)
@@ -94,7 +102,7 @@ function(ecal_add_mon_plugin TARGET_NAME)
       $<$<CONFIG:RelWithDebInfo>:QT_NO_DEBUG>
       $<$<CONFIG:MinSizeRel>:QT_NO_DEBUG>
   )
-    
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_rec_addon TARGET_NAME)
@@ -105,7 +113,7 @@ function(ecal_add_rec_addon TARGET_NAME)
     OUTPUT_NAME ecal_${TARGET_NAME}
     RUNTIME_OUTPUT_DIRECTORY $<IF:$<BOOL:${WIN32}>,${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/ecalrec_addons,${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ecal/addons/rec>
   )
-    
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_time_plugin TARGET_NAME)
@@ -114,6 +122,7 @@ function(ecal_add_time_plugin TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
   )
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_shared_library TARGET_NAME)
@@ -122,6 +131,7 @@ function(ecal_add_shared_library TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_${TARGET_NAME})
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_static_library TARGET_NAME)
@@ -132,6 +142,7 @@ function(ecal_add_static_library TARGET_NAME)
     OUTPUT_NAME ecal_${TARGET_NAME}
     POSITION_INDEPENDENT_CODE ON
   )
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
 function(ecal_add_interface_library TARGET_NAME)
@@ -152,5 +163,6 @@ function(ecal_add_sample TARGET_NAME)
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
     OUTPUT_NAME ecal_sample_${TARGET_NAME})
+  ecal_add_compiler_warnings(${TARGET_NAME})
 endfunction()
 
