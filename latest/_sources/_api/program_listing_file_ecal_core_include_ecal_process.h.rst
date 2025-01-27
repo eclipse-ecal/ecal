@@ -37,6 +37,7 @@ Program Listing for File process.h
    #include <ecal/os.h>
    #include <ecal/process_mode.h>
    #include <ecal/process_severity.h>
+   #include <ecal/deprecate.h>
    
    namespace eCAL
    {
@@ -75,10 +76,13 @@ Program Listing for File process.h
    
        ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
    
+       ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
        ECAL_API int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, bool create_console_, eCAL::Process::eStartMode process_mode_, bool block_);
    
+       ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
        ECAL_API bool StopProcess(const char* proc_name_);
    
+       ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
        ECAL_API bool StopProcess(int proc_id_);
      }
    }

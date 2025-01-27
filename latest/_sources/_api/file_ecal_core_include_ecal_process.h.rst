@@ -32,6 +32,8 @@ Includes
 
 - ``chrono``
 
+- ``ecal/deprecate.h`` (:ref:`file_ecal_core_include_ecal_deprecate.h`)
+
 - ``ecal/os.h`` (:ref:`file_ecal_core_include_ecal_os.h`)
 
 - ``ecal/process_mode.h`` (:ref:`file_ecal_core_include_ecal_process_mode.h`)

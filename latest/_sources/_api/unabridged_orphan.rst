@@ -221,3 +221,12 @@ Files
    :maxdepth: 5
 
    file_ecal_core_include_ecal_util.h.rst
+
+Pages
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   page_deprecated.rst
