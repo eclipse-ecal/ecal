@@ -120,7 +120,7 @@ class MonitorModel
     return Topic::Direction::SUBSCRIBER;
   }
 
-  Topic::TransportLayer TopicTransportLayer(eCAL::pb::eTLayerType layer)
+  Topic::TransportLayer TopicTransportLayer(eCAL::pb::eTransportLayerType layer)
   {
     switch(layer)
     {

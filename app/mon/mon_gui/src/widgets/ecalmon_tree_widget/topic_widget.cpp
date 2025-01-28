@@ -226,13 +226,13 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_topic_id("");
   example_topic_pb.set_topic_name("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
-  example_topic_pb.mutable_tdatatype()->set_name("Enc.TypeName.Name____");
-  example_topic_pb.mutable_tdatatype()->set_encoding("encdg:");
+  example_topic_pb.mutable_datatype_information()->set_name("Enc.TypeName.Name____");
+  example_topic_pb.mutable_datatype_information()->set_encoding("encdg:");
   //example_topic_pb.mutable_tdatatype()->set_desc("");
 
-  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
-  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
-  example_topic_pb.set_tsize(999999);
+  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_shm);
+  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_udp_mc);
+  example_topic_pb.set_topic_size(999999);
   example_topic_pb.set_connections_loc(999999);
   example_topic_pb.set_connections_ext(999999);
   example_topic_pb.set_message_drops(999999);

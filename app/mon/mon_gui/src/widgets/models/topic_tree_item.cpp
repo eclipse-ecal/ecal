@@ -90,7 +90,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      return topic_.datatype_information().desc().c_str();
+      return topic_.datatype_information().descriptor_information().c_str();
     }
     else if (column == Columns::TRANSPORT_LAYER)
     {
@@ -147,7 +147,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().desc();
+      const std::string& raw_data = topic_.datatype_information().descriptor_information();
 
       if (!raw_data.empty())
       {
@@ -181,16 +181,16 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         {
           switch (layer.type())
           {
-          case eCAL::pb::eTLayerType::tl_ecal_tcp:
+          case eCAL::pb::eTransportLayerType::tl_ecal_tcp:
             this_layer_string = "tcp";
             break;
-          case eCAL::pb::eTLayerType::tl_ecal_udp_mc:
+          case eCAL::pb::eTransportLayerType::tl_ecal_udp_mc:
             this_layer_string = "udp_mc";
             break;
-          case eCAL::pb::eTLayerType::tl_ecal_shm:
+          case eCAL::pb::eTransportLayerType::tl_ecal_shm:
             this_layer_string = "shm";
             break;
-          case eCAL::pb::eTLayerType::tl_all:
+          case eCAL::pb::eTransportLayerType::tl_all:
             this_layer_string = "all";
             break;
           default:
@@ -224,7 +224,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().desc();
+      const std::string& raw_data = topic_.datatype_information().descriptor_information();
       return static_cast<int>(raw_data.size());
     }
 
@@ -317,7 +317,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().desc();
+      const std::string& raw_data = topic_.datatype_information().descriptor_information();
       if (raw_data.empty())
       {
         QFont font;

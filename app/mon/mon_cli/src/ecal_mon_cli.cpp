@@ -622,7 +622,7 @@ void ProcDesc(const std::string& topic_name_)
     // check topic name
     if(topic.topic_name() != topic_name_) continue;
 
-    std::string ttype_desc = topic.datatype_information().desc();
+    std::string ttype_desc = topic.datatype_information().descriptor_information();
     if (ttype_desc.empty()) ttype_desc = "\"\"";
 
     // print topic description

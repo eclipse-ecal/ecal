@@ -171,25 +171,25 @@ int main()
         std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)
         std::cout << "ttype name      : " << topic.datatype_information().name() << std::endl;   // topic type name
         std::cout << "ttype encoding  : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
-        //std::cout << "tdesc           : " << topic.datatype_information().desc()     << std::endl;   // topic description
+        //std::cout << "tdesc           : " << topic.datatype_information().descriptor_information()     << std::endl;   // topic description
         for (const auto& layer : topic.transport_layer())
         {
           std::string layer_type("unknown");
           switch (layer.type())
           {
-          case eCAL::pb::eTLayerType::tl_none:
+          case eCAL::pb::eTransportLayerType::tl_none:
             layer_type = "tlayer_none";
             break;
-          case eCAL::pb::eTLayerType::tl_ecal_udp_mc:
+          case eCAL::pb::eTransportLayerType::tl_ecal_udp_mc:
             layer_type = "tlayer_udp_mc";
             break;
-          case eCAL::pb::eTLayerType::tl_ecal_shm:
+          case eCAL::pb::eTransportLayerType::tl_ecal_shm:
             layer_type = "tlayer_shm";
             break;
-          case eCAL::pb::eTLayerType::tl_ecal_tcp:
+          case eCAL::pb::eTransportLayerType::tl_ecal_tcp:
             layer_type = "tlayer_tcp";
             break;
-          case eCAL::pb::eTLayerType::tl_all:
+          case eCAL::pb::eTransportLayerType::tl_all:
             layer_type = "tlayer_all";
             break;
           default:

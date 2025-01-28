@@ -94,7 +94,7 @@ namespace eCAL
             // Evaluate the quality of the current descriptor information
             int this_topic_info_quality = 0;
 
-            if (!topic.datatype_information().desc().empty())
+            if (!topic.datatype_information().descriptor_information().empty())
             {
               this_topic_info_quality |= DESCRIPTION_AVAILABLE_QUALITYBIT;
             }
@@ -128,14 +128,14 @@ namespace eCAL
               if (channel_descriptor_map_it == channel_descriptor_map.end())
               {
                 // Save the new descriptor
-                channel_descriptor_map.emplace(topic.topic_name(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().desc())));
+                channel_descriptor_map.emplace(topic.topic_name(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().descriptor_information())));
               }
               else
               {
                 if(channel_descriptor_map_it->second.first < this_topic_info_quality)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().desc()));
+                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().descriptor_information()));
                 }
               }
             }
@@ -149,14 +149,14 @@ namespace eCAL
               if (type_descriptor_map_it == type_descriptor_map.end())
               {
                 // Save the new descriptor
-                type_descriptor_map.emplace(combined_enc_type, std::make_pair(quality_for_other_channels, topic.datatype_information().desc()));
+                type_descriptor_map.emplace(combined_enc_type, std::make_pair(quality_for_other_channels, topic.datatype_information().descriptor_information()));
               }
               else
               {
                 if(type_descriptor_map_it->second.first < quality_for_other_channels)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.datatype_information().desc());
+                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.datatype_information().descriptor_information());
                 }
               }
             }
