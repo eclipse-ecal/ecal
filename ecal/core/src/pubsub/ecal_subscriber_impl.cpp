@@ -56,6 +56,7 @@
 #include <chrono>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <list>
 #include <memory>
 #include <mutex>

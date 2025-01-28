@@ -45,6 +45,7 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
+#include <limits>
 #include <mutex>
 #include <sstream>
 #include <string>
