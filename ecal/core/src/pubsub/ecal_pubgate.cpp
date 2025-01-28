@@ -104,10 +104,10 @@ namespace eCAL
 
     // TODO: Substitute ProducerInfo type
     const auto& subscription_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     CPublisherImpl::SLayerStates layer_states;
-    for (const auto& layer : ecal_topic.tlayer)
+    for (const auto& layer : ecal_topic.transport_layer)
     {
       // transport layer versions 0 and 1 did not support dynamic layer enable feature
       // so we set assume layer is enabled if we receive a registration in this case
@@ -132,7 +132,7 @@ namespace eCAL
 
     std::string reader_par;
 #if 0
-    for (const auto& layer : ecal_sample.tlayer())
+    for (const auto& layer : ecal_sample.transport_layer())
     {
       // layer parameter as protobuf message
       // this parameter is not used at all currently
@@ -161,7 +161,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& subscription_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);

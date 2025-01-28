@@ -64,9 +64,9 @@ namespace eCAL
       topic.topic_id                  = rand();
       topic.topic_name                = GenerateString(10);
       topic.direction            = direction;
-      topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
-      topic.tlayer.push_back({ tl_ecal_shm, 1, true });
-      topic.tsize                = rand() % 5000;
+      topic.datatype_information            = eCAL::Registration::GenerateDataTypeInformation();
+      topic.transport_layer.push_back({ eTransportLayerType::shm, 1, true });
+      topic.topic_size                = rand() % 5000;
       topic.connections_loc      = rand() % 10;
       topic.connections_ext      = rand() % 10;
       topic.message_drops        = rand() % 100;

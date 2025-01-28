@@ -169,10 +169,10 @@ int main()
         std::cout << "topic_id             : " << topic.topic_id() << std::endl;   // topic id
         std::cout << "topic_name           : " << topic.topic_name() << std::endl;   // topic name
         std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)
-        std::cout << "ttype name      : " << topic.tdatatype().name() << std::endl;   // topic type name
-        std::cout << "ttype encoding  : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
-        //std::cout << "tdesc           : " << topic.tdatatype().desc()     << std::endl;   // topic description
-        for (const auto& layer : topic.tlayer())
+        std::cout << "ttype name      : " << topic.datatype_information().name() << std::endl;   // topic type name
+        std::cout << "ttype encoding  : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
+        //std::cout << "tdesc           : " << topic.datatype_information().desc()     << std::endl;   // topic description
+        for (const auto& layer : topic.transport_layer())
         {
           std::string layer_type("unknown");
           switch (layer.type())
@@ -195,10 +195,10 @@ int main()
           default:
             break;
           }
-          std::cout << "  tlayer.type    : " << layer_type << std::endl;             // transport layers type
-          std::cout << "  tlayer.active  : " << layer.active() << std::endl;         // transport layers confirmation
+          std::cout << "  transport_layer.type    : " << layer_type << std::endl;             // transport layers type
+          std::cout << "  transport_layer.active  : " << layer.active() << std::endl;         // transport layers confirmation
         }
-        std::cout << "tsize           : " << topic.tsize() << std::endl;             // topic size
+        std::cout << "topic_size           : " << topic.topic_size() << std::endl;             // topic size
 
         std::cout << "connections_loc : " << topic.connections_loc() << std::endl;   // number of local connected entities
         std::cout << "connections_ext : " << topic.connections_ext() << std::endl;   // number of external connected entities

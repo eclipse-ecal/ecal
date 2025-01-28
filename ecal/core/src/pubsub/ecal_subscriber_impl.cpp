@@ -634,13 +634,13 @@ namespace eCAL
     ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.tdatatype;
+      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.datatype_information;
       ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
     ecal_reg_sample_topic.attr  = m_attr;
-    ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
@@ -650,7 +650,7 @@ namespace eCAL
       udp_tlayer.version   = ecal_transport_layer_version;
       udp_tlayer.enabled   = m_layers.udp.read_enabled;
       udp_tlayer.active    = m_layers.udp.active;
-      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
@@ -662,7 +662,7 @@ namespace eCAL
       shm_tlayer.version   = ecal_transport_layer_version;
       shm_tlayer.enabled   = m_layers.shm.read_enabled;
       shm_tlayer.active    = m_layers.shm.active;
-      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
@@ -674,7 +674,7 @@ namespace eCAL
       tcp_tlayer.version   = ecal_transport_layer_version;
       tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
       tcp_tlayer.active    = m_layers.tcp.active;
-      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 

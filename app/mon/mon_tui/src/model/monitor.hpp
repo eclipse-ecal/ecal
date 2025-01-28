@@ -182,12 +182,12 @@ class MonitorModel
         if(direction == "publisher")
         {
           host->publisher_count++;
-          host->data_sent_bytes += ((long long)t.tsize() * (long long)t.dfreq()) / 1000;
+          host->data_sent_bytes += ((long long)t.topic_size() * (long long)t.dfreq()) / 1000;
         }
         else if(direction == "subscriber")
         {
           host->subscriber_count++;
-          host->data_received_bytes += ((long long)t.tsize() * (long long)t.dfreq()) / 1000;
+          host->data_received_bytes += ((long long)t.topic_size() * (long long)t.dfreq()) / 1000;
         }
       }
       auto &topic = topics.emplace_back();
@@ -199,17 +199,17 @@ class MonitorModel
       topic.id = std::move(*t.mutable_topic_id());
       topic.name = std::move(*t.mutable_topic_name());
       topic.direction = TopicDirection(t.direction());
-      topic.encoding = std::move(*t.mutable_tdatatype()->mutable_encoding());
-      topic.type = std::move(*t.mutable_tdatatype()->mutable_name());
-      topic.type_descriptor = std::move(*t.mutable_tdatatype()->mutable_desc());
-      for(auto &tl: t.tlayer())
+      topic.encoding = std::move(*t.mutable_datatype_information()->mutable_encoding());
+      topic.type = std::move(*t.mutable_datatype_information()->mutable_name());
+      topic.type_descriptor = std::move(*t.mutable_datatype_information()->mutable_descriptor_information());
+      for(auto &tl: t.transport_layer())
       {
         if (tl.active())
         {
           topic.transport_layers.emplace_back(TopicTransportLayer(tl.type()));
         }
       }
-      topic.size = t.tsize();
+      topic.size = t.topic_size();
       topic.local_connections_count = t.connections_loc();
       topic.external_connections_count = t.connections_ext();
       topic.message_drops = t.message_drops();

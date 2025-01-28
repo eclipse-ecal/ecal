@@ -80,10 +80,10 @@ namespace eCAL
       EntityIdT                           topic_id{0};               //!< topic id
       std::string                         topic_name;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
-      SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
+      SDataTypeInformation                datatype_information;            //!< topic datatype information (name, encoding, descriptor)
 	  
       std::vector<STransportLayer>        transport_layer;               //!< transport layer details
-      int32_t                             tsize{0};             //!< topic size
+      int32_t                             topic_size{0};             //!< topic size
 
       int32_t                             connections_loc{0};   //!< number of local connected entities
       int32_t                             connections_ext{0};   //!< number of external connected entities

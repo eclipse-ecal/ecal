@@ -22,8 +22,8 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     pb_callback_t topic_id; /* topic id */
     pb_callback_t topic_name; /* topic name */
     pb_callback_t direction; /* direction (publisher, subscriber) */
-    pb_callback_t tlayer; /* active topic transport layers and it's specific parameter */
-    int32_t tsize; /* topic size */
+    pb_callback_t transport_layer; /* active topic transport layers and it's specific parameter */
+    int32_t topic_size; /* topic size */
     int32_t connections_loc; /* number of local connected entities */
     int32_t connections_ext; /* number of external connected entities */
     int32_t message_drops; /* dropped messages */
@@ -34,8 +34,8 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     pb_callback_t shm_transport_domain; /* shm_transport_domain */
     /* 9 = topic type + topic encoding (deprecated)
  10 = topic description (protocol descriptor) (deprecated) */
-    bool has_tdatatype;
-    eCAL_pb_DataTypeInformation tdatatype; /* topic datatype information (encoding & type & description) */
+    bool has_datatype_information;
+    eCAL_pb_DataTypeInformation datatype_information; /* topic datatype information (encoding & type & description) */
 } eCAL_pb_Topic;
 
 typedef struct _eCAL_pb_Topic_AttrEntry {
@@ -63,8 +63,8 @@ extern "C" {
 #define eCAL_pb_Topic_topic_id_tag               6
 #define eCAL_pb_Topic_topic_name_tag             7
 #define eCAL_pb_Topic_direction_tag              8
-#define eCAL_pb_Topic_tlayer_tag                 12
-#define eCAL_pb_Topic_tsize_tag                  13
+#define eCAL_pb_Topic_transport_layer_tag        12
+#define eCAL_pb_Topic_topic_size_tag             13
 #define eCAL_pb_Topic_connections_loc_tag        16
 #define eCAL_pb_Topic_connections_ext_tag        17
 #define eCAL_pb_Topic_message_drops_tag          18
@@ -73,7 +73,7 @@ extern "C" {
 #define eCAL_pb_Topic_dfreq_tag                  21
 #define eCAL_pb_Topic_attr_tag                   27
 #define eCAL_pb_Topic_shm_transport_domain_tag   28
-#define eCAL_pb_Topic_tdatatype_tag              30
+#define eCAL_pb_Topic_datatype_information_tag   30
 #define eCAL_pb_Topic_AttrEntry_key_tag          1
 #define eCAL_pb_Topic_AttrEntry_value_tag        2
 
@@ -87,8 +87,8 @@ X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
 X(a, CALLBACK, SINGULAR, STRING,   topic_id,          6) \
 X(a, CALLBACK, SINGULAR, STRING,   topic_name,        7) \
 X(a, CALLBACK, SINGULAR, STRING,   direction,         8) \
-X(a, CALLBACK, REPEATED, MESSAGE,  tlayer,           12) \
-X(a, STATIC,   SINGULAR, INT32,    tsize,            13) \
+X(a, CALLBACK, REPEATED, MESSAGE,  transport_layer,  12) \
+X(a, STATIC,   SINGULAR, INT32,    topic_size,       13) \
 X(a, STATIC,   SINGULAR, INT32,    connections_loc,  16) \
 X(a, STATIC,   SINGULAR, INT32,    connections_ext,  17) \
 X(a, STATIC,   SINGULAR, INT32,    message_drops,    18) \
@@ -97,12 +97,12 @@ X(a, STATIC,   SINGULAR, INT64,    dclock,           20) \
 X(a, STATIC,   SINGULAR, INT32,    dfreq,            21) \
 X(a, CALLBACK, REPEATED, MESSAGE,  attr,             27) \
 X(a, CALLBACK, SINGULAR, STRING,   shm_transport_domain,  28) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  tdatatype,        30)
+X(a, STATIC,   OPTIONAL, MESSAGE,  datatype_information,  30)
 #define eCAL_pb_Topic_CALLBACK pb_default_field_callback
 #define eCAL_pb_Topic_DEFAULT NULL
-#define eCAL_pb_Topic_tlayer_MSGTYPE eCAL_pb_TLayer
+#define eCAL_pb_Topic_transport_layer_MSGTYPE eCAL_pb_TransportLayer
 #define eCAL_pb_Topic_attr_MSGTYPE eCAL_pb_Topic_AttrEntry
-#define eCAL_pb_Topic_tdatatype_MSGTYPE eCAL_pb_DataTypeInformation
+#define eCAL_pb_Topic_datatype_information_MSGTYPE eCAL_pb_DataTypeInformation
 
 #define eCAL_pb_Topic_AttrEntry_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   key,               1) \

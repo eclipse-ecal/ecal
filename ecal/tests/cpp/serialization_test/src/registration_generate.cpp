@@ -109,10 +109,10 @@ namespace eCAL
       topic.unit_name                = GenerateString(5);
       topic.topic_name                = GenerateString(8);
       topic.direction            = GenerateString(5);
-      topic.tdatatype            = GenerateDataTypeInformation();
-      topic.tlayer.push_back(GenerateTLayer());
-      topic.tlayer.push_back(GenerateTLayer());
-      topic.tsize                = rand() % 1000;
+      topic.datatype_information            = GenerateDataTypeInformation();
+      topic.transport_layer.push_back(GenerateTLayer());
+      topic.transport_layer.push_back(GenerateTLayer());
+      topic.topic_size                = rand() % 1000;
       topic.connections_loc      = rand() % 50;
       topic.connections_ext      = rand() % 50;
       topic.message_drops        = rand() % 10;

@@ -969,17 +969,17 @@ namespace
       val = Py_BuildValue("s", topic.direction.c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.tdatatype.name.c_str());
+      val = Py_BuildValue("s", topic.datatype_information.name.c_str());
       PyDict_SetItemString(topicDict, "tdatatype_name", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.tdatatype.encoding.c_str());
+      val = Py_BuildValue("s", topic.datatype_information.encoding.c_str());
       PyDict_SetItemString(topicDict, "tdatatype_encoding", val); Py_DECREF(val);
 
-      val = Py_BuildValue("y#", topic.tdatatype.descriptor.c_str(), topic.tdatatype.descriptor.length());
+      val = Py_BuildValue("y#", topic.datatype_information.descriptor.c_str(), topic.datatype_information.descriptor.length());
       PyDict_SetItemString(topicDict, "tdatatype_descriptor", val); Py_DECREF(val);
 
       PyObject* layerList = PyList_New(0);
-      for (auto layer : topic.tlayer)
+      for (auto layer : topic.transport_layer)
       {
         PyObject* layerDict = PyDict_New();
         PyList_Append(layerList, layerDict); Py_DECREF(layerDict);
@@ -1009,8 +1009,8 @@ namespace
       }
       PyDict_SetItemString(topicDict, "layer", layerList); Py_DECREF(layerList);
 
-      val = Py_BuildValue("i", topic.tsize);
-      PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
+      val = Py_BuildValue("i", topic.topic_size);
+      PyDict_SetItemString(topicDict, "topic_size", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.connections_loc);
       PyDict_SetItemString(topicDict, "connections_loc", val); Py_DECREF(val);

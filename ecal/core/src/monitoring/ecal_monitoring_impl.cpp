@@ -142,11 +142,11 @@ namespace eCAL
     const auto& sample_topic = sample_.topic;
     const int          process_id = sample_.identifier.process_id;
     const std::string& topic_name = sample_topic.topic_name;
-    const int32_t      topic_size = sample_topic.tsize;
+    const int32_t      topic_size = sample_topic.topic_size;
     bool               topic_tlayer_ecal_udp(false);
     bool               topic_tlayer_ecal_shm(false);
     bool               topic_tlayer_ecal_tcp(false);
-    for (const auto& layer : sample_topic.tlayer)
+    for (const auto& layer : sample_topic.transport_layer)
     {
       topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.active;
       topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.active;
@@ -186,9 +186,9 @@ namespace eCAL
       default:
         break;
         }
-      std::string topic_datatype_encoding = sample_topic.tdatatype.encoding;
-      std::string topic_datatype_name     = sample_topic.tdatatype.name;
-      std::string topic_datatype_desc     = sample_topic.tdatatype.descriptor;
+      std::string topic_datatype_encoding = sample_topic.datatype_information.encoding;
+      std::string topic_datatype_name     = sample_topic.datatype_information.name;
+      std::string topic_datatype_desc     = sample_topic.datatype_information.descriptor;
       auto        attr                    = sample_topic.attr;
 
       // try to get topic info
@@ -207,38 +207,38 @@ namespace eCAL
 
       // update flexible content
       TopicInfo.registration_clock++;
-      TopicInfo.tdatatype.encoding   = std::move(topic_datatype_encoding);
-      TopicInfo.tdatatype.name       = std::move(topic_datatype_name);
-      TopicInfo.tdatatype.descriptor = std::move(topic_datatype_desc);
+      TopicInfo.datatype_information.encoding   = std::move(topic_datatype_encoding);
+      TopicInfo.datatype_information.name       = std::move(topic_datatype_name);
+      TopicInfo.datatype_information.descriptor = std::move(topic_datatype_desc);
 
       // attributes
       TopicInfo.attr = std::map<std::string, std::string>{attr.begin(), attr.end()};
 
       // layer
       TopicInfo.transport_layer.clear();
-      // tlayer udp_mc
+      // transport_layer udp_mc
       {
-        eCAL::Monitoring::STransportLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::eTransportLayerType::udp_mc;
-        tlayer.active = topic_tlayer_ecal_udp;
-        TopicInfo.transport_layer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::udp_mc;
+        transport_layer.active = topic_tlayer_ecal_udp;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
-      // tlayer shm
+      // transport_layer shm
       {
-        eCAL::Monitoring::STransportLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::eTransportLayerType::shm;
-        tlayer.active = topic_tlayer_ecal_shm;
-        TopicInfo.transport_layer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::shm;
+        transport_layer.active = topic_tlayer_ecal_shm;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
-      // tlayer tcp
+      // transport_layer tcp
       {
-        eCAL::Monitoring::STransportLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::eTransportLayerType::tcp;
-        tlayer.active = topic_tlayer_ecal_tcp;
-        TopicInfo.transport_layer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::tcp;
+        transport_layer.active = topic_tlayer_ecal_tcp;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
 
-      TopicInfo.tsize           = static_cast<int>(topic_size);
+      TopicInfo.topic_size           = static_cast<int>(topic_size);
       TopicInfo.connections_loc = static_cast<int>(connections_loc);
       TopicInfo.connections_ext = static_cast<int>(connections_ext);
       TopicInfo.did             = did;

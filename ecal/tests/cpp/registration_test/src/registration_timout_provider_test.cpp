@@ -68,8 +68,8 @@ void InitializeAllSamples()
   pub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_publisher;
   pub_foo_process_a_register_1.topic.registration_clock = 1;
   pub_foo_process_a_register_1.topic.direction = "publisher";
-  pub_foo_process_a_register_1.topic.tdatatype = { "a", "b", "c" };
-  pub_foo_process_a_register_1.topic.tsize = 100;
+  pub_foo_process_a_register_1.topic.datatype_information = { "a", "b", "c" };
+  pub_foo_process_a_register_1.topic.topic_size = 100;
   pub_foo_process_a_register_1.topic.connections_loc = 2;
   pub_foo_process_a_register_1.topic.connections_ext = 2;
   pub_foo_process_a_register_1.topic.message_drops = 0;
@@ -93,8 +93,8 @@ void InitializeAllSamples()
   sub_foo_process_a_register_1.cmd_type = eCAL::bct_reg_subscriber;
   sub_foo_process_a_register_1.topic.registration_clock = 1;
   sub_foo_process_a_register_1.topic.direction = "subscriber";
-  sub_foo_process_a_register_1.topic.tdatatype = { "a", "b", "c" };
-  sub_foo_process_a_register_1.topic.tsize = 100;
+  sub_foo_process_a_register_1.topic.datatype_information = { "a", "b", "c" };
+  sub_foo_process_a_register_1.topic.topic_size = 100;
   sub_foo_process_a_register_1.topic.connections_loc = 2;
   sub_foo_process_a_register_1.topic.connections_ext = 2;
   sub_foo_process_a_register_1.topic.message_drops = 0;
@@ -118,8 +118,8 @@ void InitializeAllSamples()
   sub_foo_process_b_register_1.cmd_type = eCAL::bct_reg_subscriber;
   sub_foo_process_b_register_1.topic.registration_clock = 1;
   sub_foo_process_b_register_1.topic.direction = "subscriber";
-  sub_foo_process_b_register_1.topic.tdatatype = { "a", "b", "c" };
-  sub_foo_process_b_register_1.topic.tsize = 100;
+  sub_foo_process_b_register_1.topic.datatype_information = { "a", "b", "c" };
+  sub_foo_process_b_register_1.topic.topic_size = 100;
   sub_foo_process_b_register_1.topic.connections_loc = 2;
   sub_foo_process_b_register_1.topic.connections_ext = 2;
   sub_foo_process_b_register_1.topic.message_drops = 0;

@@ -265,10 +265,10 @@ namespace eCAL
       std::string                         unit_name;                        // unit name
       std::string                         topic_name;                        // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
-      SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
+      SDataTypeInformation                datatype_information;                    // topic datatype information (encoding & type & description)
 
-      Util::CExpandingVector<TLayer>      tlayer;                       // active topic transport layers and its specific parameter
-      int32_t                             tsize = 0;                    // topic size
+      Util::CExpandingVector<TLayer>      transport_layer;                       // active topic transport layers and its specific parameter
+      int32_t                             topic_size = 0;                    // topic size
 
       int32_t                             connections_loc = 0;          // number of local connected entities
       int32_t                             connections_ext = 0;          // number of external connected entities
@@ -287,9 +287,9 @@ namespace eCAL
           unit_name == other.unit_name &&
           topic_name == other.topic_name &&
           direction == other.direction &&
-          tdatatype == other.tdatatype &&
-          tlayer == other.tlayer &&
-          tsize == other.tsize &&
+          datatype_information == other.datatype_information &&
+          transport_layer == other.transport_layer &&
+          topic_size == other.topic_size &&
           connections_loc == other.connections_loc &&
           connections_ext == other.connections_ext &&
           message_drops == other.message_drops &&
@@ -307,10 +307,10 @@ namespace eCAL
         unit_name.clear();
         topic_name.clear();
         direction.clear();
-        tdatatype.clear();
+        datatype_information.clear();
 
-        tlayer.clear();
-        tsize = 0;
+        transport_layer.clear();
+        topic_size = 0;
 
         connections_loc = 0;
         connections_ext = 0;

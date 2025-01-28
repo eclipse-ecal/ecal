@@ -298,7 +298,7 @@ void ProcBandwidth(const std::string& topic_name)
       found = true;
 
       std::string unit = "Byte/s";
-      auto bw = topic.tsize() * (topic.dfreq()/1000.0);
+      auto bw = topic.topic_size() * (topic.dfreq()/1000.0);
       if (bw > _10MB)
       {
         bw /= _1MB;
@@ -393,12 +393,12 @@ void ProcFind(const std::string& topic_type_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tdatatype().name() != topic_type_name) continue;
+      if(topic.datatype_information().name() != topic_type_name) continue;
 
       // print topic details
       std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
+      std::cout << "ttype name   : " << topic.datatype_information().name()     << std::endl;   // topic type name
+      std::cout << "ttype enc.   : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
@@ -476,13 +476,13 @@ void ProcInfo(const std::string& topic_name)
 
       // print topic details
       std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
+      std::cout << "ttype name   : " << topic.datatype_information().name()     << std::endl;   // topic type name
+      std::cout << "ttype enc.   : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
       std::cout << "topic_id          : " << topic.topic_id()                  << std::endl;   // topic id
-      std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
+      std::cout << "topic_size        : " << topic.topic_size()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
       std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)
       std::cout << std::endl;
@@ -520,13 +520,13 @@ void ProcList()
     {
       // print topic details
       std::cout << "topic_name        : " << topic.topic_name()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
+      std::cout << "ttype name   : " << topic.datatype_information().name()     << std::endl;   // topic type name
+      std::cout << "ttype enc.   : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
       std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
       std::cout << "host_name    : " << topic.host_name()            << std::endl;   // host name
       std::cout << "process_id          : " << topic.process_id()                  << std::endl;   // process id
       std::cout << "topic_id          : " << topic.topic_id()                  << std::endl;   // topic id
-      std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
+      std::cout << "topic_size        : " << topic.topic_size()                << std::endl;   // topic size
       std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
       std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)
       std::cout << std::endl;
@@ -588,7 +588,7 @@ void ProcType(const std::string& topic_name)
     // check topic name
     if(topic.topic_name() != topic_name) continue;
 
-    std::string ttype_name = topic.tdatatype().name();
+    std::string ttype_name = topic.datatype_information().name();
     if(ttype_name.empty()) ttype_name = "\"\"";
 
     // print topic type
@@ -622,7 +622,7 @@ void ProcDesc(const std::string& topic_name_)
     // check topic name
     if(topic.topic_name() != topic_name_) continue;
 
-    std::string ttype_desc = topic.tdatatype().desc();
+    std::string ttype_desc = topic.datatype_information().desc();
     if (ttype_desc.empty()) ttype_desc = "\"\"";
 
     // print topic description

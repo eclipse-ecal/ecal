@@ -168,16 +168,16 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.topic_name, registration_topic_.topic_name);
     // direction
     eCAL::nanopb::encode_string(pb_topic_.direction, registration_topic_.direction);
-    // tdatatype
-    pb_topic_.has_tdatatype = true;
-    // tdatatype.name
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.name, registration_topic_.tdatatype.name);
-    // tdatatype.encoding
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.encoding, registration_topic_.tdatatype.encoding);
-    // tdatatype.desc
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.desc, registration_topic_.tdatatype.descriptor);
-    // tsize
-    pb_topic_.tsize = registration_topic_.tsize;
+    // datatype_information
+    pb_topic_.has_datatype_information = true;
+    // datatype_information.name
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.name, registration_topic_.datatype_information.name);
+    // datatype_information.encoding
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.encoding, registration_topic_.datatype_information.encoding);
+    // datatype_information.descriptor
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.descriptor, registration_topic_.datatype_information.descriptor);
+    // topic_size
+    pb_topic_.topic_size = registration_topic_.topic_size;
     // connections_loc
     pb_topic_.connections_loc = registration_topic_.connections_loc;
     // connections_ext
@@ -190,8 +190,8 @@ namespace
     pb_topic_.dclock = registration_topic_.dclock;
     // dfreq
     pb_topic_.dfreq = registration_topic_.dfreq;
-    // tlayer
-    eCAL::nanopb::encode_registration_layer(pb_topic_.tlayer, registration_topic_.tlayer);
+    // transport_layer
+    eCAL::nanopb::encode_registration_layer(pb_topic_.transport_layer, registration_topic_.transport_layer);
     // attr
     eCAL::nanopb::encode_map(pb_topic_.attr, registration_topic_.attr);
   }
@@ -384,14 +384,14 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.topic_name, registration_.topic.topic_name);
     // direction
     eCAL::nanopb::decode_string(pb_sample_.topic.direction, registration_.topic.direction);
-    // tdatatype.name
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.name, registration_.topic.tdatatype.name);
-    // tdatatype.encoding
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.encoding, registration_.topic.tdatatype.encoding);
-    // tdatatype.desc
-    eCAL::nanopb::decode_string(pb_sample_.topic.tdatatype.desc, registration_.topic.tdatatype.descriptor);
-    // tlayer
-    eCAL::nanopb::decode_registration_layer(pb_sample_.topic.tlayer, registration_.topic.tlayer);
+    // datatype_information.name
+    eCAL::nanopb::decode_string(pb_sample_.topic.datatype_information.name, registration_.topic.datatype_information.name);
+    // datatype_information.encoding
+    eCAL::nanopb::decode_string(pb_sample_.topic.datatype_information.encoding, registration_.topic.datatype_information.encoding);
+    // datatype_information.descriptor
+    eCAL::nanopb::decode_string(pb_sample_.topic.datatype_information.descriptor, registration_.topic.datatype_information.descriptor);
+    // transport_layer
+    eCAL::nanopb::decode_registration_layer(pb_sample_.topic.transport_layer, registration_.topic.transport_layer);
     // attr
     eCAL::nanopb::decode_map(pb_sample_.topic.attr, registration_.topic.attr);
   }
@@ -452,8 +452,8 @@ namespace
       registration_.topic.registration_clock = pb_sample_.topic.registration_clock;
       // process_id
       registration_.identifier.process_id = pb_sample_.topic.process_id;
-      // tsize
-      registration_.topic.tsize = pb_sample_.topic.tsize;
+      // topic_size
+      registration_.topic.topic_size = pb_sample_.topic.topic_size;
       // connections_loc
       registration_.topic.connections_loc = pb_sample_.topic.connections_loc;
       // connections_ext

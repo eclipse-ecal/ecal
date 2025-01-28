@@ -40,10 +40,10 @@ message Topic                                      // eCAL topic
   string              direction             =  8;  // direction (publisher, subscriber)
                                                    // 9 = topic type + topic encoding (deprecated)
                                                    // 10 = topic description (protocol descriptor) (deprecated)
-  DataTypeInformation tdatatype             = 30;  // topic datatype information (encoding & type & description)
+  DataTypeInformation datatype_information  = 30;  // topic datatype information (encoding & type & description)
 
-  repeated TLayer     tlayer                = 12;  // active topic transport layers and it's specific parameter
-  int32               tsize                 = 13;  // topic size
+  repeated TransportLayer transport_layer       = 12;  // active topic transport layers and it's specific parameter
+  int32                   topic_size                 = 13;  // topic size
                       
   int32               connections_loc       = 16;  // number of local connected entities
   int32               connections_ext       = 17;  // number of external connected entities

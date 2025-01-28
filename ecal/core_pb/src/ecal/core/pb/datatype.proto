@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package eCAL.pb;
 
 message DataTypeInformation
 {
-  string name      = 1;  // name of the datatype
-  string encoding  = 2;  // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
-  bytes  desc      = 3;  // descriptor information of the datatype (necessary for reflection)
+  string name                   = 1;  // name of the datatype
+  string encoding               = 2;  // encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+  bytes  descriptor_information = 3;  // descriptor information of the datatype (necessary for reflection)
 }

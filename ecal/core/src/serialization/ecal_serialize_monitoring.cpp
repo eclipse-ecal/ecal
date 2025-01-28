@@ -125,12 +125,12 @@ namespace
         return false;
       }
 
-      eCAL_pb_TLayer pb_layer = eCAL_pb_TLayer_init_default;
-      pb_layer.type = static_cast<eCAL_pb_eTLayerType>(layer.type);
+      eCAL_pb_TransportLayer pb_layer = eCAL_pb_TransportLayer_init_default;
+      pb_layer.type = static_cast<eCAL_pb_eTransportLayerType>(layer.type);
       pb_layer.version = layer.version;
       pb_layer.active = layer.active;
 
-      if (!pb_encode_submessage(stream, eCAL_pb_TLayer_fields, &pb_layer))
+      if (!pb_encode_submessage(stream, eCAL_pb_TransportLayer_fields, &pb_layer))
       {
         return false;
       }
@@ -165,16 +165,16 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.topic_name, topic_.topic_name);
     // direction
     eCAL::nanopb::encode_string(pb_topic_.direction, topic_.direction);
-    // tdatatype
-    pb_topic_.has_tdatatype = true;
-    // tdatatype.name
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.name, topic_.tdatatype.name);
-    // tdatatype.encoding
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.encoding, topic_.tdatatype.encoding);
-    // tdatatype.desc
-    eCAL::nanopb::encode_string(pb_topic_.tdatatype.desc, topic_.tdatatype.descriptor);
-    // tsize
-    pb_topic_.tsize = topic_.tsize;
+    // datatype_information
+    pb_topic_.has_datatype_information = true;
+    // datatype_information.name
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.name, topic_.datatype_information.name);
+    // datatype_information.encoding
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.encoding, topic_.datatype_information.encoding);
+    // datatype_information.descriptor
+    eCAL::nanopb::encode_string(pb_topic_.datatype_information.descriptor, topic_.datatype_information.descriptor);
+    // topic_size
+    pb_topic_.topic_size = topic_.topic_size;
     // connections_loc
     pb_topic_.connections_loc = topic_.connections_loc;
     // connections_ext
@@ -187,8 +187,8 @@ namespace
     pb_topic_.dclock = topic_.dclock;
     // dfreq
     pb_topic_.dfreq = topic_.dfreq;
-    // tlayer
-    encode_mon_registration_layer(pb_topic_.tlayer, topic_.transport_layer);
+    // transport_layer
+    encode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
     // attr
     eCAL::nanopb::encode_map(pb_topic_.attr, topic_.attr);
   }
@@ -270,12 +270,12 @@ namespace
       pb_method.has_req_datatype = true;
       eCAL::nanopb::encode_string(pb_method.req_datatype.name, method.req_datatype.name);
       eCAL::nanopb::encode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-      eCAL::nanopb::encode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+      eCAL::nanopb::encode_string(pb_method.req_datatype.descriptor, method.req_datatype.descriptor);
 
       pb_method.has_resp_datatype = true;
       eCAL::nanopb::encode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
       eCAL::nanopb::encode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-      eCAL::nanopb::encode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
+      eCAL::nanopb::encode_string(pb_method.resp_datatype.descriptor, method.resp_datatype.descriptor);
 
       pb_method.call_count = method.call_count;
 
@@ -572,10 +572,10 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    eCAL_pb_TLayer           pb_layer = eCAL_pb_TLayer_init_default;
+    eCAL_pb_TransportLayer           pb_layer = eCAL_pb_TransportLayer_init_default;
     eCAL::Monitoring::STransportLayer layer{};
 
-    if (!pb_decode(stream, eCAL_pb_TLayer_fields, &pb_layer))
+    if (!pb_decode(stream, eCAL_pb_TransportLayer_fields, &pb_layer))
     {
       return false;
     }
@@ -620,14 +620,14 @@ namespace
     eCAL::nanopb::decode_string(pb_topic_.topic_name, topic_.topic_name);
     // direction
     eCAL::nanopb::decode_string(pb_topic_.direction, topic_.direction);
-    // tdatatype.name
-    eCAL::nanopb::decode_string(pb_topic_.tdatatype.name, topic_.tdatatype.name);
-    // tdatatype.encoding
-    eCAL::nanopb::decode_string(pb_topic_.tdatatype.encoding, topic_.tdatatype.encoding);
-    // tdatatype.desc
-    eCAL::nanopb::decode_string(pb_topic_.tdatatype.desc, topic_.tdatatype.descriptor);
-    // tlayer
-    decode_mon_registration_layer(pb_topic_.tlayer, topic_.transport_layer);
+    // datatype_information.name
+    eCAL::nanopb::decode_string(pb_topic_.datatype_information.name, topic_.datatype_information.name);
+    // datatype_information.encoding
+    eCAL::nanopb::decode_string(pb_topic_.datatype_information.encoding, topic_.datatype_information.encoding);
+    // datatype_information.descriptor
+    eCAL::nanopb::decode_string(pb_topic_.datatype_information.descriptor, topic_.datatype_information.descriptor);
+    // transport_layer
+    decode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
     // attr
     eCAL::nanopb::decode_map(pb_topic_.attr, topic_.attr);
   }
@@ -641,8 +641,8 @@ namespace
     topic_.registration_clock = pb_topic_.registration_clock;
     // process_id
     topic_.process_id = pb_topic_.process_id;
-    // tsize
-    topic_.tsize = pb_topic_.tsize;
+    // topic_size
+    topic_.topic_size = pb_topic_.topic_size;
     // connections_loc
     topic_.connections_loc = pb_topic_.connections_loc;
     // connections_ext
@@ -707,11 +707,11 @@ namespace
 
     eCAL::nanopb::decode_string(pb_method.req_datatype.name, method.req_datatype.name);
     eCAL::nanopb::decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-    eCAL::nanopb::decode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+    eCAL::nanopb::decode_string(pb_method.req_datatype.descriptor, method.req_datatype.descriptor);
 
     eCAL::nanopb::decode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
     eCAL::nanopb::decode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-    eCAL::nanopb::decode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
+    eCAL::nanopb::decode_string(pb_method.resp_datatype.descriptor, method.resp_datatype.descriptor);
 
     // decode it
     if (!pb_decode(stream, eCAL_pb_Method_fields, &pb_method))

@@ -82,29 +82,29 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TENCODING)
     {
-      return topic_.tdatatype().encoding().c_str();
+      return topic_.datatype_information().encoding().c_str();
     }
     else if (column == Columns::TTYPE)
     {
-      return topic_.tdatatype().name().c_str();
+      return topic_.datatype_information().name().c_str();
     }
     else if (column == Columns::TDESC)
     {
-      return topic_.tdatatype().desc().c_str();
+      return topic_.datatype_information().desc().c_str();
     }
-    else if (column == Columns::TLAYER)
+    else if (column == Columns::TRANSPORT_LAYER)
     {
       QList<QVariant> layers;
-      auto layer_pb = topic_.tlayer();
+      auto layer_pb = topic_.transport_layer();
       for (const auto& layer : layer_pb)
       {
         layers.push_back(layer.type());
       }
       return layers;
     }
-    else if (column == Columns::TSIZE)
+    else if (column == Columns::TOPIC_SIZE)
     {
-      return topic_.tsize();
+      return topic_.topic_size();
     }
     else if (column == Columns::CONNECTIONS_LOC)
     {
@@ -147,7 +147,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.tdatatype().desc();
+      const std::string& raw_data = topic_.datatype_information().desc();
 
       if (!raw_data.empty())
       {
@@ -168,11 +168,11 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
         return "None";
       }
     }
-    else if (column == Columns::TLAYER)
+    else if (column == Columns::TRANSPORT_LAYER)
     {
       QString layer_string;
 
-      auto layer_pb = topic_.tlayer();
+      auto layer_pb = topic_.transport_layer();
 
       for (const auto& layer : layer_pb)
       {
@@ -224,7 +224,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.tdatatype().desc();
+      const std::string& raw_data = topic_.datatype_information().desc();
       return static_cast<int>(raw_data.size());
     }
 
@@ -256,7 +256,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if ((column == Columns::TOPIC_ID)
       || (column == Columns::PROCESS_ID)
       || (column == Columns::REGISTRATION_CLOCK)
-      || (column == Columns::TSIZE)
+      || (column == Columns::TOPIC_SIZE)
       || (column == Columns::CONNECTIONS_LOC)
       || (column == Columns::CONNECTIONS_EXT)
       || (column == Columns::MESSAGE_DROPS)
@@ -317,7 +317,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.tdatatype().desc();
+      const std::string& raw_data = topic_.datatype_information().desc();
       if (raw_data.empty())
       {
         QFont font;

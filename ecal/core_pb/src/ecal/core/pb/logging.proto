@@ -25,9 +25,9 @@ message LogMessage                                // eCAL log message
 {
   int64                 time           =  1;      // time
   string                host_name      =  2;      // host name
-  int32                 process_id            =  3;      // process id
-  string                process_name          =  4;      // process name
-  string                unit_name          =  5;      // unit name
+  int32                 process_id     =  3;      // process id
+  string                process_name   =  4;      // process name
+  string                unit_name      =  5;      // unit name
   int32                 level          =  6;      // message level
   string                content        =  7;      // message content
 }

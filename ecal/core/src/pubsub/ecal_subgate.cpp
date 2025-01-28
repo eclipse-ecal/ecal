@@ -216,10 +216,10 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     CSubscriberImpl::SLayerStates layer_states;
-    for (const auto& layer : ecal_topic.tlayer)
+    for (const auto& layer : ecal_topic.transport_layer)
     {
       // transport layer versions 0 and 1 did not support dynamic layer enable feature
       // so we set assume layer is enabled if we receive a registration in this case
@@ -248,9 +248,9 @@ namespace eCAL
     for (auto iter = res.first; iter != res.second; ++iter)
     {
       // apply layer specific parameter
-      for (const auto& tlayer : ecal_sample_.topic.tlayer)
+      for (const auto& transport_layer : ecal_sample_.topic.transport_layer)
       {
-        iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
+        iter->second->ApplyLayerParameter(publication_info, transport_layer.type, transport_layer.par_layer);
       }
       iter->second->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
     }
@@ -267,7 +267,7 @@ namespace eCAL
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     // unregister publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);

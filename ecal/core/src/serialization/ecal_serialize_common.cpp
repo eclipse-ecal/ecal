@@ -301,8 +301,8 @@ namespace eCAL
           return false;
         }
 
-        eCAL_pb_TLayer pb_layer = eCAL_pb_TLayer_init_default;
-        pb_layer.type    = static_cast<eCAL_pb_eTLayerType>(layer.type);
+        eCAL_pb_TransportLayer pb_layer = eCAL_pb_TransportLayer_init_default;
+        pb_layer.type    = static_cast<eCAL_pb_eTransportLayerType>(layer.type);
         pb_layer.version = layer.version;
         pb_layer.enabled = layer.enabled;
         pb_layer.active  = layer.active;
@@ -322,7 +322,7 @@ namespace eCAL
         pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.encode = &encode_string_vector_field; // NOLINT(*-pro-type-union-access)
         pb_layer.par_layer.layer_par_shm.memory_file_list.arg          = (void*)(&layer.par_layer.layer_par_shm.memory_file_list);
 
-        if (!pb_encode_submessage(stream, eCAL_pb_TLayer_fields, &pb_layer))
+        if (!pb_encode_submessage(stream, eCAL_pb_TransportLayer_fields, &pb_layer))
         {
           return false;
         }
@@ -342,7 +342,7 @@ namespace eCAL
       if (arg == nullptr)  return false;
       if (*arg == nullptr) return false;
 
-      eCAL_pb_TLayer             pb_layer = eCAL_pb_TLayer_init_default;
+      eCAL_pb_TransportLayer             pb_layer = eCAL_pb_TransportLayer_init_default;
       auto* tgt_vector = static_cast<Util::CExpandingVector<eCAL::Registration::TLayer>*>(*arg);
       auto& layer = tgt_vector->push_back();
 
@@ -350,7 +350,7 @@ namespace eCAL
       pb_layer.par_layer.layer_par_shm.memory_file_list.funcs.decode = &decode_string_vector_field; // NOLINT(*-pro-type-union-access)
       pb_layer.par_layer.layer_par_shm.memory_file_list.arg          = (void*)(&layer.par_layer.layer_par_shm.memory_file_list);
 
-      if (!pb_decode(stream, eCAL_pb_TLayer_fields, &pb_layer))
+      if (!pb_decode(stream, eCAL_pb_TransportLayer_fields, &pb_layer))
       {
         return false;
       }
@@ -400,12 +400,12 @@ namespace eCAL
         pb_method.has_req_datatype = true;
         encode_string(pb_method.req_datatype.name, method.req_datatype.name);
         encode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-        encode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+        encode_string(pb_method.req_datatype.descriptor, method.req_datatype.descriptor);
 
         pb_method.has_resp_datatype = true;
         encode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
         encode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-        encode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
+        encode_string(pb_method.resp_datatype.descriptor, method.resp_datatype.descriptor);
 
         pb_method.call_count = method.call_count;
 
@@ -442,11 +442,11 @@ namespace eCAL
 
       decode_string(pb_method.req_datatype.name, method.req_datatype.name);
       decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-      decode_string(pb_method.req_datatype.desc, method.req_datatype.descriptor);
+      decode_string(pb_method.req_datatype.descriptor, method.req_datatype.descriptor);
 
       decode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
       decode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-      decode_string(pb_method.resp_datatype.desc, method.resp_datatype.descriptor);
+      decode_string(pb_method.resp_datatype.descriptor, method.resp_datatype.descriptor);
 
       // decode it
       if (!pb_decode(stream, eCAL_pb_Method_fields, &pb_method))
