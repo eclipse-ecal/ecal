@@ -21,7 +21,7 @@
 
 #include <QAbstractItemModel>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 #include <ecal_play_scenario.h>
 

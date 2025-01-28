@@ -1,9 +1,8 @@
 #include "default_configuration.h"
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 
 #include <string>
-#include <fstream>
 
 namespace 
 {
@@ -11,19 +10,19 @@ namespace
     return std::string("\"") + str_ + std::string("\"");
   }
 
-  std::string logToArray(const eCAL_Logging_Filter& filter_)
+  std::string logToArray(const eCAL::Logging::Filter& filter_)
   {
     std::string result = "[";    
-    if ((filter_ & log_level_info) != 0)    result += "\"info\", ";
-    if ((filter_ & log_level_warning) != 0) result += "\"warning\", ";
-    if ((filter_ & log_level_error) != 0)   result += "\"error\", ";
-    if ((filter_ & log_level_fatal) != 0)   result += "\"fatal\", ";
-    if ((filter_ & log_level_debug1) != 0)  result += "\"debug1\", ";
-    if ((filter_ & log_level_debug2) != 0)  result += "\"debug2\", ";
-    if ((filter_ & log_level_debug3) != 0)  result += "\"debug3\", ";
-    if ((filter_ & log_level_debug4) != 0)  result += "\"debug4\", ";
+    if ((filter_ & eCAL::Logging::log_level_info) != 0)    result += "\"info\", ";
+    if ((filter_ & eCAL::Logging::log_level_warning) != 0) result += "\"warning\", ";
+    if ((filter_ & eCAL::Logging::log_level_error) != 0)   result += "\"error\", ";
+    if ((filter_ & eCAL::Logging::log_level_fatal) != 0)   result += "\"fatal\", ";
+    if ((filter_ & eCAL::Logging::log_level_debug1) != 0)  result += "\"debug1\", ";
+    if ((filter_ & eCAL::Logging::log_level_debug2) != 0)  result += "\"debug2\", ";
+    if ((filter_ & eCAL::Logging::log_level_debug3) != 0)  result += "\"debug3\", ";
+    if ((filter_ & eCAL::Logging::log_level_debug4) != 0)  result += "\"debug4\", ";
     
-    if (result.size() == 1 && (filter_ & log_level_all) != 0)
+    if (result.size() == 1 && (filter_ & eCAL::Logging::log_level_all) != 0)
     {
       result += "\"all\", ";
     }
@@ -140,9 +139,9 @@ namespace eCAL
       ss << R"(  registration_timeout: )"                            << config_.registration.registration_timeout                   << "\n";
       ss << R"(  # Enable to receive registration information on the same local machine)"                                           << "\n";
       ss << R"(  loopback: )"                                        << config_.registration.loopback                               << "\n";
-      ss << R"(  # Host group name that enables interprocess mechanisms across (virtual))"                                          << "\n";
+      ss << R"(  # SHM transport domain that enables interprocess mechanisms across (virtual))"                                     << "\n";
       ss << R"(  # host borders (e.g, Docker); by default equivalent to local host name)"                                           << "\n";
-      ss << R"(  host_group_name: )"                                 << quoteString(config_.registration.host_group_name)           << "\n";
+      ss << R"(  shm_transport_domain: )"                            << quoteString(config_.registration.shm_transport_domain)      << "\n";
       ss << R"(  # true  = all eCAL components communicate over network boundaries)"                                                << "\n";
       ss << R"(  # false = local host only communication (Default: false))"                                                         << "\n";
       ss << R"(  network_enabled: )"                                 << config_.registration.network_enabled                        << "\n";
@@ -158,14 +157,6 @@ namespace eCAL
       ss << R"(    udp:)"                                                                                                           << "\n";
       ss << R"(      enable: )"                                      << config_.registration.layer.udp.enable                       << "\n";
       ss << R"(      port: )"                                        << config_.registration.layer.udp.port                         << "\n";
-      ss << R"()"                                                                                                                   << "\n";
-      ss << R"()"                                                                                                                   << "\n";
-      ss << R"(# Monitoring configuration)"                                                                                         << "\n";
-      ss << R"(monitoring:)"                                                                                                        << "\n";
-      ss << R"(  # Topics blacklist as regular expression (will not be monitored))"                                                 << "\n";
-      ss << R"(  filter_excl: )"                                     << quoteString(config_.monitoring.filter_excl)                 << "\n";
-      ss << R"(  # Topics whitelist as regular expression (will be monitored only) (Default: ""))"                                  << "\n";
-      ss << R"(  filter_incl: )"                                     << quoteString(config_.monitoring.filter_incl)                 << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Transport layer configuration)"                                                                                    << "\n";
@@ -244,10 +235,6 @@ namespace eCAL
       ss << R"(      # Enable layer)"                                                                                               << "\n";
       ss << R"(      enable: )"                                      << config_.publisher.layer.shm.enable                          << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(  # Share topic type via registration)"                                                                              << "\n";
-      ss << R"(  share_topic_type: )"                                << config_.publisher.share_topic_type                          << "\n";
-      ss << R"(  # Share topic description via registration)"                                                                       << "\n";
-      ss << R"(  share_topic_description: )"                         << config_.publisher.share_topic_description                   << "\n";
       ss << R"(  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP))"                                         << "\n";
       ss << R"(  priority_local: )"                                  << quoteString(config_.publisher.layer_priority_local)         << "\n";
       ss << R"(  # Priority list for layer usage in cloud mode (Default: UDP > TCP))"                                               << "\n";
@@ -348,17 +335,25 @@ namespace eCAL
       return ss;
     }
 
-    bool dumpConfigToFile(const eCAL::Configuration& config_, const std::string& file_path_)
+    std::stringstream getTimeConfigAsYamlSS()
     {
-      std::ofstream file(file_path_);
-      if (!file.is_open())
-      {
-        return false;
-      }
+      std::stringstream ss;
+      ss << std::boolalpha;
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(# ecaltime-linuxptp Settings)"                                                                                                       << "\n";
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(#)"                                                                                                                                  << "\n";
+      ss << R"(# device = /dev/ptp0                                 The device can be any ptp clock.)"                                              << "\n";
+      ss << R"(#                                                    Alternatively, you can use:)"                                                   << "\n";
+      ss << R"(#                                                      - CLOCK_MONOTONIC    (a steady clock with undefined epoche))"                 << "\n";
+      ss << R"(#                                                      - CLOCK_REALTIME     (the current system time))"                              << "\n";
+      ss << R"(#                                                      - CLOCK_TAI          (Like CLOCK_REALTIME but in International Atomic Time))" << "\n";
+      ss << R"(#)"                                                                                                                                  << "\n";
+      ss << R"(# ---------------------------------------------)"                                                                                    << "\n";
+      ss << R"(linuxptp:)"                                                                                                                          << "\n";
+      ss << R"(  device: "/dev/ptp0")"                                                                                                              << "\n";
 
-      file << getConfigAsYamlSS(config_).str();
-      file.close();
-      return true;
+      return ss;
     }
   }
 }

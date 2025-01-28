@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
  * @brief  synchronized memory file interface
 **/
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 #include "ecal_event.h"
 #include "ecal_memfile_header.h"
@@ -124,7 +124,7 @@ namespace eCAL
     if (file_to_small)
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
+      Logging::Log(Logging::log_level_debug4, m_base_name + "::CSyncMemoryFile::CheckSize - RECREATE");
 #endif
       // estimate size of memory file
       const size_t memfile_size = sizeof(SMemFileHeader) + size_ + static_cast<size_t>((static_cast<float>(m_attr.reserve) / 100.0f) * static_cast<float>(size_));
@@ -143,7 +143,7 @@ namespace eCAL
   {
     if (!m_created)
     {
-      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write - FAILED (m_created == false)");
+      Logging::Log(Logging::log_level_error, m_base_name + "::CSyncMemoryFile::Write - FAILED (m_created == false)");
       return false;
     }
 
@@ -153,7 +153,7 @@ namespace eCAL
 
     // write header and payload into the memory file
 #ifndef NDEBUG
-    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
+    Logging::Log(Logging::log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
 #endif
 
     // create user file header
@@ -181,7 +181,7 @@ namespace eCAL
     if (!write_access)
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED");
+      Logging::Log(Logging::log_level_debug2, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED");
 #endif
 
       // try to recreate the memory file
@@ -192,7 +192,7 @@ namespace eCAL
       // still no chance ? hell .... we give up
       if (!write_access)
       {
-        Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED FINALLY");
+        Logging::Log(Logging::log_level_error, m_base_name + "::CSyncMemoryFile::Write::GetWriteAccess - FAILED FINALLY");
         return false;
       }
     }
@@ -218,12 +218,12 @@ namespace eCAL
     if (written)
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(data_.len) + " Bytes written");
+      Logging::Log(Logging::log_level_debug4, m_base_name + "::CSyncMemoryFile::Write - SUCCESS : " + std::to_string(data_.len) + " Bytes written");
 #endif
     }
     else
     {
-      Logging::Log(log_level_error, m_base_name + "::CSyncMemoryFile::Write - FAILED (written == false)");
+      Logging::Log(Logging::log_level_error, m_base_name + "::CSyncMemoryFile::Write - FAILED (written == false)");
     }
 
     // return success
@@ -257,12 +257,12 @@ namespace eCAL
     // create the memory file
     if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
     {
-      Logging::Log(log_level_error, std::string("CSyncMemoryFile::Create FAILED : ") + m_memfile_name);
+      Logging::Log(Logging::log_level_error, std::string("CSyncMemoryFile::Create FAILED : ") + m_memfile_name);
       return false;
     }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, std::string("CSyncMemoryFile::Create SUCCESS : ") + m_memfile_name);
+    Logging::Log(Logging::log_level_debug2, std::string("CSyncMemoryFile::Create SUCCESS : ") + m_memfile_name);
 #endif
 
     // initialize memory file with empty header
@@ -294,13 +294,13 @@ namespace eCAL
     if (!m_memfile.Destroy(true))
     {
 #ifndef NDEBUG
-      Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - FAILED : ") + m_memfile.Name());
+      Logging::Log(Logging::log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - FAILED : ") + m_memfile.Name());
 #endif
       return false;
     }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
+    Logging::Log(Logging::log_level_debug2, std::string(m_base_name + "::CSyncMemoryFile::Destroy - SUCCESS : ") + m_memfile.Name());
 #endif
     return true;
   }
@@ -392,14 +392,14 @@ namespace eCAL
           // requests that via registration layer again.
           event_handle.second.event_ack_is_invalid = true;
 #ifndef NDEBUG
-          Logging::Log(log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
+          Logging::Log(Logging::log_level_debug2, m_base_name + "::CSyncMemoryFile::SignalWritten - ACK event timeout");
 #endif
         }
       }
     }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
+    Logging::Log(Logging::log_level_debug4, m_base_name + "::CSyncMemoryFile::SignalWritten");
 #endif
   }
 

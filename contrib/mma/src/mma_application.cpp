@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 #include <thread>
 
 #include "ecal/ecal.h"
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 #include "ecal/msg/protobuf/publisher.h"
 
 #include "../include/logger.h"
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
   std::cout << app_version_header << std::endl << ecal_version_header << std::endl << std::endl;
 
   // initialize eCAL API
-  if (eCAL::Initialize(MMA_APPLICATION_NAME, eCAL::Init::Publisher) < 0)
+  if (eCAL::Initialize(MMA_APPLICATION_NAME, eCAL::Init::Publisher))
   {
     std::cout << "eCAL initialization failed !";
     return 1;
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
     Logger::getLogger()->ResumeLogging();
   }
 
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   // create mma agent
   std::cout << std::endl << "Initializing machine monitoring agent ..." << std::endl;

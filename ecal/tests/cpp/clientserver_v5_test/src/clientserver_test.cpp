@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
-#include <ecal/ecal_server_v5.h>
+#include <ecal/v5/ecal_client.h>
+#include <ecal/v5/ecal_server.h>
 
 #include <cmath>
 #include <iostream>
@@ -70,7 +70,7 @@ namespace
 #endif
 
 #if DO_LOGGING
-  void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
+  void PrintResponse(const struct eCAL::v5::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
     std::cout << "Executed on host name : " << service_response_.host_name << std::endl;
@@ -80,13 +80,13 @@ namespace
     std::cout << "Execution state       : ";
     switch (service_response_.call_state)
     {
-    case call_state_none:
+    case none:
       std::cout << "call_state_none";
       break;
-    case call_state_executed:
+    case executed:
       std::cout << "call_state_executed";
       break;
-    case call_state_failed:
+    case failed:
       std::cout << "call_state_failed";
       break;
     }
@@ -96,7 +96,7 @@ namespace
     std::cout << std::endl;
   }
 #else
-  void PrintResponse(const struct eCAL::SServiceResponse& /*service_response_*/)
+  void PrintResponse(const struct eCAL::v5::SServiceResponse& /*service_response_*/)
   {
   }
 #endif
@@ -116,17 +116,17 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
 
-  auto event_callback = [&](const struct eCAL::SClientEventCallbackData* data_) -> void
+  auto event_callback = [&](const struct eCAL::v5::SClientEventCallbackData* data_) -> void
                         {
                           switch (data_->type)
                           {
-                          case client_event_connected:
+                          case eCAL::eClientEvent::connected:
 #if DO_LOGGING
                             std::cout << "event connected fired" << std::endl;
 #endif
                             event_connected_fired++;
                             break;
-                          case client_event_disconnected:
+                          case eCAL::eClientEvent::disconnected:
 #if DO_LOGGING
                             std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -137,8 +137,8 @@ TEST(core_cpp_clientserver_v5, ClientConnectEvent)
                           }
                         };
   // attach event
-  client.AddEventCallback(client_event_connected,    std::bind(event_callback, std::placeholders::_2));
-  client.AddEventCallback(client_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+  client.AddEventCallback(eCAL::eClientEvent::connected,    std::bind(event_callback, std::placeholders::_2));
+  client.AddEventCallback(eCAL::eClientEvent::disconnected, std::bind(event_callback, std::placeholders::_2));
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -183,17 +183,17 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
   // add server event callback for connect event
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const struct eCAL::SServerEventCallbackData* data_) -> void
+  auto event_callback = [&](const struct eCAL::v5::SServerEventCallbackData* data_) -> void
   {
     switch (data_->type)
     {
-    case server_event_connected:
+    case eCAL::eServerEvent::connected:
 #if DO_LOGGING
       std::cout << "event connected fired" << std::endl;
 #endif
       event_connected_fired++;
       break;
-    case server_event_disconnected:
+    case eCAL::eServerEvent::disconnected:
 #if DO_LOGGING
       std::cout << "event disconnected fired" << std::endl;
 #endif
@@ -204,8 +204,8 @@ TEST(core_cpp_clientserver_v5, ServerConnectEvent)
     }
   };
   // attach event
-  server.AddEventCallback(server_event_connected,    std::bind(event_callback, std::placeholders::_2));
-  server.AddEventCallback(server_event_disconnected, std::bind(event_callback, std::placeholders::_2));
+  server.AddEventCallback(eCAL::eServerEvent::connected,    std::bind(event_callback, std::placeholders::_2));
+  server.AddEventCallback(eCAL::eServerEvent::disconnected, std::bind(event_callback, std::placeholders::_2));
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -283,7 +283,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;
@@ -392,7 +392,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
                             {
                               PrintResponse(service_response_);
                               responses_executed++;
@@ -406,14 +406,14 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseCallbackTimeout)
 
   // add event callback for timeout event
   std::atomic<int> timeout_fired(0);
-  auto event_callback = [&](const struct eCAL::SClientEventCallbackData* /*data_*/) -> void
+  auto event_callback = [&](const struct eCAL::v5::SClientEventCallbackData* /*data_*/) -> void
                         {
                           timeout_fired++;
                         };
   for (const auto& client : client_vec)
   {
     // catch events
-    client->AddEventCallback(client_event_timeout, std::bind(event_callback, std::placeholders::_2));
+    client->AddEventCallback(eCAL::eClientEvent::timeout, std::bind(event_callback, std::placeholders::_2));
   }
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
@@ -543,7 +543,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsyncCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;
@@ -619,7 +619,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseAsync)
 
   // response callback function
   atomic_signalable<int> num_client_response_callbacks_finished(0);
-  auto client_response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto client_response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
                                   {
                                     PrintResponse(service_response_);
                                     num_client_response_callbacks_finished++;
@@ -740,7 +740,7 @@ TEST(core_cpp_clientserver_v5, ClientServerBaseBlocking)
   // call service
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::v5::ServiceResponseVecT service_response_vec;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
@@ -826,14 +826,14 @@ TEST(core_cpp_clientserver_v5, NestedRPCCall)
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
   bool success(true);
-  auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback1 = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     success &= client2.Call("foo::method2", "my request for method 2");
     methods_called++;
     responses_executed++;
   };
-  auto response_callback2 = [&](const struct eCAL::SServiceResponse& service_response_)
+  auto response_callback2 = [&](const struct eCAL::v5::SServiceResponse& service_response_)
   {
     PrintResponse(service_response_);
     responses_executed++;

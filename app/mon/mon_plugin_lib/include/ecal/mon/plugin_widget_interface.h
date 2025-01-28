@@ -22,7 +22,7 @@
 #include <QString>
 #include <QWidget>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 namespace eCAL
 {

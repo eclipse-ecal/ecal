@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace eCAL
      *
      * @param msg_   The log message string.
     **/
-    void Log(eCAL_Logging_eLogLevel level_, const std::string& msg_)
+    void Log(eLogLevel level_, const std::string& msg_)
     {
       if(g_log_provider() != nullptr) g_log_provider()->Log(level_, msg_);
     }
@@ -53,8 +53,7 @@ namespace eCAL
     {
       if (g_log_udp_receiver() == nullptr)
         return false;
-      g_log_udp_receiver()->GetLogging(log_);
-      return true;
+      return g_log_udp_receiver()->GetLogging(log_);
     }
 
     /**

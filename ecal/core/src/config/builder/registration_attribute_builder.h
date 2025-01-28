@@ -21,7 +21,7 @@
 
 #include "registration/config/attributes/registration_attributes.h"
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 namespace eCAL
 {

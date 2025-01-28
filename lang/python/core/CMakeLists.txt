@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,6 +50,13 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     eCAL::core
+)
+
+# we're using only definitions from eCAL::core_c but no functionality.
+# This is a bit hacky, however, we will hopefully switch to nanobind soon.
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    $<TARGET_PROPERTY:eCAL::core_c,INCLUDE_DIRECTORIES>
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

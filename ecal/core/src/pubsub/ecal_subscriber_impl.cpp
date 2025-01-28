@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@
  * @brief  common eCAL data reader
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include "ecal_subscriber_impl.h"
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
+#include <ecal/time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
@@ -69,21 +71,19 @@ namespace eCAL
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_topic_info(topic_info_),
                  m_topic_size(0),
-                 m_attributes(attr_),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
-                 m_created(false)
+                 m_created(false),
+                 m_attributes(attr_)
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
+    Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
 
     // build topic id
-    std::stringstream counter;
-    counter << std::chrono::steady_clock::now().time_since_epoch().count();
-    m_topic_id = counter.str();
+    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // start transport layers
     InitializeLayers();
@@ -97,7 +97,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Destructor");
+    Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Destructor");
 #endif
 
     if (!m_created) return;
@@ -148,7 +148,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Read");
+      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Read");
 #endif
       // copy content to target string
       buf_.clear();
@@ -165,12 +165,12 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(ReceiveIDCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(v6::ReceiveCallbackT callback_)
   {
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
 #endif
 
     // set receive callback
@@ -187,7 +187,7 @@ namespace eCAL
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
 #endif
 
     // remove receive callback
@@ -199,12 +199,12 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_)
   {
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventCallback");
 #endif
 
     // set event callback
@@ -216,12 +216,12 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::RemoveEventCallback(eCAL_Subscriber_Event type_)
+  bool CSubscriberImpl::RemoveEventCallback(eSubscriberEvent type_)
   {
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
 #endif
 
     // remove event callback
@@ -233,12 +233,12 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventIDCallback(const SubEventIDCallbackT callback_)
+  bool CSubscriberImpl::SetEventIDCallback(const v6::SubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
 #endif
 
     // set event id callback
@@ -249,12 +249,12 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::RemoveEventIDCallback()
+  bool CSubscriberImpl::RemoveEventCallback()
   {
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventIDCallback");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
 #endif
 
     // remove event id callback
@@ -268,7 +268,7 @@ namespace eCAL
   bool CSubscriberImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
 
     m_attr[attr_name_] = attr_value_;
@@ -279,7 +279,7 @@ namespace eCAL
   bool CSubscriberImpl::ClearAttribute(const std::string& attr_name_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
 
     m_attr.erase(attr_name_);
@@ -290,7 +290,7 @@ namespace eCAL
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
 #ifndef NDEBUG
-    Logging::Log(log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
+    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
 #endif
 
     m_id_set = filter_ids_;
@@ -310,8 +310,7 @@ namespace eCAL
 #endif
 
     // add key to connection map, including connection state
-    bool is_new_connection     = false;
-    bool is_updated_connection = false;
+    bool is_new_connection = false;
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
       auto publication_info_iter = m_connection_map.find(publication_info_);
@@ -332,11 +331,6 @@ namespace eCAL
         {
           is_new_connection = true;
         }
-        // the connection was active, so we just update it
-        else
-        {
-          is_updated_connection = true;
-        }
 
         // update the data type and layer states, even if the connection is not new
         connection = SConnection{ data_type_info_, pub_layer_states_, true };
@@ -352,14 +346,9 @@ namespace eCAL
       // fire connect event
       FireConnectEvent(publication_info_, data_type_info_);
     }
-    else if (is_updated_connection)
-    {
-      // fire update event
-      FireUpdateEvent(publication_info_, data_type_info_);
-    }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherRegistration");
+    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherRegistration");
 #endif
   }
 
@@ -384,7 +373,7 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
+    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
 #endif
   }
 
@@ -478,7 +467,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
+      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
 #endif
       return(size_);
     }
@@ -499,7 +488,11 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(topic_info_.tid, clock_))
+    SPublicationInfo publication_info;
+    publication_info.entity_id  = topic_info_.tid;
+    publication_info.host_name  = topic_info_.hname;
+    publication_info.process_id = topic_info_.pid;
+    if (!CheckMessageClock(publication_info, clock_))
     {
       // we will not process that message
       return(0);
@@ -507,7 +500,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
+    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
 #endif
 
     // increase read clock
@@ -534,7 +527,7 @@ namespace eCAL
       {
 #ifndef NDEBUG
         // log it
-        Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
+        Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
@@ -544,7 +537,7 @@ namespace eCAL
         cb_data.time  = time_;
         cb_data.clock = clock_;
 
-        Registration::STopicId topic_id;
+        STopicId topic_id;
         topic_id.topic_name          = topic_info_.tname;
         topic_id.topic_id.host_name  = topic_info_.hname;
         topic_id.topic_id.entity_id  = topic_info_.tid;
@@ -576,7 +569,7 @@ namespace eCAL
       m_read_buf_cv.notify_one();
 #ifndef NDEBUG
       // log it
-      Logging::Log(log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
+      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
 #endif
     }
 
@@ -592,7 +585,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Register");
+    Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Register");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -606,7 +599,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Unregister");
+    Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Unregister");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -636,21 +629,15 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id  = m_topic_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      if (m_attributes.share_topic_type)
-      {
-        ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
-        ecal_reg_sample_tdatatype.name     = m_topic_info.name;
-      }
-      if (m_attributes.share_topic_description)
-      {
-        ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
-      }
+      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.tdatatype;
+      ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
+      ecal_reg_sample_tdatatype.name       = m_topic_info.name;
+      ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
     ecal_reg_sample_topic.attr  = m_attr;
     ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
@@ -711,11 +698,11 @@ namespace eCAL
     ecal_reg_sample_identifier.entity_id = m_topic_id;
     ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.pname                = m_attributes.process_name;
+    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()
@@ -790,24 +777,23 @@ namespace eCAL
 #endif
   }
 
-  void CSubscriberImpl::FireEvent(const eCAL_Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void CSubscriberImpl::FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    SSubEventCallbackData data;
-    data.type      = type_;
-    data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    data.clock     = 0;
-    data.tid       = publication_info_.entity_id;
-    data.tdatatype = data_type_info_;
-
     // new event handling with topic id
     if (m_event_id_callback)
     {
-      Registration::STopicId topic_id;
+      v6::SSubEventCallbackData data;
+      data.event_type         = type_;
+      data.event_time         = eCAL::Time::GetMicroSeconds();
+      data.publisher_datatype = data_type_info_;
+
+      STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
       topic_id.topic_id.process_id = publication_info_.process_id;
       topic_id.topic_id.host_name  = publication_info_.host_name;
       topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
+
       // call event callback
       m_event_id_callback(topic_id, data);
     }
@@ -818,6 +804,14 @@ namespace eCAL
       auto iter = m_event_callback_map.find(type_);
       if (iter != m_event_callback_map.end() && iter->second)
       {
+        v5::SSubEventCallbackData data;
+        data.type      = type_;
+        data.time      = eCAL::Time::GetMicroSeconds();
+        data.clock     = 0;
+        data.tid       = std::to_string(publication_info_.entity_id);
+        data.tdatatype = data_type_info_;
+
+        // call event callback
         (iter->second)(m_attributes.topic_name.c_str(), &data);
       }
     }
@@ -825,17 +819,17 @@ namespace eCAL
 
   void CSubscriberImpl::FireConnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(sub_event_connected, publication_info_, data_type_info_);
-  }
-
-  void CSubscriberImpl::FireUpdateEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
-  {
-    FireEvent(sub_event_update_connection, publication_info_, data_type_info_);
+    FireEvent(eSubscriberEvent::connected, publication_info_, data_type_info_);
   }
 
   void CSubscriberImpl::FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
-    FireEvent(sub_event_disconnected, publication_info_, data_type_info_);
+    FireEvent(eSubscriberEvent::disconnected, publication_info_, data_type_info_);
+  }
+
+  void CSubscriberImpl::FireDroppedEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  {
+    FireEvent(eSubscriberEvent::dropped, publication_info_, data_type_info_);
   }
 
   size_t CSubscriberImpl::GetConnectionCount()
@@ -852,14 +846,14 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::CheckMessageClock(const std::string& tid_, long long current_clock_)
+  bool CSubscriberImpl::CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_)
   {
-    auto iter = m_writer_counter_map.find(tid_);
+    auto iter = m_writer_counter_map.find(publication_info_.entity_id);
     
     // initial entry
     if (iter == m_writer_counter_map.end())
     {
-      m_writer_counter_map[tid_] = current_clock_;
+      m_writer_counter_map[publication_info_.entity_id] = current_clock_;
       return true;
     }
     // clock entry exists
@@ -906,19 +900,11 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
-        // we fire the message drop event
-        {
-          const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-          auto citer = m_event_callback_map.find(sub_event_dropped);
-          if (citer != m_event_callback_map.end() && citer->second)
-          {
-            SSubEventCallbackData data;
-            data.type  = sub_event_dropped;
-            data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-            data.clock = current_clock_;
-            (citer->second)(m_attributes.topic_name.c_str(), &data);
-          }
-        }
+
+        // fire dropped event
+        // we do not know the data type of the dropped message here
+        // so we use an empty data type information
+        FireDroppedEvent(publication_info_, SDataTypeInformation());
 
         // increase the drop counter
         m_message_drops += clock_difference;
@@ -959,7 +945,7 @@ namespace eCAL
           msg += m_attributes.topic_name;
           msg += "\'";
           msg += " received a message in the wrong order";
-          Logging::Log(log_level_warning, msg);
+          Logging::Log(Logging::log_level_warning, msg);
 
           // process it
           return true;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,10 +209,12 @@ int main(int argc, char** argv)
     }
 
     // initialize eCAL API
-    eCAL::Initialize("eCALMon CLI", eCAL::Init::All);
+    auto config = eCAL::Init::Configuration();
+    config.logging.receiver.enable = true;
+    eCAL::Initialize(config, "eCALMon CLI", eCAL::Init::All);
 
     // set process state
-    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     switch (cmd_option)
     {
@@ -332,7 +334,7 @@ void ProcEcho(const std::string& topic_name, int msg_count)
   eCAL::string::CSubscriber<std::string> sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   while(eCAL::Ok() && (cnt != 0))
   {
@@ -355,7 +357,7 @@ void ProcProto(const std::string& topic_name, int msg_count)
   eCAL::protobuf::CDynamicSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::shared_ptr<google::protobuf::Message>& msg_) { if (cnt != 0) { std::cout << msg_->DebugString() << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok() && (cnt != 0))

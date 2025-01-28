@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,17 @@
  */
 
 /**
- * @file   ecal_logging_config.h
+ * @file   config/logging.h
  * @brief  eCAL configuration for logging
 **/
 
 #pragma once
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 #include <vector>
 #include <string>
 
-namespace
-{
-  // After switchting to c++17, this can be replaced by an inline constexpr
-  static const eCAL_Logging_Filter log_filter_default = log_level_info | log_level_warning | log_level_error | log_level_fatal;
-}
 
 namespace eCAL
 {
@@ -44,7 +39,7 @@ namespace eCAL
       struct Sink
       {
         bool enable;                                    //!< Enable sink
-        eCAL_Logging_Filter filter_log;                 //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+        Filter filter_log;                              //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
       };
 
       namespace File
@@ -65,9 +60,9 @@ namespace eCAL
 
       struct Configuration
       {
-        Sink                console { true,  log_level_error | log_level_fatal}; //!< default: true, log_level_error
-        Sink                file    { false, log_level_none };                   //!< default: false, log_level_none
-        Sink                udp     { true,  log_filter_default };               //!< default: true, log_filter_default
+        Sink                console { true,  log_level_warning | log_level_error | log_level_fatal };                   //!< default: true, log_level_warning | log_level_error | log_level_fatal
+        Sink                file    { false, log_level_none };                                                          //!< default: false, log_level_none
+        Sink                udp     { true,  log_level_info | log_level_warning | log_level_error | log_level_fatal };  //!< default: true, log_level_info | log_level_warning | log_level_error | log_level_fatal
         
         File::Configuration file_config;
         UDP::Configuration  udp_config;

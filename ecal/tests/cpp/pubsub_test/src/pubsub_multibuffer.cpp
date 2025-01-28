@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #include <cstddef>
 #include <cstring>
 #include <ecal/ecal.h>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/payload_writer.h>
 
 #include <atomic>
 #include <iomanip>
@@ -98,7 +98,7 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   std::vector<char>   received_content;
 
   // add callback
-  auto lambda = [&](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+  auto lambda = [&](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
     received_bytes += data_.size;
     ++received_count;
     for (auto i = 0; i < bytes_to_read; ++i)

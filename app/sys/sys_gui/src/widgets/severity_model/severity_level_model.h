@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ public:
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
   QString getString(int row) const;
-  eCAL_Process_eSeverity_Level getSeverityLevel(int row) const;
+  eCAL::Process::eSeverityLevel getSeverityLevel(int row) const;
 
-  int getRow(eCAL_Process_eSeverity_Level level) const;
+  int getRow(eCAL::Process::eSeverityLevel level) const;
 
 private:
-  std::vector<std::pair<QString, eCAL_Process_eSeverity_Level>> rows;
+  std::vector<std::pair<QString, eCAL::Process::eSeverityLevel>> rows;
 };

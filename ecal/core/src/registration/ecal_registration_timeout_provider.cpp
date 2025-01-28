@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,12 @@ namespace eCAL
 
       if (IsTopicRegistration(unregister_sample))
       {
-        const auto& sample_topic = sample_.topic;
-        auto& unregister_sample_topic = unregister_sample.topic;
-        unregister_sample_topic.hgname = sample_topic.hgname;
-        unregister_sample_topic.pname = sample_topic.pname;
-        unregister_sample_topic.tname = sample_topic.tname;
-        unregister_sample_topic.uname = sample_topic.uname;
+        const auto& sample_topic                     = sample_.topic;
+        auto& unregister_sample_topic                = unregister_sample.topic;
+        unregister_sample_topic.shm_transport_domain = sample_topic.shm_transport_domain;
+        unregister_sample_topic.pname                = sample_topic.pname;
+        unregister_sample_topic.tname                = sample_topic.tname;
+        unregister_sample_topic.uname                = sample_topic.uname;
       }
 
       if (unregister_sample.cmd_type == bct_unreg_service)

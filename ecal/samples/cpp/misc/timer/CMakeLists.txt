@@ -30,7 +30,7 @@ set(timer_src
 
 ecal_add_sample(${PROJECT_NAME} ${timer_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

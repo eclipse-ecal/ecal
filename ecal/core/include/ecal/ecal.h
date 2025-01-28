@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,22 +25,24 @@
 #pragma once
 
 // all ecal includes
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_defs.h>
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_client.h>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
-#include <ecal/ecal_monitoring.h>
-#include <ecal/ecal_publisher.h>
-#include <ecal/ecal_registration.h>
-#include <ecal/ecal_server.h>
-#include <ecal/ecal_service_info.h>
-#include <ecal/ecal_subscriber.h>
-#include <ecal/ecal_time.h>
-#include <ecal/ecal_timer.h>
-#include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_util.h>
+#include <ecal/os.h>
+#include <ecal/defs.h>
+#include <ecal/callback.h>
+#include <ecal/service/client.h>
+#include <ecal/config.h>
+#include <ecal/core.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
+#include <ecal/monitoring.h>
+#include <ecal/registration.h>
+#include <ecal/service/server.h>
+#include <ecal/service/types.h>
+#include <ecal/time.h>
+#include <ecal/timer.h>
+#include <ecal/tlayer.h>
+#include <ecal/util.h>
 #include <ecal/config/configuration.h>
+#include <ecal/pubsub/publisher.h>
+#include <ecal/pubsub/subscriber.h>
+#include <ecal/service/client.h>
+#include <ecal/service/server.h>

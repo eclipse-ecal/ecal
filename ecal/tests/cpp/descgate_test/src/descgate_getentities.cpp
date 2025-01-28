@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
-    reg_sample.identifier.entity_id       = std::to_string(topic_id_);
+    reg_sample.identifier.entity_id       = topic_id_;
     reg_sample.topic.tname                = topic_name_;
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
@@ -53,7 +53,7 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
-    reg_sample.identifier.entity_id       = std::to_string(topic_id_);
+    reg_sample.identifier.entity_id       = topic_id_;
     reg_sample.topic.tname                = topic_name_;
     reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
     reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
@@ -73,7 +73,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type             = eCAL::bct_reg_service;
     reg_sample.service.sname        = service_name_;
-    reg_sample.identifier.entity_id = std::to_string(service_id_);
+    reg_sample.identifier.entity_id = service_id_;
 
     eCAL::Service::Method method;
     method.mname = "method_name";
@@ -93,7 +93,7 @@ namespace
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type               = eCAL::bct_reg_client;
     reg_sample.client.sname           = client_name_;
-    reg_sample.identifier.entity_id   = std::to_string(service_id_);
+    reg_sample.identifier.entity_id   = service_id_;
 
     eCAL::Service::Method method;
     method.mname = "method_name";
@@ -285,14 +285,14 @@ TEST(core_cpp_descgate, ServiceExpiration)
   {
     desc_gate.ApplySample(CreateService("service1", 1), eCAL::tl_none);
 
-    EXPECT_EQ(1, desc_gate.GetServiceIDs().size());
+    EXPECT_EQ(1, desc_gate.GetServerIDs().size());
   }
 
   // now let the sample expire
   desc_gate.ApplySample(DestroyService("service1", 1), eCAL::tl_none);
 
   // sample should be expired
-  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(0, desc_gate.GetServerIDs().size());
 }
 
 TEST(core_cpp_descgate, ManyService)
@@ -307,7 +307,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // map should contain num_service samples
-  EXPECT_EQ(num_service, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(num_service, desc_gate.GetServerIDs().size());
 
   // now let the samples expire
   for (auto service = 0; service < num_service; ++service)
@@ -317,7 +317,7 @@ TEST(core_cpp_descgate, ManyService)
   }
 
   // samples should be expired
-  EXPECT_EQ(0, desc_gate.GetServiceIDs().size());
+  EXPECT_EQ(0, desc_gate.GetServerIDs().size());
 }
 
 TEST(core_cpp_descgate, ClientExpiration)

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,8 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString& topic_type,
   ui_.publish_timestamp_warning_label->setVisible(false);
 
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
-  subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
+  subscriber_.SetReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
+  subscriber_.SetErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 
   // Button connections
   connect(ui_.expand_button, &QPushButton::clicked, [this]() { tree_view_->expandAll();   });
@@ -105,8 +105,8 @@ PluginWidget::~PluginWidget()
   qDebug().nospace() << "[" << PluginWidget::metaObject()->className() << "]: Deleting Widget for topic " << topic_name_;
 #endif // NDEBUG
 
-  subscriber_.RemReceiveCallback();
-  subscriber_.RemErrorCallback();
+  subscriber_.RemoveReceiveCallback();
+  subscriber_.RemoveErrorCallback();
   
   {
     std::lock_guard<std::mutex> lock(proto_message_mutex_);
@@ -206,7 +206,7 @@ void PluginWidget::updateTree()
     // tree view and replace it with a dummy error-item. We also log an eCAL
     // error message.
 
-    eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "Error when receiving data on topic \"" + topic_name_.toStdString() + "\": " + last_error_string_.toStdString());
+    eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, "Error when receiving data on topic \"" + topic_name_.toStdString() + "\": " + last_error_string_.toStdString());
 
     tree_model_->removeAllChildren();
     currently_showing_error_item_ = true;
@@ -319,14 +319,14 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // Add eCAL Callbacks
-  subscriber_.AddReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
-  subscriber_.AddErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
+  subscriber_.SetReceiveCallback(std::bind(&PluginWidget::onProtoMessageCallback, this, std::placeholders::_2, std::placeholders::_3));
+  subscriber_.SetErrorCallback(std::bind(&PluginWidget::onProtoErrorCallback, this, std::placeholders::_1));
 }
 
 void PluginWidget::onPause()
 {
-  subscriber_.RemReceiveCallback();
-  subscriber_.RemErrorCallback();
+  subscriber_.RemoveReceiveCallback();
+  subscriber_.RemoveErrorCallback();
 }
 
 QWidget* PluginWidget::getWidget()

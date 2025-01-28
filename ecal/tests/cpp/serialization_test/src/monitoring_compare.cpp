@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ namespace eCAL
       {
         if (monitoring1.processes[i].rclock != monitoring2.processes[i].rclock ||
           monitoring1.processes[i].hname != monitoring2.processes[i].hname ||
-          monitoring1.processes[i].hgname != monitoring2.processes[i].hgname ||
+          monitoring1.processes[i].shm_transport_domain != monitoring2.processes[i].shm_transport_domain ||
           monitoring1.processes[i].pid != monitoring2.processes[i].pid ||
           monitoring1.processes[i].pname != monitoring2.processes[i].pname ||
           monitoring1.processes[i].uname != monitoring2.processes[i].uname ||
@@ -51,7 +51,9 @@ namespace eCAL
           monitoring1.processes[i].tsync_mod_name != monitoring2.processes[i].tsync_mod_name ||
           monitoring1.processes[i].component_init_state != monitoring2.processes[i].component_init_state ||
           monitoring1.processes[i].component_init_info != monitoring2.processes[i].component_init_info ||
-          monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version)
+          monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version ||
+          monitoring1.processes[i].config_file_path != monitoring2.processes[i].config_file_path
+          )
         {
           return false;
         }
@@ -67,7 +69,7 @@ namespace eCAL
       {
         if (monitoring1.publisher[i].rclock != monitoring2.publisher[i].rclock ||
           monitoring1.publisher[i].hname != monitoring2.publisher[i].hname ||
-          monitoring1.publisher[i].hgname != monitoring2.publisher[i].hgname ||
+          monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
           monitoring1.publisher[i].pid != monitoring2.publisher[i].pid ||
           monitoring1.publisher[i].pname != monitoring2.publisher[i].pname ||
           monitoring1.publisher[i].uname != monitoring2.publisher[i].uname ||
@@ -99,7 +101,7 @@ namespace eCAL
       {
         if (monitoring1.subscriber[i].rclock != monitoring2.subscriber[i].rclock ||
           monitoring1.subscriber[i].hname != monitoring2.subscriber[i].hname ||
-          monitoring1.subscriber[i].hgname != monitoring2.subscriber[i].hgname ||
+          monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
           monitoring1.subscriber[i].pid != monitoring2.subscriber[i].pid ||
           monitoring1.subscriber[i].pname != monitoring2.subscriber[i].pname ||
           monitoring1.subscriber[i].uname != monitoring2.subscriber[i].uname ||
@@ -147,10 +149,6 @@ namespace eCAL
         for (size_t j = 0; j < monitoring1.server[i].methods.size(); ++j)
         {
           if (monitoring1.server[i].methods[j].mname != monitoring2.server[i].methods[j].mname ||
-            monitoring1.server[i].methods[j].req_type != monitoring2.server[i].methods[j].req_type ||
-            monitoring1.server[i].methods[j].req_desc != monitoring2.server[i].methods[j].req_desc ||
-            monitoring1.server[i].methods[j].resp_type != monitoring2.server[i].methods[j].resp_type ||
-            monitoring1.server[i].methods[j].resp_desc != monitoring2.server[i].methods[j].resp_desc ||
             monitoring1.server[i].methods[j].req_datatype != monitoring2.server[i].methods[j].req_datatype ||
             monitoring1.server[i].methods[j].resp_datatype != monitoring2.server[i].methods[j].resp_datatype ||
             monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
@@ -184,10 +182,6 @@ namespace eCAL
         for (size_t j = 0; j < monitoring1.clients[i].methods.size(); ++j)
         {
           if (monitoring1.clients[i].methods[j].mname != monitoring2.clients[i].methods[j].mname ||
-            monitoring1.clients[i].methods[j].req_type != monitoring2.clients[i].methods[j].req_type ||
-            monitoring1.clients[i].methods[j].req_desc != monitoring2.clients[i].methods[j].req_desc ||
-            monitoring1.clients[i].methods[j].resp_type != monitoring2.clients[i].methods[j].resp_type ||
-            monitoring1.clients[i].methods[j].resp_desc != monitoring2.clients[i].methods[j].resp_desc ||
             monitoring1.clients[i].methods[j].req_datatype != monitoring2.clients[i].methods[j].req_datatype ||
             monitoring1.clients[i].methods[j].resp_datatype != monitoring2.clients[i].methods[j].resp_datatype ||
             monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)

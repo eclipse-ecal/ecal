@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #include "ecalmon.h"
 
 #include "ecal/ecal.h"
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"
@@ -71,9 +71,10 @@ Ecalmon::Ecalmon(QWidget *parent)
   , monitor_error_counter_(0)
 {
   // Just make sure that eCAL is initialized
-  eCAL::Initialize("eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
-  eCAL::Monitoring::SetFilterState(false);
-  eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+  auto config = eCAL::Init::Configuration();
+  config.logging.receiver.enable = true;
+  eCAL::Initialize(config, "eCALMon", eCAL::Init::Default | eCAL::Init::Monitoring);
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
   ui_.setupUi(this);
 
@@ -371,7 +372,7 @@ void Ecalmon::updateMonitor()
 #ifndef NDEBUG
     qDebug().nospace() << "[" << metaObject()->className() << "Error getting Monitoring Information";
 #endif // NDEBUG
-    eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
+    eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, "Error getting eCAL Monitoring information");
   }
 }
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 #include <cstddef>
 #include <vector>
 
-#include <ecal/ecal_tlayer.h>
+#include <ecal/tlayer.h>
 
 #include "ecal/types/ecal_custom_data_types.h"
 
@@ -69,15 +69,12 @@ namespace eCAL
       using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
       LayerPriorityVector  layer_priority_local;
       LayerPriorityVector  layer_priority_remote;
-      
-      bool                 share_topic_type;
-      bool                 share_topic_description;
 
       bool                 network_enabled;
       bool                 loopback;
 
       std::string          host_name;
-      std::string          host_group_name;
+      std::string          shm_transport_domain;
       int                  process_id;
       std::string          process_name;
 

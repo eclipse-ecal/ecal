@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 */
 
 /**
- * @file   monitoring.h
+ * @file   types/monitoring.h
  * @brief  eCAL monitoring struct interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 #include <map>
 #include <string>
@@ -73,11 +73,11 @@ namespace eCAL
     {
       int32_t                             rclock{0};            //!< registration clock (heart beat)
       std::string                         hname;                //!< host name
-      std::string                         hgname;               //!< host group name
+      std::string                         shm_transport_domain; //!< shm transport domain
       int32_t                             pid{0};               //!< process id
       std::string                         pname;                //!< process name
       std::string                         uname;                //!< unit name
-      std::string                         tid;                  //!< topic id
+      EntityIdT             tid{0};               //!< topic id
       std::string                         tname;                //!< topic name
       std::string                         direction;            //!< direction (publisher, subscriber)
       SDataTypeInformation                tdatatype;            //!< topic datatype information (name, encoding, descriptor)
@@ -100,7 +100,7 @@ namespace eCAL
     {
       int32_t        rclock{0};                                 //!< registration clock
       std::string    hname;                                     //!< host name
-      std::string    hgname;                                    //!< host group name
+      std::string    shm_transport_domain;                      //!< shm transport domain
       int32_t        pid{0};                                    //!< process id
       std::string    pname;                                     //!< process name
       std::string    uname;                                     //!< unit name
@@ -129,16 +129,12 @@ namespace eCAL
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
 
       std::string    ecal_runtime_version;                      //!< loaded / runtime eCAL version of a component
+      std::string    config_file_path;                          //!< Filepath of the configuration filepath that was loaded
     };
 
     struct SMethodMon                                           //<! eCAL Server Method struct
     {
       std::string           mname;                              //<! method name
-
-      std::string           req_type;                           //<! request  type       (deprecated use req_datatype)
-      std::string           req_desc;                           //<! request  descriptor (deprecated use req_datatype)
-      std::string           resp_type;                          //<! response type       (deprecated use resp_datatype)
-      std::string           resp_desc;                          //<! response descriptor (deprecated use resp_datatype)
 
       SDataTypeInformation  req_datatype;                       //<! request  datatype information (encoding & type & description)
       SDataTypeInformation  resp_datatype;                      //<! response datatype information (encoding & type & description)
@@ -155,7 +151,7 @@ namespace eCAL
       int32_t                  pid{0};                          //<! process id
 
       std::string              sname;                           //<! service name
-      std::string              sid;                             //<! service id
+      EntityIdT  sid{0};                          //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
@@ -166,18 +162,18 @@ namespace eCAL
 
     struct SClientMon                                           //<! eCAL Client struct
     {
-      int32_t      rclock{0};                                   //<! registration clock
-      std::string  hname;                                       //<! host name
-      std::string  pname;                                       //<! process name
-      std::string  uname;                                       //<! unit name
-      int32_t      pid{0};                                      //<! process id
+      int32_t                  rclock{0};                       //<! registration clock
+      std::string              hname;                           //<! host name
+      std::string              pname;                           //<! process name
+      std::string              uname;                           //<! unit name
+      int32_t                  pid{0};                          //<! process id
 
-      std::string  sname;                                       //<! service name
-      std::string  sid;                                         //<! service id
+      std::string              sname;                           //<! service name
+      EntityIdT  sid{0};                          //<! service id
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
 
-      uint32_t     version{0};                                  //<! client protocol version
+      uint32_t                 version{0};                     //<! client protocol version
     };
 
     struct SMonitoring                                          //<! eCAL Monitoring struct

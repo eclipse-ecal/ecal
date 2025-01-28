@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 
 #include <sstream>
 #include <ecal_def.h>
@@ -11,6 +11,6 @@ namespace eCAL
   {
     std::stringstream getConfigAsYamlSS(const eCAL::Configuration& config_ = eCAL::GetConfiguration());
 
-    bool dumpConfigToFile(const eCAL::Configuration& config_ = eCAL::GetConfiguration(), const std::string& file_path_ = ECAL_DEFAULT_CFG);
+    std::stringstream getTimeConfigAsYamlSS();
   }
 }

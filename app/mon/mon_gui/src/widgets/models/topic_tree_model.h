@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public:
     DIRECTION,
     UNIT_NAME,
     HOST_NAME,
-    HOST_GROUP_NAME,
+    SHM_TRANSPORT_DOMAIN,
     PID,
     PROCESS_NAME,
     TOPIC_TYPE,
@@ -90,7 +90,7 @@ private:
     { Columns::GROUP,                  "Group" },
     { Columns::HEARTBEAT,              "Heartbeat" },
     { Columns::HOST_NAME,              "Host" },
-    { Columns::HOST_GROUP_NAME,        "Host Group" },
+    { Columns::SHM_TRANSPORT_DOMAIN,   "SHM Transport Domain" },
     { Columns::PID,                    "PID" },
     { Columns::PROCESS_NAME,           "Process Path" },
     { Columns::UNIT_NAME,              "Process" },
@@ -114,7 +114,7 @@ private:
     { Columns::GROUP,                  -1 },
     { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::RCLOCK },
     { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HNAME },
-    { Columns::HOST_GROUP_NAME,        (int)TopicTreeItem::Columns::HGNAME },
+    { Columns::SHM_TRANSPORT_DOMAIN,   (int)TopicTreeItem::Columns::SHM_TRANSPORT_DOMAIN },
     { Columns::PID,                    (int)TopicTreeItem::Columns::PID },
     { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PNAME },
     { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNAME },

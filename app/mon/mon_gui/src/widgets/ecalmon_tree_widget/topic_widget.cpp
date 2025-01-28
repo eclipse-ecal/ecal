@@ -26,7 +26,7 @@
 
 #include "ecalmon.h"
 
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 #include <iostream>
 
@@ -184,13 +184,11 @@ TopicWidget::~TopicWidget()
 
 void TopicWidget::loadRegExpLists()
 {
+  // TODO: Load regular expressions from eCALMon configuration
 
-  QString exclude_string;
-  QString include_string;
-  exclude_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterExcludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_EXCL_S);
-
-  include_string = QString::fromStdString(eCAL::Config::GetMonitoringFilterIncludeList()); //ini.GetValue(MON_SECTION_S, MON_FILTER_INCL_S);
-
+  // this is now just taken from the old ecal.yaml/ini configuration
+  QString exclude_string{ "^__.*$" }; //!< Topics blacklist as regular expression (will not be monitored) (Default: "^__.*$")
+  QString include_string{ "" };       //!< Topics whitelist as regular expression (will be monitored only) (Default: "")
 
   // The ecal.yaml defines a very strange regex format: A filter consists of
   // several regular expressions divided by "," or ";". Thus we have to

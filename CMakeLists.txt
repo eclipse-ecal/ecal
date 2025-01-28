@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,19 +79,24 @@ endif()
 option(HAS_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
 
 option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
+option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+
+# Serialization format support
 option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
-option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+option(HAS_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
 
 option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
+option(BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${BUILD_APPS})
 option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
+option(BUILD_C_BINDING                         "Build eCAL C binding"                                              ON)
+mark_as_advanced(FORCE BUILD_C_BINDING)
 option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
 option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
 
-option(ECAL_INCLUDE_PY_SAMPLES                 "Include python language sample projects into CMake"               OFF)
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
@@ -120,7 +125,7 @@ set(ECAL_CORE_TRANSPORT_SHM                                                     
 # -----------------------
 # eCAL Python configuration
 # -----------------------
-set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+#set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
 set(ECAL_PYTHON_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
 set(ECAL_PYTHON_HAS_HDF5                                                                                  ${HAS_HDF5})
 
@@ -145,7 +150,7 @@ else()
   )
 endif()
 
-set(ECAL_CSHARP_BUILD_SAMPLES  ${BUILD_SAMPLES})
+
 
 
 # there is a CMake issue with testing threading availibility via TEST_RUN
@@ -281,15 +286,17 @@ endif()
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(HAS_QT)
+if(HAS_QT AND BUILD_APPS)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif()
 
 # --------------------------------------------------------
 # ecal rec addon sdk
 # --------------------------------------------------------
-add_subdirectory(app/rec/rec_addon_core)
-add_subdirectory(app/rec/rec_addon_dummy)
+if(BUILD_APP_REC_ADDON_SDK)
+  add_subdirectory(app/rec/rec_addon_core)
+  add_subdirectory(app/rec/rec_addon_dummy)
+endif()
 
 # --------------------------------------------------------
 # ecal time
@@ -307,7 +314,6 @@ endif()
 if(HAS_HDF5)
   add_subdirectory(contrib/measurement/hdf5)
   add_subdirectory(contrib/ecalhdf5)
-  add_subdirectory(contrib/message)
 endif()
 add_subdirectory(contrib/measurement/base)
 
@@ -322,14 +328,22 @@ endif()
 # ecal core csharp binding
 # --------------------------------------------------------
 if(BUILD_CSHARP_BINDING AND WIN32)
+  set(ECAL_CSHARP_BUILD_SAMPLES     ${BUILD_SAMPLES})
+  set(ECAL_CSHARP_BUILD_TESTS    ${BUILD_ECAL_TESTS})
   add_subdirectory(lang/csharp)
+endif()
+
+if(BUILD_C_BINDING)
+  set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
+  set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
+  add_subdirectory(lang/c)
 endif()
 
 # --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
-add_subdirectory(app/apps)
 if(BUILD_APPS)
+  add_subdirectory(app/apps)
   if (HAS_FTXUI)
     add_subdirectory(app/mon/mon_tui)
   endif()
@@ -390,6 +404,43 @@ if(BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()
 
+
+# --------------------------------------------------------
+# Serialization extensions
+# --------------------------------------------------------
+# Capnroto
+if (HAS_CAPNPROTO)
+set(ECAL_CAPNPROTO_BUILD_SAMPLES                                                                     ${BUILD_SAMPLES})
+set(ECAL_CAPNPROTO_BUILD_TESTS                                                                    ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/capnproto)
+endif ()
+
+# Flatbuffers
+if (HAS_FLATBUFFERS)
+set(ECAL_FLATBUFFERS_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
+set(ECAL_FLATBUFFERS_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/flatbuffers)
+endif()
+
+# Messagepack
+#if (HAS_MESSAGEPACK)
+#set(ECAL_MESSAGEPACK_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
+#set(ECAL_MESSAGEPACK_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+#add_subdirectory(serialization/messagepack)
+#endif()
+
+# Protobuf
+set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${BUILD_SAMPLES})
+set(ECAL_PROTOBUF_BUILD_TESTS                                                                     ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/protobuf)
+
+# String
+set(ECAL_STRING_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
+set(ECAL_STRING_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
+add_subdirectory(serialization/string)
+
+
+
 # --------------------------------------------------------
 # unit tests
 # --------------------------------------------------------
@@ -402,8 +453,6 @@ if(BUILD_ECAL_TESTS)
   if(HAS_HDF5)
     add_subdirectory(tests/contrib/ecalhdf5/hdf5_test)
   endif()
-  add_subdirectory(tests/contrib/ecalproto/dynproto_test)
-  add_subdirectory(tests/contrib/ecalproto/ecal_proto_test)
 
   # ------------------------------------------------------
   # test apps
@@ -446,6 +495,7 @@ install(FILES ${eCAL_config} ${eCAL_config_version}
 
 install(FILES
   cmake/helper_functions/ecal_add_functions.cmake
+  cmake/helper_functions/ecal_compiler_warnings.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake
   DESTINATION ${${PROJECT_NAME}_install_cmake_dir}/helper_functions
@@ -487,7 +537,6 @@ message(STATUS "BUILD_TIME                                     : ${BUILD_TIME}")
 message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BINDING}")
 message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
 message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
-message(STATUS "ECAL_INCLUDE_PY_SAMPLES                        : ${ECAL_INCLUDE_PY_SAMPLES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")

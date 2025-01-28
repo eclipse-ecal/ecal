@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
  * @brief  udp data writer
 **/
 
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
 
 #include "ecal_writer_udp.h"
 #include "serialization/ecal_serialize_sample_payload.h"
@@ -105,7 +105,7 @@ namespace eCAL
     // log it
     if (sent == 0)
     {
-      Logging::Log(log_level_fatal, "CDataWriterUDP::Send failed to send message !");
+      Logging::Log(Logging::log_level_fatal, "CDataWriterUDP::Send failed to send message !");
     }
 
     return(sent > 0);

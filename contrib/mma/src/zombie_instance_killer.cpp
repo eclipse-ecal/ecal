@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif
 
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 #include "../include/zombie_instance_killer.h"
 
 bool ZombieInstanceKiller::KillZombieInstance(const std::list<std::string>& process_names)

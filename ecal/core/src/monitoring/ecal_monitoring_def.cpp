@@ -29,9 +29,9 @@
 
 namespace eCAL
 {
-  CMonitoring::CMonitoring(const Monitoring::SAttributes& attr_)
+  CMonitoring::CMonitoring()
   {
-    m_monitoring_impl = std::make_unique<CMonitoringImpl>(attr_);
+    m_monitoring_impl = std::make_unique<CMonitoringImpl>();
   }
 
   CMonitoring::~CMonitoring()
@@ -49,21 +49,6 @@ namespace eCAL
     m_monitoring_impl->Destroy();
   }
 
-  void CMonitoring::SetExclFilter(const std::string& filter_)
-  {
-    m_monitoring_impl->SetExclFilter(filter_);
-  }
-
-  void CMonitoring::SetInclFilter(const std::string& filter_)
-  {
-    m_monitoring_impl->SetInclFilter(filter_);
-  }
-
-  void CMonitoring::SetFilterState(bool state_)
-  {
-    m_monitoring_impl->SetFilterState(state_);
-  }
-
   void CMonitoring::GetMonitoring(std::string& monitoring_, unsigned int entities_)
   {
     m_monitoring_impl->GetMonitoring(monitoring_, entities_);
@@ -79,36 +64,6 @@ namespace eCAL
     ////////////////////////////////////////////////////////
     // static library interface
     ////////////////////////////////////////////////////////
-    bool SetExclFilter(const std::string& filter_)
-    {
-      if (g_monitoring() != nullptr)
-      {
-        g_monitoring()->SetExclFilter(filter_);
-        return true;
-      }
-      return false;
-    }
-
-    bool SetInclFilter(const std::string& filter_)
-    {
-      if (g_monitoring() != nullptr)
-      {
-        g_monitoring()->SetInclFilter(filter_);
-        return true;
-      }
-      return false;
-    }
-
-    bool SetFilterState(const bool state_)
-    {
-      if (g_monitoring() != nullptr)
-      {
-        g_monitoring()->SetFilterState(state_);
-        return true;
-      }
-      return false;
-    }
-
     bool GetMonitoring(std::string& mon_, unsigned int entities_)
     {
       if (g_monitoring() != nullptr)

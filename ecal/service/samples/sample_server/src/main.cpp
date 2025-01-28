@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2023 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/server_manager.h>
-#include <ecal/service/server_session_types.h>
-#include <ecal/service/logger.h>
+#include <ecal_service/server_manager.h>
+#include <ecal_service/server_session_types.h>
+#include <ecal_service/logger.h>
 
 void print_usage(const std::string& arg0)
 {
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
   auto io_context = std::make_shared<asio::io_context>();
 
   // Create a server manager
-  auto server_manager = eCAL::service::ServerManager::create(io_context, eCAL::service::default_logger("Server", eCAL::service::LogLevel::DebugVerbose));
+  auto server_manager = ecal_service::ServerManager::create(io_context, ecal_service::default_logger("Server", ecal_service::LogLevel::DebugVerbose));
 
   // Server Service callback
   // 
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
             };
 
   // Event callbacks (empty)
-  auto server_event_callback = [](eCAL::service::ServerEventType /*event*/, const std::string& /*message*/) {};
+  auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
 
   // Create server
   // If the port is 0, the server will choose a port automatically

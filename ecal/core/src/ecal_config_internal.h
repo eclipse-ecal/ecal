@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,18 @@
 #pragma once
 
 #include <cstddef>
-#include <ecal/ecal_log_level.h>
-#include <ecal/ecal_os.h>
-#include <ecal/ecal_tlayer.h>
+#include <ecal/log_level.h>
+#include <ecal/os.h>
+#include <ecal/tlayer.h>
 #include "ecal/config/configuration.h"
 
 #include <string>
 
 namespace eCAL
 {
-  ECAL_API TransportLayer::Configuration& GetTransportLayerConfiguration ();
-  ECAL_API Registration::Configuration&   GetRegistrationConfiguration   ();
-  ECAL_API Monitoring::Configuration&     GetMonitoringConfiguration     ();
-  ECAL_API Logging::Configuration&        GetLoggingConfiguration        ();
-  ECAL_API Time::Configuration&           GetTimesyncConfiguration       ();
-  ECAL_API Application::Configuration&    GetApplicationConfiguration    ();
+  ECAL_API const TransportLayer::Configuration& GetTransportLayerConfiguration ();
+  ECAL_API const Registration::Configuration&   GetRegistrationConfiguration   ();
+  ECAL_API const Logging::Configuration&        GetLoggingConfiguration        ();
+  ECAL_API const Time::Configuration&           GetTimesyncConfiguration       ();
+  ECAL_API const Application::Configuration&    GetApplicationConfiguration    ();
 }

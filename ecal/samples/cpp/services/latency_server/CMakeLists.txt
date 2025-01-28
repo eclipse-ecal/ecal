@@ -30,7 +30,7 @@ set(latency_server_src
 
 ecal_add_sample(${PROJECT_NAME} ${latency_server_src})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     eCAL::core
 )
 

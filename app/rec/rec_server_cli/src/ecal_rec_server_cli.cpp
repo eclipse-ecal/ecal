@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 #include <condition_variable>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecal_utils/string.h>
 #include <rec_server_core/rec_server.h>
 #include <rec_client_core/ecal_rec_defs.h>
@@ -144,6 +144,9 @@ std::unique_ptr<eCAL::rec_cli::command::Record> record_command;
 int main(int argc, char** argv)
 {
 #ifdef WIN32
+  (void)argc; // suppress unused warning
+  (void)argv; // suppress unused warning
+
   EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
 #endif // WIN32
 
@@ -331,7 +334,7 @@ int main(int argc, char** argv)
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
     eCAL::Initialize("eCALRec-Remote", eCAL::Init::All);
-    eCAL::Process::SetState(proc_sev_healthy, proc_sev_level1, "Running");
+    eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
   }

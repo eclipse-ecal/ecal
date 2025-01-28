@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@
 SeverityLevelModel::SeverityLevelModel(QObject *parent)
   : QAbstractListModel(parent)
 {
-  rows.push_back(std::make_pair(QString("Level 1"), eCAL_Process_eSeverity_Level::proc_sev_level1));
-  rows.push_back(std::make_pair(QString("Level 2"), eCAL_Process_eSeverity_Level::proc_sev_level2));
-  rows.push_back(std::make_pair(QString("Level 3"), eCAL_Process_eSeverity_Level::proc_sev_level3));
-  rows.push_back(std::make_pair(QString("Level 4"), eCAL_Process_eSeverity_Level::proc_sev_level4));
-  rows.push_back(std::make_pair(QString("Level 5"), eCAL_Process_eSeverity_Level::proc_sev_level5));
+  rows.push_back(std::make_pair(QString("Level 1"), eCAL::Process::eSeverityLevel::level1));
+  rows.push_back(std::make_pair(QString("Level 2"), eCAL::Process::eSeverityLevel::level2));
+  rows.push_back(std::make_pair(QString("Level 3"), eCAL::Process::eSeverityLevel::level3));
+  rows.push_back(std::make_pair(QString("Level 4"), eCAL::Process::eSeverityLevel::level4));
+  rows.push_back(std::make_pair(QString("Level 5"), eCAL::Process::eSeverityLevel::level5));
 }
 
 SeverityLevelModel::~SeverityLevelModel()
@@ -51,12 +51,12 @@ QString SeverityLevelModel::getString(int row) const
   return rows[row].first;
 }
 
-eCAL_Process_eSeverity_Level SeverityLevelModel::getSeverityLevel(int row) const
+eCAL::Process::eSeverityLevel SeverityLevelModel::getSeverityLevel(int row) const
 {
   return rows[row].second;
 }
 
-int SeverityLevelModel::getRow(eCAL_Process_eSeverity_Level level) const
+int SeverityLevelModel::getRow(eCAL::Process::eSeverityLevel level) const
 {
   for (int i = 0; i < (int)rows.size(); i++)
   {

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,48 +103,49 @@ namespace eCAL
     Topic GenerateTopic()
     {
       Topic topic;
-      topic.rclock          = rand() % 1000;
-      topic.hgname          = GenerateString(6);
-      topic.pname           = GenerateString(10);
-      topic.uname           = GenerateString(5);
-      topic.tname           = GenerateString(8);
-      topic.direction       = GenerateString(5);
-      topic.tdatatype       = GenerateDataTypeInformation();
+      topic.rclock               = rand() % 1000;
+      topic.shm_transport_domain = GenerateString(6);
+      topic.pname                = GenerateString(10);
+      topic.uname                = GenerateString(5);
+      topic.tname                = GenerateString(8);
+      topic.direction            = GenerateString(5);
+      topic.tdatatype            = GenerateDataTypeInformation();
       topic.tlayer.push_back(GenerateTLayer());
       topic.tlayer.push_back(GenerateTLayer());
-      topic.tsize           = rand() % 1000;
-      topic.connections_loc = rand() % 50;
-      topic.connections_ext = rand() % 50;
-      topic.message_drops   = rand() % 10;
-      topic.did             = rand();
-      topic.dclock          = rand();
-      topic.dfreq           = rand() % 100;
+      topic.tsize                = rand() % 1000;
+      topic.connections_loc      = rand() % 50;
+      topic.connections_ext      = rand() % 50;
+      topic.message_drops        = rand() % 10;
+      topic.did                  = rand();
+      topic.dclock               = rand();
+      topic.dfreq                = rand() % 100;
       return topic;
     }
 
     Process GenerateProcess()
     {
       Process process;
-      process.rclock = rand() % 1000;
-      process.hgname = GenerateString(6);
-      process.pname = GenerateString(10);
-      process.uname = GenerateString(5);
-      process.pparam = GenerateString(12);
-      process.state.severity = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      process.rclock               = rand() % 1000;
+      process.shm_transport_domain = GenerateString(6);
+      process.pname                = GenerateString(10);
+      process.uname                = GenerateString(5);
+      process.pparam               = GenerateString(12);
+      process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
       process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
-      process.state.info = GenerateString(10);
-      process.tsync_state = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
-      process.tsync_mod_name = GenerateString(6);
+      process.state.info           = GenerateString(10);
+      process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
+      process.tsync_mod_name       = GenerateString(6);
       process.component_init_state = rand() % 5;
-      process.component_init_info = GenerateString(8);
+      process.component_init_info  = GenerateString(8);
       process.ecal_runtime_version = GenerateString(5);
+      process.config_file_path     = GenerateString(20);
       return process;
     }
 
     SampleIdentifier GenerateIdentifier()
     {
       SampleIdentifier identifier;
-      identifier.entity_id = GenerateString(7);
+      identifier.entity_id = rand();
       identifier.process_id = rand() % 100;
       identifier.host_name = GenerateString(8);
       return identifier;
@@ -157,7 +158,7 @@ namespace eCAL
       sample.host.hname = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
-      sample.identifier.entity_id = std::to_string(sample.identifier.process_id);
+      sample.identifier.entity_id = sample.identifier.process_id;
       sample.process = GenerateProcess();
       return sample;
     }

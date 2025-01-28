@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,10 @@ eCAL::Registration::Sample sub_foo_process_b_register_1;
 eCAL::Registration::Sample sub_foo_process_b_register_2;
 
 // make sure we create unique topic IDs for our testcases
-std::string getUniqueId()
+uint64_t getUniqueId()
 {
-  static int topic_id = 1;
-  return std::to_string(topic_id++);
+  static uint64_t topic_id = 1;
+  return topic_id++;
 }
 
 eCAL::Registration::Sample UpdateTopicSample(const eCAL::Registration::Sample& input_)
@@ -59,7 +59,7 @@ void InitializeAllSamples()
   pub_foo_process_a_unregister.identifier.host_name = "host0";
   pub_foo_process_a_unregister.identifier.process_id = 1000;
   pub_foo_process_a_unregister.identifier.entity_id = getUniqueId();
-  pub_foo_process_a_unregister.topic.hgname = "host0";
+  pub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
   pub_foo_process_a_unregister.topic.pname = "process_a";
   pub_foo_process_a_unregister.topic.tname = "foo";
   pub_foo_process_a_register_1.topic.uname = "abc";
@@ -84,7 +84,7 @@ void InitializeAllSamples()
   sub_foo_process_a_unregister.identifier.host_name = "host0";
   sub_foo_process_a_unregister.identifier.process_id = 1000;
   sub_foo_process_a_unregister.identifier.entity_id = getUniqueId();
-  sub_foo_process_a_unregister.topic.hgname = "host0";
+  sub_foo_process_a_unregister.topic.shm_transport_domain = "host0";
   sub_foo_process_a_unregister.topic.pname = "process_a";
   sub_foo_process_a_unregister.topic.tname = "foo";
   sub_foo_process_a_register_1.topic.uname = "abc";
@@ -109,7 +109,7 @@ void InitializeAllSamples()
   sub_foo_process_b_unregister.identifier.host_name = "host0";
   sub_foo_process_b_unregister.identifier.process_id = 1000;
   sub_foo_process_b_unregister.identifier.entity_id = getUniqueId();
-  sub_foo_process_b_unregister.topic.hgname = "host0";
+  sub_foo_process_b_unregister.topic.shm_transport_domain = "host0";
   sub_foo_process_b_unregister.topic.pname = "process_b";
   sub_foo_process_b_unregister.topic.tname = "foo";
   sub_foo_process_b_register_1.topic.uname = "abc";

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@
  * @brief  Function definitions for setting default config values
 **/
 
-#include "ecal/ecal_config.h"
+#include "ecal/config.h"
 #include "ecal_config_internal.h"
-#include "ecal/ecal_util.h"
+#include "ecal/util.h"
 
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
@@ -55,7 +55,7 @@
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 #include "ecal_utils/ecal_utils.h"
-#include "ecal/ecal_log.h"
+#include "ecal/log.h"
 
 #include <algorithm>
 #include <fstream>
@@ -236,52 +236,47 @@ namespace eCAL
 
     Configuration::Configuration() = default;
 
-    std::string Configuration::GetYamlFilePath()
+    std::string Configuration::GetConfigurationFilePath() const
     {
       return ecal_yaml_file_path;
     }
 
-    Configuration& GetConfiguration()
+    const Configuration& GetConfiguration()
     {
       return g_ecal_configuration;
     }
 
-    TransportLayer::Configuration& GetTransportLayerConfiguration()
+    const TransportLayer::Configuration& GetTransportLayerConfiguration()
     {
       return GetConfiguration().transport_layer;
     }
 
-    Registration::Configuration& GetRegistrationConfiguration()
+    const Registration::Configuration& GetRegistrationConfiguration()
     {
       return GetConfiguration().registration;
     }
 
-    Monitoring::Configuration& GetMonitoringConfiguration()
-    {
-      return GetConfiguration().monitoring;
-    }
-
-    Logging::Configuration& GetLoggingConfiguration()
+    const Logging::Configuration& GetLoggingConfiguration()
     {
       return GetConfiguration().logging;
     }
 
-    Subscriber::Configuration& GetSubscriberConfiguration()
+    const Subscriber::Configuration& GetSubscriberConfiguration()
     {
       return GetConfiguration().subscriber;
     }
 
-    Publisher::Configuration& GetPublisherConfiguration()
+    const Publisher::Configuration& GetPublisherConfiguration()
     {
       return GetConfiguration().publisher;
     }
 
-    Time::Configuration& GetTimesyncConfiguration()
+    const Time::Configuration& GetTimesyncConfiguration()
     {
       return GetConfiguration().timesync;
     }
 
-    Application::Configuration& GetApplicationConfiguration()
+    const Application::Configuration& GetApplicationConfiguration()
     {
       return GetConfiguration().application;
     }

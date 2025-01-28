@@ -22,7 +22,7 @@
 **/
 
 #include <cstdint>
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <memory>
 #include <string>
 

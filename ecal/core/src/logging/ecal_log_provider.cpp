@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,9 @@
 #include "serialization/ecal_serialize_logging.h"
 #include "config/builder/udp_attribute_builder.h"
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 #include <ecal_utils/filesystem.h>
+#include <ecal_utils/string.h>
 
 #include <chrono>
 #include <iostream>
@@ -50,18 +51,8 @@ namespace
 #include <sys/time.h>
 #include <ctime>
 
-namespace{
-  bool isDirectory(const std::string& path_)
-  {
-    if (path_.empty()) return false;
-
-    struct stat st;
-    if (stat(path_.c_str(), &st) == 0)
-      return S_ISDIR(st.st_mode);
-
-    return false;
-  }
-
+namespace
+{
   std::string get_time_str()
   {
     char            fmt[64];
@@ -85,7 +76,7 @@ namespace
     std::cout << "[eCAL][Logging-Provider][Warning] " << msg_ << "\n";
   }
 
-  void createLogHeader(std::stringstream& msg_stream, const eCAL_Logging_eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
+  void createLogHeader(std::stringstream& msg_stream, const eCAL::Logging::eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
   {
     msg_stream << std::chrono::duration_cast<std::chrono::milliseconds>(log_time_.time_since_epoch()).count();
     msg_stream << " ms";
@@ -98,31 +89,31 @@ namespace
     msg_stream << " | ";
     switch(level_)
     {
-    case log_level_none:
-    case log_level_all:
+    case eCAL::Logging::log_level_none:
+    case eCAL::Logging::log_level_all:
       break;
-    case log_level_info:
+    case eCAL::Logging::log_level_info:
       msg_stream << "info";
       break;
-    case log_level_warning:
+    case eCAL::Logging::log_level_warning:
       msg_stream << "warning";
       break;
-    case log_level_error:
+    case eCAL::Logging::log_level_error:
       msg_stream << "error";
       break;
-    case log_level_fatal:
+    case eCAL::Logging::log_level_fatal:
       msg_stream << "fatal";
       break;
-    case log_level_debug1:
+    case eCAL::Logging::log_level_debug1:
       msg_stream << "debug1";
       break;
-    case log_level_debug2:
+    case eCAL::Logging::log_level_debug2:
       msg_stream << "debug2";
       break;
-    case log_level_debug3:
+    case eCAL::Logging::log_level_debug3:
       msg_stream << "debug3";
       break;
-    case log_level_debug4:
+    case eCAL::Logging::log_level_debug4:
       msg_stream << "debug4";
       break;
     }
@@ -148,9 +139,9 @@ namespace eCAL
   namespace Logging
   {
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
-    : m_attributes(attr_)
-    , m_created(false)
+    : m_created(false)
     , m_logfile(nullptr)
+    , m_attributes(attr_)
     {
     }
 
@@ -188,11 +179,24 @@ namespace eCAL
       if (!isDirectoryOrCreate(m_attributes.file_config.path)) return false;
       
       const std::string tstring = get_time_str();
-  
-      m_logfile_name = m_attributes.file_config.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      
+      std::string log_path = m_attributes.file_config.path;
+      if (EcalUtils::Filesystem::ToUnixSeperators(log_path).back() == '/')
+        log_path.pop_back();
+
+      const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      const std::vector<std::string> file_path_components = { log_path, file_name };
+      
+      m_logfile_name = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), file_path_components);
       m_logfile = fopen(m_logfile_name.c_str(), "w");
 
-      return m_logfile != nullptr;
+      if (m_logfile != nullptr)
+      {
+        std::cout << "[eCAL][Logging-Provider] Logfile created: " << m_logfile_name << "\n";
+        return true;
+      }
+
+      return false;
     }
 
     bool CLogProvider::StartUDPLogging()
@@ -203,16 +207,16 @@ namespace eCAL
       return m_udp_logging_sender != nullptr;
     }
 
-    void CLogProvider::Log(const eCAL_Logging_eLogLevel level_, const std::string& msg_)
+    void CLogProvider::Log(const eLogLevel level_, const std::string& msg_)
     {
       const std::lock_guard<std::mutex> lock(m_log_mtx);
 
       if(!m_created) return;
       if(msg_.empty()) return;
 
-      const eCAL_Logging_Filter log_con  = level_ & m_attributes.console_sink.filter_log;
-      const eCAL_Logging_Filter log_file = level_ & m_attributes.file_sink.filter_log;
-      const eCAL_Logging_Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
+      const Filter log_con  = level_ & m_attributes.console_sink.filter_log;
+      const Filter log_file = level_ & m_attributes.file_sink.filter_log;
+      const Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
       if((log_con | log_file | log_udp) == 0) return;
 
       auto log_time = eCAL::Time::ecal_clock::now();

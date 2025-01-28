@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@
 #include "modsupport.h"
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
-#include <ecal/ecal_server_v5.h>
-#include <ecal/ecal_subscriber_v5.h>
+#include <ecal/v5/ecal_client.h>
+#include <ecal/v5/ecal_server.h>
+#include <ecal/v5/ecal_subscriber.h>
 
 #include "ecal_clang.h"
 
@@ -114,19 +114,6 @@ PyObject* finalize(PyObject* /*self*/, PyObject* /*args*/)
 PyObject* is_initialized(PyObject* /*self*/, PyObject* /*args*/)
 {
   return(Py_BuildValue("i", ecal_is_initialized()));
-}
-
-/****************************************/
-/*      set_unit_name                   */
-/****************************************/
-PyObject* set_unit_name(PyObject* /*self*/, PyObject* args)
-{
-  char* unit_name = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &unit_name))
-    return nullptr;
-
-  return(Py_BuildValue("i", ecal_set_unit_name(unit_name)));
 }
 
 /****************************************/
@@ -544,7 +531,7 @@ PyObject* server_destroy(PyObject* /*self*/, PyObject* args)
 /****************************************/
 /*      server_add_method_callback      */
 /****************************************/
-static int c_server_method_callback(const std::string& method_name_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, ECAL_HANDLE handle_)
+static int c_server_method_callback(const std::string& method_name_, const std::string& request_type_, const std::string& response_type_, const std::string& request_, std::string& response_, ECAL_HANDLE handle_)
 {
   int ret_state = 0;
 
@@ -561,14 +548,14 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   PyObject* method_name = Py_BuildValue("s", method_name_.c_str());
 
   const std::string fmt("y#");
-  PyObject* req_type  = Py_BuildValue(fmt.data(), req_type_.data(),  (Py_ssize_t)req_type_.size());
-  PyObject* resp_type = Py_BuildValue(fmt.data(), resp_type_.data(), (Py_ssize_t)resp_type_.size());
-  PyObject* request   = Py_BuildValue(fmt.data(), request_.data(),   (Py_ssize_t)request_.size());
+  PyObject* request_type  = Py_BuildValue(fmt.data(), request_type_.data(),  (Py_ssize_t)request_type_.size());
+  PyObject* response_type = Py_BuildValue(fmt.data(), response_type_.data(), (Py_ssize_t)response_type_.size());
+  PyObject* request       = Py_BuildValue(fmt.data(), request_.data(),   (Py_ssize_t)request_.size());
 
   PyObject* args = PyTuple_New(4);
   PyTuple_SetItem(args, 0, method_name);
-  PyTuple_SetItem(args, 1, req_type);
-  PyTuple_SetItem(args, 2, resp_type);
+  PyTuple_SetItem(args, 1, request_type);
+  PyTuple_SetItem(args, 2, response_type);
   PyTuple_SetItem(args, 3, request);
 
   eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)handle_;
@@ -603,15 +590,15 @@ static int c_server_method_callback(const std::string& method_name_, const std::
   return ret_state;
 }
 
-PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (server_handle, method_name, req_type, resp_type, callback)
+PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (server_handle, method_name, request_type, response_type, callback)
 {
-  ECAL_HANDLE server_handle = nullptr;
-  char*       method_name   = nullptr;
-  char*       req_type      = nullptr;
-  char*       resp_type     = nullptr;
-  PyObject*   cb_func       = nullptr;
+  ECAL_HANDLE server_handle     = nullptr;
+  char*       method_name       = nullptr;
+  char*       request_type      = nullptr;
+  char*       response_type     = nullptr;
+  PyObject*   cb_func           = nullptr;
 
-  if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &req_type, &resp_type, &cb_func))
+  if (!PyArg_ParseTuple(args, "nsssO", &server_handle, &method_name, &request_type, &response_type, &cb_func))
     return nullptr;
 
   eCAL::v5::CServiceServer* server = (eCAL::v5::CServiceServer*)server_handle;
@@ -645,7 +632,7 @@ PyObject* server_add_method_callback(PyObject* /*self*/, PyObject* args)   // (s
 
     bool added_callback{ false };
     Py_BEGIN_ALLOW_THREADS
-      added_callback = server->AddMethodCallback(method_name, req_type, resp_type, std::bind(c_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, server));
+      added_callback = server->AddMethodCallback(method_name, request_type, response_type, std::bind(c_server_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, server));
     Py_END_ALLOW_THREADS
     
     if (added_callback)
@@ -777,7 +764,7 @@ PyObject* client_call_method(PyObject* /*self*/, PyObject* args)   // (client_ha
 /****************************************/
 /*      client_add_response_callback    */
 /****************************************/
-static void c_client_callback(const struct eCAL::SServiceResponse& service_response_, ECAL_HANDLE handle_)
+static void c_client_callback(const struct eCAL::v5::SServiceResponse& service_response_, ECAL_HANDLE handle_)
 {
 #if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
@@ -806,13 +793,13 @@ static void c_client_callback(const struct eCAL::SServiceResponse& service_respo
   std::string call_state_s;
   switch (service_response_.call_state)
   {
-  case call_state_none:
+  case eCAL::eCallState::none:
     call_state_s = "call_state_none";
     break;
-  case call_state_executed:
+  case eCAL::eCallState::executed:
     call_state_s = "call_state_executed";
     break;
-  case call_state_failed:
+  case eCAL::eCallState::failed:
     call_state_s = "call_state_failed";
     break;
   default:
@@ -944,45 +931,6 @@ PyObject* mon_finalize(PyObject* /*self*/, PyObject* /*args*/)
 }
 
 /****************************************/
-/*      mon_setexclfilter               */
-/****************************************/
-PyObject* mon_setexclfilter(PyObject* /*self*/, PyObject* args)
-{
-  char* filter = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &filter)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetExclFilter(filter))));
-}
-
-/****************************************/
-/*      mon_setinclfilter               */
-/****************************************/
-PyObject* mon_setinclfilter(PyObject* /*self*/, PyObject* args)
-{
-  char* filter = nullptr;
-
-  if (!PyArg_ParseTuple(args, "s", &filter)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetInclFilter(filter))));
-}
-
-/****************************************/
-/*      mon_setfilterstate              */
-/****************************************/
-PyObject* mon_setfilterstate(PyObject* /*self*/, PyObject* args)
-{
-  int state = 0;
-
-  if (!PyArg_ParseTuple(args, "i", &state)) 
-    return nullptr;
-
-  return(Py_BuildValue("i", static_cast<int>(!eCAL::Monitoring::SetFilterState(state != 0))));
-}
-
-/****************************************/
 /*      mon_monitoring                  */
 /****************************************/
 namespace
@@ -1000,8 +948,8 @@ namespace
       val = Py_BuildValue("s", topic.hname.c_str());
       PyDict_SetItemString(topicDict, "hname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.hgname.c_str());
-      PyDict_SetItemString(topicDict, "hgname", val); Py_DECREF(val);
+      val = Py_BuildValue("s", topic.shm_transport_domain.c_str());
+      PyDict_SetItemString(topicDict, "shm_transport_domain", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.pid);
       PyDict_SetItemString(topicDict, "pid", val); Py_DECREF(val);
@@ -1012,7 +960,7 @@ namespace
       val = Py_BuildValue("s", topic.uname.c_str());
       PyDict_SetItemString(topicDict, "uname", val); Py_DECREF(val);
 
-      val = Py_BuildValue("s", topic.tid.c_str());
+      val = Py_BuildValue("s", std::to_string(topic.tid).c_str());
       PyDict_SetItemString(topicDict, "tid", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.tname.c_str());
@@ -1021,9 +969,45 @@ namespace
       val = Py_BuildValue("s", topic.direction.c_str());
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
-      // TODO: SDataTypeInformation tdatatype
+      val = Py_BuildValue("s", topic.tdatatype.name.c_str());
+      PyDict_SetItemString(topicDict, "tdatatype_name", val); Py_DECREF(val);
 
-      // TODO: std::vector<TLayer> tlayer
+      val = Py_BuildValue("s", topic.tdatatype.encoding.c_str());
+      PyDict_SetItemString(topicDict, "tdatatype_encoding", val); Py_DECREF(val);
+
+      val = Py_BuildValue("y#", topic.tdatatype.descriptor.c_str(), topic.tdatatype.descriptor.length());
+      PyDict_SetItemString(topicDict, "tdatatype_descriptor", val); Py_DECREF(val);
+
+      PyObject* layerList = PyList_New(0);
+      for (auto layer : topic.tlayer)
+      {
+        PyObject* layerDict = PyDict_New();
+        PyList_Append(layerList, layerDict); Py_DECREF(layerDict);
+
+        switch (layer.type)
+        {
+        case eCAL::Monitoring::tl_none:
+          val = Py_BuildValue("s", "tl_none");
+          break;
+        case eCAL::Monitoring::tl_ecal_shm:
+          val = Py_BuildValue("s", "tl_ecal_shm");
+          break;
+        case eCAL::Monitoring::tl_ecal_udp_mc:
+          val = Py_BuildValue("s", "tl_ecal_udp_mc");
+          break;
+        case eCAL::Monitoring::tl_ecal_tcp:
+          val = Py_BuildValue("s", "tl_ecal_tcp");
+          break;
+        }
+        PyDict_SetItemString(layerDict, "type", val); Py_DECREF(val);
+
+        val = Py_BuildValue("i", layer.version);
+        PyDict_SetItemString(layerDict, "version", val); Py_DECREF(val);
+
+        val = Py_BuildValue("O", layer.active ? Py_True : Py_False);
+        PyDict_SetItemString(layerDict, "active", val); Py_DECREF(val);
+      }
+      PyDict_SetItemString(topicDict, "layer", layerList); Py_DECREF(layerList);
 
       val = Py_BuildValue("i", topic.tsize);
       PyDict_SetItemString(topicDict, "tsize", val); Py_DECREF(val);
@@ -1076,8 +1060,8 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", process.hname.c_str());
         PyDict_SetItemString(processDict, "hname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.hgname.c_str());
-        PyDict_SetItemString(processDict, "hgname", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.shm_transport_domain.c_str());
+        PyDict_SetItemString(processDict, "shm_transport_domain", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", process.pid);
         PyDict_SetItemString(processDict, "pid", val); Py_DECREF(val);
@@ -1145,7 +1129,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.sname.c_str());
         PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", service.sid.c_str());
+        val = Py_BuildValue("s", std::to_string(service.sid).c_str());
         PyDict_SetItemString(serviceDict, "sid", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", service.version);
@@ -1165,15 +1149,23 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.mname.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_type.c_str());
-          PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
+          val = Py_BuildValue("s", method.req_datatype.name.c_str());
+          PyDict_SetItemString(methodsDict, "request_datatype_name", val); Py_DECREF(val);
 
-          // TODO: std::string req_desc
+          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_type.c_str());
-          PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
+          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
 
-          // TODO: std::string resp_desc
+          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
+          PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
+
+          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1209,7 +1201,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", client.sname.c_str());
         PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", client.sid.c_str());
+        val = Py_BuildValue("s", std::to_string(client.sid).c_str());
         PyDict_SetItemString(clientDict, "sid", val); Py_DECREF(val);
 
         PyObject* methodsDict = PyDict_New();
@@ -1220,15 +1212,23 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.mname.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_type.c_str());
-          PyDict_SetItemString(methodsDict, "req_type", val); Py_DECREF(val);
+          val = Py_BuildValue("s", method.req_datatype.name.c_str());
+          PyDict_SetItemString(methodsDict, "request_datatype_type", val); Py_DECREF(val);
 
-          // TODO: std::string req_desc
-          
-          val = Py_BuildValue("s", method.resp_type.c_str());
-          PyDict_SetItemString(methodsDict, "resp_type", val); Py_DECREF(val);
+          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
-          // TODO: std::string resp_desc
+          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
+          PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
+
+          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
+
+          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
           PyDict_SetItemString(methodsDict, "call_count", val); Py_DECREF(val);
@@ -1306,7 +1306,6 @@ static PyMethodDef _ecal_methods[] =
   {"initialize",                    initialize,                    METH_VARARGS,  "initialize(unit_name)"},
   {"finalize",                      finalize,                      METH_NOARGS,   "finalize()"},
   {"is_initialized",                is_initialized,                METH_NOARGS,   "is_initialized()"},
-  {"set_unit_name",                 set_unit_name,                 METH_VARARGS,  "set_unit_name(unit_name)"},
 
   {"getversion",                    getversion,                    METH_NOARGS,   "getversion()"},
   {"getversion_components",         getversion_components,         METH_NOARGS,   "getversion_components()"},
@@ -1321,12 +1320,12 @@ static PyMethodDef _ecal_methods[] =
   {"log_setlevel",                  log_setlevel,                  METH_VARARGS,  "log_setlevel(level)"},
   {"log_message",                   log_message,                   METH_VARARGS,  "log_message(message)"},
 
-  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
+  {"pub_create",                    pub_create,                    METH_VARARGS,  "pub_create(topic_name, topic_type_name, topic_type_encoding, topic_type_desc)"},
   {"pub_destroy",                   pub_destroy,                   METH_VARARGS,  "pub_destroy(topic_handle)"},
 
   {"pub_send",                      pub_send,                      METH_VARARGS,  "pub_send(topic_handle, payload, time)"},
 
-  {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topic_type, topic_encoding, topic_desc)"},
+  {"sub_create",                    sub_create,                    METH_VARARGS,  "sub_create(topic_name, topic_type_name, topic_type_encoding, topic_type_desc)"},
   {"sub_destroy",                   sub_destroy,                   METH_VARARGS,  "sub_destroy(topic_handle)"},
 
   {"sub_receive",                   sub_receive,                   METH_VARARGS,  "sub_receive(topic_handle, timeout)"},
@@ -1337,7 +1336,7 @@ static PyMethodDef _ecal_methods[] =
   {"server_create",                 server_create,                 METH_VARARGS,  "server_create(service_name)" },
   {"server_destroy",                server_destroy,                METH_VARARGS,  "server_destroy(server_handle)" },
 
-  {"server_add_method_callback",    server_add_method_callback,    METH_VARARGS,  "server_add_method_callback(server_handle, method_name, req_type, resp_type, callback)" },
+  {"server_add_method_callback",    server_add_method_callback,    METH_VARARGS,  "server_add_method_callback(server_handle, method_name, request_type_name, response_type_name, callback)" },
   {"server_rem_method_callback",    server_rem_method_callback,    METH_VARARGS,  "server_rem_method_callback(server_handle, method_name)" },
 
   {"client_create",                 client_create,                 METH_VARARGS,  "client_create(service_name)" },
@@ -1351,9 +1350,6 @@ static PyMethodDef _ecal_methods[] =
   
   {"mon_initialize",                mon_initialize,                METH_NOARGS,   "mon_initialize()"},
   {"mon_finalize",                  mon_finalize,                  METH_NOARGS,   "mon_finalize()"},
-  {"mon_setexclfilter",             mon_setexclfilter,             METH_VARARGS,  "mon_setexclfilter(filter)"},
-  {"mon_setinclfilter",             mon_setinclfilter,             METH_VARARGS,  "mon_setinclfilter(filter)"},
-  {"mon_setfilterstate",            mon_setfilterstate,            METH_VARARGS,  "mon_setfilterstate(state)"},
 
   {"mon_monitoring",                mon_monitoring,                METH_NOARGS,   "mon_monitoring()"},
   {"mon_logging",                   mon_logging,                   METH_NOARGS,   "mon_logging()"},

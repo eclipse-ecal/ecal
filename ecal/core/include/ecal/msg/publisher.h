@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@
 */
 
 /**
- * @file   ecal_publisher.h
+ * @file   msg/publisher.h
  * @brief  eCAL message publisher interface
 **/
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
-#include <ecal/ecal_publisher_v5.h>
-#include <ecal/ecal_util.h>
+#include <ecal/deprecate.h>
+#include <ecal/pubsub/publisher.h>
+#include <ecal/util.h>
 
 #include <string>
 #include <vector>
@@ -43,38 +43,29 @@ namespace eCAL
    * 
   **/
   template <typename T>
-  class CMsgPublisher : public v5::CPublisher
+  class CMsgPublisher : public CPublisher
   {
   public:
     /**
-     * @brief  Default Constructor. 
-     *         Using this constructor, the object is not actually in a usable state.
-     *         Before being able to send data, one has to call the `Create()` function, first.
-    **/
-    CMsgPublisher() : CPublisher()
-    {
-    }
-
-    /**
-     * @brief  Constructor, that automatically intializes the Publisher. 
-     *         This should be the preferred constructor.
+     * @brief  Constructor.
      *
      * @param topic_name_      Unique topic name.
      * @param data_type_info_  Topic data type information (encoding, type, descriptor).
      * @param config_          Optional configuration parameters.
     **/
-    CMsgPublisher(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
     {
     }
 
     /**
-     * @brief  Constructor, that automatically intializes the Publisher. 
-     *         If no datatype information about the topic is available, this constructor can be used.
+     * @brief  Constructor.
      *
-     * @param topic_name_  Unique topic name.
-     * @param config_      Optional configuration parameters.
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param event_callback_  The publisher event callback funtion.
+     * @param config_          Optional configuration parameters.
     **/
-    explicit CMsgPublisher(const std::string& topic_name_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher(topic_name_, GetDataTypeInformation(), config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
     {
     }
 
@@ -101,30 +92,6 @@ namespace eCAL
     ~CMsgPublisher() override = default;
 
     /**
-     * @brief  Creates this object.
-     *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param config_          Optional configuration parameters.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    bool Create(const std::string& topic_name_, const struct SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
-    {
-      return(CPublisher::Create(topic_name_, data_type_info_, config_));
-    }
-
-    /**
-     * @brief  Destroys this object. 
-     *
-     * @return  True if it succeeds, false if it fails. 
-    **/
-    bool Destroy()
-    {
-      return(CPublisher::Destroy());
-    }
-
-    /**
      * @brief  Send serialized message. 
      *
      * @param msg_   The message object. 
@@ -139,9 +106,9 @@ namespace eCAL
       // serialization, but we send an empty payload
       // to still do some statistics like message clock
         // counting and frequency calculation for the monitoring layer
-      if (!IsSubscribed())
+      if (CPublisher::GetSubscriberCount() == 0)
       {
-        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+        return(CPublisher::Send(nullptr, 0, time_));
       }
 
       // if we have a subscription allocate memory for the
@@ -153,20 +120,20 @@ namespace eCAL
         m_buffer.resize(size);
         if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
         {
-          return(eCAL::v5::CPublisher::Send(m_buffer.data(), size, time_) > 0);
+          return(CPublisher::Send(m_buffer.data(), size, time_));
         }
       }
       else
       {
         // send a zero payload length message to trigger the subscriber side
-        return(eCAL::v5::CPublisher::Send(nullptr, 0, time_) > 0);
+        return(CPublisher::Send(nullptr, 0, time_));
       }
-      return(0);
+      return false;
     }
 
   protected:
     // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-    virtual struct SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
+    virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
   private:
     virtual size_t GetSize(const T& msg_) const = 0;
     virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;

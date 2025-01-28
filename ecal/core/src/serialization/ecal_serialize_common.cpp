@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,48 @@ namespace eCAL
     {
       pb_callback.funcs.decode = &decode_string_field; // NOLINT(*-pro-type-union-access)
       pb_callback.arg = &str;
+    }
+
+    bool encode_int_to_string_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
+    {
+      if (arg == nullptr)  return false;
+      if (*arg == nullptr) return false;
+
+      if (!pb_encode_tag_for_field(stream, field))
+        return false;
+
+      auto* int_value = static_cast<uint64_t*>(*arg);
+      auto integer_value_as_string = std::to_string(*int_value);
+      return pb_encode_string(stream, (pb_byte_t*)(integer_value_as_string.data()), integer_value_as_string.size()); // NOLINT(*-pro-type-cstyle-cast)
+    }
+
+    void encode_int_to_string(pb_callback_t& pb_callback, const uint64_t& int_argument)
+    {
+      pb_callback.funcs.encode = &encode_int_to_string_field; // NOLINT(*-pro-type-union-access)
+      pb_callback.arg = (void*)(&int_argument);
+    }
+
+
+    bool decode_int_from_string_field(pb_istream_t* stream, const pb_field_iter_t* /*field*/, void** arg)
+    {
+      if (arg == nullptr)  return false;
+      if (*arg == nullptr) return false;
+
+      size_t len = stream->bytes_left;
+      auto* tgt_integer = static_cast<uint64_t*>(*arg);
+
+      std::string intermediate_string;
+      intermediate_string.resize(len);
+
+      auto ret = pb_read(stream, (pb_byte_t*)(intermediate_string.data()), intermediate_string.size()); // NOLINT(*-pro-type-cstyle-cast)
+      *tgt_integer = std::stoull(intermediate_string);
+      return ret;
+    }
+
+    void decode_int_from_string(pb_callback_t& pb_callback, uint64_t& int_argument)
+    {
+      pb_callback.funcs.decode = &decode_int_from_string_field; // NOLINT(*-pro-type-union-access)
+      pb_callback.arg = (void*)(&int_argument);
     }
 
     ///////////////////////////////////////////////

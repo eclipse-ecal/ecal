@@ -49,7 +49,7 @@ ChangesAssociations=yes
 ; PrivilegesRequired=admin
 ; Only available in Version 6 and above:
 PrivilegesRequiredOverridesAllowed=dialog
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64compatible
 ChangesEnvironment=true
 VersionInfoVersion={#AppVersion}
 LicenseFile={#LicenseFile}

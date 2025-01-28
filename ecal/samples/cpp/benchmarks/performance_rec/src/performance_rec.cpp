@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/string/subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <iostream>
 #include <sstream>
@@ -62,7 +62,7 @@ int main()
   long long bytes(0);
 
   // add callback
-    auto on_receive = [&](const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
+    auto on_receive = [&](const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
     auto size = data_.size;
 
     msgs++;

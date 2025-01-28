@@ -3,45 +3,38 @@
 // utility functions for yaml node handling
 namespace YAML
 {
-  template<typename AS, typename MEM>
-  void AssignValue(MEM& member, const YAML::Node& node_, const char* key)
-  {
-    if (node_[key])
-      member = node_[key].as<AS>();
-  }
-
-  eCAL_Logging_Filter ParseLogLevel(const std::vector<std::string>& filter_)
+  eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
-    char filter_mask = log_level_none;
+    char filter_mask = eCAL::Logging::log_level_none;
     for (const auto& it : filter_)
     {
-      if (it == "all")     filter_mask |= log_level_all;
-      if (it == "info")    filter_mask |= log_level_info;
-      if (it == "warning") filter_mask |= log_level_warning;
-      if (it == "error")   filter_mask |= log_level_error;
-      if (it == "fatal")   filter_mask |= log_level_fatal;
-      if (it == "debug1")  filter_mask |= log_level_debug1;
-      if (it == "debug2")  filter_mask |= log_level_debug2;
-      if (it == "debug3")  filter_mask |= log_level_debug3;
-      if (it == "debug4")  filter_mask |= log_level_debug4;
+      if (it == "all")     filter_mask |= eCAL::Logging::log_level_all;
+      if (it == "info")    filter_mask |= eCAL::Logging::log_level_info;
+      if (it == "warning") filter_mask |= eCAL::Logging::log_level_warning;
+      if (it == "error")   filter_mask |= eCAL::Logging::log_level_error;
+      if (it == "fatal")   filter_mask |= eCAL::Logging::log_level_fatal;
+      if (it == "debug1")  filter_mask |= eCAL::Logging::log_level_debug1;
+      if (it == "debug2")  filter_mask |= eCAL::Logging::log_level_debug2;
+      if (it == "debug3")  filter_mask |= eCAL::Logging::log_level_debug3;
+      if (it == "debug4")  filter_mask |= eCAL::Logging::log_level_debug4;
     }
 
     return(filter_mask);
   }
 
-  std::vector<std::string> LogLevelToVector(eCAL_Logging_Filter filter_mask) 
+  std::vector<std::string> LogLevelToVector(eCAL::Logging::Filter filter_mask)
   {
     std::vector<std::string> filter;
-    if ((filter_mask & log_level_all) != 0)     filter.emplace_back("all");
-    if ((filter_mask & log_level_info) != 0)    filter.emplace_back("info");
-    if ((filter_mask & log_level_warning) != 0) filter.emplace_back("warning");
-    if ((filter_mask & log_level_error) != 0)   filter.emplace_back("error");
-    if ((filter_mask & log_level_fatal) != 0)   filter.emplace_back("fatal");
-    if ((filter_mask & log_level_debug1) != 0)  filter.emplace_back("debug1");
-    if ((filter_mask & log_level_debug2) != 0)  filter.emplace_back("debug2");
-    if ((filter_mask & log_level_debug3) != 0)  filter.emplace_back("debug3");
-    if ((filter_mask & log_level_debug4) != 0)  filter.emplace_back("debug4");
+    if ((filter_mask & eCAL::Logging::log_level_all) != 0)     filter.emplace_back("all");
+    if ((filter_mask & eCAL::Logging::log_level_info) != 0)    filter.emplace_back("info");
+    if ((filter_mask & eCAL::Logging::log_level_warning) != 0) filter.emplace_back("warning");
+    if ((filter_mask & eCAL::Logging::log_level_error) != 0)   filter.emplace_back("error");
+    if ((filter_mask & eCAL::Logging::log_level_fatal) != 0)   filter.emplace_back("fatal");
+    if ((filter_mask & eCAL::Logging::log_level_debug1) != 0)  filter.emplace_back("debug1");
+    if ((filter_mask & eCAL::Logging::log_level_debug2) != 0)  filter.emplace_back("debug2");
+    if ((filter_mask & eCAL::Logging::log_level_debug3) != 0)  filter.emplace_back("debug3");
+    if ((filter_mask & eCAL::Logging::log_level_debug4) != 0)  filter.emplace_back("debug4");
 
     return filter;
   }
@@ -148,7 +141,7 @@ namespace YAML
     node["registration_refresh"] = config_.registration_refresh;
     node["network_enabled"]      = config_.network_enabled;
     node["loopback"]             = config_.loopback;
-    node["host_group_name"]      = config_.host_group_name;
+    node["shm_transport_domain"] = config_.shm_transport_domain;
     return node;
   }
 
@@ -160,37 +153,12 @@ namespace YAML
     AssignValue<bool>(config_.loopback, node_, "loopback");    
     AssignValue<eCAL::Registration::Layer::Configuration>(config_.layer, node_, "layer");
 
-    // By default the host_group_name is set with the current host name.
-    // If the user does not specify the host group name in the yaml, leave it like it is.
-    std::string host_group_name;
-    AssignValue<std::string>(host_group_name, node_, "host_group_name");
-    if (!host_group_name.empty()) config_.host_group_name = host_group_name;
+    // By default the shm_transport_domain is set with the current host name.
+    // If the user does not specify the shm transport domain in the yaml, leave it like it is.
+    std::string shm_transport_domain;
+    AssignValue<std::string>(shm_transport_domain, node_, "shm_transport_domain");
+    if (!shm_transport_domain.empty()) config_.shm_transport_domain = shm_transport_domain;
 
-    return true;
-  }
-
-
-  /*
-       __  ___          _ __           _          
-      /  |/  /__  ___  (_) /____  ____(_)__  ___ _
-     / /|_/ / _ \/ _ \/ / __/ _ \/ __/ / _ \/ _ `/
-    /_/  /_/\___/_//_/_/\__/\___/_/ /_/_//_/\_, / 
-                                           /___/  
-  */
-  
-  Node convert<eCAL::Monitoring::Configuration>::encode(const eCAL::Monitoring::Configuration& config_)
-  {
-    Node node;
-    node["filter_excl"] = config_.filter_excl;
-    node["filter_incl"] = config_.filter_incl;
-
-    return node;
-  }
-
-  bool convert<eCAL::Monitoring::Configuration>::decode(const Node& node_, eCAL::Monitoring::Configuration& config_)
-  {
-    AssignValue<std::string>(config_.filter_excl, node_, "filter_excl");
-    AssignValue<std::string>(config_.filter_incl, node_, "filter_incl");
     return true;
   }
 
@@ -366,8 +334,6 @@ namespace YAML
   Node convert<eCAL::Publisher::Configuration>::encode(const eCAL::Publisher::Configuration& config_)
   {
     Node node;
-    node["share_topic_description"] = config_.share_topic_description;
-    node["share_topic_type"]        = config_.share_topic_type;
     node["layer"]                   = config_.layer;
     node["priority_local"]          = transformLayerEnumToStr(config_.layer_priority_local);
     node["priority_network"]        = transformLayerEnumToStr(config_.layer_priority_remote);
@@ -376,9 +342,6 @@ namespace YAML
 
   bool convert<eCAL::Publisher::Configuration>::decode(const Node& node_, eCAL::Publisher::Configuration& config_)
   {
-    AssignValue<bool>(config_.share_topic_description, node_, "share_topic_description");
-    AssignValue<bool>(config_.share_topic_type, node_, "share_topic_type");
-    
     std::vector<std::string> tmp;
     AssignValue<std::vector<std::string>>(tmp, node_, "priority_local");
     config_.layer_priority_local = transformLayerStrToEnum(tmp);
@@ -677,7 +640,6 @@ namespace YAML
     node["publisher"]    = config_.publisher;
     node["subscriber"]   = config_.subscriber;
     node["registration"] = config_.registration;
-    node["monitoring"]   = config_.monitoring;
     node["time"]         = config_.timesync;
     node["application"]  = config_.application;
     node["logging"]      = config_.logging;
@@ -690,7 +652,6 @@ namespace YAML
     AssignValue<eCAL::Publisher::Configuration>(config_.publisher, node_, "publisher");
     AssignValue<eCAL::Subscriber::Configuration>(config_.subscriber, node_, "subscriber");
     AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
-    AssignValue<eCAL::Monitoring::Configuration>(config_.monitoring, node_, "monitoring");
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");

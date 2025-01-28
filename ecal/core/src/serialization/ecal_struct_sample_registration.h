@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 #include "ecal_struct_sample_common.h"
 #include "ecal_struct_service.h"
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include "util/expanding_vector.h"
 
 #include <cstdint>
@@ -212,7 +212,7 @@ namespace eCAL
     struct Process
     {
       int32_t                             rclock = 0;                   // registration clock
-      std::string                         hgname;                       // host group name
+      std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         pparam;                       // process parameter
@@ -222,10 +222,11 @@ namespace eCAL
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
+      std::string                         config_file_path;             // Path from where the eCAL configuration for this process was loadedloaded/runtime eCAL version of a component
 
       bool operator==(const Process& other) const {
         return rclock == other.rclock &&
-          hgname == other.hgname &&
+          shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
           pparam == other.pparam &&
@@ -234,13 +235,14 @@ namespace eCAL
           tsync_mod_name == other.tsync_mod_name &&
           component_init_state == other.component_init_state &&
           component_init_info == other.component_init_info &&
-          ecal_runtime_version == other.ecal_runtime_version;
+          ecal_runtime_version == other.ecal_runtime_version &&
+          config_file_path == other.config_file_path;
       }
 
       void clear()
       {
         rclock = 0;
-        hgname.clear();
+        shm_transport_domain.clear();
         pname.clear();
         uname.clear();
         pparam.clear();
@@ -250,6 +252,7 @@ namespace eCAL
         component_init_state = 0;
         component_init_info.clear();
         ecal_runtime_version.clear();
+        config_file_path.clear();
       }
     };
 
@@ -257,7 +260,7 @@ namespace eCAL
     struct Topic
     {
       int32_t                             rclock = 0;                   // registration clock (heart beat)
-      std::string                         hgname;                       // host group name
+      std::string                         shm_transport_domain;         // shm transport domain
       std::string                         pname;                        // process name
       std::string                         uname;                        // unit name
       std::string                         tname;                        // topic name
@@ -279,7 +282,7 @@ namespace eCAL
 
       bool operator==(const Topic& other) const {
         return rclock == other.rclock &&
-          hgname == other.hgname &&
+          shm_transport_domain == other.shm_transport_domain &&
           pname == other.pname &&
           uname == other.uname &&
           tname == other.tname &&
@@ -299,7 +302,7 @@ namespace eCAL
       void clear()
       {
         rclock = 0;
-        hgname.clear();
+        shm_transport_domain.clear();
         pname.clear();
         uname.clear();
         tname.clear();
@@ -323,7 +326,7 @@ namespace eCAL
 
     struct SampleIdentifier
     {
-      std::string                        entity_id;                     // unique id within that process
+      uint64_t                           entity_id = 0;                 // unique id within that process
       int32_t                            process_id = 0;                // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
 
@@ -339,7 +342,7 @@ namespace eCAL
 
       void clear()
       {
-        entity_id.clear();
+        entity_id = 0;
         process_id = 0;
         host_name.clear();
       }

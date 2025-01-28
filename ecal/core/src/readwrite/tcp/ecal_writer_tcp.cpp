@@ -21,8 +21,8 @@
  * @brief  tcp writer
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/process.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 

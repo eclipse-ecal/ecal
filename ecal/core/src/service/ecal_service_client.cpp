@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
  * @brief  eCAL service client interface
 **/
 
+#include <ecal/service/client.h>
 #include <ecal/ecal.h>
 
 #include "ecal_clientgate.h"
@@ -31,10 +32,12 @@
 
 namespace eCAL
 {
-  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationMapT method_information_map_, const ClientEventIDCallbackT event_callback_)
+  ECAL_CORE_NAMESPACE_V6
+  {
+  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInfoSetT& method_information_set_, const ClientEventCallbackT event_callback_)
   {
     // create client implementation
-    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_map_, event_callback_);
+    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_set_, event_callback_);
 
     // register client
     if (g_clientgate() != nullptr) g_clientgate()->Register(service_name_, m_service_client_impl);
@@ -49,12 +52,12 @@ namespace eCAL
     if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
   }
 
-  CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
+  CServiceClient::CServiceClient(CServiceClient && rhs) noexcept
     : m_service_client_impl(std::move(rhs.m_service_client_impl))
   {
   }
 
-  CServiceClient& CServiceClient::operator=(CServiceClient&& rhs) noexcept
+  CServiceClient & CServiceClient::operator=(CServiceClient && rhs) noexcept
   {
     if (this != &rhs)
     {
@@ -77,13 +80,13 @@ namespace eCAL
     return instances;
   }
 
-  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
+  bool CServiceClient::CallWithResponse(const std::string & method_name_, const std::string & request_, int timeout_, ServiceIDResponseVecT & service_response_vec_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
     // vector to hold futures for the return values and responses
-    std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
+    std::vector<std::future<std::pair<bool, SServiceIDResponse>>> futures;
     futures.reserve(num_instances);
 
     // launch asynchronous calls for each instance
@@ -106,9 +109,9 @@ namespace eCAL
       try
       {
         // explicitly unpack the pair
-        std::pair<bool, SServiceResponse> result = future.get();
+        const std::pair<bool, SServiceIDResponse> result = future.get();
         bool success = result.first;
-        SServiceResponse response = result.second;
+        const SServiceIDResponse response = result.second;
 
         // add response to the vector
         service_response_vec_.emplace_back(response);
@@ -119,9 +122,9 @@ namespace eCAL
       catch (const std::exception& e)
       {
         // handle exceptions and add an error response
-        SServiceResponse error_response;
+        SServiceIDResponse error_response;
         error_response.error_msg = e.what();
-        error_response.call_state = call_state_failed;
+        error_response.call_state = eCallState::failed;
         service_response_vec_.emplace_back(error_response);
 
         // mark overall success as false if any call fails
@@ -129,10 +132,10 @@ namespace eCAL
       }
     }
 
-    return overall_success; 
+    return overall_success;
   }
 
-  bool CServiceClient::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const
+  bool CServiceClient::CallWithCallback(const std::string & method_name_, const std::string & request_, int timeout_, const ResponseIDCallbackT & response_callback_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
@@ -167,7 +170,7 @@ namespace eCAL
     return return_state;
   }
 
-  bool CServiceClient::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const
+  bool CServiceClient::CallWithCallbackAsync(const std::string & method_name_, const std::string & request_, const ResponseIDCallbackT & response_callback_) const
   {
     bool return_state = true;
     auto instances = GetClientInstances();
@@ -184,10 +187,10 @@ namespace eCAL
     return m_service_client_impl->GetServiceName();
   }
 
-  Registration::SServiceMethodId CServiceClient::GetServiceId() const
+  SServiceId CServiceClient::GetServiceId() const
   {
-    // TODO: Implement this
-    return Registration::SServiceMethodId();
+    if (m_service_client_impl == nullptr) return SServiceId();
+    return m_service_client_impl->GetServiceId();
   }
 
   bool CServiceClient::IsConnected() const
@@ -198,5 +201,6 @@ namespace eCAL
       if (instance.IsConnected()) return true;
     }
     return false;
+  }
   }
 }

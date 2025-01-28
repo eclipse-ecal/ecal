@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ int main()
   {
     // GetTopics
     {
-      std::set<eCAL::Registration::STopicId> topic_id_pub_set;
-      std::set<eCAL::Registration::STopicId> topic_id_sub_set;
+      std::set<eCAL::STopicId> topic_id_pub_set;
+      std::set<eCAL::STopicId> topic_id_sub_set;
 
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)

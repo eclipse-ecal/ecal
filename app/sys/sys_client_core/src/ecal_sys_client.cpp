@@ -28,8 +28,8 @@
 #pragma warning(pop)
 #endif
 
-#include <ecal/ecal_process.h>
-#include <ecal/ecal_util.h>
+#include <ecal/process.h>
+#include <ecal/util.h>
 
 #include <chrono>
 #include <EcalParser/EcalParser.h>

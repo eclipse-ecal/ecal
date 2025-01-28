@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_config.h>
+#include <ecal/core.h>
+#include <ecal/config.h>
 #include "ini_file.h"
 
 #include <gtest/gtest.h>
@@ -54,8 +54,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   const int                 upd_snd_buff                = (5242880 + 1024);
 
   // Monitoring options
-  const std::string         mon_filter_excl             = "_A.*";
-  const eCAL_Logging_Filter mon_log_filter_con          = log_level_warning;
+  const eCAL::Logging::Filter mon_log_filter_con = eCAL::Logging::log_level_warning;
   
   // Publisher options
   const bool                pub_use_shm                 = false;
@@ -67,7 +66,6 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
     custom_config.transport_layer.udp.network.group           = ip_address;
     custom_config.transport_layer.udp.send_buffer             = upd_snd_buff;
     
-    custom_config.monitoring.filter_excl                      = mon_filter_excl;
     custom_config.logging.provider.console.filter_log         = mon_log_filter_con;
 
     custom_config.publisher.layer.shm.enable                  = pub_use_shm;
@@ -92,9 +90,6 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
 
   // Test UDP send buffer assignment, default is 5242880
   EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.send_buffer);
-
-  // Test monitoring filter exclude assignment, default is "_.*"
-  EXPECT_EQ(mon_filter_excl, eCAL::GetConfiguration().monitoring.filter_excl);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.provider.console.filter_log);

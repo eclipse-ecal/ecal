@@ -85,7 +85,7 @@ private:
 
   QTimer* deactivation_timer;
 
-  void mmaReceivedCallback(const char* topic_name, const eCAL::pb::mma::State& state);
+  void mmaReceivedCallback(const eCAL::STopicId& topic_id_, const eCAL::pb::mma::State& state_);
 
   QString normalizedDataAsString(unsigned long long bytes);
 

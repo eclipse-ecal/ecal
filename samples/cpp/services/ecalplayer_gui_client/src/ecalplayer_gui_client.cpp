@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ EcalplayGuiClient::EcalplayGuiClient(QWidget *parent)
   eCAL::Initialize("ecalplayer gui client");
 
   // create player service client
-  player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
+  player_service_.AddResponseCallback([this](const struct eCAL::v5::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::setConfigRequest);
@@ -196,7 +196,7 @@ void EcalplayGuiClient::commandRequest()
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
+void EcalplayGuiClient::onPlayerResponse(const struct eCAL::v5::SServiceResponse& service_response_)
 {
   QString response_string;
   QTextStream response_stream(&response_string);
@@ -204,7 +204,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
   switch (service_response_.call_state)
   {
     // service successful executed
-  case call_state_executed:
+  case eCAL::eCallState::executed:
   {
     if (service_response_.method_name == "GetConfig")
     {
@@ -226,7 +226,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
     break;
   }
   // service execution failed
-  case call_state_failed:
+  case eCAL::eCallState::failed:
   {
     eCAL::pb::play::Response response;
     response.ParseFromString(service_response_.response);

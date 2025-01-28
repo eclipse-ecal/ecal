@@ -35,7 +35,11 @@ namespace YAML
 {
   // Utility function to be used also in other files
   template<typename AS, typename MEM>
-  void AssignValue(MEM& member, const YAML::Node& node_, const char* key);
+  inline void AssignValue(MEM& member, const YAML::Node& node_, const char* key)
+  {
+    if (node_[key])
+      member = node_[key].as<AS>();
+  }
 
 
   /*
@@ -75,22 +79,6 @@ namespace YAML
     static Node encode(const eCAL::Registration::Configuration& config_);
 
     static bool decode(const Node& node_, eCAL::Registration::Configuration& config_);
-  };
-
-
-  /*
-       __  ___          _ __           _          
-      /  |/  /__  ___  (_) /____  ____(_)__  ___ _
-     / /|_/ / _ \/ _ \/ / __/ _ \/ __/ / _ \/ _ `/
-    /_/  /_/\___/_//_/_/\__/\___/_/ /_/_//_/\_, / 
-                                           /___/  
-  */
-  template<>
-  struct convert<eCAL::Monitoring::Configuration>
-  {
-    static Node encode(const eCAL::Monitoring::Configuration& config_);
-
-    static bool decode(const Node& node_, eCAL::Monitoring::Configuration& config_);
   };
 
 

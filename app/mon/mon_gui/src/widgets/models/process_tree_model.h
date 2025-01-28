@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public:
     GROUP,
     UNIT_NAME,
     HOST_NAME,
-    HOST_GROUP_NAME,
+    SHM_TRANSPORT_DOMAIN,
     PID,
     PROCESS_NAME,
     PARAMETERS,
@@ -59,6 +59,7 @@ public:
     TIMESYNC_MOD_NAME,
     COMPONENT_INIT_INFO,
     ECAL_RUNTIME_VERSION,
+    CONFIG_FILE_PATH,
 
     COLUMN_COUNT
   };
@@ -84,7 +85,7 @@ private:
     { Columns::GROUP,                "Group" },
     { Columns::UNIT_NAME,            "Process" },
     { Columns::HOST_NAME,            "Host" },
-    { Columns::HOST_GROUP_NAME,      "Host Group" },
+    { Columns::SHM_TRANSPORT_DOMAIN, "Host Group" },
     { Columns::PID,                  "PID" },
     { Columns::PROCESS_NAME,         "Process Path" },
     { Columns::PARAMETERS,           "Command line" },
@@ -95,6 +96,7 @@ private:
     { Columns::TIMESYNC_MOD_NAME,    "Timesync Mod Name" },
     { Columns::COMPONENT_INIT_INFO,  "Component Initialization" },
     { Columns::ECAL_RUNTIME_VERSION, "eCAL Runtime Version" },
+    { Columns::CONFIG_FILE_PATH,     "Loaded configuration file" },
   };
 
   std::map<Columns, int> column_mapping =
@@ -102,7 +104,7 @@ private:
     { Columns::GROUP,                -1 },
     { Columns::UNIT_NAME,            (int)ProcessTreeItem::Columns::UNAME },
     { Columns::HOST_NAME,            (int)ProcessTreeItem::Columns::HNAME },
-    { Columns::HOST_GROUP_NAME,      (int)ProcessTreeItem::Columns::HGNAME},
+    { Columns::SHM_TRANSPORT_DOMAIN, (int)ProcessTreeItem::Columns::SHM_TRANSPORT_DOMAIN},
     { Columns::PID,                  (int)ProcessTreeItem::Columns::PID },
     { Columns::PROCESS_NAME,         (int)ProcessTreeItem::Columns::PNAME },
     { Columns::PARAMETERS,           (int)ProcessTreeItem::Columns::PPARAM },
@@ -113,6 +115,7 @@ private:
     { Columns::TIMESYNC_MOD_NAME,    (int)ProcessTreeItem::Columns::TSYNC_MOD_NAME },
     { Columns::COMPONENT_INIT_INFO,  (int)ProcessTreeItem::Columns::COMPONENT_INIT_INFO },
     { Columns::ECAL_RUNTIME_VERSION, (int)ProcessTreeItem::Columns::ECAL_RUNTIME_VERSION },
+    { Columns::CONFIG_FILE_PATH,     (int)ProcessTreeItem::Columns::CONFIG_FILE_PATH },
   };
 
   std::map<std::string, ProcessTreeItem*> tree_item_map_;

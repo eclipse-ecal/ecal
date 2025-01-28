@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 
 #include <chrono>
 #include <iostream>
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
         out << "Messages/s:            " << (unsigned int)(msgs  /                            diff_time.count()) << std::endl;
         out << "Latency (us):          " << (diff_time.count() * 1e6) / (double)msgs                             << std::endl;
         std::cout << out.str() << std::endl;
-        eCAL::Logging::Log(log_level_info, out.str());
+        eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, out.str());
 
         // reset counter
         msgs  = 0;

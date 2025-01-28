@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ endif()
 # If we're currently doing a build within a git repository, we will configure the header files.
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0
-if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
-  configure_file(src/ecal_defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h" @ONLY)
-endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/ecal_defs.h")
+if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
+  configure_file(src/defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h" @ONLY)
+endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
 
 if(UNIX)
  include (CheckSymbolExists)
@@ -61,19 +61,27 @@ if(UNIX)
   endif()
 endif()
 
+macro(add_ecal_core_library TARGET_NAME)
 ######################################
 # config
 ######################################
 set(ecal_config_src
-    src/config/default_configuration.cpp        
+    src/config/default_configuration.cpp
+    src/config/default_configuration.h
     src/config/ecal_config.cpp
-    src/config/ecal_config_initializer.cpp
+    src/config/configuration.cpp
+    src/config/ecal_path_processing.cpp
+    src/config/ecal_path_processing.h
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
   list(APPEND ecal_config_src
       src/config/configuration_to_yaml.cpp
+      src/config/configuration_to_yaml.h
       src/config/configuration_reader.cpp
+      src/config/configuration_reader.h
+      src/config/configuration_writer.cpp
+      src/config/configuration_writer.h
   )
 endif()
 ######################################
@@ -181,7 +189,9 @@ endif()
 set(ecal_logging_src
     src/logging/ecal_log.cpp
     src/logging/ecal_log_provider.cpp
+    src/logging/ecal_log_provider.h
     src/logging/ecal_log_receiver.cpp
+    src/logging/ecal_log_receiver.h
 )
 
 ######################################
@@ -191,8 +201,6 @@ if(ECAL_CORE_MONITORING)
 set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.cpp
     src/monitoring/ecal_monitoring_def.h
-    src/monitoring/ecal_monitoring_filter.cpp
-    src/monitoring/ecal_monitoring_filter.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
 )
@@ -206,9 +214,9 @@ if(ECAL_CORE_PUBLISHER)
       src/pubsub/ecal_publisher.cpp
       src/pubsub/ecal_publisher_impl.cpp
       src/pubsub/ecal_publisher_impl.h
-      src/pubsub/ecal_publisher_v5.cpp
       src/pubsub/ecal_pubgate.cpp
       src/pubsub/ecal_pubgate.h
+      src/v5/pubsub/ecal_publisher.cpp
   )
 endif()
 
@@ -217,9 +225,9 @@ if(ECAL_CORE_SUBSCRIBER)
       src/pubsub/ecal_subscriber.cpp
       src/pubsub/ecal_subscriber_impl.cpp
       src/pubsub/ecal_subscriber_impl.h
-      src/pubsub/ecal_subscriber_v5.cpp
       src/pubsub/ecal_subgate.cpp
       src/pubsub/ecal_subgate.h
+      src/v5/pubsub/ecal_subscriber.cpp
   )
 endif()
 
@@ -383,17 +391,17 @@ if(ECAL_CORE_SERVICE)
       src/service/ecal_service_client_impl.cpp
       src/service/ecal_service_client_impl.h
       src/service/ecal_service_client_instance.cpp
-      src/service/ecal_service_client_v5.cpp
-      src/service/ecal_service_client_v5_impl.cpp
-      src/service/ecal_service_client_v5_impl.h
       src/service/ecal_service_server.cpp
       src/service/ecal_service_server_impl.cpp
       src/service/ecal_service_server_impl.h
-      src/service/ecal_service_server_v5.cpp
-      src/service/ecal_service_server_v5_impl.cpp
-      src/service/ecal_service_server_v5_impl.h
       src/service/ecal_service_singleton_manager.cpp
       src/service/ecal_service_singleton_manager.h
+      src/v5/service/ecal_service_client.cpp
+      src/v5/service/ecal_service_client_impl.cpp
+      src/v5/service/ecal_service_client_impl.h
+      src/v5/service/ecal_service_server.cpp
+      src/v5/service/ecal_service_server_impl.cpp
+      src/v5/service/ecal_service_server_impl.h
   )
 endif()
 
@@ -433,8 +441,8 @@ endif()
 ######################################
 set(ecal_cmn_src
     src/ecal.cpp
+    src/ecal_config_internal.h
     src/ecal_def.h
-    src/ecal_def_ini.h
     src/ecal_descgate.cpp
     src/ecal_descgate.h
     src/ecal_event.cpp 
@@ -459,50 +467,56 @@ endif()
 ######################################
 set (ecal_builder_src
     src/config/builder/logging_attribute_builder.cpp
-    src/config/builder/monitoring_attribute_builder.cpp
+    src/config/builder/logging_attribute_builder.h
     src/config/builder/registration_attribute_builder.cpp
+    src/config/builder/registration_attribute_builder.h
+
+    src/logging/config/attributes/ecal_log_provider_attributes.h
+    src/logging/config/attributes/ecal_log_receiver_attributes.h
     src/logging/config/builder/udp_attribute_builder.cpp
+    src/logging/config/builder/udp_attribute_builder.h
+
     src/pubsub/config/builder/reader_attribute_builder.cpp
+    src/pubsub/config/builder/reader_attribute_builder.h
     src/pubsub/config/builder/writer_attribute_builder.cpp
+    src/pubsub/config/builder/writer_attribute_builder.h
+
+    src/readwrite/config/attributes/reader_attributes.h
+    src/readwrite/config/attributes/writer_attributes.h
     src/readwrite/config/builder/shm_attribute_builder.cpp
+    src/readwrite/config/builder/shm_attribute_builder.h
     src/readwrite/config/builder/tcp_attribute_builder.cpp
+    src/readwrite/config/builder/tcp_attribute_builder.h
     src/readwrite/config/builder/udp_attribute_builder.cpp
+    src/readwrite/config/builder/udp_attribute_builder.h
+
+    src/readwrite/shm/config/attributes/reader_shm_attributes.h
+    src/readwrite/shm/config/attributes/writer_shm_attributes.h
+
+    src/readwrite/tcp/config/attributes/data_reader_tcp_attributes.h
+    src/readwrite/tcp/config/attributes/data_writer_tcp_attributes.h
+    src/readwrite/tcp/config/attributes/tcp_reader_layer_attributes.h
     src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.cpp
+    src/readwrite/tcp/config/builder/data_reader_tcp_attribute_builder.h
+
+    src/readwrite/udp/config/attributes/reader_udp_attributes.h
+    src/readwrite/udp/config/attributes/writer_udp_attributes.h
     src/readwrite/udp/config/builder/udp_attribute_builder.cpp
-    src/registration/config/builder/udp_shm_attribute_builder.cpp
+    src/readwrite/udp/config/builder/udp_attribute_builder.h
+
+    src/registration/config/attributes/registration_attributes.h
+    src/registration/config/attributes/sample_applier_attributes.h
     src/registration/config/builder/sample_applier_attribute_builder.cpp
+    src/registration/config/builder/sample_applier_attribute_builder.h
+    src/registration/config/builder/udp_shm_attribute_builder.cpp
+    src/registration/config/builder/udp_shm_attribute_builder.h
+
+    src/registration/shm/config/attributes/registration_shm_attributes.h
+    src/registration/udp/config/attributes/registration_receiver_udp_attributes.h
+    src/registration/udp/config/attributes/registration_sender_udp_attributes.h
     src/registration/udp/config/builder/udp_attribute_builder.cpp
+    src/registration/udp/config/builder/udp_attribute_builder.h
 )
-
-
-######################################
-# c interface
-######################################
-set(ecal_c_src
-    src/cimpl/ecal_client_cimpl.cpp
-    src/cimpl/ecal_common_cimpl.cpp
-    src/cimpl/ecal_common_cimpl.h
-    src/cimpl/ecal_core_cimpl.cpp
-    src/cimpl/ecal_log_cimpl.cpp
-    src/cimpl/ecal_monitoring_cimpl.cpp
-    src/cimpl/ecal_process_cimpl.cpp
-    src/cimpl/ecal_publisher_cimpl.cpp
-    src/cimpl/ecal_server_cimpl.cpp
-    src/cimpl/ecal_subscriber_cimpl.cpp
-    src/cimpl/ecal_time_cimpl.cpp
-    src/cimpl/ecal_timer_cimpl.cpp
-    src/cimpl/ecal_util_cimpl.cpp    
-)
-
-######################################
-# windows dll
-######################################
-if(WIN32)
-  set(ecal_c_win_src
-      src/win32/dll/dllmain.cpp
-      src/win32/dll/ecal.rc
-  )
-endif()
 
 ######################################
 # public header
@@ -511,74 +525,48 @@ set(ecal_header_cmn
     include/ecal/config/application.h
     include/ecal/config/configuration.h
     include/ecal/config/logging.h
-    include/ecal/config/monitoring.h
     include/ecal/config/publisher.h
     include/ecal/config/registration.h
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
+    include/ecal/pubsub/subscriber.h
+    include/ecal/pubsub/types.h
+    include/ecal/pubsub/payload_writer.h
+    include/ecal/pubsub/publisher.h
+    include/ecal/service/client.h
+    include/ecal/service/client_instance.h
+    include/ecal/service/server.h
+    include/ecal/service/types.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
-    include/ecal/ecal_callback.h
-    include/ecal/ecal_client.h
-    include/ecal/ecal_client_instance.h
-    include/ecal/ecal_client_v5.h
-    include/ecal/ecal_config.h
-    include/ecal/ecal_core.h
-    include/ecal/ecal_deprecate.h
-    include/ecal/ecal_init.h
-    include/ecal/ecal_log.h
-    include/ecal/ecal_log_level.h
-    include/ecal/ecal_os.h
-    include/ecal/ecal_payload_writer.h
-    include/ecal/ecal_monitoring.h
-    include/ecal/ecal_process.h
-    include/ecal/ecal_process_severity.h
-    include/ecal/ecal_registration.h
-    include/ecal/ecal_publisher.h
-    include/ecal/ecal_publisher_v5.h
-    include/ecal/ecal_server.h
-    include/ecal/ecal_server_v5.h
-    include/ecal/ecal_service_info.h
-    include/ecal/ecal_subscriber.h
-    include/ecal/ecal_subscriber_v5.h
-    include/ecal/ecal_time.h
-    include/ecal/ecal_timer.h
-    include/ecal/ecal_tlayer.h
-    include/ecal/ecal_types.h
-    include/ecal/ecal_util.h
-)
-
-set(ecal_header_cimpl
-    include/ecal/cimpl/ecal_callback_cimpl.h
-    include/ecal/cimpl/ecal_client_cimpl.h
-    include/ecal/cimpl/ecal_core_cimpl.h
-    include/ecal/cimpl/ecal_init_cimpl.h
-    include/ecal/cimpl/ecal_log_cimpl.h
-    include/ecal/cimpl/ecal_monitoring_cimpl.h
-    include/ecal/cimpl/ecal_process_cimpl.h
-    include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_server_cimpl.h
-    include/ecal/cimpl/ecal_service_info_cimpl.h
-    include/ecal/cimpl/ecal_subscriber_cimpl.h
-    include/ecal/cimpl/ecal_time_cimpl.h
-    include/ecal/cimpl/ecal_timer_cimpl.h
-    include/ecal/cimpl/ecal_util_cimpl.h
-    include/ecal/ecalc.h
-    include/ecal/ecalc_types.h
+    include/ecal/callback.h
+    include/ecal/v5/ecal_callback.h
+    include/ecal/v5/ecal_client.h
+    include/ecal/config.h
+    include/ecal/core.h
+    include/ecal/deprecate.h
+    include/ecal/init.h
+    include/ecal/log.h
+    include/ecal/log_level.h
+    include/ecal/os.h
+    include/ecal/monitoring.h
+    include/ecal/namespace.h
+    include/ecal/process.h
+    include/ecal/process_severity.h
+    include/ecal/registration.h
+    include/ecal/v5/ecal_publisher.h
+    include/ecal/v5/ecal_server.h
+    include/ecal/v5/ecal_subscriber.h
+    include/ecal/time.h
+    include/ecal/timer.h
+    include/ecal/tlayer.h
+    include/ecal/types.h
+    include/ecal/util.h
 )
 
 set(ecal_header_msg
-    include/ecal/msg/protobuf/client.h
-    include/ecal/msg/protobuf/dynamic_json_subscriber.h
-    include/ecal/msg/protobuf/dynamic_publisher.h
-    include/ecal/msg/protobuf/dynamic_subscriber.h    
-    include/ecal/msg/protobuf/publisher.h
-    include/ecal/msg/protobuf/server.h
-    include/ecal/msg/protobuf/subscriber.h
-    include/ecal/msg/string/publisher.h
-    include/ecal/msg/string/subscriber.h
     include/ecal/msg/dynamic.h
     include/ecal/msg/publisher.h
     include/ecal/msg/subscriber.h
@@ -612,47 +600,22 @@ set(ecal_sources
     ${ecal_header_msg}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${TARGET_NAME}
     ${ecal_sources}
-    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/ecal_defs.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
 )
 
 if (ECAL_CORE_CONFIGURATION)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
+  target_compile_definitions(${TARGET_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
 endif()
 
 if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-set(ecal_c_sources
-    ${ecal_c_src}
-    ${ecal_c_win_src}
-    ${ecal_header_cimpl}
-)
+add_library(eCAL::${TARGET_NAME}   ALIAS ${TARGET_NAME})
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}_c 
-    ${ecal_c_sources}
-)
-
-add_library(eCAL::${PROJECT_NAME}   ALIAS ${PROJECT_NAME})
-add_library(eCAL::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
-
-target_link_libraries(${PROJECT_NAME}_c ${PROJECT_NAME})
-
-target_compile_definitions(${PROJECT_NAME}_c
-  INTERFACE 
-    ECAL_C_DLL # This is deprecated
-    ECAL_CORE_C_IMPORTS
-  PUBLIC
-    ASIO_STANDALONE
-    ASIO_DISABLE_VISIBILITY
-  PRIVATE 
-    ECAL_CORE_C_EXPORTS
-    ECAL_NO_DEPRECATION_WARNINGS
-)
-
-target_compile_definitions(${PROJECT_NAME}
+target_compile_definitions(${TARGET_NAME}
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
@@ -666,20 +629,12 @@ target_compile_definitions(${PROJECT_NAME}
     ECAL_CORE_IMPORTS
 )
 
-set_target_properties(${PROJECT_NAME}_c
+set_target_properties(${TARGET_NAME}
   PROPERTIES 
     CXX_VISIBILITY_PRESET hidden
     C_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
 )
-
-set_target_properties(${PROJECT_NAME}
-  PROPERTIES 
-    CXX_VISIBILITY_PRESET hidden
-    C_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN ON
-)
-
 
 set(ECAL_CORE_FEATURES
   ECAL_CORE_CONFIGURATION
@@ -699,47 +654,45 @@ set(ECAL_CORE_FEATURES
 
 foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   if(${CORE_FEATURE})
-    target_compile_definitions(${PROJECT_NAME}
-      PRIVATE ${CORE_FEATURE})
-    target_compile_definitions(${PROJECT_NAME}_c
-      PRIVATE ${CORE_FEATURE})
+    target_compile_definitions(${TARGET_NAME}
+      PUBLIC ${CORE_FEATURE})
   endif()
 endforeach()
 
 if(ECAL_CORE_CONFIGURATION)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       yaml-cpp::yaml-cpp
   )
 endif()
 
 if(ECAL_CORE_COMMAND_LINE)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       tclap::tclap
   )
 endif()
 
 if(ECAL_CORE_SERVICE)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       ecal_service
   )
 endif()
 
 if(ECAL_CORE_TRANSPORT_TCP)
-  target_link_libraries(${PROJECT_NAME}
+  target_link_libraries(${TARGET_NAME}
     PRIVATE
       tcp_pubsub::tcp_pubsub
   )
 endif()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${TARGET_NAME}
   PRIVATE
     ecaludp::ecaludp
 )
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(${TARGET_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
@@ -750,7 +703,7 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${TARGET_NAME} 
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
@@ -767,27 +720,48 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::ecal-utils
 )
 
-set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER core)
-set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER core)
+set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME}_c)
-ecal_install_ecal_shared_library(${PROJECT_NAME})
-
-install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h")
-
-# install generated ecal_defs.h file    
-install(DIRECTORY
-   "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h")
+ecal_install_shared_library(${TARGET_NAME})
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${ecal_sources}
-    ${ecal_c_sources}
   )
 endif()
+
+endmacro()
+
+#######################################
+# We now create two libraries
+# One of them is a compatibility version that should facilitate easier migration.
+# ecal_core, ecal_core_v5.
+#######################################
+
+add_ecal_core_library(${PROJECT_NAME})
+target_compile_definitions(${PROJECT_NAME}
+  PUBLIC 
+    ECAL_CORE_V5_FUNCTIONALTIY=1
+)
+
+add_ecal_core_library(core_v5)
+target_compile_definitions(core_v5 
+  PUBLIC
+    ECAL_CORE_NAMESPACE_V5_INLINE=1
+    ECAL_CORE_V5_FUNCTIONALTIY=1
+)
+
+###
+## Iinstall header files only once...
+## 
+install(DIRECTORY
+   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    FILES_MATCHING PATTERN "*.h")
+
+# install generated defs.h file    
+install(DIRECTORY
+   "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    FILES_MATCHING PATTERN "*.h")
 
 # eCAL process stub
 if(UNIX)
@@ -804,22 +778,3 @@ if(UNIX)
 
     set_property(TARGET ${PROJECT_NAME_PROCESS_STUB} PROPERTY FOLDER core)
 endif(UNIX)
-
-if(ECAL_CORE_HAS_PROTOBUF)
-find_package(Protobuf REQUIRED)
-
-add_library(core_protobuf INTERFACE)
-add_library(eCAL::core_protobuf ALIAS core_protobuf)
-
-target_link_libraries(core_protobuf 
-  INTERFACE
-    eCAL::core
-    eCAL::proto
-)
-
-install(
-  TARGETS core_protobuf
-  EXPORT eCALCoreTargets  
-)
-
-endif()

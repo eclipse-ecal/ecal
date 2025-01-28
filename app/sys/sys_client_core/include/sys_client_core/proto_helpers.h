@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 #include "runner.h"
 #include "task.h"
 
-#include <ecal/ecal_process_mode.h>
+#include <ecal/process_mode.h>
 
 #include <vector>
 
@@ -47,7 +47,7 @@ namespace eCAL
 
       void FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb,              eCAL::sys_client::Task&            task);
       void FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb,            eCAL::sys_client::Runner&          runner);
-      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL_Process_eStartMode&           window_mode);
+      void FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb,       eCAL::Process::eStartMode&           window_mode);
       void FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  StartTaskParameters&               start_task_param);
       void FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   std::vector<StartTaskParameters>&  start_task_list);
       void FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   StopTaskParameters&                stop_task_param);
@@ -58,7 +58,7 @@ namespace eCAL
 
       eCAL::sys_client::Task            FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb);
       eCAL::sys_client::Runner          FromProtobuf(const eCAL::pb::sys_client::Runner&              runner_pb);
-      eCAL_Process_eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb);
+      eCAL::Process::eStartMode           FromProtobuf(const eCAL::pb::sys_client::WindowMode&          window_mode_pb);
       StartTaskParameters               FromProtobuf(const eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb);
       std::vector<StartTaskParameters>  FromProtobuf(const eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb);
       StopTaskParameters                FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb);
@@ -73,7 +73,7 @@ namespace eCAL
 
       void ToProtobuf(eCAL::pb::sys_client::Task&                task_pb,              const eCAL::sys_client::Task&            task);
       void ToProtobuf(eCAL::pb::sys_client::Runner&              runner_pb,            const eCAL::sys_client::Runner&          runner);
-      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL_Process_eStartMode            window_mode);
+      void ToProtobuf(eCAL::pb::sys_client::WindowMode&          window_mode_pb,       const eCAL::Process::eStartMode            window_mode);
       void ToProtobuf(eCAL::pb::sys_client::StartTaskParameters& start_task_param_pb,  const StartTaskParameters&               start_task_param);
       void ToProtobuf(eCAL::pb::sys_client::StartTaskRequest&    start_task_list_pb,   const std::vector<StartTaskParameters>&  start_task_list);
       void ToProtobuf(eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   const StopTaskParameters&                stop_task_param);
@@ -84,7 +84,7 @@ namespace eCAL
 
       eCAL::pb::sys_client::Task                ToProtobuf(const eCAL::sys_client::Task&                task);
       eCAL::pb::sys_client::Runner              ToProtobuf(const eCAL::sys_client::Runner&              runner);
-      eCAL::pb::sys_client::WindowMode          ToProtobuf(const eCAL_Process_eStartMode                window_mode);
+      eCAL::pb::sys_client::WindowMode          ToProtobuf(const eCAL::Process::eStartMode                window_mode);
       eCAL::pb::sys_client::StartTaskParameters ToProtobuf(const StartTaskParameters&                   start_task_param);
       eCAL::pb::sys_client::StartTaskRequest    ToProtobuf(const std::vector<StartTaskParameters>&      start_task_list);
       eCAL::pb::sys_client::StopTaskParameters  ToProtobuf(const StopTaskParameters&                    stop_task_param);

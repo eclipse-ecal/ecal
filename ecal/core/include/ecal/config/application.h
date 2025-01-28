@@ -18,14 +18,14 @@
  */
 
 /**
- * @file   ecal_application_config.h
+ * @file   config/application.h
  * @brief  eCAL configuration for applications
 **/
 
 #pragma once
 
 #include <string>
-#include <ecal/ecal_os.h>
+#include <ecal/os.h>
 #include <cstddef>
 
 namespace eCAL

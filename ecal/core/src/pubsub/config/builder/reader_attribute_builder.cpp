@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 */
 
 #include "reader_attribute_builder.h"
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
 
 namespace eCAL
 {
-  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const Publisher::Configuration& pub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_)
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_)
   {
     eCALReader::SAttributes attributes;
 
@@ -32,12 +32,10 @@ namespace eCAL
     attributes.registration_timeout_ms    = reg_config_.registration_timeout;
     attributes.topic_name                 = topic_name_;
     attributes.host_name                  = Process::GetHostName();
-    attributes.host_group_name            = Process::GetHostGroupName();
+    attributes.shm_transport_domain       = Process::GetShmTransportDomain();
     attributes.process_id                 = Process::GetProcessID();
     attributes.process_name               = Process::GetProcessName();
     attributes.unit_name                  = Process::GetUnitName();
-    attributes.share_topic_type           = pub_config_.share_topic_type;
-    attributes.share_topic_description    = pub_config_.share_topic_description;
 
     attributes.udp.enable        = sub_config_.layer.udp.enable;
     attributes.udp.mode          = tl_config_.udp.mode;

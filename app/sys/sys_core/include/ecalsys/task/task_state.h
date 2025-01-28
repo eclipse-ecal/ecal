@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,16 @@
 class TaskState
 {
 public:
-  eCAL_Process_eSeverity        severity;             /**< The severity (Unknown, Healthy, Warning, Critical, Failed) */
-  eCAL_Process_eSeverity_Level  severity_level;       /**< The severity Level (Level 1 - 5) */
+  eCAL::Process::eSeverity        severity;             /**< The severity (Unknown, Healthy, Warning, Critical, Failed) */
+  eCAL::Process::eSeverityLevel  severity_level;       /**< The severity Level (Level 1 - 5) */
   std::string                   info;                 /**< A human readable status message */
 
   /**
    * @brief Creates a new State (Unknown Level1) without info message.
    */
   TaskState()
-    : severity(eCAL_Process_eSeverity::proc_sev_unknown)
-    , severity_level(eCAL_Process_eSeverity_Level::proc_sev_level1)
+    : severity(eCAL::Process::eSeverity::unknown)
+    , severity_level(eCAL::Process::eSeverityLevel::level1)
     , info("")
   {}
 
@@ -46,7 +46,7 @@ public:
    * @param severity        The severity of the new state
    * @param severity_level  The severity level of the new state
    */
-  TaskState(eCAL_Process_eSeverity severity, eCAL_Process_eSeverity_Level severity_level)
+  TaskState(eCAL::Process::eSeverity severity, eCAL::Process::eSeverityLevel severity_level)
     : severity(severity)
     , severity_level(severity_level)
     , info("")
@@ -94,53 +94,53 @@ public:
 
     if (severity_string_lower == "unknown")
     {
-      severity = eCAL_Process_eSeverity::proc_sev_unknown;
+      severity = eCAL::Process::eSeverity::unknown;
     }
     else if (severity_string_lower == "healthy")
     {
-      severity = eCAL_Process_eSeverity::proc_sev_healthy;
+      severity = eCAL::Process::eSeverity::healthy;
     }
     else if (severity_string_lower == "warning")
     {
-      severity = eCAL_Process_eSeverity::proc_sev_warning;
+      severity = eCAL::Process::eSeverity::warning;
     }
     else if (severity_string_lower == "critical")
     {
-      severity = eCAL_Process_eSeverity::proc_sev_critical;
+      severity = eCAL::Process::eSeverity::critical;
     }
     else if (severity_string_lower == "failed")
     {
-      severity = eCAL_Process_eSeverity::proc_sev_failed;
+      severity = eCAL::Process::eSeverity::failed;
     }
     else
     {
-      severity = eCAL_Process_eSeverity::proc_sev_unknown;
+      severity = eCAL::Process::eSeverity::unknown;
       failure = true;
     }
 
     if (severity_level_string_lower == "level1" || severity_level_string_lower == "level 1")
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
+      severity_level = eCAL::Process::eSeverityLevel::level1;
     }
     else if (severity_level_string_lower == "level2" || severity_level_string_lower == "level 2")
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level2;
+      severity_level = eCAL::Process::eSeverityLevel::level2;
     }
     else if (severity_level_string_lower == "level3" || severity_level_string_lower == "level 3")
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level3;
+      severity_level = eCAL::Process::eSeverityLevel::level3;
     }
     else if (severity_level_string_lower == "level4" || severity_level_string_lower == "level 4")
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level4;
+      severity_level = eCAL::Process::eSeverityLevel::level4;
     }
     else if (severity_level_string_lower == "level5" || severity_level_string_lower == "level 5")
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level5;
+      severity_level = eCAL::Process::eSeverityLevel::level5;
     }
     else
     {
-      severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
+      severity_level = eCAL::Process::eSeverityLevel::level1;
       failure = true;
     }
 
@@ -157,19 +157,19 @@ public:
   {
     switch (severity_level)
     {
-    case eCAL_Process_eSeverity_Level::proc_sev_level1:
+    case eCAL::Process::eSeverityLevel::level1:
       severity_level_string = "Level1";
       break;
-    case eCAL_Process_eSeverity_Level::proc_sev_level2:
+    case eCAL::Process::eSeverityLevel::level2:
       severity_level_string = "Level2";
       break;
-    case eCAL_Process_eSeverity_Level::proc_sev_level3:
+    case eCAL::Process::eSeverityLevel::level3:
       severity_level_string = "Level3";
       break;
-    case eCAL_Process_eSeverity_Level::proc_sev_level4:
+    case eCAL::Process::eSeverityLevel::level4:
       severity_level_string = "Level4";
       break;
-    case eCAL_Process_eSeverity_Level::proc_sev_level5:
+    case eCAL::Process::eSeverityLevel::level5:
       severity_level_string = "Level5";
       break;
     default:
@@ -178,19 +178,19 @@ public:
 
     switch (severity)
     {
-    case eCAL_Process_eSeverity::proc_sev_unknown:
+    case eCAL::Process::eSeverity::unknown:
       severity_string = "Unknown";
       break;
-    case eCAL_Process_eSeverity::proc_sev_healthy:
+    case eCAL::Process::eSeverity::healthy:
       severity_string = "Healthy";
       break;
-    case eCAL_Process_eSeverity::proc_sev_warning:
+    case eCAL::Process::eSeverity::warning:
       severity_string = "Warning";
       break;
-    case eCAL_Process_eSeverity::proc_sev_critical:
+    case eCAL::Process::eSeverity::critical:
       severity_string = "Critical";
       break;
-    case eCAL_Process_eSeverity::proc_sev_failed:
+    case eCAL::Process::eSeverity::failed:
       severity_string = "Failed";
       break;
     default:
@@ -215,17 +215,17 @@ public:
   void FromInt(int combined_severity)
   {
     // We want to directly cast the severities. That will lead to funny bugs if someone eventually decides to change the ranges.
-    static_assert((int)eCAL_Process_eSeverity::proc_sev_unknown == 0,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity::proc_sev_failed  == 4,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity_Level::proc_sev_level1 == 1, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity_Level::proc_sev_level5 == 5, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverity::unknown == 0,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverity::failed  == 4,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverityLevel::level1 == 1, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverityLevel::level5 == 5, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
 
     // limit the interger to the desired range
     combined_severity = std::max(std::min(combined_severity, 24), 0);
 
     // calculate the interger severity / -level
-    severity       = (eCAL_Process_eSeverity)      (combined_severity / 5);
-    severity_level = (eCAL_Process_eSeverity_Level)(combined_severity % 5 + 1);
+    severity       = (eCAL::Process::eSeverity)      (combined_severity / 5);
+    severity_level = (eCAL::Process::eSeverityLevel)(combined_severity % 5 + 1);
   }
 
   /**
@@ -245,10 +245,10 @@ public:
   int ToInt() const
   {
     // We want to directly cast the severities. That will lead to funny bugs if someone eventually decides to change the ranges.
-    static_assert((int)eCAL_Process_eSeverity::proc_sev_unknown == 0,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity::proc_sev_failed  == 4,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity_Level::proc_sev_level1 == 1, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
-    static_assert((int)eCAL_Process_eSeverity_Level::proc_sev_level5 == 5, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverity::unknown == 0,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverity::failed  == 4,      "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverityLevel::level1 == 1, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
+    static_assert((int)eCAL::Process::eSeverityLevel::level5 == 5, "Somebody shifted the severity values! We expect severities to have a rage 0-4 and severity levels to have a range of 1-5!");
 
     return ((int)severity * 5) + ((int)severity_level - 1);
   }

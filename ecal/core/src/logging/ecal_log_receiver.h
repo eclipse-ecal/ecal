@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,10 @@ namespace eCAL
          * @brief Get the log messages.
          *
          * @param log_msg_list_string_ The log messages.
+         * 
+         * @return True if enabled and the message receiving got called.
         **/
-        void GetLogging(std::string& log_msg_list_string_);
+        bool GetLogging(std::string& log_msg_list_string_);
 
         /**
          * @brief Get the log messages.

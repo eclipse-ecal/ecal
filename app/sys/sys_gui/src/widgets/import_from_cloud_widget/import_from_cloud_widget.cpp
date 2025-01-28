@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -224,8 +224,8 @@ void ImportFromCloudWidget::reload()
   for (auto& task : task_list_)
   {
     TaskState restart_at_severity;
-    restart_at_severity.severity = eCAL_Process_eSeverity::proc_sev_failed;
-    restart_at_severity.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
+    restart_at_severity.severity = eCAL::Process::eSeverity::failed;
+    restart_at_severity.severity_level = eCAL::Process::eSeverityLevel::level1;
     task->SetRestartAtSeverity(restart_at_severity);
   }
 
@@ -923,7 +923,7 @@ void ImportFromCloudWidget::import()
 
 void ImportFromCloudWidget::loadExcludeTasksFilter()
 {
-  std::string default_cfg_file_path = eCAL::Util::GeteCALActiveIniFile();
+  const std::string default_cfg_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
   QFile default_cfg_file(default_cfg_file_path.c_str());
   if (default_cfg_file.exists())
   {

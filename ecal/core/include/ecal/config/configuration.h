@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@
  */
 
 /**
- * @file   configuration.h
+ * @file   config/configuration.h
  * @brief  eCAL configuration interface
 **/
 
 #pragma once
 
 #include <ecal/config/application.h>
-#include <ecal/config/monitoring.h>
 #include <ecal/config/registration.h>
 #include <ecal/config/logging.h>
 #include <ecal/config/publisher.h>
@@ -34,8 +33,8 @@
 #include <ecal/types/ecal_custom_data_types.h>
 
 
-#include "ecal/ecal_os.h"
-#include "ecal/ecal_log_level.h"
+#include "ecal/os.h"
+#include "ecal/log_level.h"
 
 #include <string>
 #include <vector>
@@ -48,7 +47,6 @@ namespace eCAL
   {
     TransportLayer::Configuration transport_layer;
     Registration::Configuration   registration;
-    Monitoring::Configuration     monitoring;
     Subscriber::Configuration     subscriber;
     Publisher::Configuration      publisher;
     Time::Configuration           timesync;
@@ -60,9 +58,9 @@ namespace eCAL
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
-    ECAL_API std::string GetYamlFilePath();
+    ECAL_API std::string GetConfigurationFilePath() const;
 
     protected:
-      std::string ecal_yaml_file_path;
+      std::string ecal_yaml_file_path = "abc";
   };
 }

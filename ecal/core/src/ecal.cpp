@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,6 +90,7 @@ namespace eCAL
   bool Initialize(const std::string& unit_name_ /*= ""*/, unsigned int components_ /*= Init::Default*/)
   {
     eCAL::Configuration config;
+    config.InitFromConfig();
 
     return Initialize(config, unit_name_, components_);
   }
@@ -147,21 +148,6 @@ namespace eCAL
       return false;
 
     return g_globals()->IsInitialized(component_);
-  }
-
-  /**
-   * @brief  Set/change the unit name of current module.
-   *
-   * @param unit_name_  Defines the name of the eCAL unit. 
-   *
-   * @return True if succeeded.
-  **/
-  bool SetUnitName(const std::string& unit_name_)
-  {
-    if (unit_name_.empty())
-      return false;
-    g_unit_name = unit_name_;
-    return true;
   }
 
   /**

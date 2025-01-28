@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ namespace
     // pid
     log_message_.pid = pb_log_message_.pid;
     // level
-    log_message_.level = static_cast<eCAL_Logging_eLogLevel>(pb_log_message_.level);
+    log_message_.level = static_cast<eCAL::Logging::eLogLevel>(pb_log_message_.level);
   }
 
   bool Buffer2LogMessageStruct(const char* data_, size_t size_, eCAL::Logging::SLogMessage& log_message_)

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,6 @@
 # ========================= eCAL LICENSE =================================
 
 cmake_minimum_required(VERSION 3.13)
-
-# --------------------------------------------------------
-# c tests
-# --------------------------------------------------------
-add_subdirectory(c/core_test)
 
 # --------------------------------------------------------
 # cpp tests
@@ -41,7 +36,6 @@ endif()
 add_subdirectory(cpp/event_test)
 add_subdirectory(cpp/expmap_test)
 add_subdirectory(cpp/logging_test)
-add_subdirectory(cpp/monitoring_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
 add_subdirectory(cpp/util_test)
@@ -54,16 +48,10 @@ if(ECAL_CORE_REGISTRATION AND ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
   if(ECAL_CORE_TRANSPORT_SHM OR ECAL_CORE_TRANSPORT_UDP) # pubsub tests are running for shm and udp layer only, needs to be fixed for tcp
     add_subdirectory(cpp/pubsub_test)
     add_subdirectory(cpp/pubsub_v5_test)
-    if(ECAL_CORE_HAS_PROTOBUF)
-      add_subdirectory(cpp/pubsub_proto_test)
-    endif()
   endif()
 endif()
 
 if(ECAL_CORE_SERVICE)
   add_subdirectory(cpp/clientserver_test)
   add_subdirectory(cpp/clientserver_v5_test)
-  if(ECAL_CORE_HAS_PROTOBUF)
-    add_subdirectory(cpp/clientserver_proto_test)
-  endif()
 endif()

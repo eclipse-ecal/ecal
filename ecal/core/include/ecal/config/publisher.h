@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   publisher.h
+ * @file   config/publisher.h
  * @brief  eCAL publisher configuration
  * 
  * This publisher configuration struct can be used to define the behavior of an eCAL publisher. Additional information on 
@@ -88,7 +88,7 @@
 
 #pragma once
 
-#include <ecal/ecal_tlayer.h>
+#include <ecal/tlayer.h>
 #include <ecal/types/ecal_custom_data_types.h>
 #include <ecal/config/transport_layer.h>
 
@@ -147,9 +147,6 @@ namespace eCAL
       using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
       LayerPriorityVector  layer_priority_local    { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
       LayerPriorityVector  layer_priority_remote   {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
-
-      bool                 share_topic_type        { true };      //!< share topic type via registration
-      bool                 share_topic_description { true };      //!< share topic description via registration
     };
   }
 }

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 #include <tcp_pubsub/tcp_pubsub_logger.h>
 
 namespace eCAL
@@ -33,22 +33,22 @@ namespace eCAL
     switch (log_level_)
     {
     case tcp_pubsub::logger::LogLevel::DebugVerbose:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug4, std::string("CTCPReaderLayer - TCPPubSub (DebugVerbose) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug4, std::string("CTCPReaderLayer - TCPPubSub (DebugVerbose) -") + message_);
       break;
     case tcp_pubsub::logger::LogLevel::Debug:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_debug3, std::string("CTCPReaderLayer - TCPPubSub (Debug) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug3, std::string("CTCPReaderLayer - TCPPubSub (Debug) -") + message_);
       break;
     case tcp_pubsub::logger::LogLevel::Info:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, std::string("CTCPReaderLayer - TCPPubSub (Info) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_info, std::string("CTCPReaderLayer - TCPPubSub (Info) -") + message_);
       break;
     case tcp_pubsub::logger::LogLevel::Warning:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, std::string("CTCPReaderLayer - TCPPubSub (Warning) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_warning, std::string("CTCPReaderLayer - TCPPubSub (Warning) -") + message_);
       break;
     case tcp_pubsub::logger::LogLevel::Error:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_error, std::string("CTCPReaderLayer - TCPPubSub (Error) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_error, std::string("CTCPReaderLayer - TCPPubSub (Error) -") + message_);
       break;
     case tcp_pubsub::logger::LogLevel::Fatal:
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_fatal, std::string("CTCPReaderLayer - TCPPubSub (Fatal) -") + message_);
+      eCAL::Logging::Log(eCAL::Logging::log_level_fatal, std::string("CTCPReaderLayer - TCPPubSub (Fatal) -") + message_);
       break;
     default:
       break;

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@
 
 #include "ecal_process_registration.h"
 
-#include <ecal/ecal_init.h>
-#include <ecal/ecal_process.h>
+#include <ecal/init.h>
+#include <ecal/process.h>
 #include "ecal_global_accessors.h"
 #include "ecal_globals.h"
 #include "time/ecal_timegate.h"
@@ -40,16 +40,16 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
   // We need to set the pid as entity_id.
   // However, we cannot send anything over the wire :(
-  process_sample_identifier.entity_id = std::to_string(process_sample_identifier.process_id);
+  process_sample_identifier.entity_id = process_sample_identifier.process_id;
 
-  auto& process_sample_process = process_sample.process;
-  process_sample_process.hgname = eCAL::Process::GetHostGroupName();
-  process_sample_process.pname = eCAL::Process::GetProcessName();
-  process_sample_process.uname = eCAL::Process::GetUnitName();
-  process_sample_process.pparam = eCAL::Process::GetProcessParameter();
-  process_sample_process.state.severity = static_cast<Registration::eProcessSeverity>(g_process_severity);
+  auto& process_sample_process                = process_sample.process;
+  process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
+  process_sample_process.pname                = eCAL::Process::GetProcessName();
+  process_sample_process.uname                = eCAL::Process::GetUnitName();
+  process_sample_process.pparam               = eCAL::Process::GetProcessParameter();
+  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
   process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-  process_sample_process.state.info = g_process_info;
+  process_sample_process.state.info           = g_process_info;
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {
@@ -92,6 +92,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.component_init_info = component_info;
 
   process_sample_process.ecal_runtime_version = eCAL::GetVersionString();
+  process_sample_process.config_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
 
   return process_sample;
 }

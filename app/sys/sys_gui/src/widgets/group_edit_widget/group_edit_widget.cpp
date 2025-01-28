@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -642,8 +642,8 @@ void GroupEditWidget::stateAddTaskButtonClicked()
       {
         TaskTreeItem* task_tree_item = static_cast<TaskTreeItem*>(tree_item);
         TaskState minimal_task_state;
-        minimal_task_state.severity = eCAL_Process_eSeverity::proc_sev_healthy;
-        minimal_task_state.severity_level = eCAL_Process_eSeverity_Level::proc_sev_level1;
+        minimal_task_state.severity = eCAL::Process::eSeverity::healthy;
+        minimal_task_state.severity_level = eCAL::Process::eSeverityLevel::level1;
         std::pair<std::shared_ptr<EcalSysTask>, TaskState> min_state(task_tree_item->getTask(), minimal_task_state);
 
         auto minimal_states_list = group_state_->GetMinimalStatesList();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@
 #include <QLibrary>
 #include <QProcessEnvironment>
 
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_defs.h>
+#include <ecal/log.h>
+#include <ecal/defs.h>
 
 std::unique_ptr<PluginManager> PluginManager::instance_;
 
@@ -135,14 +135,14 @@ void PluginManager::AddFoundPlugins(const QVector<QString>& library_paths)
         plugins_.insert(iid, ActivePlugin{ plugin, false });
       else {
         if (plugin_iter->wrapper.getPluginData().path != file_path)
-          eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning,
+          eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning,
             "Ambiguous plugin iid " + iid.toStdString() + " of " + meta_data.name.toStdString() + " " +
             meta_data.version.toStdString() + ".  Plugin " + file_path.toStdString() +
             " was not loaded.");
       }
     }
     catch (const std::runtime_error &e) {
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning,
+      eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning,
         std::string(e.what()) + " Plugin " + file_path.toStdString() + " was not loaded.");
     }
   }

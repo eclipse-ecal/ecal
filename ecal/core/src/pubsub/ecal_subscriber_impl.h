@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_types.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
@@ -69,16 +69,16 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool SetReceiveCallback(ReceiveIDCallbackT callback_);
+    bool SetReceiveCallback(v6::ReceiveCallbackT callback_);
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Subscriber_Event type_, SubEventCallbackT callback_);
-    bool RemoveEventCallback(eCAL_Subscriber_Event type_);
+    bool SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_);
+    bool RemoveEventCallback(eSubscriberEvent type_);
 
     // future event callback interface
-    bool SetEventIDCallback(const SubEventIDCallbackT callback_);
-    bool RemoveEventIDCallback();
+    bool SetEventIDCallback(const v6::SubEventCallbackT callback_);
+    bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -96,9 +96,9 @@ namespace eCAL
     bool IsPublished() const;
     size_t GetPublisherCount() const;
 
-    Registration::STopicId GetId() const
+    STopicId GetId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -107,7 +107,6 @@ namespace eCAL
     }
 
     std::string          GetTopicName()           const { return(m_attributes.topic_name); }
-    std::string          GetTopicID()             const { return(m_topic_id); }
     SDataTypeInformation GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
@@ -123,19 +122,19 @@ namespace eCAL
     void StartTransportLayer();
     void StopTransportLayer();
 
-    void FireEvent(const eCAL_Subscriber_Event type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    void FireUpdateEvent    (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    
+    void FireDroppedEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+
     size_t GetConnectionCount();
 
-    bool CheckMessageClock(const std::string& tid_, long long current_clock_);
+    bool CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_);
 
     int32_t GetFrequency();
 
-    std::string                               m_topic_id;
+    EntityIdT                   m_topic_id;
     SDataTypeInformation                      m_topic_info;
     std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
@@ -158,17 +157,17 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    ReceiveIDCallbackT                        m_receive_callback;
+    v6::ReceiveCallbackT                      m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
 
-    using EventCallbackMapT = std::map<eCAL_Subscriber_Event, SubEventCallbackT>;
+    using EventCallbackMapT = std::map<eSubscriberEvent, v5::SubEventCallbackT>;
     std::mutex                                m_event_callback_map_mutex;
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    SubEventIDCallbackT                       m_event_id_callback;
+    v6::SubEventCallbackT                     m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
@@ -177,7 +176,7 @@ namespace eCAL
 
     std::set<long long>                       m_id_set;
 
-    using WriterCounterMapT = std::unordered_map<std::string, long long>;
+    using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops = 0;
 

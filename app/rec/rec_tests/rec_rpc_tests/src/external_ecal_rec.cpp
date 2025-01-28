@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,12 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
   if (gui)
   {
     std::cout << "Starting " << "\"" << ECAL_REC_GUI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL_Process_eStartMode::proc_smode_minimized, false);
+    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
   }
   else
   {
     std::cout << "Starting " << "\"" << ECAL_REC_CLI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL_Process_eStartMode::proc_smode_hidden, false);
+    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
   }
 
   if (pid != 0)
@@ -120,7 +120,7 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::rec_server::RecS
 eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::RecServerConfig& config_pb_output)
 {
   eCAL::pb::rec_server::GenericRequest request;
-  eCAL::ServiceResponseVecT            service_response_vec;
+  eCAL::v5::ServiceResponseVecT            service_response_vec;
 
   constexpr int timeout_ms = 1000;
 
@@ -143,7 +143,7 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::rec_server
 
 eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_server::RecServerConfig& config_pb)
 {
-  eCAL::ServiceResponseVecT service_response_vec;
+  eCAL::v5::ServiceResponseVecT service_response_vec;
 
   constexpr int timeout_ms = 1000;
 

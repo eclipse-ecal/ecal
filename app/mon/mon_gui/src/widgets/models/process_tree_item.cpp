@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,9 +61,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.hname().c_str();
     }
-    else if (column == Columns::HGNAME)
+    else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
-      return process_.hgname().c_str();
+      return process_.shm_transport_domain().c_str();
     }
     else if (column == Columns::PID)
     {
@@ -105,6 +105,10 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.ecal_runtime_version().c_str();
     }
+    else if (column == Columns::CONFIG_FILE_PATH)
+    {
+      return process_.config_file_path().c_str();
+    }
     else
     {
       return QVariant();
@@ -114,7 +118,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {
@@ -153,7 +157,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == (Qt::ItemDataRole)ItemDataRoles::FilterRole) //-V1016 //-V547
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {
@@ -239,7 +243,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   else if (role == Qt::ItemDataRole::FontRole)
   {
     if ((column == Columns::HNAME)
-      || (column == Columns::HGNAME)
+      || (column == Columns::SHM_TRANSPORT_DOMAIN)
       || (column == Columns::PNAME)
       || (column == Columns::UNAME))
     {

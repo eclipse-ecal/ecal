@@ -38,22 +38,20 @@ eCAL::CSimTime::CSimTime() :
 bool eCAL::CSimTime::initialize()
 {
   std::unique_lock<std::mutex> lk(initialize_mutex);
-  if (!is_initialized) {
+  if (!is_initialized)
+  {
     //eCAL::Initialize("ecal_sim_time_listener", eCAL::Init::Subscriber);
     // this has to be done by the parent process
     // needs to be fixed with an improved reference counting
     // in eCAL::Initialize ..
 
-    if (sim_time_subscriber.Create("__sim_time__")) {
-      sim_time_subscriber.AddReceiveCallback(std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2));
-      is_initialized = true;
-    }
-    else {
-      is_initialized = false;
-    }
-    return is_initialized;
+    sim_time_subscriber = std::make_unique<eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>>("__sim_time__");
+    sim_time_subscriber->SetReceiveCallback(std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2));
+    is_initialized = true;
+    return true;
   }
-  else {
+  else
+  {
     return false;
   }
 }

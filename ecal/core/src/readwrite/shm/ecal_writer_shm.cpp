@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
  * @brief  memory file data writer
 **/
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"
@@ -83,7 +83,7 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
     if (host_name_ != m_attributes.host_name) return;
@@ -99,18 +99,18 @@ namespace eCAL
     {
       memory_file->Connect(std::to_string(process_id_));
 #ifndef NDEBUG
-      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }
 
-  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const std::string& topic_id_)
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
 
     // remove topic id from the id set for the given process id
-    bool memfile_has_subscriptions(true);
+    // bool memfile_has_subscriptions(true);
     {
       const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
       auto process_it = m_process_id_topic_id_set_map.find(process_id_);
@@ -127,22 +127,26 @@ namespace eCAL
           // we can remove the empty topic id set
           m_process_id_topic_id_set_map.erase(process_it);
           // and set the subscription state to false for later processing
-          memfile_has_subscriptions = false;
+          //memfile_has_subscriptions = false;
         }
       }
     }
-
-    // memory file is still connected to at least one topic id of this process id
-    // no need to Disconnect process id
-    if (memfile_has_subscriptions) return;
-
-    for (auto& memory_file : m_memory_file_vec)
-    {
-      memory_file->Disconnect(std::to_string(process_id_));
-#ifndef NDEBUG
-      Logging::Log(log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
-#endif
-    }
+// TODO: Disconnect events immediately if there is no longer an existing subscription.
+//       Unfortunately the below Disconnect()-method leads to incongruous event handles on
+//       unix operating systems in case of a subscriber tries to reconnected to same publisher
+//       again.
+//
+//    // memory file is still connected to at least one topic id of this process id
+//    // no need to Disconnect process id
+//    if (memfile_has_subscriptions) return;
+//
+//    for (auto& memory_file : m_memory_file_vec)
+//    {
+//      memory_file->Disconnect(std::to_string(process_id_));
+//#ifndef NDEBUG
+//      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+//#endif
+//    }
   }
 
   Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()
@@ -163,7 +167,7 @@ namespace eCAL
     // buffer count zero not allowed
     if (buffer_count_ < 1)
     {
-      Logging::Log(log_level_error, m_attributes.topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
+      Logging::Log(Logging::log_level_error, m_attributes.topic_name + "::CDataWriterSHM::SetBufferCount minimal number of memory files is 1 !");
       return false;
     }
 
@@ -197,7 +201,7 @@ namespace eCAL
       else
       {
         m_memory_file_vec.clear();
-        Logging::Log(log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
+        Logging::Log(Logging::log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
         return false;
       }
     }

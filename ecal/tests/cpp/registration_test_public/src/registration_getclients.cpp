@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,17 +54,18 @@ protected:
 };
 TEST_P(ClientsTestFixture, ClientExpiration)
 {
-  std::set<eCAL::Registration::SServiceMethodId> id_set;
+  std::set<eCAL::SServiceId> id_set;
 
   // create simple client and let it expire
   {
     // create client
     eCAL::SServiceMethodInformation service_method_info;
+    service_method_info.method_name              = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -112,11 +113,12 @@ TEST_P(ClientsTestFixture, GetClientIDs)
   {
     // create client
     eCAL::SServiceMethodInformation service_method_info;
+    service_method_info.method_name          = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    const eCAL::CServiceClient client("foo::service", { {"foo::method", service_method_info} });
+    const eCAL::CServiceClient client("foo::service", { service_method_info });
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -126,11 +128,11 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
-      eCAL::SServiceMethodInformation info;
+      eCAL::ServiceMethodInfoSetT info;
       EXPECT_TRUE(eCAL::Registration::GetClientInfo(*id_set.begin(), info));
 
       // check service/method names
-      EXPECT_EQ(service_method_info, info);
+      EXPECT_TRUE(info.find(service_method_info) != info.end());
     }
   }
 }
@@ -147,11 +149,11 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     ClientsTestParams{ []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
       ClientsTestParams{ []() {

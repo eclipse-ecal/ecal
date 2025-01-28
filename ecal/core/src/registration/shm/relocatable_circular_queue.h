@@ -31,16 +31,23 @@
 #include <stdexcept>
 
 template<class T>
-class RelocatableCircularQueue{
+class RelocatableCircularQueue {
 public:
   static constexpr auto invalid_index = std::numeric_limits<std::uint64_t>::max();
 
-  class iterator : public std::iterator<std::forward_iterator_tag, T, std::uint64_t> {
+  class iterator {
   public:
-    explicit iterator(RelocatableCircularQueue<T>& relocatable_circular_queue, std::uint64_t index): m_relocatable_circular_queue(relocatable_circular_queue), m_index(index){
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = T;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = T*;
+    using reference         = T&;
+
+    explicit iterator(RelocatableCircularQueue<T>& relocatable_circular_queue, std::uint64_t index)
+      : m_relocatable_circular_queue(relocatable_circular_queue), m_index(index) {
     }
 
-    iterator& operator++()
+    iterator& operator++() 
     {
       if (m_index == m_relocatable_circular_queue.m_header->front_index)
         m_index = invalid_index;
@@ -85,7 +92,7 @@ public:
 
   iterator begin()
   {
-    if(m_header->size == 0)
+    if (m_header->size == 0)
       return iterator(*this, invalid_index);
     else
       return iterator(*this, m_header->back_index);
@@ -98,7 +105,7 @@ public:
 
   const iterator begin() const
   {
-    if(m_header->size == 0)
+    if (m_header->size == 0)
       return iterator(*this, invalid_index);
     else
       return iterator(*this, m_header->back_index);
@@ -109,7 +116,7 @@ public:
     return iterator(*this, invalid_index);
   }
 
-  RelocatableCircularQueue(): m_header(nullptr)
+  RelocatableCircularQueue() : m_header(nullptr)
   {}
 
   void Push(const T& value)
@@ -218,18 +225,18 @@ private:
   };
 #pragma pack(pop)
 
-  void* m_base_address{nullptr};
+  void* m_base_address{ nullptr };
   Header* m_header;
 
-  T * Value(std::uint64_t index)
+  T* Value(std::uint64_t index)
   {
     assert(m_base_address != nullptr);
-    return reinterpret_cast<T *>(static_cast<char *>(m_base_address) + sizeof(Header) + sizeof(T) * index);
+    return reinterpret_cast<T*>(static_cast<char*>(m_base_address) + sizeof(Header) + sizeof(T) * index);
   }
 
-  const T * Value(std::uint64_t index) const
+  const T* Value(std::uint64_t index) const
   {
     assert(m_base_address != nullptr);
-    return reinterpret_cast<const T *>(static_cast<char *>(m_base_address) + sizeof(Header) + sizeof(T) * index);
+    return reinterpret_cast<const T*>(static_cast<char*>(m_base_address) + sizeof(Header) + sizeof(T) * index);
   }
 };

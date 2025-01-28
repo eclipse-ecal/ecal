@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
 #include <cstdint>
 #include <tuple>
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include <util/expanding_vector.h>
 
 namespace eCAL
@@ -154,6 +154,7 @@ namespace eCAL
     };
 
     // Service
+    // TODO: this naming is wrong, it should be Server!!!
     struct Service
     {
       int32_t                         rclock = 0;       // Registration clock

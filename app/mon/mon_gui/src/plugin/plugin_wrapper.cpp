@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 
 #include <stdexcept>
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 QPair<QString, QString> splitTopicType(const QString& topic_type)
 {
@@ -104,25 +104,25 @@ bool PluginWrapper::load()
       eCAL::mon::PluginInterface* plugin = qobject_cast<eCAL::mon::PluginInterface*>(instance);
       if (plugin)
       {
-        eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, "Plugin " + plugin_data_.meta_data.name.toStdString() + " " + plugin_data_.meta_data.version.toStdString() + " has been loaded.");
+        eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, "Plugin " + plugin_data_.meta_data.name.toStdString() + " " + plugin_data_.meta_data.version.toStdString() + " has been loaded.");
         instance_ = std::shared_ptr<eCAL::mon::PluginInterface>(plugin,
           [this](eCAL::mon::PluginInterface* p)
         {
-          eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_info, "Plugin " + plugin_data_.meta_data.name.toStdString() + " " + plugin_data_.meta_data.version.toStdString() + " has been unloaded.");
+          eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, "Plugin " + plugin_data_.meta_data.name.toStdString() + " " + plugin_data_.meta_data.version.toStdString() + " has been unloaded.");
           delete dynamic_cast<QObject*>(p);
         });
         return true;
       }
       else
       {
-        eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Plugin " + plugin_data_.path.toStdString() + " is not suitable for eCAL Monitor");
+        eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, "Plugin " + plugin_data_.path.toStdString() + " is not suitable for eCAL Monitor");
         loader.unload();
       }
     }
     else
     {
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, "Unable to load plugin " + plugin_data_.path.toStdString() + ".");
-      eCAL::Logging::Log(eCAL_Logging_eLogLevel::log_level_warning, loader.errorString().toStdString());
+      eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, "Unable to load plugin " + plugin_data_.path.toStdString() + ".");
+      eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, loader.errorString().toStdString());
     }
   }
   else

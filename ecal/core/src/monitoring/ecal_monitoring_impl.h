@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@
 #include <ecal/types/monitoring.h>
 
 #include "ecal_def.h"
-#include "monitoring/config/attributes/monitoring_attributes.h"
-#include "monitoring/ecal_monitoring_filter.h"
 
 #include "serialization/ecal_serialize_sample_registration.h"
 
@@ -45,15 +43,11 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(const Monitoring::SAttributes& attr_);
+    CMonitoringImpl();
     ~CMonitoringImpl() = default;
 
     void Create();
     void Destroy();
-
-    void SetExclFilter(const std::string& filter_);
-    void SetInclFilter(const std::string& filter_);
-    void SetFilterState(bool state_);
 
     void GetMonitoring(std::string& monitoring_, unsigned int entities_);
     void GetMonitoring(Monitoring::SMonitoring& monitoring_, unsigned int entities_);
@@ -79,7 +73,7 @@ namespace eCAL
     bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = std::map<std::string, Monitoring::STopicMon>;
+    using TopicMonMapT = std::map<EntityIdT, Monitoring::STopicMon>;
     struct STopicMonMap
     {
       explicit STopicMonMap() :
@@ -90,7 +84,7 @@ namespace eCAL
       std::unique_ptr<TopicMonMapT>  map;
     };
 
-    using ProcessMonMapT = std::map<std::string, Monitoring::SProcessMon>;
+    using ProcessMonMapT = std::map<EntityIdT, Monitoring::SProcessMon>;
     struct SProcessMonMap
     {
       explicit SProcessMonMap() :
@@ -101,7 +95,7 @@ namespace eCAL
       std::unique_ptr<ProcessMonMapT>  map;
     };
 
-    using ServerMonMapT = std::map<std::string, Monitoring::SServerMon>;
+    using ServerMonMapT = std::map<EntityIdT, Monitoring::SServerMon>;
     struct SServerMonMap
     {
       explicit SServerMonMap() :
@@ -112,7 +106,7 @@ namespace eCAL
       std::unique_ptr<ServerMonMapT>  map;
     };
 
-    using ClientMonMapT = std::map<std::string, Monitoring::SClientMon>;
+    using ClientMonMapT = std::map<EntityIdT, Monitoring::SClientMon>;
     struct SClientMonMap
     {
       explicit SClientMonMap() :
@@ -131,9 +125,6 @@ namespace eCAL
     void MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
 
     bool                                         m_init;
-
-    std::mutex                                   m_monitoring_filter_mtx;
-    CMonitoringFilter                            m_monitoring_filter;
 
     // database
     SProcessMonMap                               m_process_map;

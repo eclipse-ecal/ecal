@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/pubsub/payload_writer.h>
+#include <ecal/config.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
@@ -82,12 +82,12 @@ namespace eCAL
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
     // deprecated event callback interface
-    bool SetEventCallback(eCAL_Publisher_Event type_, const PubEventCallbackT callback_);
-    bool RemoveEventCallback(eCAL_Publisher_Event type_);
+    bool SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_);
+    bool RemoveEventCallback(ePublisherEvent type_);
 
     // future event callback interface
-    bool SetEventIDCallback(const PubEventIDCallbackT callback_);
-    bool RemoveEventIDCallback();
+    bool SetEventCallback(const v6::PubEventCallbackT callback_);
+    bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
     bool ClearAttribute(const std::string& attr_name_);
@@ -103,9 +103,9 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    Registration::STopicId GetTopicId() const
+    STopicId GetTopicId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -129,10 +129,9 @@ namespace eCAL
 
     void StopAllLayer();
 
-    void FireEvent(const eCAL_Publisher_Event type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
+    void FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
-    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
@@ -143,7 +142,7 @@ namespace eCAL
     
     int32_t GetFrequency();
 
-    std::string                            m_topic_id;
+    EntityIdT                m_topic_id;
     SDataTypeInformation                   m_topic_info;
     std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
@@ -162,12 +161,12 @@ namespace eCAL
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
 
-    using EventCallbackMapT = std::map<eCAL_Publisher_Event, PubEventCallbackT>;
+    using EventCallbackMapT = std::map<ePublisherEvent, v5::PubEventCallbackT>;
     std::mutex                             m_event_callback_map_mutex;
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    PubEventIDCallbackT                    m_event_id_callback;
+    v6::PubEventCallbackT                  m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

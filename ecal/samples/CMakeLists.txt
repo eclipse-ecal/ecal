@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,25 +16,6 @@
 #
 # ========================= eCAL LICENSE =================================
 cmake_minimum_required(VERSION 3.10)
-
-# --------------------------------------------------------
-# c samples
-# --------------------------------------------------------
-# pubsub
-if(ECAL_CORE_PUBLISHER)
-  add_subdirectory(c/pubsub/string/minimal_snd)
-endif()
-
-if(ECAL_CORE_SUBSCRIBER)
-  add_subdirectory(c/pubsub/string/minimal_rec)
-  add_subdirectory(c/pubsub/string/minimal_rec_cb)
-endif()
-
-# services
-if(ECAL_CORE_SERVICE)
-  add_subdirectory(c/services/minimal_client_c)
-  add_subdirectory(c/services/minimal_server_c)
-endif()
 
 # --------------------------------------------------------
 # cpp samples
@@ -99,40 +80,12 @@ if(ECAL_CORE_PUBLISHER)
   add_subdirectory(cpp/pubsub/binary/binary_snd)
   add_subdirectory(cpp/pubsub/binary/binary_zero_copy_snd)
   add_subdirectory(cpp/pubsub/binary/ping)
-  add_subdirectory(cpp/pubsub/string/minimal_snd)
-  if(ECAL_CORE_HAS_PROTOBUF)
-    add_subdirectory(cpp/pubsub/protobuf/person_events_snd)
-    add_subdirectory(cpp/pubsub/protobuf/person_snd)
-    if(ECAL_CORE_TRANSPORT_UDP)
-      add_subdirectory(cpp/pubsub/protobuf/person_snd_udp)
-    endif()
-    if(ECAL_CORE_TRANSPORT_TCP)
-      add_subdirectory(cpp/pubsub/protobuf/person_snd_tcp)
-    endif()
-  endif()
 endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   add_subdirectory(cpp/pubsub/binary/binary_rec)
   add_subdirectory(cpp/pubsub/binary/binary_zero_copy_rec)
   add_subdirectory(cpp/pubsub/binary/pong)
-  add_subdirectory(cpp/pubsub/string/minimal_rec)
-  add_subdirectory(cpp/pubsub/string/minimal_rec_cb)
-  if(ECAL_CORE_HAS_PROTOBUF)
-    add_subdirectory(cpp/pubsub/protobuf/person_events_rec)
-    add_subdirectory(cpp/pubsub/protobuf/person_rec)
-    add_subdirectory(cpp/pubsub/protobuf/proto_dyn_json_rec)
-    if(ECAL_CORE_MONITORING)
-      add_subdirectory(cpp/pubsub/protobuf/proto_dyn_rec)
-      add_subdirectory(cpp/pubsub/protobuf/proto_dyn_snd)
-    endif()
-  endif()
-endif()
-
-if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER)
-  if(ECAL_CORE_HAS_PROTOBUF)
-    add_subdirectory(cpp/pubsub/protobuf/person_loopback)
-  endif()
 endif()
 
 # services
@@ -141,11 +94,4 @@ if(ECAL_CORE_SERVICE)
   add_subdirectory(cpp/services/latency_server)
   add_subdirectory(cpp/services/minimal_client)
   add_subdirectory(cpp/services/minimal_server)
-  if(ECAL_CORE_HAS_PROTOBUF)
-    add_subdirectory(cpp/services/math_client)
-    add_subdirectory(cpp/services/math_server)
-    add_subdirectory(cpp/services/ping_client)
-    add_subdirectory(cpp/services/ping_client_dyn)
-    add_subdirectory(cpp/services/ping_server)
-  endif()
 endif()

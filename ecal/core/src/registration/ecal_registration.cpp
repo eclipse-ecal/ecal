@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  *
 **/
 
-#include <ecal/ecal_registration.h>
+#include <ecal/registration.h>
 
 #include "ecal_def.h"
 #include "ecal_globals.h"
@@ -46,7 +46,7 @@ namespace eCAL
       return g_descgate()->GetPublisherInfo(id_, topic_info_);
     }
 
-    CallbackToken AddPublisherEventCallback(const TopicIDCallbackT& callback_)
+    CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
       return g_descgate()->AddPublisherEventCallback(callback_);
@@ -70,7 +70,7 @@ namespace eCAL
       return g_descgate()->GetSubscriberInfo(id_, topic_info_);
     }
 
-    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicIDCallbackT& callback_)
+    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_)
     {
       if (g_descgate() == nullptr) return CallbackToken();
       return g_descgate()->AddSubscriberEventCallback(callback_);
@@ -82,25 +82,25 @@ namespace eCAL
       return g_descgate()->RemSubscriberEventCallback(token_);
     }
 
-    std::set<SServiceMethodId> GetServiceIDs()
+    std::set<SServiceId> GetServerIDs()
     {
-      if (g_descgate() == nullptr) return std::set<SServiceMethodId>();
-      return g_descgate()->GetServiceIDs();
+      if (g_descgate() == nullptr) return std::set<SServiceId>();
+      return g_descgate()->GetServerIDs();
     }
 
-    bool GetServiceInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
+    bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetServiceInfo(id_, service_info_);
+      return g_descgate()->GetServerInfo(id_, service_info_);
     }
 
-    std::set<SServiceMethodId> GetClientIDs()
+    std::set<SServiceId> GetClientIDs()
     {
-      if (g_descgate() == nullptr) return std::set<SServiceMethodId>();
+      if (g_descgate() == nullptr) return std::set<SServiceId>();
       return g_descgate()->GetClientIDs();
     }
 
-    bool GetClientInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
+    bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetClientInfo(id_, service_info_);
@@ -122,16 +122,21 @@ namespace eCAL
         topic_names_.insert(sub_id.topic_name);
       }
     }
-
-    void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_)
+    
+    void GetServerMethodNames(std::set<SServiceMethod>& server_method_names_)
     {
-      service_method_names_.clear();
+      server_method_names_.clear();
 
-      // get services id set and insert names into the service_method_names set
-      const std::set<SServiceMethodId> service_id_set = GetServiceIDs();
-      for (const auto& service_id : service_id_set)
+      // get servers id set and insert names into the server_method_names_ set
+      const std::set<SServiceId> server_id_set = GetServerIDs();
+      for (const auto& server_id : server_id_set)
       {
-        service_method_names_.insert({ service_id.service_name, service_id.method_name });
+        eCAL::ServiceMethodInfoSetT methods;
+        (void)GetServerInfo(server_id, methods);
+        for (const auto& method : methods)
+        {
+          server_method_names_.insert({ server_id.service_name, method.method_name });
+        }
       }
     }
 
@@ -140,11 +145,17 @@ namespace eCAL
       client_method_names_.clear();
 
       // get clients id set and insert names into the client_method_names set
-      const std::set<SServiceMethodId> client_id_set = GetClientIDs();
+      const std::set<SServiceId> client_id_set = GetClientIDs();
       for (const auto& client_id : client_id_set)
       {
-        client_method_names_.insert({ client_id.service_name, client_id.method_name });
+        eCAL::ServiceMethodInfoSetT methods;
+        (void)GetClientInfo(client_id, methods);
+        for (const auto& method : methods)
+        {
+          client_method_names_.insert({ client_id.service_name, method.method_name });
+        }
       }
     }
+    
   }
 }

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 namespace eCAL
 {
@@ -32,7 +32,7 @@ namespace eCAL
       struct SSink
       {
         bool                enabled;
-        eCAL_Logging_Filter filter_log;
+        Filter              filter_log;
       };
 
       struct SUDP
