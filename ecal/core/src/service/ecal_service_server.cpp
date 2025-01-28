@@ -29,8 +29,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
   CServiceServer::CServiceServer(const std::string & service_name_, const ServerEventCallbackT event_callback_)
     : m_service_server_impl(nullptr)
   {
@@ -92,6 +90,5 @@ namespace eCAL
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->IsConnected();
-  }
   }
 }

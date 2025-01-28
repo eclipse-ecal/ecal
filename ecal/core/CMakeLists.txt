@@ -736,20 +736,23 @@ endmacro()
 # We now create two libraries
 # One of them is a compatibility version that should facilitate easier migration.
 # ecal_core, ecal_core_v5.
+# We removed again the compatibility libraries.
+# We might reintroduce it, but then for *ALL* functionality.
 #######################################
 
 add_ecal_core_library(${PROJECT_NAME})
-target_compile_definitions(${PROJECT_NAME}
-  PUBLIC 
-    ECAL_CORE_V5_FUNCTIONALTIY=1
-)
 
-add_ecal_core_library(core_v5)
-target_compile_definitions(core_v5 
-  PUBLIC
-    ECAL_CORE_NAMESPACE_V5_INLINE=1
-    ECAL_CORE_V5_FUNCTIONALTIY=1
-)
+#target_compile_definitions(${PROJECT_NAME}
+#  PUBLIC 
+#    ECAL_CORE_V5_FUNCTIONALTIY=1
+#)
+
+#add_ecal_core_library(core_v5)
+#target_compile_definitions(core_v5 
+#  PUBLIC
+#    ECAL_CORE_NAMESPACE_V5_INLINE=1
+#    ECAL_CORE_V5_FUNCTIONALTIY=1
+#)
 
 ###
 ## Iinstall header files only once...

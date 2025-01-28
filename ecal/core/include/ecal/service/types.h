@@ -132,12 +132,12 @@ namespace eCAL
    *            Used to Create a Client Instance
    *            Can be queried from eCAL::Registration.
   **/
-  using ServiceMethodInfoSetT = std::set<SServiceMethodInformation>;
+  using ServiceMethodInformationSetT = std::set<SServiceMethodInformation>;
 
   /**
-   * @brief Service response struct containing the (responding) server informations and the response itself.
+   * @brief Service response struct containing the (responding) server information and the response itself.
   **/
-  struct SServiceIDResponse
+  struct SServiceResponse
   {
     eCallState                     call_state = eCallState::none; //!< call state, to indicate if the call was successful or not
 
@@ -148,14 +148,14 @@ namespace eCAL
   
     std::string                    error_msg;                    //!< human readable error message
   };
-  using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
+  using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses
 
   /**
    * @brief Service response callback function type (low level client interface).
    * 
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseIDCallbackT = std::function<void (const SServiceIDResponse& service_response_)>;
+  using ResponseCallbackT = std::function<void (const SServiceResponse& service_response_)>;
 
   /**
    * @brief Service method callback function type (low level server interface).
@@ -168,41 +168,38 @@ namespace eCAL
   **/
   using ServiceMethodCallbackT = std::function<int(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)>;
  
-  ECAL_CORE_NAMESPACE_V6
+  /**
+   * @brief eCAL client event callback struct.
+  **/
+  struct SClientEventCallbackData
   {
-      /**
-     * @brief eCAL client event callback struct.
-    **/
-    struct SClientEventCallbackData
-    {
-      eClientEvent      type{ eClientEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
-    };
+    eClientEvent      type{ eClientEvent::none };  //!< event type
+    long long         time = 0;                  //!< event time in µs
+  };
 
-    /**
-     * @brief Client event callback function type.
-     *
-     * @param service_id_  The service id struct of the connection that triggered the event.
-     * @param data_        Event callback data structure with the event specific information.
-    **/
-    using ClientEventCallbackT = std::function<void(const SServiceId& service_id_, const SClientEventCallbackData& data_)>;
+  /**
+   * @brief Client event callback function type.
+   *
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
+  **/
+  using ClientEventCallbackT = std::function<void(const SServiceId& service_id_, const SClientEventCallbackData& data_)>;
 
-    /**
-     * @brief eCAL server event callback struct.
-    **/
-    struct SServerEventCallbackData
-    {
-      eServerEvent      type{ eServerEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
-    };
+  /**
+   * @brief eCAL server event callback struct.
+  **/
+  struct SServerEventCallbackData
+  {
+    eServerEvent      type{ eServerEvent::none };  //!< event type
+    long long         time = 0;                  //!< event time in µs
+  };
 
-    /**
-     * @brief Server event callback function type.
-     *
-     * @param service_id_  The service id struct of the connection that triggered the event.
-     * @param data_        Event callback data structure with the event specific information.
-    **/
-    using ServerEventCallbackT = std::function<void(const SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
-  }
-    
+  /**
+   * @brief Server event callback function type.
+   *
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
+  **/
+  using ServerEventCallbackT = std::function<void(const SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
+
 }

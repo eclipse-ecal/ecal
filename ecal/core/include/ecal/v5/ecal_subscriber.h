@@ -196,7 +196,7 @@ namespace eCAL
         * @return  True if succeeded, false if not.
        **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddReceiveCallback(v6::ReceiveCallbackT callback_);
+        bool AddReceiveCallback(eCAL::ReceiveCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.

@@ -51,7 +51,7 @@ namespace eCAL
       explicit CServiceClientImpl(const std::string& service_name_);
 
       // Constructor for creating a service client instance with a service name and method information map.
-      explicit CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_);
+      explicit CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_);
 
       // Destructor to clean up resources.
       virtual ~CServiceClientImpl();
@@ -60,7 +60,7 @@ namespace eCAL
       bool Create(const std::string& service_name_);
 
       // Creates a service client with a specific service name and method information map.
-      bool Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_);
+      bool Create(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_);
 
       // Destroys the service client instance and releases resources.
       bool Destroy();
@@ -103,7 +103,7 @@ namespace eCAL
 
     private:
       // Pointer to the underlying service client implementation
-      std::shared_ptr<eCAL::v6::CServiceClient> m_service_client_impl;
+      std::shared_ptr<eCAL::CServiceClient> m_service_client_impl;
 
       // Host name filter for the service client
       std::string m_host_name;

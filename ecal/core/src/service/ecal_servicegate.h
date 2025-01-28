@@ -35,14 +35,8 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
-    class CServiceServerImpl;
-  }
-}
+  class CServiceServerImpl;
 
-namespace eCAL
-{
   class CServiceGate
   {
   public:
@@ -52,15 +46,15 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool Register  (const std::string& service_name_, const std::shared_ptr<eCAL::v6::CServiceServerImpl>& server_);
-    bool Unregister(const std::string& service_name_, const std::shared_ptr<eCAL::v6::CServiceServerImpl>& server_);
+    bool Register  (const std::string& service_name_, const std::shared_ptr<eCAL::CServiceServerImpl>& server_);
+    bool Unregister(const std::string& service_name_, const std::shared_ptr<eCAL::CServiceServerImpl>& server_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 
   protected:
     static std::atomic<bool>      m_created;
 
-    using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<eCAL::v6::CServiceServerImpl>>;
+    using ServiceNameServiceImplMapT = std::multimap<std::string, std::shared_ptr<eCAL::CServiceServerImpl>>;
     std::shared_timed_mutex       m_service_server_map_mutex;
     ServiceNameServiceImplMapT    m_service_server_map;
   };
