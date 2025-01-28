@@ -68,10 +68,10 @@ namespace
     pb_process_.state.severity_level = static_cast<eCAL_pb_eProcessSeverityLevel>(registration_process_.state.severity_level);
     // state.info
     eCAL::nanopb::encode_string(pb_process_.state.info, registration_process_.state.info);
-    // process.tsync_state
-    pb_process_.tsync_state = static_cast<eCAL_pb_eTSyncState>(registration_process_.tsync_state);
-    // tsync_mod_name
-    eCAL::nanopb::encode_string(pb_process_.tsync_mod_name, registration_process_.tsync_mod_name);
+    // process.time_sync_state
+    pb_process_.time_sync_state = static_cast<eCAL_pb_eTSyncState>(registration_process_.time_sync_state);
+    // timesync_module_name
+    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, registration_process_.timesync_module_name);
     // component_init_state
     pb_process_.component_init_state = registration_process_.component_init_state;
     // component_init_info
@@ -326,8 +326,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.process.pparam, registration_.process.pparam);
     // state.info
     eCAL::nanopb::decode_string(pb_sample_.process.state.info, registration_.process.state.info);
-    // tsync_mod_name
-    eCAL::nanopb::decode_string(pb_sample_.process.tsync_mod_name, registration_.process.tsync_mod_name);
+    // timesync_module_name
+    eCAL::nanopb::decode_string(pb_sample_.process.time_sync_module_name, registration_.process.timesync_module_name);
     // component_init_info
     eCAL::nanopb::decode_string(pb_sample_.process.component_init_info, registration_.process.component_init_info);
     // ecal_runtime_version
@@ -417,8 +417,8 @@ namespace
       registration_.process.state.severity = static_cast<eCAL::Registration::eProcessSeverity>(pb_sample_.process.state.severity);
       // state.severity_level
       registration_.process.state.severity_level = static_cast<eCAL::Registration::eProcessSeverityLevel>(pb_sample_.process.state.severity_level);
-      // tsync_state
-      registration_.process.tsync_state = static_cast<eCAL::Registration::eTSyncState>(pb_sample_.process.tsync_state);
+      // time_sync_state
+      registration_.process.time_sync_state = static_cast<eCAL::Registration::eTSyncState>(pb_sample_.process.time_sync_state);
       // component_init_state
       registration_.process.component_init_state = pb_sample_.process.component_init_state;
       break;

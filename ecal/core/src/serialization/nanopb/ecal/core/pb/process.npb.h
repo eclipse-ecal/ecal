@@ -52,8 +52,8 @@ typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported 
  11 = data read bytes per sec */
     bool has_state;
     eCAL_pb_ProcessState state; /* process state info */
-    eCAL_pb_eTSyncState tsync_state; /* time synchronization state */
-    pb_callback_t tsync_mod_name; /* time synchronization module name */
+    eCAL_pb_eTSyncState time_sync_state; /* time synchronization state */
+    pb_callback_t time_sync_module_name; /* time synchronization module name */
     int32_t component_init_state; /* eCAL component initialization state (eCAL::Initialize(..)) */
     pb_callback_t component_init_info; /* like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc) */
     pb_callback_t ecal_runtime_version; /* loaded / runtime eCAL version of a component */
@@ -82,7 +82,7 @@ extern "C" {
 #define eCAL_pb_ProcessState_severity_ENUMTYPE eCAL_pb_eProcessSeverity
 #define eCAL_pb_ProcessState_severity_level_ENUMTYPE eCAL_pb_eProcessSeverityLevel
 
-#define eCAL_pb_Process_tsync_state_ENUMTYPE eCAL_pb_eTSyncState
+#define eCAL_pb_Process_time_sync_state_ENUMTYPE eCAL_pb_eTSyncState
 
 
 /* Initializer values for message structs */
@@ -102,8 +102,8 @@ extern "C" {
 #define eCAL_pb_Process_unit_name_tag            5
 #define eCAL_pb_Process_pparam_tag               6
 #define eCAL_pb_Process_state_tag                12
-#define eCAL_pb_Process_tsync_state_tag          13
-#define eCAL_pb_Process_tsync_mod_name_tag       14
+#define eCAL_pb_Process_time_sync_state_tag      13
+#define eCAL_pb_Process_time_sync_module_name_tag 14
 #define eCAL_pb_Process_component_init_state_tag 15
 #define eCAL_pb_Process_component_init_info_tag  16
 #define eCAL_pb_Process_ecal_runtime_version_tag 17
@@ -126,8 +126,8 @@ X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
 X(a, CALLBACK, SINGULAR, STRING,   pparam,            6) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  state,            12) \
-X(a, STATIC,   SINGULAR, UENUM,    tsync_state,      13) \
-X(a, CALLBACK, SINGULAR, STRING,   tsync_mod_name,   14) \
+X(a, STATIC,   SINGULAR, UENUM,    time_sync_state,  13) \
+X(a, CALLBACK, SINGULAR, STRING,   time_sync_module_name,  14) \
 X(a, STATIC,   SINGULAR, INT32,    component_init_state,  15) \
 X(a, CALLBACK, SINGULAR, STRING,   component_init_info,  16) \
 X(a, CALLBACK, SINGULAR, STRING,   ecal_runtime_version,  17) \

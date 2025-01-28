@@ -165,7 +165,7 @@ class MonitorModel
       process.severity = Severity(p.state().severity());
       process.severity_level = SeverityLevel(p.state().severity_level());
       process.state_info = std::move(*p.mutable_state()->mutable_info());
-      process.time_sync_state = TimeSyncState(p.tsync_state());
+      process.time_sync_state = TimeSyncState(p.time_sync_state());
       process.time_sync_mod_name = std::move(*p.mutable_tsync_mod_name());
       process.component_init_info = std::move(*p.mutable_component_init_info());
       process.ecal_runtime_version = std::move(*p.mutable_ecal_runtime_version());

@@ -65,10 +65,10 @@ namespace
     pb_process_.state.severity_level = static_cast<eCAL_pb_eProcessSeverityLevel>(process_.state_severity_level);
     // state.info
     eCAL::nanopb::encode_string(pb_process_.state.info, process_.state_info);
-    // process.tsync_state
-    pb_process_.tsync_state = static_cast<eCAL_pb_eTSyncState>(process_.tsync_state);
-    // tsync_mod_name
-    eCAL::nanopb::encode_string(pb_process_.tsync_mod_name, process_.tsync_mod_name);
+    // process.time_sync_state
+    pb_process_.time_sync_state = static_cast<eCAL_pb_eTSyncState>(process_.time_sync_state);
+    // timesync_module_name
+    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, process_.timesync_module_name);
     // component_init_state
     pb_process_.component_init_state = process_.component_init_state;
     // component_init_info
@@ -508,8 +508,8 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.pparam, process_.pparam);
     // state.info
     eCAL::nanopb::decode_string(pb_process_.state.info, process_.state_info);
-    // tsync_mod_name
-    eCAL::nanopb::decode_string(pb_process_.tsync_mod_name, process_.tsync_mod_name);
+    // timesync_module_name
+    eCAL::nanopb::decode_string(pb_process_.time_sync_module_name, process_.timesync_module_name);
     // component_init_info
     eCAL::nanopb::decode_string(pb_process_.component_init_info, process_.component_init_info);
     // ecal_runtime_version
@@ -531,8 +531,8 @@ namespace
     process_.state_severity = pb_process_.state.severity;
     // state.severity_level
     process_.state_severity_level = pb_process_.state.severity_level;
-    // tsync_state
-    process_.tsync_state = pb_process_.tsync_state;
+    // time_sync_state
+    process_.time_sync_state = pb_process_.time_sync_state;
     // component_init_state
     process_.component_init_state = pb_process_.component_init_state;
   }

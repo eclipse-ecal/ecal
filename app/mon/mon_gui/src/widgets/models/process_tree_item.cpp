@@ -89,13 +89,13 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.state().info().c_str();
     }
-    else if (column == Columns::TSYNC_STATE)
+    else if (column == Columns::TIME_SYNC_STATE)
     {
-      return (int)process_.tsync_state();
+      return (int)process_.time_sync_state();
     }
     else if (column == Columns::TSYNC_MOD_NAME)
     {
-      return process_.tsync_mod_name().c_str();
+      return process_.timesync_module_name().c_str();
     }
     else if (column == Columns::COMPONENT_INIT_INFO)
     {
@@ -129,9 +129,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return severityToString(process_.state().severity(), process_.state().severity_level());
     }
-    else if (column == Columns::TSYNC_STATE)
+    else if (column == Columns::TIME_SYNC_STATE)
     {
-      switch (process_.tsync_state())
+      switch (process_.time_sync_state())
       {
       case 0:
         return "None";
@@ -163,9 +163,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
     }
-    else if (column == Columns::TSYNC_STATE)
+    else if (column == Columns::TIME_SYNC_STATE)
     {
-      switch (process_.tsync_state())
+      switch (process_.time_sync_state())
       {
       case 0:
         return "None";
@@ -260,11 +260,11 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
       }
     }
     
-    else if (column == Columns::TSYNC_STATE)
+    else if (column == Columns::TIME_SYNC_STATE)
     {
       QFont font;
       font.setItalic(true);
-      switch (process_.tsync_state())
+      switch (process_.time_sync_state())
       {
       case 0:
       case 1:

@@ -1084,11 +1084,11 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", process.state_info.c_str());
         PyDict_SetItemString(processDict, "state_info", val); Py_DECREF(val);
 
-        val = Py_BuildValue("i", process.tsync_state);
-        PyDict_SetItemString(processDict, "tsync_state", val); Py_DECREF(val);
+        val = Py_BuildValue("i", process.time_sync_state);
+        PyDict_SetItemString(processDict, "time_sync_state", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.tsync_mod_name.c_str());
-        PyDict_SetItemString(processDict, "tsync_mod_name", val); Py_DECREF(val);
+        val = Py_BuildValue("s", process.timesync_module_name.c_str());
+        PyDict_SetItemString(processDict, "timesync_module_name", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", process.component_init_state);
         PyDict_SetItemString(processDict, "component_init_state", val); Py_DECREF(val);

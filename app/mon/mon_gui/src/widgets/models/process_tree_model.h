@@ -111,7 +111,7 @@ private:
     { Columns::STATE,                (int)ProcessTreeItem::Columns::SEVERITY },
     { Columns::INFO,                 (int)ProcessTreeItem::Columns::INFO },
     { Columns::HEARTBEAT,            (int)ProcessTreeItem::Columns::REGISTRATION_CLOCK },
-    { Columns::TIMESYNC_STATE,       (int)ProcessTreeItem::Columns::TSYNC_STATE },
+    { Columns::TIMESYNC_STATE,       (int)ProcessTreeItem::Columns::TIME_SYNC_STATE },
     { Columns::TIMESYNC_MOD_NAME,    (int)ProcessTreeItem::Columns::TSYNC_MOD_NAME },
     { Columns::COMPONENT_INIT_INFO,  (int)ProcessTreeItem::Columns::COMPONENT_INIT_INFO },
     { Columns::ECAL_RUNTIME_VERSION, (int)ProcessTreeItem::Columns::ECAL_RUNTIME_VERSION },

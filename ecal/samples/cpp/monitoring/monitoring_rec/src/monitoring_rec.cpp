@@ -101,8 +101,8 @@ int main()
         std::cout << "pparam          : " << process.pparam() << std::endl;   // process parameter
         std::cout << "severity        : " << process.state().severity() << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info() << std::endl;   // process state info
-        std::cout << "tsync state     : " << process.tsync_state() << std::endl;   // time sync state
-        std::cout << "tsync mod name  : " << process.tsync_mod_name() << std::endl;   // time sync mod name
+        std::cout << "tsync state     : " << process.time_sync_state() << std::endl;   // time sync state
+        std::cout << "tsync mod name  : " << process.timesync_module_name() << std::endl;   // time sync mod name
         std::cout << std::endl;
       }
     }
