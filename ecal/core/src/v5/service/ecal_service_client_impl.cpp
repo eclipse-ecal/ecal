@@ -27,7 +27,7 @@
 
 namespace
 {
-  eCAL::v5::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceIDResponse& service_id_response)
+  eCAL::v5::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceResponse& service_id_response)
   {
     eCAL::v5::SServiceResponse service_response;
 
@@ -66,7 +66,7 @@ namespace eCAL
       Create(service_name_);
     }
 
-    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
       : m_service_client_impl(nullptr)
     {
       Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Initializing service client with name: " + service_name_);
@@ -81,10 +81,10 @@ namespace eCAL
 
     bool CServiceClientImpl::Create(const std::string& service_name_)
     {
-      return Create(service_name_, ServiceMethodInfoSetT());
+      return Create(service_name_, ServiceMethodInformationSetT());
     }
 
-    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
     {
       if (m_service_client_impl != nullptr)
       {
@@ -184,13 +184,13 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SServiceIDResponse& service_response_)
+      const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
             Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Response received for method call.");
             
-            // Convert SServiceResponse to SServiceIDResponse
+            // Convert eCAL::SServiceResponse to eCAL::v5::SServiceResponse
             const v5::SServiceResponse service_response = ConvertToServiceResponse(service_response_);
 
             // Call the stored response callback
@@ -227,7 +227,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call with response collection to method: " + method_name_);
 
       auto instances = m_service_client_impl->GetClientInstances();
-      std::vector<std::pair<bool, SServiceIDResponse>> responses;
+      std::vector<std::pair<bool, eCAL::SServiceResponse>> responses;
       bool success = false;
       for (auto& instance : instances)
       {
@@ -263,7 +263,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making an asynchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SServiceIDResponse& service_response_)
+      const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {

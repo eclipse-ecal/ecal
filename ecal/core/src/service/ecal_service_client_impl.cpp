@@ -47,9 +47,9 @@ namespace
     return request_shared_ptr;
   }
 
-  eCAL::SServiceIDResponse CreateErrorResponse(const eCAL::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
+  eCAL::SServiceResponse CreateErrorResponse(const eCAL::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_, const std::string& error_message_)
   {
-    eCAL::SServiceIDResponse error_response;
+    eCAL::SServiceResponse error_response;
     // service/method id
     error_response.service_method_id.service_id   = entity_id_;
     error_response.service_method_id.service_name = service_name_;
@@ -64,7 +64,7 @@ namespace
   }
 
   void ResponseError(const eCAL::SEntityId& entity_id_, const std::string& service_name_, const std::string& method_name_,
-    const std::string& error_message_, const eCAL::ResponseIDCallbackT& response_callback_)
+    const std::string& error_message_, const eCAL::ResponseCallbackT& response_callback_)
   {
     eCAL::Logging::Log(eCAL::Logging::log_level_error, "CServiceClientImpl: Response error for service: " + service_name_ + ", method: " + method_name_ + ", error: " + error_message_);
     response_callback_(CreateErrorResponse(entity_id_, service_name_, method_name_, error_message_));
@@ -75,7 +75,7 @@ namespace eCAL
 {
     // Factory method to create a new instance of CServiceClientImpl
     std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
-        const std::string & service_name_, const ServiceMethodInfoSetT & method_information_map_, const ClientEventCallbackT & event_callback_)
+        const std::string & service_name_, const ServiceMethodInformationSetT & method_information_map_, const ClientEventCallbackT & event_callback_)
     {
   #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
@@ -85,7 +85,7 @@ namespace eCAL
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
-      const std::string & service_name_, const ServiceMethodInfoSetT & method_information_set_, const ClientEventCallbackT & event_callback_)
+      const std::string & service_name_, const ServiceMethodInformationSetT & method_information_set_, const ClientEventCallbackT & event_callback_)
       : m_service_name(service_name_), m_method_information_set(method_information_set_)
   {
 #ifndef NDEBUG
@@ -163,9 +163,9 @@ namespace eCAL
   }
 
   // Calls a service method synchronously, blocking until a response is received or timeout occurs
-  std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallWithCallback(
+  std::pair<bool, SServiceResponse> CServiceClientImpl::CallWithCallback(
       const SEntityId & entity_id_, const std::string & method_name_,
-      const std::string & request_, int timeout_ms_, const ResponseIDCallbackT & response_callback_)
+      const std::string & request_, int timeout_ms_, const ResponseCallbackT & response_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);
@@ -175,7 +175,7 @@ namespace eCAL
     if (!GetClientByEntity(entity_id_, client))
     {
       eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
-      return { false, SServiceIDResponse() };
+      return { false, SServiceResponse() };
     }
 
     auto response = CallMethodWithTimeout(entity_id_, client, method_name_, request_, std::chrono::milliseconds(timeout_ms_));
@@ -202,7 +202,7 @@ namespace eCAL
   }
 
   // Asynchronous call to a service with a specified timeout
-  bool CServiceClientImpl::CallWithCallbackAsync(const SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseIDCallbackT & response_callback_)
+  bool CServiceClientImpl::CallWithCallbackAsync(const SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseCallbackT & response_callback_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CallWithCallbackAsync: Performing asynchronous call for service: " + m_service_name + ", method: " + method_name_);
@@ -427,17 +427,17 @@ namespace eCAL
   }
 
   // Blocking call to a service with a specified timeout
-  std::pair<bool, SServiceIDResponse> CServiceClientImpl::CallMethodWithTimeout(
+  std::pair<bool, SServiceResponse> CServiceClientImpl::CallMethodWithTimeout(
     const SEntityId & entity_id_, SClient & client_, const std::string & method_name_,
     const std::string & request_, std::chrono::nanoseconds timeout_)
   {
     if (method_name_.empty())
-      return { false, SServiceIDResponse() };
+      return { false, SServiceResponse() };
 
     // Serialize the request
     auto request_shared_ptr = SerializeRequest(method_name_, request_);
     if (!request_shared_ptr)
-      return { false, SServiceIDResponse() };
+      return { false, SServiceResponse() };
 
     // Prepare response data
     auto response_data = PrepareInitialResponse(client_, method_name_);
@@ -574,9 +574,9 @@ namespace eCAL
   }
 
   // DeSerializes the response string into a service response
-  eCAL::SServiceIDResponse CServiceClientImpl::DeserializedResponse(const SClient & client_, const std::string & response_pb_)
+  eCAL::SServiceResponse CServiceClientImpl::DeserializedResponse(const SClient & client_, const std::string & response_pb_)
   {
-    eCAL::SServiceIDResponse service_reponse;
+    eCAL::SServiceResponse service_reponse;
     eCAL::Service::Response response;
     if (eCAL::DeserializeFromBuffer(response_pb_.c_str(), response_pb_.size(), response))
     {

@@ -132,12 +132,12 @@ namespace eCAL
    *            Used to Create a Client Instance
    *            Can be queried from eCAL::Registration.
   **/
-  using ServiceMethodInfoSetT = std::set<SServiceMethodInformation>;
+  using ServiceMethodInformationSetT = std::set<SServiceMethodInformation>;
 
   /**
-   * @brief Service response struct containing the (responding) server informations and the response itself.
+   * @brief Service response struct containing the (responding) server information and the response itself.
   **/
-  struct SServiceIDResponse
+  struct SServiceResponse
   {
     eCallState                     call_state = eCallState::none; //!< call state, to indicate if the call was successful or not
 
@@ -148,14 +148,14 @@ namespace eCAL
   
     std::string                    error_msg;                    //!< human readable error message
   };
-  using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
+  using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses
 
   /**
    * @brief Service response callback function type (low level client interface).
    * 
    * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using ResponseIDCallbackT = std::function<void (const SServiceIDResponse& service_response_)>;
+  using ResponseCallbackT = std::function<void (const SServiceResponse& service_response_)>;
 
   /**
    * @brief Service method callback function type (low level server interface).

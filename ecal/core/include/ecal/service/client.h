@@ -53,7 +53,7 @@ namespace eCAL
      * @param event_callback_          The client event callback funtion.
     **/
     ECAL_API_EXPORTED_MEMBER
-      CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_set_ = ServiceMethodInfoSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
+      CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_ = ServiceMethodInformationSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
 
     /**
      * @brief Destructor.
@@ -102,7 +102,7 @@ namespace eCAL
      * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceIDResponseVecT& service_response_vec_) const;
+      bool CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const;
 
     /**
      * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
@@ -115,7 +115,7 @@ namespace eCAL
      * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_) const;
+      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseCallbackT& response_callback_) const;
 
     /**
      * @brief Asynchronous call of a service method for all existing service instances, using callback
@@ -127,7 +127,7 @@ namespace eCAL
      * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_) const;
+      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_) const;
 
     /**
      * @brief Retrieve service name.

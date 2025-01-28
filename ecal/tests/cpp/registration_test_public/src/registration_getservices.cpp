@@ -127,7 +127,7 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {
-      eCAL::ServiceMethodInfoSetT methods;
+      eCAL::ServiceMethodInformationSetT methods;
       EXPECT_TRUE(eCAL::Registration::GetServerInfo(*id_set.begin(), methods));
 
       // check service/method names
