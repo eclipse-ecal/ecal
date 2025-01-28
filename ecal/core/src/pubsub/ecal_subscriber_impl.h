@@ -69,7 +69,7 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool SetReceiveCallback(v6::ReceiveCallbackT callback_);
+    bool SetReceiveCallback(ReceiveCallbackT callback_);
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
@@ -77,7 +77,7 @@ namespace eCAL
     bool RemoveEventCallback(eSubscriberEvent type_);
 
     // future event callback interface
-    bool SetEventIDCallback(const v6::SubEventCallbackT callback_);
+    bool SetEventIDCallback(const SubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -157,7 +157,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    v6::ReceiveCallbackT                      m_receive_callback;
+    ReceiveCallbackT                      m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
@@ -167,7 +167,7 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    v6::SubEventCallbackT                     m_event_id_callback;
+    SubEventCallbackT                     m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 

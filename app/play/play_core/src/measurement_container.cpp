@@ -155,10 +155,6 @@ void MeasurementContainer::CreatePublishers(const std::map<std::string, std::str
 void MeasurementContainer::DeInitializePublishers()
 {
   // Clear the publisher map
-  for (auto& publisher_info : publisher_map_)
-  {
-    publisher_info.second.publisher_.Destroy();
-  }
   publisher_map_.clear();
 
   // Remove pointers to publishers from all frames
@@ -219,7 +215,8 @@ bool MeasurementContainer::PublishFrame(long long index)
         {
           timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].send_timestamp_.time_since_epoch()).count();
         }
-        frame_table_[index].publisher_info_->publisher_.SetID(frame_table_[index].send_id_);
+        // this is not supported by the eCAL v6 API
+        //frame_table_[index].publisher_info_->publisher_.SetID(frame_table_[index].send_id_);
         frame_table_[index].publisher_info_->publisher_.Send(send_buffer_, data_size, timestamp_usecs);
         frame_table_[index].publisher_info_->message_counter_++;
         return true;

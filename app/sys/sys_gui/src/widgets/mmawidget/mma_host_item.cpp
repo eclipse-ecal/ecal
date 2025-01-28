@@ -73,7 +73,7 @@ MmaHostItem::MmaHostItem(QTreeWidget* tree_widget, const QString& hostname)
   // Create eCAL Subscriber
   mma_subscriber = std::unique_ptr<eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>>
                     (new eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>("machine_state_" + hostname_.toStdString()));
-  mma_subscriber->AddReceiveCallback(std::bind(&MmaHostItem::mmaReceivedCallback, this, std::placeholders::_1, std::placeholders::_2));
+  mma_subscriber->SetReceiveCallback(std::bind(&MmaHostItem::mmaReceivedCallback, this, std::placeholders::_1, std::placeholders::_2));
 
   // Register custom Type in order to directly pass the monitoring state
   qRegisterMetaType<eCAL::pb::mma::State>("eCAL::pb::mma::State");
@@ -227,10 +227,10 @@ void MmaHostItem::disable()
   setEnabled(false);
 }
 
-void MmaHostItem::mmaReceivedCallback(const char* /*topic_name*/, const eCAL::pb::mma::State& state)
+void MmaHostItem::mmaReceivedCallback(const eCAL::STopicId& /*topic_id_*/, const eCAL::pb::mma::State& state_)
 {
   // only emit the signal in order to make use of the Qt event loop
-  emit mmaReceivedSignal(state);
+  emit mmaReceivedSignal(state_);
 }
 
 void MmaHostItem::machineStateChanged(eCAL::pb::mma::State state)

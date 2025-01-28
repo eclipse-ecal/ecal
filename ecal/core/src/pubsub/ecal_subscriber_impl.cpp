@@ -165,7 +165,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(v6::ReceiveCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
   {
     if (!m_created) return(false);
 
@@ -233,7 +233,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventIDCallback(const v6::SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventIDCallback(const SubEventCallbackT callback_)
   {
     if (!m_created) return false;
 
@@ -782,7 +782,7 @@ namespace eCAL
     // new event handling with topic id
     if (m_event_id_callback)
     {
-      v6::SSubEventCallbackData data;
+      SSubEventCallbackData data;
       data.event_type         = type_;
       data.event_time         = eCAL::Time::GetMicroSeconds();
       data.publisher_datatype = data_type_info_;

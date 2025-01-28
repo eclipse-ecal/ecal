@@ -66,7 +66,7 @@ namespace eCAL
 
     private:
       // Pointer to the underlying service server implementation
-      std::shared_ptr<eCAL::v6::CServiceServer> m_service_server_impl;
+      std::shared_ptr<eCAL::CServiceServer> m_service_server_impl;
 
       // Mutex and map for managing event callbacks
       std::mutex m_event_callback_map_mutex;

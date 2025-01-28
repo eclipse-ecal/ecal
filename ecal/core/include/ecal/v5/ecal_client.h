@@ -67,7 +67,7 @@ namespace eCAL
        * @param method_information_map_  Map of method names and corresponding datatype information.
       **/
       ECAL_API_EXPORTED_MEMBER
-        explicit CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_);
+        explicit CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_);
 
       /**
        * @brief Destructor.
@@ -104,7 +104,7 @@ namespace eCAL
        * @return  True if successful.
       **/
       ECAL_API_EXPORTED_MEMBER
-        bool Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_);
+        bool Create(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_);
 
       /**
        * @brief Destroys this object.

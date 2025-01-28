@@ -43,7 +43,7 @@ ecal_add_mon_plugin(${PROJECT_NAME}
   METADATA src/metadata.json
 )
 
-target_link_libraries (${PROJECT_NAME}
+target_link_libraries (${PROJECT_NAME} PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Widgets
   eCAL::core

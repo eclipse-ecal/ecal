@@ -63,7 +63,7 @@ public:
 #endif
   }
 
-  void OnPerson(const char*, const pb::People::Person&, long long, long long)
+  void OnPerson()
   {
     received_callbacks++;
   }
@@ -79,9 +79,8 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
-  ASSERT_TRUE(person_rec.IsCreated());
+  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  person_rec.SetReceiveCallback(person_callback);
 
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
 
@@ -96,21 +95,13 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 {
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
+  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  person_rec.SetReceiveCallback(person_callback);
 
-  ASSERT_TRUE(person_rec.IsCreated());
-
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved;
-
-  ASSERT_FALSE(person_moved.IsCreated());
+  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved("ProtoSubscriberTest");
 
   person_moved = std::move(person_rec);
 
-  // New Subscriber must be initialized
-  ASSERT_TRUE(person_moved.IsCreated());
-  // Old subscriber is not initialized
-  ASSERT_FALSE(person_rec.IsCreated());
   ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
 
   // Assert that the move constructed object can receive something
@@ -128,15 +119,11 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
+  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  person_rec.SetReceiveCallback(person_callback);
 
-  ASSERT_TRUE(person_rec.IsCreated());
+  eCAL::protobuf::CSubscriber<pb::People::Person> person_moved{ std::move(person_rec) };
 
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved{ std::move(person_rec) };
-
-  ASSERT_TRUE(person_moved.IsCreated());
-  ASSERT_FALSE(person_rec.IsCreated());
   ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
 
   // Assert that the move constructed object can receive something

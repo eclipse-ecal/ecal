@@ -39,8 +39,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief Service client implementation class.
     **/
@@ -49,11 +47,11 @@ namespace eCAL
     public:
       // Factory method to create an instance of the client implementation
       static std::shared_ptr<CServiceClientImpl> CreateInstance(
-        const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
+        const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
 
     private:
       // Private constructor to enforce creation through factory method
-      CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
+      CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
 
     public:
       ~CServiceClientImpl();
@@ -61,16 +59,16 @@ namespace eCAL
       // Retrieve service IDs of all matching services
       std::vector<SEntityId> GetServiceIDs();
 
-      // Blocking call to a specific service; returns response as pair<bool, SServiceIDResponse>
+      // Blocking call to a specific service; returns response as pair<bool, SServiceResponse>
       // if a callback is provided call the callback as well
-      std::pair<bool, SServiceIDResponse> CallWithCallback(
+      std::pair<bool, SServiceResponse> CallWithCallback(
         const SEntityId& entity_id_, const std::string& method_name_,
-        const std::string& request_, int timeout_ms_, const ResponseIDCallbackT& response_callback_ = nullptr);
+        const std::string& request_, int timeout_ms_, const ResponseCallbackT& response_callback_ = nullptr);
 
       // Asynchronous call to a specific service using callback
       bool CallWithCallbackAsync(
         const SEntityId& entity_id_, const std::string& method_name_,
-        const std::string& request_, const ResponseIDCallbackT& response_callback_);
+        const std::string& request_, const ResponseCallbackT& response_callback_);
 
       // Check connection state of a specific service
       bool IsConnected(const SEntityId& entity_id_);
@@ -110,7 +108,7 @@ namespace eCAL
       bool GetClientByEntity(const SEntityId& entity_id_, SClient& client_);
 
       // Blocking call to a specific service method with timeout
-      std::pair<bool, SServiceIDResponse> CallMethodWithTimeout(const SEntityId& entity_id_, SClient& client_,
+      std::pair<bool, SServiceResponse> CallMethodWithTimeout(const SEntityId& entity_id_, SClient& client_,
         const std::string& method_name_, const std::string& request_, std::chrono::nanoseconds timeout_);
 
       // Update the connection states for client sessions
@@ -127,14 +125,14 @@ namespace eCAL
       {
         std::shared_ptr<std::mutex>                          mutex;
         std::shared_ptr<std::condition_variable>             condition_variable;
-        std::shared_ptr<std::pair<bool, SServiceIDResponse>> response;
+        std::shared_ptr<std::pair<bool, SServiceResponse>> response;
         std::shared_ptr<bool>                                block_modifying_response;
         std::shared_ptr<bool>                                finished;
 
         SResponseData() :
           mutex(std::make_shared<std::mutex>()),
           condition_variable(std::make_shared<std::condition_variable>()),
-          response(std::make_shared<std::pair<bool, SServiceIDResponse>>(false, SServiceIDResponse())),
+          response(std::make_shared<std::pair<bool, SServiceResponse>>(false, SServiceResponse())),
           block_modifying_response(std::make_shared<bool>(false)),
           finished(std::make_shared<bool>(false))
         {}
@@ -143,7 +141,7 @@ namespace eCAL
       static std::shared_ptr<SResponseData> PrepareInitialResponse(const SClient& client_, const std::string& method_name_);
       static ecal_service::ClientResponseCallbackT CreateResponseCallback(const SClient& client_, const std::shared_ptr<SResponseData>& response_data_);
 
-      static SServiceIDResponse DeserializedResponse(const SClient& client_, const std::string& response_pb_);
+      static SServiceResponse DeserializedResponse(const SClient& client_, const std::string& response_pb_);
 
       // Client version (incremented for protocol or functionality changes)
       static constexpr int         m_client_version = 1;
@@ -159,7 +157,7 @@ namespace eCAL
 
       // Method information map (tracks method attributes like data type and description)
       std::mutex                   m_method_information_set_mutex;
-      ServiceMethodInfoSetT        m_method_information_set;
+      ServiceMethodInformationSetT        m_method_information_set;
 
       // Method call count map (tracks number of calls for each method)
       using MethodCallCountMapT = std::map<std::string, uint64_t>;
@@ -169,5 +167,4 @@ namespace eCAL
       std::mutex                   m_event_callback_mutex;
       ClientEventCallbackT       m_event_callback;
     };
-  }
 }

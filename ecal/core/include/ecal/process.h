@@ -30,6 +30,7 @@
 #include <ecal/os.h>
 #include <ecal/process_mode.h>
 #include <ecal/process_severity.h>
+#include <ecal/deprecate.h>
 
 namespace eCAL
 {
@@ -154,6 +155,7 @@ namespace eCAL
     ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
 
     /**
+     * @deprecated This function is deprecated and will be removed in future eCAL versions.
      * @brief  Start specified process (windows only). 
      *
      * @param proc_name_       Process name. 
@@ -165,24 +167,29 @@ namespace eCAL
      *
      * @return  Process id or zero if failed. 
     **/
+    ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
     ECAL_API int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, bool create_console_, eCAL::Process::eStartMode process_mode_, bool block_);
 
     /**
+     * @deprecated This function is deprecated and will be removed in future eCAL versions. 
      * @brief  Stop specified process (windows only). 
      *
      * @param proc_name_  Process name. 
      *
      * @return  True if successful. 
     **/
+    ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
     ECAL_API bool StopProcess(const char* proc_name_);
 
     /**
+     * @deprecated This function is deprecated and will be removed in future eCAL versions.
      * @brief  Stop specified process (windows only). 
      *
      * @param proc_id_    Process id. 
      *
      * @return  True if successful. 
     **/
+    ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
     ECAL_API bool StopProcess(int proc_id_);
   }
   /** @example process.cpp

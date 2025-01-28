@@ -88,7 +88,7 @@ namespace eCAL
       return g_descgate()->GetServerIDs();
     }
 
-    bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_)
+    bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetServerInfo(id_, service_info_);
@@ -100,7 +100,7 @@ namespace eCAL
       return g_descgate()->GetClientIDs();
     }
 
-    bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_)
+    bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetClientInfo(id_, service_info_);
@@ -131,7 +131,7 @@ namespace eCAL
       const std::set<SServiceId> server_id_set = GetServerIDs();
       for (const auto& server_id : server_id_set)
       {
-        eCAL::ServiceMethodInfoSetT methods;
+        eCAL::ServiceMethodInformationSetT methods;
         (void)GetServerInfo(server_id, methods);
         for (const auto& method : methods)
         {
@@ -148,7 +148,7 @@ namespace eCAL
       const std::set<SServiceId> client_id_set = GetClientIDs();
       for (const auto& client_id : client_id_set)
       {
-        eCAL::ServiceMethodInfoSetT methods;
+        eCAL::ServiceMethodInformationSetT methods;
         (void)GetClientInfo(client_id, methods);
         for (const auto& method : methods)
         {

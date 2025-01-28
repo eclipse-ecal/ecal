@@ -69,12 +69,20 @@ void printAddressBook(const AddressBook::Reader& addressBook)
       std::cout << "  self-employed" << std::endl;
       break;
     }
-
-    std::cout << std::endl;
   }
 }
 
-int main(int argc, char **argv)
+void OnAddressbook(const eCAL::STopicId& topic_id_, AddressBook::Reader msg_, const long long time_)
+{
+  // print content
+  std::cout << "topic name : " << topic_id_.topic_name << std::endl;
+  std::cout << "time       : " << time_                << std::endl;
+  std::cout << std::endl;
+  printAddressBook(msg_);
+  std::cout << std::endl;
+}
+  
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("addressbook subscriber");
@@ -84,16 +92,16 @@ int main(int argc, char **argv)
 
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CSubscriber<AddressBook> sub("addressbook");
+
+  // add receive callback function (_1 = topic_id, _2 = msg, _3 = time)
+  auto callback = std::bind(OnAddressbook, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+  sub.SetReceiveCallback(callback);
+
   // enter main loop
   while (eCAL::Ok())
   {
-    // receive content
-    AddressBook::Reader reader;
-    if (sub.Receive(reader))
-    {
-      printAddressBook(reader);
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // sleep 500 ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
   // finalize eCAL API
