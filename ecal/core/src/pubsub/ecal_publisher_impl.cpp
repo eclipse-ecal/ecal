@@ -45,6 +45,7 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
+#include <limits>
 #include <mutex>
 #include <sstream>
 #include <string>
@@ -935,6 +936,15 @@ namespace eCAL
   {
     const auto frequency_time = std::chrono::steady_clock::now();
     const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
+
+    const double frequency_in_mhz = m_frequency_calculator.getFrequency(frequency_time) * 1000;
+
+    if (frequency_in_mhz > static_cast<double>(std::numeric_limits<int32_t>::max())) {
+      return std::numeric_limits<int32_t>::max();
+    }
+    else if (frequency_in_mhz < static_cast<double>(std::numeric_limits<int32_t>::min())) {
+      return std::numeric_limits<int32_t>::min();
+    }
+    return static_cast<int32_t>(frequency_in_mhz);
   }
 }
