@@ -38,8 +38,6 @@ Included By
 -----------
 
 
-- :ref:`file_ecal_core_include_ecal_callback.h`
-
 - :ref:`file_ecal_core_include_ecal_msg_publisher.h`
 
 - :ref:`file_ecal_core_include_ecal_msg_subscriber.h`

@@ -70,11 +70,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_callback.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_config.h.rst
 
 .. toctree::

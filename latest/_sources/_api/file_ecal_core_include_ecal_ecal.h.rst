@@ -30,8 +30,6 @@ Includes
 --------
 
 
-- ``ecal/callback.h`` (:ref:`file_ecal_core_include_ecal_callback.h`)
-
 - ``ecal/config.h`` (:ref:`file_ecal_core_include_ecal_config.h`)
 
 - ``ecal/config/configuration.h``

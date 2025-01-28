@@ -99,4 +99,4 @@ Typedefs
 
 - :ref:`exhale_typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583`
 
-- :ref:`exhale_typedef_namespaceeCAL_1ada8fc20e2ddd0f5bc55f137861092851`
+- :ref:`exhale_typedef_namespaceeCAL_1a4807caba9c43983d8989737912a00bd7`
