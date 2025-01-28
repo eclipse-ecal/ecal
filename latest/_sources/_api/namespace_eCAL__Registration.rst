@@ -37,7 +37,7 @@ Functions
 
 - :ref:`exhale_function_registration_8h_1a97020b544734171d309970068b799774`
 
-- :ref:`exhale_function_registration_8h_1a671daeff62e03b3f0b6b9fbd30a3a360`
+- :ref:`exhale_function_registration_8h_1a92cc9006d02ed7c62a83e9be25c215a9`
 
 - :ref:`exhale_function_registration_8h_1a3e799437fa8e6132ea86d7004126753b`
 
@@ -47,7 +47,7 @@ Functions
 
 - :ref:`exhale_function_registration_8h_1a503e37d3487dac6d5667b5498cb2494f`
 
-- :ref:`exhale_function_registration_8h_1a3a56a8124e08716a5b273a7a1eebe933`
+- :ref:`exhale_function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc`
 
 - :ref:`exhale_function_registration_8h_1a043cc9cac5da8236e78f199ec4f194b3`
 

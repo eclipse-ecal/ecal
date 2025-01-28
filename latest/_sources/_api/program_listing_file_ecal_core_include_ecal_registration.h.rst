@@ -86,11 +86,11 @@ Program Listing for File registration.h
    
        ECAL_API std::set<SServiceId> GetServerIDs();
    
-       ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
+       ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
    
        ECAL_API std::set<SServiceId> GetClientIDs();
    
-       ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
+       ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
    
        ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
    
