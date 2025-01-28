@@ -24,8 +24,8 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     pb_callback_t direction; /* direction (publisher, subscriber) */
     pb_callback_t transport_layer; /* active topic transport layers and it's specific parameter */
     int32_t topic_size; /* topic size */
-    int32_t connections_loc; /* number of local connected entities */
-    int32_t connections_ext; /* number of external connected entities */
+    int32_t connections_local; /* number of local connected entities */
+    int32_t connections_external; /* number of external connected entities */
     int32_t message_drops; /* dropped messages */
     int64_t did; /* data send id (publisher setid) */
     int64_t dclock; /* data clock (send / receive action) */
@@ -65,8 +65,8 @@ extern "C" {
 #define eCAL_pb_Topic_direction_tag              8
 #define eCAL_pb_Topic_transport_layer_tag        12
 #define eCAL_pb_Topic_topic_size_tag             13
-#define eCAL_pb_Topic_connections_loc_tag        16
-#define eCAL_pb_Topic_connections_ext_tag        17
+#define eCAL_pb_Topic_connections_local_tag      16
+#define eCAL_pb_Topic_connections_external_tag   17
 #define eCAL_pb_Topic_message_drops_tag          18
 #define eCAL_pb_Topic_did_tag                    19
 #define eCAL_pb_Topic_dclock_tag                 20
@@ -89,8 +89,8 @@ X(a, CALLBACK, SINGULAR, STRING,   topic_name,        7) \
 X(a, CALLBACK, SINGULAR, STRING,   direction,         8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  transport_layer,  12) \
 X(a, STATIC,   SINGULAR, INT32,    topic_size,       13) \
-X(a, STATIC,   SINGULAR, INT32,    connections_loc,  16) \
-X(a, STATIC,   SINGULAR, INT32,    connections_ext,  17) \
+X(a, STATIC,   SINGULAR, INT32,    connections_local,  16) \
+X(a, STATIC,   SINGULAR, INT32,    connections_external,  17) \
 X(a, STATIC,   SINGULAR, INT32,    message_drops,    18) \
 X(a, STATIC,   SINGULAR, INT64,    did,              19) \
 X(a, STATIC,   SINGULAR, INT64,    dclock,           20) \

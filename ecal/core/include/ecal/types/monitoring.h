@@ -85,8 +85,8 @@ namespace eCAL
       std::vector<STransportLayer>        transport_layer;               //!< transport layer details
       int32_t                             topic_size{0};             //!< topic size
 
-      int32_t                             connections_loc{0};   //!< number of local connected entities
-      int32_t                             connections_ext{0};   //!< number of external connected entities
+      int32_t                             connections_local{0};   //!< number of local connected entities
+      int32_t                             connections_external{0};   //!< number of external connected entities
       int32_t                             message_drops{0};     //!< dropped messages
 
       int64_t                             did{0};               //!< data send id (publisher setid)

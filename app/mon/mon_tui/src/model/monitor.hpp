@@ -210,8 +210,8 @@ class MonitorModel
         }
       }
       topic.size = t.topic_size();
-      topic.local_connections_count = t.connections_loc();
-      topic.external_connections_count = t.connections_ext();
+      topic.local_connections_count = t.connections_local();
+      topic.external_connections_count = t.connections_external();
       topic.message_drops = t.message_drops();
       topic.data_id = t.did();
       topic.data_clock = t.dclock();

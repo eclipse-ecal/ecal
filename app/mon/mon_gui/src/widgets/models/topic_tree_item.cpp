@@ -106,13 +106,13 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.topic_size();
     }
-    else if (column == Columns::CONNECTIONS_LOC)
+    else if (column == Columns::CONNECTIONS_LOCAL)
     {
-      return topic_.connections_loc();
+      return topic_.connections_local();
     }
-    else if (column == Columns::CONNECTIONS_EXT)
+    else if (column == Columns::CONNECTIONS_EXTERNAL)
     {
-      return topic_.connections_ext();
+      return topic_.connections_external();
     }
     else if (column == Columns::MESSAGE_DROPS)
     {
@@ -257,8 +257,8 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::PROCESS_ID)
       || (column == Columns::REGISTRATION_CLOCK)
       || (column == Columns::TOPIC_SIZE)
-      || (column == Columns::CONNECTIONS_LOC)
-      || (column == Columns::CONNECTIONS_EXT)
+      || (column == Columns::CONNECTIONS_LOCAL)
+      || (column == Columns::CONNECTIONS_EXTERNAL)
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DCLOCK)
       || (column == Columns::DFREQ)

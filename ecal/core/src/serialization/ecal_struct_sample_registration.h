@@ -270,8 +270,8 @@ namespace eCAL
       Util::CExpandingVector<TLayer>      transport_layer;                       // active topic transport layers and its specific parameter
       int32_t                             topic_size = 0;                    // topic size
 
-      int32_t                             connections_loc = 0;          // number of local connected entities
-      int32_t                             connections_ext = 0;          // number of external connected entities
+      int32_t                             connections_local = 0;          // number of local connected entities
+      int32_t                             connections_external = 0;          // number of external connected entities
       int32_t                             message_drops   = 0;          // dropped messages
 
       int64_t                             did    = 0;                   // data send id (publisher setid)
@@ -290,8 +290,8 @@ namespace eCAL
           datatype_information == other.datatype_information &&
           transport_layer == other.transport_layer &&
           topic_size == other.topic_size &&
-          connections_loc == other.connections_loc &&
-          connections_ext == other.connections_ext &&
+          connections_local == other.connections_local &&
+          connections_external == other.connections_external &&
           message_drops == other.message_drops &&
           did == other.did &&
           dclock == other.dclock &&
@@ -312,8 +312,8 @@ namespace eCAL
         transport_layer.clear();
         topic_size = 0;
 
-        connections_loc = 0;
-        connections_ext = 0;
+        connections_local = 0;
+        connections_external = 0;
         message_drops = 0;
 
         did = 0;

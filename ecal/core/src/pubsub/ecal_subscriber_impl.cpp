@@ -685,8 +685,8 @@ namespace eCAL
     ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
-    ecal_reg_sample_topic.connections_loc = 0;
-    ecal_reg_sample_topic.connections_ext = 0;
+    ecal_reg_sample_topic.connections_local = 0;
+    ecal_reg_sample_topic.connections_external = 0;
   }
 
   void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)

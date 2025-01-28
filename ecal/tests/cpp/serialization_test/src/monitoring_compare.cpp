@@ -79,8 +79,8 @@ namespace eCAL
           monitoring1.publisher[i].datatype_information != monitoring2.publisher[i].datatype_information ||
           monitoring1.publisher[i].transport_layer.size() != monitoring2.publisher[i].transport_layer.size() ||
           monitoring1.publisher[i].topic_size != monitoring2.publisher[i].topic_size ||
-          monitoring1.publisher[i].connections_loc != monitoring2.publisher[i].connections_loc ||
-          monitoring1.publisher[i].connections_ext != monitoring2.publisher[i].connections_ext ||
+          monitoring1.publisher[i].connections_local != monitoring2.publisher[i].connections_local ||
+          monitoring1.publisher[i].connections_external != monitoring2.publisher[i].connections_external ||
           monitoring1.publisher[i].message_drops != monitoring2.publisher[i].message_drops ||
           monitoring1.publisher[i].did != monitoring2.publisher[i].did ||
           monitoring1.publisher[i].dclock != monitoring2.publisher[i].dclock ||
@@ -111,8 +111,8 @@ namespace eCAL
           monitoring1.subscriber[i].datatype_information != monitoring2.subscriber[i].datatype_information ||
           monitoring1.subscriber[i].transport_layer.size() != monitoring2.subscriber[i].transport_layer.size() ||
           monitoring1.subscriber[i].topic_size != monitoring2.subscriber[i].topic_size ||
-          monitoring1.subscriber[i].connections_loc != monitoring2.subscriber[i].connections_loc ||
-          monitoring1.subscriber[i].connections_ext != monitoring2.subscriber[i].connections_ext ||
+          monitoring1.subscriber[i].connections_local != monitoring2.subscriber[i].connections_local ||
+          monitoring1.subscriber[i].connections_external != monitoring2.subscriber[i].connections_external ||
           monitoring1.subscriber[i].message_drops != monitoring2.subscriber[i].message_drops ||
           monitoring1.subscriber[i].did != monitoring2.subscriber[i].did ||
           monitoring1.subscriber[i].dclock != monitoring2.subscriber[i].dclock ||

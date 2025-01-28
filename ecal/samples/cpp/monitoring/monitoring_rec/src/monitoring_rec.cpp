@@ -200,8 +200,8 @@ int main()
         }
         std::cout << "topic_size           : " << topic.topic_size() << std::endl;             // topic size
 
-        std::cout << "connections_loc : " << topic.connections_loc() << std::endl;   // number of local connected entities
-        std::cout << "connections_ext : " << topic.connections_ext() << std::endl;   // number of external connected entities
+        std::cout << "connections_local : " << topic.connections_local() << std::endl;   // number of local connected entities
+        std::cout << "connections_external : " << topic.connections_external() << std::endl;   // number of external connected entities
         std::cout << "message_drops   : " << topic.message_drops() << std::endl;     // dropped messages
 
         std::cout << "did             : " << topic.did() << std::endl;               // data send id (publisher setid)

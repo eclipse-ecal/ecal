@@ -152,8 +152,8 @@ namespace eCAL
       topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.active;
       topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.active;
     }
-    const int32_t      connections_loc = sample_topic.connections_loc;
-    const int32_t      connections_ext = sample_topic.connections_ext;
+    const int32_t      connections_local = sample_topic.connections_local;
+    const int32_t      connections_external = sample_topic.connections_external;
     const int64_t      did = sample_topic.did;
     const int64_t      dclock = sample_topic.dclock;
     const int32_t      message_drops = sample_topic.message_drops;
@@ -239,8 +239,8 @@ namespace eCAL
       }
 
       TopicInfo.topic_size           = static_cast<int>(topic_size);
-      TopicInfo.connections_loc = static_cast<int>(connections_loc);
-      TopicInfo.connections_ext = static_cast<int>(connections_ext);
+      TopicInfo.connections_local = static_cast<int>(connections_local);
+      TopicInfo.connections_external = static_cast<int>(connections_external);
       TopicInfo.did             = did;
       TopicInfo.dclock          = dclock;
       TopicInfo.message_drops   = message_drops;

@@ -67,8 +67,8 @@ namespace eCAL
       topic.datatype_information            = eCAL::Registration::GenerateDataTypeInformation();
       topic.transport_layer.push_back({ eTransportLayerType::shm, 1, true });
       topic.topic_size                = rand() % 5000;
-      topic.connections_loc      = rand() % 10;
-      topic.connections_ext      = rand() % 10;
+      topic.connections_local      = rand() % 10;
+      topic.connections_external      = rand() % 10;
       topic.message_drops        = rand() % 100;
       topic.did                  = rand() % 10000;
       topic.dclock               = rand() % 10000;

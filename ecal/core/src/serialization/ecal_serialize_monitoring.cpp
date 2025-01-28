@@ -175,10 +175,10 @@ namespace
     eCAL::nanopb::encode_string(pb_topic_.datatype_information.descriptor_information, topic_.datatype_information.descriptor);
     // topic_size
     pb_topic_.topic_size = topic_.topic_size;
-    // connections_loc
-    pb_topic_.connections_loc = topic_.connections_loc;
-    // connections_ext
-    pb_topic_.connections_ext = topic_.connections_ext;
+    // connections_local
+    pb_topic_.connections_local = topic_.connections_local;
+    // connections_external
+    pb_topic_.connections_external = topic_.connections_external;
     // message_drops
     pb_topic_.message_drops = topic_.message_drops;
     // did
@@ -643,10 +643,10 @@ namespace
     topic_.process_id = pb_topic_.process_id;
     // topic_size
     topic_.topic_size = pb_topic_.topic_size;
-    // connections_loc
-    topic_.connections_loc = pb_topic_.connections_loc;
-    // connections_ext
-    topic_.connections_ext = pb_topic_.connections_ext;
+    // connections_local
+    topic_.connections_local = pb_topic_.connections_local;
+    // connections_external
+    topic_.connections_external = pb_topic_.connections_external;
     // message_drops
     topic_.message_drops = pb_topic_.message_drops;
     // did

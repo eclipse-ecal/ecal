@@ -703,8 +703,8 @@ namespace eCAL
       }
       ext_connections = m_connection_map.size() - loc_connections;
     }
-    ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
-    ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
+    ecal_reg_sample_topic.connections_local = static_cast<int32_t>(loc_connections);
+    ecal_reg_sample_topic.connections_external = static_cast<int32_t>(ext_connections);
   }
 
   void CPublisherImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)

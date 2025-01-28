@@ -113,8 +113,8 @@ namespace eCAL
       topic.transport_layer.push_back(GenerateTLayer());
       topic.transport_layer.push_back(GenerateTLayer());
       topic.topic_size                = rand() % 1000;
-      topic.connections_loc      = rand() % 50;
-      topic.connections_ext      = rand() % 50;
+      topic.connections_local      = rand() % 50;
+      topic.connections_external      = rand() % 50;
       topic.message_drops        = rand() % 10;
       topic.did                  = rand();
       topic.dclock               = rand();

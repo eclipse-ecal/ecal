@@ -45,8 +45,8 @@ message Topic                                      // eCAL topic
   repeated TransportLayer transport_layer       = 12;  // active topic transport layers and it's specific parameter
   int32                   topic_size                 = 13;  // topic size
                       
-  int32               connections_loc       = 16;  // number of local connected entities
-  int32               connections_ext       = 17;  // number of external connected entities
+  int32               connections_local       = 16;  // number of local connected entities
+  int32               connections_external       = 17;  // number of external connected entities
   int32               message_drops         = 18;  // dropped messages
                       
   int64               did                   = 19;  // data send id (publisher setid)

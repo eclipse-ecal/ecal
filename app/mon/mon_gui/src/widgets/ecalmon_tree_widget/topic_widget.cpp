@@ -233,8 +233,8 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_shm);
   example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_udp_mc);
   example_topic_pb.set_topic_size(999999);
-  example_topic_pb.set_connections_loc(999999);
-  example_topic_pb.set_connections_ext(999999);
+  example_topic_pb.set_connections_local(999999);
+  example_topic_pb.set_connections_external(999999);
   example_topic_pb.set_message_drops(999999);
   example_topic_pb.set_dclock(99999999999);
   example_topic_pb.set_dfreq(999999);

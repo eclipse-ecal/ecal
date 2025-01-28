@@ -1012,11 +1012,11 @@ namespace
       val = Py_BuildValue("i", topic.topic_size);
       PyDict_SetItemString(topicDict, "topic_size", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", topic.connections_loc);
-      PyDict_SetItemString(topicDict, "connections_loc", val); Py_DECREF(val);
+      val = Py_BuildValue("i", topic.connections_local);
+      PyDict_SetItemString(topicDict, "connections_local", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", topic.connections_ext);
-      PyDict_SetItemString(topicDict, "connections_ext", val); Py_DECREF(val);
+      val = Py_BuildValue("i", topic.connections_external);
+      PyDict_SetItemString(topicDict, "connections_external", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.message_drops);
       PyDict_SetItemString(topicDict, "message_drops", val); Py_DECREF(val);
