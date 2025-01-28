@@ -311,8 +311,8 @@ namespace eCAL
 
       const std::vector<std::pair<std::string, uint16_t>> endpoint_list
       {
-        {service_.host_name, port_to_use},
-        {service_.host_name + ".local", port_to_use},
+        {service_.hname, port_to_use},
+        {service_.hname + ".local", port_to_use},
       };
       client.client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), endpoint_list, event_callback);
 
@@ -483,8 +483,8 @@ namespace eCAL
 
       SEntityId entity_id;
       entity_id.entity_id = client_data.service_attr.sid;
-      entity_id.process_id = client_data.service_attr.process_id;
-      entity_id.host_name = client_data.service_attr.host_name;
+      entity_id.process_id = client_data.service_attr.pid;
+      entity_id.host_name = client_data.service_attr.hname;
 
       SServiceId service_id;
       service_id.service_name = m_service_name;
@@ -537,8 +537,8 @@ namespace eCAL
     data->response->first = false;
 
     data->response->second.service_method_id.service_id.entity_id = client_.service_attr.sid;
-    data->response->second.service_method_id.service_id.process_id = client_.service_attr.process_id;
-    data->response->second.service_method_id.service_id.host_name = client_.service_attr.host_name;
+    data->response->second.service_method_id.service_id.process_id = client_.service_attr.pid;
+    data->response->second.service_method_id.service_id.host_name = client_.service_attr.hname;
 
     data->response->second.service_method_id.service_name = client_.service_attr.sname;
     data->response->second.service_method_id.method_name = method_name_;
@@ -582,7 +582,7 @@ namespace eCAL
       const auto& response_header = response.header;
       // service/method id
       service_reponse.service_method_id.service_id.entity_id = client_.service_attr.sid;
-      service_reponse.service_method_id.service_id.process_id = client_.service_attr.process_id;
+      service_reponse.service_method_id.service_id.process_id = client_.service_attr.pid;
       service_reponse.service_method_id.service_id.host_name = response_header.host_name;
 
       // service and method name

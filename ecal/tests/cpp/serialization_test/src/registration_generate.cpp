@@ -50,10 +50,10 @@ namespace eCAL
     Service::Service GenerateService()
     {
       Service::Service service;
-      service.registration_clock      = rand() % 1000;
+      service.registration_clock = rand() % 1000;
       service.process_name       = GenerateString(10);
-      service.unit_name       = GenerateString(5);
-      service.sname       = GenerateString(8);
+      service.unit_name          = GenerateString(5);
+      service.sname              = GenerateString(8);
       service.methods.push_back(GenerateMethod());
       service.methods.push_back(GenerateMethod());
       service.version     = rand() % 10;
@@ -68,12 +68,12 @@ namespace eCAL
     {
       Service::Client client;
       client.registration_clock  = rand() % 1000;
-      client.process_name   = GenerateString(10);
-      client.unit_name   = GenerateString(5);
-      client.sname   = GenerateString(8);
+      client.process_name        = GenerateString(10);
+      client.unit_name           = GenerateString(5);
+      client.sname               = GenerateString(8);
       client.methods.push_back(GenerateMethod());
       client.methods.push_back(GenerateMethod());
-      client.version = rand() % 10;
+      client.version             = rand() % 10;
 
       return client;
     }
@@ -103,18 +103,18 @@ namespace eCAL
     Topic GenerateTopic()
     {
       Topic topic;
-      topic.registration_clock               = rand() % 1000;
+      topic.registration_clock   = rand() % 1000;
       topic.shm_transport_domain = GenerateString(6);
-      topic.process_name                = GenerateString(10);
-      topic.unit_name                = GenerateString(5);
-      topic.topic_name                = GenerateString(8);
+      topic.process_name         = GenerateString(10);
+      topic.unit_name            = GenerateString(5);
+      topic.topic_name           = GenerateString(8);
       topic.direction            = GenerateString(5);
-      topic.datatype_information            = GenerateDataTypeInformation();
+      topic.datatype_information = GenerateDataTypeInformation();
       topic.transport_layer.push_back(GenerateTLayer());
       topic.transport_layer.push_back(GenerateTLayer());
-      topic.topic_size                = rand() % 1000;
-      topic.connections_local      = rand() % 50;
-      topic.connections_external      = rand() % 50;
+      topic.topic_size           = rand() % 1000;
+      topic.connections_local    = rand() % 50;
+      topic.connections_external = rand() % 50;
       topic.message_drops        = rand() % 10;
       topic.did                  = rand();
       topic.dclock               = rand();
@@ -125,41 +125,41 @@ namespace eCAL
     Process GenerateProcess()
     {
       Process process;
-      process.registration_clock               = rand() % 1000;
-      process.shm_transport_domain = GenerateString(6);
-      process.process_name                = GenerateString(10);
-      process.unit_name                = GenerateString(5);
-      process.pparam               = GenerateString(12);
-      process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
-      process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
-      process.state.info           = GenerateString(10);
-      process.time_sync_state          = static_cast<eTimeSyncState>(rand() % (tsync_replay + 1));
-      process.time_sync_module_name       = GenerateString(6);
-      process.component_init_state = rand() % 5;
-      process.component_init_info  = GenerateString(8);
-      process.ecal_runtime_version = GenerateString(5);
-      process.config_file_path     = GenerateString(20);
+      process.registration_clock    = rand() % 1000;
+      process.shm_transport_domain  = GenerateString(6);
+      process.process_name          = GenerateString(10);
+      process.unit_name             = GenerateString(5);
+      process.pparam                = GenerateString(12);
+      process.state.severity        = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      process.state.severity_level  = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
+      process.state.info            = GenerateString(10);
+      process.time_sync_state       = static_cast<eTimeSyncState>(rand() % (tsync_replay + 1));
+      process.time_sync_module_name = GenerateString(6);
+      process.component_init_state  = rand() % 5;
+      process.component_init_info   = GenerateString(8);
+      process.ecal_runtime_version  = GenerateString(5);
+      process.config_file_path      = GenerateString(20);
       return process;
     }
 
     SampleIdentifier GenerateIdentifier()
     {
       SampleIdentifier identifier;
-      identifier.entity_id = rand();
+      identifier.entity_id  = rand();
       identifier.process_id = rand() % 100;
-      identifier.host_name = GenerateString(8);
+      identifier.host_name  = GenerateString(8);
       return identifier;
     }
 
     Sample GenerateProcessSample()
     {
       Sample sample;
-      sample.cmd_type = bct_reg_process;
-      sample.host.name = GenerateString(8);
+      sample.cmd_type   = bct_reg_process;
+      sample.host.name  = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
       sample.identifier.entity_id = sample.identifier.process_id;
-      sample.process = GenerateProcess();
+      sample.process    = GenerateProcess();
       return sample;
     }
 

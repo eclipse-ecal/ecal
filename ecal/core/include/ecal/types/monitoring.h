@@ -64,47 +64,47 @@ namespace eCAL
 
     struct STransportLayer
     {
-      eTransportLayerType  type    = eTransportLayerType::none;                           //<! transport layer type
-      int32_t      version = 0;                                 //<! transport layer version
-      bool         active  = false;                             //<! transport layer used?
+      eTransportLayerType  type    = eTransportLayerType::none;    //<! transport layer type
+      int32_t      version = 0;                                    //<! transport layer version
+      bool         active  = false;                                //<! transport layer used?
     };
 
-    struct STopicMon                                            //<! eCAL Topic struct
+    struct STopicMon                                               //<! eCAL Topic struct
     {
-      int32_t                             registration_clock{0};            //!< registration clock (heart beat)
-      std::string                         host_name;                //!< host name
-      std::string                         shm_transport_domain; //!< shm transport domain
-      int32_t                             process_id{0};               //!< process id
-      std::string                         process_name;                //!< process name
-      std::string                         unit_name;                //!< unit name
-      EntityIdT                           topic_id{0};               //!< topic id
-      std::string                         topic_name;                //!< topic name
-      std::string                         direction;            //!< direction (publisher, subscriber)
-      SDataTypeInformation                datatype_information;            //!< topic datatype information (name, encoding, descriptor)
+      int32_t                             registration_clock{0};   //!< registration clock (heart beat)
+      std::string                         host_name;               //!< host name
+      std::string                         shm_transport_domain;    //!< shm transport domain
+      int32_t                             process_id{0};           //!< process id
+      std::string                         process_name;            //!< process name
+      std::string                         unit_name;               //!< unit name
+      EntityIdT                           topic_id{0};             //!< topic id
+      std::string                         topic_name;              //!< topic name
+      std::string                         direction;               //!< direction (publisher, subscriber)
+      SDataTypeInformation                datatype_information;    //!< topic datatype information (name, encoding, descriptor)
 	  
-      std::vector<STransportLayer>        transport_layer;               //!< transport layer details
-      int32_t                             topic_size{0};             //!< topic size
+      std::vector<STransportLayer>        transport_layer;         //!< transport layer details
+      int32_t                             topic_size{0};           //!< topic size
 
-      int32_t                             connections_local{0};   //!< number of local connected entities
-      int32_t                             connections_external{0};   //!< number of external connected entities
-      int32_t                             message_drops{0};     //!< dropped messages
+      int32_t                             connections_local{0};    //!< number of local connected entities
+      int32_t                             connections_external{0}; //!< number of external connected entities
+      int32_t                             message_drops{0};        //!< dropped messages
 
-      int64_t                             did{0};               //!< data send id (publisher setid)
-      int64_t                             dclock{0};            //!< data clock (send / receive action)
-      int32_t                             dfreq{0};             //!< data frequency (send / receive samples per second) [mHz]
+      int64_t                             did{0};                  //!< data send id (publisher setid)
+      int64_t                             dclock{0};               //!< data clock (send / receive action)
+      int32_t                             dfreq{0};                //!< data frequency (send / receive samples per second) [mHz]
 
-      std::map<std::string, std::string>  attr;                 //!< generic topic description
+      std::map<std::string, std::string>  attr;                    //!< generic topic description
     };
 
-    struct SProcessMon                                          //<! eCAL Process struct
+    struct SProcessMon                                             //<! eCAL Process struct
     {
-      int32_t        registration_clock{0};                                 //!< registration clock
-      std::string    host_name;                                     //!< host name
-      std::string    shm_transport_domain;                      //!< shm transport domain
-      int32_t        process_id{0};                                    //!< process id
-      std::string    process_name;                                     //!< process name
-      std::string    unit_name;                                     //!< unit name
-      std::string    pparam;                                    //!< process parameter
+      int32_t        registration_clock{0};                        //!< registration clock
+      std::string    host_name;                                    //!< host name
+      std::string    shm_transport_domain;                         //!< shm transport domain
+      int32_t        process_id{0};                                //!< process id
+      std::string    process_name;                                 //!< process name
+      std::string    unit_name;                                    //!< unit name
+      std::string    pparam;                                       //!< process parameter
 
       int32_t        state_severity{0};                         //!< process state info severity:
                                                                 //!<   proc_sev_unknown       = 0 (condition unknown)
@@ -122,8 +122,8 @@ namespace eCAL
 
       std::string    state_info;                                //!< process state info as human readable string
 
-      int32_t        time_sync_state{0};                            //!< time synchronization state
-      std::string    time_sync_module_name;                            //!< time synchronization module name
+      int32_t        time_sync_state{0};                        //!< time synchronization state
+      std::string    time_sync_module_name;                     //!< time synchronization module name
 
       int32_t        component_init_state{0};                   //!< eCAL component initialization state (eCAL::Initialize(..))
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
@@ -144,14 +144,14 @@ namespace eCAL
 
     struct SServerMon                                           //<! eCAL Server struct
     {
-      int32_t                  registration_clock{0};                       //<! registration clock
-      std::string              host_name;                           //<! host name
-      std::string              process_name;                           //<! process name
-      std::string              unit_name;                           //<! unit name
-      int32_t                  process_id{0};                          //<! process id
+      int32_t                  registration_clock{0};           //<! registration clock
+      std::string              host_name;                       //<! host name
+      std::string              process_name;                    //<! process name
+      std::string              unit_name;                       //<! unit name
+      int32_t                  process_id{0};                   //<! process id
 
       std::string              sname;                           //<! service name
-      EntityIdT  sid{0};                          //<! service id
+      EntityIdT  sid{0};                                        //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
@@ -162,18 +162,18 @@ namespace eCAL
 
     struct SClientMon                                           //<! eCAL Client struct
     {
-      int32_t                  registration_clock{0};                       //<! registration clock
-      std::string              host_name;                           //<! host name
-      std::string              process_name;                           //<! process name
-      std::string              unit_name;                           //<! unit name
-      int32_t                  process_id{0};                          //<! process id
+      int32_t                  registration_clock{0};           //<! registration clock
+      std::string              host_name;                       //<! host name
+      std::string              process_name;                    //<! process name
+      std::string              unit_name;                       //<! unit name
+      int32_t                  process_id{0};                   //<! process id
 
       std::string              sname;                           //<! service name
-      EntityIdT  sid{0};                          //<! service id
+      EntityIdT  sid{0};                                        //<! service id
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
 
-      uint32_t                 version{0};                     //<! client protocol version
+      uint32_t                 version{0};                      //<! client protocol version
     };
 
     struct SMonitoring                                          //<! eCAL Monitoring struct

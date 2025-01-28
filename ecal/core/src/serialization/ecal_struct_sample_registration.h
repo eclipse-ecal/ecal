@@ -211,14 +211,14 @@ namespace eCAL
     // Process information
     struct Process
     {
-      int32_t                             registration_clock = 0;                   // registration clock
+      int32_t                             registration_clock = 0;       // registration clock
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         process_name;                        // process name
-      std::string                         unit_name;                        // unit name
+      std::string                         process_name;                 // process name
+      std::string                         unit_name;                    // unit name
       std::string                         pparam;                       // process parameter
       ProcessState                        state;                        // process state info
-      eTimeSyncState                         time_sync_state = tsync_none;     // time synchronization state
-      std::string                         time_sync_module_name;               // time synchronization module name
+      eTimeSyncState                      time_sync_state = tsync_none; // time synchronization state
+      std::string                         time_sync_module_name;        // time synchronization module name
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
@@ -259,19 +259,19 @@ namespace eCAL
     // eCAL topic information
     struct Topic
     {
-      int32_t                             registration_clock = 0;                   // registration clock (heart beat)
+      int32_t                             registration_clock = 0;       // registration clock (heart beat)
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         process_name;                        // process name
-      std::string                         unit_name;                        // unit name
-      std::string                         topic_name;                        // topic name
+      std::string                         process_name;                 // process name
+      std::string                         unit_name;                    // unit name
+      std::string                         topic_name;                   // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
-      SDataTypeInformation                datatype_information;                    // topic datatype information (encoding & type & description)
+      SDataTypeInformation                datatype_information;         // topic datatype information (encoding & type & description)
 
-      Util::CExpandingVector<TLayer>      transport_layer;                       // active topic transport layers and its specific parameter
-      int32_t                             topic_size = 0;                    // topic size
+      Util::CExpandingVector<TLayer>      transport_layer;              // active topic transport layers and its specific parameter
+      int32_t                             topic_size = 0;               // topic size
 
-      int32_t                             connections_local = 0;          // number of local connected entities
-      int32_t                             connections_external = 0;          // number of external connected entities
+      int32_t                             connections_local = 0;        // number of local connected entities
+      int32_t                             connections_external = 0;     // number of external connected entities
       int32_t                             message_drops   = 0;          // dropped messages
 
       int64_t                             did    = 0;                   // data send id (publisher setid)
