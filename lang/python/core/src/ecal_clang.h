@@ -462,7 +462,7 @@ bool client_destroy(ECAL_HANDLE handle_);
  *
  * @return  True if succeeded.
 **/
-bool client_set_host_name(ECAL_HANDLE handle_, const char* host_name_);
+bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_);
 
 /**
  * @brief Call method of this service (none blocking variant with callback).

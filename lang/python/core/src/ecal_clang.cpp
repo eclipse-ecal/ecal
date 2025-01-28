@@ -385,13 +385,13 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.topic_id       = data_->tid.c_str();
-  data.topic_name     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -563,13 +563,13 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.topic_id       = data_->tid.c_str();
-  data.topic_name     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -700,9 +700,9 @@ bool client_destroy(ECAL_HANDLE handle_)
 }
 
 /****************************************/
-/*      client_set_host_name             */
+/*      client_set_hostname             */
 /****************************************/
-bool client_set_host_name(ECAL_HANDLE handle_, const char* host_name_)
+bool client_set_hostname(ECAL_HANDLE handle_, const char* host_name_)
 {
   auto* client = static_cast<eCAL::v5::CServiceClient*>(handle_);
   if (client != nullptr)
