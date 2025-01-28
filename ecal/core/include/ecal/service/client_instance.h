@@ -109,7 +109,7 @@ namespace eCAL
       SEntityId GetClientID() const;
 
   private:
-    SEntityId                             m_entity_id;
+    SEntityId                                       m_entity_id;
     const std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }
