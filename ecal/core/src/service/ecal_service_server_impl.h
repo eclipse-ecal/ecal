@@ -24,7 +24,6 @@
 #pragma once
 
 #include <ecal/namespace.h>
-#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/service/types.h>
 #include <ecal_service/server.h>

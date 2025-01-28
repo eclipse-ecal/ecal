@@ -541,7 +541,6 @@ set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
-    include/ecal/callback.h
     include/ecal/v5/ecal_callback.h
     include/ecal/v5/ecal_client.h
     include/ecal/config.h
