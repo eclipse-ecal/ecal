@@ -44,7 +44,7 @@ namespace eCAL
       Create(service_name_);
     }
 
-    CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
       : m_service_client_impl(nullptr)
     {
       Create(service_name_, method_information_map_);
@@ -57,10 +57,10 @@ namespace eCAL
 
     bool CServiceClient::Create(const std::string& service_name_)
     {
-      return Create(service_name_, ServiceMethodInfoSetT());
+      return Create(service_name_, ServiceMethodInformationSetT());
     }
 
-    bool CServiceClient::Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    bool CServiceClient::Create(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
     {
       if (m_service_client_impl != nullptr) return false;
       m_service_client_impl = std::make_shared<CServiceClientImpl>(service_name_, method_information_map_);

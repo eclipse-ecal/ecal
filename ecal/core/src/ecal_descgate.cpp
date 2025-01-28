@@ -58,9 +58,9 @@ namespace
   // we could also think about an update function here
   // e.g. we don't always copy everything, but only write if things have changed. At least this would be beneficial for performance.
   template<typename Service>
-  eCAL::ServiceMethodInfoSetT Convert(const Service& service_)
+  eCAL::ServiceMethodInformationSetT Convert(const Service& service_)
   {
-    eCAL::ServiceMethodInfoSetT methods;
+    eCAL::ServiceMethodInformationSetT methods;
     for (const auto& method : service_.methods)
     {
       const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
@@ -220,7 +220,7 @@ namespace eCAL
     return GetServiceIDs(m_service_info_map);
   }
 
-  bool CDescGate::GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
+  bool CDescGate::GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const
   {
     return GetService(id_, m_service_info_map, service_info_);
   }
@@ -230,7 +230,7 @@ namespace eCAL
     return GetServiceIDs(m_client_info_map);
   }
 
-  bool CDescGate::GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_info_) const
+  bool CDescGate::GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const
   {
     return GetService(id_, m_client_info_map, service_info_);
   }
@@ -274,7 +274,7 @@ namespace eCAL
     return service_id_set;
   }
 
-  bool CDescGate::GetService(const SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInfoSetT& service_method_info_)
+  bool CDescGate::GetService(const SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInformationSetT& service_method_info_)
   {
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     auto iter = service_method_info_map_.id_map.find(id_);

@@ -57,7 +57,7 @@ int main()
   {
     if (service_id.service_name == service_name)
     {
-      eCAL::ServiceMethodInfoSetT methods;
+      eCAL::ServiceMethodInformationSetT methods;
       eCAL::Registration::GetServerInfo(service_id, methods);
 
       for (const auto& method : methods)
@@ -102,7 +102,7 @@ int main()
     if (!ping_request.empty())
     {
       // call Ping service method
-      eCAL::ServiceIDResponseVecT service_response_vec;
+      eCAL::ServiceResponseVecT service_response_vec;
       if (ping_client.CallWithResponse("Ping", ping_request, -1, service_response_vec))
       {
         std::cout << '\n' << "PingService::Ping method called with message (JSON) : " << req_json << '\n';

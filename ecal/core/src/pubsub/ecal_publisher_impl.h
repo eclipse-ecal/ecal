@@ -86,7 +86,7 @@ namespace eCAL
     bool RemoveEventCallback(ePublisherEvent type_);
 
     // future event callback interface
-    bool SetEventCallback(const v6::PubEventCallbackT callback_);
+    bool SetEventCallback(const PubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -166,7 +166,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    v6::PubEventCallbackT                  m_event_id_callback;
+    PubEventCallbackT                  m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

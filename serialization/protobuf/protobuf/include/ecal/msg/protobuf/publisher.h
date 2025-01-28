@@ -27,7 +27,7 @@
 #include <cstddef>
 #include <ecal/deprecate.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
-#include <ecal/v5/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 
 // protobuf includes
 #ifdef _MSC_VER
@@ -54,7 +54,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    class CPublisher : public eCAL::v5::CPublisher
+    class CPublisher : public eCAL::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -91,23 +91,22 @@ namespace eCAL
     public:
       /**
        * @brief  Constructor.
+       *
+       * @param topic_name_  Unique topic name.
+       * @param config_      Optional configuration parameters.
       **/
-      CPublisher() : eCAL::v5::CPublisher()
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
       {
       }
 
       /**
        * @brief  Constructor.
        *
-       * @param topic_name_  Unique topic name.
-       * @param config_      Optional configuration parameters.
+       * @param topic_name_      Unique topic name.
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
       **/
-
-      // call the function via its class because it's a virtual function that is called in constructor/destructor,-
-      // where the vtable is not created yet, or it's destructed.
-      // Probably we can handle the Message publishers differently. One message publisher class and then one class for payloads and getting type
-      // descriptor information.
-      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::v5::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, CPublisher::GetDataTypeInformation(), event_callback_, config_)
       {
       }
 
@@ -137,19 +136,6 @@ namespace eCAL
       CPublisher& operator=(CPublisher&&) = default;
 
       /**
-       * @brief  Creates this object.
-       *
-       * @param topic_name_  Unique topic name.
-       * @param config_      Optional configuration parameters.
-       *
-       * @return  True if it succeeds, false if it fails.
-      **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
-      {
-        return(eCAL::v5::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
-      }
-
-      /**
        * @brief Send a serialized message to all subscribers.
        *
        * @param msg_                     The message object.
@@ -160,7 +146,7 @@ namespace eCAL
       bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
       {
         CPayload payload{ msg_ };
-        return (eCAL::v5::CPublisher::Send(payload, time_) > 0);
+        return (eCAL::CPublisher::Send(payload, time_));
       }
 
     private:
@@ -169,9 +155,9 @@ namespace eCAL
        *
        * @return  Topic information.
       **/
-      struct SDataTypeInformation GetDataTypeInformation() const
+      SDataTypeInformation GetDataTypeInformation() const
       {
-        struct SDataTypeInformation data_type_info;
+        SDataTypeInformation data_type_info;
         static T msg{};
         data_type_info.encoding   = "proto";
         data_type_info.name       = msg.GetTypeName();

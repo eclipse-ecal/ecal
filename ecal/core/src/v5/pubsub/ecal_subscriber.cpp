@@ -157,7 +157,7 @@ namespace eCAL
       return AddReceiveCallback(v6_callback);
     }
 
-    bool CSubscriber::AddReceiveCallback(v6::ReceiveCallbackT callback_)
+    bool CSubscriber::AddReceiveCallback(eCAL::ReceiveCallbackT callback_)
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemReceiveCallback();

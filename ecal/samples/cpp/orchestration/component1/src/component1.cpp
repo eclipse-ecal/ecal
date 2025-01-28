@@ -33,8 +33,8 @@ public:
   ComponentServiceImpl()
   {
     // create 2 publisher for sending messages 'foo' and 'vec'
-    publisher_foo = eCAL::protobuf::CPublisher<component::foo>("foo");
-    publisher_vec = eCAL::protobuf::CPublisher<component::vec>("vec");
+    publisher_foo = std::make_unique<eCAL::protobuf::CPublisher<component::foo>>("foo");
+    publisher_vec = std::make_unique<eCAL::protobuf::CPublisher<component::vec>>("vec");
   }
 
   // the component execute method
@@ -48,7 +48,7 @@ public:
       component::foo msg;
       msg.set_id(request->id());
       msg.set_hello("HELLO");
-      publisher_foo.Send(msg);
+      publisher_foo->Send(msg);
       std::cout << "Topic 'foo' sent with ID: " << request->id() << std::endl;
     }
 
@@ -57,7 +57,7 @@ public:
       component::vec msg;
       msg.set_id(request->id());
       for (uint64_t i = 0U; i < 8192; ++i) msg.add_uvec(i);
-      publisher_vec.Send(msg);
+      publisher_vec->Send(msg);
       std::cout << "Topic 'vec' sent with ID: " << request->id() << std::endl;
     }
 
@@ -65,8 +65,8 @@ public:
   }
 
 private:
-  eCAL::protobuf::CPublisher<component::foo> publisher_foo;
-  eCAL::protobuf::CPublisher<component::vec> publisher_vec;
+  std::unique_ptr<eCAL::protobuf::CPublisher<component::foo>> publisher_foo;
+  std::unique_ptr<eCAL::protobuf::CPublisher<component::vec>> publisher_vec;
 };
 
 int main()

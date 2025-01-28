@@ -33,7 +33,6 @@ add_subdirectory(string)
 # --------------------------------------------------------
 if(ECAL_STRING_BUILD_SAMPLES)
   add_subdirectory(samples/pubsub/minimal_rec)
-  add_subdirectory(samples/pubsub/minimal_rec_cb)
   add_subdirectory(samples/pubsub/minimal_snd)
 endif()
 

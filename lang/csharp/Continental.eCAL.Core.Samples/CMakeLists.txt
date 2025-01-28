@@ -23,7 +23,7 @@ find_package(eCAL REQUIRED)
 
 macro(ecal_add_csharp_core_sample sample_name)
   ecal_add_sample(${sample_name} ${sample_name}.cs)
-  target_link_libraries(${sample_name} Continental.eCAL.Core)
+  target_link_libraries(${sample_name} PRIVATE Continental.eCAL.Core)
   set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/core)
 endmacro()
 

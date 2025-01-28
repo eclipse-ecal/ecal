@@ -137,7 +137,7 @@ namespace eCAL
      *
      * @return True if information could be queried.
     **/
-    ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
+    ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
 
     /**
      * @brief Get complete snapshot of all known clients.
@@ -151,7 +151,7 @@ namespace eCAL
      *
      * @return True if information could be queried.
     **/
-    ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInfoSetT& service_method_info_);
+    ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
 
     /**
      * @brief Get all topic names.

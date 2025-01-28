@@ -27,7 +27,7 @@
 
 namespace
 {
-  eCAL::v5::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceIDResponse& service_id_response)
+  eCAL::v5::SServiceResponse ConvertToServiceResponse(const eCAL::SServiceResponse& service_id_response)
   {
     eCAL::v5::SServiceResponse service_response;
 
@@ -35,7 +35,7 @@ namespace
     service_response.host_name    = service_id_response.service_method_id.service_id.host_name;
     service_response.service_name = service_id_response.service_method_id.service_name;
     service_response.service_id   = std::to_string(service_id_response.service_method_id.service_id.entity_id);
-    service_response.method_name  = service_id_response.service_method_id.method_name;
+    service_response.method_name  = service_id_response.service_method_information.method_name;
 
     // error message, return state and call state
     service_response.error_msg    = service_id_response.error_msg;
@@ -66,7 +66,7 @@ namespace eCAL
       Create(service_name_);
     }
 
-    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    CServiceClientImpl::CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
       : m_service_client_impl(nullptr)
     {
       Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Initializing service client with name: " + service_name_);
@@ -81,10 +81,10 @@ namespace eCAL
 
     bool CServiceClientImpl::Create(const std::string& service_name_)
     {
-      return Create(service_name_, ServiceMethodInfoSetT());
+      return Create(service_name_, ServiceMethodInformationSetT());
     }
 
-    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInfoSetT& method_information_map_)
+    bool CServiceClientImpl::Create(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_)
     {
       if (m_service_client_impl != nullptr)
       {
@@ -95,7 +95,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      v6::ClientEventCallbackT event_callback = [this](const SServiceId& service_id_, const v6::SClientEventCallbackData& data_)
+      eCAL::ClientEventCallbackT event_callback = [this](const SServiceId& service_id_, const eCAL::SClientEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -120,7 +120,7 @@ namespace eCAL
         };
 
       // Create the new service client implementation with the event callback
-      m_service_client_impl = std::make_shared<eCAL::v6::CServiceClient>(
+      m_service_client_impl = std::make_shared<eCAL::CServiceClient>(
         service_name_,
         method_information_map_,
         event_callback
@@ -184,13 +184,13 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {
             Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Response received for method call.");
             
-            // Convert SServiceResponse to SServiceIDResponse
+            // Convert eCAL::SServiceResponse to eCAL::v5::SServiceResponse
             const v5::SServiceResponse service_response = ConvertToServiceResponse(service_response_);
 
             // Call the stored response callback
@@ -227,7 +227,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making a synchronous call with response collection to method: " + method_name_);
 
       auto instances = m_service_client_impl->GetClientInstances();
-      std::vector<std::pair<bool, SServiceIDResponse>> responses;
+      std::vector<std::pair<bool, eCAL::SServiceResponse>> responses;
       bool success = false;
       for (auto& instance : instances)
       {
@@ -263,7 +263,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Making an asynchronous call to method: " + method_name_);
 
       // Wrap the response callback to filter by host name if necessary
-      const ResponseIDCallbackT callback = [this](const SEntityId& /*entity_id_*/, const struct SServiceIDResponse& service_response_)
+      const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
           if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
           {

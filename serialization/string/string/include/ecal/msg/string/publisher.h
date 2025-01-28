@@ -56,11 +56,20 @@ namespace eCAL
        * @brief  Constructor.
        *
        * @param topic_name_  Unique topic name.
+       * @param config_      Optional configuration parameters.
       **/
-
-      // call the function via its class because it's a virtual function that is called in constructor/destructor,-
-      // where the vtable is not created yet, or it's destructed.
       explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), config_)
+      {
+      }
+
+      /**
+       * @brief  Constructor.
+       *
+       * @param topic_name_      Unique topic name.
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
+      **/
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : CMsgPublisher<T>(topic_name_, GetDataTypeInformation(), event_callback_, config_)
       {
       }
 
@@ -83,19 +92,6 @@ namespace eCAL
        * @brief  Move assignment
       **/
       CPublisher& operator=(CPublisher&&) = default;
-
-      /**
-       * @brief  Creates this object.
-       *
-       * @param topic_name_  Unique topic name.
-       * @param config_      Optional configuration parameters.
-       *
-       * @return  True if it succeeds, false if it fails.
-      **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
-      {
-        return(CMsgPublisher<T>::Create(topic_name_, GetDataTypeInformation(), config_));
-      }
 
     private:
       /**

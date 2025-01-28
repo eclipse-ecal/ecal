@@ -57,7 +57,7 @@ namespace eCAL
       }
 
       // Define the event callback to pass to CServiceClient
-      v6::ServerEventCallbackT event_callback = [this](const SServiceId& service_id_, const v6::SServerEventCallbackData& data_)
+      eCAL::ServerEventCallbackT event_callback = [this](const SServiceId& service_id_, const eCAL::SServerEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceServerImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -77,7 +77,7 @@ namespace eCAL
           }
         };
 
-      m_service_server_impl = std::make_shared<eCAL::v6::CServiceServer>(service_name_, event_callback);
+      m_service_server_impl = std::make_shared<eCAL::CServiceServer>(service_name_, event_callback);
       Logging::Log(Logging::log_level_debug1, "v5::CServiceServerImpl: Service server created with name: " + service_name_);
       return true;
     }
@@ -130,7 +130,7 @@ namespace eCAL
       method_info.request_type.name  = req_type_;
       method_info.response_type.name = resp_type_;
 
-      const MethodInfoCallbackT callback =
+      const ServiceMethodCallbackT callback =
         [req_type_, resp_type_, callback_](
           const SServiceMethodInformation& method_info,
           const std::string& request,

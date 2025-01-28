@@ -24,12 +24,12 @@
 
 #include "person.pb.h"
 
-void OnPerson(const char* topic_name_, const pb::People::Person& person_, const long long time_, const long long clock_)
+void OnPerson(const eCAL::STopicId& topic_id_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
   std::cout << " HEAD "                                     << std::endl;
   std::cout << "------------------------------------------" << std::endl;
-  std::cout << "topic name   : " << topic_name_             << std::endl;
+  std::cout << "topic name   : " << topic_id_.topic_name    << std::endl;
   std::cout << "topic time   : " << time_                   << std::endl;
   std::cout << "topic clock  : " << clock_                  << std::endl;
   std::cout << "------------------------------------------" << std::endl;
@@ -66,7 +66,7 @@ int main()
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  sub.AddReceiveCallback(callback);
+  sub.SetReceiveCallback(callback);
 
   while(eCAL::Ok())
   {

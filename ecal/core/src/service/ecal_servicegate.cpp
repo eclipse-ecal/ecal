@@ -57,18 +57,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CServiceGate::Register(const std::string& service_name_, const std::shared_ptr<v6::CServiceServerImpl>& server_)
+  bool CServiceGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_)
   {
     if(!m_created) return(false);
 
     // register internal service
     const std::unique_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
-    m_service_server_map.emplace(std::pair<std::string, std::shared_ptr<v6::CServiceServerImpl>>(service_name_, server_));
+    m_service_server_map.emplace(std::pair<std::string, std::shared_ptr<CServiceServerImpl>>(service_name_, server_));
 
     return(true);
   }
 
-  bool CServiceGate::Unregister(const std::string& service_name_, const std::shared_ptr<v6::CServiceServerImpl>& server_)
+  bool CServiceGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceServerImpl>& server_)
   {
     if (!m_created) return(false);
     bool ret_state = false;

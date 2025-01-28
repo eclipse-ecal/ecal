@@ -33,8 +33,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     // Factory method to create a new instance of CServiceServerImpl
     std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
       const std::string & service_name_, const ServerEventCallbackT & event_callback_)
@@ -68,7 +66,7 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
   {
     const auto& method_ = method_info_.method_name;
 
@@ -511,6 +509,5 @@ namespace eCAL
     callback_data.type = event_type_;
     callback_data.time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     m_event_callback(service_id_, callback_data);
-  }
   }
 }

@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/v5/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 #include <ecal/msg/capnproto/helper.h>
 
 // capnp includes
@@ -50,7 +50,7 @@ namespace eCAL
     *
     **/
     template <typename message_type>
-    class CPublisher : public eCAL::v5::CPublisher
+    class CPublisher : public eCAL::CPublisher
     {
       class CPayload : public eCAL::CPayloadWriter
       {
@@ -86,23 +86,25 @@ namespace eCAL
 
     public:
       /**
-      * @brief  Constructor.
+       * @brief  Constructor.
+       *
+       * @param topic_name_  Unique topic name.
+       * @param config_      Optional configuration parameters.
       **/
-      CPublisher()
-        : eCAL::v5::CPublisher()
+      explicit CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
       }
 
       /**
-      * @brief  Constructor.
-      *
-      * @param topic_name_  Unique topic name.
-      * @param config_      Optional configuration parameters.
+       * @brief  Constructor.
+       *
+       * @param topic_name_      Unique topic name.
+       * @param event_callback_  The publisher event callback funtion.
+       * @param config_          Optional configuration parameters.
       **/
-      CPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
-        : eCAL::v5::CPublisher(topic_name_, GetDataTypeInformation(), config_)
+      explicit CPublisher(const std::string& topic_name_, const eCAL::PubEventCallbackT& event_callback_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration()) : eCAL::CPublisher(topic_name_, GetDataTypeInformation(), event_callback_, config_)
         , builder(std::make_unique<capnp::MallocMessageBuilder>())
         , root_builder(builder->initRoot<message_type>())
       {
@@ -142,19 +144,6 @@ namespace eCAL
 
       }
 
-      /**
-      * @brief  Creates this object.
-      *
-      * @param topic_name_  Unique topic name.
-      * @param config_      Optional configuration parameters.
-      *
-      * @return  True if it succeeds, false if it fails.
-      **/
-      bool Create(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = {})
-      {
-        return(eCAL::v5::CPublisher::Create(topic_name_, GetDataTypeInformation(), config_));
-      }
-
       typename message_type::Builder GetBuilder()
       {
         return root_builder;
@@ -163,7 +152,7 @@ namespace eCAL
       bool Send()
       {
         CPayload payload{ *builder };
-        return eCAL::v5::CPublisher::Send(payload);
+        return eCAL::CPublisher::Send(payload);
       }
 
     private:
