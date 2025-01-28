@@ -970,13 +970,13 @@ namespace
       PyDict_SetItemString(topicDict, "direction", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.datatype_information.name.c_str());
-      PyDict_SetItemString(topicDict, "tdatatype_name", val); Py_DECREF(val);
+      PyDict_SetItemString(topicDict, "datatype_information_name", val); Py_DECREF(val);
 
       val = Py_BuildValue("s", topic.datatype_information.encoding.c_str());
-      PyDict_SetItemString(topicDict, "tdatatype_encoding", val); Py_DECREF(val);
+      PyDict_SetItemString(topicDict, "datatype_information_encoding", val); Py_DECREF(val);
 
       val = Py_BuildValue("y#", topic.datatype_information.descriptor.c_str(), topic.datatype_information.descriptor.length());
-      PyDict_SetItemString(topicDict, "tdatatype_descriptor", val); Py_DECREF(val);
+      PyDict_SetItemString(topicDict, "datatype_information_descriptor", val); Py_DECREF(val);
 
       PyObject* layerList = PyList_New(0);
       for (auto layer : topic.transport_layer)
@@ -986,17 +986,17 @@ namespace
 
         switch (layer.type)
         {
-        case eCAL::Monitoring::tl_none:
-          val = Py_BuildValue("s", "tl_none");
+        case eCAL::Monitoring::eTransportLayerType::none:
+          val = Py_BuildValue("s", "none");
           break;
-        case eCAL::Monitoring::tl_ecal_shm:
-          val = Py_BuildValue("s", "tl_ecal_shm");
+        case eCAL::Monitoring::eTransportLayerType::shm:
+          val = Py_BuildValue("s", "shm");
           break;
-        case eCAL::Monitoring::tl_ecal_udp_mc:
-          val = Py_BuildValue("s", "tl_ecal_udp_mc");
+        case eCAL::Monitoring::eTransportLayerType::udp_mc:
+          val = Py_BuildValue("s", "udp_mc");
           break;
-        case eCAL::Monitoring::tl_ecal_tcp:
-          val = Py_BuildValue("s", "tl_ecal_tcp");
+        case eCAL::Monitoring::eTransportLayerType::tcp:
+          val = Py_BuildValue("s", "tcp");
           break;
         }
         PyDict_SetItemString(layerDict, "type", val); Py_DECREF(val);
