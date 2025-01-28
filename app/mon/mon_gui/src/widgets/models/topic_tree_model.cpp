@@ -127,8 +127,27 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   {
     if (!topic.second)
     {
-      removeItemFromGroups(topic_tree_item_map_.at(topic.first).tree_item);
-      topic_tree_item_map_.erase(topic.first);
+      auto& tree_entry = topic_tree_item_map_.at(topic.first);
+      TopicTreeItem* topic_tree_item = tree_entry.tree_item;
+
+      if (!tree_entry.striked_out)
+        {
+          auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
+          auto font = qvariant_cast<QFont>(fontrole);
+          font.setStrikeOut(true);
+          topic_tree_item->setFont(font);
+          tree_entry.striked_out = true;
+        }
+
+      if (tree_entry.deleted_topic_timer == false)
+      {
+        QTimer::singleShot(10000, [this, topic_tree_item, topic]()
+        {
+          removeItemFromGroups(topic_tree_item);
+          topic_tree_item_map_.erase(topic.first);
+        });
+        tree_entry.deleted_topic_timer = true;
+      }
     }
   }
 

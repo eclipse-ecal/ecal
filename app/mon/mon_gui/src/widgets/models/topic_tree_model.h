@@ -138,6 +138,8 @@ private:
     TopicTreeItem*  tree_item = nullptr;
     bool            default_font = false;
     bool            new_topic_timer = false;
+    bool            striked_out = false;
+    bool            deleted_topic_timer = false;
   };
   std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };
