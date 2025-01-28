@@ -95,7 +95,7 @@ namespace eCAL
       Logging::Log(Logging::log_level_debug1, "v5::CServiceClientImpl: Creating service client with name: " + service_name_);
 
       // Define the event callback to pass to CServiceClient
-      v6::ClientEventCallbackT event_callback = [this](const SServiceId& service_id_, const v6::SClientEventCallbackData& data_)
+      eCAL::ClientEventCallbackT event_callback = [this](const SServiceId& service_id_, const eCAL::SClientEventCallbackData& data_)
         {
           Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Event callback triggered for event type: " + to_string(data_.type));
 
@@ -120,7 +120,7 @@ namespace eCAL
         };
 
       // Create the new service client implementation with the event callback
-      m_service_client_impl = std::make_shared<eCAL::v6::CServiceClient>(
+      m_service_client_impl = std::make_shared<eCAL::CServiceClient>(
         service_name_,
         method_information_map_,
         event_callback

@@ -39,8 +39,6 @@ namespace eCAL
 {
   class CServiceClientImpl;
 
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief Service client wrapper class.
     **/
@@ -156,7 +154,6 @@ namespace eCAL
         bool IsConnected() const;
 
     private:
-      std::shared_ptr<eCAL::v6::CServiceClientImpl> m_service_client_impl;
+      std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
     };
-  }
 }

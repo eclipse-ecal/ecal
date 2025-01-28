@@ -31,8 +31,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
     {
       // create subscriber implementation
@@ -107,5 +105,4 @@ namespace eCAL
       if (m_subscriber_impl == nullptr) return SDataTypeInformation{};
       return m_subscriber_impl->GetDataTypeInformation();
     }
-  }
 }

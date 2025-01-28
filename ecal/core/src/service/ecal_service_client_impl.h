@@ -39,8 +39,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief Service client implementation class.
     **/
@@ -169,5 +167,4 @@ namespace eCAL
       std::mutex                   m_event_callback_mutex;
       ClientEventCallbackT       m_event_callback;
     };
-  }
 }

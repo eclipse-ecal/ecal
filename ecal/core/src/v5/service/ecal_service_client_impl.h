@@ -103,7 +103,7 @@ namespace eCAL
 
     private:
       // Pointer to the underlying service client implementation
-      std::shared_ptr<eCAL::v6::CServiceClient> m_service_client_impl;
+      std::shared_ptr<eCAL::CServiceClient> m_service_client_impl;
 
       // Host name filter for the service client
       std::string m_host_name;

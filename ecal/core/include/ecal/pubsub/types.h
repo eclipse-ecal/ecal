@@ -110,8 +110,6 @@ namespace eCAL
     }
   }
 
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief Receive callback function type with topic id and data struct. The topic id contains the topic name, the process
      *          name, the host name and a uniques topic identifier.
@@ -157,6 +155,5 @@ namespace eCAL
      * @param data_      Event callback data structure with the event specific information.
     **/
     using SubEventCallbackT = std::function<void(const STopicId& topic_id_, const SSubEventCallbackData& data_)>;
-  }
 }
 

@@ -35,8 +35,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     class CServiceServerImpl;
 
     /**
@@ -130,5 +128,4 @@ namespace eCAL
     private:
       std::shared_ptr<CServiceServerImpl> m_service_server_impl;
     };
-  }
 } 

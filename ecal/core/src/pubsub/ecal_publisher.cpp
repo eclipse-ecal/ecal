@@ -38,8 +38,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
     {
       // create publisher implementation
@@ -134,5 +132,4 @@ namespace eCAL
       if (m_publisher_impl == nullptr) return SDataTypeInformation();
       return(m_publisher_impl->GetDataTypeInformation());
     }
-  }
 }

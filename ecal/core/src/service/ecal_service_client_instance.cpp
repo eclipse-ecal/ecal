@@ -26,7 +26,7 @@
 
 namespace eCAL
 {
-  CClientInstance::CClientInstance(const SEntityId& entity_id_, const std::shared_ptr<v6::CServiceClientImpl>& service_client_id_impl_)
+  CClientInstance::CClientInstance(const SEntityId& entity_id_, const std::shared_ptr<CServiceClientImpl>& service_client_id_impl_)
     : m_entity_id(entity_id_), m_service_client_impl(service_client_id_impl_)
   {
     assert(m_service_client_impl && "service_client_id_impl_ must not be null");

@@ -32,8 +32,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
   CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInfoSetT& method_information_set_, const ClientEventCallbackT event_callback_)
   {
     // create client implementation
@@ -201,6 +199,5 @@ namespace eCAL
       if (instance.IsConnected()) return true;
     }
     return false;
-  }
   }
 }

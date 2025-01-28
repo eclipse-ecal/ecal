@@ -40,8 +40,6 @@ namespace eCAL
 {
   class CPublisherImpl;
 
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief eCAL publisher class.
     **/
@@ -169,5 +167,5 @@ namespace eCAL
     private:
       std::shared_ptr<CPublisherImpl> m_publisher_impl;
     };
-  }
+
 }

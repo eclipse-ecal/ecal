@@ -38,8 +38,6 @@ namespace eCAL
 {
   class CSubscriberImpl;
 
-  ECAL_CORE_NAMESPACE_V6
-  {
     /**
      * @brief eCAL subscriber class.
     **/
@@ -148,5 +146,4 @@ namespace eCAL
     private:
       std::shared_ptr<CSubscriberImpl> m_subscriber_impl;
     };
-  }
 }

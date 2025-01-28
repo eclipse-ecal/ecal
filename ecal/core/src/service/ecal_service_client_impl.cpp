@@ -73,8 +73,6 @@ namespace
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
     // Factory method to create a new instance of CServiceClientImpl
     std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
         const std::string & service_name_, const ServiceMethodInfoSetT & method_information_map_, const ClientEventCallbackT & event_callback_)
@@ -620,6 +618,5 @@ namespace eCAL
     }
 
     return service_reponse;
-  }
   }
 }
