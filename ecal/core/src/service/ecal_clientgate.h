@@ -27,8 +27,6 @@
 #include "ecal_def.h"
 #include "serialization/ecal_struct_sample_registration.h"
 
-#include <ecal/callback.h>
-
 #include <atomic>
 #include <map>
 #include <memory>

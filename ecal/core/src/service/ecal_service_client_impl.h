@@ -23,7 +23,6 @@
 
 #include <ecal/ecal.h>
 #include <ecal/deprecate.h>
-#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/service/types.h>
 #include <ecal/types.h>

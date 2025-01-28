@@ -27,7 +27,6 @@
 // all ecal includes
 #include <ecal/os.h>
 #include <ecal/defs.h>
-#include <ecal/callback.h>
 #include <ecal/service/client.h>
 #include <ecal/config.h>
 #include <ecal/core.h>
