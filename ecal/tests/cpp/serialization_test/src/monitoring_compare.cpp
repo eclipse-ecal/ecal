@@ -48,7 +48,7 @@ namespace eCAL
           monitoring1.processes[i].state_severity_level != monitoring2.processes[i].state_severity_level ||
           monitoring1.processes[i].state_info != monitoring2.processes[i].state_info ||
           monitoring1.processes[i].time_sync_state != monitoring2.processes[i].time_sync_state ||
-          monitoring1.processes[i].timesync_module_name != monitoring2.processes[i].timesync_module_name ||
+          monitoring1.processes[i].time_sync_module_name != monitoring2.processes[i].time_sync_module_name ||
           monitoring1.processes[i].component_init_state != monitoring2.processes[i].component_init_state ||
           monitoring1.processes[i].component_init_info != monitoring2.processes[i].component_init_info ||
           monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version ||

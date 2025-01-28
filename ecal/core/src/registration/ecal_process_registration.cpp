@@ -53,30 +53,30 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {
-    process_sample_process.time_sync_state = Registration::eTSyncState::tsync_none;
+    process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }
   else
   {
     if (!g_timegate()->IsSynchronized())
     {
-      process_sample_process.time_sync_state = Registration::eTSyncState::tsync_none;
+      process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
     }
     else
     {
       switch (g_timegate()->GetSyncMode())
       {
       case CTimeGate::eTimeSyncMode::realtime:
-        process_sample_process.time_sync_state = Registration::eTSyncState::tsync_realtime;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_realtime;
         break;
       case CTimeGate::eTimeSyncMode::replay:
-        process_sample_process.time_sync_state = Registration::eTSyncState::tsync_replay;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_replay;
         break;
       default:
-        process_sample_process.time_sync_state = Registration::eTSyncState::tsync_none;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
         break;
       }
     }
-    process_sample_process.timesync_module_name = g_timegate()->GetName();
+    process_sample_process.time_sync_module_name = g_timegate()->GetName();
   }
 #endif
 

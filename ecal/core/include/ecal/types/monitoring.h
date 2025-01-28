@@ -123,7 +123,7 @@ namespace eCAL
       std::string    state_info;                                //!< process state info as human readable string
 
       int32_t        time_sync_state{0};                            //!< time synchronization state
-      std::string    timesync_module_name;                            //!< time synchronization module name
+      std::string    time_sync_module_name;                            //!< time synchronization module name
 
       int32_t        component_init_state{0};                   //!< eCAL component initialization state (eCAL::Initialize(..))
       std::string    component_init_info;                       //!< like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)

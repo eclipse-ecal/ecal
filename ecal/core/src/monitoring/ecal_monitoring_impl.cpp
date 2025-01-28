@@ -282,7 +282,7 @@ namespace eCAL
     const int             process_state_severity_level = sample_process_state.severity_level;
     const std::string&    process_state_info           = sample_process_state.info;
     const int             process_time_sync_state          = sample_process.time_sync_state;
-    const std::string&    process_tsync_mod_name       = sample_process.timesync_module_name;
+    const std::string&    process_tsync_mod_name       = sample_process.time_sync_module_name;
     const int             component_init_state         = sample_process.component_init_state;
     const std::string&    component_init_info          = sample_process.component_init_info;
     const std::string&    ecal_runtime_version         = sample_process.ecal_runtime_version;
@@ -311,7 +311,7 @@ namespace eCAL
     ProcessInfo.state_severity_level = process_state_severity_level;
     ProcessInfo.state_info           = process_state_info;
     ProcessInfo.time_sync_state          = process_time_sync_state;
-    ProcessInfo.timesync_module_name       = process_tsync_mod_name;
+    ProcessInfo.time_sync_module_name       = process_tsync_mod_name;
     ProcessInfo.component_init_state = component_init_state;
     ProcessInfo.component_init_info  = component_init_info;
     ProcessInfo.ecal_runtime_version = ecal_runtime_version;

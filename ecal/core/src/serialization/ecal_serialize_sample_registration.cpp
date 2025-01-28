@@ -70,8 +70,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.state.info, registration_process_.state.info);
     // process.time_sync_state
     pb_process_.time_sync_state = static_cast<eCAL_pb_eTSyncState>(registration_process_.time_sync_state);
-    // timesync_module_name
-    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, registration_process_.timesync_module_name);
+    // time_sync_module_name
+    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, registration_process_.time_sync_module_name);
     // component_init_state
     pb_process_.component_init_state = registration_process_.component_init_state;
     // component_init_info
@@ -326,8 +326,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.process.pparam, registration_.process.pparam);
     // state.info
     eCAL::nanopb::decode_string(pb_sample_.process.state.info, registration_.process.state.info);
-    // timesync_module_name
-    eCAL::nanopb::decode_string(pb_sample_.process.time_sync_module_name, registration_.process.timesync_module_name);
+    // time_sync_module_name
+    eCAL::nanopb::decode_string(pb_sample_.process.time_sync_module_name, registration_.process.time_sync_module_name);
     // component_init_info
     eCAL::nanopb::decode_string(pb_sample_.process.component_init_info, registration_.process.component_init_info);
     // ecal_runtime_version
@@ -418,7 +418,7 @@ namespace
       // state.severity_level
       registration_.process.state.severity_level = static_cast<eCAL::Registration::eProcessSeverityLevel>(pb_sample_.process.state.severity_level);
       // time_sync_state
-      registration_.process.time_sync_state = static_cast<eCAL::Registration::eTSyncState>(pb_sample_.process.time_sync_state);
+      registration_.process.time_sync_state = static_cast<eCAL::Registration::eTimeSyncState>(pb_sample_.process.time_sync_state);
       // component_init_state
       registration_.process.component_init_state = pb_sample_.process.component_init_state;
       break;

@@ -133,8 +133,8 @@ namespace eCAL
       process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
       process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
       process.state.info           = GenerateString(10);
-      process.time_sync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
-      process.timesync_module_name       = GenerateString(6);
+      process.time_sync_state          = static_cast<eTimeSyncState>(rand() % (tsync_replay + 1));
+      process.time_sync_module_name       = GenerateString(6);
       process.component_init_state = rand() % 5;
       process.component_init_info  = GenerateString(8);
       process.ecal_runtime_version = GenerateString(5);

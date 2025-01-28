@@ -43,7 +43,7 @@ namespace eCAL
       process.state_severity_level = rand() % 6;
       process.state_info           = GenerateString(15);
       process.time_sync_state          = rand() % 3;
-      process.timesync_module_name       = GenerateString(12);
+      process.time_sync_module_name       = GenerateString(12);
       process.component_init_state = rand() % 10;
       process.component_init_info  = GenerateString(20);
       process.ecal_runtime_version = GenerateString(8);

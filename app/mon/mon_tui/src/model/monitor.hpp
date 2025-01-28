@@ -99,7 +99,7 @@ class MonitorModel
     }
   }
 
-  Process::TimeSyncState TimeSyncState(eCAL::pb::eTSyncState state)
+  Process::TimeSyncState TimeSyncState(eCAL::pb::eTimeSyncState state)
   {
     switch(state)
     {
@@ -166,7 +166,7 @@ class MonitorModel
       process.severity_level = SeverityLevel(p.state().severity_level());
       process.state_info = std::move(*p.mutable_state()->mutable_info());
       process.time_sync_state = TimeSyncState(p.time_sync_state());
-      process.time_sync_mod_name = std::move(*p.mutable_tsync_mod_name());
+      process.time_sync_mod_name = std::move(*p.mutable_time_sync_module_name());
       process.component_init_info = std::move(*p.mutable_component_init_info());
       process.ecal_runtime_version = std::move(*p.mutable_ecal_runtime_version());
     }

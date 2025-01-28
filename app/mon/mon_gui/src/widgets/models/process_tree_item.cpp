@@ -95,7 +95,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TSYNC_MOD_NAME)
     {
-      return process_.timesync_module_name().c_str();
+      return process_.time_sync_module_name().c_str();
     }
     else if (column == Columns::COMPONENT_INIT_INFO)
     {

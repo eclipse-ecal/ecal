@@ -102,7 +102,7 @@ int main()
         std::cout << "severity        : " << process.state().severity() << std::endl;   // process state severity
         std::cout << "info            : " << process.state().info() << std::endl;   // process state info
         std::cout << "tsync state     : " << process.time_sync_state() << std::endl;   // time sync state
-        std::cout << "tsync mod name  : " << process.timesync_module_name() << std::endl;   // time sync mod name
+        std::cout << "tsync mod name  : " << process.time_sync_module_name() << std::endl;   // time sync mod name
         std::cout << std::endl;
       }
     }

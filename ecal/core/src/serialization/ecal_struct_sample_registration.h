@@ -60,7 +60,7 @@ namespace eCAL
       proc_sev_level5        = 5
     };
 
-    enum eTSyncState
+    enum eTimeSyncState
     {
       tsync_none     = 0,
       tsync_realtime = 1,
@@ -217,8 +217,8 @@ namespace eCAL
       std::string                         unit_name;                        // unit name
       std::string                         pparam;                       // process parameter
       ProcessState                        state;                        // process state info
-      eTSyncState                         time_sync_state = tsync_none;     // time synchronization state
-      std::string                         timesync_module_name;               // time synchronization module name
+      eTimeSyncState                         time_sync_state = tsync_none;     // time synchronization state
+      std::string                         time_sync_module_name;               // time synchronization module name
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
@@ -232,7 +232,7 @@ namespace eCAL
           pparam == other.pparam &&
           state == other.state &&
           time_sync_state == other.time_sync_state &&
-          timesync_module_name == other.timesync_module_name &&
+          time_sync_module_name == other.time_sync_module_name &&
           component_init_state == other.component_init_state &&
           component_init_info == other.component_init_info &&
           ecal_runtime_version == other.ecal_runtime_version &&
@@ -248,7 +248,7 @@ namespace eCAL
         pparam.clear();
         state.clear();
         time_sync_state = tsync_none;
-        timesync_module_name.clear();
+        time_sync_module_name.clear();
         component_init_state = 0;
         component_init_info.clear();
         ecal_runtime_version.clear();

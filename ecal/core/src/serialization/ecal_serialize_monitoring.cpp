@@ -67,8 +67,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.state.info, process_.state_info);
     // process.time_sync_state
     pb_process_.time_sync_state = static_cast<eCAL_pb_eTSyncState>(process_.time_sync_state);
-    // timesync_module_name
-    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, process_.timesync_module_name);
+    // time_sync_module_name
+    eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, process_.time_sync_module_name);
     // component_init_state
     pb_process_.component_init_state = process_.component_init_state;
     // component_init_info
@@ -508,8 +508,8 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.pparam, process_.pparam);
     // state.info
     eCAL::nanopb::decode_string(pb_process_.state.info, process_.state_info);
-    // timesync_module_name
-    eCAL::nanopb::decode_string(pb_process_.time_sync_module_name, process_.timesync_module_name);
+    // time_sync_module_name
+    eCAL::nanopb::decode_string(pb_process_.time_sync_module_name, process_.time_sync_module_name);
     // component_init_info
     eCAL::nanopb::decode_string(pb_process_.component_init_info, process_.component_init_info);
     // ecal_runtime_version
