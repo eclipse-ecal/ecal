@@ -227,13 +227,13 @@ namespace eCAL
       {
         switch (layer.type)
         {
-        case TLayer::tlayer_udp_mc:
+        case TransportLayer::transport_layer_udp_mc:
           layer_states.udp.write_enabled = true;
           break;
-        case TLayer::tlayer_shm:
+        case TransportLayer::transport_layer_shm:
           layer_states.shm.write_enabled = true;
           break;
-        case TLayer::tlayer_tcp:
+        case TransportLayer::transport_layer_tcp:
           layer_states.tcp.write_enabled = true;
           break;
         default:

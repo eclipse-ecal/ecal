@@ -459,7 +459,7 @@ namespace eCAL
 #endif
 
     // determine if we need to start a transport layer
-    const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
+    const TransportLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
     case tl_ecal_udp:
@@ -912,14 +912,14 @@ namespace eCAL
     return snd_hash;
   }
 
-  TLayer::eTransportLayer CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
+  TransportLayer::eTransportLayer CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
     const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
     // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
-    for (const TLayer::eTransportLayer layer : layer_priority_vector)
+    for (const TransportLayer::eTransportLayer layer : layer_priority_vector)
     {
       if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), layer) != enabled_pub_layer_.end()
         && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), layer) != enabled_sub_layer_.end())
@@ -929,7 +929,7 @@ namespace eCAL
     }
 
     // return tl_none if no common transport layer is found
-    return TLayer::eTransportLayer::tlayer_none;
+    return TransportLayer::eTransportLayer::transport_layer_none;
   }
 
   int32_t CPublisherImpl::GetFrequency()

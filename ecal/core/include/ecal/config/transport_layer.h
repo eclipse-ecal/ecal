@@ -31,6 +31,15 @@ namespace eCAL
 {
   namespace TransportLayer
   {
+    enum eTransportLayer
+    {
+      transport_layer_none = 0,
+      transport_layer_udp_mc = 1,
+      transport_layer_shm = 4,
+      transport_layer_tcp = 5,
+      transport_layer_all = 255
+    };
+
     namespace UDP
     {      
       struct MulticastConfiguration
