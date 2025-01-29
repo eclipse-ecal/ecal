@@ -1,0 +1,123 @@
+
+:orphan:
+
+.. include:: /../include.txt
+
+.. _ecal_release_page_5_12_6:
+
+===============
+eCAL 5.12.6
+===============
+
+
+
+- Release Date: 2024-06-21
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.12.6
+
+Changelog
+=========
+
+.. literalinclude:: changelog_ecal_5_12_6.txt
+   :language: text
+
+Downloads
+=========
+
+
+.. note::
+
+   A more recent version of eCAL 5.12 is available: :ref:`eCAL 5.12.7 <ecal_release_page_5_12_7>`.
+
+
+
+eCAL Installer
+--------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   * - |fa-windows| Windows
+
+     - x64
+
+     - `ecal_5.12.6-win64.exe <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal_5.12.6-win64.exe>`__
+
+   * - |fa-Ubuntu| Ubuntu 22.04
+
+     - x64
+
+     - `ecal_5.12.6-jammy_amd64.deb <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal_5.12.6-jammy_amd64.deb>`__
+
+   * - |fa-Ubuntu| Ubuntu 20.04
+
+     - x64
+
+     - `ecal_5.12.6-focal_amd64.deb <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal_5.12.6-focal_amd64.deb>`__
+
+   
+|fa-python| Python Binding
+--------------------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   
+   * - |fa-windows| Windows
+
+     - x64
+
+     - `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp312-cp312-win_amd64.whl>`__ 
+
+       `Python 3.11 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp311-cp311-win_amd64.whl>`__ 
+
+       `Python 3.10 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp310-cp310-win_amd64.whl>`__ 
+
+       `Python 3.9 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp39-cp39-win_amd64.whl>`__ 
+
+       `Python 3.8 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp38-cp38-win_amd64.whl>`__ 
+
+       `Python 3.7 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-cp37-cp37m-win_amd64.whl>`__ 
+
+       
+   * - |fa-Ubuntu| Ubuntu 22.04
+
+     - x64
+
+     - `Python 3.11 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-1jammy-cp311-cp311-linux_x86_64.whl>`__ 
+
+       `Python 3.10 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-1jammy-cp310-cp310-linux_x86_64.whl>`__  (Default)
+
+       
+   * - |fa-Ubuntu| Ubuntu 20.04
+
+     - x64
+
+     - `Python 3.9 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-1focal-cp39-cp39-linux_x86_64.whl>`__ 
+
+       `Python 3.8 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal5-5.12.6-1focal-cp38-cp38-linux_x86_64.whl>`__  (Default)
+
+       
+|fa-code| Source
+----------------
+
+.. list-table::
+    :widths: 1
+
+    * - `ecal-fat-source.tar.gz <https://github.com/eclipse-ecal/ecal/releases/download/v5.12.6/ecal-fat-source.tar.gz>`__
+
+    
+
