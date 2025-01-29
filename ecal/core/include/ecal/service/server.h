@@ -50,7 +50,7 @@ namespace eCAL
      * @param event_callback_ Callback function for server events.
     **/
     ECAL_API_EXPORTED_MEMBER
-      explicit CServiceServer(const std::string& service_name_, const ServerEventCallbackT event_callback_ = ServerEventCallbackT());
+      explicit CServiceServer(const std::string& service_name_, const ServerEventCallbackT& event_callback_ = ServerEventCallbackT());
 
     /**
      * @brief Destructor.
