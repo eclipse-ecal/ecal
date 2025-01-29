@@ -459,16 +459,16 @@ namespace eCAL
 #endif
 
     // determine if we need to start a transport layer
-    const TransportLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
+    const TransportLayer::eType layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
-    case tl_ecal_udp:
+    case TransportLayer::eType::udp_mc:
       StartUdpLayer();
       break;
-    case tl_ecal_shm:
+    case TransportLayer::eType::shm:
       StartShmLayer();
       break;
-    case tl_ecal_tcp:
+    case TransportLayer::eType::tcp:
       StartTcpLayer();
       break;
     default:
@@ -912,24 +912,31 @@ namespace eCAL
     return snd_hash;
   }
 
-  TransportLayer::eTransportLayer CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
+  TransportLayer::eType CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
     const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
-    // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
-    for (const TransportLayer::eTransportLayer layer : layer_priority_vector)
+    static const std::map<TransportLayer::eType, eTLayerType> transport_layer_mapping {
+      {TransportLayer::eType::none, tl_none },
+      {TransportLayer::eType::shm, tl_ecal_shm},
+      {TransportLayer::eType::udp_mc, tl_ecal_udp},
+      {TransportLayer::eType::tcp, tl_ecal_tcp},
+      {TransportLayer::eType::all, tl_all}
+    };
+
+    for (const TransportLayer::eType layer : layer_priority_vector)
     {
-      if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), layer) != enabled_pub_layer_.end()
-        && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), layer) != enabled_sub_layer_.end())
+      if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), transport_layer_mapping.at(layer)) != enabled_pub_layer_.end()
+        && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), transport_layer_mapping.at(layer)) != enabled_sub_layer_.end())
       {
         return layer;
       }
     }
 
     // return tl_none if no common transport layer is found
-    return TransportLayer::eTransportLayer::transport_layer_none;
+    return TransportLayer::eType::none;
   }
 
   int32_t CPublisherImpl::GetFrequency()

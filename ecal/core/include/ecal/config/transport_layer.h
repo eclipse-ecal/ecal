@@ -31,13 +31,13 @@ namespace eCAL
 {
   namespace TransportLayer
   {
-    enum eTransportLayer
+    enum class eType
     {
-      transport_layer_none = 0,
-      transport_layer_udp_mc = 1,
-      transport_layer_shm = 4,
-      transport_layer_tcp = 5,
-      transport_layer_all = 255
+      none,
+      udp_mc,
+      shm,
+      tcp,
+      all
     };
 
     namespace UDP

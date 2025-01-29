@@ -44,9 +44,9 @@ namespace YAML
     eCAL::Publisher::Configuration::LayerPriorityVector layer_priority_vector;
     for (const auto& layer_as_string : string_vector_)
     {
-      if (layer_as_string == "shm") layer_priority_vector.emplace_back(eCAL::TransportLayer::transport_layer_shm);
-      if (layer_as_string == "udp") layer_priority_vector.emplace_back(eCAL::TransportLayer::transport_layer_udp_mc);
-      if (layer_as_string == "tcp") layer_priority_vector.emplace_back(eCAL::TransportLayer::transport_layer_tcp);
+      if (layer_as_string == "shm") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::shm);
+      if (layer_as_string == "udp") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::udp_mc);
+      if (layer_as_string == "tcp") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::tcp);
     }
 
     return layer_priority_vector;
@@ -59,13 +59,13 @@ namespace YAML
     {
       switch (layer_as_enum)
       {
-        case eCAL::TransportLayer::transport_layer_shm:
+        case eCAL::TransportLayer::eType::shm:
           layer_priority_vector.emplace_back("shm");
           break;
-        case eCAL::TransportLayer::transport_layer_udp_mc:
+        case eCAL::TransportLayer::eType::udp_mc:
           layer_priority_vector.emplace_back("udp");
           break;
-        case eCAL::TransportLayer::transport_layer_tcp:
+        case eCAL::TransportLayer::eType::tcp:
           layer_priority_vector.emplace_back("tcp");
           break;
         default:

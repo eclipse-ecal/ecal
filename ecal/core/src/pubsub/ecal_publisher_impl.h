@@ -138,7 +138,7 @@ namespace eCAL
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TransportLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 

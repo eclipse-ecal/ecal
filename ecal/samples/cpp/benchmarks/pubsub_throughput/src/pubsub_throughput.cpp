@@ -28,7 +28,7 @@
 const auto g_snd_size (8* 1024 * 1024);
 const auto g_snd_loops(1000);
 
-void throughput_test(int snd_size, int snd_loops, eCAL::TransportLayer::eTransportLayer layer, bool zero_copy)
+void throughput_test(int snd_size, int snd_loops, eCAL::TransportLayer::eType layer, bool zero_copy)
 {
   // create payload
   CBinaryPayload payload(snd_size);
@@ -42,13 +42,13 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TransportLayer::eTranspo
   pub_config.layer.tcp.enable = false;
   switch (layer)
   {
-  case eCAL::TransportLayer::transport_layer_shm:
+  case eCAL::TransportLayer::eType::shm:
     pub_config.layer.shm.enable = true;
     break;
-  case eCAL::TransportLayer::transport_layer_udp_mc:
+  case eCAL::TransportLayer::eType::udp_mc:
     pub_config.layer.udp.enable = true;
     break;
-  case eCAL::TransportLayer::transport_layer_tcp:
+  case eCAL::TransportLayer::eType::tcp:
     pub_config.layer.tcp.enable = true;
     break;
   default:
@@ -116,13 +116,13 @@ int main()
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM"                  << '\n';
   std::cout << "---------------------------" << '\n';
-  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::transport_layer_shm, false);
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::eType::shm, false);
   std::cout << '\n' << '\n';
 
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM ZERO-COPY"        << '\n';
   std::cout << "---------------------------" << '\n';
-  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::transport_layer_shm, true);
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::eType::shm, true);
   std::cout << '\n' << '\n';
 
   // finalize eCAL API

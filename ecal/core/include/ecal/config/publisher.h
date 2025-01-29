@@ -143,9 +143,9 @@ namespace eCAL
     {
       Layer::Configuration layer;                        //!< Layer configuration
 
-      using LayerPriorityVector = std::vector<TransportLayer::eTransportLayer>;
-      LayerPriorityVector  layer_priority_local    { TransportLayer::transport_layer_shm,    TransportLayer::transport_layer_udp_mc, TransportLayer::transport_layer_tcp };
-      LayerPriorityVector  layer_priority_remote   { TransportLayer::transport_layer_udp_mc, TransportLayer::transport_layer_tcp };
+      using LayerPriorityVector = std::vector<TransportLayer::eType>;
+      LayerPriorityVector  layer_priority_local    { TransportLayer::eType::shm,    TransportLayer::eType::udp_mc, TransportLayer::eType::tcp };
+      LayerPriorityVector  layer_priority_remote   { TransportLayer::eType::udp_mc, TransportLayer::eType::tcp };
     };
   }
 }

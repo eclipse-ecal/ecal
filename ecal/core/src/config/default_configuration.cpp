@@ -45,13 +45,13 @@ namespace
     {
       switch (elem)
       {
-        case eCAL::TransportLayer::transport_layer_shm:
+      case eCAL::TransportLayer::eType::shm:
           result += "\"shm\", ";
           break;
-        case eCAL::TransportLayer::transport_layer_udp_mc:
+        case eCAL::TransportLayer::eType::udp_mc:
           result += "\"udp\", ";
           break;
-        case eCAL::TransportLayer::transport_layer_tcp:
+        case eCAL::TransportLayer::eType::tcp:
           result += "\"tcp\", ";
           break;
         default:

@@ -66,7 +66,7 @@ namespace eCAL
 
     struct SAttributes
     {
-      using LayerPriorityVector = std::vector<TransportLayer::eTransportLayer>;
+      using LayerPriorityVector = std::vector<TransportLayer::eType>;
       LayerPriorityVector  layer_priority_local;
       LayerPriorityVector  layer_priority_remote;
 
