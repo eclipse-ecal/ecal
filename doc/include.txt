@@ -1,0 +1,78 @@
+
+.. |fa-windows| raw:: html
+
+   <i class="fab fa-windows"></i>
+
+.. |fa-linux| raw:: html
+
+   <i class="fab fa-linux"></i>
+
+.. |fa-ubuntu| raw:: html
+
+   <i class="fab fa-ubuntu"></i>
+
+.. |fa-apple| raw:: html
+
+   <i class="fab fa-apple"></i>
+
+.. |fa-folder-open| raw:: html
+
+   <i class="far fa-folder-open"></i>
+
+.. |fa-folder| raw:: html
+
+   <i class="far fa-folder"></i>
+
+.. |fa-file| raw:: html
+
+   <i class="far fa-file"></i>
+
+.. |fa-file-alt| raw:: html
+
+   <i class="far fa-file-alt"></i>
+
+.. |fa-download| raw:: html
+   
+   <i class="fas fa-download"></i>
+
+.. |fa-github| raw:: html
+   
+   <i class="fab fa-github"></i>
+
+.. |fa-book| raw:: html
+   
+   <i class="fas fa-book"></i>
+
+.. |fa-copy| raw:: html
+   
+   <i class="fas fa-copy"></i>
+
+.. |fa-python| raw:: html
+   
+   <i class="fab fa-python"></i>
+
+.. |fa-pencil-alt| raw:: html
+   
+   <i class="fas fa-pencil-alt"></i>
+
+.. |fa-code| raw:: html
+   
+   <i class="fas fa-code"></i>
+
+
+.. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.yaml`
+.. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.yaml`
+
+.. |ecalini-path-windows-old| replace:: :file:`C:\\eCAL\\cfg\\ecal.yaml`
+.. |ecalini-path-ubuntu-old|  replace:: :file:`/usr/etc/ecal/ecal.yaml`
+
+
+.. |person_snd-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_snd.exe`
+.. |person_rec-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_rec.exe`
+.. |service_server_c-path-windows| replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_minimal_server_c.exe`
+.. |service_client_c-pathwindows|  replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_minimal_client_c.exe`
+
+.. |ecal_mon-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Monitor`
+.. |ecal_rec-start-menu-path-windows|  replace:: :file:`Start / eCAL / eCAL Recorder`
+.. |ecal_play-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Player`
+.. |ecal_sys-start-menu-path-windows| replace:: :file:`Start / eCAL / eCAL Sys`

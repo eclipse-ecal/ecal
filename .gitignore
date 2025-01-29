@@ -48,6 +48,10 @@ doc/rst/_download_main_page
 doc/extensions/_autogen
 doc/rst/getting_started/**/*_pb2.py
 doc/rst/.venv
+doc/release_page/index.rst
+doc/release_page/ecal_*.rst
+doc/release_page/changelog_*.txt
+doc/release_page/_build
 .venv/
 *.pyc
 
