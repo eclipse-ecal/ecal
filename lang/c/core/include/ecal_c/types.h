@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   types.h
+ * @file   ecal_c/types.h
  * @brief  File including shared types for eCAL C API
 **/
 
-#ifndef types_h_included
-#define types_h_included
+#ifndef ecal_c_types_h_included
+#define ecal_c_types_h_included
 
 /**
  * @brief Flag to indicate eCAL to allocate/deallocate memory.
@@ -45,4 +45,4 @@ typedef struct
   int patch; //!< patch version number
 } eCAL_SVersion;
 
-#endif /* types_h_included */
+#endif /* ecal_c_types_h_included */

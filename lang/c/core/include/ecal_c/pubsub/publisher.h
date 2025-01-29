@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   publisher.h
+ * @file   ecal_c/pubsub/publisher.h
  * @brief  eCAL publisher c interface
 **/
 
-#ifndef publisher_h_included
-#define publisher_h_included
+#ifndef ecal_c_pubsub_publisher_h_included
+#define ecal_c_pubsub_publisher_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -157,4 +157,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*publisher_h_included*/
+#endif /*ecal_c_pubsub_publisher_h_included*/

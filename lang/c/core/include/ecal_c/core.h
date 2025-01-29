@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   core.h
+ * @file   ecal_c/core.h
  * @brief  eCAL core function c interface
 **/
 
-#ifndef core_h_included
-#define core_h_included
+#ifndef ecal_c_core_h_included
+#define ecal_c_core_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -122,4 +122,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*core_h_included*/
+#endif /*ecal_c_core_h_included*/

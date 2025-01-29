@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   client.h
+ * @file   ecal_c/service/client.h
  * @brief  eCAL client c interface
 **/
 
-#ifndef client_h_included
-#define client_h_included
+#ifndef ecal_c_service_client_h_included
+#define ecal_c_service_client_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -168,4 +168,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*client_h_included*/
+#endif /*ecal_c_service_client_h_included*/

@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   ecal.h
+ * @file   ecal_c/ecal.h
  * @brief  eCAL main c header file
 **/
 
-#ifndef ecal_h_included
-#define ecal_h_included
+#ifndef ecal_c_ecal_h_included
+#define ecal_c_ecal_h_included
 
 #ifndef _MSC_VER
   #include <string.h>
@@ -45,4 +45,4 @@
 #include <ecal_c/types.h>
 #include <ecal_c/util.h>
 
-#endif /* ecal_h_included */
+#endif /* ecal_c_ecal_h_included */

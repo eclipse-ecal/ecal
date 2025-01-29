@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   process.h
+ * @file   ecal_c/process.h
  * @brief  eCAL process c interface
 **/
 
-#ifndef process_h_included
-#define process_h_included
+#ifndef ecal_c_process_h_included
+#define ecal_c_process_h_included
 
 #include <ecal_c/export.h>
 
@@ -188,4 +188,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*process_h_included*/
+#endif /*ecal_c_process_h_included*/

@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   export.h
+ * @file   ecal_c/export.h
  * @brief  eCAL dll / so export commands
 **/
 
-#ifndef export_h_included
-#define export_h_included
+#ifndef ecal_c_export_h_included
+#define ecal_c_export_h_included
 
 #ifdef _MSC_VER
   #ifdef ECAL_CORE_C_EXPORTS
@@ -45,4 +45,4 @@
   #define ECALC_API_DEPRECATED __attribute__((deprecated)) ECALC_API 
 #endif
 
-#endif
+#endif /*ecal_c_export_h_included*/

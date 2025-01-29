@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   server.h
+ * @file   ecal_c/service/server.h
  * @brief  eCAL service c interface
 **/
 
-#ifndef server_h_included
-#define server_h_included
+#ifndef ecal_c_service_server_h_included
+#define ecal_c_service_server_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -117,4 +117,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*server_h_included*/
+#endif /*ecal_c_service_server_h_included*/

@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   timer.h
+ * @file   ecal_c/timer.h
  * @brief  eCAL timer c interface
 **/
 
-#ifndef timer_h_included
-#define timer_h_included
+#ifndef ecal_c_timer_h_included
+#define ecal_c_timer_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -75,4 +75,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*timer_h_included*/
+#endif /*ecal_c_timer_h_included*/

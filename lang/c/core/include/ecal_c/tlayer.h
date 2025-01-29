@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   tlayer.h
+ * @file   ecal_c/tlayer.h
  * @brief  eCAL transport layer
 **/
 
-#ifndef tlayer_h_included
-#define tlayer_h_included
+#ifndef ecal_c_tlayer_h_included
+#define ecal_c_tlayer_h_included
 
 /**
  * @brief eCAL transport layer types.
@@ -48,4 +48,4 @@ enum eSendModeC
   smode_auto
 };
 
-#endif /*tlayer_h_included*/
+#endif /*ecal_c_tlayer_h_included*/

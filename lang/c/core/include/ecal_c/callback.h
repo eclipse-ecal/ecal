@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   callback.h
+ * @file   ecal_c/callback.h
  * @brief  eCAL callback interface events, structs and functions
 **/
 
-#ifndef callback_h_included
-#define callback_h_included
+#ifndef ecal_c_callback_h_included
+#define ecal_c_callback_h_included
 
 /**
  * @brief eCAL subscriber event callback type.
@@ -189,4 +189,4 @@ typedef void(*ClientEventCallbackCT)(const char* name_, const struct SClientEven
 **/
 typedef void(*ServerEventCallbackCT)(const char* name_, const struct SServerEventCallbackDataC* data_, void* par_);
 
-#endif /* callback_h_included */
+#endif /* ecal_c_callback_h_included */

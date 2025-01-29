@@ -18,12 +18,12 @@
 */
 
 /**
- * @file   subscriber.h
+ * @file   ecal_c/pubsub/subscriber.h
  * @brief  eCAL subscriber c interface
 **/
 
-#ifndef subscriber_h_included
-#define subscriber_h_included
+#ifndef ecal_c_pubsub_subscriber_h_included
+#define ecal_c_pubsub_subscriber_h_included
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
@@ -235,4 +235,4 @@ extern "C"
 }
 #endif /*__cplusplus*/
 
-#endif /*subscriber_h_included*/
+#endif /*ecal_c_pubsub_subscriber_h_included*/
