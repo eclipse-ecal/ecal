@@ -32,8 +32,8 @@ namespace eCAL
     TopicInfo GenerateTopic()
     {
       TopicInfo topic;
-      topic.host_name = GenerateString(8);
-      topic.process_id   = rand() % 1000;
+      topic.host_name  = GenerateString(8);
+      topic.process_id = rand() % 1000;
       topic.topic_id   = rand();
       topic.topic_name = GenerateString(10);
 

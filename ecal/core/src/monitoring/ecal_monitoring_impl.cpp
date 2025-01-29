@@ -196,14 +196,14 @@ namespace eCAL
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
-      TopicInfo.host_name                = host_name;
+      TopicInfo.host_name            = host_name;
       TopicInfo.shm_transport_domain = shm_transport_domain;
-      TopicInfo.process_id                  = process_id;
-      TopicInfo.process_name                = process_name;
-      TopicInfo.unit_name                = unit_name;
-      TopicInfo.topic_name                = topic_name;
+      TopicInfo.process_id           = process_id;
+      TopicInfo.process_name         = process_name;
+      TopicInfo.unit_name            = unit_name;
+      TopicInfo.topic_name           = topic_name;
       TopicInfo.direction            = direction;
-      TopicInfo.topic_id                  = topic_id;
+      TopicInfo.topic_id             = topic_id;
 
       // update flexible content
       TopicInfo.registration_clock++;
@@ -239,12 +239,12 @@ namespace eCAL
       }
 
       TopicInfo.topic_size           = static_cast<int>(topic_size);
-      TopicInfo.connections_local = static_cast<int>(connections_local);
+      TopicInfo.connections_local    = static_cast<int>(connections_local);
       TopicInfo.connections_external = static_cast<int>(connections_external);
-      TopicInfo.did             = did;
-      TopicInfo.dclock          = dclock;
-      TopicInfo.message_drops   = message_drops;
-      TopicInfo.dfreq           = dfreq;
+      TopicInfo.did                  = did;
+      TopicInfo.dclock               = dclock;
+      TopicInfo.message_drops        = message_drops;
+      TopicInfo.dfreq                = dfreq;
     }
 
     return(true);
@@ -281,7 +281,7 @@ namespace eCAL
     const int             process_state_severity       = sample_process_state.severity;
     const int             process_state_severity_level = sample_process_state.severity_level;
     const std::string&    process_state_info           = sample_process_state.info;
-    const int             process_time_sync_state          = sample_process.time_sync_state;
+    const int             process_time_sync_state      = sample_process.time_sync_state;
     const std::string&    process_tsync_mod_name       = sample_process.time_sync_module_name;
     const int             component_init_state         = sample_process.component_init_state;
     const std::string&    component_init_info          = sample_process.component_init_info;
@@ -298,24 +298,24 @@ namespace eCAL
     Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
-    ProcessInfo.host_name                = host_name;
+    ProcessInfo.host_name            = host_name;
     ProcessInfo.shm_transport_domain = shm_transport_domain;
-    ProcessInfo.process_name                = process_name;
-    ProcessInfo.unit_name                = unit_name;
-    ProcessInfo.process_id                  = process_id;
+    ProcessInfo.process_name         = process_name;
+    ProcessInfo.unit_name            = unit_name;
+    ProcessInfo.process_id           = process_id;
     ProcessInfo.pparam               = process_param;
 
     // update flexible content
     ProcessInfo.registration_clock++;
-    ProcessInfo.state_severity       = process_state_severity;
-    ProcessInfo.state_severity_level = process_state_severity_level;
-    ProcessInfo.state_info           = process_state_info;
-    ProcessInfo.time_sync_state          = process_time_sync_state;
-    ProcessInfo.time_sync_module_name       = process_tsync_mod_name;
-    ProcessInfo.component_init_state = component_init_state;
-    ProcessInfo.component_init_info  = component_init_info;
-    ProcessInfo.ecal_runtime_version = ecal_runtime_version;
-    ProcessInfo.config_file_path     = config_file_path;
+    ProcessInfo.state_severity        = process_state_severity;
+    ProcessInfo.state_severity_level  = process_state_severity_level;
+    ProcessInfo.state_info            = process_state_info;
+    ProcessInfo.time_sync_state       = process_time_sync_state;
+    ProcessInfo.time_sync_module_name = process_tsync_mod_name;
+    ProcessInfo.component_init_state  = component_init_state;
+    ProcessInfo.component_init_info   = component_init_info;
+    ProcessInfo.ecal_runtime_version  = ecal_runtime_version;
+    ProcessInfo.config_file_path      = config_file_path;
 
     return(true);
   }
@@ -358,14 +358,14 @@ namespace eCAL
     Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_map_key];
 
     // set static content
-    ServerInfo.host_name       = host_name;
-    ServerInfo.sname       = service_name;
-    ServerInfo.sid         = service_id;
-    ServerInfo.process_name       = process_name;
-    ServerInfo.unit_name       = unit_name;
-    ServerInfo.process_id         = process_id;
-    ServerInfo.tcp_port_v0 = tcp_port_v0;
-    ServerInfo.tcp_port_v1 = tcp_port_v1;
+    ServerInfo.host_name    = host_name;
+    ServerInfo.sname        = service_name;
+    ServerInfo.sid          = service_id;
+    ServerInfo.process_name = process_name;
+    ServerInfo.unit_name    = unit_name;
+    ServerInfo.process_id   = process_id;
+    ServerInfo.tcp_port_v0  = tcp_port_v0;
+    ServerInfo.tcp_port_v1  = tcp_port_v1;
 
     // update flexible content
     ServerInfo.registration_clock++;
@@ -421,11 +421,11 @@ namespace eCAL
     Monitoring::SClientMon& ClientInfo = (*m_clients_map.map)[client_map_key];
 
     // set static content
-    ClientInfo.host_name = host_name;
-    ClientInfo.sname = service_name;
-    ClientInfo.sid   = service_id;
+    ClientInfo.host_name    = host_name;
+    ClientInfo.sname        = service_name;
+    ClientInfo.sid          = service_id;
     ClientInfo.process_name = process_name;
-    ClientInfo.unit_name = unit_name;
+    ClientInfo.unit_name    = unit_name;
     ClientInfo.process_id   = process_id;
 
     // update flexible content

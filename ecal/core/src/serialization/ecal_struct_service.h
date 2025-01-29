@@ -47,7 +47,7 @@ namespace eCAL
     // ServiceHeader
     struct ServiceHeader
     {
-      std::string          host_name;           // Host name
+      std::string          host_name;       // Host name
       std::string          sname;           // Service name
       std::string          sid;             // Service id
       std::string          mname;           // Method name
@@ -157,14 +157,14 @@ namespace eCAL
     // TODO: this naming is wrong, it should be Server!!!
     struct Service
     {
-      int32_t                         registration_clock = 0;       // Registration clock
+      int32_t                         registration_clock = 0;  // Registration clock
       std::string                     process_name;            // Process name
-      std::string                     unit_name;            // Unit name
-      std::string                     sname;            // Service name
-      Util::CExpandingVector<Method>  methods;          // List of methods
-      uint32_t                        version = 0;      // Service protocol version
-      uint32_t                        tcp_port_v0 = 0;  // The TCP port used for that service (v0)
-      uint32_t                        tcp_port_v1 = 0;  // The TCP port used for that service (v1)
+      std::string                     unit_name;               // Unit name
+      std::string                     sname;                   // Service name
+      Util::CExpandingVector<Method>  methods;                 // List of methods
+      uint32_t                        version = 0;             // Service protocol version
+      uint32_t                        tcp_port_v0 = 0;         // The TCP port used for that service (v0)
+      uint32_t                        tcp_port_v1 = 0;         // The TCP port used for that service (v1)
 
       bool operator==(const Service& other) const {
         return registration_clock == other.registration_clock &&
@@ -193,12 +193,12 @@ namespace eCAL
     // Client
     struct Client
     {
-      int32_t                         registration_clock = 0;       // Registration clock
+      int32_t                         registration_clock = 0;  // Registration clock
       std::string                     process_name;            // Process name
-      std::string                     unit_name;            // Unit name
-      std::string                     sname;            // Service name
-      Util::CExpandingVector<Method>  methods;          // List of methods
-      uint32_t                        version = 0;      // Client protocol version
+      std::string                     unit_name;               // Unit name
+      std::string                     sname;                   // Service name
+      Util::CExpandingVector<Method>  methods;                 // List of methods
+      uint32_t                        version = 0;             // Client protocol version
 
       bool operator==(const Client& other) const {
         return registration_clock == other.registration_clock &&

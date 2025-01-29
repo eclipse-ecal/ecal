@@ -62,7 +62,7 @@ int main()
       monitoring.ParseFromString(monitoring_s);
 
       // collect host infos
-      std::cout << "-------- HOSTS ----------" << std::endl;
+      std::cout << "-------- HOSTS ----------" << "\n";
 
       // for all hosts
       for (const auto& host : monitoring.hosts())
@@ -71,9 +71,9 @@ int main()
         if (!g_host_filt_string.empty() && (g_host_filt_string != host.name())) continue;
 
         // print host details
-        std::cout << "host.name       : " << host.name()      << std::endl;   // host name
-        std::cout << "os.name         : " << host.os().name() << std::endl;   // operating system details
-        std::cout << std::endl;
+        std::cout << "host.name       : " << host.name()      << "\n";   // host name
+        std::cout << "os.name         : " << host.os().name() << "\n";   // operating system details
+        std::cout << "\n";
       }
     }
 
@@ -85,7 +85,7 @@ int main()
       monitoring.ParseFromString(monitoring_s);
 
       // collect process infos
-      std::cout << "------- PROCESSES -------" << std::endl;
+      std::cout << "------- PROCESSES -------" << "\n";
 
       // for all processes
       for (const auto& process : monitoring.processes())
@@ -94,16 +94,16 @@ int main()
         if (!g_procs_filt_string.empty() && (g_procs_filt_string != process.unit_name())) continue;
 
         // print process details
-        std::cout << "host_name       : " << process.host_name() << std::endl;   // host name
-        std::cout << "process_id             : " << process.process_id() << std::endl;   // process id
-        std::cout << "process_name           : " << process.process_name() << std::endl;   // process name
-        std::cout << "unit_name           : " << process.unit_name() << std::endl;   // unit name
-        std::cout << "pparam          : " << process.pparam() << std::endl;   // process parameter
-        std::cout << "severity        : " << process.state().severity() << std::endl;   // process state severity
-        std::cout << "info            : " << process.state().info() << std::endl;   // process state info
-        std::cout << "tsync state     : " << process.time_sync_state() << std::endl;   // time sync state
-        std::cout << "tsync mod name  : " << process.time_sync_module_name() << std::endl;   // time sync mod name
-        std::cout << std::endl;
+        std::cout << "host name       : " << process.host_name()             << "\n";   // host name
+        std::cout << "process id      : " << process.process_id()            << "\n";   // process id
+        std::cout << "process name    : " << process.process_name()          << "\n";   // process name
+        std::cout << "unit name       : " << process.unit_name()             << "\n";   // unit name
+        std::cout << "pparam          : " << process.pparam()                << "\n";   // process parameter
+        std::cout << "severity        : " << process.state().severity()      << "\n";   // process state severity
+        std::cout << "info            : " << process.state().info()          << "\n";   // process state info
+        std::cout << "tsync state     : " << process.time_sync_state()       << "\n";   // time sync state
+        std::cout << "tsync mod name  : " << process.time_sync_module_name() << "\n";   // time sync mod name
+        std::cout << "\n";
       }
     }
 
@@ -115,7 +115,7 @@ int main()
       monitoring.ParseFromString(monitoring_s);
 
       // collect process infos
-      std::cout << "------- SERVICES -------" << std::endl;
+      std::cout << "------- SERVICES -------" << "\n";
 
       // for all processes
       for (const auto& service : monitoring.services())
@@ -124,23 +124,23 @@ int main()
         if (!g_services_filt_string.empty() && (g_services_filt_string != service.sname())) continue;
 
         // print process details
-        std::cout << "host_name       : " << service.host_name() << std::endl;   // host name
-        std::cout << "sname           : " << service.sname() << std::endl;   // service name
-        std::cout << "process_id             : " << service.process_id() << std::endl;   // process id
-        std::cout << std::endl;
+        std::cout << "host name       : " << service.host_name()  << "\n";   // host name
+        std::cout << "sname           : " << service.sname()      << "\n";   // service name
+        std::cout << "process id      : " << service.process_id() << "\n";   // process id
+        std::cout << "\n";
 
         for (int i = 0; i < service.methods_size(); ++i)
         {
           auto method = service.methods(i);
-          std::cout << "  mname           : " << method.mname() << std::endl;   // method name
-          std::cout << "  req_type        : " << method.req_type() << std::endl;   // request type
-          //std::cout << "  req_desc        : " << method.req_desc()   << std::endl;   // request descriptor
-          std::cout << "  resp_type       : " << method.resp_type() << std::endl;   // response type
-          //std::cout << "  resp_desc       : " << method.resp_desc()  << std::endl;   // response descriptor
-          std::cout << "  call_count      : " << method.call_count() << std::endl;   // call count
-          std::cout << std::endl;
+          std::cout << "  mname           : " << method.mname()      << "\n";   // method name
+          std::cout << "  req_type        : " << method.req_type()   << "\n";   // request type
+          //std::cout << "  req_desc        : " << method.req_desc()   << "\n";   // request descriptor
+          std::cout << "  resp_type       : " << method.resp_type()  << "\n";   // response type
+          //std::cout << "  resp_desc       : " << method.resp_desc()  << "\n";   // response descriptor
+          std::cout << "  call_count      : " << method.call_count() << "\n";   // call count
+          std::cout << "\n";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
       }
     }
 
@@ -152,7 +152,7 @@ int main()
       monitoring.ParseFromString(monitoring_s);
 
       // collect topic infos
-      std::cout << "-------- TOPICS ---------" << std::endl;
+      std::cout << "-------- TOPICS ---------" << "\n";
 
       // for all topics
       for (const auto& topic : monitoring.topics())
@@ -161,17 +161,17 @@ int main()
         if (!g_topics_filt_string.empty() && (g_topics_filt_string != topic.topic_name())) continue;
 
         // print topic details
-        std::cout << "registration_clock          : " << topic.registration_clock() << std::endl;   // registration clock
-        std::cout << "host_name       : " << topic.host_name() << std::endl;   // host name
-        std::cout << "process_id             : " << topic.process_id() << std::endl;   // process id
-        std::cout << "process_name           : " << topic.process_name() << std::endl;   // process name
-        std::cout << "unit_name           : " << topic.unit_name() << std::endl;   // unit name
-        std::cout << "topic_id             : " << topic.topic_id() << std::endl;   // topic id
-        std::cout << "topic_name           : " << topic.topic_name() << std::endl;   // topic name
-        std::cout << "direction       : " << topic.direction() << std::endl;   // direction (publisher, subscriber)
-        std::cout << "ttype name      : " << topic.datatype_information().name() << std::endl;   // topic type name
-        std::cout << "ttype encoding  : " << topic.datatype_information().encoding() << std::endl;   // topic type encoding
-        //std::cout << "tdesc           : " << topic.datatype_information().descriptor_information()     << std::endl;   // topic description
+        std::cout << "registration clock : " << topic.registration_clock()              << "\n";   // registration clock
+        std::cout << "host name          : " << topic.host_name()                       << "\n";   // host name
+        std::cout << "process id         : " << topic.process_id()                      << "\n";   // process id
+        std::cout << "process name       : " << topic.process_name()                    << "\n";   // process name
+        std::cout << "unit_name          : " << topic.unit_name()                       << "\n";   // unit name
+        std::cout << "topic id           : " << topic.topic_id()                        << "\n";   // topic id
+        std::cout << "topic name         : " << topic.topic_name()                      << "\n";   // topic name
+        std::cout << "direction          : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
+        std::cout << "ttype name         : " << topic.datatype_information().name()     << "\n";   // topic type name
+        std::cout << "ttype encoding     : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
+        //std::cout << "tdesc           : " << topic.datatype_information().descriptor_information()     << "\n";   // topic description
         for (const auto& layer : topic.transport_layer())
         {
           std::string layer_type("unknown");
@@ -195,20 +195,20 @@ int main()
           default:
             break;
           }
-          std::cout << "  transport_layer.type    : " << layer_type << std::endl;             // transport layers type
-          std::cout << "  transport_layer.active  : " << layer.active() << std::endl;         // transport layers confirmation
-        }
-        std::cout << "topic_size           : " << topic.topic_size() << std::endl;             // topic size
+          std::cout << "  transport_layer.type    : " << layer_type                   << "\n";         // transport layers type
+          std::cout << "  transport_layer.active  : " << layer.active()               << "\n";         // transport layers confirmation
+        }           
+        std::cout << "topic_size                  : " << topic.topic_size()           << "\n";             // topic size
 
-        std::cout << "connections_local : " << topic.connections_local() << std::endl;   // number of local connected entities
-        std::cout << "connections_external : " << topic.connections_external() << std::endl;   // number of external connected entities
-        std::cout << "message_drops   : " << topic.message_drops() << std::endl;     // dropped messages
+        std::cout << "connections_local           : " << topic.connections_local()    << "\n";   // number of local connected entities
+        std::cout << "connections_external        : " << topic.connections_external() << "\n";   // number of external connected entities
+        std::cout << "message_drops               : " << topic.message_drops()        << "\n";     // dropped messages
 
-        std::cout << "did             : " << topic.did() << std::endl;               // data send id (publisher setid)
-        std::cout << "dclock          : " << topic.dclock() << std::endl;            // data clock (send / receive action)
-        std::cout << "dfreq           : " << topic.dfreq() << std::endl;             // data frequency (send / receive samples per second * 1000)
+        std::cout << "did                         : " << topic.did()                  << "\n";               // data send id (publisher setid)
+        std::cout << "dclock                      : " << topic.dclock()               << "\n";            // data clock (send / receive action)
+        std::cout << "dfreq                       : " << topic.dfreq()                << "\n";             // data frequency (send / receive samples per second * 1000)
 
-        std::cout << std::endl;
+        std::cout << "\n";
       }
     }
 

@@ -35,8 +35,8 @@ namespace eCAL
       }
 
       // compare topic info
-      if (sample1.topic_info.host_name != sample2.topic_info.host_name ||
-          sample1.topic_info.process_id   != sample2.topic_info.process_id ||
+      if (sample1.topic_info.host_name  != sample2.topic_info.host_name ||
+          sample1.topic_info.process_id != sample2.topic_info.process_id ||
           sample1.topic_info.topic_id   != sample2.topic_info.topic_id ||
           sample1.topic_info.topic_name != sample2.topic_info.topic_name) {
         return false;

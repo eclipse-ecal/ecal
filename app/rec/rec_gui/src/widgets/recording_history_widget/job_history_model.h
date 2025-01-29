@@ -108,7 +108,7 @@ private:
   {
     { Columns::JOB,                    "Job" } ,
     { Columns::ID,                     "ID" } ,
-    { Columns::PROCESS_ID,                    "PROCESS_ID" } ,
+    { Columns::PROCESS_ID,             "Process Id" } ,
     { Columns::STILL_ONLINE,           "Still online" } ,
     { Columns::STATUS,                 "Status" } ,
     { Columns::HOSTNAME,               "Host" } ,

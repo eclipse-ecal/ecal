@@ -89,7 +89,7 @@ private:
   {
     { Columns::TIME,         "Time" },
     { Columns::HOST_NAME,    "Host" },
-    { Columns::PROCESS_ID,          "PROCESS_ID" },
+    { Columns::PROCESS_ID,   "PROCESS_ID" },
     { Columns::PROCESS_NAME, "Process" },
     { Columns::PROCESS_PATH, "Process Path" },
     { Columns::LOG_LEVEL,    "Level" },

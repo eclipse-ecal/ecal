@@ -33,9 +33,9 @@ namespace
   eCAL::Registration::Sample CreatePublisher(const std::string& topic_name_, std::uint64_t topic_id_)
   {
     eCAL::Registration::Sample reg_sample;
-    reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
-    reg_sample.identifier.entity_id       = topic_id_;
-    reg_sample.topic.topic_name                = topic_name_;
+    reg_sample.cmd_type                              = eCAL::bct_reg_publisher;
+    reg_sample.identifier.entity_id                  = topic_id_;
+    reg_sample.topic.topic_name                      = topic_name_;
     reg_sample.topic.datatype_information.name       = topic_name_ + "-datatype_information.name";
     reg_sample.topic.datatype_information.encoding   = topic_name_ + "-datatype_information.encoding";
     reg_sample.topic.datatype_information.descriptor = topic_name_ + "-datatype_information.descriptor";
@@ -52,9 +52,9 @@ namespace
   eCAL::Registration::Sample CreateSubscriber(const std::string& topic_name_, std::uint64_t topic_id_)
   {
     eCAL::Registration::Sample reg_sample;
-    reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
-    reg_sample.identifier.entity_id       = topic_id_;
-    reg_sample.topic.topic_name                = topic_name_;
+    reg_sample.cmd_type                              = eCAL::bct_reg_subscriber;
+    reg_sample.identifier.entity_id                  = topic_id_;
+    reg_sample.topic.topic_name                      = topic_name_;
     reg_sample.topic.datatype_information.name       = topic_name_ + "-datatype_information.name";
     reg_sample.topic.datatype_information.encoding   = topic_name_ + "-datatype_information.encoding";
     reg_sample.topic.datatype_information.descriptor = topic_name_ + "-datatype_information.descriptor";

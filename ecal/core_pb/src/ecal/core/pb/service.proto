@@ -72,13 +72,13 @@ message Method                               // method
 message Service                              // service
 {
   int32                registration_clock =  1;  // registration clock
-  string               host_name      =  2;  // host name
-  string               process_name          =  3;  // process name
+  string               host_name          =  2;  // host name
+  string               process_name       =  3;  // process name
   string               unit_name          =  4;  // unit name
-  int32                process_id            =  5;  // process id
-  string               sname          =  6;  // service name
-  string               sid            =  9;  // service id
-  repeated Method      methods        =  8;  // list of methods
+  int32                process_id         =  5;  // process id
+  string               sname              =  6;  // service name
+  string               sid                =  9;  // service id
+  repeated Method      methods            =  8;  // list of methods
 
   // transport specific parameter (for internal use)
   uint32               version        = 10;  // service protocol version
@@ -86,17 +86,17 @@ message Service                              // service
   uint32               tcp_port_v1    = 11;  // the tcp port used for that service
 }
 
-message Client                               // client
+message Client                                   // client
 {
   int32                registration_clock =  1;  // registration clock
-  string               host_name      =  2;  // host name
-  string               process_name          =  3;  // process name
+  string               host_name          =  2;  // host name
+  string               process_name       =  3;  // process name
   string               unit_name          =  4;  // unit name
-  int32                process_id            =  5;  // process id
-  string               sname          =  6;  // service name
-  string               sid            =  7;  // service id
-  repeated Method      methods        =  9;  // list of methods
+  int32                process_id         =  5;  // process id
+  string               sname              =  6;  // service name
+  string               sid                =  7;  // service id
+  repeated Method      methods            =  9;  // list of methods
 
   // transport specific parameter (for internal use)
-  uint32               version        =  8;  // client protocol version
+  uint32               version            =  8;  // client protocol version
 }

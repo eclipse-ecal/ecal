@@ -71,7 +71,7 @@ namespace eCAL
 
       void FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   StopTaskParameters&                stop_task_param)
       {
-        stop_task_param.process_id           = stop_task_param_pb.process_id();
+        stop_task_param.process_id    = stop_task_param_pb.process_id();
         stop_task_param.task          = FromProtobuf(stop_task_param_pb.task());
         stop_task_param.ecal_shutdown = stop_task_param_pb.ecal_shutdown();
       }
@@ -239,7 +239,7 @@ namespace eCAL
 
       void ToProtobuf(eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   const StopTaskParameters&               stop_task_param)
       {
-        stop_task_param_pb.set_process_id          (stop_task_param.process_id);
+        stop_task_param_pb.set_process_id   (stop_task_param.process_id);
         ToProtobuf                          (*stop_task_param_pb.mutable_task(), stop_task_param.task);
         stop_task_param_pb.set_ecal_shutdown(stop_task_param.ecal_shutdown);
       }

@@ -43,7 +43,7 @@ public:
     HOSTNAME,                   //    State
     ADDON_ID,                   //    State
     ADDON_EXECUTABLE_PATH,      //    State
-    PROCESS_ID,                        //    State
+    PROCESS_ID,                 //    State
     HOST_FILTER,                // Config
     TIMESTAMP,                  //    State, Time (updateTimeWarning depends on it!)
     TIME_ERROR,                 //    State, Time (updateTimeWarning depends on it!)
@@ -180,7 +180,7 @@ private:
     { Columns::HOSTNAME,                "Recorder" } ,
     { Columns::ADDON_ID,                "Addon ID" } ,
     { Columns::ADDON_EXECUTABLE_PATH,   "Addon Executable" } ,
-    { Columns::PROCESS_ID,                     "PROCESS_ID" } ,
+    { Columns::PROCESS_ID,              "Process Id" } ,
     { Columns::HOST_FILTER,             "Hosts" } ,
     { Columns::INFO,                    "Info" } ,
     { Columns::STATE,                   "State" } ,

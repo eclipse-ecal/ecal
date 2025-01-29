@@ -40,9 +40,9 @@ namespace eCAL
     struct TopicInfo
     {
       std::string                         host_name;                        // host name
-      uint64_t                            topic_id;                          // topic id
-      std::string                         topic_name;                        // topic name
-      int32_t                             process_id = 0;                      // process id
+      uint64_t                            topic_id;                         // topic id
+      std::string                         topic_name;                       // topic name
+      int32_t                             process_id = 0;                   // process id
     };
 
     // Topic content payload
