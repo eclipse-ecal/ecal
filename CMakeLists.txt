@@ -152,7 +152,6 @@ endif()
 
 
 
-
 # there is a CMake issue with testing threading availibility via TEST_RUN
 if(${CMAKE_CROSSCOMPILING})
   set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
