@@ -195,18 +195,18 @@ int main()
           default:
             break;
           }
-          std::cout << "  transport_layer.type    : " << layer_type                   << "\n";         // transport layers type
-          std::cout << "  transport_layer.active  : " << layer.active()               << "\n";         // transport layers confirmation
+          std::cout << "  transport_layer.type    : " << layer_type                   << "\n";   // transport layers type
+          std::cout << "  transport_layer.active  : " << layer.active()               << "\n";   // transport layers confirmation
         }           
-        std::cout << "topic_size                  : " << topic.topic_size()           << "\n";             // topic size
+        std::cout << "topic_size                  : " << topic.topic_size()           << "\n";   // topic size
 
         std::cout << "connections_local           : " << topic.connections_local()    << "\n";   // number of local connected entities
         std::cout << "connections_external        : " << topic.connections_external() << "\n";   // number of external connected entities
-        std::cout << "message_drops               : " << topic.message_drops()        << "\n";     // dropped messages
+        std::cout << "message_drops               : " << topic.message_drops()        << "\n";   // dropped messages
 
-        std::cout << "did                         : " << topic.did()                  << "\n";               // data send id (publisher setid)
-        std::cout << "dclock                      : " << topic.dclock()               << "\n";            // data clock (send / receive action)
-        std::cout << "dfreq                       : " << topic.dfreq()                << "\n";             // data frequency (send / receive samples per second * 1000)
+        std::cout << "data id                     : " << topic.data_id()              << "\n";   // data send id (publisher setid)
+        std::cout << "dclock                      : " << topic.dclock()               << "\n";   // data clock (send / receive action)
+        std::cout << "dfreq                       : " << topic.dfreq()                << "\n";   // data frequency (send / receive samples per second * 1000)
 
         std::cout << "\n";
       }

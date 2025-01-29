@@ -27,11 +27,11 @@ typedef enum _eCAL_pb_eProcessSeverityLevel {
     eCAL_pb_eProcessSeverityLevel_proc_sev_level5 = 5 /* severity level 5 */
 } eCAL_pb_eProcessSeverityLevel;
 
-typedef enum _eCAL_pb_eTSyncState {
-    eCAL_pb_eTSyncState_tsync_none = 0, /* not synchronized */
-    eCAL_pb_eTSyncState_tsync_realtime = 1, /* real time sync mode */
-    eCAL_pb_eTSyncState_tsync_replay = 2 /* replay time sync mode */
-} eCAL_pb_eTSyncState;
+typedef enum _eCAL_pb_eTimeSyncState {
+    eCAL_pb_eTimeSyncState_tsync_none = 0, /* not synchronized */
+    eCAL_pb_eTimeSyncState_tsync_realtime = 1, /* real time sync mode */
+    eCAL_pb_eTimeSyncState_tsync_replay = 2 /* replay time sync mode */
+} eCAL_pb_eTimeSyncState;
 
 /* Struct definitions */
 typedef struct _eCAL_pb_ProcessState {
@@ -52,7 +52,7 @@ typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported 
  11 = data read bytes per sec */
     bool has_state;
     eCAL_pb_ProcessState state; /* process state info */
-    eCAL_pb_eTSyncState time_sync_state; /* time synchronization state */
+    eCAL_pb_eTimeSyncState time_sync_state; /* time synchronization state */
     pb_callback_t time_sync_module_name; /* time synchronization module name */
     int32_t component_init_state; /* eCAL component initialization state (eCAL::Initialize(..)) */
     pb_callback_t component_init_info; /* like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc) */
@@ -75,21 +75,21 @@ extern "C" {
 #define _eCAL_pb_eProcessSeverityLevel_MAX eCAL_pb_eProcessSeverityLevel_proc_sev_level5
 #define _eCAL_pb_eProcessSeverityLevel_ARRAYSIZE ((eCAL_pb_eProcessSeverityLevel)(eCAL_pb_eProcessSeverityLevel_proc_sev_level5+1))
 
-#define _eCAL_pb_eTSyncState_MIN eCAL_pb_eTSyncState_tsync_none
-#define _eCAL_pb_eTSyncState_MAX eCAL_pb_eTSyncState_tsync_replay
-#define _eCAL_pb_eTSyncState_ARRAYSIZE ((eCAL_pb_eTSyncState)(eCAL_pb_eTSyncState_tsync_replay+1))
+#define _eCAL_pb_eTimeSyncState_MIN eCAL_pb_eTimeSyncState_tsync_none
+#define _eCAL_pb_eTimeSyncState_MAX eCAL_pb_eTimeSyncState_tsync_replay
+#define _eCAL_pb_eTimeSyncState_ARRAYSIZE ((eCAL_pb_eTimeSyncState)(eCAL_pb_eTimeSyncState_tsync_replay+1))
 
 #define eCAL_pb_ProcessState_severity_ENUMTYPE eCAL_pb_eProcessSeverity
 #define eCAL_pb_ProcessState_severity_level_ENUMTYPE eCAL_pb_eProcessSeverityLevel
 
-#define eCAL_pb_Process_time_sync_state_ENUMTYPE eCAL_pb_eTSyncState
+#define eCAL_pb_Process_time_sync_state_ENUMTYPE eCAL_pb_eTimeSyncState
 
 
 /* Initializer values for message structs */
 #define eCAL_pb_ProcessState_init_default        {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTimeSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_ProcessState_init_zero           {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTimeSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_ProcessState_severity_tag        1

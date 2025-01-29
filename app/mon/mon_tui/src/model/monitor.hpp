@@ -213,7 +213,7 @@ class MonitorModel
       topic.local_connections_count = t.connections_local();
       topic.external_connections_count = t.connections_external();
       topic.message_drops = t.message_drops();
-      topic.data_id = t.did();
+      topic.data_id = t.data_id();
       topic.data_clock = t.dclock();
       topic.data_frequency = t.dfreq();
       for(auto &attr: *t.mutable_attr())

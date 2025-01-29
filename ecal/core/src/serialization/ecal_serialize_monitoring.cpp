@@ -66,7 +66,7 @@ namespace
     // state.info
     eCAL::nanopb::encode_string(pb_process_.state.info, process_.state_info);
     // process.time_sync_state
-    pb_process_.time_sync_state = static_cast<eCAL_pb_eTSyncState>(process_.time_sync_state);
+    pb_process_.time_sync_state = static_cast<eCAL_pb_eTimeSyncState>(process_.time_sync_state);
     // time_sync_module_name
     eCAL::nanopb::encode_string(pb_process_.time_sync_module_name, process_.time_sync_module_name);
     // component_init_state
@@ -181,8 +181,8 @@ namespace
     pb_topic_.connections_external = topic_.connections_external;
     // message_drops
     pb_topic_.message_drops = topic_.message_drops;
-    // did
-    pb_topic_.did = topic_.did;
+    // data_id
+    pb_topic_.data_id = topic_.data_id;
     // dclock
     pb_topic_.dclock = topic_.dclock;
     // dfreq
@@ -649,8 +649,8 @@ namespace
     topic_.connections_external = pb_topic_.connections_external;
     // message_drops
     topic_.message_drops = pb_topic_.message_drops;
-    // did
-    topic_.did = pb_topic_.did;
+    // data_id
+    topic_.data_id = pb_topic_.data_id;
     // dclock
     topic_.dclock = pb_topic_.dclock;
     // dfreq

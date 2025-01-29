@@ -49,7 +49,7 @@ message Topic                                      // eCAL topic
   int32               connections_external  = 17;  // number of external connected entities
   int32               message_drops         = 18;  // dropped messages
                       
-  int64               did                   = 19;  // data send id (publisher setid)
+  int64               data_id               = 19;  // data send id (publisher setid)
   int64               dclock                = 20;  // data clock (send / receive action)
   int32               dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
 

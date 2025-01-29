@@ -274,7 +274,7 @@ namespace eCAL
       int32_t                             connections_external = 0;     // number of external connected entities
       int32_t                             message_drops   = 0;          // dropped messages
 
-      int64_t                             did    = 0;                   // data send id (publisher setid)
+      int64_t                             data_id    = 0;               // data send id (publisher setid)
       int64_t                             dclock = 0;                   // data clock (send / receive action)
       int32_t                             dfreq  = 0;                   // data frequency (send / receive registrations per second) [mHz]
 
@@ -293,7 +293,7 @@ namespace eCAL
           connections_local == other.connections_local &&
           connections_external == other.connections_external &&
           message_drops == other.message_drops &&
-          did == other.did &&
+          data_id == other.data_id &&
           dclock == other.dclock &&
           dfreq == other.dfreq &&
           attr == other.attr;
@@ -316,7 +316,7 @@ namespace eCAL
         connections_external = 0;
         message_drops = 0;
 
-        did = 0;
+        data_id = 0;
         dclock = 0;
         dfreq = 0;
 

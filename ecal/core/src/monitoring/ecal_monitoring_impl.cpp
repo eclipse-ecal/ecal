@@ -154,7 +154,7 @@ namespace eCAL
     }
     const int32_t      connections_local = sample_topic.connections_local;
     const int32_t      connections_external = sample_topic.connections_external;
-    const int64_t      did = sample_topic.did;
+    const int64_t      data_id = sample_topic.data_id;
     const int64_t      dclock = sample_topic.dclock;
     const int32_t      message_drops = sample_topic.message_drops;
     const int32_t      dfreq = sample_topic.dfreq;
@@ -241,7 +241,7 @@ namespace eCAL
       TopicInfo.topic_size           = static_cast<int>(topic_size);
       TopicInfo.connections_local    = static_cast<int>(connections_local);
       TopicInfo.connections_external = static_cast<int>(connections_external);
-      TopicInfo.did                  = did;
+      TopicInfo.data_id              = data_id;
       TopicInfo.dclock               = dclock;
       TopicInfo.message_drops        = message_drops;
       TopicInfo.dfreq                = dfreq;
