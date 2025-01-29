@@ -28,7 +28,7 @@
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
 
-#include <ecal_c/service_info.h>
+#include <ecal_c/service/service_info.h>
 #include <ecal_c/callback.h>
 
 #ifdef __cplusplus

@@ -24,7 +24,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/v5/ecal_server.h>
-#include <ecal_c/server.h>
+#include <ecal_c/service/server.h>
 
 #include "common.h"
 

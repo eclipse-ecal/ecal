@@ -24,7 +24,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/v5/ecal_publisher.h>
-#include <ecal_c/publisher.h>
+#include <ecal_c/pubsub/publisher.h>
 
 #include "common.h"
 

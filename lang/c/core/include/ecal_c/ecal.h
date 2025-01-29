@@ -30,19 +30,19 @@
 #endif
 
 // all ecal c includes
-#include <ecal_c/export.h>
-#include <ecal_c/types.h>
-#include <ecal_c/client.h>
+#include <ecal_c/pubsub/publisher.h>
+#include <ecal_c/pubsub/subscriber.h>
+#include <ecal_c/service/client.h>
+#include <ecal_c/service/server.h>
 #include <ecal_c/core.h>
+#include <ecal_c/export.h>
 #include <ecal_c/log.h>
 #include <ecal_c/monitoring.h>
 #include <ecal_c/process.h>
-#include <ecal_c/publisher.h>
-#include <ecal_c/server.h>
-#include <ecal_c/subscriber.h>
 #include <ecal_c/time.h>
 #include <ecal_c/timer.h>
 #include <ecal_c/tlayer.h>
+#include <ecal_c/types.h>
 #include <ecal_c/util.h>
 
 #endif /* ecal_h_included */

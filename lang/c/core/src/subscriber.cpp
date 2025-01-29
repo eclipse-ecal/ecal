@@ -24,7 +24,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/v5/ecal_subscriber.h>
-#include <ecal_c/subscriber.h>
+#include <ecal_c/pubsub/subscriber.h>
 
 #include "common.h"
 
