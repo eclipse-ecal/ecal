@@ -57,8 +57,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.process_name, registration_process_.process_name);
     // unit_name
     eCAL::nanopb::encode_string(pb_process_.unit_name, registration_process_.unit_name);
-    // pparam
-    eCAL::nanopb::encode_string(pb_process_.pparam, registration_process_.pparam);
+    // process_parameter
+    eCAL::nanopb::encode_string(pb_process_.process_parameter, registration_process_.process_parameter);
 
     // state
     pb_process_.has_state = true;
@@ -322,8 +322,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.process.process_name, registration_.process.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_sample_.process.unit_name, registration_.process.unit_name);
-    // pparam
-    eCAL::nanopb::decode_string(pb_sample_.process.pparam, registration_.process.pparam);
+    // process_parameter
+    eCAL::nanopb::decode_string(pb_sample_.process.process_parameter, registration_.process.process_parameter);
     // state.info
     eCAL::nanopb::decode_string(pb_sample_.process.state.info, registration_.process.state.info);
     // time_sync_module_name

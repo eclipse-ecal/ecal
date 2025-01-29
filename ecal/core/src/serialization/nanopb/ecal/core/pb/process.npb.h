@@ -47,7 +47,7 @@ typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported 
     int32_t process_id; /* process id */
     pb_callback_t process_name; /* process name */
     pb_callback_t unit_name; /* unit name */
-    pb_callback_t pparam; /* process parameter */
+    pb_callback_t process_parameter; /* process parameter */
     /* 10 = data write bytes per sec
  11 = data read bytes per sec */
     bool has_state;
@@ -100,7 +100,7 @@ extern "C" {
 #define eCAL_pb_Process_process_id_tag           3
 #define eCAL_pb_Process_process_name_tag         4
 #define eCAL_pb_Process_unit_name_tag            5
-#define eCAL_pb_Process_pparam_tag               6
+#define eCAL_pb_Process_process_parameter_tag    6
 #define eCAL_pb_Process_state_tag                12
 #define eCAL_pb_Process_time_sync_state_tag      13
 #define eCAL_pb_Process_time_sync_module_name_tag 14
@@ -124,7 +124,7 @@ X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, STATIC,   SINGULAR, INT32,    process_id,        3) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
-X(a, CALLBACK, SINGULAR, STRING,   pparam,            6) \
+X(a, CALLBACK, SINGULAR, STRING,   process_parameter,   6) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  state,            12) \
 X(a, STATIC,   SINGULAR, UENUM,    time_sync_state,  13) \
 X(a, CALLBACK, SINGULAR, STRING,   time_sync_module_name,  14) \

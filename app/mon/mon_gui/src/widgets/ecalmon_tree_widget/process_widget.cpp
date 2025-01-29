@@ -113,7 +113,7 @@ void ProcessWidget::autoSizeColumns()
   example_process_pb.set_process_id(999999);
   example_process_pb.set_process_name("");
   example_process_pb.set_unit_name("eCALProcessUnitNameABCDE___");
-  example_process_pb.set_pparam("");
+  example_process_pb.set_process_parameter("");
 
   example_process_pb.mutable_state()->set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
   example_process_pb.mutable_state()->set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);

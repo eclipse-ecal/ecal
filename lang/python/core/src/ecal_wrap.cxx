@@ -1072,7 +1072,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", process.unit_name.c_str());
         PyDict_SetItemString(processDict, "uname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", process.pparam.c_str());
+        val = Py_BuildValue("s", process.process_parameter.c_str());
         PyDict_SetItemString(processDict, "pparam", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", process.state_severity);

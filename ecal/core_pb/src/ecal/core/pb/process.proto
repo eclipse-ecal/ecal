@@ -65,7 +65,7 @@ message Process                                           // process
   int32                     process_id            =  3;    // process id
   string                    process_name          =  4;    // process name
   string                    unit_name             =  5;    // unit name
-  string                    pparam                =  6;    // process parameter
+  string                    process_parameter     =  6;    // process parameter
                                                            // 10 = data write bytes per sec
                                                            // 11 = data read bytes per sec
   ProcessState              state                 = 12;    // process state info

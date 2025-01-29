@@ -275,7 +275,7 @@ namespace eCAL
     const std::string&    shm_transport_domain         = sample_process.shm_transport_domain;
     const std::string&    process_name                 = sample_process.process_name;
     const int             process_id                   = sample_.identifier.process_id;
-    const std::string&    process_param                = sample_process.pparam;
+    const std::string&    process_param                = sample_process.process_parameter;
     const std::string&    unit_name                    = sample_process.unit_name;
     const auto&           sample_process_state         = sample_process.state;
     const int             process_state_severity       = sample_process_state.severity;
@@ -303,7 +303,7 @@ namespace eCAL
     ProcessInfo.process_name         = process_name;
     ProcessInfo.unit_name            = unit_name;
     ProcessInfo.process_id           = process_id;
-    ProcessInfo.pparam               = process_param;
+    ProcessInfo.process_parameter               = process_param;
 
     // update flexible content
     ProcessInfo.registration_clock++;

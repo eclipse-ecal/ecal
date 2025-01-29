@@ -276,7 +276,7 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
   {
     std::string monitor_process_name = EcalUtils::String::Trim(monitor_process.unit_name());
     std::string monitor_process_path = EcalUtils::String::Trim(monitor_process.process_name());
-    std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.pparam());
+    std::string monitor_process_args = EcalUtils::String::Trim(monitor_process.process_parameter());
     std::string monitor_process_host = EcalUtils::String::Trim(monitor_process.host_name());
     int process_id                          = monitor_process.process_id();
     TaskState task_state             = eCAL::sys::proto_helpers::FromProtobuf(monitor_process.state());
@@ -293,7 +293,7 @@ std::list<std::shared_ptr<EcalSysTask>> EcalSysMonitor::GetTasksFromCloud()
     std::string algo_path;
     std::string algo_params;
 
-    std::vector<std::string> algo_cmdline_vector = EcalUtils::CommandLine::splitCommandLine(monitor_process.pparam(), 2); // Split command line in algo + arguments
+    std::vector<std::string> algo_cmdline_vector = EcalUtils::CommandLine::splitCommandLine(monitor_process.process_parameter(), 2); // Split command line in algo + arguments
     if(algo_cmdline_vector.size() == 0)
     {
       algo_path = monitor_process_path;

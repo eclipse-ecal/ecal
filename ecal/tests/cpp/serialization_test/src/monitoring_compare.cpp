@@ -43,7 +43,7 @@ namespace eCAL
           monitoring1.processes[i].process_id != monitoring2.processes[i].process_id ||
           monitoring1.processes[i].process_name != monitoring2.processes[i].process_name ||
           monitoring1.processes[i].unit_name != monitoring2.processes[i].unit_name ||
-          monitoring1.processes[i].pparam != monitoring2.processes[i].pparam ||
+          monitoring1.processes[i].process_parameter != monitoring2.processes[i].process_parameter ||
           monitoring1.processes[i].state_severity != monitoring2.processes[i].state_severity ||
           monitoring1.processes[i].state_severity_level != monitoring2.processes[i].state_severity_level ||
           monitoring1.processes[i].state_info != monitoring2.processes[i].state_info ||

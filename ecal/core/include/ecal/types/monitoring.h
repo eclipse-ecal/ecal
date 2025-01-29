@@ -104,7 +104,7 @@ namespace eCAL
       int32_t        process_id{0};                                //!< process id
       std::string    process_name;                                 //!< process name
       std::string    unit_name;                                    //!< unit name
-      std::string    pparam;                                       //!< process parameter
+      std::string    process_parameter;                            //!< process parameter
 
       int32_t        state_severity{0};                         //!< process state info severity:
                                                                 //!<   proc_sev_unknown       = 0 (condition unknown)
@@ -151,7 +151,7 @@ namespace eCAL
       int32_t                  process_id{0};                   //<! process id
 
       std::string              sname;                           //<! service name
-      EntityIdT  sid{0};                                        //<! service id
+      EntityIdT                sid{0};                          //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service

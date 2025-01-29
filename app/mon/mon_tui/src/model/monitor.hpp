@@ -161,7 +161,7 @@ class MonitorModel
       process.name = std::move(*p.mutable_process_name());
       process.host_name = std::move(*p.mutable_host_name());
       process.unit_name = std::move(*p.mutable_unit_name());
-      process.params = std::move(*p.mutable_pparam());
+      process.params = std::move(*p.mutable_process_parameter());
       process.severity = Severity(p.state().severity());
       process.severity_level = SeverityLevel(p.state().severity_level());
       process.state_info = std::move(*p.mutable_state()->mutable_info());

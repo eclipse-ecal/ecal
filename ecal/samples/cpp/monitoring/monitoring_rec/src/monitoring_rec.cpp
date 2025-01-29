@@ -98,7 +98,7 @@ int main()
         std::cout << "process id      : " << process.process_id()            << "\n";   // process id
         std::cout << "process name    : " << process.process_name()          << "\n";   // process name
         std::cout << "unit name       : " << process.unit_name()             << "\n";   // unit name
-        std::cout << "pparam          : " << process.pparam()                << "\n";   // process parameter
+        std::cout << "process_parameter          : " << process.process_parameter()                << "\n";   // process parameter
         std::cout << "severity        : " << process.state().severity()      << "\n";   // process state severity
         std::cout << "info            : " << process.state().info()          << "\n";   // process state info
         std::cout << "tsync state     : " << process.time_sync_state()       << "\n";   // time sync state

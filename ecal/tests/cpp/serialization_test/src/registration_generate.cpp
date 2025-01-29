@@ -129,7 +129,7 @@ namespace eCAL
       process.shm_transport_domain  = GenerateString(6);
       process.process_name          = GenerateString(10);
       process.unit_name             = GenerateString(5);
-      process.pparam                = GenerateString(12);
+      process.process_parameter                = GenerateString(12);
       process.state.severity        = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
       process.state.severity_level  = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
       process.state.info            = GenerateString(10);

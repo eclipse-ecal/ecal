@@ -165,10 +165,10 @@ namespace eCAL
           {
 #ifdef _WIN32
             // Windows gives us the proper command line, so we can directly match it
-            if ((process.pparam() == evaluated_task.path)
-              || (process.pparam() == "\"" + evaluated_task.path + "\"")
-              || (process.pparam() == (evaluated_task.path + " " + evaluated_task.arguments))
-              || (process.pparam() == ("\"" + evaluated_task.path + "\" " + evaluated_task.arguments)))
+            if ((process.process_parameter() == evaluated_task.path)
+              || (process.process_parameter() == "\"" + evaluated_task.path + "\"")
+              || (process.process_parameter() == (evaluated_task.path + " " + evaluated_task.arguments))
+              || (process.process_parameter() == ("\"" + evaluated_task.path + "\" " + evaluated_task.arguments)))
             {
               pid_list.push_back(process.process_id());
             }
@@ -182,7 +182,7 @@ namespace eCAL
             // 
             // This is also true for macOS and probably most other UNIX systems.
 
-            std::vector<std::string> process_argv  = EcalUtils::CommandLine::ToArgv(process.pparam());
+            std::vector<std::string> process_argv  = EcalUtils::CommandLine::ToArgv(process.process_parameter());
             if ((sys_task_argv.size() == process_argv.size())
               && (sys_task_argv == process_argv))
             {

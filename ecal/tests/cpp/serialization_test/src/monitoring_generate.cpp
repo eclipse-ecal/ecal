@@ -38,7 +38,7 @@ namespace eCAL
       process.process_id            = rand() % 1000;
       process.process_name          = GenerateString(8);
       process.unit_name             = GenerateString(6);
-      process.pparam                = GenerateString(20);
+      process.process_parameter                = GenerateString(20);
       process.state_severity        = rand() % 5;
       process.state_severity_level  = rand() % 6;
       process.state_info            = GenerateString(15);

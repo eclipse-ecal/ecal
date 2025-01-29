@@ -77,9 +77,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return process_.unit_name().c_str();
     }
-    else if (column == Columns::PPARAM)
+    else if (column == Columns::PROCESS_PARAMETER)
     {
-      return process_.pparam().c_str();
+      return process_.process_parameter().c_str();
     }
     else if (column == Columns::SEVERITY)
     {

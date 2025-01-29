@@ -107,7 +107,7 @@ private:
     { Columns::SHM_TRANSPORT_DOMAIN, (int)ProcessTreeItem::Columns::SHM_TRANSPORT_DOMAIN},
     { Columns::PROCESS_ID,           (int)ProcessTreeItem::Columns::PROCESS_ID },
     { Columns::PROCESS_NAME,         (int)ProcessTreeItem::Columns::PROCESS_NAME },
-    { Columns::PARAMETERS,           (int)ProcessTreeItem::Columns::PPARAM },
+    { Columns::PARAMETERS,           (int)ProcessTreeItem::Columns::PROCESS_PARAMETER },
     { Columns::STATE,                (int)ProcessTreeItem::Columns::SEVERITY },
     { Columns::INFO,                 (int)ProcessTreeItem::Columns::INFO },
     { Columns::HEARTBEAT,            (int)ProcessTreeItem::Columns::REGISTRATION_CLOCK },

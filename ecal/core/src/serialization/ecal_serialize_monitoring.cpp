@@ -55,8 +55,8 @@ namespace
     eCAL::nanopb::encode_string(pb_process_.process_name, process_.process_name);
     // unit_name
     eCAL::nanopb::encode_string(pb_process_.unit_name, process_.unit_name);
-    // pparam
-    eCAL::nanopb::encode_string(pb_process_.pparam, process_.pparam);
+    // process_parameter
+    eCAL::nanopb::encode_string(pb_process_.process_parameter, process_.process_parameter);
     // state
     pb_process_.has_state = true;
     // state.severity
@@ -504,8 +504,8 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.process_name, process_.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_process_.unit_name, process_.unit_name);
-    // pparam
-    eCAL::nanopb::decode_string(pb_process_.pparam, process_.pparam);
+    // process_parameter
+    eCAL::nanopb::decode_string(pb_process_.process_parameter, process_.process_parameter);
     // state.info
     eCAL::nanopb::decode_string(pb_process_.state.info, process_.state_info);
     // time_sync_module_name

@@ -215,7 +215,7 @@ namespace eCAL
       std::string                         shm_transport_domain;         // shm transport domain
       std::string                         process_name;                 // process name
       std::string                         unit_name;                    // unit name
-      std::string                         pparam;                       // process parameter
+      std::string                         process_parameter;                       // process parameter
       ProcessState                        state;                        // process state info
       eTimeSyncState                      time_sync_state = tsync_none; // time synchronization state
       std::string                         time_sync_module_name;        // time synchronization module name
@@ -229,7 +229,7 @@ namespace eCAL
           shm_transport_domain == other.shm_transport_domain &&
           process_name == other.process_name &&
           unit_name == other.unit_name &&
-          pparam == other.pparam &&
+          process_parameter == other.process_parameter &&
           state == other.state &&
           time_sync_state == other.time_sync_state &&
           time_sync_module_name == other.time_sync_module_name &&
@@ -245,7 +245,7 @@ namespace eCAL
         shm_transport_domain.clear();
         process_name.clear();
         unit_name.clear();
-        pparam.clear();
+        process_parameter.clear();
         state.clear();
         time_sync_state = tsync_none;
         time_sync_module_name.clear();

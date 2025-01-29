@@ -43,7 +43,7 @@ public:
     PROCESS_ID,
     PROCESS_NAME,
     UNIT_NAME,
-    PPARAM,
+    PROCESS_PARAMETER,
     SEVERITY,
     INFO,
     TIME_SYNC_STATE,
