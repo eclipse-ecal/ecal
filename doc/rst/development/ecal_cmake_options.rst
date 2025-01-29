@@ -10,7 +10,7 @@ eCAL is using CMake as build system.
 The build makes use of CMake options to configure what features to build and to see what capabilities are available.
 The options are grouped by their prefix:
 
-- ``HAS_`` variables indicate if a certain feature is supported for the build. E.g setting ``HAS_QT5`` to off, will disable all components of eCAL that have a GUI attached.
+- ``HAS_`` variables indicate if a certain feature is supported for the build. E.g setting ``ECAL_HAS_QT5`` to off, will disable all components of eCAL that have a GUI attached.
 - ``BUILD_`` variables turn on / off certain eCAL components. Those components can be language bindings, application (like monitor / player / recorder), documentation or tests
 - ``ECAL_THIRDPARTY_`` variables control on a dependency by dependency basis, if that dependency is to be compiled alongside eCAL.
 
@@ -21,37 +21,37 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | CMake option                              | Default | Description                                                     |
 +===========================================+=========+=================================================================+
-| ``HAS_HDF5``                              | ``ON``  | Platform supports HDF5 library                                  |
+| ``ECAL_USE_HDF5``                              | ``ON``  | Platform supports HDF5 library                                  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``HAS_QT``                                | ``ON``  | Platform supports Qt 5 6 library.                               |
+| ``ECAL_USE_QT``                                | ``ON``  | Platform supports Qt 5 6 library.                               |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``HAS_CURL``                              | ``ON``  | Build with CURL (i.e. upload support in the recorder app)       |
+| ``ECAL_USE_CURL``                              | ``ON``  | Build with CURL (i.e. upload support in the recorder app)       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``HAS_CAPNPROTO``                         | ``OFF`` | Platform supports Cap'n Proto library                           |
+| ``ECAL_USE_CAPNPROTO``                         | ``OFF`` | Platform supports Cap'n Proto library                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``HAS_FLATBUFFERS``                       | ``OFF`` | Platform supports flatbuffers library                           |
+| ``ECAL_USE_FLATBUFFERS``                       | ``OFF`` | Platform supports flatbuffers library                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``HAS_FTXUI``                             | ``ON``  | Platform supports FTXUI library. Requires C++17 and up.         |
+| ``ECAL_USE_FTXUI``                             | ``ON``  | Platform supports FTXUI library. Requires C++17 and up.         |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_DOCS``                            | ``OFF`` | Build the eCAL documentation                                    |
+| ``ECAL_BUILD_DOCS``                            | ``OFF`` | Build the eCAL documentation                                    |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_APPS``                            | ``ON``  | Build the eCAL applications                                     |
+| ``ECAL_BUILD_APPS``                            | ``ON``  | Build the eCAL applications                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_SAMPLES``                         | ``ON``  | Build the eCAL samples                                          |
+| ``ECAL_BUILD_SAMPLES``                         | ``ON``  | Build the eCAL samples                                          |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_TIME``                            | ``ON``  | Build the eCAL time interfaces                                  |
+| ``ECAL_BUILD_TIMEPLUGINS``                            | ``ON``  | Build the eCAL time interfaces                                  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_PY_BINDING``                      | ``OFF`` | Build eCAL python binding                                       |
+| ``ECAL_BUILD_PY_BINDING``                      | ``OFF`` | Build eCAL python binding                                       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``BUILD_STANDAL``ON``E_PY_WHEEL``         | ``OFF`` | Build eCAL python binding as standalone wheel                   |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_CSHARP_BINDING``                  | ``OFF`` | Build eCAL C# binding                                           |
+| ``ECAL_BUILD_CSHARP_BINDING``                  | ``OFF`` | Build eCAL C# binding                                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_ECAL_TESTS``                      | ``OFF`` | Build the eCAL google tests                                     |
+| ``ECAL_BUILD_TESTS``                      | ``OFF`` | Build the eCAL google tests                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_INSTALL_SAMPLE_SOURCES``           | ``ON``  | Install the sources of eCAL samples                             |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_NPCAP_SUPPORT``                    | ``OFF`` | Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix) |
+| ``ECAL_USE_NPCAP``                    | ``OFF`` | Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix) |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_USE_CLOCKLOCK_MUTEX``              | ``OFF`` | Use native mutex with monotonic clock (requires glibc >= 2.30)  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
@@ -91,10 +91,10 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_LINK_HDF5_SHARED``                 | ``ON``  | Link shared libs of HDF5                                        |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``CPACK_PACK_WITH_INNOSETUP``             | ``ON``  | Create Innosetup installer for the Windows build                |
+| ``ECAL_CPACK_PACK_WITH_INNOSETUP``             | ``ON``  | Create Innosetup installer for the Windows build                |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 
-To build the eCAL csharp extension you need to set the CMake option ``BUILD_CSHARP_BINDING`` to ``ON``.
+To build the eCAL csharp extension you need to set the CMake option ``ECAL_BUILD_CSHARP_BINDING`` to ``ON``.
 In order to make the CSharp Google::Protobuf extension work you need to install additionally the Microsoft package management tool `Nuget <https://www.nuget.org/downloads>`_.
 Please ensure that the installation path is part of your windows user or system PATH environment variable.
 Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.
