@@ -205,7 +205,7 @@ int main()
         std::cout << "message_drops               : " << topic.message_drops()        << "\n";   // dropped messages
 
         std::cout << "data id                     : " << topic.data_id()              << "\n";   // data send id (publisher setid)
-        std::cout << "dclock                      : " << topic.dclock()               << "\n";   // data clock (send / receive action)
+        std::cout << "data_clock                  : " << topic.data_clock()           << "\n";   // data clock (send / receive action)
         std::cout << "dfreq                       : " << topic.dfreq()                << "\n";   // data frequency (send / receive samples per second * 1000)
 
         std::cout << "\n";

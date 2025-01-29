@@ -54,7 +54,7 @@ public:
     CONNECTIONS_LOCAL,
     CONNECTIONS_EXTERNAL,
     MESSAGE_DROPS,
-    DCLOCK,
+    DATA_CLOCK,
     DFREQ,
   };
 

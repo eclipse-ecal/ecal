@@ -129,7 +129,7 @@ private:
     { Columns::CONNECTIONS_LOCAL,      (int)TopicTreeItem::Columns::CONNECTIONS_LOCAL },
     { Columns::CONNECTIONS_EXTERNAL,   (int)TopicTreeItem::Columns::CONNECTIONS_EXTERNAL },
     { Columns::MESSAGE_DROPS,          (int)TopicTreeItem::Columns::MESSAGE_DROPS },
-    { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DCLOCK },
+    { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DATA_CLOCK },
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
   };
 

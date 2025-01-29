@@ -50,7 +50,7 @@ message Topic                                      // eCAL topic
   int32               message_drops         = 18;  // dropped messages
                       
   int64               data_id               = 19;  // data send id (publisher setid)
-  int64               dclock                = 20;  // data clock (send / receive action)
+  int64               data_clock                = 20;  // data clock (send / receive action)
   int32               dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
 
   map<string, string> attr                  = 27;  // generic topic description

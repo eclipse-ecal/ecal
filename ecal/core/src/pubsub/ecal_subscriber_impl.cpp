@@ -631,7 +631,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
     // topic_information
     {
       auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.datatype_information;
@@ -678,9 +678,9 @@ namespace eCAL
     }
 #endif
 
-    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
-    ecal_reg_sample_topic.unit_name         = m_attributes.unit_name;
-    ecal_reg_sample_topic.dclock        = m_clock;
+    ecal_reg_sample_topic.process_name  = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name     = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_clock    = m_clock;
     ecal_reg_sample_topic.dfreq         = GetFrequency();
     ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
 
@@ -695,14 +695,14 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id = m_topic_id;
-    ecal_reg_sample_identifier.host_name = m_attributes.host_name;
+    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.process_name                = m_attributes.process_name;
-    ecal_reg_sample_topic.topic_name                = m_attributes.topic_name;
-    ecal_reg_sample_topic.unit_name                = m_attributes.unit_name;
+    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
+    ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()

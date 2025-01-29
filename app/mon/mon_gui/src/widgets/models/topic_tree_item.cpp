@@ -118,9 +118,9 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.message_drops();
     }
-    else if (column == Columns::DCLOCK)
+    else if (column == Columns::DATA_CLOCK)
     {
-      return (long long)topic_.dclock();
+      return (long long)topic_.data_clock();
     }
     else if (column == Columns::DFREQ)
     {
@@ -260,7 +260,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::CONNECTIONS_LOCAL)
       || (column == Columns::CONNECTIONS_EXTERNAL)
       || (column == Columns::MESSAGE_DROPS)
-      || (column == Columns::DCLOCK)
+      || (column == Columns::DATA_CLOCK)
       || (column == Columns::DFREQ)
       )
     {

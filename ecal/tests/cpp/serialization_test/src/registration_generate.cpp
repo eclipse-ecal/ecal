@@ -117,7 +117,7 @@ namespace eCAL
       topic.connections_external = rand() % 50;
       topic.message_drops        = rand() % 10;
       topic.data_id              = rand();
-      topic.dclock               = rand();
+      topic.data_clock               = rand();
       topic.dfreq                = rand() % 100;
       return topic;
     }

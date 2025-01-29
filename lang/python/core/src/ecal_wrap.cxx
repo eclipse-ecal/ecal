@@ -1024,7 +1024,7 @@ namespace
       val = Py_BuildValue("i", topic.data_id);
       PyDict_SetItemString(topicDict, "did", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", topic.dclock);
+      val = Py_BuildValue("i", topic.data_clock);
       PyDict_SetItemString(topicDict, "dclock", val); Py_DECREF(val);
 
       val = Py_BuildValue("i", topic.dfreq);

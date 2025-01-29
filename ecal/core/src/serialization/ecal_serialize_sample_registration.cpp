@@ -186,8 +186,8 @@ namespace
     pb_topic_.message_drops = registration_topic_.message_drops;
     // data_id
     pb_topic_.data_id = registration_topic_.data_id;
-    // dclock
-    pb_topic_.dclock = registration_topic_.dclock;
+    // data_clock
+    pb_topic_.data_clock = registration_topic_.data_clock;
     // dfreq
     pb_topic_.dfreq = registration_topic_.dfreq;
     // transport_layer
@@ -462,8 +462,8 @@ namespace
       registration_.topic.message_drops = pb_sample_.topic.message_drops;
       // data_id
       registration_.topic.data_id = pb_sample_.topic.data_id;
-      // dclock
-      registration_.topic.dclock = pb_sample_.topic.dclock;
+      // data_clock
+      registration_.topic.data_clock = pb_sample_.topic.data_clock;
       // dfreq
       registration_.topic.dfreq = pb_sample_.topic.dfreq;
       break;

@@ -90,7 +90,7 @@ namespace eCAL
       int32_t                             message_drops{0};        //!< dropped messages
 
       int64_t                             data_id{0};              //!< data send id (publisher setid)
-      int64_t                             dclock{0};               //!< data clock (send / receive action)
+      int64_t                             data_clock{0};           //!< data clock (send / receive action)
       int32_t                             dfreq{0};                //!< data frequency (send / receive samples per second) [mHz]
 
       std::map<std::string, std::string>  attr;                    //!< generic topic description

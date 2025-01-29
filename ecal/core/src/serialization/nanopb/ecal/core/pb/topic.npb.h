@@ -28,7 +28,7 @@ typedef struct _eCAL_pb_Topic { /* Reserved fields in enums are not supported in
     int32_t connections_external; /* number of external connected entities */
     int32_t message_drops; /* dropped messages */
     int64_t data_id; /* data send id (publisher setid) */
-    int64_t dclock; /* data clock (send / receive action) */
+    int64_t data_clock; /* data clock (send / receive action) */
     int32_t dfreq; /* data frequency (send / receive samples per second) [mHz] */
     pb_callback_t attr; /* generic topic description */
     pb_callback_t shm_transport_domain; /* shm_transport_domain */
@@ -69,7 +69,7 @@ extern "C" {
 #define eCAL_pb_Topic_connections_external_tag   17
 #define eCAL_pb_Topic_message_drops_tag          18
 #define eCAL_pb_Topic_data_id_tag                19
-#define eCAL_pb_Topic_dclock_tag                 20
+#define eCAL_pb_Topic_data_clock_tag             20
 #define eCAL_pb_Topic_dfreq_tag                  21
 #define eCAL_pb_Topic_attr_tag                   27
 #define eCAL_pb_Topic_shm_transport_domain_tag   28
@@ -93,7 +93,7 @@ X(a, STATIC,   SINGULAR, INT32,    connections_local,  16) \
 X(a, STATIC,   SINGULAR, INT32,    connections_external,  17) \
 X(a, STATIC,   SINGULAR, INT32,    message_drops,    18) \
 X(a, STATIC,   SINGULAR, INT64,    data_id,          19) \
-X(a, STATIC,   SINGULAR, INT64,    dclock,           20) \
+X(a, STATIC,   SINGULAR, INT64,    data_clock,       20) \
 X(a, STATIC,   SINGULAR, INT32,    dfreq,            21) \
 X(a, CALLBACK, REPEATED, MESSAGE,  attr,             27) \
 X(a, CALLBACK, SINGULAR, STRING,   shm_transport_domain,  28) \

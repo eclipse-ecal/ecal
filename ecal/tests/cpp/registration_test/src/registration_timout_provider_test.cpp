@@ -48,7 +48,7 @@ eCAL::Registration::Sample UpdateTopicSample(const eCAL::Registration::Sample& i
   // vary statistical data
   eCAL::Registration::Sample updated = input_;
   updated.topic.registration_clock = input_.topic.registration_clock + 1;
-  updated.topic.dclock = input_.topic.dclock + 10;
+  updated.topic.data_clock = input_.topic.data_clock + 10;
   return updated;
 }
 
@@ -74,7 +74,7 @@ void InitializeAllSamples()
   pub_foo_process_a_register_1.topic.connections_external = 2;
   pub_foo_process_a_register_1.topic.message_drops = 0;
   pub_foo_process_a_register_1.topic.data_id = 0;
-  pub_foo_process_a_register_1.topic.dclock = 1;
+  pub_foo_process_a_register_1.topic.data_clock = 1;
   pub_foo_process_a_register_1.topic.dfreq = 10;
 
   pub_foo_process_a_register_2 = UpdateTopicSample(pub_foo_process_a_register_1);
@@ -99,7 +99,7 @@ void InitializeAllSamples()
   sub_foo_process_a_register_1.topic.connections_external = 2;
   sub_foo_process_a_register_1.topic.message_drops = 0;
   sub_foo_process_a_register_1.topic.data_id = 0;
-  sub_foo_process_a_register_1.topic.dclock = 1;
+  sub_foo_process_a_register_1.topic.data_clock = 1;
   sub_foo_process_a_register_1.topic.dfreq = 10;
 
   sub_foo_process_a_register_2 = UpdateTopicSample(sub_foo_process_a_register_1);
@@ -124,7 +124,7 @@ void InitializeAllSamples()
   sub_foo_process_b_register_1.topic.connections_external = 2;
   sub_foo_process_b_register_1.topic.message_drops = 0;
   sub_foo_process_b_register_1.topic.data_id = 0;
-  sub_foo_process_b_register_1.topic.dclock = 1;
+  sub_foo_process_b_register_1.topic.data_clock = 1;
   sub_foo_process_b_register_1.topic.dfreq = 10;
 
   sub_foo_process_b_register_2 = UpdateTopicSample(sub_foo_process_b_register_1);

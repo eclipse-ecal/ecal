@@ -183,8 +183,8 @@ namespace
     pb_topic_.message_drops = topic_.message_drops;
     // data_id
     pb_topic_.data_id = topic_.data_id;
-    // dclock
-    pb_topic_.dclock = topic_.dclock;
+    // data_clock
+    pb_topic_.data_clock = topic_.data_clock;
     // dfreq
     pb_topic_.dfreq = topic_.dfreq;
     // transport_layer
@@ -651,8 +651,8 @@ namespace
     topic_.message_drops = pb_topic_.message_drops;
     // data_id
     topic_.data_id = pb_topic_.data_id;
-    // dclock
-    topic_.dclock = pb_topic_.dclock;
+    // data_clock
+    topic_.data_clock = pb_topic_.data_clock;
     // dfreq
     topic_.dfreq = pb_topic_.dfreq;
   }

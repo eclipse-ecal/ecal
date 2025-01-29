@@ -687,7 +687,7 @@ namespace eCAL
     ecal_reg_sample_topic.process_name = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
     ecal_reg_sample_topic.data_id      = m_id;
-    ecal_reg_sample_topic.dclock       = m_clock;
+    ecal_reg_sample_topic.data_clock       = m_clock;
     ecal_reg_sample_topic.dfreq        = GetFrequency();
 
     size_t loc_connections(0);
