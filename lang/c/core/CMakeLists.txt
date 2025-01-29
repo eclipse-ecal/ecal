@@ -23,19 +23,19 @@ project(core_c VERSION ${eCAL_VERSION_STRING})
 # c interface
 ######################################
 set(ecal_c_src
-    src/ecal_client_cimpl.cpp
-    src/ecal_common_cimpl.cpp
-    src/ecal_common_cimpl.h
-    src/ecal_core_cimpl.cpp
-    src/ecal_log_cimpl.cpp
-    src/ecal_monitoring_cimpl.cpp
-    src/ecal_process_cimpl.cpp
-    src/ecal_publisher_cimpl.cpp
-    src/ecal_server_cimpl.cpp
-    src/ecal_subscriber_cimpl.cpp
-    src/ecal_time_cimpl.cpp
-    src/ecal_timer_cimpl.cpp
-    src/ecal_util_cimpl.cpp    
+    src/client.cpp
+    src/common.cpp
+    src/common.h
+    src/core.cpp
+    src/log.cpp
+    src/monitoring.cpp
+    src/process.cpp
+    src/publisher.cpp
+    src/server.cpp
+    src/subscriber.cpp
+    src/time.cpp
+    src/timer.cpp
+    src/util.cpp    
 )
 
 ######################################
@@ -54,23 +54,23 @@ endif()
 
 
 set(ecal_header_cimpl
-    include/ecalc/callback_cimpl.h
-    include/ecalc/client_cimpl.h
-    include/ecalc/core_cimpl.h
-    include/ecalc/init_cimpl.h
-    include/ecalc/log_cimpl.h
-    include/ecalc/monitoring_cimpl.h
-    include/ecalc/process_cimpl.h
-    include/ecalc/publisher_cimpl.h
-    include/ecalc/server_cimpl.h
-    include/ecalc/service_info_cimpl.h
-    include/ecalc/subscriber_cimpl.h
-    include/ecalc/time_cimpl.h
-    include/ecalc/timer_cimpl.h
-    include/ecalc/util_cimpl.h
-    include/ecalc/ecalc.h
-    include/ecalc/ecalc_export.h
-    include/ecalc/ecalc_types.h
+    include/ecal_c/callback.h
+    include/ecal_c/client.h
+    include/ecal_c/core.h
+    include/ecal_c/init.h
+    include/ecal_c/log.h
+    include/ecal_c/monitoring.h
+    include/ecal_c/process.h
+    include/ecal_c/publisher.h
+    include/ecal_c/server.h
+    include/ecal_c/service_info.h
+    include/ecal_c/subscriber.h
+    include/ecal_c/time.h
+    include/ecal_c/timer.h
+    include/ecal_c/util.h
+    include/ecal_c/ecal.h
+    include/ecal_c/export.h
+    include/ecal_c/types.h
 )
 
 
