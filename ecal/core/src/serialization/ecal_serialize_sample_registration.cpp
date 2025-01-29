@@ -188,8 +188,8 @@ namespace
     pb_topic_.data_id = registration_topic_.data_id;
     // data_clock
     pb_topic_.data_clock = registration_topic_.data_clock;
-    // dfreq
-    pb_topic_.dfreq = registration_topic_.dfreq;
+    // data_frequency
+    pb_topic_.data_frequency = registration_topic_.data_frequency;
     // transport_layer
     eCAL::nanopb::encode_registration_layer(pb_topic_.transport_layer, registration_topic_.transport_layer);
     // attr
@@ -464,8 +464,8 @@ namespace
       registration_.topic.data_id = pb_sample_.topic.data_id;
       // data_clock
       registration_.topic.data_clock = pb_sample_.topic.data_clock;
-      // dfreq
-      registration_.topic.dfreq = pb_sample_.topic.dfreq;
+      // data_frequency
+      registration_.topic.data_frequency = pb_sample_.topic.data_frequency;
       break;
     default:
     break;

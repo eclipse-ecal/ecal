@@ -157,7 +157,7 @@ namespace eCAL
     const int64_t      data_id = sample_topic.data_id;
     const int64_t      data_clock = sample_topic.data_clock;
     const int32_t      message_drops = sample_topic.message_drops;
-    const int32_t      dfreq = sample_topic.dfreq;
+    const int32_t      data_frequency = sample_topic.data_frequency;
 
     /////////////////////////////////
     // register in topic map
@@ -244,7 +244,7 @@ namespace eCAL
       TopicInfo.data_id              = data_id;
       TopicInfo.data_clock               = data_clock;
       TopicInfo.message_drops        = message_drops;
-      TopicInfo.dfreq                = dfreq;
+      TopicInfo.data_frequency                = data_frequency;
     }
 
     return(true);

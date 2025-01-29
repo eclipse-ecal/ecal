@@ -176,12 +176,12 @@ void HostTreeItem::update(const eCAL::pb::Monitoring& monitoring_pb)
       if (direction.compare("publisher", Qt::CaseSensitivity::CaseInsensitive) == 0)
       {
         publisher_count_++;
-        data_sent_bytes_ += ((long long)topic.topic_size() * (long long)topic.dfreq()) / 1000;
+        data_sent_bytes_ += ((long long)topic.topic_size() * (long long)topic.data_frequency()) / 1000;
       }
       else if (direction.compare("subscriber", Qt::CaseSensitivity::CaseInsensitive) == 0)
       {
         subscriber_count_++;
-        data_received_bytes_ += ((long long)topic.topic_size() * (long long)topic.dfreq()) / 1000;
+        data_received_bytes_ += ((long long)topic.topic_size() * (long long)topic.data_frequency()) / 1000;
       }
     }
   }

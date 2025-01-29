@@ -237,7 +237,7 @@ void TopicWidget::autoSizeColumns()
   example_topic_pb.set_connections_external(999999);
   example_topic_pb.set_message_drops(999999);
   example_topic_pb.set_data_clock(99999999999);
-  example_topic_pb.set_dfreq(999999);
+  example_topic_pb.set_data_frequency(999999);
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
   GroupTreeItem* example_group_item = new GroupTreeItem("ATypicalLongGroupName___", "", "", QVariant(), "");

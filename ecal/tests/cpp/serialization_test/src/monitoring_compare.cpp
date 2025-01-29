@@ -84,7 +84,7 @@ namespace eCAL
           monitoring1.publisher[i].message_drops != monitoring2.publisher[i].message_drops ||
           monitoring1.publisher[i].data_id != monitoring2.publisher[i].data_id ||
           monitoring1.publisher[i].data_clock != monitoring2.publisher[i].data_clock ||
-          monitoring1.publisher[i].dfreq != monitoring2.publisher[i].dfreq ||
+          monitoring1.publisher[i].data_frequency != monitoring2.publisher[i].data_frequency ||
           monitoring1.publisher[i].attr != monitoring2.publisher[i].attr)
         {
           return false;
@@ -116,7 +116,7 @@ namespace eCAL
           monitoring1.subscriber[i].message_drops != monitoring2.subscriber[i].message_drops ||
           monitoring1.subscriber[i].data_id != monitoring2.subscriber[i].data_id ||
           monitoring1.subscriber[i].data_clock != monitoring2.subscriber[i].data_clock ||
-          monitoring1.subscriber[i].dfreq != monitoring2.subscriber[i].dfreq ||
+          monitoring1.subscriber[i].data_frequency != monitoring2.subscriber[i].data_frequency ||
           monitoring1.subscriber[i].attr != monitoring2.subscriber[i].attr)
         {
           return false;

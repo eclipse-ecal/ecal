@@ -75,7 +75,7 @@ void InitializeAllSamples()
   pub_foo_process_a_register_1.topic.message_drops = 0;
   pub_foo_process_a_register_1.topic.data_id = 0;
   pub_foo_process_a_register_1.topic.data_clock = 1;
-  pub_foo_process_a_register_1.topic.dfreq = 10;
+  pub_foo_process_a_register_1.topic.data_frequency = 10;
 
   pub_foo_process_a_register_2 = UpdateTopicSample(pub_foo_process_a_register_1);
 
@@ -100,7 +100,7 @@ void InitializeAllSamples()
   sub_foo_process_a_register_1.topic.message_drops = 0;
   sub_foo_process_a_register_1.topic.data_id = 0;
   sub_foo_process_a_register_1.topic.data_clock = 1;
-  sub_foo_process_a_register_1.topic.dfreq = 10;
+  sub_foo_process_a_register_1.topic.data_frequency = 10;
 
   sub_foo_process_a_register_2 = UpdateTopicSample(sub_foo_process_a_register_1);
 
@@ -125,7 +125,7 @@ void InitializeAllSamples()
   sub_foo_process_b_register_1.topic.message_drops = 0;
   sub_foo_process_b_register_1.topic.data_id = 0;
   sub_foo_process_b_register_1.topic.data_clock = 1;
-  sub_foo_process_b_register_1.topic.dfreq = 10;
+  sub_foo_process_b_register_1.topic.data_frequency = 10;
 
   sub_foo_process_b_register_2 = UpdateTopicSample(sub_foo_process_b_register_1);
 }

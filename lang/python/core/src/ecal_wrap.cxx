@@ -1027,7 +1027,7 @@ namespace
       val = Py_BuildValue("i", topic.data_clock);
       PyDict_SetItemString(topicDict, "dclock", val); Py_DECREF(val);
 
-      val = Py_BuildValue("i", topic.dfreq);
+      val = Py_BuildValue("i", topic.data_frequency);
       PyDict_SetItemString(topicDict, "dfreq", val); Py_DECREF(val);
 
       // TODO: std::map<std::string, std::string> attr

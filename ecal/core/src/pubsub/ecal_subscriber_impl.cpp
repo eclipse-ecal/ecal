@@ -678,11 +678,11 @@ namespace eCAL
     }
 #endif
 
-    ecal_reg_sample_topic.process_name  = m_attributes.process_name;
-    ecal_reg_sample_topic.unit_name     = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_clock    = m_clock;
-    ecal_reg_sample_topic.dfreq         = GetFrequency();
-    ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
+    ecal_reg_sample_topic.process_name   = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_clock     = m_clock;
+    ecal_reg_sample_topic.data_frequency = GetFrequency();
+    ecal_reg_sample_topic.message_drops  = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_local = 0;

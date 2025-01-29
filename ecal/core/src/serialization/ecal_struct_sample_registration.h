@@ -276,7 +276,7 @@ namespace eCAL
 
       int64_t                             data_id    = 0;               // data send id (publisher setid)
       int64_t                             data_clock = 0;               // data clock (send / receive action)
-      int32_t                             dfreq  = 0;                   // data frequency (send / receive registrations per second) [mHz]
+      int32_t                             data_frequency  = 0;                   // data frequency (send / receive registrations per second) [mHz]
 
       std::map<std::string, std::string>  attr;                         // generic topic description
 
@@ -295,7 +295,7 @@ namespace eCAL
           message_drops == other.message_drops &&
           data_id == other.data_id &&
           data_clock == other.data_clock &&
-          dfreq == other.dfreq &&
+          data_frequency == other.data_frequency &&
           attr == other.attr;
       }
 
@@ -318,7 +318,7 @@ namespace eCAL
 
         data_id = 0;
         data_clock = 0;
-        dfreq = 0;
+        data_frequency = 0;
 
         attr.clear();
       }

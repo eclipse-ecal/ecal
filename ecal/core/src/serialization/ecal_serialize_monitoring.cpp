@@ -185,8 +185,8 @@ namespace
     pb_topic_.data_id = topic_.data_id;
     // data_clock
     pb_topic_.data_clock = topic_.data_clock;
-    // dfreq
-    pb_topic_.dfreq = topic_.dfreq;
+    // data_frequency
+    pb_topic_.data_frequency = topic_.data_frequency;
     // transport_layer
     encode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
     // attr
@@ -653,8 +653,8 @@ namespace
     topic_.data_id = pb_topic_.data_id;
     // data_clock
     topic_.data_clock = pb_topic_.data_clock;
-    // dfreq
-    topic_.dfreq = pb_topic_.dfreq;
+    // data_frequency
+    topic_.data_frequency = pb_topic_.data_frequency;
   }
 
   bool decode_topics_field(pb_istream_t* stream, const pb_field_iter_t* /*field*/, void** arg)

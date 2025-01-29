@@ -182,12 +182,12 @@ class MonitorModel
         if(direction == "publisher")
         {
           host->publisher_count++;
-          host->data_sent_bytes += ((long long)t.topic_size() * (long long)t.dfreq()) / 1000;
+          host->data_sent_bytes += ((long long)t.topic_size() * (long long)t.data_frequency()) / 1000;
         }
         else if(direction == "subscriber")
         {
           host->subscriber_count++;
-          host->data_received_bytes += ((long long)t.topic_size() * (long long)t.dfreq()) / 1000;
+          host->data_received_bytes += ((long long)t.topic_size() * (long long)t.data_frequency()) / 1000;
         }
       }
       auto &topic = topics.emplace_back();
@@ -215,7 +215,7 @@ class MonitorModel
       topic.message_drops = t.message_drops();
       topic.data_id = t.data_id();
       topic.data_clock = t.data_clock();
-      topic.data_frequency = t.dfreq();
+      topic.data_frequency = t.data_frequency();
       for(auto &attr: *t.mutable_attr())
       {
         topic.attributes.emplace(

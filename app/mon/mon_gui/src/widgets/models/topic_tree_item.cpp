@@ -124,7 +124,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::DFREQ)
     {
-      return topic_.dfreq();
+      return topic_.data_frequency();
     }
     else
     {

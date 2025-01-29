@@ -165,7 +165,7 @@ int main()
         std::cout << "host name          : " << topic.host_name()                       << "\n";   // host name
         std::cout << "process id         : " << topic.process_id()                      << "\n";   // process id
         std::cout << "process name       : " << topic.process_name()                    << "\n";   // process name
-        std::cout << "unit_name          : " << topic.unit_name()                       << "\n";   // unit name
+        std::cout << "unit name          : " << topic.unit_name()                       << "\n";   // unit name
         std::cout << "topic id           : " << topic.topic_id()                        << "\n";   // topic id
         std::cout << "topic name         : " << topic.topic_name()                      << "\n";   // topic name
         std::cout << "direction          : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
@@ -198,15 +198,15 @@ int main()
           std::cout << "  transport_layer.type    : " << layer_type                   << "\n";   // transport layers type
           std::cout << "  transport_layer.active  : " << layer.active()               << "\n";   // transport layers confirmation
         }           
-        std::cout << "topic_size                  : " << topic.topic_size()           << "\n";   // topic size
+        std::cout << "topic size                  : " << topic.topic_size()           << "\n";   // topic size
 
         std::cout << "connections_local           : " << topic.connections_local()    << "\n";   // number of local connected entities
         std::cout << "connections_external        : " << topic.connections_external() << "\n";   // number of external connected entities
-        std::cout << "message_drops               : " << topic.message_drops()        << "\n";   // dropped messages
+        std::cout << "message drops               : " << topic.message_drops()        << "\n";   // dropped messages
 
         std::cout << "data id                     : " << topic.data_id()              << "\n";   // data send id (publisher setid)
-        std::cout << "data_clock                  : " << topic.data_clock()           << "\n";   // data clock (send / receive action)
-        std::cout << "dfreq                       : " << topic.dfreq()                << "\n";   // data frequency (send / receive samples per second * 1000)
+        std::cout << "data clock                  : " << topic.data_clock()           << "\n";   // data clock (send / receive action)
+        std::cout << "data frequency              : " << topic.data_frequency()       << "\n";   // data frequency (send / receive samples per second * 1000)
 
         std::cout << "\n";
       }

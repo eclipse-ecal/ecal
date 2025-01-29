@@ -298,7 +298,7 @@ void ProcBandwidth(const std::string& topic_name)
       found = true;
 
       std::string unit = "Byte/s";
-      auto bw = topic.topic_size() * (topic.dfreq()/1000.0);
+      auto bw = topic.topic_size() * (topic.data_frequency()/1000.0);
       if (bw > _10MB)
       {
         bw /= _1MB;
@@ -438,7 +438,7 @@ void ProcRate(const std::string& topic_name)
     {
       // check topic name
       if(topic.topic_name() != topic_name) continue;
-      std::cout << topic.dfreq()/1000.0 << std::endl; // data frequency (send / receive samples per second * 1000)
+      std::cout << topic.data_frequency()/1000.0 << std::endl; // data frequency (send / receive samples per second * 1000)
     }
 
     // sleep
@@ -484,7 +484,7 @@ void ProcInfo(const std::string& topic_name)
       std::cout << "topic id     : " << topic.topic_id()                        << "\n";   // topic id
       std::cout << "topic size   : " << topic.topic_size()                      << "\n";   // topic size
       std::cout << "data clock   : " << topic.data_clock()                      << "\n";   // data clock (send / receive action)
-      std::cout << "dfreq        : " << topic.dfreq()/1000.0                    << "\n";   // data frequency (send / receive samples per second * 1000)
+      std::cout << "data_frequency        : " << topic.data_frequency()/1000.0                    << "\n";   // data frequency (send / receive samples per second * 1000)
       std::cout << "\n";
     }
 
@@ -519,16 +519,16 @@ void ProcList()
     for(const auto& topic : monitoring.topics())
     {
       // print topic details
-      std::cout << "topic_name   : " << topic.topic_name()                      << "\n";   // topic name
-      std::cout << "ttype name   : " << topic.datatype_information().name()     << "\n";   // topic type name
-      std::cout << "ttype enc.   : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
-      std::cout << "direction    : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
-      std::cout << "host name    : " << topic.host_name()                       << "\n";   // host name
-      std::cout << "process id   : " << topic.process_id()                      << "\n";   // process id
-      std::cout << "topic id     : " << topic.topic_id()                        << "\n";   // topic id
-      std::cout << "topic size   : " << topic.topic_size()                      << "\n";   // topic size
-      std::cout << "data clock   : " << topic.data_clock()                      << "\n";   // data clock (send / receive action)
-      std::cout << "dfreq        : " << topic.dfreq()/1000.0                    << "\n";   // data frequency (send / receive samples per second * 1000)
+      std::cout << "topic_name     : " << topic.topic_name()                      << "\n";   // topic name
+      std::cout << "ttype name     : " << topic.datatype_information().name()     << "\n";   // topic type name
+      std::cout << "ttype enc.     : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
+      std::cout << "direction      : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
+      std::cout << "host name      : " << topic.host_name()                       << "\n";   // host name
+      std::cout << "process id     : " << topic.process_id()                      << "\n";   // process id
+      std::cout << "topic id       : " << topic.topic_id()                        << "\n";   // topic id
+      std::cout << "topic size     : " << topic.topic_size()                      << "\n";   // topic size
+      std::cout << "data clock     : " << topic.data_clock()                      << "\n";   // data clock (send / receive action)
+      std::cout << "data_frequency : " << topic.data_frequency()/1000.0           << "\n";   // data frequency (send / receive samples per second * 1000)
       std::cout << "\n";
     }
 

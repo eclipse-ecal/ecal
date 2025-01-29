@@ -72,7 +72,7 @@ namespace eCAL
       topic.message_drops        = rand() % 100;
       topic.data_id              = rand() % 10000;
       topic.data_clock           = rand() % 10000;
-      topic.dfreq                = rand() % 100;
+      topic.data_frequency       = rand() % 100;
       return topic;
     }
 

@@ -166,7 +166,7 @@ namespace eCAL
               if ((running_enabled_rec_client_it != running_enabled_rec_clients.end()
                 && (running_enabled_rec_client_it->second == topic.process_id())))
               {
-                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.process_id()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
+                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.process_id()}] = (static_cast<double>(topic.data_frequency()) / 1000.0);
               }
             }
           }
