@@ -1490,7 +1490,7 @@ int main(int argc, char** argv)
   {
     std::cout << "Shutting down eCAL Rec..." << std::endl;
 
-    rec_server_service_server->Destroy(); // Prevent other applications to control this recorder from now on!
+    rec_server_service_server = nullptr; // Prevent other applications to control this recorder from now on!
 
     rec_server_instance      ->StopRecording();
     rec_server_instance      ->WaitForPendingRequests();
