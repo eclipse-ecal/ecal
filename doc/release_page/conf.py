@@ -7,44 +7,14 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
-import sys
-
-# -- Variable setup ----------------------------------------------------------
-
-try:
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from conf_py_buildvars import *
-    
-    is_cmake_build = True
-    
-except ImportError:
-    print("WARNING: conf_py_buildvars NOT imported. Setting in-source-build variables.")
-    ecal_python_dir             = ''
-    sphinx_custom_extension_dir = r'../extensions'
-    rst_source_dir              = '.'
-    ecal_source_root_dir        = '../..'
-    
-    is_cmake_build              = False
-
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-
-if is_cmake_build:
-    sys.path.insert(0, ecal_python_dir)
-
-sys.path.insert(0, sphinx_custom_extension_dir)
 
 # -- Generate download archive and tables for the homepage --------------------
 import generate_release_documentation
 
 gh_api_key = os.getenv("ECAL_GH_API_KEY")
 if gh_api_key:
-    release_page_dir = "release"
-    index_file_path = "index.rst"
+    release_page_dir = "."
+    index_file_path = "./index.rst"
     generate_release_documentation.generate_release_documentation(gh_api_key, index_file_path, release_page_dir)
 else:  
     print("ERROR: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
@@ -59,14 +29,7 @@ copyright = u'2023, Continental'
 # The short X.Y version
 # version = u''
 # The full version, including alpha/beta/rc tags
-
-# Get release version from ECAL_DOC_VERSION environment variable
-ecal_doc_version = os.getenv("ECAL_DOC_VERSION")
-
-if not ecal_doc_version:
-    ecal_doc_version = ""
-
-release = ecal_doc_version # The release variable is important for the version-banner
+# release = u''
 
 # -- General configuration ---------------------------------------------------
 
