@@ -140,6 +140,7 @@ private:
     bool            new_topic_timer = false;
     bool            striked_out = false;
     bool            deleted_topic_timer = false;
+    bool            topic_removed = false;
   };
   std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };

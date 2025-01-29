@@ -107,6 +107,17 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       auto& tree_entry = topic_tree_item_map_.at(topic_id);
       auto *topic_tree_item = tree_entry.tree_item;
 
+      if (tree_entry.striked_out)
+      {
+        auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
+        auto font = qvariant_cast<QFont>(fontrole);
+        font.setStrikeOut(false);
+        font.setBold(false);
+        topic_tree_item->setFont(font);
+        tree_entry.striked_out = false;
+        tree_entry.default_font = true;
+      }
+
       if(tree_entry.new_topic_timer && !tree_entry.default_font)
       {
         auto fontrole = topic_tree_item->data(1, Qt::ItemDataRole::FontRole);
@@ -117,6 +128,8 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       }
 
       // Update an existing topic
+      tree_entry.topic_removed = false;
+      tree_entry.deleted_topic_timer = false;
       topic_tree_item->update(topic);
       topic_still_existing[topic_id] = true;
     }
@@ -137,16 +150,20 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
           font.setStrikeOut(true);
           topic_tree_item->setFont(font);
           tree_entry.striked_out = true;
+          tree_entry.topic_removed = true;
         }
 
-      if (tree_entry.deleted_topic_timer == false)
+      if (!tree_entry.deleted_topic_timer)
       {
+        tree_entry.deleted_topic_timer = true;
         QTimer::singleShot(10000, [this, topic_tree_item, topic]()
         {
-          removeItemFromGroups(topic_tree_item);
-          topic_tree_item_map_.erase(topic.first);
+          if (topic_tree_item_map_.find(topic.first) != topic_tree_item_map_.end() && topic_tree_item_map_[topic.first].topic_removed)
+          {
+            removeItemFromGroups(topic_tree_item);
+            topic_tree_item_map_.erase(topic.first);
+          }
         });
-        tree_entry.deleted_topic_timer = true;
       }
     }
   }
