@@ -1,4 +1,4 @@
-name: Build Sphinx Documentation
+name: Documentation Release Page
 
 on:
   push:
@@ -48,14 +48,14 @@ jobs:
         pip install --upgrade pip
         pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
-    - name: Build Sphinx documentation
+    - name: Build Release page with Sphinx
       env:
         ECAL_GH_API_KEY: ${{ secrets.GITHUB_TOKEN }}
       run: |
         source ".venv/bin/activate"
         sphinx-build -b html doc/release_page build/html
 
-    - name: Zip documentation
+    - name: Zip Release Page
       run: |
         cd build/html
         zip -r ../release-page.zip .
@@ -65,3 +65,13 @@ jobs:
       with:
         name: release-page
         path: build/release-page.zip
+
+    - name: Deploy Release Page
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/html
+        destination_dir: releases
+      if: env.publish_doc == 'true'
+  
