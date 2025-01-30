@@ -66,7 +66,7 @@ add_library(eCAL::protobuf_core ALIAS protobuf_core)
 target_link_libraries(protobuf_core 
   INTERFACE 
     eCAL::protobuf_base
-    eCAL::core
+    eCAL::message_core
 )
 
 target_sources(protobuf_core

@@ -16,38 +16,34 @@
 #
 # ========================= eCAL LICENSE =================================
 
-find_package(CapnProto REQUIRED)
+################################
+# eCAL core Message extensions #
+################################
+add_library(message_core INTERFACE)
+add_library(eCAL::message_core ALIAS message_core)
 
-##########################
-# Capnproto core communication extension
-##########################
-add_library(capnproto_core INTERFACE)
-add_library(eCAL::capnproto_core ALIAS capnproto_core)
-
-target_link_libraries(capnproto_core 
+target_link_libraries(message_core 
   INTERFACE 
-    CapnProto::capnp
-    eCAL::message_core
+    eCAL::core
 )
 
-target_sources(capnproto_core
+target_sources(message_core
   INTERFACE
-    FILE_SET capnproto_core_headers
+    FILE_SET message_core_headers
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/capnproto/dynamic.h
-      include/ecal/msg/capnproto/helper.h
-      include/ecal/msg/capnproto/publisher.h
-      include/ecal/msg/capnproto/subscriber.h      
+      include/ecal/msg/dynamic.h
+      include/ecal/msg/publisher.h
+      include/ecal/msg/subscriber.h
 )
 
-target_compile_features(capnproto_core INTERFACE cxx_std_17)
+target_compile_features(message_core INTERFACE cxx_std_14)
 
 install(
-  TARGETS capnproto_core
+  TARGETS message_core
   EXPORT eCALCoreTargets  
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET capnproto_core_headers COMPONENT sdk
+  FILE_SET message_core_headers COMPONENT sdk
 )

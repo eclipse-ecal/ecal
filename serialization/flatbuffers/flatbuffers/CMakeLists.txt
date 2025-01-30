@@ -27,7 +27,7 @@ add_library(eCAL::flatbuffers_core ALIAS flatbuffers_core)
 target_link_libraries(flatbuffers_core 
   INTERFACE 
     flatbuffers::flatbuffers
-    eCAL::core
+    eCAL::message_core
 )
 
 target_sources(flatbuffers_core

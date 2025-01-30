@@ -564,12 +564,6 @@ set(ecal_header_cmn
     include/ecal/util.h
 )
 
-set(ecal_header_msg
-    include/ecal/msg/dynamic.h
-    include/ecal/msg/publisher.h
-    include/ecal/msg/subscriber.h
-)
-
 set(ecal_sources
     ${ecal_config_src}
     ${ecal_io_mtx_src}
@@ -595,7 +589,6 @@ set(ecal_sources
     ${ecal_cmn_src}
     ${ecal_builder_src}
     ${ecal_header_cmn}
-    ${ecal_header_msg}
 )
 
 ecal_add_shared_library(${TARGET_NAME}
