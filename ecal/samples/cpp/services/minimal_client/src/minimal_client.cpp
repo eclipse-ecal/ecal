@@ -39,12 +39,12 @@ int main()
       // service successful executed
     case eCAL::eCallState::executed:
     {
-      std::cout << "Received response for method " << service_response_.service_method_information.method_name << " : " << service_response_.response << " from service id " << service_response_.service_method_id.service_id.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
+      std::cout << "Received response for method " << service_response_.service_method_information.method_name << " : " << service_response_.response << " from service id " << service_response_.server_id.service_id.entity_id << " from host " << service_response_.server_id.service_id.host_name << std::endl;
     }
     break;
     // service execution failed
     case eCAL::eCallState::failed:
-      std::cout << "Received error for method " << service_response_.service_method_information.method_name << " : " << service_response_.error_msg << " from service id " << service_response_.service_method_id.service_id.entity_id << " from host " << service_response_.service_method_id.service_id.host_name << std::endl;
+      std::cout << "Received error for method " << service_response_.service_method_information.method_name << " : " << service_response_.error_msg << " from service id " << service_response_.server_id.service_id.entity_id << " from host " << service_response_.server_id.service_id.host_name << std::endl;
       break;
     default:
       break;
@@ -76,7 +76,7 @@ int main()
       {
         auto& response_content = std::get<1>(service_response);
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
-        auto& server_host_name = response_content.service_method_id.service_id.host_name;
+        auto& server_host_name = response_content.server_id.service_id.host_name;
         switch (response_content.call_state)
         {
           // service successful executed
