@@ -35,7 +35,7 @@ void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInforma
   std::cout << "----------------------------------------------" << std::endl;
   std::cout << " Size         : " << data_.buffer_size          << std::endl;
   std::cout << " Time         : " << data_.send_timestamp       << std::endl;
-  std::cout << " Counter      : " << data_.send_counter         << std::endl;
+  std::cout << " Clock        : " << data_.send_clock           << std::endl;
   std::cout                                                     << std::endl;
 }
 

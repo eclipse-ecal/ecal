@@ -221,7 +221,7 @@ namespace eCAL
       try
       {
         auto msg = m_deserializer.Deserialize(data_.buffer, data_.buffer_size, topic_info_);
-        fn_callback(topic_id_, msg, data_.send_timestamp, data_.send_counter);
+        fn_callback(topic_id_, msg, data_.send_timestamp, data_.send_clock);
       }
       catch (const DynamicReflectionException& e)
       {

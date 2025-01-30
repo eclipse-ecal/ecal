@@ -33,10 +33,13 @@
 
 namespace eCAL
 {
+  /**
+   * @brief A struct which uniquely identifies anybody producing or consuming topics, e.g. a CPublisher or a CSubscriber.
+  **/
   struct STopicId
   {
-    SEntityId    topic_id;
-    std::string  topic_name;
+    SEntityId    topic_id;    //!< The unique id of the topic
+    std::string  topic_name;  //!< The topics name (on which matching is performed in the pub/sub case)
 
     bool operator==(const STopicId& other) const
     {
@@ -61,42 +64,21 @@ namespace eCAL
   **/
   struct SReceiveCallbackData
   {
-    const void* buffer = nullptr;       //!< payload buffer
+    const void* buffer = nullptr;       //!< payload buffer, containing the sent data
     size_t      buffer_size = 0;        //!< payload buffer size
-    int64_t     send_timestamp = 0;     //!< publisher send time in µs
-    uint64_t    send_counter = 0;       //!< publisher send counter. Each publisher increases the counter by one, every time a message is sent. It can be used to detect message drops.
+    int64_t     send_timestamp = 0;     //!< publisher send timestamp in µs
+    uint64_t    send_clock = 0;         //!< publisher send clock. Each publisher increases the counter by one, every time a message is sent. It can be used to detect message drops.
   };
 
   /**
- * @brief eCAL subscriber event callback type.
-**/
-  enum class eSubscriberEvent
-  {
-    none = 0,
-    connected = 1,
-    disconnected = 2,
-    dropped = 3
-  };
-
-  inline std::string to_string(eSubscriberEvent event_) {
-    switch (event_) {
-    case eSubscriberEvent::none:         return "NONE";
-    case eSubscriberEvent::connected:    return "CONNECTED";
-    case eSubscriberEvent::disconnected: return "DISCONNECTED";
-    case eSubscriberEvent::dropped:     return "DROPPED";
-    default:                             return "Unknown";
-    }
-  }
-
-  /**
-   * @brief eCAL publisher event callback type.
+  * @brief eCAL publisher event callback type.
   **/
   enum class ePublisherEvent
   {
     none = 0,
-    connected = 1,
-    disconnected = 2,
-    dropped = 3
+    connected = 1,     //!< a new subscriber has been connected to the publisher
+    disconnected = 2,  //!< a previously connected subscriber has been disconnected from this publisher
+    dropped = 3        //!< some subscriber has missed a message that was sent by this publisher
   };
 
   inline std::string to_string(ePublisherEvent event_) {
@@ -110,14 +92,35 @@ namespace eCAL
   }
 
   /**
-   * @brief Receive callback function type with topic id and data struct. The topic id contains the topic name, the process
-   *          name, the host name and a uniques topic identifier.
+ * @brief eCAL subscriber event callback type.
+**/
+  enum class eSubscriberEvent
+  {
+    none = 0,
+    connected = 1,      //!< a new publisher has been connected to the subscriber
+    disconnected = 2,   //!< a previously connected publisher has been disconnected from this subscriber
+    dropped = 3         //!< a message coming from a publisher has been dropped, e.g. the subscriber has missed it
+  };
+
+  inline std::string to_string(eSubscriberEvent event_) {
+    switch (event_) {
+    case eSubscriberEvent::none:         return "NONE";
+    case eSubscriberEvent::connected:    return "CONNECTED";
+    case eSubscriberEvent::disconnected: return "DISCONNECTED";
+    case eSubscriberEvent::dropped:      return "DROPPED";
+    default:                             return "Unknown";
+    }
+  }
+
+  /**
+   * @brief Receive callback function type. A user can register this callback type with a subscriber, and this callback will be triggered when the user receives any data.
    *
-   * @param topic_id_        The topic id struct of the received message.
-   * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+   * @param publisher_id_    The topic id of the publisher that has sent the data which is now being received.
+   * @param data_type_info_  Topic metadata, as set by the publisher (encoding, type, descriptor). 
+   *                         This can be used to validate that the received data can be properly interpreted by the subscriber.
    * @param data_            Data struct containing payload, timestamp and publication clock.
   **/
-  using ReceiveCallbackT = std::function<void(const STopicId& topic_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
+  using ReceiveCallbackT = std::function<void(const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
 
   /**
    * @brief eCAL publisher event callback struct.

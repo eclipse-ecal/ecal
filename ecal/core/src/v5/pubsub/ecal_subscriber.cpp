@@ -158,7 +158,7 @@ namespace eCAL
           v5_callback_data.size = static_cast<long>(v6_callback_data.buffer_size);
           v5_callback_data.id = 0; // v6 callbacks do not communicate this data any more, hence it is always set to 0.
           v5_callback_data.time = v6_callback_data.send_timestamp;
-          v5_callback_data.clock = v6_callback_data.send_counter;
+          v5_callback_data.clock = v6_callback_data.send_clock;
           callback_(topic_id_.topic_name.c_str(), &v5_callback_data);
         };
       return AddReceiveCallback(v6_callback);

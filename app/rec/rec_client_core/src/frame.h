@@ -37,7 +37,7 @@ namespace eCAL
         , ecal_receive_time_(receive_time)
         , system_receive_time_(system_receive_time)
         , topic_name_(topic_name)
-        , clock_(callback_data->send_counter)
+        , clock_(callback_data->send_clock)
         , id_(0) // TODO: We don't receive ids any more. We shoud probably adapt the frame class here.
       {
         data_.reserve(callback_data->buffer_size);

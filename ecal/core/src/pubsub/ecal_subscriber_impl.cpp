@@ -536,7 +536,7 @@ namespace eCAL
         cb_data.buffer   = static_cast<const void*>(payload_);
         cb_data.buffer_size  = long(size_);
         cb_data.send_timestamp  = time_;
-        cb_data.send_counter = clock_;
+        cb_data.send_clock = clock_;
 
         STopicId topic_id;
         topic_id.topic_name          = topic_info_.topic_name;

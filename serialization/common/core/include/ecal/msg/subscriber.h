@@ -181,7 +181,7 @@ namespace eCAL
       // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
       if (m_deserializer.Deserialize(msg, data_.buffer, data_.buffer_size))
       {
-        (fn_callback)(topic_id_, msg, data_.send_timestamp, data_.send_counter);
+        (fn_callback)(topic_id_, msg, data_.send_timestamp, data_.send_clock);
       }
     }
 
