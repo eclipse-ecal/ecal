@@ -1035,12 +1035,12 @@ sudo<span class="w"> </span>docker-compose<span class="w"> </span>up
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>This will work with eCAL 5.12 and higher.
-Older versions lack the ability to utilize the <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> in the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> file, thus it won’t work.</p>
+Older versions lack the ability to utilize the <code class="docutils literal notranslate"><span class="pre">shm_transport_domain</span></code> in the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> file, thus it won’t work.</p>
 </div>
-<p>In eCAL, you are able to set host belonging over network borders by utilizing the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> configuration file with the same <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> - in the following steps, you will learn how to set this up.</p>
+<p>In eCAL, you are able to set host belonging over network borders by utilizing the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> configuration file with the same <code class="docutils literal notranslate"><span class="pre">shm_transport_domain</span></code> - in the following steps, you will learn how to set this up.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If we don’t set the same <code class="docutils literal notranslate"><span class="pre">host_group_name</span></code> on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.</p>
+<p>If we don’t set the same <code class="docutils literal notranslate"><span class="pre">shm_transport_domain</span></code> on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.</p>
 </div>
 <ol class="arabic">
 <li><p>To encapsulate your container network from your host network, you need to create a new docker network with the following command:</p>
@@ -1053,7 +1053,7 @@ Older versions lack the ability to utilize the <code class="docutils literal not
 <li><p>You will use our previously discussed <a class="reference internal" href="#ecal-in-docker"><span class="std std-ref">ecal-runtime-image</span></a> for the next step.</p></li>
 <li><p>First, open <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code> from your preferred editor.</p></li>
 <li><p>Search for the line <code class="docutils literal notranslate"><span class="pre">registration-&gt;network_enabled</span></code> and set it to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
-<li><p>Search for the line <code class="docutils literal notranslate"><span class="pre">registration-&gt;host_group_name</span></code> and write your preferred name.</p></li>
+<li><p>Search for the line <code class="docutils literal notranslate"><span class="pre">registration-&gt;shm_transport_domain</span></code> and write your preferred name.</p></li>
 <li><p>Save and close the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> file.</p></li>
 <li><p>Now your <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> file is prepared.
 We want to use it not only for our Host-System but also for our Container, so we don’t need to edit the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> in our Container again.
