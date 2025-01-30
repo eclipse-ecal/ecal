@@ -32,9 +32,9 @@ namespace
     eCAL::v5::SServiceResponse service_response;
 
     // service/method id
-    service_response.host_name    = service_id_response.service_method_id.service_id.host_name;
-    service_response.service_name = service_id_response.service_method_id.service_name;
-    service_response.service_id   = std::to_string(service_id_response.service_method_id.service_id.entity_id);
+    service_response.host_name    = service_id_response.server_id.service_id.host_name;
+    service_response.service_name = service_id_response.server_id.service_name;
+    service_response.service_id   = std::to_string(service_id_response.server_id.service_id.entity_id);
     service_response.method_name  = service_id_response.service_method_information.method_name;
 
     // error message, return state and call state
@@ -186,7 +186,7 @@ namespace eCAL
       // Wrap the response callback to filter by host name if necessary
       const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
-          if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
+          if (m_host_name.empty() || service_response_.server_id.service_id.host_name == m_host_name)
           {
             Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Response received for method call.");
             
@@ -265,7 +265,7 @@ namespace eCAL
       // Wrap the response callback to filter by host name if necessary
       const eCAL::ResponseCallbackT callback = [this](const eCAL::SServiceResponse& service_response_)
         {
-          if (m_host_name.empty() || service_response_.service_method_id.service_id.host_name == m_host_name)
+          if (m_host_name.empty() || service_response_.server_id.service_id.host_name == m_host_name)
           {
             Logging::Log(Logging::log_level_debug2, "v5::CServiceClientImpl: Response received for async method call.");
             // Call the stored response callback

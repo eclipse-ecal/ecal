@@ -51,8 +51,8 @@ namespace
   {
     eCAL::SServiceResponse error_response;
     // service/method id
-    error_response.service_method_id.service_id   = entity_id_;
-    error_response.service_method_id.service_name = service_name_;
+    error_response.server_id.service_id   = entity_id_;
+    error_response.server_id.service_name = service_name_;
     error_response.service_method_information.method_name  = method_name_;
     // TODO we need to fill SDatatypeInformation
 
@@ -536,11 +536,11 @@ namespace eCAL
     auto data = std::make_shared<SResponseData>();
     data->response->first = false;
 
-    data->response->second.service_method_id.service_id.entity_id  = client_.service_attr.sid;
-    data->response->second.service_method_id.service_id.process_id = client_.service_attr.pid;
-    data->response->second.service_method_id.service_id.host_name  = client_.service_attr.hname;
+    data->response->second.server_id.service_id.entity_id = client_.service_attr.sid;
+    data->response->second.server_id.service_id.process_id = client_.service_attr.pid;
+    data->response->second.server_id.service_id.host_name = client_.service_attr.hname;
 
-    data->response->second.service_method_id.service_name         = client_.service_attr.sname;
+    data->response->second.server_id.service_name = client_.service_attr.sname;
     data->response->second.service_method_information.method_name = method_name_;
     // TODO we need to fill SDatatypeInformation
 
@@ -582,12 +582,12 @@ namespace eCAL
     {
       const auto& response_header = response.header;
       // service/method id
-      service_reponse.service_method_id.service_id.entity_id  = client_.service_attr.sid;
-      service_reponse.service_method_id.service_id.process_id = client_.service_attr.pid;
-      service_reponse.service_method_id.service_id.host_name  = response_header.host_name;
+      service_reponse.server_id.service_id.entity_id = client_.service_attr.sid;
+      service_reponse.server_id.service_id.process_id = client_.service_attr.pid;
+      service_reponse.service_method_id.service_id.host_name = response_header.host_name;
 
       // service and method name
-      service_reponse.service_method_id.service_name         = response_header.service_name;
+      service_reponse.service_method_id.service_name = response_header.service_name;
       service_reponse.service_method_information.method_name = response_header.method_name;
       // TODO fill in information about datatypes. Do we have them? from the other clients? we should???
 

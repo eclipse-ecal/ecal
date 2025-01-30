@@ -77,9 +77,9 @@ namespace
   void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
-    std::cout << "Executed on host name : " << service_response_.service_method_id.service_id.host_name << std::endl;
-    std::cout << "Executed service name : " << service_response_.service_method_id.service_name         << std::endl;
-    std::cout << "Executed method name  : " << service_response_.service_method_id.method_name          << std::endl;
+    std::cout << "Executed on host name : " << service_response_.server_id.service_id.host_name << std::endl;
+    std::cout << "Executed service name : " << service_response_.server_id.service_name         << std::endl;
+    std::cout << "Executed method name  : " << service_response_.server_id.method_name          << std::endl;
     std::cout << "Return value          : " << service_response_.ret_state                              << std::endl;
     std::cout << "Execution state       : ";
     switch (service_response_.call_state)
