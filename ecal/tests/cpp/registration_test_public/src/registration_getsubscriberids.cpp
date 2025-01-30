@@ -75,9 +75,11 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of subscriber IDs
-    const auto sub_ids1 = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids1;
+    const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids1);
 
     // verify the number of subscribers created
+    ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
     ASSERT_EQ(sub_ids1.size(), GetParam().subscriber_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_timeout);
 
   // get the list of subscriber IDs
-  const auto sub_ids2 = eCAL::Registration::GetSubscriberIDs();
+  std::set<eCAL::STopicId> sub_ids2;
+  const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids2);
 
   // all subscriber should be timeouted
+  ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
   ASSERT_EQ(sub_ids2.size(), 0);
 }
 

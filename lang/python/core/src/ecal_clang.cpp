@@ -48,8 +48,10 @@ namespace
 
   bool GetTopicDataTypeInformation(const char* topic_name_, eCAL::SDataTypeInformation& topic_info_)
   {
+    std::set<eCAL::STopicId> pub_ids;
+    eCAL::Registration::GetPublisherIDs(pub_ids);
     // try to find topic name in publisher set
-    for (const auto& pub_id : eCAL::Registration::GetPublisherIDs())
+    for (const auto& pub_id : pub_ids)
     {
       if (pub_id.topic_name == topic_name_)
       {
@@ -57,7 +59,8 @@ namespace
       }
     }
     // try to find topic name in subscriber set
-    const auto& sub_ids = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids;
+    eCAL::Registration::GetSubscriberIDs(sub_ids);
     for (const auto& sub_id : sub_ids)
     {
       if (sub_id.topic_name == topic_name_)

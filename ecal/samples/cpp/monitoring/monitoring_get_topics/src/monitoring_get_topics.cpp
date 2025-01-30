@@ -44,30 +44,13 @@ int main()
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
-        topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+        eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+        eCAL::Registration::GetSubscriberIDs(topic_id_pub_set);
       }
 
-      auto num_topics = topic_id_pub_set.size() + topic_id_sub_set.size();
+      auto num_entities = topic_id_pub_set.size() + topic_id_sub_set.size();
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetTopics      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    // GetTopicNames
-    {
-      std::set<std::string> topic_names;
-
-      start_time = std::chrono::steady_clock::now();
-      for (run = 0; run < runs; ++run)
-      {
-        eCAL::Registration::GetTopicNames(topic_names);
-      }
-
-      auto num_topics = topic_names.size();
-      auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
-      std::cout << "GetTopicsNames : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;
-      std::cout << std::endl;
+      std::cout << "GetTopics      : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_entities << " entities)" << std::endl;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }

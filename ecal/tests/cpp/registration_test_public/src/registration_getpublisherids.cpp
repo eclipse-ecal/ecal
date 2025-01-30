@@ -75,9 +75,11 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of publisher IDs
-    const auto pub_ids1 = eCAL::Registration::GetPublisherIDs();
+    std::set<eCAL::STopicId> pub_ids1;
+    const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids1);
 
     // verify the number of publishers created
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     ASSERT_EQ(pub_ids1.size(), GetParam().publisher_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(GetParam().configuration.registration.registration_timeout);
 
   // get the list of publisher IDs
-  const auto pub_ids2 = eCAL::Registration::GetPublisherIDs();
+  std::set<eCAL::STopicId> pub_ids2;
+  const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids2);
 
   // all publisher should be timeouted
+  EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 

@@ -158,8 +158,14 @@ int main()
     size_t num_sub(0);
     while ((num_pub < publisher_number) || (num_sub < subscriber_number))
     {
-      num_pub = eCAL::Registration::GetPublisherIDs().size();
-      num_sub = eCAL::Registration::GetSubscriberIDs().size();
+      std::set<eCAL::STopicId> publisher_ids;
+      std::set<eCAL::STopicId> subscriber_ids;
+
+      eCAL::Registration::GetPublisherIDs(publisher_ids);
+      eCAL::Registration::GetSubscriberIDs(subscriber_ids);
+
+      num_pub = publisher_ids.size();
+      num_sub = subscriber_ids.size();
 
       std::cout << "Registered publisher : " << num_pub << std::endl;
       std::cout << "Registered subscriber: " << num_sub << std::endl;
@@ -183,7 +189,8 @@ int main()
     // start time measurement
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    const auto pub_ids = eCAL::Registration::GetPublisherIDs();
+    std::set<eCAL::STopicId> pub_ids;
+    eCAL::Registration::GetPublisherIDs(pub_ids);
     num_pub = pub_ids.size();
     for (const auto& id : pub_ids)
     {
@@ -200,7 +207,8 @@ int main()
   }
 
   // check creation events
-  const std::set<eCAL::STopicId> publisher_ids = eCAL::Registration::GetPublisherIDs();
+  std::set<eCAL::STopicId> publisher_ids;
+  eCAL::Registration::GetPublisherIDs(publisher_ids);
   std::cout << "Number of publisher creation events   " << created_publisher_num << std::endl;
   std::cout << "Size   of publisher creation id set   " << created_publisher_ids.size() << std::endl;
   //std::cout << "Publisher creation id sets are equal  " << (publisher_ids == created_publisher_ids) << std::endl;

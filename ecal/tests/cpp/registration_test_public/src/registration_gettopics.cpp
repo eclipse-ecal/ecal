@@ -41,6 +41,8 @@ TEST(core_cpp_registration_public, GetTopics)
 
   std::set<eCAL::STopicId> topic_id_pub_set;
   std::set<eCAL::STopicId> topic_id_sub_set;
+  bool get_publisher_ids_succeeded;
+  bool get_subscriber_ids_succeeded;
 
   // create and check a few pub/sub entities
   {
@@ -64,7 +66,8 @@ TEST(core_cpp_registration_public, GetTopics)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all publisher topics and check size
-    topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
+    get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     EXPECT_EQ(topic_id_pub_set.size(), 3);
 
     // check publisher types and descriptions
@@ -77,7 +80,8 @@ TEST(core_cpp_registration_public, GetTopics)
     }
 
     // get all subscriber topics and check size
-    topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+    get_publisher_ids_succeeded = eCAL::Registration::GetSubscriberIDs(topic_id_sub_set);
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetSubscriberIDs call failed";
     EXPECT_EQ(topic_id_sub_set.size(), 2);
 
     // check subscriber types and descriptions
@@ -93,11 +97,13 @@ TEST(core_cpp_registration_public, GetTopics)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all publisher topics and check size (should not be expired)
-    topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
+    get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     EXPECT_EQ(topic_id_pub_set.size(), 3);
 
     // get all subscriber topics and check size (should not be expired)
-    topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+    get_subscriber_ids_succeeded = eCAL::Registration::GetSubscriberIDs(topic_id_sub_set);
+    EXPECT_TRUE(get_subscriber_ids_succeeded) << "GetSubscriberIDs call failed";
     EXPECT_EQ(topic_id_sub_set.size(), 2);
 
     // now destroy publisher pub1 and subscriber sub1
@@ -110,11 +116,13 @@ TEST(core_cpp_registration_public, GetTopics)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all publisher topics and check size (pub1 should be expired)
-    topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
+    get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     EXPECT_EQ(topic_id_pub_set.size(), 2);
 
     // get all subscriber topics and check size (sub1 should be expired)
-    topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+    get_subscriber_ids_succeeded = eCAL::Registration::GetSubscriberIDs(topic_id_sub_set);
+    EXPECT_TRUE(get_subscriber_ids_succeeded) << "GetSubscriberIDs call failed";
     EXPECT_EQ(topic_id_sub_set.size(), 1);
   }
 
@@ -122,11 +130,13 @@ TEST(core_cpp_registration_public, GetTopics)
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   // get all publisher topics and check size (all publisher should be expired)
-  topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
+  get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+  EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
   EXPECT_EQ(topic_id_pub_set.size(), 0);
 
   // get all subscriber topics and check size (all subscriber should be expired)
-  topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+  get_subscriber_ids_succeeded = eCAL::Registration::GetSubscriberIDs(topic_id_sub_set);
+  EXPECT_TRUE(get_subscriber_ids_succeeded) << "GetSubscriberIDs call failed";
   EXPECT_EQ(topic_id_sub_set.size(), 0);
 
   // finalize eCAL API
@@ -166,14 +176,13 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
     size_t number_publishers_seen = 0;
     size_t max_number_publishers_seen = 0;
 
-    std::set<std::string> tmp_topic_names;
-    std::set<eCAL::STopicId> tmp_topic_ids;
+    std::set<eCAL::STopicId> tmp_publisher_ids;
 
     do {
-      eCAL::Registration::GetTopicNames(tmp_topic_names);
-      tmp_topic_ids = eCAL::Registration::GetPublisherIDs();
+      std::set<eCAL::STopicId> tmp_publisher_ids;
+      eCAL::Registration::GetPublisherIDs(tmp_publisher_ids);
 
-      number_publishers_seen = tmp_topic_names.size();
+      number_publishers_seen = tmp_publisher_ids.size();
       max_number_publishers_seen = std::max(max_number_publishers_seen, number_publishers_seen);
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
     } while (!testing_completed);
