@@ -370,7 +370,8 @@ int main(int argc, char** argv)
   }
 
   // Shutdown service
-  rec_service_ = nullptr;
+  rec_service_server_ = nullptr;
+  rec_service_        = nullptr;
 
   // Stop recording
   ecal_rec->StopRecording();

@@ -86,6 +86,12 @@ namespace eCAL
       ~CServiceServer() override = default;
 
       /**
+       * @brief CServiceServers are non-movable.
+      **/
+      CServiceServer(CServiceServer&& other) = delete;
+      CServiceServer& operator=(CServiceServer&& other) = delete;
+
+      /**
        * @brief CServiceServers are non-copyable.
       **/
       CServiceServer(const CServiceServer&) = delete;
