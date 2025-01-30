@@ -37,7 +37,6 @@ namespace eCAL
       udp_mc,
       shm,
       tcp,
-      all
     };
 
     namespace UDP

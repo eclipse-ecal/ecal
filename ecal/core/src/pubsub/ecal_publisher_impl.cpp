@@ -923,7 +923,6 @@ namespace eCAL
       {TransportLayer::eType::shm, tl_ecal_shm},
       {TransportLayer::eType::udp_mc, tl_ecal_udp},
       {TransportLayer::eType::tcp, tl_ecal_tcp},
-      {TransportLayer::eType::all, tl_all}
     };
 
     for (const TransportLayer::eType layer : layer_priority_vector)
