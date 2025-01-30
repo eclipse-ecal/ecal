@@ -46,12 +46,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_ecal.h`
 
-- :ref:`file_ecal_core_include_ecal_msg_dynamic.h`
-
-- :ref:`file_ecal_core_include_ecal_msg_publisher.h`
-
-- :ref:`file_ecal_core_include_ecal_msg_subscriber.h`
-
 
 
 

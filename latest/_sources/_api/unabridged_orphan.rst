@@ -51,11 +51,6 @@ Directories
 .. toctree::
    :maxdepth: 5
 
-   dir__home_runner_work_ecal_ecal_ecal_core_include_ecal_msg.rst
-
-.. toctree::
-   :maxdepth: 5
-
    dir_contrib.rst
 
 .. toctree::
@@ -86,11 +81,6 @@ Files
    :maxdepth: 5
 
    file_doc.hpp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_msg_dynamic.h.rst
 
 .. toctree::
    :maxdepth: 5
@@ -180,17 +170,7 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_msg_publisher.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_registration.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   file_ecal_core_include_ecal_msg_subscriber.h.rst
 
 .. toctree::
    :maxdepth: 5

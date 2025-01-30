@@ -12,10 +12,5 @@ Directory ecal
 
 *Directory path:* ``/home/runner/work/ecal/ecal/ecal/core/include/ecal``
 
-Subdirectories
---------------
-
-- :ref:`dir__home_runner_work_ecal_ecal_ecal_core_include_ecal_msg`
-
 
 
