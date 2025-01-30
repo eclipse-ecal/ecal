@@ -12,7 +12,7 @@ The options are grouped by their prefix:
 
 - ``ECAL_USE_`` variables indicate if eCAL shall use a certain dependency. E.g setting ``ECAL_USE_QT`` to off, will disable all components of eCAL that have a (Qt) GUI attached.
 - ``ECAL_BUILD_`` variables turn on / off certain eCAL components. Those components can be language bindings, application (like monitor / player / recorder), documentation or tests
-- ``ECAL_THIRDPARTY_`` variables control on a dependency by dependency basis, if that dependency is to be compiled alongside eCAL.
+- ``ECAL_THIRDPARTY_BUILD`` variables control on a dependency by dependency basis, if that dependency is to be compiled alongside eCAL.
 
 There are a few addional options which do not fit in these categories, but they are also documentd below.
 
