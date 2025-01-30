@@ -584,10 +584,10 @@ namespace eCAL
       // service/method id
       service_reponse.server_id.service_id.entity_id = client_.service_attr.sid;
       service_reponse.server_id.service_id.process_id = client_.service_attr.pid;
-      service_reponse.service_method_id.service_id.host_name = response_header.host_name;
+      service_reponse.server_id.service_id.host_name = response_header.host_name;
 
       // service and method name
-      service_reponse.service_method_id.service_name = response_header.service_name;
+      service_reponse.server_id.service_name = response_header.service_name;
       service_reponse.service_method_information.method_name = response_header.method_name;
       // TODO fill in information about datatypes. Do we have them? from the other clients? we should???
 

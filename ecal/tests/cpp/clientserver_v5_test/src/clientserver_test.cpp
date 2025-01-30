@@ -80,13 +80,13 @@ namespace
     std::cout << "Execution state       : ";
     switch (service_response_.call_state)
     {
-    case none:
+    case eCAL::eCallState::none:
       std::cout << "call_state_none";
       break;
-    case executed:
+    case eCAL::eCallState::executed:
       std::cout << "call_state_executed";
       break;
-    case failed:
+    case eCAL::eCallState::failed:
       std::cout << "call_state_failed";
       break;
     }
