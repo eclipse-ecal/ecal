@@ -29,7 +29,7 @@
 
 namespace eCAL
 {
-  CServiceServer::CServiceServer(const std::string & service_name_, const ServerEventCallbackT event_callback_)
+  CServiceServer::CServiceServer(const std::string & service_name_, const ServerEventCallbackT& event_callback_)
     : m_service_server_impl(nullptr)
   {
     // create server implementation

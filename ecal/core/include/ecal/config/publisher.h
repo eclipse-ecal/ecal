@@ -88,7 +88,7 @@
 
 #pragma once
 
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
