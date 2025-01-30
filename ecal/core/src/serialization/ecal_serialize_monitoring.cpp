@@ -189,8 +189,6 @@ namespace
     pb_topic_.data_frequency = topic_.data_frequency;
     // transport_layer
     encode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
-    // attr
-    eCAL::nanopb::encode_map(pb_topic_.attr, topic_.attr);
   }
 
   bool encode_mon_message_topics_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
@@ -628,8 +626,6 @@ namespace
     eCAL::nanopb::decode_string(pb_topic_.datatype_information.descriptor_information, topic_.datatype_information.descriptor);
     // transport_layer
     decode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
-    // attr
-    eCAL::nanopb::decode_map(pb_topic_.attr, topic_.attr);
   }
 
   void AssignValues(const eCAL_pb_Topic& pb_topic_, eCAL::Monitoring::STopicMon& topic_)

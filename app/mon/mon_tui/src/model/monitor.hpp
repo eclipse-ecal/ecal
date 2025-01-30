@@ -216,14 +216,6 @@ class MonitorModel
       topic.data_id = t.data_id();
       topic.data_clock = t.data_clock();
       topic.data_frequency = t.data_frequency();
-      for(auto &attr: *t.mutable_attr())
-      {
-        topic.attributes.emplace(
-          std::pair<std::string, std::string>(
-            std::move(attr.first), std::move(attr.second)
-          )
-        );
-      }
     }
 
     for(auto &s: *mon_.mutable_services())

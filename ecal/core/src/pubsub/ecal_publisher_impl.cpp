@@ -346,26 +346,24 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  bool CPublisherImpl::SetAttribute(const std::string& /* attr_name_ */_, const std::string& /* attr_value_ */)
   {
-    m_attr[attr_name_] = attr_value_;
-
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetAttribute");
 #endif
-
-    return(true);
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::SetAttribute - Setting publisher attributes no longer has an effect.");
+    
+    return(false);
   }
 
-  bool CPublisherImpl::ClearAttribute(const std::string& attr_name_)
+  bool CPublisherImpl::ClearAttribute(const std::string& /* attr_name_ */)
   {
-    m_attr.erase(attr_name_);
-
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ClearAttribute");
 #endif
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::ClearAttribute - Clear publisher attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
   bool CPublisherImpl::SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_)
@@ -640,7 +638,6 @@ namespace eCAL
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr  = m_attr;
     ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP

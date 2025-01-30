@@ -144,7 +144,6 @@ namespace eCAL
 
     EntityIdT                m_topic_id;
     SDataTypeInformation                   m_topic_info;
-    std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
     eCAL::eCALWriter::SAttributes          m_attributes;
 

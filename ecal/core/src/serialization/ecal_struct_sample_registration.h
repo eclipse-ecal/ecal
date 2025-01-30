@@ -278,7 +278,6 @@ namespace eCAL
       int64_t                             data_clock = 0;               // data clock (send / receive action)
       int32_t                             data_frequency  = 0;                   // data frequency (send / receive registrations per second) [mHz]
 
-      std::map<std::string, std::string>  attr;                         // generic topic description
 
       bool operator==(const Topic& other) const {
         return registration_clock == other.registration_clock &&
@@ -295,8 +294,7 @@ namespace eCAL
           message_drops == other.message_drops &&
           data_id == other.data_id &&
           data_clock == other.data_clock &&
-          data_frequency == other.data_frequency &&
-          attr == other.attr;
+          data_frequency == other.data_frequency;
       }
 
       void clear()
@@ -319,8 +317,6 @@ namespace eCAL
         data_id = 0;
         data_clock = 0;
         data_frequency = 0;
-
-        attr.clear();
       }
     };
 
