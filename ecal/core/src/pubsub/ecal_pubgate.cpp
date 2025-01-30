@@ -115,13 +115,13 @@ namespace eCAL
       {
         switch (layer.type)
         {
-        case TLayer::tlayer_udp_mc:
+        case tl_ecal_udp:
           layer_states.udp.read_enabled = true;
           break;
-        case TLayer::tlayer_shm:
+        case tl_ecal_shm:
           layer_states.shm.read_enabled = true;
           break;
-        case TLayer::tlayer_tcp:
+        case tl_ecal_tcp:
           layer_states.tcp.read_enabled = true;
           break;
         default:
