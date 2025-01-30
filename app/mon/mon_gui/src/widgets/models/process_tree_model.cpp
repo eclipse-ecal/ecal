@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ void ProcessTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
   for (const auto& process_pb : monitoring_pb.processes())
   {
     // Create a Process ID that is unique across all hosts
-    std::string process_identifier = (std::to_string(process_pb.pid()) + "@" + process_pb.hname());
+    std::string process_identifier = (std::to_string(process_pb.process_id()) + "@" + process_pb.host_name());
 
     if (tree_item_map_.find(process_identifier) == tree_item_map_.end())
     {

@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public:
   { //-V802
     long long time;
     QString   host_name;
-    int       pid;
+    int       process_id;
     QString   process_name;
     QString   process_path;
     int       log_level;
@@ -54,7 +54,7 @@ public:
     TIME,
     LOG_LEVEL,
     HOST_NAME,
-    PID,
+    PROCESS_ID,
     PROCESS_NAME,
     PROCESS_PATH,
     MESSAGE,
@@ -89,7 +89,7 @@ private:
   {
     { Columns::TIME,         "Time" },
     { Columns::HOST_NAME,    "Host" },
-    { Columns::PID,          "PID" },
+    { Columns::PROCESS_ID,   "PROCESS_ID" },
     { Columns::PROCESS_NAME, "Process" },
     { Columns::PROCESS_PATH, "Process Path" },
     { Columns::LOG_LEVEL,    "Level" },

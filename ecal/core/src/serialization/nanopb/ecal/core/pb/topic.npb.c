@@ -6,10 +6,7 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(eCAL_pb_Topic, eCAL_pb_Topic, 2)
-
-
-PB_BIND(eCAL_pb_Topic_AttrEntry, eCAL_pb_Topic_AttrEntry, AUTO)
+PB_BIND(eCAL_pb_Topic, eCAL_pb_Topic, AUTO)
 
 
 

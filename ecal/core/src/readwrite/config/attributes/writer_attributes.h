@@ -23,9 +23,9 @@
 #include <cstddef>
 #include <vector>
 
-#include <ecal/tlayer.h>
+#include <ecal/config/transport_layer.h>
 
-#include "ecal/types/ecal_custom_data_types.h"
+#include "ecal/types/custom_data_types.h"
 
 namespace eCAL
 {
@@ -66,7 +66,7 @@ namespace eCAL
 
     struct SAttributes
     {
-      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
+      using LayerPriorityVector = std::vector<TransportLayer::eType>;
       LayerPriorityVector  layer_priority_local;
       LayerPriorityVector  layer_priority_remote;
 

@@ -69,12 +69,12 @@ namespace eCAL
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
-        const std::string pname = process.pname;
-        if ( (pname         == process_name_)
-          && (process.hname == host_name)
+        const std::string process_name = process.process_name;
+        if ( (process_name         == process_name_)
+          && (process.host_name == host_name)
           )
         {
-          proc_id_list.push_back(process.pid);
+          proc_id_list.push_back(process.process_id);
         }
       }
 
@@ -104,20 +104,20 @@ namespace eCAL
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
-        const std::string uname = process.uname;
-        if  ((uname != "eCALMon")
-          && (uname != "eCALPlay")
-          && (uname != "eCALPlayGUI")
-          && (uname != "eCALRec")
-          && (uname != "eCALRecGUI")
-          && (uname != "eCALSys")
-          && (uname != "eCALSysGUI")
-          && (uname != "eCALStop")
-          && (uname != "eCALTopic")
-          && (process.hname == host_name)
+        const std::string unit_name = process.unit_name;
+        if  ((unit_name != "eCALMon")
+          && (unit_name != "eCALPlay")
+          && (unit_name != "eCALPlayGUI")
+          && (unit_name != "eCALRec")
+          && (unit_name != "eCALRecGUI")
+          && (unit_name != "eCALSys")
+          && (unit_name != "eCALSysGUI")
+          && (unit_name != "eCALStop")
+          && (unit_name != "eCALTopic")
+          && (process.host_name == host_name)
           )
         {
-          proc_id_list.push_back(process.pid);
+          proc_id_list.push_back(process.process_id);
         }
       }
 
@@ -135,21 +135,21 @@ namespace eCAL
       std::vector<int> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
-        const std::string uname = process.uname;
-        if (((uname == "eCALMon")
-          || (uname == "eCALPlay")
-          || (uname == "eCALPlayGUI")
-          || (uname == "eCALRec")
-          || (uname == "eCALRecGUI")
-          || (uname == "eCALSys")
-          || (uname == "eCALSysGUI")
-          || (uname == "eCALStop")
-          || (uname == "eCALTopic")
+        const std::string unit_name = process.unit_name;
+        if (((unit_name == "eCALMon")
+          || (unit_name == "eCALPlay")
+          || (unit_name == "eCALPlayGUI")
+          || (unit_name == "eCALRec")
+          || (unit_name == "eCALRecGUI")
+          || (unit_name == "eCALSys")
+          || (unit_name == "eCALSysGUI")
+          || (unit_name == "eCALStop")
+          || (unit_name == "eCALTopic")
           )
-          && (process.hname == host_name)
+          && (process.host_name == host_name)
           )
         {
-          proc_id_list.push_back(process.pid);
+          proc_id_list.push_back(process.process_id);
         }
       }
 

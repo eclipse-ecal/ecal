@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ struct Process
     NONE, REALTIME, REPLAY
   };
 
-  int32_t pid;
+  int32_t process_id;
   std::string name;
   std::string host_name;
   std::string unit_name;

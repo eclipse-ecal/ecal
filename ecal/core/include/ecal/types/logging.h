@@ -37,10 +37,10 @@ namespace eCAL
     struct SLogMessage
     {
       int64_t                time  = 0;               // time
-      std::string            hname;                   // host name
-      int32_t                pid   = 0;               // process id
-      std::string            pname;                   // process name
-      std::string            uname;                   // unit name
+      std::string            host_name;               // host name
+      int32_t                process_id   = 0;        // process id
+      std::string            process_name;            // process name
+      std::string            unit_name;               // unit name
       eLogLevel              level = log_level_none;  // message level
       std::string            content;                 // message content
     };

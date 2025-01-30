@@ -141,12 +141,14 @@ namespace eCAL
   {
     eCallState                     call_state = eCallState::none; //!< call state, to indicate if the call was successful or not
 
-    SServiceId                     service_method_id;            //!< service information (service id (entity id, process id, host name), service name, method name)
-    SServiceMethodInformation      service_method_information;   //!< method information (method name & DatatypeInformation of request and reponse // TODO: the datatypeinformation are not yet filled!!!
-    int                            ret_state  = 0;               //!< return state of the called service method // TODO: does this value even make sense? or should service methods always return void? It's not actually used anywhere
-    std::string                    response;                     //!< the actual response data
+    SServiceId                     server_id;                    //!< Id of the server that executed the service (server id (entity id, process id, host name), name)
+    // TODO: the datatypeinformation of the service_method_information are not yet being filled!!!
+    SServiceMethodInformation      service_method_information;   //!< Additional Information about the method that has been called (name & DatatypeInformation of request and reponse)
+    // TODO: does this value even make sense? or should service methods always return void? It's not actually used anywhere
+    int                            ret_state  = 0;               //!< return state of the called service method 
+    std::string                    response;                     //!< the actual response data of the service call
   
-    std::string                    error_msg;                    //!< human readable error message
+    std::string                    error_msg;                    //!< human readable error message, in case that the service call could not be executed.
   };
   using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses
 

@@ -27,11 +27,11 @@ typedef enum _eCAL_pb_eProcessSeverityLevel {
     eCAL_pb_eProcessSeverityLevel_proc_sev_level5 = 5 /* severity level 5 */
 } eCAL_pb_eProcessSeverityLevel;
 
-typedef enum _eCAL_pb_eTSyncState {
-    eCAL_pb_eTSyncState_tsync_none = 0, /* not synchronized */
-    eCAL_pb_eTSyncState_tsync_realtime = 1, /* real time sync mode */
-    eCAL_pb_eTSyncState_tsync_replay = 2 /* replay time sync mode */
-} eCAL_pb_eTSyncState;
+typedef enum _eCAL_pb_eTimeSyncState {
+    eCAL_pb_eTimeSyncState_tsync_none = 0, /* not synchronized */
+    eCAL_pb_eTimeSyncState_tsync_realtime = 1, /* real time sync mode */
+    eCAL_pb_eTimeSyncState_tsync_replay = 2 /* replay time sync mode */
+} eCAL_pb_eTimeSyncState;
 
 /* Struct definitions */
 typedef struct _eCAL_pb_ProcessState {
@@ -42,18 +42,18 @@ typedef struct _eCAL_pb_ProcessState {
 
 typedef struct _eCAL_pb_Process { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 7 to 11; */
-    int32_t rclock; /* registration clock */
-    pb_callback_t hname; /* host name */
-    int32_t pid; /* process id */
-    pb_callback_t pname; /* process name */
-    pb_callback_t uname; /* unit name */
-    pb_callback_t pparam; /* process parameter */
+    int32_t registration_clock; /* registration clock */
+    pb_callback_t host_name; /* host name */
+    int32_t process_id; /* process id */
+    pb_callback_t process_name; /* process name */
+    pb_callback_t unit_name; /* unit name */
+    pb_callback_t process_parameter; /* process parameter */
     /* 10 = data write bytes per sec
  11 = data read bytes per sec */
     bool has_state;
     eCAL_pb_ProcessState state; /* process state info */
-    eCAL_pb_eTSyncState tsync_state; /* time synchronization state */
-    pb_callback_t tsync_mod_name; /* time synchronization module name */
+    eCAL_pb_eTimeSyncState time_sync_state; /* time synchronization state */
+    pb_callback_t time_sync_module_name; /* time synchronization module name */
     int32_t component_init_state; /* eCAL component initialization state (eCAL::Initialize(..)) */
     pb_callback_t component_init_info; /* like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc) */
     pb_callback_t ecal_runtime_version; /* loaded / runtime eCAL version of a component */
@@ -75,35 +75,35 @@ extern "C" {
 #define _eCAL_pb_eProcessSeverityLevel_MAX eCAL_pb_eProcessSeverityLevel_proc_sev_level5
 #define _eCAL_pb_eProcessSeverityLevel_ARRAYSIZE ((eCAL_pb_eProcessSeverityLevel)(eCAL_pb_eProcessSeverityLevel_proc_sev_level5+1))
 
-#define _eCAL_pb_eTSyncState_MIN eCAL_pb_eTSyncState_tsync_none
-#define _eCAL_pb_eTSyncState_MAX eCAL_pb_eTSyncState_tsync_replay
-#define _eCAL_pb_eTSyncState_ARRAYSIZE ((eCAL_pb_eTSyncState)(eCAL_pb_eTSyncState_tsync_replay+1))
+#define _eCAL_pb_eTimeSyncState_MIN eCAL_pb_eTimeSyncState_tsync_none
+#define _eCAL_pb_eTimeSyncState_MAX eCAL_pb_eTimeSyncState_tsync_replay
+#define _eCAL_pb_eTimeSyncState_ARRAYSIZE ((eCAL_pb_eTimeSyncState)(eCAL_pb_eTimeSyncState_tsync_replay+1))
 
 #define eCAL_pb_ProcessState_severity_ENUMTYPE eCAL_pb_eProcessSeverity
 #define eCAL_pb_ProcessState_severity_level_ENUMTYPE eCAL_pb_eProcessSeverityLevel
 
-#define eCAL_pb_Process_tsync_state_ENUMTYPE eCAL_pb_eTSyncState
+#define eCAL_pb_Process_time_sync_state_ENUMTYPE eCAL_pb_eTimeSyncState
 
 
 /* Initializer values for message structs */
 #define eCAL_pb_ProcessState_init_default        {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_default             {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_default, _eCAL_pb_eTimeSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 #define eCAL_pb_ProcessState_init_zero           {_eCAL_pb_eProcessSeverity_MIN, {{NULL}, NULL}, _eCAL_pb_eProcessSeverityLevel_MIN}
-#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
+#define eCAL_pb_Process_init_zero                {0, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, eCAL_pb_ProcessState_init_zero, _eCAL_pb_eTimeSyncState_MIN, {{NULL}, NULL}, 0, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_ProcessState_severity_tag        1
 #define eCAL_pb_ProcessState_info_tag            2
 #define eCAL_pb_ProcessState_severity_level_tag  3
-#define eCAL_pb_Process_rclock_tag               1
-#define eCAL_pb_Process_hname_tag                2
-#define eCAL_pb_Process_pid_tag                  3
-#define eCAL_pb_Process_pname_tag                4
-#define eCAL_pb_Process_uname_tag                5
-#define eCAL_pb_Process_pparam_tag               6
+#define eCAL_pb_Process_registration_clock_tag   1
+#define eCAL_pb_Process_host_name_tag            2
+#define eCAL_pb_Process_process_id_tag           3
+#define eCAL_pb_Process_process_name_tag         4
+#define eCAL_pb_Process_unit_name_tag            5
+#define eCAL_pb_Process_process_parameter_tag    6
 #define eCAL_pb_Process_state_tag                12
-#define eCAL_pb_Process_tsync_state_tag          13
-#define eCAL_pb_Process_tsync_mod_name_tag       14
+#define eCAL_pb_Process_time_sync_state_tag      13
+#define eCAL_pb_Process_time_sync_module_name_tag 14
 #define eCAL_pb_Process_component_init_state_tag 15
 #define eCAL_pb_Process_component_init_info_tag  16
 #define eCAL_pb_Process_ecal_runtime_version_tag 17
@@ -119,15 +119,15 @@ X(a, STATIC,   SINGULAR, UENUM,    severity_level,    3)
 #define eCAL_pb_ProcessState_DEFAULT NULL
 
 #define eCAL_pb_Process_FIELDLIST(X, a) \
-X(a, STATIC,   SINGULAR, INT32,    rclock,            1) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             2) \
-X(a, STATIC,   SINGULAR, INT32,    pid,               3) \
-X(a, CALLBACK, SINGULAR, STRING,   pname,             4) \
-X(a, CALLBACK, SINGULAR, STRING,   uname,             5) \
-X(a, CALLBACK, SINGULAR, STRING,   pparam,            6) \
+X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \
+X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
+X(a, STATIC,   SINGULAR, INT32,    process_id,        3) \
+X(a, CALLBACK, SINGULAR, STRING,   process_name,      4) \
+X(a, CALLBACK, SINGULAR, STRING,   unit_name,         5) \
+X(a, CALLBACK, SINGULAR, STRING,   process_parameter,   6) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  state,            12) \
-X(a, STATIC,   SINGULAR, UENUM,    tsync_state,      13) \
-X(a, CALLBACK, SINGULAR, STRING,   tsync_mod_name,   14) \
+X(a, STATIC,   SINGULAR, UENUM,    time_sync_state,  13) \
+X(a, CALLBACK, SINGULAR, STRING,   time_sync_module_name,  14) \
 X(a, STATIC,   SINGULAR, INT32,    component_init_state,  15) \
 X(a, CALLBACK, SINGULAR, STRING,   component_init_info,  16) \
 X(a, CALLBACK, SINGULAR, STRING,   ecal_runtime_version,  17) \

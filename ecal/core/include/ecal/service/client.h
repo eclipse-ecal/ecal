@@ -53,7 +53,7 @@ namespace eCAL
      * @param event_callback_          The client event callback funtion.
     **/
     ECAL_API_EXPORTED_MEMBER
-      CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_ = ServiceMethodInformationSetT(), const ClientEventCallbackT event_callback_ = ClientEventCallbackT());
+      CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_ = ServiceMethodInformationSetT(), const ClientEventCallbackT& event_callback_ = ClientEventCallbackT());
 
     /**
      * @brief Destructor.
@@ -92,7 +92,7 @@ namespace eCAL
       std::vector<CClientInstance> GetClientInstances() const;
 
     /**
-     * @brief Blocking call of a service method for all existing service instances, response will be returned as vector<pair<bool, SServiceReponse>>
+     * @brief Blocking call of a service method for all existing service instances, response will be returned as ServiceResponseVecT
      *
      * @param       method_name_  Method name.
      * @param       request_      Request string.

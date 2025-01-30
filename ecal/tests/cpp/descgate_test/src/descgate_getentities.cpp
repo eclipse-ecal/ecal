@@ -33,12 +33,12 @@ namespace
   eCAL::Registration::Sample CreatePublisher(const std::string& topic_name_, std::uint64_t topic_id_)
   {
     eCAL::Registration::Sample reg_sample;
-    reg_sample.cmd_type                   = eCAL::bct_reg_publisher;
-    reg_sample.identifier.entity_id       = topic_id_;
-    reg_sample.topic.tname                = topic_name_;
-    reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
-    reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
-    reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
+    reg_sample.cmd_type                              = eCAL::bct_reg_publisher;
+    reg_sample.identifier.entity_id                  = topic_id_;
+    reg_sample.topic.topic_name                      = topic_name_;
+    reg_sample.topic.datatype_information.name       = topic_name_ + "-datatype_information.name";
+    reg_sample.topic.datatype_information.encoding   = topic_name_ + "-datatype_information.encoding";
+    reg_sample.topic.datatype_information.descriptor = topic_name_ + "-datatype_information.descriptor";
     return reg_sample;
   }
 
@@ -52,12 +52,12 @@ namespace
   eCAL::Registration::Sample CreateSubscriber(const std::string& topic_name_, std::uint64_t topic_id_)
   {
     eCAL::Registration::Sample reg_sample;
-    reg_sample.cmd_type                   = eCAL::bct_reg_subscriber;
-    reg_sample.identifier.entity_id       = topic_id_;
-    reg_sample.topic.tname                = topic_name_;
-    reg_sample.topic.tdatatype.name       = topic_name_ + "-tdatatype.name";
-    reg_sample.topic.tdatatype.encoding   = topic_name_ + "-tdatatype.encoding";
-    reg_sample.topic.tdatatype.descriptor = topic_name_ + "-tdatatype.descriptor";
+    reg_sample.cmd_type                              = eCAL::bct_reg_subscriber;
+    reg_sample.identifier.entity_id                  = topic_id_;
+    reg_sample.topic.topic_name                      = topic_name_;
+    reg_sample.topic.datatype_information.name       = topic_name_ + "-datatype_information.name";
+    reg_sample.topic.datatype_information.encoding   = topic_name_ + "-datatype_information.encoding";
+    reg_sample.topic.datatype_information.descriptor = topic_name_ + "-datatype_information.descriptor";
     return reg_sample;
   }
 
@@ -72,11 +72,11 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type             = eCAL::bct_reg_service;
-    reg_sample.service.sname        = service_name_;
+    reg_sample.service.service_name = service_name_;
     reg_sample.identifier.entity_id = service_id_;
 
     eCAL::Service::Method method;
-    method.mname = "method_name";
+    method.method_name = "method_name";
     reg_sample.service.methods.push_back(method);
     return reg_sample;
   }
@@ -92,11 +92,11 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type               = eCAL::bct_reg_client;
-    reg_sample.client.sname           = client_name_;
+    reg_sample.client.service_name    = client_name_;
     reg_sample.identifier.entity_id   = service_id_;
 
     eCAL::Service::Method method;
-    method.mname = "method_name";
+    method.method_name = "method_name";
     reg_sample.client.methods.push_back(method);
     return reg_sample;
   }
@@ -151,10 +151,10 @@ TEST(core_cpp_descgate, PublisherQualities)
       EXPECT_TRUE(found);
       if (found)
       {
-        std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "-tdatatype.name",       topic_info.name);
-        EXPECT_EQ(tname + "-tdatatype.encoding",   topic_info.encoding);
-        EXPECT_EQ(tname + "-tdatatype.descriptor", topic_info.descriptor);
+        std::string topic_name = id.topic_name;
+        EXPECT_EQ(topic_name + "-datatype_information.name",       topic_info.name);
+        EXPECT_EQ(topic_name + "-datatype_information.encoding",   topic_info.encoding);
+        EXPECT_EQ(topic_name + "-datatype_information.descriptor", topic_info.descriptor);
       }
     }
   }
@@ -234,10 +234,10 @@ TEST(core_cpp_descgate, SubscriberQualities)
       EXPECT_TRUE(found);
       if (found)
       {
-        std::string tname = id.topic_name;
-        EXPECT_EQ(tname + "-tdatatype.name",       topic_info.name);
-        EXPECT_EQ(tname + "-tdatatype.encoding",   topic_info.encoding);
-        EXPECT_EQ(tname + "-tdatatype.descriptor", topic_info.descriptor);
+        std::string topic_name = id.topic_name;
+        EXPECT_EQ(topic_name + "-datatype_information.name",       topic_info.name);
+        EXPECT_EQ(topic_name + "-datatype_information.encoding",   topic_info.encoding);
+        EXPECT_EQ(topic_name + "-datatype_information.descriptor", topic_info.descriptor);
       }
     }
   }

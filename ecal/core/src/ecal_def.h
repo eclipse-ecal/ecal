@@ -24,7 +24,6 @@
 #pragma once
 
 #include <ecal/config/configuration.h>
-#include <ecal/tlayer.h>
 #include <ecal/log_level.h>
 #include <ecal/os.h>
 

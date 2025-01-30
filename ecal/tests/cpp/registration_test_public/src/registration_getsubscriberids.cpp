@@ -60,24 +60,26 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      subscriber_vec.emplace_back(tname.str(), data_type_info);
+      subscriber_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of subscriber IDs
-    const auto sub_ids1 = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids1;
+    const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids1);
 
     // verify the number of subscribers created
+    ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
     ASSERT_EQ(sub_ids1.size(), GetParam().subscriber_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_timeout);
 
   // get the list of subscriber IDs
-  const auto sub_ids2 = eCAL::Registration::GetSubscriberIDs();
+  std::set<eCAL::STopicId> sub_ids2;
+  const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids2);
 
   // all subscriber should be timeouted
+  ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
   ASSERT_EQ(sub_ids2.size(), 0);
 }
 
@@ -119,15 +123,15 @@ TEST_P(TestFixture, SubscriberEventCallbackIsTriggered)
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      subscriber_vec.emplace_back(tname.str(), data_type_info);
+      subscriber_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register

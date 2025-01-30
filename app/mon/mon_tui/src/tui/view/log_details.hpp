@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public:
     return vbox (
       separatorEmpty(),
       text("Host name: " + details->host_name),
-      text("PID: " + std::to_string(details->pid)),
+      text("PID: " + std::to_string(details->process_id)),
       text("Process path: " + details->process_path),
       separatorEmpty(),
       text("Message:"),

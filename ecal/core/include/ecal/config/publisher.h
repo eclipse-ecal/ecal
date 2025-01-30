@@ -88,8 +88,7 @@
 
 #pragma once
 
-#include <ecal/tlayer.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
@@ -144,9 +143,9 @@ namespace eCAL
     {
       Layer::Configuration layer;                        //!< Layer configuration
 
-      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
-      LayerPriorityVector  layer_priority_local    { TLayer::tlayer_shm, TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
-      LayerPriorityVector  layer_priority_remote   {                     TLayer::tlayer_udp_mc, TLayer::tlayer_tcp };
+      using LayerPriorityVector = std::vector<TransportLayer::eType>;
+      LayerPriorityVector  layer_priority_local    { TransportLayer::eType::shm,    TransportLayer::eType::udp_mc, TransportLayer::eType::tcp };
+      LayerPriorityVector  layer_priority_remote   { TransportLayer::eType::udp_mc, TransportLayer::eType::tcp };
     };
   }
 }

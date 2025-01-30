@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ message State
     string                        name                 =  2;
     string                        target_host          =  3;  // The configured target host
     ProcessState                  state                =  4;
-    repeated int32                pids                 =  5;  // pid; field is repeated because the task can be started multiple times
+    repeated int32                process_ids          =  5;  // process_id; field is repeated because the task can be started multiple times
 
     uint32                        launch_order         =  6;
     reserved 7; // Runner

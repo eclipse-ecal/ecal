@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -806,10 +806,10 @@ namespace eCAL
         auto connected_rec_client_it = connected_rec_clients_.find(enabled_rec_client.first);
         if (connected_rec_client_it != connected_rec_clients_.end())
         {
-          int32_t pid = connected_rec_client_it->second->GetStatus().first.pid_;
-          if (pid >= 0)
+          int32_t process_id = connected_rec_client_it->second->GetStatus().first.pid_;
+          if (process_id >= 0)
           {
-            running_enabled_rec_clients[enabled_rec_client.first] = pid;
+            running_enabled_rec_clients[enabled_rec_client.first] = process_id;
           }
         }
       }

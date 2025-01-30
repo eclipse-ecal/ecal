@@ -31,15 +31,15 @@ namespace eCAL
     Service::Method GenerateMethod()
     {
       Service::Method method;
-      method.mname      = GenerateString(8);
+      method.method_name      = GenerateString(8);
 
       method.req_type   = GenerateString(8);  // deprecated
       method.req_desc   = GenerateString(10); // deprecated
       method.resp_type  = GenerateString(8);  // deprecated
       method.resp_desc  = GenerateString(10); // deprecated
 
-      method.req_datatype  = GenerateDataTypeInformation();
-      method.resp_datatype = GenerateDataTypeInformation();
+      method.request_datatype_information  = GenerateDataTypeInformation();
+      method.response_datatype_information = GenerateDataTypeInformation();
 
       method.call_count = rand() % 10000;
 
@@ -50,10 +50,10 @@ namespace eCAL
     Service::Service GenerateService()
     {
       Service::Service service;
-      service.rclock      = rand() % 1000;
-      service.pname       = GenerateString(10);
-      service.uname       = GenerateString(5);
-      service.sname       = GenerateString(8);
+      service.registration_clock = rand() % 1000;
+      service.process_name       = GenerateString(10);
+      service.unit_name          = GenerateString(5);
+      service.service_name       = GenerateString(8);
       service.methods.push_back(GenerateMethod());
       service.methods.push_back(GenerateMethod());
       service.version     = rand() % 10;
@@ -67,13 +67,13 @@ namespace eCAL
     Service::Client GenerateClient()
     {
       Service::Client client;
-      client.rclock  = rand() % 1000;
-      client.pname   = GenerateString(10);
-      client.uname   = GenerateString(5);
-      client.sname   = GenerateString(8);
+      client.registration_clock  = rand() % 1000;
+      client.process_name        = GenerateString(10);
+      client.unit_name           = GenerateString(5);
+      client.service_name        = GenerateString(8);
       client.methods.push_back(GenerateMethod());
       client.methods.push_back(GenerateMethod());
-      client.version = rand() % 10;
+      client.version             = rand() % 10;
 
       return client;
     }
@@ -95,7 +95,7 @@ namespace eCAL
       layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
       layer.version   = rand() % 100;
       layer.enabled   = rand() % 2 == 1;
-      layer.active = rand() % 2 == 1;
+      layer.active    = rand() % 2 == 1;
       return layer;
     }
 
@@ -103,63 +103,63 @@ namespace eCAL
     Topic GenerateTopic()
     {
       Topic topic;
-      topic.rclock               = rand() % 1000;
+      topic.registration_clock   = rand() % 1000;
       topic.shm_transport_domain = GenerateString(6);
-      topic.pname                = GenerateString(10);
-      topic.uname                = GenerateString(5);
-      topic.tname                = GenerateString(8);
+      topic.process_name         = GenerateString(10);
+      topic.unit_name            = GenerateString(5);
+      topic.topic_name           = GenerateString(8);
       topic.direction            = GenerateString(5);
-      topic.tdatatype            = GenerateDataTypeInformation();
-      topic.tlayer.push_back(GenerateTLayer());
-      topic.tlayer.push_back(GenerateTLayer());
-      topic.tsize                = rand() % 1000;
-      topic.connections_loc      = rand() % 50;
-      topic.connections_ext      = rand() % 50;
+      topic.datatype_information = GenerateDataTypeInformation();
+      topic.transport_layer.push_back(GenerateTLayer());
+      topic.transport_layer.push_back(GenerateTLayer());
+      topic.topic_size           = rand() % 1000;
+      topic.connections_local    = rand() % 50;
+      topic.connections_external = rand() % 50;
       topic.message_drops        = rand() % 10;
-      topic.did                  = rand();
-      topic.dclock               = rand();
-      topic.dfreq                = rand() % 100;
+      topic.data_id              = rand();
+      topic.data_clock           = rand();
+      topic.data_frequency       = rand() % 100;
       return topic;
     }
 
     Process GenerateProcess()
     {
       Process process;
-      process.rclock               = rand() % 1000;
-      process.shm_transport_domain = GenerateString(6);
-      process.pname                = GenerateString(10);
-      process.uname                = GenerateString(5);
-      process.pparam               = GenerateString(12);
-      process.state.severity       = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
-      process.state.severity_level = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
-      process.state.info           = GenerateString(10);
-      process.tsync_state          = static_cast<eTSyncState>(rand() % (tsync_replay + 1));
-      process.tsync_mod_name       = GenerateString(6);
-      process.component_init_state = rand() % 5;
-      process.component_init_info  = GenerateString(8);
-      process.ecal_runtime_version = GenerateString(5);
-      process.config_file_path     = GenerateString(20);
+      process.registration_clock    = rand() % 1000;
+      process.shm_transport_domain  = GenerateString(6);
+      process.process_name          = GenerateString(10);
+      process.unit_name             = GenerateString(5);
+      process.process_parameter     = GenerateString(12);
+      process.state.severity        = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
+      process.state.severity_level  = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
+      process.state.info            = GenerateString(10);
+      process.time_sync_state       = static_cast<eTimeSyncState>(rand() % (tsync_replay + 1));
+      process.time_sync_module_name = GenerateString(6);
+      process.component_init_state  = rand() % 5;
+      process.component_init_info   = GenerateString(8);
+      process.ecal_runtime_version  = GenerateString(5);
+      process.config_file_path      = GenerateString(20);
       return process;
     }
 
     SampleIdentifier GenerateIdentifier()
     {
       SampleIdentifier identifier;
-      identifier.entity_id = rand();
+      identifier.entity_id  = rand();
       identifier.process_id = rand() % 100;
-      identifier.host_name = GenerateString(8);
+      identifier.host_name  = GenerateString(8);
       return identifier;
     }
 
     Sample GenerateProcessSample()
     {
       Sample sample;
-      sample.cmd_type = bct_reg_process;
-      sample.host.hname = GenerateString(8);
+      sample.cmd_type   = bct_reg_process;
+      sample.host.name  = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       // Process samples don't have an id internally, hence it must be 0.
       sample.identifier.entity_id = sample.identifier.process_id;
-      sample.process = GenerateProcess();
+      sample.process    = GenerateProcess();
       return sample;
     }
 
@@ -167,7 +167,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_publisher;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.topic = GenerateTopic();
       return sample;
@@ -177,7 +177,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_service;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.service = GenerateService();
       return sample;
@@ -187,7 +187,7 @@ namespace eCAL
     {
       Sample sample;
       sample.cmd_type = bct_reg_client;
-      sample.host.hname = GenerateString(8);
+      sample.host.name = GenerateString(8);
       sample.identifier = GenerateIdentifier();
       sample.client = GenerateClient();
       return sample;

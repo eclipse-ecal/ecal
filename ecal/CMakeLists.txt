@@ -25,7 +25,7 @@ set(ECAL_CORE_PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 # --------------------------------------------------------
 add_subdirectory(core)
 
-if(ECAL_CORE_HAS_PROTOBUF)
+if(ECAL_CORE_USE_PROTOBUF)
   add_subdirectory(core_pb)
 endif()
 

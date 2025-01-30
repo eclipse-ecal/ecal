@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ TopicWidget::TopicWidget(QWidget *parent)
     (int)TopicTreeModel::Columns::DIRECTION,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
-    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::PROCESS_ID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::TOPIC_SIZE,
@@ -218,26 +218,26 @@ void TopicWidget::autoSizeColumns()
 {
   eCAL::pb::Topic example_topic_pb;
 
-  example_topic_pb.set_rclock(999999);
-  example_topic_pb.set_hname("HOSTNAME____");
-  example_topic_pb.set_pid(999999);
-  example_topic_pb.set_pname("");
-  example_topic_pb.set_uname("ATypicalLongUnitName___");
-  example_topic_pb.set_tid("");
-  example_topic_pb.set_tname("ATypicalLongTopicName___");
+  example_topic_pb.set_registration_clock(999999);
+  example_topic_pb.set_host_name("HOSTNAME____");
+  example_topic_pb.set_process_id(999999);
+  example_topic_pb.set_process_name("");
+  example_topic_pb.set_unit_name("ATypicalLongUnitName___");
+  example_topic_pb.set_topic_id("");
+  example_topic_pb.set_topic_name("ATypicalLongTopicName___");
   example_topic_pb.set_direction("subscriber__");
-  example_topic_pb.mutable_tdatatype()->set_name("Enc.TypeName.Name____");
-  example_topic_pb.mutable_tdatatype()->set_encoding("encdg:");
+  example_topic_pb.mutable_datatype_information()->set_name("Enc.TypeName.Name____");
+  example_topic_pb.mutable_datatype_information()->set_encoding("encdg:");
   //example_topic_pb.mutable_tdatatype()->set_desc("");
 
-  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_shm);
-  example_topic_pb.mutable_tlayer()->Add()->set_type(eCAL::pb::eTLayerType::tl_ecal_udp_mc);
-  example_topic_pb.set_tsize(999999);
-  example_topic_pb.set_connections_loc(999999);
-  example_topic_pb.set_connections_ext(999999);
+  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_shm);
+  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_udp_mc);
+  example_topic_pb.set_topic_size(999999);
+  example_topic_pb.set_connections_local(999999);
+  example_topic_pb.set_connections_external(999999);
   example_topic_pb.set_message_drops(999999);
-  example_topic_pb.set_dclock(99999999999);
-  example_topic_pb.set_dfreq(999999);
+  example_topic_pb.set_data_clock(99999999999);
+  example_topic_pb.set_data_frequency(999999);
 
   TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
   GroupTreeItem* example_group_item = new GroupTreeItem("ATypicalLongGroupName___", "", "", QVariant(), "");
@@ -257,7 +257,7 @@ void TopicWidget::autoSizeColumns()
     (int)TopicTreeModel::Columns::DIRECTION,
     (int)TopicTreeModel::Columns::UNIT_NAME,
     (int)TopicTreeModel::Columns::HOST_NAME,
-    (int)TopicTreeModel::Columns::PID,
+    (int)TopicTreeModel::Columns::PROCESS_ID,
     (int)TopicTreeModel::Columns::TOPIC_ENCODING,
     (int)TopicTreeModel::Columns::TOPIC_TYPE,
     (int)TopicTreeModel::Columns::HEARTBEAT,
@@ -274,7 +274,6 @@ void TopicWidget::autoSizeColumns()
   {
     ui_.tree_view->resizeColumnToContents(column);
   }
-
 
   topic_tree_model_->removeItem(example_topic_item);
   topic_tree_model_->removeItem(example_group_item);
@@ -295,7 +294,7 @@ void TopicWidget::openReflectionWindowForSelection()
     {
       TopicTreeItem* topic_item = (TopicTreeItem*)item;
 
-      QString topic_name = topic_item->data(TopicTreeItem::Columns::TNAME, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
+      QString topic_name = topic_item->data(TopicTreeItem::Columns::TOPIC_NAME, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
 
       if (visualisation_windows_.contains(topic_name))
       {
@@ -343,7 +342,7 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
 
   if (item)
   {
-    QString topic_name     = item->data((int)TopicTreeItem::Columns::TNAME).toString();
+    QString topic_name     = item->data((int)TopicTreeItem::Columns::TOPIC_NAME).toString();
     QString topic_encoding = item->data((int)TopicTreeItem::Columns::TENCODING).toString();
     QString topic_type     = item->data((int)TopicTreeItem::Columns::TTYPE).toString();
 

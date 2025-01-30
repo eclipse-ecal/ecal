@@ -53,7 +53,7 @@ namespace eCAL
       void FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   StopTaskParameters&                stop_task_param);
       void FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    std::vector<StopTaskParameters>&   stop_task_list);
       void FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb,         std::vector<Task>&                 task_list);
-      void FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb,          std::vector<int32_t>&              pid_list);
+      void FromProtobuf(const eCAL::pb::sys_client::ProcessIdList&       pid_list_pb,          std::vector<int32_t>&              pid_list);
       void FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, std::vector<std::vector<int32_t>>& map_task_response);
 
       eCAL::sys_client::Task            FromProtobuf(const eCAL::pb::sys_client::Task&                task_pb);
@@ -64,7 +64,7 @@ namespace eCAL
       StopTaskParameters                FromProtobuf(const eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb);
       std::vector<StopTaskParameters>   FromProtobuf(const eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb);
       std::vector<Task>                 FromProtobuf(const eCAL::pb::sys_client::TaskList&            task_list_pb);
-      std::vector<int32_t>              FromProtobuf(const eCAL::pb::sys_client::PidList&             pid_list_pb);
+      std::vector<int32_t>              FromProtobuf(const eCAL::pb::sys_client::ProcessIdList&       pid_list_pb);
       std::vector<std::vector<int32_t>> FromProtobuf(const eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb);
 
       ///////////////////////////////
@@ -79,7 +79,7 @@ namespace eCAL
       void ToProtobuf(eCAL::pb::sys_client::StopTaskParameters&  stop_task_param_pb,   const StopTaskParameters&                stop_task_param);
       void ToProtobuf(eCAL::pb::sys_client::StopTaskRequest&     stop_task_list_pb,    const std::vector<StopTaskParameters>&   stop_task_list);
       void ToProtobuf(eCAL::pb::sys_client::TaskList&            task_list_pb,         const std::vector<Task>&                 task_list);
-      void ToProtobuf(eCAL::pb::sys_client::PidList&             pid_list_pb,          const std::vector<int32_t>&              pid_list);
+      void ToProtobuf(eCAL::pb::sys_client::ProcessIdList&       pid_list_pb,          const std::vector<int32_t>&              pid_list);
       void ToProtobuf(eCAL::pb::sys_client::MatchTaskResponse&   map_task_response_pb, const std::vector<std::vector<int32_t>>& map_task_response);
 
       eCAL::pb::sys_client::Task                ToProtobuf(const eCAL::sys_client::Task&                task);
@@ -90,7 +90,7 @@ namespace eCAL
       eCAL::pb::sys_client::StopTaskParameters  ToProtobuf(const StopTaskParameters&                    stop_task_param);
       eCAL::pb::sys_client::StopTaskRequest     ToProtobuf(const std::vector<StopTaskParameters>&       stop_task_list);
       eCAL::pb::sys_client::TaskList            ToProtobuf(const std::vector<Task>&                     task_list_pb);
-      eCAL::pb::sys_client::PidList             ToProtobuf(const std::vector<int32_t>&                  pid_list_pb);
+      eCAL::pb::sys_client::ProcessIdList       ToProtobuf(const std::vector<int32_t>&                  pid_list_pb);
       eCAL::pb::sys_client::MatchTaskResponse   ToProtobuf(const std::vector<std::vector<int32_t>>&     map_task_response_pb);
     }
   }

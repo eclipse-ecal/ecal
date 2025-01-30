@@ -51,7 +51,9 @@ int main()
   std::string req_desc;
   std::string resp_type;
   std::string resp_desc;
-  auto service_ids = eCAL::Registration::GetServerIDs();
+
+  std::set<eCAL::SServiceId> service_ids;
+  eCAL::Registration::GetServerIDs(service_ids);
   bool service_info_found(false);
   for (const auto& service_id : service_ids)
   {
@@ -115,12 +117,12 @@ int main()
           case eCAL::eCallState::executed:
           {
             const std::string resp_json = GetJSONFromSerialzedMessage(resp_msg.get(), service_response.response);
-            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.service_method_id.service_id.host_name << '\n';
+            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.server_id.service_id.host_name << '\n';
           }
           break;
           // service execution failed
           case eCAL::eCallState::failed:
-            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.service_method_id.service_id.host_name << '\n';
+            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.server_id.service_id.host_name << '\n';
             break;
           default:
             break;

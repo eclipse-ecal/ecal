@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace eCAL
 
       std::string                                        type_;                 ///< Type of the topic (e.g. the protobuf-type)
       std::map<std::string, std::set<std::string>>       publishers_;           ///< {hostname: [publisher_names]}
-      std::map<std::pair<std::string, int32_t>, double>  rec_subscribers_;      ///< {(hostname, pid): data_frequency}
+      std::map<std::pair<std::string, int32_t>, double>  rec_subscribers_;      ///< {(hostname, process_id): data_frequency}
     };
 
     typedef std::map<std::string, eCAL::rec_server::TopicInfo>                       TopicInfoMap_T;

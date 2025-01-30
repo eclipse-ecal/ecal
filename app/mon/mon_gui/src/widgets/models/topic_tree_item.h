@@ -20,6 +20,7 @@
 #pragma once
 
 #include "CustomQt/QAbstractTreeItem.h"
+#include <QFont>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -37,24 +38,24 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
-    HNAME,
+    REGISTRATION_CLOCK,
+    HOST_NAME,
     SHM_TRANSPORT_DOMAIN,
-    PID,
-    PNAME,
-    UNAME,
-    TID,
-    TNAME,
+    PROCESS_ID,
+    PROCESS_NAME,
+    UNIT_NAME,
+    TOPIC_ID,
+    TOPIC_NAME,
     DIRECTION,
     TENCODING,
     TTYPE,
     TDESC,
-    TLAYER,
-    TSIZE,
-    CONNECTIONS_LOC,
-    CONNECTIONS_EXT,
+    TRANSPORT_LAYER,
+    TOPIC_SIZE,
+    CONNECTIONS_LOCAL,
+    CONNECTIONS_EXTERNAL,
     MESSAGE_DROPS,
-    DCLOCK,
+    DATA_CLOCK,
     DFREQ,
   };
 
@@ -67,6 +68,8 @@ public:
 
   QVariant data(Columns column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
 
+  bool setFont(const QFont& font);
+
   int type() const;
 
   void update(const eCAL::pb::Topic& topic);
@@ -77,7 +80,6 @@ public:
 
 private:
   eCAL::pb::Topic topic_;
-
+  QFont itemfont;
   static QString toFrequencyString(long long freq);
 };
-

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ void StopTaskListThread::Run()
       stop_tasks_param_map [host_to_stop_on].push_back(std::move(stop_task_param));
       original_task_ptr_map[host_to_stop_on].push_back(task);
     }
-    else if (stop_task_param.pid != 0)
+    else if (stop_task_param.process_id != 0)
     {
       stop_tasks_param_map [host_to_stop_on].push_back(std::move(stop_task_param));
       original_task_ptr_map[host_to_stop_on].push_back(task);

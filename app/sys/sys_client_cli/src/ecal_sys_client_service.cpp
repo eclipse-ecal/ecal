@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,14 +37,14 @@ void EcalSysClientService::StartTasks(::google::protobuf::RpcController*        
 {
   response->Clear();
 
-  std::vector<int32_t> pids = eCAL::sys_client::StartTasks(eCAL::sys_client::proto_helpers::FromProtobuf(*request));
+  std::vector<int32_t> process_ids = eCAL::sys_client::StartTasks(eCAL::sys_client::proto_helpers::FromProtobuf(*request));
 
-  for (int32_t pid : pids)
+  for (int32_t process_id : process_ids)
   {
     auto task_response = response->mutable_responses()->Add();
-    task_response->set_pid(pid);
-    task_response->set_result(pid != 0 ? eCAL::pb::sys_client::eServiceResult::success : eCAL::pb::sys_client::eServiceResult::failed);
-    task_response->set_error (pid != 0 ? "" : "Error starting task");
+    task_response->set_process_id(process_id);
+    task_response->set_result(process_id != 0 ? eCAL::pb::sys_client::eServiceResult::success : eCAL::pb::sys_client::eServiceResult::failed);
+    task_response->set_error (process_id != 0 ? "" : "Error starting task");
   }
 }
 
