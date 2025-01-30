@@ -514,6 +514,8 @@ endif()
 # --------------------------------------------------------
 # Serialization extensions
 # --------------------------------------------------------
+add_subdirectory(serialization/common/core)
+
 # Capnroto
 if (ECAL_USE_CAPNPROTO)
 set(ECAL_CAPNPROTO_BUILD_SAMPLES                                                                     ${ECAL_BUILD_SAMPLES})

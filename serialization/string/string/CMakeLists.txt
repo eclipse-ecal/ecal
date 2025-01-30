@@ -53,7 +53,7 @@ add_library(eCAL::string_core ALIAS string_core)
 
 target_link_libraries(string_core 
   INTERFACE 
-    eCAL::core
+    eCAL::message_core
     eCAL::string_base
 )
 
