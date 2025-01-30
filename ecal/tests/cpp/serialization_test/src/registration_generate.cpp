@@ -31,7 +31,7 @@ namespace eCAL
     Service::Method GenerateMethod()
     {
       Service::Method method;
-      method.mname      = GenerateString(8);
+      method.method_name      = GenerateString(8);
 
       method.req_type   = GenerateString(8);  // deprecated
       method.req_desc   = GenerateString(10); // deprecated
@@ -53,7 +53,7 @@ namespace eCAL
       service.registration_clock = rand() % 1000;
       service.process_name       = GenerateString(10);
       service.unit_name          = GenerateString(5);
-      service.sname              = GenerateString(8);
+      service.service_name       = GenerateString(8);
       service.methods.push_back(GenerateMethod());
       service.methods.push_back(GenerateMethod());
       service.version     = rand() % 10;
@@ -70,7 +70,7 @@ namespace eCAL
       client.registration_clock  = rand() % 1000;
       client.process_name        = GenerateString(10);
       client.unit_name           = GenerateString(5);
-      client.sname               = GenerateString(8);
+      client.service_name        = GenerateString(8);
       client.methods.push_back(GenerateMethod());
       client.methods.push_back(GenerateMethod());
       client.version             = rand() % 10;
@@ -95,7 +95,7 @@ namespace eCAL
       layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
       layer.version   = rand() % 100;
       layer.enabled   = rand() % 2 == 1;
-      layer.active = rand() % 2 == 1;
+      layer.active    = rand() % 2 == 1;
       return layer;
     }
 
@@ -129,7 +129,7 @@ namespace eCAL
       process.shm_transport_domain  = GenerateString(6);
       process.process_name          = GenerateString(10);
       process.unit_name             = GenerateString(5);
-      process.process_parameter                = GenerateString(12);
+      process.process_parameter     = GenerateString(12);
       process.state.severity        = static_cast<eProcessSeverity>(rand() % (proc_sev_failed + 1));
       process.state.severity_level  = static_cast<eProcessSeverityLevel>(rand() % (proc_sev_level5 + 1));
       process.state.info            = GenerateString(10);

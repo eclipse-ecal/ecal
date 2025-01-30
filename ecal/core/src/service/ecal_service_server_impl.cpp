@@ -122,7 +122,7 @@ namespace eCAL
 #endif
       SMethod method;
       // method name
-      method.method.mname = method_;
+      method.method.method_name = method_;
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // set data type and callback
@@ -362,7 +362,7 @@ namespace eCAL
     service.version = m_server_version;
     service.process_name = Process::GetProcessName();
     service.unit_name = Process::GetUnitName();
-    service.sname = m_service_name;
+    service.service_name = m_service_name;
     service.tcp_port_v0 = 0;
     service.tcp_port_v1 = server_tcp_port;
 
@@ -371,7 +371,7 @@ namespace eCAL
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
-        method.mname = iter.first;
+        method.method_name = iter.first;
 
         // old type and descriptor fields
         method.req_type = iter.second.method.req_type;
@@ -405,7 +405,7 @@ namespace eCAL
     service.version = m_server_version;
     service.process_name = Process::GetProcessName();
     service.unit_name = Process::GetUnitName();
-    service.sname = m_service_name;
+    service.service_name = m_service_name;
 
     return ecal_reg_sample;
   }
@@ -420,7 +420,7 @@ namespace eCAL
     Service::Response response;
     auto& response_header = response.header;
     response_header.host_name = Process::GetHostName();
-    response_header.sname = m_service_name;
+    response_header.service_name = m_service_name;
     response_header.sid = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
 
     // try to parse request
@@ -445,16 +445,16 @@ namespace eCAL
     // get method
     SMethod method;
     const auto& request_header = request.header;
-    response_header.mname = request_header.mname;
+    response_header.method_name = request_header.method_name;
     {
       const std::lock_guard<std::mutex> lock(m_method_map_mutex);
-      auto requested_method_iterator = m_method_map.find(request_header.mname);
+      auto requested_method_iterator = m_method_map.find(request_header.method_name);
       if (requested_method_iterator == m_method_map.end())
       {
         // set method call state 'failed'
         response_header.state = Service::eMethodCallState::failed;
         // set error message
-        const std::string emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
+        const std::string emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.method_name + "'";
         response_header.error = emsg;
 
         // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
@@ -476,7 +476,7 @@ namespace eCAL
     const std::string& request_s = request.request;
     std::string response_s;
     const SServiceMethodInformation method_info{
-      method.method.mname,
+      method.method.method_name,
       method.method.req_datatype,
       method.method.resp_datatype
     };

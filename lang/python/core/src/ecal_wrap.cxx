@@ -1126,7 +1126,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("i", service.process_id);
         PyDict_SetItemString(serviceDict, "pid", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", service.sname.c_str());
+        val = Py_BuildValue("s", service.service_name.c_str());
         PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", std::to_string(service.sid).c_str());
@@ -1146,7 +1146,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 
         for (const auto method : service.methods)
         {
-          val = Py_BuildValue("s", method.mname.c_str());
+          val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.name.c_str());
@@ -1198,7 +1198,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("i", client.process_id);
         PyDict_SetItemString(clientDict, "pid", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", client.sname.c_str());
+        val = Py_BuildValue("s", client.service_name.c_str());
         PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
 
         val = Py_BuildValue("s", std::to_string(client.sid).c_str());
@@ -1209,7 +1209,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
 
         for (const auto method : client.methods)
         {
-          val = Py_BuildValue("s", method.mname.c_str());
+          val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
           val = Py_BuildValue("s", method.req_datatype.name.c_str());

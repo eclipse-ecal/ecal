@@ -391,7 +391,7 @@ namespace eCAL
         }
 
         eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
-        encode_string(pb_method.mname, method.mname);
+        encode_string(pb_method.method_name, method.method_name);
         encode_string(pb_method.req_type, method.req_type);
         encode_string(pb_method.resp_type, method.resp_type);
         encode_string(pb_method.req_desc, method.req_desc);
@@ -434,7 +434,7 @@ namespace eCAL
       auto& method = method_vec->push_back();
 
       // decode method parameter
-      decode_string(pb_method.mname, method.mname);
+      decode_string(pb_method.method_name, method.method_name);
       decode_string(pb_method.req_type, method.req_type);
       decode_string(pb_method.req_desc, method.req_desc);
       decode_string(pb_method.resp_type, method.resp_type);

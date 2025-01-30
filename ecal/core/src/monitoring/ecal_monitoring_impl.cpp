@@ -242,9 +242,9 @@ namespace eCAL
       TopicInfo.connections_local    = static_cast<int>(connections_local);
       TopicInfo.connections_external = static_cast<int>(connections_external);
       TopicInfo.data_id              = data_id;
-      TopicInfo.data_clock               = data_clock;
+      TopicInfo.data_clock           = data_clock;
       TopicInfo.message_drops        = message_drops;
-      TopicInfo.data_frequency                = data_frequency;
+      TopicInfo.data_frequency       = data_frequency;
     }
 
     return(true);
@@ -341,7 +341,7 @@ namespace eCAL
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_service = sample_.service;
-    const std::string& service_name = sample_service.sname;
+    const std::string& service_name = sample_service.service_name;
     const std::string& process_name = sample_service.process_name;
     const std::string& unit_name    = sample_service.unit_name;
 
@@ -359,7 +359,7 @@ namespace eCAL
 
     // set static content
     ServerInfo.host_name    = host_name;
-    ServerInfo.sname        = service_name;
+    ServerInfo.service_name        = service_name;
     ServerInfo.sid          = service_id;
     ServerInfo.process_name = process_name;
     ServerInfo.unit_name    = unit_name;
@@ -373,7 +373,7 @@ namespace eCAL
     for (const auto& sample_service_method : sample_.service.methods)
     {
       struct Monitoring::SMethodMon method;
-      method.mname         = sample_service_method.mname;
+      method.method_name   = sample_service_method.method_name;
 
       method.req_datatype  = sample_service_method.req_datatype;
       method.resp_datatype = sample_service_method.resp_datatype;
@@ -407,7 +407,7 @@ namespace eCAL
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_client = sample_.client;
-    const std::string& service_name = sample_client.sname;
+    const std::string& service_name = sample_client.service_name;
     const std::string& process_name = sample_client.process_name;
     const std::string& unit_name    = sample_client.unit_name;
 
@@ -422,7 +422,7 @@ namespace eCAL
 
     // set static content
     ClientInfo.host_name    = host_name;
-    ClientInfo.sname        = service_name;
+    ClientInfo.service_name        = service_name;
     ClientInfo.sid          = service_id;
     ClientInfo.process_name = process_name;
     ClientInfo.unit_name    = unit_name;
@@ -434,7 +434,7 @@ namespace eCAL
     for (const auto& sample_client_method : sample_.client.methods)
     {
       struct Monitoring::SMethodMon method;
-      method.mname = sample_client_method.mname;
+      method.method_name = sample_client_method.method_name;
       method.req_datatype = sample_client_method.req_datatype;
       method.resp_datatype = sample_client_method.resp_datatype;
       method.call_count = sample_client_method.call_count;

@@ -20,8 +20,8 @@ typedef enum _eCAL_pb_ServiceHeader_eCallState {
 /* Struct definitions */
 typedef struct _eCAL_pb_ServiceHeader {
     pb_callback_t host_name; /* host name */
-    pb_callback_t sname; /* service name */
-    pb_callback_t mname; /* method name */
+    pb_callback_t service_name; /* service name */
+    pb_callback_t method_name; /* method name */
     pb_callback_t error; /* error message */
     int32_t id; /* session id */
     eCAL_pb_ServiceHeader_eCallState state; /* method call state */
@@ -42,7 +42,7 @@ typedef struct _eCAL_pb_Response {
 } eCAL_pb_Response;
 
 typedef struct _eCAL_pb_Method {
-    pb_callback_t mname; /* method name */
+    pb_callback_t method_name; /* method name */
     pb_callback_t req_type; /* request  type        (deprecated use req_datatype) */
     pb_callback_t resp_type; /* response type        (deprecated use resp_datatype) */
     int64_t call_count; /* call counter */
@@ -60,7 +60,7 @@ typedef struct _eCAL_pb_Service {
     pb_callback_t process_name; /* process name */
     pb_callback_t unit_name; /* unit name */
     int32_t process_id; /* process id */
-    pb_callback_t sname; /* service name */
+    pb_callback_t service_name; /* service name */
     uint32_t tcp_port_v0; /* the tcp port used for that service  (deprecated) */
     pb_callback_t methods; /* list of methods */
     pb_callback_t sid; /* service id */
@@ -75,7 +75,7 @@ typedef struct _eCAL_pb_Client {
     pb_callback_t process_name; /* process name */
     pb_callback_t unit_name; /* unit name */
     int32_t process_id; /* process id */
-    pb_callback_t sname; /* service name */
+    pb_callback_t service_name; /* service name */
     pb_callback_t sid; /* service id */
     /* transport specific parameter (for internal use) */
     uint32_t version; /* client protocol version */
@@ -116,8 +116,8 @@ extern "C" {
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_ServiceHeader_host_name_tag      1
-#define eCAL_pb_ServiceHeader_sname_tag          2
-#define eCAL_pb_ServiceHeader_mname_tag          3
+#define eCAL_pb_ServiceHeader_service_name_tag   2
+#define eCAL_pb_ServiceHeader_method_name_tag    3
 #define eCAL_pb_ServiceHeader_error_tag          4
 #define eCAL_pb_ServiceHeader_id_tag             5
 #define eCAL_pb_ServiceHeader_state_tag          6
@@ -127,7 +127,7 @@ extern "C" {
 #define eCAL_pb_Response_header_tag              1
 #define eCAL_pb_Response_response_tag            2
 #define eCAL_pb_Response_ret_state_tag           3
-#define eCAL_pb_Method_mname_tag                 1
+#define eCAL_pb_Method_method_name_tag           1
 #define eCAL_pb_Method_req_type_tag              2
 #define eCAL_pb_Method_resp_type_tag             3
 #define eCAL_pb_Method_call_count_tag            4
@@ -140,7 +140,7 @@ extern "C" {
 #define eCAL_pb_Service_process_name_tag         3
 #define eCAL_pb_Service_unit_name_tag            4
 #define eCAL_pb_Service_process_id_tag           5
-#define eCAL_pb_Service_sname_tag                6
+#define eCAL_pb_Service_service_name_tag         6
 #define eCAL_pb_Service_tcp_port_v0_tag          7
 #define eCAL_pb_Service_methods_tag              8
 #define eCAL_pb_Service_sid_tag                  9
@@ -151,7 +151,7 @@ extern "C" {
 #define eCAL_pb_Client_process_name_tag          3
 #define eCAL_pb_Client_unit_name_tag             4
 #define eCAL_pb_Client_process_id_tag            5
-#define eCAL_pb_Client_sname_tag                 6
+#define eCAL_pb_Client_service_name_tag          6
 #define eCAL_pb_Client_sid_tag                   7
 #define eCAL_pb_Client_version_tag               8
 #define eCAL_pb_Client_methods_tag               9
@@ -159,8 +159,8 @@ extern "C" {
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_ServiceHeader_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   host_name,         1) \
-X(a, CALLBACK, SINGULAR, STRING,   sname,             2) \
-X(a, CALLBACK, SINGULAR, STRING,   mname,             3) \
+X(a, CALLBACK, SINGULAR, STRING,   service_name,      2) \
+X(a, CALLBACK, SINGULAR, STRING,   method_name,       3) \
 X(a, CALLBACK, SINGULAR, STRING,   error,             4) \
 X(a, STATIC,   SINGULAR, INT32,    id,                5) \
 X(a, STATIC,   SINGULAR, UENUM,    state,             6) \
@@ -184,7 +184,7 @@ X(a, STATIC,   SINGULAR, INT64,    ret_state,         3)
 #define eCAL_pb_Response_header_MSGTYPE eCAL_pb_ServiceHeader
 
 #define eCAL_pb_Method_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   mname,             1) \
+X(a, CALLBACK, SINGULAR, STRING,   method_name,       1) \
 X(a, CALLBACK, SINGULAR, STRING,   req_type,          2) \
 X(a, CALLBACK, SINGULAR, STRING,   resp_type,         3) \
 X(a, STATIC,   SINGULAR, INT64,    call_count,        4) \
@@ -203,7 +203,7 @@ X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         4) \
 X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
-X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
+X(a, CALLBACK, SINGULAR, STRING,   service_name,      6) \
 X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v0,       7) \
 X(a, CALLBACK, REPEATED, MESSAGE,  methods,           8) \
 X(a, CALLBACK, SINGULAR, STRING,   sid,               9) \
@@ -219,7 +219,7 @@ X(a, CALLBACK, SINGULAR, STRING,   host_name,         2) \
 X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         4) \
 X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
-X(a, CALLBACK, SINGULAR, STRING,   sname,             6) \
+X(a, CALLBACK, SINGULAR, STRING,   service_name,      6) \
 X(a, CALLBACK, SINGULAR, STRING,   sid,               7) \
 X(a, STATIC,   SINGULAR, UINT32,   version,           8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  methods,           9)

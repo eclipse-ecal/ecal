@@ -72,11 +72,11 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type             = eCAL::bct_reg_service;
-    reg_sample.service.sname        = service_name_;
+    reg_sample.service.service_name = service_name_;
     reg_sample.identifier.entity_id = service_id_;
 
     eCAL::Service::Method method;
-    method.mname = "method_name";
+    method.method_name = "method_name";
     reg_sample.service.methods.push_back(method);
     return reg_sample;
   }
@@ -92,11 +92,11 @@ namespace
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type               = eCAL::bct_reg_client;
-    reg_sample.client.sname           = client_name_;
+    reg_sample.client.service_name    = client_name_;
     reg_sample.identifier.entity_id   = service_id_;
 
     eCAL::Service::Method method;
-    method.mname = "method_name";
+    method.method_name = "method_name";
     reg_sample.client.methods.push_back(method);
     return reg_sample;
   }

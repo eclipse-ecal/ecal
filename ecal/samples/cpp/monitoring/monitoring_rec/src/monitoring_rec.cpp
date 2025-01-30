@@ -94,15 +94,15 @@ int main()
         if (!g_procs_filt_string.empty() && (g_procs_filt_string != process.unit_name())) continue;
 
         // print process details
-        std::cout << "host name       : " << process.host_name()             << "\n";   // host name
-        std::cout << "process id      : " << process.process_id()            << "\n";   // process id
-        std::cout << "process name    : " << process.process_name()          << "\n";   // process name
-        std::cout << "unit name       : " << process.unit_name()             << "\n";   // unit name
-        std::cout << "process_parameter          : " << process.process_parameter()                << "\n";   // process parameter
-        std::cout << "severity        : " << process.state().severity()      << "\n";   // process state severity
-        std::cout << "info            : " << process.state().info()          << "\n";   // process state info
-        std::cout << "tsync state     : " << process.time_sync_state()       << "\n";   // time sync state
-        std::cout << "tsync mod name  : " << process.time_sync_module_name() << "\n";   // time sync mod name
+        std::cout << "host name         : " << process.host_name()             << "\n";   // host name
+        std::cout << "process id        : " << process.process_id()            << "\n";   // process id
+        std::cout << "process name      : " << process.process_name()          << "\n";   // process name
+        std::cout << "unit name         : " << process.unit_name()             << "\n";   // unit name
+        std::cout << "process parameter : " << process.process_parameter()     << "\n";   // process parameter
+        std::cout << "severity          : " << process.state().severity()      << "\n";   // process state severity
+        std::cout << "info              : " << process.state().info()          << "\n";   // process state info
+        std::cout << "tsync state       : " << process.time_sync_state()       << "\n";   // time sync state
+        std::cout << "tsync mod name    : " << process.time_sync_module_name() << "\n";   // time sync mod name
         std::cout << "\n";
       }
     }
@@ -121,23 +121,23 @@ int main()
       for (const auto& service : monitoring.services())
       {
         // check filtering
-        if (!g_services_filt_string.empty() && (g_services_filt_string != service.sname())) continue;
+        if (!g_services_filt_string.empty() && (g_services_filt_string != service.service_name())) continue;
 
         // print process details
         std::cout << "host name       : " << service.host_name()  << "\n";   // host name
-        std::cout << "sname           : " << service.sname()      << "\n";   // service name
+        std::cout << "service name    : " << service.service_name()      << "\n";   // service name
         std::cout << "process id      : " << service.process_id() << "\n";   // process id
         std::cout << "\n";
 
         for (int i = 0; i < service.methods_size(); ++i)
         {
           auto method = service.methods(i);
-          std::cout << "  mname           : " << method.mname()      << "\n";   // method name
-          std::cout << "  req_type        : " << method.req_type()   << "\n";   // request type
+          std::cout << "  method name     : " << method.method_name() << "\n";   // method name
+          std::cout << "  req_type        : " << method.req_type()    << "\n";   // request type
           //std::cout << "  req_desc        : " << method.req_desc()   << "\n";   // request descriptor
-          std::cout << "  resp_type       : " << method.resp_type()  << "\n";   // response type
+          std::cout << "  resp_type       : " << method.resp_type()   << "\n";   // response type
           //std::cout << "  resp_desc       : " << method.resp_desc()  << "\n";   // response descriptor
-          std::cout << "  call_count      : " << method.call_count() << "\n";   // call count
+          std::cout << "  call_count      : " << method.call_count()  << "\n";   // call count
           std::cout << "\n";
         }
         std::cout << "\n";
@@ -200,8 +200,8 @@ int main()
         }           
         std::cout << "topic size                  : " << topic.topic_size()           << "\n";   // topic size
 
-        std::cout << "connections_local           : " << topic.connections_local()    << "\n";   // number of local connected entities
-        std::cout << "connections_external        : " << topic.connections_external() << "\n";   // number of external connected entities
+        std::cout << "connections local           : " << topic.connections_local()    << "\n";   // number of local connected entities
+        std::cout << "connections external        : " << topic.connections_external() << "\n";   // number of external connected entities
         std::cout << "message drops               : " << topic.message_drops()        << "\n";   // dropped messages
 
         std::cout << "data id                     : " << topic.data_id()              << "\n";   // data send id (publisher setid)

@@ -51,10 +51,10 @@ public:
     PROCESS_NAME,
     UNIT_NAME,
     PROCESS_ID,
-    SNAME,
+    SERVICE_NAME,
     STYPE,
     TCP_PORT,
-    MNAME,
+    METHOD_NAME,
     REQ_TYPE,
     RESP_TYPE,
     CALL_COUNT,
@@ -100,9 +100,9 @@ public:
       {
         return service_.process_id();
       }
-      else if (column == Columns::SNAME)
+      else if (column == Columns::SERVICE_NAME)
       {
-        return service_.sname().c_str();
+        return service_.service_name().c_str();
       }
       else if (column == Columns::STYPE)
       {
@@ -112,9 +112,9 @@ public:
       {
         return tcpPort() != 0 ? tcpPort() : QVariant();
       }
-      else if (column == Columns::MNAME)
+      else if (column == Columns::METHOD_NAME)
       {
-        return method_.mname().c_str();
+        return method_.method_name().c_str();
       }
       else if (column == Columns::REQ_TYPE)
       {
@@ -138,8 +138,8 @@ public:
       if ((column == Columns::HOST_NAME)
         || (column == Columns::PROCESS_NAME)
         || (column == Columns::UNIT_NAME)
-        || (column == Columns::SNAME)
-        || (column == Columns::MNAME)
+        || (column == Columns::SERVICE_NAME)
+        || (column == Columns::METHOD_NAME)
         || (column == Columns::REQ_TYPE)
         || (column == Columns::RESP_TYPE))
       {
@@ -195,9 +195,9 @@ public:
           QStringList list{ service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
-        else if (column == Columns::SNAME)
+        else if (column == Columns::SERVICE_NAME)
         {
-          QStringList list{ service_.sname().c_str(), service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
+          QStringList list{ service_.service_name().c_str(), service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
         else
@@ -211,9 +211,9 @@ public:
       if ((column == Columns::HOST_NAME)
         || (column == Columns::PROCESS_NAME)
         || (column == Columns::UNIT_NAME)
-        || (column == Columns::SNAME)
+        || (column == Columns::SERVICE_NAME)
         || (column == Columns::STYPE)
-        || (column == Columns::MNAME)
+        || (column == Columns::METHOD_NAME)
         || (column == Columns::REQ_TYPE)
         || (column == Columns::RESP_TYPE))
       {
@@ -250,7 +250,7 @@ public:
 
   static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
   {
-    return std::to_string(service.process_id()) + "@" + service.host_name() + "@" + service.sname() + "@" + method.mname();
+    return std::to_string(service.process_id()) + "@" + service.host_name() + "@" + service.service_name() + "@" + method.method_name();
   }
 
   void update(const T& service, const eCAL::pb::Method& method)

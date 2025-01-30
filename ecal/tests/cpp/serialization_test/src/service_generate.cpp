@@ -31,13 +31,13 @@ namespace eCAL
     ServiceHeader GenerateServiceHeader()
     {
       ServiceHeader header;
-      header.host_name = GenerateString(8);
-      header.sname = GenerateString(8);
-      header.sid   = GenerateString(5);
-      header.mname = GenerateString(8);
-      header.error = GenerateString(15);
-      header.id    = rand() % 100;
-      header.state = static_cast<eMethodCallState>(rand() % 3);
+      header.host_name    = GenerateString(8);
+      header.service_name = GenerateString(8);
+      header.sid          = GenerateString(5);
+      header.method_name  = GenerateString(8);
+      header.error        = GenerateString(15);
+      header.id           = rand() % 100;
+      header.state        = static_cast<eMethodCallState>(rand() % 3);
 
       return header;
     }

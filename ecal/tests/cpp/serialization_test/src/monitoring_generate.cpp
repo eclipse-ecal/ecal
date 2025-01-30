@@ -80,7 +80,7 @@ namespace eCAL
     SMethodMon GenerateServiceMethod()
     {
       SMethodMon method;
-      method.mname = GenerateString(8);
+      method.method_name = GenerateString(8);
 
       method.req_datatype  = eCAL::Registration::GenerateDataTypeInformation();
       method.resp_datatype = eCAL::Registration::GenerateDataTypeInformation();
@@ -98,7 +98,7 @@ namespace eCAL
       server.process_name       = GenerateString(8);
       server.unit_name          = GenerateString(6);
       server.process_id         = rand() % 1000;
-      server.sname              = GenerateString(10);
+      server.service_name       = GenerateString(10);
       server.sid                = rand();
       server.version            = rand() % 100;
       server.tcp_port_v0        = rand() % 65536;
@@ -119,7 +119,7 @@ namespace eCAL
       client.process_name       = GenerateString(8);
       client.unit_name          = GenerateString(6);
       client.process_id         = rand() % 1000;
-      client.sname              = GenerateString(10);
+      client.service_name       = GenerateString(10);
       client.sid                = rand();
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());

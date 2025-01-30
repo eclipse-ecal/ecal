@@ -26,13 +26,13 @@ namespace eCAL
     // compare two ServiceHeaders for equality
     bool CompareServiceHeaders(const ServiceHeader& header1, const ServiceHeader& header2)
     {
-      return (header1.host_name == header2.host_name &&
-              header1.sname == header2.sname &&
-              header1.sid   == header2.sid &&
-              header1.mname == header2.mname &&
-              header1.error == header2.error &&
-              header1.id    == header2.id &&
-              header1.state == header2.state);
+      return (header1.host_name    == header2.host_name &&
+              header1.service_name == header2.service_name &&
+              header1.sid          == header2.sid &&
+              header1.method_name  == header2.method_name &&
+              header1.error        == header2.error &&
+              header1.id           == header2.id &&
+              header1.state        == header2.state);
     }
 
     // compare two Requests for equality

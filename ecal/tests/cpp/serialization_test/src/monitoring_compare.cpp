@@ -136,7 +136,7 @@ namespace eCAL
           monitoring1.server[i].process_name != monitoring2.server[i].process_name ||
           monitoring1.server[i].unit_name != monitoring2.server[i].unit_name ||
           monitoring1.server[i].process_id != monitoring2.server[i].process_id ||
-          monitoring1.server[i].sname != monitoring2.server[i].sname ||
+          monitoring1.server[i].service_name != monitoring2.server[i].service_name ||
           monitoring1.server[i].sid != monitoring2.server[i].sid ||
           monitoring1.server[i].version != monitoring2.server[i].version ||
           monitoring1.server[i].tcp_port_v0 != monitoring2.server[i].tcp_port_v0 ||
@@ -148,7 +148,7 @@ namespace eCAL
 
         for (size_t j = 0; j < monitoring1.server[i].methods.size(); ++j)
         {
-          if (monitoring1.server[i].methods[j].mname != monitoring2.server[i].methods[j].mname ||
+          if (monitoring1.server[i].methods[j].method_name != monitoring2.server[i].methods[j].method_name ||
             monitoring1.server[i].methods[j].req_datatype != monitoring2.server[i].methods[j].req_datatype ||
             monitoring1.server[i].methods[j].resp_datatype != monitoring2.server[i].methods[j].resp_datatype ||
             monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
@@ -171,7 +171,7 @@ namespace eCAL
           monitoring1.clients[i].process_name != monitoring2.clients[i].process_name ||
           monitoring1.clients[i].unit_name != monitoring2.clients[i].unit_name ||
           monitoring1.clients[i].process_id != monitoring2.clients[i].process_id ||
-          monitoring1.clients[i].sname != monitoring2.clients[i].sname ||
+          monitoring1.clients[i].service_name != monitoring2.clients[i].service_name ||
           monitoring1.clients[i].sid != monitoring2.clients[i].sid ||
           monitoring1.clients[i].methods.size() != monitoring2.clients[i].methods.size() ||
           monitoring1.clients[i].version != monitoring2.clients[i].version)
@@ -181,7 +181,7 @@ namespace eCAL
 
         for (size_t j = 0; j < monitoring1.clients[i].methods.size(); ++j)
         {
-          if (monitoring1.clients[i].methods[j].mname != monitoring2.clients[i].methods[j].mname ||
+          if (monitoring1.clients[i].methods[j].method_name != monitoring2.clients[i].methods[j].method_name ||
             monitoring1.clients[i].methods[j].req_datatype != monitoring2.clients[i].methods[j].req_datatype ||
             monitoring1.clients[i].methods[j].resp_datatype != monitoring2.clients[i].methods[j].resp_datatype ||
             monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)

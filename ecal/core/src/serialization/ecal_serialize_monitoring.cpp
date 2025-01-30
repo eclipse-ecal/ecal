@@ -265,7 +265,7 @@ namespace
       }
 
       eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
-      eCAL::nanopb::encode_string(pb_method.mname, method.mname);
+      eCAL::nanopb::encode_string(pb_method.method_name, method.method_name);
 
       pb_method.has_req_datatype = true;
       eCAL::nanopb::encode_string(pb_method.req_datatype.name, method.req_datatype.name);
@@ -309,8 +309,8 @@ namespace
     eCAL::nanopb::encode_string(pb_service_.unit_name, service_.unit_name);
     // process_id
     pb_service_.process_id = service_.process_id;
-    // sname
-    eCAL::nanopb::encode_string(pb_service_.sname, service_.sname);
+    // service_name
+    eCAL::nanopb::encode_string(pb_service_.service_name, service_.service_name);
     // sid
     eCAL::nanopb::encode_int_to_string(pb_service_.sid, service_.sid);
     // methods
@@ -370,8 +370,8 @@ namespace
     eCAL::nanopb::encode_string(pb_client_.unit_name, client_.unit_name);
     // process_id
     pb_client_.process_id = client_.process_id;
-    // sname
-    eCAL::nanopb::encode_string(pb_client_.sname, client_.sname);
+    // service_name
+    eCAL::nanopb::encode_string(pb_client_.service_name, client_.service_name);
     // sid
     eCAL::nanopb::encode_int_to_string(pb_client_.sid, client_.sid);
     // methods
@@ -703,7 +703,7 @@ namespace
     eCAL::Monitoring::SMethodMon method{};
 
     // decode method parameter
-    eCAL::nanopb::decode_string(pb_method.mname, method.mname);
+    eCAL::nanopb::decode_string(pb_method.method_name, method.method_name);
 
     eCAL::nanopb::decode_string(pb_method.req_datatype.name, method.req_datatype.name);
     eCAL::nanopb::decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
@@ -749,8 +749,8 @@ namespace
     eCAL::nanopb::decode_string(pb_service_.process_name, service_.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_service_.unit_name, service_.unit_name);
-    // sname
-    eCAL::nanopb::decode_string(pb_service_.sname, service_.sname);
+    // service_name
+    eCAL::nanopb::decode_string(pb_service_.service_name, service_.service_name);
     // sid
     eCAL::nanopb::decode_int_from_string(pb_service_.sid, service_.sid);
     // methods
@@ -818,8 +818,8 @@ namespace
     eCAL::nanopb::decode_string(pb_client_.process_name, client_.process_name);
     // unit_name
     eCAL::nanopb::decode_string(pb_client_.unit_name, client_.unit_name);
-    // sname
-    eCAL::nanopb::decode_string(pb_client_.sname, client_.sname);
+    // service_name
+    eCAL::nanopb::decode_string(pb_client_.service_name, client_.service_name);
     // sid
     eCAL::nanopb::decode_int_from_string(pb_client_.sid, client_.sid);
     // methods

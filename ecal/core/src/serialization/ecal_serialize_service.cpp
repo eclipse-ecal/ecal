@@ -47,12 +47,12 @@ namespace
 
     // host_name
     eCAL::nanopb::encode_string(pb_request_.header.host_name, request_.header.host_name);
-    // sname
-    eCAL::nanopb::encode_string(pb_request_.header.sname, request_.header.sname);
+    // service_name
+    eCAL::nanopb::encode_string(pb_request_.header.service_name, request_.header.service_name);
     // sid
     eCAL::nanopb::encode_string(pb_request_.header.sid, request_.header.sid);
-    // mname
-    eCAL::nanopb::encode_string(pb_request_.header.mname, request_.header.mname);
+    // method_name
+    eCAL::nanopb::encode_string(pb_request_.header.method_name, request_.header.method_name);
     // error
     eCAL::nanopb::encode_string(pb_request_.header.error, request_.header.error);
     // id
@@ -121,12 +121,12 @@ namespace
     ///////////////////////////////////////////////
     // host_name
     eCAL::nanopb::decode_string(pb_request.header.host_name, request_.header.host_name);
-    // sname
-    eCAL::nanopb::decode_string(pb_request.header.sname, request_.header.sname);
+    // service_name
+    eCAL::nanopb::decode_string(pb_request.header.service_name, request_.header.service_name);
     // sid
     eCAL::nanopb::decode_string(pb_request.header.sid, request_.header.sid);
-    // mname
-    eCAL::nanopb::decode_string(pb_request.header.mname, request_.header.mname);
+    // method_name
+    eCAL::nanopb::decode_string(pb_request.header.method_name, request_.header.method_name);
     // error
     eCAL::nanopb::decode_string(pb_request.header.error, request_.header.error);
 
@@ -173,12 +173,12 @@ namespace
 
     // host_name
     eCAL::nanopb::encode_string(pb_response_.header.host_name, response_.header.host_name);
-    // sname
-    eCAL::nanopb::encode_string(pb_response_.header.sname, response_.header.sname);
+    // service_name
+    eCAL::nanopb::encode_string(pb_response_.header.service_name, response_.header.service_name);
     // sid
     eCAL::nanopb::encode_string(pb_response_.header.sid, response_.header.sid);
-    // mname
-    eCAL::nanopb::encode_string(pb_response_.header.mname, response_.header.mname);
+    // method_name
+    eCAL::nanopb::encode_string(pb_response_.header.method_name, response_.header.method_name);
     // error
     eCAL::nanopb::encode_string(pb_response_.header.error, response_.header.error);
     // id
@@ -248,12 +248,12 @@ namespace
     ///////////////////////////////////////////////
     // host_name
     eCAL::nanopb::decode_string(pb_response.header.host_name, response_.header.host_name);
-    // sname
-    eCAL::nanopb::decode_string(pb_response.header.sname, response_.header.sname);
+    // service_name
+    eCAL::nanopb::decode_string(pb_response.header.service_name, response_.header.service_name);
     // sid
     eCAL::nanopb::decode_string(pb_response.header.sid, response_.header.sid);
-    // mname
-    eCAL::nanopb::decode_string(pb_response.header.mname, response_.header.mname);
+    // method_name
+    eCAL::nanopb::decode_string(pb_response.header.method_name, response_.header.method_name);
     // error
     eCAL::nanopb::decode_string(pb_response.header.error, response_.header.error);
 

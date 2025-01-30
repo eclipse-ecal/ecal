@@ -48,18 +48,18 @@ namespace eCAL
     struct ServiceHeader
     {
       std::string          host_name;       // Host name
-      std::string          sname;           // Service name
+      std::string          service_name;    // Service name
       std::string          sid;             // Service id
-      std::string          mname;           // Method name
+      std::string          method_name;     // Method name
       std::string          error;           // Error message
       int32_t              id = 0;          // Session id
       eMethodCallState     state = none;    // Method call state
 
       bool operator==(const ServiceHeader& other) const {
         return host_name == other.host_name &&
-          sname == other.sname &&
+          service_name == other.service_name &&
           sid == other.sid &&
-          mname == other.mname &&
+          method_name == other.method_name &&
           error == other.error &&
           id == other.id &&
           state == other.state;
@@ -68,9 +68,9 @@ namespace eCAL
       void clear()
       {
         host_name.clear();
-        sname.clear();
+        service_name.clear();
         sid.clear();
-        mname.clear();
+        method_name.clear();
         error.clear();
         id = 0;
         state = none;
@@ -119,7 +119,7 @@ namespace eCAL
     // Service Method
     struct Method
     {
-      std::string          mname;            // Method name
+      std::string          method_name;      // Method name
 
       std::string          req_type;         // Request  type       (deprecated use req_datatype)
       std::string          req_desc;         // Request  descriptor (deprecated use req_datatype)
@@ -132,7 +132,7 @@ namespace eCAL
       int64_t              call_count = 0;   // Call counter
 
       bool operator==(const Method& other) const {
-        return mname == other.mname &&
+        return method_name == other.method_name &&
           req_type == other.req_type &&
           req_desc == other.req_desc &&
           resp_type == other.resp_type &&
@@ -144,7 +144,7 @@ namespace eCAL
 
       void clear()
       {
-        mname.clear();
+        method_name.clear();
         req_type.clear();
         req_desc.clear();
         resp_type.clear();
@@ -160,7 +160,7 @@ namespace eCAL
       int32_t                         registration_clock = 0;  // Registration clock
       std::string                     process_name;            // Process name
       std::string                     unit_name;               // Unit name
-      std::string                     sname;                   // Service name
+      std::string                     service_name;            // Service name
       Util::CExpandingVector<Method>  methods;                 // List of methods
       uint32_t                        version = 0;             // Service protocol version
       uint32_t                        tcp_port_v0 = 0;         // The TCP port used for that service (v0)
@@ -170,7 +170,7 @@ namespace eCAL
         return registration_clock == other.registration_clock &&
           process_name == other.process_name &&
           unit_name == other.unit_name &&
-          sname == other.sname &&
+          service_name == other.service_name &&
           methods == other.methods &&
           version == other.version &&
           tcp_port_v0 == other.tcp_port_v0 &&
@@ -182,7 +182,7 @@ namespace eCAL
         registration_clock = 0;
         process_name.clear();
         unit_name.clear();
-        sname.clear();
+        service_name.clear();
         methods.clear();
         version = 0;
         tcp_port_v0 = 0;
@@ -196,7 +196,7 @@ namespace eCAL
       int32_t                         registration_clock = 0;  // Registration clock
       std::string                     process_name;            // Process name
       std::string                     unit_name;               // Unit name
-      std::string                     sname;                   // Service name
+      std::string                     service_name;            // Service name
       Util::CExpandingVector<Method>  methods;                 // List of methods
       uint32_t                        version = 0;             // Client protocol version
 
@@ -204,7 +204,7 @@ namespace eCAL
         return registration_clock == other.registration_clock &&
           process_name == other.process_name &&
           unit_name == other.unit_name &&
-          sname == other.sname &&
+          service_name == other.service_name &&
           methods == other.methods &&
           version == other.version;
       }
@@ -214,7 +214,7 @@ namespace eCAL
         registration_clock = 0;
         process_name.clear();
         unit_name.clear();
-        sname.clear();
+        service_name.clear();
         methods.clear();
         version = 0;
       }

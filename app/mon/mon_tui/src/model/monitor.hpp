@@ -230,7 +230,7 @@ class MonitorModel
     {
       auto &service = services.emplace_back();
       service.id = s.sid();
-      service.name = std::move(*s.mutable_sname());
+      service.name = std::move(*s.mutable_service_name());
       service.host_name = std::move(*s.mutable_host_name());
       service.process_name = std::move(*s.mutable_process_name());
       service.unit_name = std::move(*s.mutable_unit_name());
@@ -239,7 +239,7 @@ class MonitorModel
       for(auto &m: *s.mutable_methods())
       {
         auto &method = service.methods.emplace_back();
-        method.name = std::move(*m.mutable_mname());
+        method.name = std::move(*m.mutable_method_name());
         method.request_type = std::move(*m.mutable_req_type());
         method.response_type = std::move(*m.mutable_resp_type());
         method.call_count = m.call_count();

@@ -134,7 +134,7 @@ namespace eCAL
 
     struct SMethodMon                                           //<! eCAL Server Method struct
     {
-      std::string           mname;                              //<! method name
+      std::string           method_name;                        //<! method name
 
       SDataTypeInformation  req_datatype;                       //<! request  datatype information (encoding & type & description)
       SDataTypeInformation  resp_datatype;                      //<! response datatype information (encoding & type & description)
@@ -150,7 +150,7 @@ namespace eCAL
       std::string              unit_name;                       //<! unit name
       int32_t                  process_id{0};                   //<! process id
 
-      std::string              sname;                           //<! service name
+      std::string              service_name;                    //<! service name
       EntityIdT                sid{0};                          //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
@@ -168,8 +168,8 @@ namespace eCAL
       std::string              unit_name;                       //<! unit name
       int32_t                  process_id{0};                   //<! process id
 
-      std::string              sname;                           //<! service name
-      EntityIdT  sid{0};                                        //<! service id
+      std::string              service_name;                    //<! service name
+      EntityIdT                sid{0};                          //<! service id
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
 

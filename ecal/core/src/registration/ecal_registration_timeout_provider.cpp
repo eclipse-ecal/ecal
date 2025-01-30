@@ -71,7 +71,7 @@ namespace eCAL
         const auto& sample_service = sample_.service;
         auto& unregister_sample_service = unregister_sample.service;
         unregister_sample_service.process_name = sample_service.process_name;
-        unregister_sample_service.sname        = sample_service.sname;
+        unregister_sample_service.service_name = sample_service.service_name;
         unregister_sample_service.unit_name    = sample_service.unit_name;
         unregister_sample_service.version      = sample_service.version;
       }
@@ -82,7 +82,7 @@ namespace eCAL
         auto& unregister_sample_client = unregister_sample.client;
 
         unregister_sample_client.process_name = sample_client.process_name;
-        unregister_sample_client.sname        = sample_client.sname;
+        unregister_sample_client.service_name = sample_client.service_name;
         unregister_sample_client.unit_name    = sample_client.unit_name;
         unregister_sample_client.version      = sample_client.version;
       }
