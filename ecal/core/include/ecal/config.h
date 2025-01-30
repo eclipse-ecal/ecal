@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file   config.h
+ * @brief  eCAL configuration access
+**/
+
 #pragma once
 
 #include <cstddef>
@@ -70,7 +75,7 @@ namespace eCAL
     ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
 
-    ECAL_API std::string              GetShmTransportDomain                     ();
+    ECAL_API std::string              GetShmTransportDomain                ();
 
     /////////////////////////////////////
     // time

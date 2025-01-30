@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   ecal_process_mode.h
+ * @file   process_mode.h
  * @brief  eCAL process start mode
 **/
 
