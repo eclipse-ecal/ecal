@@ -19,7 +19,6 @@
 
 #include "topic_tree_item.h"
 
-#include <QColor>
 #include <QFont>
 #include <QString>
 #include <QByteArray>
@@ -42,6 +41,7 @@ QVariant TopicTreeItem::data(int column, Qt::ItemDataRole role) const
 
 QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
 {
+
   if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
   {
     if (column == Columns::REGISTRATION_CLOCK)
@@ -312,6 +312,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       {
         QFont font;
         font.setItalic(true);
+        font.setBold(itemfont.bold());
         return font;
       }
     }
@@ -322,14 +323,21 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       {
         QFont font;
         font.setItalic(true);
+        font.setBold(itemfont.bold());
         return font;
       }
     }
 
-    return QVariant(); // Invalid QVariant
+    return itemfont;
   }
 
   return QVariant(); // Invalid QVariant
+}
+
+bool TopicTreeItem::setFont(const QFont& font)
+{
+  itemfont = font;
+  return false;
 }
 
 int TopicTreeItem::type() const

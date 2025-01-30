@@ -20,6 +20,7 @@
 #pragma once
 
 #include "CustomQt/QAbstractTreeItem.h"
+#include <QFont>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -67,6 +68,8 @@ public:
 
   QVariant data(Columns column, Qt::ItemDataRole role = Qt::ItemDataRole::DisplayRole) const;
 
+  bool setFont(const QFont& font);
+
   int type() const;
 
   void update(const eCAL::pb::Topic& topic);
@@ -77,7 +80,6 @@ public:
 
 private:
   eCAL::pb::Topic topic_;
-
+  QFont itemfont;
   static QString toFrequencyString(long long freq);
 };
-

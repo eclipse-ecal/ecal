@@ -139,7 +139,7 @@ void GroupTreeModel::insertItemIntoGroups(QAbstractTreeItem* item)
     QVariant current_group_name        = item->data(mapColumnToItem(group_by_columns_[0], item->type()), Qt::ItemDataRole::DisplayRole);
     QVariant current_group_filter_role = item->data(mapColumnToItem(group_by_columns_[0], item->type()), (Qt::ItemDataRole)ItemDataRoles::FilterRole); //-V1016
     QVariant current_group_sort_role   = item->data(mapColumnToItem(group_by_columns_[0], item->type()), (Qt::ItemDataRole)ItemDataRoles::SortRole); //-V1016
-    QVariant current_group_font_role   = item->data(mapColumnToItem(group_by_columns_[0], item->type()), Qt::ItemDataRole::FontRole);
+    QVariant current_group_font_role = standardFont;
     QVariant current_group_identifier  = item->data(mapColumnToItem(group_by_columns_[0], item->type()), (Qt::ItemDataRole)ItemDataRoles::GroupRole); //-V1016
 
 
@@ -175,7 +175,7 @@ void GroupTreeModel::insertItemIntoGroups(QAbstractTreeItem* item)
       current_group_name        = item->data(remaining_sub_groups.front(), Qt::ItemDataRole::DisplayRole);
       current_group_filter_role = item->data(remaining_sub_groups.front(), (Qt::ItemDataRole)ItemDataRoles::FilterRole); //-V1016
       current_group_sort_role   = item->data(remaining_sub_groups.front(), (Qt::ItemDataRole)ItemDataRoles::SortRole); //-V1016
-      current_group_font_role   = item->data(remaining_sub_groups.front(), Qt::ItemDataRole::FontRole);
+      current_group_font_role = standardFont;
       current_group_identifier  = item->data(remaining_sub_groups.front(), (Qt::ItemDataRole)ItemDataRoles::GroupRole); //-V1016
 
       auto subgroup_list = group_item->findChildren(

@@ -76,7 +76,7 @@ public:
 
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-  QVector<QPair<int, QString>> getTreeItemColumnNameMapping() const;
+  QVector<QPair<int, QVariant>> getTreeItemColumnNameMapping() const;
 
   void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
 
@@ -133,5 +133,14 @@ private:
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
   };
 
-  std::map<std::string, TopicTreeItem*> topic_tree_item_map_;
+  struct STopicTreeEntry
+  {
+    TopicTreeItem*  tree_item = nullptr;
+    bool            default_font = false;
+    bool            new_topic_timer = false;
+    bool            striked_out = false;
+    bool            deleted_topic_timer = false;
+    bool            topic_removed = false;
+  };
+  std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };

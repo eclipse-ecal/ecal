@@ -275,7 +275,6 @@ void TopicWidget::autoSizeColumns()
     ui_.tree_view->resizeColumnToContents(column);
   }
 
-
   topic_tree_model_->removeItem(example_topic_item);
   topic_tree_model_->removeItem(example_group_item);
 
