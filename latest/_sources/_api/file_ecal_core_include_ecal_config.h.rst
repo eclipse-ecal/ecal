@@ -4,6 +4,11 @@
 File config.h
 =============
 
+
+:ref:`namespace_eCAL` configuration access 
+
+
+
 .. contents:: Contents
    :local:
    :backlinks: none

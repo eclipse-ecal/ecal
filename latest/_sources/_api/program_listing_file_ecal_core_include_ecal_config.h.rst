@@ -77,7 +77,7 @@ Program Listing for File config.h
        ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
        ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
    
-       ECAL_API std::string              GetShmTransportDomain                     ();
+       ECAL_API std::string              GetShmTransportDomain                ();
    
        // time
    
