@@ -32,7 +32,7 @@
 
 namespace eCAL
 {
-  CServiceClient::CServiceClient(const std::string & service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT event_callback_)
+  CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT& event_callback_)
   {
     // create client implementation
     m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_set_, event_callback_);
@@ -50,12 +50,12 @@ namespace eCAL
     if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
   }
 
-  CServiceClient::CServiceClient(CServiceClient && rhs) noexcept
+  CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
     : m_service_client_impl(std::move(rhs.m_service_client_impl))
   {
   }
 
-  CServiceClient & CServiceClient::operator=(CServiceClient && rhs) noexcept
+  CServiceClient& CServiceClient::operator=(CServiceClient&& rhs) noexcept
   {
     if (this != &rhs)
     {
@@ -78,7 +78,7 @@ namespace eCAL
     return instances;
   }
 
-  bool CServiceClient::CallWithResponse(const std::string & method_name_, const std::string & request_, int timeout_, ServiceResponseVecT & service_response_vec_) const
+  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
@@ -133,7 +133,7 @@ namespace eCAL
     return overall_success;
   }
 
-  bool CServiceClient::CallWithCallback(const std::string & method_name_, const std::string & request_, int timeout_, const ResponseCallbackT & response_callback_) const
+  bool CServiceClient::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseCallbackT& response_callback_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
@@ -168,7 +168,7 @@ namespace eCAL
     return return_state;
   }
 
-  bool CServiceClient::CallWithCallbackAsync(const std::string & method_name_, const std::string & request_, const ResponseCallbackT & response_callback_) const
+  bool CServiceClient::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_) const
   {
     bool return_state = true;
     auto instances = GetClientInstances();
