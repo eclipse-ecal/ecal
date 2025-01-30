@@ -847,7 +847,7 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
 <section id="fa-ubuntu-ubuntu-22-04-20-04-build">
 <h3><i class="fab fa-ubuntu"></i> Ubuntu 22.04 / 20.04 build<a class="headerlink" href="#fa-ubuntu-ubuntu-22-04-20-04-build" title="Link to this heading">#</a></h3>
 <ol class="arabic">
-<li><p>Compile eCAL with the following options (additional set <cite>BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
+<li><p>Compile eCAL with the following options (additional set <cite>ECAL_BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>_build
 <span class="nb">cd</span><span class="w"> </span>_build
 cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES<span class="o">=</span>cmake/submodule_dependencies.cmake<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_PROTOBUF<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_CURL<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_HDF5<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_QWT<span class="o">=</span>OFF
@@ -862,7 +862,7 @@ sudo<span class="w"> </span>ldconfig
 </pre></div>
 </div>
 </li>
-<li><p>Optional: Create and install the eCAL python wheel (Only available if you enabled the <cite>BUILD_PY_BINDING</cite> CMake option in step 1):</p>
+<li><p>Optional: Create and install the eCAL python wheel (Only available if you enabled the <cite>ECAL_BUILD_PY_BINDING</cite> CMake option in step 1):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>--build<span class="w"> </span>.<span class="w"> </span>--target<span class="w"> </span>create_python_wheel<span class="w"> </span>--config<span class="w"> </span>Release
 sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>_deploy/ecal5-*
 </pre></div>
