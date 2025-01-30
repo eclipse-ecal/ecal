@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecalc.h>
+#include <ecal_c/ecal.h>
 
 /*************************************************************************/
 /*  common                                                               */

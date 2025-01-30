@@ -17,38 +17,33 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal_c/ecal.h>
+/**
+ * @file   util.cpp
+ * @brief  eCAL utility c interface
+**/
 
-#include <stdio.h>
-#include <string.h>
+#include <ecal/ecal.h>
+#include <ecal_c/util.h>
 
-int main()
+#include "common.h"
+
+extern "C"
 {
-  ECAL_HANDLE pub     = 0;
-  char        snd_s[] = "HELLO WORLD FROM C";
-  int         sent    = 0;
-
-  // initialize eCAL API
-  eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
-
-  // create publisher "Hello"
-  pub = eCAL_Pub_New();
-  eCAL_Pub_Create(pub, "Hello", "std::string", "base", "", 0);
-
-  // send updates
-  while(eCAL_Ok())
+#if ECAL_CORE_MONITORING
+  ECALC_API void eCAL_Util_ShutdownUnitName(const char* unit_name_)
   {
-    // send content
-    sent = eCAL_Pub_Send(pub, snd_s, (int)strlen(snd_s), -1);
-    if(sent <= 0) printf("Sending topic \"Hello\" failed !\n");
-    else          printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
-
-    // sleep 100 ms
-    eCAL_Process_SleepMS(100);
+    const std::string unit_name = unit_name_;
+    eCAL::Util::ShutdownProcess(unit_name);
   }
 
-  // finalize eCAL API
-  eCAL_Finalize();
+  ECALC_API void eCAL_Util_ShutdownProcessID(int process_id_)
+  {
+    eCAL::Util::ShutdownProcess(process_id_);
+  }
 
-  return(0);
+  ECALC_API void eCAL_Util_ShutdownProcesses()
+  {
+    eCAL::Util::ShutdownProcesses();
+  }
+#endif // ECAL_CORE_MONITORING
 }
