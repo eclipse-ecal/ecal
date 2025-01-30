@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ int main()
 
   // add callback
   auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
-    long long const clock = reinterpret_cast<long long*>(data_.buf)[0];
+    long long const clock = static_cast<const long long*>(data_.buffer)[0];
     if(g_first_clock < 0)
     {
       g_first_clock = clock;

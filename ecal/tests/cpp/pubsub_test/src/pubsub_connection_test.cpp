@@ -77,7 +77,7 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.GetPublisherCount() > 0;
-        first_received_sample = std::string(static_cast<const char*>(data_.buf), data_.size);
+        first_received_sample = std::string(static_cast<const char*>(data_.buffer), data_.buffer_size);
       }
 
         if (sub_count < max_sub_count)
@@ -176,7 +176,7 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.GetPublisherCount() > 0;
-        first_received_sample = std::string(static_cast<const char*>(data_.buf), data_.size);
+        first_received_sample = std::string(static_cast<const char*>(data_.buffer), data_.buffer_size);
       }
 
         if (sub_count < max_sub_count)
@@ -255,7 +255,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   eCAL::CSubscriber sub1("topic1");
   auto subscriber1_callback = [&pub2](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
     // On receiving data from Publisher1, Publisher2 sends the same data
-    const std::string received_data(static_cast<const char*>(data_.buf), data_.size);
+    const std::string received_data(static_cast<const char*>(data_.buffer), data_.buffer_size);
     pub2.Send(received_data);
     };
   sub1.SetReceiveCallback(subscriber1_callback);

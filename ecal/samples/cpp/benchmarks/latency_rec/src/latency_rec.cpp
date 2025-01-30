@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ void on_receive(const struct eCAL::SReceiveCallbackData& data_, SCallbackPar* pa
 
   // update latency, size and msg number
   const std::lock_guard<std::mutex> lock(par_->mtx);
-  par_->latency_array.push_back(rec_time - data_.time);
-  par_->rec_size = data_.size;
+  par_->latency_array.push_back(rec_time - data_.send_timestamp);
+  par_->rec_size = data_.buffer_size;
   par_->msg_num++;
   // delay callback
   if(delay_ > 0) std::this_thread::sleep_for(std::chrono::milliseconds(delay_));

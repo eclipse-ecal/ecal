@@ -129,9 +129,8 @@ namespace eCAL
      * @param msg_         Message content.
      * @param time_        Message time stamp.
      * @param clock_       Message writer clock.
-     * @param id_          Message id.
      **/
-    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
+    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_)>;
 
     /**
      * @brief  Add receive callback for incoming messages.
@@ -180,9 +179,9 @@ namespace eCAL
 
       T msg;
       // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
-      if (m_deserializer.Deserialize(msg, data_.buf, data_.size))
+      if (m_deserializer.Deserialize(msg, data_.buffer, data_.buffer_size))
       {
-        (fn_callback)(topic_id_, msg, data_.time, data_.clock, data_.id);
+        (fn_callback)(topic_id_, msg, data_.send_timestamp, data_.send_counter);
       }
     }
 

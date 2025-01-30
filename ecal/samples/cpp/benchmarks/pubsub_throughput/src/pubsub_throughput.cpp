@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TransportLayer::eType la
   // add callback
   std::atomic<size_t> received_bytes;
   auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
-    received_bytes += data_.size;
+    received_bytes += data_.buffer_size;
   };
   sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 

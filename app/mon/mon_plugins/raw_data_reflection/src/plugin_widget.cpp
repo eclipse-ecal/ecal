@@ -75,9 +75,9 @@ PluginWidget::~PluginWidget()
 void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
-  last_message_ = QByteArray(static_cast<char*>(callback_data.buf), callback_data.size);
+  last_message_ = QByteArray(static_cast<const char*>(callback_data.buffer), callback_data.buffer_size);
 
-  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data.time));
+  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data.send_timestamp));
 
   received_message_counter_++;
   new_msg_available_ = true;

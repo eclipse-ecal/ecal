@@ -61,11 +61,10 @@ namespace eCAL
   **/
   struct SReceiveCallbackData
   {
-    void* buf = nullptr;  //!< payload buffer
-    long      size = 0;        //!< payload buffer size
-    long long id = 0;        //!< publisher id (SetId())
-    long long time = 0;        //!< publisher send time in µs
-    long long clock = 0;        //!< publisher send clock
+    const void* buffer = nullptr;       //!< payload buffer
+    size_t      buffer_size = 0;        //!< payload buffer size
+    int64_t     send_timestamp = 0;     //!< publisher send time in µs
+    uint64_t    send_counter = 0;       //!< publisher send counter. Each publisher increases the counter by one, every time a message is sent. It can be used to detect message drops.
   };
 
   /**

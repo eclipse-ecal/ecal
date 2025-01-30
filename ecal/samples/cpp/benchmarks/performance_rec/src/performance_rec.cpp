@@ -30,10 +30,10 @@ void PrintStatistic(const std::string& topic_name_, const std::chrono::duration<
 {
     std::stringstream out;
     out << "Topic Name:            " << topic_name_                                                      << std::endl;
-    if (data_.size > 15)
+    if (data_.buffer_size > 15)
     {
       out << "Message [0 - 15]:      ";
-      for (auto i = 0; i < 16; ++i) out << (static_cast<char*>(data_.buf))[i] << " ";
+      for (auto i = 0; i < 16; ++i) out << (static_cast<const char*>(data_.buffer))[i] << " ";
       out << std::endl;
     }
     out << "Message size (kByte):  " << (unsigned int)(size_  / 1024.0)                                        << std::endl;
@@ -63,7 +63,7 @@ int main()
 
   // add callback
     auto on_receive = [&](const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
-    auto size = data_.size;
+    auto size = data_.buffer_size;
 
     msgs++;
     bytes += size;

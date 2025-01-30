@@ -479,6 +479,7 @@ namespace eCAL
     while (m_sample_hash_queue.size() > hash_queue_size) m_sample_hash_queue.pop_front();
 
     // check id
+    // TODO: not sure if this is needed / necessary.
     if (!m_id_set.empty())
     {
       if (m_id_set.find(id_) == m_id_set.end()) return(0);
@@ -532,11 +533,10 @@ namespace eCAL
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
-        cb_data.buf   = const_cast<char*>(payload_);
-        cb_data.size  = long(size_);
-        cb_data.id    = id_;
-        cb_data.time  = time_;
-        cb_data.clock = clock_;
+        cb_data.buffer   = static_cast<const void*>(payload_);
+        cb_data.buffer_size  = long(size_);
+        cb_data.send_timestamp  = time_;
+        cb_data.send_counter = clock_;
 
         STopicId topic_id;
         topic_id.topic_name          = topic_info_.topic_name;

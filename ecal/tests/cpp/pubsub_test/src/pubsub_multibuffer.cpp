@@ -99,11 +99,11 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
 
   // add callback
   auto lambda = [&](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
-    received_bytes += data_.size;
+    received_bytes += data_.buffer_size;
     ++received_count;
     for (auto i = 0; i < bytes_to_read; ++i)
     {
-      const char rec_char(static_cast<const char*>(data_.buf)[i]);
+      const char rec_char(static_cast<const char*>(data_.buffer)[i]);
       received_content.push_back(rec_char);
       std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(rec_char) << " ";
     }
