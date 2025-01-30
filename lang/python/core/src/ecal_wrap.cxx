@@ -1149,22 +1149,22 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_datatype.name.c_str());
+          val = Py_BuildValue("s", method.request_datatype_information.name.c_str());
           PyDict_SetItemString(methodsDict, "request_datatype_name", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          val = Py_BuildValue("s", method.request_datatype_information.encoding.c_str());
           PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          val = Py_BuildValue("y#", method.request_datatype_information.descriptor.c_str(), method.request_datatype_information.descriptor.length());
           PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
+          val = Py_BuildValue("s", method.response_datatype_information.name.c_str());
           PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          val = Py_BuildValue("s", method.response_datatype_information.encoding.c_str());
           PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          val = Py_BuildValue("y#", method.response_datatype_information.descriptor.c_str(), method.response_datatype_information.descriptor.length());
           PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);
@@ -1212,22 +1212,22 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
           val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_datatype.name.c_str());
+          val = Py_BuildValue("s", method.request_datatype_information.name.c_str());
           PyDict_SetItemString(methodsDict, "request_datatype_type", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.req_datatype.encoding.c_str());
+          val = Py_BuildValue("s", method.request_datatype_information.encoding.c_str());
           PyDict_SetItemString(methodsDict, "request_datatype_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("y#", method.req_datatype.descriptor.c_str(), method.req_datatype.descriptor.length());
+          val = Py_BuildValue("y#", method.request_datatype_information.descriptor.c_str(), method.request_datatype_information.descriptor.length());
           PyDict_SetItemString(methodsDict, "request_datatype_descriptor", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_datatype.name.c_str());
+          val = Py_BuildValue("s", method.response_datatype_information.name.c_str());
           PyDict_SetItemString(methodsDict, "response_datatype_name", val); Py_DECREF(val);
 
-          val = Py_BuildValue("s", method.resp_datatype.encoding.c_str());
+          val = Py_BuildValue("s", method.response_datatype_information.encoding.c_str());
           PyDict_SetItemString(methodsDict, "response_datatype_encoding", val); Py_DECREF(val);
 
-          val = Py_BuildValue("y#", method.resp_datatype.descriptor.c_str(), method.resp_datatype.descriptor.length());
+          val = Py_BuildValue("y#", method.response_datatype_information.descriptor.c_str(), method.response_datatype_information.descriptor.length());
           PyDict_SetItemString(methodsDict, "response_datatype_descriptor", val); Py_DECREF(val);
 
           val = Py_BuildValue("i", method.call_count);

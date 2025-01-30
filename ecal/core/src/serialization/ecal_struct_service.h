@@ -121,13 +121,13 @@ namespace eCAL
     {
       std::string          method_name;      // Method name
 
-      std::string          req_type;         // Request  type       (deprecated use req_datatype)
-      std::string          req_desc;         // Request  descriptor (deprecated use req_datatype)
-      std::string          resp_type;        // Response type       (deprecated use resp_datatype)
-      std::string          resp_desc;        // Response descriptor (deprecated use resp_datatype)
+      std::string          req_type;         // Request  type       (deprecated use request_datatype_information)
+      std::string          req_desc;         // Request  descriptor (deprecated use request_datatype_information)
+      std::string          resp_type;        // Response type       (deprecated use response_datatype_information)
+      std::string          resp_desc;        // Response descriptor (deprecated use response_datatype_information)
 
-      SDataTypeInformation req_datatype;     // Request  datatype information (encoding & type & description)
-      SDataTypeInformation resp_datatype;    // Response datatype information (encoding & type & description)
+      SDataTypeInformation request_datatype_information;     // Request  datatype information (encoding & type & description)
+      SDataTypeInformation response_datatype_information;    // Response datatype information (encoding & type & description)
 
       int64_t              call_count = 0;   // Call counter
 
@@ -137,8 +137,8 @@ namespace eCAL
           req_desc == other.req_desc &&
           resp_type == other.resp_type &&
           resp_desc == other.resp_desc &&
-          req_datatype == other.req_datatype &&
-          resp_datatype == other.resp_datatype &&
+          request_datatype_information == other.request_datatype_information &&
+          response_datatype_information == other.response_datatype_information &&
           call_count == other.call_count;
       }
 

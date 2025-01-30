@@ -63,8 +63,8 @@ namespace
     eCAL::ServiceMethodInformationSetT methods;
     for (const auto& method : service_.methods)
     {
-      const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
-      const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
+      const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.request_datatype_information, method.req_type, method.req_desc);
+      const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.response_datatype_information, method.resp_type, method.resp_desc);
       methods.insert(eCAL::SServiceMethodInformation{method.method_name, request_datatype, response_datatype });
     }
     return methods;

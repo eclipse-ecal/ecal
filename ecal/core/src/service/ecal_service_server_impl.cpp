@@ -82,8 +82,8 @@ namespace eCAL
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // update data type and callback
-      iter->second.method.req_datatype = method_info_.request_type;
-      iter->second.method.resp_datatype = method_info_.response_type;
+      iter->second.method.request_datatype_information = method_info_.request_type;
+      iter->second.method.response_datatype_information = method_info_.response_type;
       iter->second.callback = callback_;
 #else
       /////////////////////////////////////////////
@@ -99,14 +99,14 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      iter->second.method.req_datatype.name = method_info_.request_type.name;
-      iter->second.method.resp_datatype.name = method_info_.response_type.name;
+      iter->second.method.request_datatype_information.name = method_info_.request_type.name;
+      iter->second.method.response_datatype_information.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
-      if (!method_info_.request_type.encoding.empty())    iter->second.method.req_datatype.encoding = method_info_.request_type.encoding;
-      if (!method_info_.response_type.encoding.empty())   iter->second.method.resp_datatype.encoding = method_info_.response_type.encoding;
-      if (!method_info_.request_type.descriptor.empty())  iter->second.method.req_datatype.descriptor = method_info_.request_type.descriptor;
-      if (!method_info_.response_type.descriptor.empty()) iter->second.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+      if (!method_info_.request_type.encoding.empty())    iter->second.method.request_datatype_information.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   iter->second.method.response_datatype_information.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  iter->second.method.request_datatype_information.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) iter->second.method.response_datatype_information.descriptor = method_info_.response_type.descriptor;
 
       // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
       if (callback_ != nullptr)
@@ -126,8 +126,8 @@ namespace eCAL
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // set data type and callback
-      method.method.req_datatype = method_info_.request_type;
-      method.method.resp_datatype = method_info_.response_type;
+      method.method.request_datatype_information = method_info_.request_type;
+      method.method.response_datatype_information = method_info_.response_type;
       method.callback = callback_;
 #else
 #endif
@@ -144,14 +144,14 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      method.method.req_datatype.name = method_info_.request_type.name;
-      method.method.resp_datatype.name = method_info_.response_type.name;
+      method.method.request_datatype_information.name = method_info_.request_type.name;
+      method.method.response_datatype_information.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
-      if (!method_info_.request_type.encoding.empty())    method.method.req_datatype.encoding = method_info_.request_type.encoding;
-      if (!method_info_.response_type.encoding.empty())   method.method.resp_datatype.encoding = method_info_.response_type.encoding;
-      if (!method_info_.request_type.descriptor.empty())  method.method.req_datatype.descriptor = method_info_.request_type.descriptor;
-      if (!method_info_.response_type.descriptor.empty()) method.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+      if (!method_info_.request_type.encoding.empty())    method.method.request_datatype_information.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   method.method.response_datatype_information.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  method.method.request_datatype_information.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) method.method.response_datatype_information.descriptor = method_info_.response_type.descriptor;
 
       // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
       if (callback_ != nullptr)
@@ -380,8 +380,8 @@ namespace eCAL
         method.resp_desc = iter.second.method.resp_desc;
 
         // new type and descriptor fields
-        method.req_datatype = iter.second.method.req_datatype;
-        method.resp_datatype = iter.second.method.resp_datatype;
+        method.request_datatype_information = iter.second.method.request_datatype_information;
+        method.response_datatype_information = iter.second.method.response_datatype_information;
 
         method.call_count = iter.second.method.call_count;
         service.methods.push_back(method);
@@ -477,8 +477,8 @@ namespace eCAL
     std::string response_s;
     const SServiceMethodInformation method_info{
       method.method.method_name,
-      method.method.req_datatype,
-      method.method.resp_datatype
+      method.method.request_datatype_information,
+      method.method.response_datatype_information
     };
     const int service_return_state = method.callback(method_info, request_s, response_s);
 

@@ -38,8 +38,8 @@ namespace eCAL
       method.resp_type  = GenerateString(8);  // deprecated
       method.resp_desc  = GenerateString(10); // deprecated
 
-      method.req_datatype  = GenerateDataTypeInformation();
-      method.resp_datatype = GenerateDataTypeInformation();
+      method.request_datatype_information  = GenerateDataTypeInformation();
+      method.response_datatype_information = GenerateDataTypeInformation();
 
       method.call_count = rand() % 10000;
 

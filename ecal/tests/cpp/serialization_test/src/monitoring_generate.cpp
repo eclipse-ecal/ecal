@@ -82,8 +82,8 @@ namespace eCAL
       SMethodMon method;
       method.method_name = GenerateString(8);
 
-      method.req_datatype  = eCAL::Registration::GenerateDataTypeInformation();
-      method.resp_datatype = eCAL::Registration::GenerateDataTypeInformation();
+      method.request_datatype_information  = eCAL::Registration::GenerateDataTypeInformation();
+      method.response_datatype_information = eCAL::Registration::GenerateDataTypeInformation();
 
       method.call_count = rand() % 10000;
       return method;

@@ -43,15 +43,15 @@ typedef struct _eCAL_pb_Response {
 
 typedef struct _eCAL_pb_Method {
     pb_callback_t method_name; /* method name */
-    pb_callback_t req_type; /* request  type        (deprecated use req_datatype) */
-    pb_callback_t resp_type; /* response type        (deprecated use resp_datatype) */
+    pb_callback_t req_type; /* request  type        (deprecated use request_datatype_information) */
+    pb_callback_t resp_type; /* response type        (deprecated use response_datatype_information) */
     int64_t call_count; /* call counter */
-    pb_callback_t req_desc; /* request  descriptor  (deprecated use req_datatype) */
-    pb_callback_t resp_desc; /* response descriptor  (deprecated use resp_datatype) */
-    bool has_req_datatype;
-    eCAL_pb_DataTypeInformation req_datatype; /* request  datatype information  (encoding & type & description) */
-    bool has_resp_datatype;
-    eCAL_pb_DataTypeInformation resp_datatype; /* response datatype information  (encoding & type & description) */
+    pb_callback_t req_desc; /* request  descriptor  (deprecated use request_datatype_information) */
+    pb_callback_t resp_desc; /* response descriptor  (deprecated use response_datatype_information) */
+    bool has_request_datatype_information;
+    eCAL_pb_DataTypeInformation request_datatype_information; /* request  datatype information  (encoding & type & description) */
+    bool has_response_datatype_information;
+    eCAL_pb_DataTypeInformation response_datatype_information; /* response datatype information  (encoding & type & description) */
 } eCAL_pb_Method;
 
 typedef struct _eCAL_pb_Service {
@@ -133,8 +133,8 @@ extern "C" {
 #define eCAL_pb_Method_call_count_tag            4
 #define eCAL_pb_Method_req_desc_tag              5
 #define eCAL_pb_Method_resp_desc_tag             6
-#define eCAL_pb_Method_req_datatype_tag          7
-#define eCAL_pb_Method_resp_datatype_tag         8
+#define eCAL_pb_Method_request_datatype_information_tag 7
+#define eCAL_pb_Method_response_datatype_information_tag 8
 #define eCAL_pb_Service_registration_clock_tag   1
 #define eCAL_pb_Service_host_name_tag            2
 #define eCAL_pb_Service_process_name_tag         3
@@ -190,12 +190,12 @@ X(a, CALLBACK, SINGULAR, STRING,   resp_type,         3) \
 X(a, STATIC,   SINGULAR, INT64,    call_count,        4) \
 X(a, CALLBACK, SINGULAR, BYTES,    req_desc,          5) \
 X(a, CALLBACK, SINGULAR, BYTES,    resp_desc,         6) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  req_datatype,      7) \
-X(a, STATIC,   OPTIONAL, MESSAGE,  resp_datatype,     8)
+X(a, STATIC,   OPTIONAL, MESSAGE,  request_datatype_information,   7) \
+X(a, STATIC,   OPTIONAL, MESSAGE,  response_datatype_information,   8)
 #define eCAL_pb_Method_CALLBACK pb_default_field_callback
 #define eCAL_pb_Method_DEFAULT NULL
-#define eCAL_pb_Method_req_datatype_MSGTYPE eCAL_pb_DataTypeInformation
-#define eCAL_pb_Method_resp_datatype_MSGTYPE eCAL_pb_DataTypeInformation
+#define eCAL_pb_Method_request_datatype_information_MSGTYPE eCAL_pb_DataTypeInformation
+#define eCAL_pb_Method_response_datatype_information_MSGTYPE eCAL_pb_DataTypeInformation
 
 #define eCAL_pb_Service_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    registration_clock,   1) \

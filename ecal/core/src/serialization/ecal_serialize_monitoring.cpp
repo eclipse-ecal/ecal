@@ -267,15 +267,15 @@ namespace
       eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
       eCAL::nanopb::encode_string(pb_method.method_name, method.method_name);
 
-      pb_method.has_req_datatype = true;
-      eCAL::nanopb::encode_string(pb_method.req_datatype.name, method.req_datatype.name);
-      eCAL::nanopb::encode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-      eCAL::nanopb::encode_string(pb_method.req_datatype.descriptor_information, method.req_datatype.descriptor);
+      pb_method.has_request_datatype_information = true;
+      eCAL::nanopb::encode_string(pb_method.request_datatype_information.name, method.request_datatype_information.name);
+      eCAL::nanopb::encode_string(pb_method.request_datatype_information.encoding, method.request_datatype_information.encoding);
+      eCAL::nanopb::encode_string(pb_method.request_datatype_information.descriptor_information, method.request_datatype_information.descriptor);
 
-      pb_method.has_resp_datatype = true;
-      eCAL::nanopb::encode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
-      eCAL::nanopb::encode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-      eCAL::nanopb::encode_string(pb_method.resp_datatype.descriptor_information, method.resp_datatype.descriptor);
+      pb_method.has_response_datatype_information = true;
+      eCAL::nanopb::encode_string(pb_method.response_datatype_information.name, method.response_datatype_information.name);
+      eCAL::nanopb::encode_string(pb_method.response_datatype_information.encoding, method.response_datatype_information.encoding);
+      eCAL::nanopb::encode_string(pb_method.response_datatype_information.descriptor_information, method.response_datatype_information.descriptor);
 
       pb_method.call_count = method.call_count;
 
@@ -705,13 +705,13 @@ namespace
     // decode method parameter
     eCAL::nanopb::decode_string(pb_method.method_name, method.method_name);
 
-    eCAL::nanopb::decode_string(pb_method.req_datatype.name, method.req_datatype.name);
-    eCAL::nanopb::decode_string(pb_method.req_datatype.encoding, method.req_datatype.encoding);
-    eCAL::nanopb::decode_string(pb_method.req_datatype.descriptor_information, method.req_datatype.descriptor);
+    eCAL::nanopb::decode_string(pb_method.request_datatype_information.name, method.request_datatype_information.name);
+    eCAL::nanopb::decode_string(pb_method.request_datatype_information.encoding, method.request_datatype_information.encoding);
+    eCAL::nanopb::decode_string(pb_method.request_datatype_information.descriptor_information, method.request_datatype_information.descriptor);
 
-    eCAL::nanopb::decode_string(pb_method.resp_datatype.name, method.resp_datatype.name);
-    eCAL::nanopb::decode_string(pb_method.resp_datatype.encoding, method.resp_datatype.encoding);
-    eCAL::nanopb::decode_string(pb_method.resp_datatype.descriptor_information, method.resp_datatype.descriptor);
+    eCAL::nanopb::decode_string(pb_method.response_datatype_information.name, method.response_datatype_information.name);
+    eCAL::nanopb::decode_string(pb_method.response_datatype_information.encoding, method.response_datatype_information.encoding);
+    eCAL::nanopb::decode_string(pb_method.response_datatype_information.descriptor_information, method.response_datatype_information.descriptor);
 
     // decode it
     if (!pb_decode(stream, eCAL_pb_Method_fields, &pb_method))

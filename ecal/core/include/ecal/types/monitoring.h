@@ -136,8 +136,8 @@ namespace eCAL
     {
       std::string           method_name;                        //<! method name
 
-      SDataTypeInformation  req_datatype;                       //<! request  datatype information (encoding & type & description)
-      SDataTypeInformation  resp_datatype;                      //<! response datatype information (encoding & type & description)
+      SDataTypeInformation  request_datatype_information;       //<! request  datatype information (encoding & type & description)
+      SDataTypeInformation  response_datatype_information;      //<! response datatype information (encoding & type & description)
 
       long long             call_count{0};                      //<! call counter
     };

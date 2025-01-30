@@ -380,8 +380,8 @@ namespace eCAL
       method.resp_desc = method_information.response_type.descriptor;
 
       // new type and descriptor fields
-      method.req_datatype = method_information.request_type;
-      method.resp_datatype = method_information.response_type;
+      method.request_datatype_information = method_information.request_type;
+      method.response_datatype_information = method_information.response_type;
 
       {
         const auto& call_count_iter = m_method_call_count_map.find(method_name);

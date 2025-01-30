@@ -149,8 +149,8 @@ namespace eCAL
         for (size_t j = 0; j < monitoring1.server[i].methods.size(); ++j)
         {
           if (monitoring1.server[i].methods[j].method_name != monitoring2.server[i].methods[j].method_name ||
-            monitoring1.server[i].methods[j].req_datatype != monitoring2.server[i].methods[j].req_datatype ||
-            monitoring1.server[i].methods[j].resp_datatype != monitoring2.server[i].methods[j].resp_datatype ||
+            monitoring1.server[i].methods[j].request_datatype_information != monitoring2.server[i].methods[j].request_datatype_information ||
+            monitoring1.server[i].methods[j].response_datatype_information != monitoring2.server[i].methods[j].response_datatype_information ||
             monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
           {
             return false;
@@ -182,8 +182,8 @@ namespace eCAL
         for (size_t j = 0; j < monitoring1.clients[i].methods.size(); ++j)
         {
           if (monitoring1.clients[i].methods[j].method_name != monitoring2.clients[i].methods[j].method_name ||
-            monitoring1.clients[i].methods[j].req_datatype != monitoring2.clients[i].methods[j].req_datatype ||
-            monitoring1.clients[i].methods[j].resp_datatype != monitoring2.clients[i].methods[j].resp_datatype ||
+            monitoring1.clients[i].methods[j].request_datatype_information != monitoring2.clients[i].methods[j].request_datatype_information ||
+            monitoring1.clients[i].methods[j].response_datatype_information != monitoring2.clients[i].methods[j].response_datatype_information ||
             monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)
           {
             return false;

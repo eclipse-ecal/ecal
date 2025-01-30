@@ -58,13 +58,13 @@ message Method                               // method
 {
   string               method_name    =  1;  // method name
 
-  string               req_type       =  2;  // request  type        (deprecated use req_datatype)
-  bytes                req_desc       =  5;  // request  descriptor  (deprecated use req_datatype)
-  string               resp_type      =  3;  // response type        (deprecated use resp_datatype)
-  bytes                resp_desc      =  6;  // response descriptor  (deprecated use resp_datatype)
+  string               req_type       =  2;  // request  type        (deprecated use request_datatype_information)
+  bytes                req_desc       =  5;  // request  descriptor  (deprecated use request_datatype_information)
+  string               resp_type      =  3;  // response type        (deprecated use response_datatype_information)
+  bytes                resp_desc      =  6;  // response descriptor  (deprecated use response_datatype_information)
 
-  DataTypeInformation  req_datatype   =  7;  // request  datatype information  (encoding & type & description)
-  DataTypeInformation  resp_datatype  =  8;  // response datatype information  (encoding & type & description)
+  DataTypeInformation  request_datatype_information   =  7;  // request  datatype information  (encoding & type & description)
+  DataTypeInformation  response_datatype_information  =  8;  // response datatype information  (encoding & type & description)
 
   int64                call_count     =  4;  // call counter
 }
