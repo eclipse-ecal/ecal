@@ -62,8 +62,6 @@ Includes
 
 - ``ecal/timer.h`` (:ref:`file_ecal_core_include_ecal_timer.h`)
 
-- ``ecal/tlayer.h`` (:ref:`file_ecal_core_include_ecal_tlayer.h`)
-
 - ``ecal/util.h`` (:ref:`file_ecal_core_include_ecal_util.h`)
 
 

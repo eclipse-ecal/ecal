@@ -205,11 +205,6 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_ecal_core_include_ecal_tlayer.h.rst
-
-.. toctree::
-   :maxdepth: 5
-
    file_ecal_core_include_ecal_types.h.rst
 
 .. toctree::

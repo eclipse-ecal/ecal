@@ -38,8 +38,6 @@ Namespaces
 
 - :ref:`namespace_eCAL__Time`
 
-- :ref:`namespace_eCAL__TLayer`
-
 - :ref:`namespace_eCAL__Util`
 
 

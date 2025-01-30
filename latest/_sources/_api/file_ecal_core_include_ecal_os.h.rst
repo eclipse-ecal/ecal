@@ -50,8 +50,6 @@ Included By
 
 - :ref:`file_ecal_core_include_ecal_timer.h`
 
-- :ref:`file_ecal_core_include_ecal_tlayer.h`
-
 - :ref:`file_ecal_core_include_ecal_util.h`
 
 

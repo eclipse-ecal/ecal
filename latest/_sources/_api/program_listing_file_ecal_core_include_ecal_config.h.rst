@@ -34,7 +34,6 @@ Program Listing for File config.h
    #include <cstddef>
    #include <ecal/log_level.h>
    #include <ecal/os.h>
-   #include <ecal/tlayer.h>
    #include "ecal/config/configuration.h"
    
    #include <string>

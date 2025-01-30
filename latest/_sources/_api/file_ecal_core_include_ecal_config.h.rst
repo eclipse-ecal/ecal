@@ -33,8 +33,6 @@ Includes
 
 - ``ecal/os.h`` (:ref:`file_ecal_core_include_ecal_os.h`)
 
-- ``ecal/tlayer.h`` (:ref:`file_ecal_core_include_ecal_tlayer.h`)
-
 - ``string``
 
 
