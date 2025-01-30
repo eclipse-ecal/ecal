@@ -25,7 +25,7 @@
 #pragma once
 
 #include <ecal/deprecate.h>
-#include <ecal/v5/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 // protobuf includes
@@ -50,22 +50,15 @@ namespace eCAL
      * @brief Google Protobuf Client wrapper class.
     **/
     template <typename T>
-    class CServiceClient : public eCAL::v5::CServiceClient
+    class CServiceClient : public eCAL::CServiceClient
     {
     public:
       /**
-       * @brief Constructor (using protobuf defined service name).
-       *
+       * @brief Constructor (using protobuf-defined service name).
       **/
-      CServiceClient()
+      CServiceClient(const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
+        : eCAL::CServiceClient(GetServiceNameFromDescriptor(), CreateServiceMethodInformationSet(), event_callback_)
       {
-        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
-        // we need to inherit public from T in order to make the method accessible in our code.
-        struct U : T {};
-        std::shared_ptr<U> service = std::make_shared<U>();
-        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
-
-        Create(service_descriptor->full_name(), CreateMethodInformationMap());
       }
 
       /**
@@ -73,100 +66,114 @@ namespace eCAL
        *
        * @param service_name_  Unique service name.
       **/
-      explicit CServiceClient(const std::string& service_name_)
+      explicit CServiceClient(const std::string& service_name_, const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
+        : eCAL::CServiceClient(service_name_, CreateServiceMethodInformationSet(), event_callback_)
       {
-        Create(service_name_, CreateMethodInformationMap());
       }
 
       /**
-       * @brief CServiceClients are non-copyable
+       * @brief CServiceClients are non-copyable.
       **/
       CServiceClient(const CServiceClient&) = delete;
-
-      /**
-       * @brief CServiceClients are non-copyable
-      **/
       CServiceClient& operator=(const CServiceClient&) = delete;
 
       /**
-       * @brief Call a method of this service, responses will be returned by callback. 
-       *
-       * @param method_name_  Method name.
-       * @param request_      Request message.
-       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-       *
-       * @return  True if successful.
-      **/
-      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
-      {
-        return Call(method_name_, request_.SerializeAsString(), timeout_);
-      }
-
-      /**
-       * @brief Call a method of this service, all responses will be returned in service_response_vec.
+       * @brief Blocking call of a service method for all existing service instances, response will be returned as ServiceResponseVecT
        *
        * @param       method_name_           Method name.
        * @param       request_               Request message.
        * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-       * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
+       * @param [out] service_response_vec_  Response vector containing service responses from every called service.
        *
-       * @return  True if successful.
+       * @return  True if all calls were successful.
       **/
-      bool Call(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_, v5::ServiceResponseVecT* service_response_vec_)
+      bool CallWithResponse(const std::string& method_name_, const google::protobuf::Message& request_, int timeout_, ServiceResponseVecT& service_response_vec_)
       {
-        return Call(method_name_, request_.SerializeAsString(), timeout_, service_response_vec_);
+        return CallWithResponse(method_name_, request_.SerializeAsString(), timeout_, service_response_vec_);
       }
 
       /**
-       * @brief Call a method of this service asynchronously, responses will be returned by callback.
+       * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
        *
-       * @param method_name_  Method name.
-       * @param request_      Request message.
-       * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
+       * @param method_name_        Method name.
+       * @param request_            Request message.
+       * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
+       * @param response_callback_  Callback function for the service method response.
        *
-       * @return  True if successful.
+       * @return  True if all calls were successful.
       **/
-      bool CallAsync(const std::string& method_name_, const google::protobuf::Message& request_, const int timeout_ = -1)
+      bool CallWithCallback(const std::string& method_name_, const google::protobuf::Message& request_, int timeout_, const ResponseCallbackT& response_callback_)
       {
-        return CallAsync(method_name_, request_.SerializeAsString(), timeout_);
+        return CallWithCallback(method_name_, request_.SerializeAsString(), timeout_, response_callback_);
       }
 
-      using eCAL::v5::CServiceClient::Call;
-      using eCAL::v5::CServiceClient::CallAsync;
-    private:
-      ServiceMethodInformationSetT CreateMethodInformationMap()
+      /**
+       * @brief Asynchronous call of a service method for all existing service instances, using callback
+       *
+       * @param method_name_        Method name.
+       * @param request_            Request message.
+       * @param response_callback_  Callback function for the service method response.
+       *
+       * @return  True if all calls were successful.
+      **/
+      bool CallWithCallbackAsync(const std::string& method_name_, const google::protobuf::Message& request_, const ResponseCallbackT& response_callback_)
       {
-        // As google::protobuf::Service::GetDescriptor() is defined in a protected class scope
-        // we need to inherit public from T in order to make the method accessible in our code.
-        struct U : T {};
-        std::shared_ptr<U> service = std::make_shared<U>();
-        const google::protobuf::ServiceDescriptor* service_descriptor = service->GetDescriptor();
+        return CallWithCallbackAsync(method_name_, request_.SerializeAsString(), response_callback_);
+      }
 
-        std::string error_s;
+      using eCAL::CServiceClient::CallWithResponse;
+      using eCAL::CServiceClient::CallWithCallback;
+      using eCAL::CServiceClient::CallWithCallbackAsync;
+
+    private:
+      /**
+       * @brief Retrieves the full service name from the Protobuf descriptor.
+      **/
+      static std::string GetServiceNameFromDescriptor()
+      {
+        struct U : T {};  // Temporary subclass to access protected descriptor method
+        U temp_instance;
+        return temp_instance.GetDescriptor()->full_name();
+      }
+
+      /**
+       * @brief Generates the method information map for the service.
+       * @return A set containing service method information.
+      **/
+      static ServiceMethodInformationSetT CreateServiceMethodInformationSet()
+      {
+        struct U : T {};  // Temporary subclass to access protected descriptor method
+        U temp_instance;
+        const google::protobuf::ServiceDescriptor* service_descriptor = temp_instance.GetDescriptor();
+
+        if (!service_descriptor)
+        {
+          throw std::runtime_error("Failed to retrieve service descriptor.");
+        }
+
         ServiceMethodInformationSetT method_information_map;
         CProtoDynDecoder dyn_decoder;
+        std::string error_s;
+
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
-          // get method name and descriptor
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          const std::string method_name = method_descriptor->name();
+          std::string method_name = method_descriptor->name();
 
-          // get message type names
-          const std::string request_type_name = method_descriptor->input_type()->name();
-          const std::string response_type_name = method_descriptor->output_type()->name();
+          std::string request_type_name  = method_descriptor->input_type()->name();
+          std::string response_type_name = method_descriptor->output_type()->name();
 
-          // get message type descriptors
           std::string request_type_descriptor;
           std::string response_type_descriptor;
 
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
           dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
 
-          method_information_map.emplace(SServiceMethodInformation{ method_name,
-            SDataTypeInformation{request_type_name, "proto", request_type_descriptor},
+          method_information_map.emplace(SServiceMethodInformation{
+            method_name,
+            SDataTypeInformation{request_type_name,  "proto", request_type_descriptor},
             SDataTypeInformation{response_type_name, "proto", response_type_descriptor}
-            }
-          );
+            });
         }
 
         return method_information_map;
