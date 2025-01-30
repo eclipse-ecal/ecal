@@ -14,7 +14,7 @@ jobs:
   cherry-pick-from-push:
     strategy:
       matrix:
-        target-branch: [ "support/v5.12", "support/v5.13" ]
+        target-branch: [ "support/v5.12", "support/v5.13", "support/v6.0" ]
 
     runs-on: ubuntu-latest
     
