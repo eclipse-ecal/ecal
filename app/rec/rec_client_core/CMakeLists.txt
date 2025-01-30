@@ -20,7 +20,7 @@ find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(spdlog REQUIRED)
 
-if (HAS_CURL)
+if (ECAL_USE_CURL)
     find_package(CURL REQUIRED)
     add_compile_definitions(ECAL_HAS_CURL)
 endif ()
@@ -70,7 +70,7 @@ set(source_files
     src/job/hdf5_writer_thread.h
 ) 
 
-if (HAS_CURL)
+if (ECAL_USE_CURL)
     set(source_files
             ${source_files}
             src/job/ftp_upload_thread.cpp
@@ -105,7 +105,7 @@ target_link_libraries(${PROJECT_NAME}
     EcalParser
 )
 
-if(HAS_CURL)
+if(ECAL_USE_CURL)
     target_link_libraries(${PROJECT_NAME}
       PRIVATE
         CURL::libcurl

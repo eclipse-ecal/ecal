@@ -46,7 +46,7 @@ and even on embedded Linux distributions.
 
 ### Installation
 
-  In order to install the MachineMonitoringAgent along with eCAL, the cmake "-DBUILD_APPS=ON" flag needs to be set ON.
+  In order to install the MachineMonitoringAgent along with eCAL, the cmake "-DECAL_BUILD_APPS=ON" flag needs to be set ON.
 
   MachineMonitoringAgent stand-alone installation:
 

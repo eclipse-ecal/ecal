@@ -34,7 +34,7 @@ endfunction()
 
 
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
-if(ECAL_PYTHON_HAS_HDF5)
+if(ECAL_PYTHON_USE_HDF5)
   foreach(python_sample ${python_samples_measurement})
     add_sample_to_solution(${python_sample})
   endforeach()
