@@ -1,4 +1,4 @@
-.. _exhale_function_registration_8h_1a014ac920046286e6be0960c9461ca74b:
+.. _exhale_function_registration_8h_1a8161755d913fa1ae385e1c6787f032b0:
 
 Function eCAL::Registration::GetPublisherIDs
 ============================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::GetPublisherIDs()
+.. doxygenfunction:: eCAL::Registration::GetPublisherIDs(std::set<STopicId>&)
    :project: eCAL

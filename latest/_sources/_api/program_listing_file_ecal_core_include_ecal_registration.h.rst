@@ -68,7 +68,7 @@ Program Listing for File registration.h
        /* @brief Event callback, when a topic related entity (publisher / subscriber) has been created or deleted */
        using TopicEventCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
    
-       ECAL_API std::set<STopicId> GetPublisherIDs();
+       ECAL_API bool GetPublisherIDs(std::set<STopicId>& topic_ids_);
    
        ECAL_API bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
    
@@ -76,7 +76,7 @@ Program Listing for File registration.h
    
        ECAL_API void RemPublisherEventCallback(CallbackToken token_);
    
-       ECAL_API std::set<STopicId> GetSubscriberIDs();
+       ECAL_API bool GetSubscriberIDs(std::set<STopicId>& topic_ids_);
    
        ECAL_API bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
    
@@ -84,19 +84,21 @@ Program Listing for File registration.h
    
        ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
    
-       ECAL_API std::set<SServiceId> GetServerIDs();
+       ECAL_API bool GetServerIDs(std::set<SServiceId>& service_ids_);
    
        ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
    
-       ECAL_API std::set<SServiceId> GetClientIDs();
+       ECAL_API bool GetClientIDs(std::set<SServiceId>& service_ids_);
    
        ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
    
-       ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
+       ECAL_API bool GetPublishedTopicNames(std::set<std::string>& topic_names_);
    
-       ECAL_API void GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
+       ECAL_API bool GetSubscribedTopicNames(std::set<std::string>& topic_names_);
    
-       ECAL_API void GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
+       ECAL_API bool GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
+   
+       ECAL_API bool GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
      }
    }
    

@@ -35,27 +35,29 @@ Functions
 
 - :ref:`exhale_function_registration_8h_1a4deeeb38b0b23b0180fda68eb7c631ee`
 
-- :ref:`exhale_function_registration_8h_1a97020b544734171d309970068b799774`
+- :ref:`exhale_function_registration_8h_1af3ad589704c0e97b0739c30cf29eb86b`
 
 - :ref:`exhale_function_registration_8h_1a92cc9006d02ed7c62a83e9be25c215a9`
 
-- :ref:`exhale_function_registration_8h_1a3e799437fa8e6132ea86d7004126753b`
+- :ref:`exhale_function_registration_8h_1a6997c1fa88c40f4774eeb3574654be41`
 
-- :ref:`exhale_function_registration_8h_1a014ac920046286e6be0960c9461ca74b`
+- :ref:`exhale_function_registration_8h_1a0781dfa082b2096e8ff5f681ace31f80`
+
+- :ref:`exhale_function_registration_8h_1a8161755d913fa1ae385e1c6787f032b0`
 
 - :ref:`exhale_function_registration_8h_1a17035589529f59e0d6fdc17186b6fc26`
 
-- :ref:`exhale_function_registration_8h_1a503e37d3487dac6d5667b5498cb2494f`
+- :ref:`exhale_function_registration_8h_1aa9efa915f51aa256cdaac21a977e2338`
 
 - :ref:`exhale_function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc`
 
-- :ref:`exhale_function_registration_8h_1a043cc9cac5da8236e78f199ec4f194b3`
+- :ref:`exhale_function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc`
 
-- :ref:`exhale_function_registration_8h_1ac9173c68b3e7cd741168076e692e759f`
+- :ref:`exhale_function_registration_8h_1add69a1577f5702987d9843ffe794d370`
+
+- :ref:`exhale_function_registration_8h_1ade1ad2a10de5483ff0893e34006f1303`
 
 - :ref:`exhale_function_registration_8h_1ad63e05588b1f6436b92cbb34d817ecbf`
-
-- :ref:`exhale_function_registration_8h_1a0aa936468b700d266a2c1c137d9b3b63`
 
 - :ref:`exhale_function_registration_8h_1a32d0524e5d48924312037910dcf646c9`
 

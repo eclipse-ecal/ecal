@@ -1,4 +1,4 @@
-.. _exhale_function_registration_8h_1ac9173c68b3e7cd741168076e692e759f:
+.. _exhale_function_registration_8h_1ade1ad2a10de5483ff0893e34006f1303:
 
 Function eCAL::Registration::GetSubscriberIDs
 =============================================
@@ -10,5 +10,5 @@ Function Documentation
 ----------------------
 
 
-.. doxygenfunction:: eCAL::Registration::GetSubscriberIDs()
+.. doxygenfunction:: eCAL::Registration::GetSubscriberIDs(std::set<STopicId>&)
    :project: eCAL
