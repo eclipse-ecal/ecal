@@ -189,7 +189,6 @@ namespace eCAL
       std::string topic_datatype_encoding = sample_topic.datatype_information.encoding;
       std::string topic_datatype_name     = sample_topic.datatype_information.name;
       std::string topic_datatype_desc     = sample_topic.datatype_information.descriptor;
-      auto        attr                    = sample_topic.attr;
 
       // try to get topic info
       const auto& topic_map_key  = topic_id;
@@ -210,9 +209,6 @@ namespace eCAL
       TopicInfo.datatype_information.encoding   = std::move(topic_datatype_encoding);
       TopicInfo.datatype_information.name       = std::move(topic_datatype_name);
       TopicInfo.datatype_information.descriptor = std::move(topic_datatype_desc);
-
-      // attributes
-      TopicInfo.attr = std::map<std::string, std::string>{attr.begin(), attr.end()};
 
       // layer
       TopicInfo.transport_layer.clear();

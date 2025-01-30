@@ -266,26 +266,26 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  bool CSubscriberImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
 
-    m_attr[attr_name_] = attr_value_;
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute - Setting subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
-  bool CSubscriberImpl::ClearAttribute(const std::string& attr_name_)
+  bool CSubscriberImpl::ClearAttribute(const std::string& /* attr_name_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
 
-    m_attr.erase(attr_name_);
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute - Clear subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
@@ -640,7 +640,6 @@ namespace eCAL
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr  = m_attr;
     ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP

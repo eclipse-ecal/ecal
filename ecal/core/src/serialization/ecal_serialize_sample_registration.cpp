@@ -192,8 +192,6 @@ namespace
     pb_topic_.data_frequency = registration_topic_.data_frequency;
     // transport_layer
     eCAL::nanopb::encode_registration_layer(pb_topic_.transport_layer, registration_topic_.transport_layer);
-    // attr
-    eCAL::nanopb::encode_map(pb_topic_.attr, registration_topic_.attr);
   }
 
   /////////////////////////////////////////////////////////////////////////////////
@@ -392,8 +390,6 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.topic.datatype_information.descriptor_information, registration_.topic.datatype_information.descriptor);
     // transport_layer
     eCAL::nanopb::decode_registration_layer(pb_sample_.topic.transport_layer, registration_.topic.transport_layer);
-    // attr
-    eCAL::nanopb::decode_map(pb_sample_.topic.attr, registration_.topic.attr);
   }
 
   void AssignValues(const eCAL_pb_Sample& pb_sample_, eCAL::Registration::Sample& registration_)

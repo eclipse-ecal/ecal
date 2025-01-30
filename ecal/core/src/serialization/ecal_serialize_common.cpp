@@ -179,69 +179,6 @@ namespace eCAL
     }
 
     ///////////////////////////////////////////////
-    // map<string,string>
-    ///////////////////////////////////////////////
-    bool encode_map_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
-    {
-      if (arg == nullptr)  return false;
-      if (*arg == nullptr) return false;
-
-      auto* attr_map = static_cast<std::map<std::string, std::string>*>(*arg);
-      for (const auto& iter : *attr_map)
-      {
-        if (!pb_encode_tag_for_field(stream, field))
-        {
-          return false;
-        }
-
-        eCAL_pb_Topic_AttrEntry pb_attr_map = eCAL_pb_Topic_AttrEntry_init_default;
-        encode_string(pb_attr_map.key, iter.first);
-        encode_string(pb_attr_map.value, iter.second);
-
-        if (!pb_encode_submessage(stream, eCAL_pb_Topic_AttrEntry_fields, &pb_attr_map))
-        {
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map)
-    {
-      pb_callback.funcs.encode = &encode_map_field; // NOLINT(*-pro-type-union-access)
-      pb_callback.arg = (void*)(&str_map);
-    }
-
-    bool decode_map_field(pb_istream_t* stream, const pb_field_iter_t* /*field*/, void** arg)
-    {
-      if (arg == nullptr)  return false;
-      if (*arg == nullptr) return false;
-
-      eCAL_pb_Topic_AttrEntry attr_entry = eCAL_pb_Topic_AttrEntry_init_default;
-      std::string key;
-      std::string value;
-      decode_string(attr_entry.key, key);
-      decode_string(attr_entry.value, value);
-
-      if (!pb_decode(stream, eCAL_pb_Topic_AttrEntry_fields, &attr_entry))
-      {
-        return false;
-      }
-
-      auto* tgt_map = static_cast<std::map<std::string, std::string>*>(*arg);
-      (*tgt_map)[key] = value;
-
-      return true;
-    }
-
-    void decode_map(pb_callback_t& pb_callback, std::map<std::string, std::string>& str_map)
-    {
-      pb_callback.funcs.decode = &decode_map_field; // NOLINT(*-pro-type-union-access)
-      pb_callback.arg = &str_map;
-    }
-
-    ///////////////////////////////////////////////
     // list<string>
     ///////////////////////////////////////////////
     bool encode_string_vector_field(pb_ostream_t* stream, const pb_field_iter_t* field, void* const* arg)
