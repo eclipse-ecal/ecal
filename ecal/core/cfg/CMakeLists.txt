@@ -38,7 +38,7 @@ endif()
 
 # Install the configs
 if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
-  if(BUILD_TIME)
+  if(ECAL_BUILD_TIMEPLUGINS)
     install(
       FILES
         ${CMAKE_CURRENT_BINARY_DIR}/${ECALTIME_INI}

@@ -260,7 +260,7 @@ int main(int argc, char** argv)
   }
   catch (TCLAP::ArgException &e)  // catch any exceptions
   {
-    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE;
   }
 
@@ -272,7 +272,7 @@ int main(int argc, char** argv)
 //////////////////////////////////////////
 void ProcBandwidth(const std::string& topic_name)
 {
-  std::cout << "display bandwidth for topic " << topic_name << std::endl << std::endl;
+  std::cout << "display bandwidth for topic " << topic_name << "\n" << "\n";
 
   // monitoring instance to store complete snapshot
   eCAL::pb::Monitoring monitoring;
@@ -294,11 +294,11 @@ void ProcBandwidth(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
+      if(topic.topic_name() != topic_name) continue;
       found = true;
 
       std::string unit = "Byte/s";
-      auto bw = topic.tsize() * (topic.dfreq()/1000.0);
+      auto bw = topic.topic_size() * (topic.data_frequency()/1000.0);
       if (bw > _10MB)
       {
         bw /= _1MB;
@@ -312,11 +312,11 @@ void ProcBandwidth(const std::string& topic_name)
           unit = "kByte/s";
         }
       }
-      std::cout << int(bw) << " " << unit << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+      std::cout << int(bw) << " " << unit << " (" << topic.host_name() << ":"  << topic.direction() << ")" << "\n";
     }
 
-    if(!found) std::cout << "." << std::endl;
-    else       std::cout        << std::endl;
+    if(!found) std::cout << "." << "\n";
+    else       std::cout        << "\n";
 
     // sleep
     std::this_thread::sleep_for(std::chrono::milliseconds(pause_val));
@@ -328,13 +328,13 @@ void ProcBandwidth(const std::string& topic_name)
 //////////////////////////////////////////
 void ProcEcho(const std::string& topic_name, int msg_count)
 {
-  std::cout << "echo string message output for topic " << topic_name << std::endl << std::endl;;
+  std::cout << "echo string message output for topic " << topic_name << "\n" << "\n";
 
   // create string subscriber for topic topic_name_ and assign callback
   eCAL::string::CSubscriber<std::string> sub(topic_name);
   std::atomic<int> cnt(msg_count);
-  auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << "\n"; if (cnt > 0) cnt--; } };
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   while(eCAL::Ok() && (cnt != 0))
   {
@@ -348,7 +348,7 @@ void ProcEcho(const std::string& topic_name, int msg_count)
 //////////////////////////////////////////
 void ProcProto(const std::string& topic_name, int msg_count)
 {
-  std::cout << "echo protobuf message output for topic " << topic_name << std::endl << std::endl;;
+  std::cout << "echo protobuf message output for topic " << topic_name << "\n" << "\n";
 
   // sleep 1000 ms
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -357,7 +357,7 @@ void ProcProto(const std::string& topic_name, int msg_count)
   eCAL::protobuf::CDynamicSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::shared_ptr<google::protobuf::Message>& msg_) { if (cnt != 0) { std::cout << msg_->DebugString() << std::endl; if (cnt > 0) cnt--; } };
-  sub.AddReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
 
   // enter main loop
   while(eCAL::Ok() && (cnt != 0))
@@ -393,17 +393,17 @@ void ProcFind(const std::string& topic_type_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tdatatype().name() != topic_type_name) continue;
+      if(topic.datatype_information().name() != topic_type_name) continue;
 
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
-      std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
-      std::cout << std::endl;
+      std::cout << "topic name   : " << topic.topic_name()                      << "\n";   // topic name
+      std::cout << "ttype name   : " << topic.datatype_information().name()     << "\n";   // topic type name
+      std::cout << "ttype enc.   : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
+      std::cout << "direction    : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
+      std::cout << "host name    : " << topic.host_name()                       << "\n";   // host name
+      std::cout << "process id   : " << topic.process_id()                      << "\n";   // process id
+      std::cout << "topic id     : " << topic.topic_id()                        << "\n";   // topic id
+      std::cout << "\n";
     }
 
     // sleep
@@ -416,7 +416,7 @@ void ProcFind(const std::string& topic_type_name)
 //////////////////////////////////////////
 void ProcRate(const std::string& topic_name)
 {
-  std::cout << "display data rate [Hz] for topic " << topic_name << std::endl << std::endl;;
+  std::cout << "display data rate [Hz] for topic " << topic_name << "\n" << "\n";
 
   // monitoring instance to store complete snapshot
   eCAL::pb::Monitoring monitoring;
@@ -437,8 +437,8 @@ void ProcRate(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
-      std::cout << topic.dfreq()/1000.0 << std::endl; // data frequency (send / receive samples per second * 1000)
+      if(topic.topic_name() != topic_name) continue;
+      std::cout << topic.data_frequency()/1000.0 << std::endl; // data frequency (send / receive samples per second * 1000)
     }
 
     // sleep
@@ -472,20 +472,20 @@ void ProcInfo(const std::string& topic_name)
     for(const auto& topic : monitoring.topics())
     {
       // check topic name
-      if(topic.tname() != topic_name) continue;
+      if(topic.topic_name() != topic_name) continue;
 
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
-      std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
-      std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
-      std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
-      std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)
-      std::cout << std::endl;
+      std::cout << "topic name     : " << topic.topic_name()                      << "\n";   // topic name
+      std::cout << "ttype name     : " << topic.datatype_information().name()     << "\n";   // topic type name
+      std::cout << "ttype enc.     : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
+      std::cout << "direction      : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
+      std::cout << "host name      : " << topic.host_name()                       << "\n";   // host name
+      std::cout << "process id     : " << topic.process_id()                      << "\n";   // process id
+      std::cout << "topic id       : " << topic.topic_id()                        << "\n";   // topic id
+      std::cout << "topic size     : " << topic.topic_size()                      << "\n";   // topic size
+      std::cout << "data clock     : " << topic.data_clock()                      << "\n";   // data clock (send / receive action)
+      std::cout << "data frequency : " << topic.data_frequency()/1000.0           << "\n";   // data frequency (send / receive samples per second * 1000)
+      std::cout << "\n";
     }
 
     // sleep
@@ -498,7 +498,7 @@ void ProcInfo(const std::string& topic_name)
 //////////////////////////////////////////
 void ProcList()
 {
-  std::cout << "display topic details for all active topics" << std::endl << std::endl;;
+  std::cout << "display topic details for all active topics" << "\n" << "\n";
 
   // monitoring instance to store complete snapshot
   eCAL::pb::Monitoring monitoring;
@@ -519,17 +519,17 @@ void ProcList()
     for(const auto& topic : monitoring.topics())
     {
       // print topic details
-      std::cout << "tname        : " << topic.tname()                << std::endl;   // topic name
-      std::cout << "ttype name   : " << topic.tdatatype().name()     << std::endl;   // topic type name
-      std::cout << "ttype enc.   : " << topic.tdatatype().encoding() << std::endl;   // topic type encoding
-      std::cout << "direction    : " << topic.direction()            << std::endl;   // direction (publisher, subscriber)
-      std::cout << "hname        : " << topic.hname()                << std::endl;   // host name
-      std::cout << "pid          : " << topic.pid()                  << std::endl;   // process id
-      std::cout << "tid          : " << topic.tid()                  << std::endl;   // topic id
-      std::cout << "tsize        : " << topic.tsize()                << std::endl;   // topic size
-      std::cout << "dclock       : " << topic.dclock()               << std::endl;   // data clock (send / receive action)
-      std::cout << "dfreq        : " << topic.dfreq()/1000.0         << std::endl;   // data frequency (send / receive samples per second * 1000)
-      std::cout << std::endl;
+      std::cout << "topic_name     : " << topic.topic_name()                      << "\n";   // topic name
+      std::cout << "ttype name     : " << topic.datatype_information().name()     << "\n";   // topic type name
+      std::cout << "ttype enc.     : " << topic.datatype_information().encoding() << "\n";   // topic type encoding
+      std::cout << "direction      : " << topic.direction()                       << "\n";   // direction (publisher, subscriber)
+      std::cout << "host name      : " << topic.host_name()                       << "\n";   // host name
+      std::cout << "process id     : " << topic.process_id()                      << "\n";   // process id
+      std::cout << "topic id       : " << topic.topic_id()                        << "\n";   // topic id
+      std::cout << "topic size     : " << topic.topic_size()                      << "\n";   // topic size
+      std::cout << "data clock     : " << topic.data_clock()                      << "\n";   // data clock (send / receive action)
+      std::cout << "data frequency : " << topic.data_frequency()/1000.0           << "\n";   // data frequency (send / receive samples per second * 1000)
+      std::cout << "\n";
     }
 
     // sleep
@@ -542,7 +542,7 @@ void ProcList()
 //////////////////////////////////////////
 void ProcPub(const std::string& topic_name, const std::string& data)
 {
-  std::cout << "publish " << data << " on topic " << topic_name << std::endl << std::endl;;
+  std::cout << "publish " << data << " on topic " << topic_name << "\n" << "\n";;
 
   // create string publisher for topic topic_name_
   eCAL::string::CPublisher<std::string> pub(topic_name);
@@ -554,7 +554,7 @@ void ProcPub(const std::string& topic_name, const std::string& data)
   while(eCAL::Ok())
   {
     // publish content
-    std::cout << "publishing   " << msg << "   on topic   " << topic_name << std::endl;
+    std::cout << "publishing   " << msg << "   on topic   " << topic_name << "\n";
     pub.Send(msg); 
 
     // sleep
@@ -567,7 +567,7 @@ void ProcPub(const std::string& topic_name, const std::string& data)
 //////////////////////////////////////////
 void ProcType(const std::string& topic_name)
 {
-  std::cout << "print type name of topic " << topic_name << std::endl << std::endl;;
+  std::cout << "print type name of topic " << topic_name << "\n" << "\n";
 
   // monitoring instance to store complete snapshot
   eCAL::pb::Monitoring monitoring;
@@ -586,13 +586,13 @@ void ProcType(const std::string& topic_name)
   for(const auto& topic : monitoring.topics())
   {
     // check topic name
-    if(topic.tname() != topic_name) continue;
+    if(topic.topic_name() != topic_name) continue;
 
-    std::string ttype_name = topic.tdatatype().name();
+    std::string ttype_name = topic.datatype_information().name();
     if(ttype_name.empty()) ttype_name = "\"\"";
 
     // print topic type
-    std::cout << ttype_name << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+    std::cout << ttype_name << " (" << topic.host_name() << ":"  << topic.direction() << ")" << "\n";
   }
 }
 
@@ -601,7 +601,7 @@ void ProcType(const std::string& topic_name)
 //////////////////////////////////////////
 void ProcDesc(const std::string& topic_name_)
 {
-  std::cout << "print description of topic " << topic_name_ << std::endl << std::endl;;
+  std::cout << "print description of topic " << topic_name_ << "\n" << "\n";
 
   // monitoring instance to store complete snapshot
   eCAL::pb::Monitoring monitoring;
@@ -620,12 +620,12 @@ void ProcDesc(const std::string& topic_name_)
   for(const auto& topic : monitoring.topics())
   {
     // check topic name
-    if(topic.tname() != topic_name_) continue;
+    if(topic.topic_name() != topic_name_) continue;
 
-    std::string ttype_desc = topic.tdatatype().desc();
+    std::string ttype_desc = topic.datatype_information().descriptor_information();
     if (ttype_desc.empty()) ttype_desc = "\"\"";
 
     // print topic description
-    std::cout << ttype_desc << " (" << topic.hname() << ":"  << topic.direction() << ")" << std::endl;
+    std::cout << ttype_desc << " (" << topic.host_name() << ":"  << topic.direction() << ")" << "\n";
   }
 }

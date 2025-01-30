@@ -24,10 +24,10 @@
 
 #include "person.pb.h"
 
-void OnEvent(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackData* data_)
+void OnEvent(const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& data_)
 {
-  std::cout << "topic name       : " << topic_name_ << std::endl;
-  switch (data_->type)
+  std::cout << "topic name       : " << topic_id_.topic_name << std::endl;
+  switch (data_.event_type)
   {
   case eCAL::ePublisherEvent::connected:
     std::cout << "event            : " << "connected" << std::endl;
@@ -35,7 +35,6 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackDa
   case eCAL::ePublisherEvent::disconnected:
     std::cout << "event            : " << "disconnected" << std::endl;
     break;
-  // not implemented yet
   case eCAL::ePublisherEvent::dropped:
     std::cout << "event            : " << "dropped" << std::endl;
     break;
@@ -55,12 +54,7 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
-
-  // add event callback function (_1 = topic_name, _2 = event data struct)
-  auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  pub.AddEventCallback(eCAL::ePublisherEvent::connected,    evt_callback);
-  pub.AddEventCallback(eCAL::ePublisherEvent::disconnected, evt_callback);
+  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", OnEvent);
 
   // generate a class instance of Person
   pb::People::Person person;

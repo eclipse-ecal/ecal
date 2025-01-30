@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,15 +46,15 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
-    HNAME,
-    PNAME,
-    UNAME,
-    PID,
-    SNAME,
+    REGISTRATION_CLOCK,
+    HOST_NAME,
+    PROCESS_NAME,
+    UNIT_NAME,
+    PROCESS_ID,
+    SERVICE_NAME,
     STYPE,
     TCP_PORT,
-    MNAME,
+    METHOD_NAME,
     REQ_TYPE,
     RESP_TYPE,
     CALL_COUNT,
@@ -80,29 +80,29 @@ public:
   {
     if (role == (Qt::ItemDataRole)ItemDataRoles::RawDataRole) //-V1016 //-V547
     {
-      if (column == Columns::RCLOCK)
+      if (column == Columns::REGISTRATION_CLOCK)
       {
-        return service_.rclock();
+        return service_.registration_clock();
       }
-      else if (column == Columns::HNAME)
+      else if (column == Columns::HOST_NAME)
       {
-        return service_.hname().c_str();
+        return service_.host_name().c_str();
       }
-      else if (column == Columns::PNAME)
+      else if (column == Columns::PROCESS_NAME)
       {
-        return service_.pname().c_str();
+        return service_.process_name().c_str();
       }
-      else if (column == Columns::UNAME)
+      else if (column == Columns::UNIT_NAME)
       {
-        return service_.uname().c_str();
+        return service_.unit_name().c_str();
       }
-      else if (column == Columns::PID)
+      else if (column == Columns::PROCESS_ID)
       {
-        return service_.pid();
+        return service_.process_id();
       }
-      else if (column == Columns::SNAME)
+      else if (column == Columns::SERVICE_NAME)
       {
-        return service_.sname().c_str();
+        return service_.service_name().c_str();
       }
       else if (column == Columns::STYPE)
       {
@@ -112,9 +112,9 @@ public:
       {
         return tcpPort() != 0 ? tcpPort() : QVariant();
       }
-      else if (column == Columns::MNAME)
+      else if (column == Columns::METHOD_NAME)
       {
-        return method_.mname().c_str();
+        return method_.method_name().c_str();
       }
       else if (column == Columns::REQ_TYPE)
       {
@@ -135,11 +135,11 @@ public:
     }
     else if ((role == Qt::ItemDataRole::DisplayRole) || (role == Qt::ItemDataRole::ToolTipRole))
     {
-      if ((column == Columns::HNAME)
-        || (column == Columns::PNAME)
-        || (column == Columns::UNAME)
-        || (column == Columns::SNAME)
-        || (column == Columns::MNAME)
+      if ((column == Columns::HOST_NAME)
+        || (column == Columns::PROCESS_NAME)
+        || (column == Columns::UNIT_NAME)
+        || (column == Columns::SERVICE_NAME)
+        || (column == Columns::METHOD_NAME)
         || (column == Columns::REQ_TYPE)
         || (column == Columns::RESP_TYPE))
       {
@@ -164,8 +164,8 @@ public:
 
     else if (role == Qt::ItemDataRole::TextAlignmentRole)
     {
-      if ((column == Columns::RCLOCK)
-        || (column == Columns::PID)
+      if ((column == Columns::REGISTRATION_CLOCK)
+        || (column == Columns::PROCESS_ID)
         || (column == Columns::TCP_PORT)
         || (column == Columns::CALL_COUNT)
         )
@@ -180,24 +180,24 @@ public:
 
     else if (role == ItemDataRoles::GroupRole) //-V547
     {
-        if (column == Columns::PNAME)
+        if (column == Columns::PROCESS_NAME)
         {
-          QStringList list{ service_.hname().c_str(), service_.pname().c_str() };
+          QStringList list{ service_.host_name().c_str(), service_.process_name().c_str() };
           return list;
         }
-        else if (column == Columns::PID)
+        else if (column == Columns::PROCESS_ID)
         {
-          QStringList list{ service_.hname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
-        else if (column == Columns::UNAME)
+        else if (column == Columns::UNIT_NAME)
         {
-          QStringList list{ service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
-        else if (column == Columns::SNAME)
+        else if (column == Columns::SERVICE_NAME)
         {
-          QStringList list{ service_.sname().c_str(), service_.hname().c_str(), service_.uname().c_str(), QString::number(service_.pid()) };
+          QStringList list{ service_.service_name().c_str(), service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
           return list;
         }
         else
@@ -208,12 +208,12 @@ public:
 
     else if (role == Qt::ItemDataRole::FontRole)
     {
-      if ((column == Columns::HNAME)
-        || (column == Columns::PNAME)
-        || (column == Columns::UNAME)
-        || (column == Columns::SNAME)
+      if ((column == Columns::HOST_NAME)
+        || (column == Columns::PROCESS_NAME)
+        || (column == Columns::UNIT_NAME)
+        || (column == Columns::SERVICE_NAME)
         || (column == Columns::STYPE)
-        || (column == Columns::MNAME)
+        || (column == Columns::METHOD_NAME)
         || (column == Columns::REQ_TYPE)
         || (column == Columns::RESP_TYPE))
       {
@@ -250,7 +250,7 @@ public:
 
   static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
   {
-    return std::to_string(service.pid()) + "@" + service.hname() + "@" + service.sname() + "@" + method.mname();
+    return std::to_string(service.process_id()) + "@" + service.host_name() + "@" + service.service_name() + "@" + method.method_name();
   }
 
   void update(const T& service, const eCAL::pb::Method& method)

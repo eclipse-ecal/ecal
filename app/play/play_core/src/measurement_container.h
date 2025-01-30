@@ -24,7 +24,7 @@
 #include <memory>
 
 #include <ecal/ecal.h>
-#include <ecal/v5/ecal_publisher.h>
+#include <ecal/pubsub/publisher.h>
 #include <ecalhdf5/eh5_meas.h>
 
 #include "continuity_report.h"
@@ -91,7 +91,7 @@ private:
 private:
   struct PublisherInfo
   {
-    eCAL::v5::CPublisher publisher_;
+    eCAL::CPublisher publisher_;
     long long message_counter_;
 
     PublisherInfo(const std::string& topic_name, const eCAL::SDataTypeInformation& info_)

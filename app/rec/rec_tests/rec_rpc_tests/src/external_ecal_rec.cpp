@@ -34,7 +34,7 @@
 ///////////////////////////////////////////////
 
 ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
-  : pid(0)
+  : process_id(0)
 {
   ecal_rec_cli_instance_lock.lock();
 
@@ -46,17 +46,17 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
   if (gui)
   {
     std::cout << "Starting " << "\"" << ECAL_REC_GUI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
+    process_id = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
   }
   else
   {
     std::cout << "Starting " << "\"" << ECAL_REC_CLI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
+    process_id = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
   }
 
-  if (pid != 0)
+  if (process_id != 0)
   {
-    std::cout << "Successfully started eCAL Rec " << (gui ? "GUI" : "CLI") << " with PID " << pid << std::endl;
+    std::cout << "Successfully started eCAL Rec " << (gui ? "GUI" : "CLI") << " with PID " << process_id << std::endl;
   }
   else
   {
@@ -87,8 +87,8 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 
 ExternalEcalRecInstance::~ExternalEcalRecInstance()
 {
-  if (pid > 0)
-    eCAL::Process::StopProcess(pid);
+  if (process_id > 0)
+    eCAL::Process::StopProcess(process_id);
   eCAL::Finalize();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

@@ -22,7 +22,6 @@
 #include <cstddef>
 #include <ecal/log_level.h>
 #include <ecal/os.h>
-#include <ecal/tlayer.h>
 #include "ecal/config/configuration.h"
 
 #include <string>
@@ -71,7 +70,7 @@ namespace eCAL
     ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
 
-    ECAL_API std::string              GetHostGroupName                     ();
+    ECAL_API std::string              GetShmTransportDomain                     ();
 
     /////////////////////////////////////
     // time

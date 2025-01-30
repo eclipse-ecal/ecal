@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -695,7 +695,7 @@ namespace eCAL
       return subscribed_topics;
     }
 
-    void EcalRecImpl::EcalMessageReceived(const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_)
+    void EcalRecImpl::EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_)
     {
       auto ecal_receive_time   = eCAL::Time::ecal_clock::now();
       auto system_receive_time = std::chrono::steady_clock::now();

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,22 +38,20 @@ eCAL::CSimTime::CSimTime() :
 bool eCAL::CSimTime::initialize()
 {
   std::unique_lock<std::mutex> lk(initialize_mutex);
-  if (!is_initialized) {
+  if (!is_initialized)
+  {
     //eCAL::Initialize("ecal_sim_time_listener", eCAL::Init::Subscriber);
     // this has to be done by the parent process
     // needs to be fixed with an improved reference counting
     // in eCAL::Initialize ..
 
-    if (sim_time_subscriber.Create("__sim_time__")) {
-      sim_time_subscriber.AddReceiveCallback(std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2));
-      is_initialized = true;
-    }
-    else {
-      is_initialized = false;
-    }
-    return is_initialized;
+    sim_time_subscriber = std::make_unique<eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>>("__sim_time__");
+    sim_time_subscriber->SetReceiveCallback(std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2));
+    is_initialized = true;
+    return true;
   }
-  else {
+  else
+  {
     return false;
   }
 }
@@ -147,7 +145,7 @@ void eCAL::CSimTime::onSimTimeMessage(const eCAL::pb::SimTime & sim_time_)
   {
     std::unique_lock<std::mutex> lk(time_mutex);
     last_measurement_time = sim_time_.simulation_time_nsecs();
-    if (sim_time_.hostname() == eCAL::Process::GetHostName()) {
+    if (sim_time_.host_name() == eCAL::Process::GetHostName()) {
       time_of_last_measurement_time = sim_time_.local_time_nsecs();
     }
     else {

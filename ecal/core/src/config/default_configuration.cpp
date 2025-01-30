@@ -45,13 +45,13 @@ namespace
     {
       switch (elem)
       {
-        case eCAL::TLayer::tlayer_shm:
+      case eCAL::TransportLayer::eType::shm:
           result += "\"shm\", ";
           break;
-        case eCAL::TLayer::tlayer_udp_mc:
+        case eCAL::TransportLayer::eType::udp_mc:
           result += "\"udp\", ";
           break;
-        case eCAL::TLayer::tlayer_tcp:
+        case eCAL::TransportLayer::eType::tcp:
           result += "\"tcp\", ";
           break;
         default:
@@ -139,9 +139,9 @@ namespace eCAL
       ss << R"(  registration_timeout: )"                            << config_.registration.registration_timeout                   << "\n";
       ss << R"(  # Enable to receive registration information on the same local machine)"                                           << "\n";
       ss << R"(  loopback: )"                                        << config_.registration.loopback                               << "\n";
-      ss << R"(  # Host group name that enables interprocess mechanisms across (virtual))"                                          << "\n";
+      ss << R"(  # SHM transport domain that enables interprocess mechanisms across (virtual))"                                     << "\n";
       ss << R"(  # host borders (e.g, Docker); by default equivalent to local host name)"                                           << "\n";
-      ss << R"(  host_group_name: )"                                 << quoteString(config_.registration.host_group_name)           << "\n";
+      ss << R"(  shm_transport_domain: )"                            << quoteString(config_.registration.shm_transport_domain)      << "\n";
       ss << R"(  # true  = all eCAL components communicate over network boundaries)"                                                << "\n";
       ss << R"(  # false = local host only communication (Default: false))"                                                         << "\n";
       ss << R"(  network_enabled: )"                                 << config_.registration.network_enabled                        << "\n";

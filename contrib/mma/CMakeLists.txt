@@ -80,7 +80,7 @@ target_include_directories(${PROJECT_NAME}
 
 create_targets_protobuf()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   Threads::Threads
   eCAL::protobuf_core
   eCAL::app_pb

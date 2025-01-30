@@ -62,7 +62,7 @@ int main()
   long long bytes(0);
 
   // add callback
-    auto on_receive = [&](const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
+    auto on_receive = [&](const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData & data_) {
     auto size = data_.size;
 
     msgs++;

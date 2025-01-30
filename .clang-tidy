@@ -52,6 +52,7 @@ Checks: "-*,
   -modernize-avoid-bind,
   
   performance-*,
+  -performance-avoid-endl,
   
   readability-*,
   -readability-braces-around-statements,

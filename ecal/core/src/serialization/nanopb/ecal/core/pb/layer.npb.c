@@ -18,7 +18,7 @@ PB_BIND(eCAL_pb_LayerParTcp, eCAL_pb_LayerParTcp, AUTO)
 PB_BIND(eCAL_pb_ConnnectionPar, eCAL_pb_ConnnectionPar, AUTO)
 
 
-PB_BIND(eCAL_pb_TLayer, eCAL_pb_TLayer, AUTO)
+PB_BIND(eCAL_pb_TransportLayer, eCAL_pb_TransportLayer, AUTO)
 
 
 

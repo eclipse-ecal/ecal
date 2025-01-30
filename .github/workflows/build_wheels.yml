@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, ubuntu-24.04-arm]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21
+        uses: pypa/cibuildwheel@v2.22
         env:
           CIBW_ARCHS: auto64
 
@@ -35,32 +35,3 @@ jobs:
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: ./wheelhouse/*.whl
-
-  build_arm64_wheels:
-    # Emulation takes a long time so we save it for release/manual triggering
-    name: Build arm64 wheels via emulation
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules:  'true'
-          fetch-depth: 0
-
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21
-        env:
-          CIBW_ARCHS_LINUX: aarch64
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-wheels-arm64
-          path: ./wheelhouse/*.whl
-

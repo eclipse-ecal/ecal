@@ -31,13 +31,14 @@
 // flatbuffers generated includes
 #include <monster/monster_generated.h>
 
-void OnMonster(const char* topic_name_, const flatbuffers::FlatBufferBuilder& msg_, const long long time_)
+
+void OnMonster(const eCAL::STopicId& topic_id_, const flatbuffers::FlatBufferBuilder& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
 {
   // create monster
   auto monster(Game::Sample::GetMonster(msg_.GetBufferPointer()));
 
   // print content
-  std::cout << "topic name        : " << topic_name_               << std::endl;
+  std::cout << "topic name        : " << topic_id_.topic_name      << std::endl;
   std::cout << "time              : " << time_                     << std::endl;
   std::cout                                                        << std::endl;
   std::cout << "monster pos x     : " << monster->pos()->x()       << std::endl;
@@ -84,9 +85,7 @@ int main(int argc, char **argv)
   // create a subscriber (topic name "monster")
   eCAL::flatbuffers::CSubscriber<flatbuffers::FlatBufferBuilder> sub("monster");
 
-  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time)
-  auto callback = std::bind(OnMonster, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-  sub.AddReceiveCallback(callback);
+  sub.SetReceiveCallback(OnMonster);
 
   while(eCAL::Ok())
   {

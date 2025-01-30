@@ -115,7 +115,7 @@ target_compile_definitions(${PROJECT_NAME}
 
 create_targets_protobuf()
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   protobuf::libprotobuf
   tclap::tclap
   eCAL::protobuf_core

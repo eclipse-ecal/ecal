@@ -64,48 +64,156 @@ if(UNIX)
   endif ()
 endif()
 
-# --------------------------------------------------------
-# command line build options
-# use it that way cmake .. -DBUILD_APPS=ON -DBUILD_SAMPLES=ON
-# --------------------------------------------------------
-option(HAS_HDF5                                "Platform supports HDF5 library"                                    ON)
+#---------------------------------------------------------
+# Compatibility Options with eCAL 5 CMake Options
+#---------------------------------------------------------
 
-# If the user set the legacy HAS_QT5 option, but didn't set the new HAS_QT option, set it to the value of HAS_QT5
-if(DEFINED HAS_QT5 AND NOT DEFINED HAS_QT)
-  set(HAS_QT ${HAS_QT5})
-  message(WARNING "The option HAS_QT5 is deprecated and may be removed at any time. Please use HAS_QT instead.")
+# Legacy Compatibility option for HAS_HDF5
+if(DEFINED HAS_HDF5 AND NOT DEFINED ECAL_USE_HDF5)
+  set(ECAL_USE_HDF5 ${HAS_HDF5})
+  message(WARNING "The option HAS_HDF5 is deprecated and may be removed at any time. Please use ECAL_USE_HDF5 instead.")
 endif()
 
-option(HAS_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
+# Legacy Compatibility option for HAS_QT
+if(DEFINED HAS_QT AND NOT DEFINED ECAL_USE_QT)
+  set(ECAL_USE_QT ${HAS_QT})
+  message(WARNING "The option HAS_QT is deprecated and may be removed at any time. Please use ECAL_USE_QT instead.")
+endif()
 
-option(HAS_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
-option(HAS_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
+# Legacy Compatibility option for HAS_CURL
+if(DEFINED HAS_CURL AND NOT DEFINED ECAL_USE_CURL)
+  set(ECAL_USE_CURL ${HAS_CURL})
+  message(WARNING "The option HAS_CURL is deprecated and may be removed at any time. Please use ECAL_USE_CURL instead.")
+endif()
+
+# Legacy Compatibility option for HAS_FTXUI
+if(DEFINED HAS_FTXUI AND NOT DEFINED ECAL_USE_FTXUI)
+  set(ECAL_USE_FTXUI ${HAS_FTXUI})
+  message(WARNING "The option HAS_FTXUI is deprecated and may be removed at any time. Please use ECAL_USE_FTXUI instead.")
+endif()
+
+# Legacy Compatibility option for HAS_CAPNPROTO
+if(DEFINED HAS_CAPNPROTO AND NOT DEFINED ECAL_USE_CAPNPROTO)
+  set(ECAL_USE_CAPNPROTO ${HAS_CAPNPROTO})
+  message(WARNING "The option HAS_CAPNPROTO is deprecated and may be removed at any time. Please use ECAL_USE_CAPNPROTO instead.")
+endif()
+
+# Legacy Compatibility option for HAS_FLATBUFFERS
+if(DEFINED HAS_FLATBUFFERS AND NOT DEFINED ECAL_USE_FLATBUFFERS)
+  set(ECAL_USE_FLATBUFFERS ${HAS_FLATBUFFERS})
+  message(WARNING "The option HAS_FLATBUFFERS is deprecated and may be removed at any time. Please use ECAL_USE_FLATBUFFERS instead.")
+endif()
+
+# Legacy Compatibility option for HAS_MESSAGEPACK
+if(DEFINED HAS_MESSAGEPACK AND NOT DEFINED ECAL_USE_MESSAGEPACK)
+  set(ECAL_USE_MESSAGEPACK ${HAS_MESSAGEPACK})
+  message(WARNING "The option HAS_MESSAGEPACK is deprecated and may be removed at any time. Please use ECAL_USE_MESSAGEPACK instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_DOCS
+if(DEFINED BUILD_DOCS AND NOT DEFINED ECAL_BUILD_DOCS)
+  set(ECAL_BUILD_DOCS ${BUILD_DOCS})
+  message(WARNING "The option BUILD_DOCS is deprecated and may be removed at any time. Please use ECAL_BUILD_DOCS instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_APPS
+if(DEFINED BUILD_APPS AND NOT DEFINED ECAL_BUILD_APPS)
+  set(ECAL_BUILD_APPS ${BUILD_APPS})
+  message(WARNING "The option BUILD_APPS is deprecated and may be removed at any time. Please use ECAL_BUILD_APPS instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_APP_REC_ADDON_SDK
+if(DEFINED BUILD_APP_REC_ADDON_SDK AND NOT DEFINED ECAL_BUILD_APP_REC_ADDON_SDK)
+  set(ECAL_BUILD_APP_REC_ADDON_SDK ${BUILD_APP_REC_ADDON_SDK})
+  message(WARNING "The option BUILD_APP_REC_ADDON_SDK is deprecated and may be removed at any time. Please use ECAL_BUILD_APP_REC_ADDON_SDK instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_SAMPLES
+if(DEFINED BUILD_SAMPLES AND NOT DEFINED ECAL_BUILD_SAMPLES)
+  set(ECAL_BUILD_SAMPLES ${BUILD_SAMPLES})
+  message(WARNING "The option BUILD_SAMPLES is deprecated and may be removed at any time. Please use ECAL_BUILD_SAMPLES instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_TIME
+if(DEFINED BUILD_TIME AND NOT DEFINED ECAL_BUILD_TIMEPLUGINS)
+  set(ECAL_BUILD_TIMEPLUGINS ${BUILD_TIME})
+  message(WARNING "The option BUILD_TIME is deprecated and may be removed at any time. Please use ECAL_BUILD_TIMEPLUGINS instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_C_BINDING
+if(DEFINED BUILD_C_BINDING AND NOT DEFINED ECAL_BUILD_C_BINDING)
+  set(ECAL_BUILD_C_BINDING ${BUILD_C_BINDING})
+  message(WARNING "The option BUILD_C_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_C_BINDING instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_PY_BINDING
+if(DEFINED BUILD_PY_BINDING AND NOT DEFINED ECAL_BUILD_PY_BINDING)
+  set(ECAL_BUILD_PY_BINDING ${BUILD_PY_BINDING})
+  message(WARNING "The option BUILD_PY_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_PY_BINDING instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_CSHARP_BINDING
+if(DEFINED BUILD_CSHARP_BINDING AND NOT DEFINED ECAL_BUILD_CSHARP_BINDING)
+  set(ECAL_BUILD_CSHARP_BINDING ${BUILD_CSHARP_BINDING})
+  message(WARNING "The option BUILD_CSHARP_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_CSHARP_BINDING instead.")
+endif()
+
+# Legacy Compatibility option for ECAL_NPCAP_SUPPORT
+if(DEFINED ECAL_NPCAP_SUPPORT AND NOT DEFINED ECAL_USE_NPCAP)
+  set(ECAL_USE_NPCAP ${ECAL_NPCAP_SUPPORT})
+  message(WARNING "The option ECAL_NPCAP_SUPPORT is deprecated and may be removed at any time. Please use ECAL_USE_NPCAP instead.")
+endif()
+
+# Legacy Compatibility option for BUILD_ECAL_TESTS
+if(DEFINED BUILD_ECAL_TESTS AND NOT DEFINED ECAL_BUILD_TESTS)
+  set(ECAL_BUILD_TESTS ${BUILD_ECAL_TESTS})
+  message(WARNING "The option BUILD_ECAL_TESTS is deprecated and may be removed at any time. Please use ECAL_BUILD_TESTS instead.")
+endif()
+
+# Legacy Compatibility option for CPACK_PACK_WITH_INNOSETUP
+if(DEFINED CPACK_PACK_WITH_INNOSETUP AND NOT DEFINED ECAL_CPACK_PACK_WITH_INNOSETUP)
+  set(ECAL_CPACK_PACK_WITH_INNOSETUP ${CPACK_PACK_WITH_INNOSETUP})
+  message(WARNING "The option CPACK_PACK_WITH_INNOSETUP is deprecated and may be removed at any time. Please use ECAL_CPACK_PACK_WITH_INNOSETUP instead.")
+endif()
+
+# --------------------------------------------------------
+# command line build options
+# use it that way cmake .. -DECAL_BUILD_APPS=ON -DECAL_BUILD_SAMPLES=ON
+# --------------------------------------------------------
+option(ECAL_USE_HDF5                                "Platform supports HDF5 library"                                    ON)
+
+option(ECAL_USE_QT                                  "Platform supports Qt 5 / 6 library."                               ON)
+
+option(ECAL_USE_CURL                                "Build with CURL (i.e. upload support in the recorder app)"         ON)
+option(ECAL_USE_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
 
 # Serialization format support
-option(HAS_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
-option(HAS_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
-option(HAS_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
+option(ECAL_USE_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
+option(ECAL_USE_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
+option(ECAL_USE_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
 
-option(BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
-option(BUILD_APPS                              "Build the eCAL applications"                                       ON)
-option(BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${BUILD_APPS})
-option(BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
-option(BUILD_TIME                              "Build the eCAL time interfaces"                                    ON)
-option(BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
-option(BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
-option(BUILD_ECAL_TESTS                        "Build the eCAL google tests"                                      OFF)
+option(ECAL_BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
+option(ECAL_BUILD_APPS                              "Build the eCAL applications"                                       ON)
+option(ECAL_BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${ECAL_BUILD_APPS})
+option(ECAL_BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
+option(ECAL_BUILD_TIMEPLUGINS                              "Build the eCAL time interfaces"                                    ON)
+option(ECAL_BUILD_C_BINDING                         "Build eCAL C binding"                                              ON)
+mark_as_advanced(FORCE ECAL_BUILD_C_BINDING)
+option(ECAL_BUILD_PY_BINDING                        "Build eCAL python binding"                                        OFF)
+option(ECAL_BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
+option(ECAL_BUILD_TESTS                        "Build the eCAL google tests"                                      OFF)
 
 option(ECAL_INSTALL_SAMPLE_SOURCES             "Install the sources of eCAL samples"                               ON)
 
-option(ECAL_NPCAP_SUPPORT                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
+option(ECAL_USE_NPCAP                      "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 option(ECAL_USE_CLOCKLOCK_MUTEX                "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
 # --------------------------------------------------------
 # ecal core configuration
 # --------------------------------------------------------
-set(ECAL_CORE_HAS_PROTOBUF                                                                                         ON)
-set(ECAL_CORE_BUILD_SAMPLES                                                                          ${BUILD_SAMPLES})
-set(ECAL_CORE_BUILD_TESTS                                                                         ${BUILD_ECAL_TESTS})
+set(ECAL_CORE_USE_PROTOBUF                                                                                         ON)
+set(ECAL_CORE_BUILD_SAMPLES                                                                          ${ECAL_BUILD_SAMPLES})
+set(ECAL_CORE_BUILD_TESTS                                                                         ${ECAL_BUILD_TESTS})
 set(ECAL_CORE_CONFIGURATION                                                                                        ON)
 set(ECAL_CORE_COMMAND_LINE                                                                                         ON)
 set(ECAL_CORE_REGISTRATION                                                                                         ON)
@@ -114,7 +222,7 @@ set(ECAL_CORE_PUBLISHER                                                         
 set(ECAL_CORE_SUBSCRIBER                                                                                           ON)
 set(ECAL_CORE_SERVICE                                                                                              ON)
 set(ECAL_CORE_TIMEPLUGIN                                                                                           ON)
-set(ECAL_CORE_NPCAP_SUPPORT                                                                     ${ECAL_NPCAP_SUPPORT})
+set(ECAL_CORE_NPCAP_SUPPORT                                                                     ${ECAL_USE_NPCAP})
 set(ECAL_CORE_REGISTRATION_SHM                                                                                     ON)
 set(ECAL_CORE_TRANSPORT_UDP                                                                                        ON)
 set(ECAL_CORE_TRANSPORT_TCP                                                                                        ON)
@@ -123,15 +231,15 @@ set(ECAL_CORE_TRANSPORT_SHM                                                     
 # -----------------------
 # eCAL Python configuration
 # -----------------------
-#set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
-set(ECAL_PYTHON_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
-set(ECAL_PYTHON_HAS_HDF5                                                                                  ${HAS_HDF5})
+#set(ECAL_PYTHON_BUILD_SAMPLES                                                                        ${ECAL_BUILD_SAMPLES})
+set(ECAL_PYTHON_BUILD_TESTS                                                                       ${ECAL_BUILD_TESTS})
+set(ECAL_PYTHON_USE_HDF5                                                                                  ${ECAL_USE_HDF5})
 
 
 # This should be ON, unless build ecal hdf5 for Matlab usage
 option(ECAL_LINK_HDF5_SHARED                   "Link shared libs of HDF5"                                          ON)
 
-option(CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for the Windows build"                  ON)
+option(ECAL_CPACK_PACK_WITH_INNOSETUP               "Create Innosetup installer for the Windows build"                  ON)
 
 set(ECAL_INSTALL_PYTHON_DIR "bin" CACHE PATH "Location to install the Python extension modules. Might be set by setupdtools install.")
 
@@ -175,7 +283,7 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # detect qt library
 # --------------------------------------------------------
 if(MSVC)
-  if (HAS_QT)
+  if (ECAL_USE_QT)
     find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
     if (NOT "${QT_FOUND}")
 	  include("cmake/qt_msvc_path.cmake")
@@ -273,25 +381,25 @@ add_subdirectory(lib/ThreadingUtils)
 add_subdirectory(lib/CustomTclap)
 add_subdirectory(lib/ecal_utils)
 
-if(HAS_QT)
+if(ECAL_USE_QT)
   add_subdirectory(lib/CustomQt)
 endif()
 add_subdirectory(lib/EcalParser)
-if(HAS_QT)
+if(ECAL_USE_QT)
   add_subdirectory(lib/QEcalParser)
 endif()
 
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(HAS_QT AND BUILD_APPS)
+if(ECAL_USE_QT AND ECAL_BUILD_APPS)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif()
 
 # --------------------------------------------------------
 # ecal rec addon sdk
 # --------------------------------------------------------
-if(BUILD_APP_REC_ADDON_SDK)
+if(ECAL_BUILD_APP_REC_ADDON_SDK)
   add_subdirectory(app/rec/rec_addon_core)
   add_subdirectory(app/rec/rec_addon_dummy)
 endif()
@@ -299,7 +407,7 @@ endif()
 # --------------------------------------------------------
 # ecal time
 # --------------------------------------------------------
-if(BUILD_TIME)
+if(ECAL_BUILD_TIMEPLUGINS)
   if(WIN32)
     set(ECAL_TIME_PLUGIN_DIR ecaltime_plugins)
   endif()
@@ -309,7 +417,7 @@ endif()
 # --------------------------------------------------------
 # ecal hdf5 support
 # --------------------------------------------------------
-if(HAS_HDF5)
+if(ECAL_USE_HDF5)
   add_subdirectory(contrib/measurement/hdf5)
   add_subdirectory(contrib/ecalhdf5)
 endif()
@@ -318,29 +426,31 @@ add_subdirectory(contrib/measurement/base)
 # --------------------------------------------------------
 # ecal core python binding
 # --------------------------------------------------------
-if(BUILD_PY_BINDING)
+if(ECAL_BUILD_PY_BINDING)
   add_subdirectory(lang/python)
 endif()
 
 # --------------------------------------------------------
 # ecal core csharp binding
 # --------------------------------------------------------
-if(BUILD_CSHARP_BINDING AND WIN32)
-  set(ECAL_CSHARP_BUILD_SAMPLES     ${BUILD_SAMPLES})
-  set(ECAL_CSHARP_BUILD_TESTS    ${BUILD_ECAL_TESTS})
+if(ECAL_BUILD_CSHARP_BINDING AND WIN32)
+  set(ECAL_CSHARP_BUILD_SAMPLES     ${ECAL_BUILD_SAMPLES})
+  set(ECAL_CSHARP_BUILD_TESTS    ${ECAL_BUILD_TESTS})
   add_subdirectory(lang/csharp)
 endif()
 
-set(ECAL_C_BUILD_SAMPLES     ${BUILD_SAMPLES})
-set(ECAL_C_BUILD_TESTS    ${BUILD_ECAL_TESTS})
-add_subdirectory(lang/c)
+if(ECAL_BUILD_C_BINDING)
+  set(ECAL_C_BUILD_SAMPLES     ${ECAL_BUILD_SAMPLES})
+  set(ECAL_C_BUILD_TESTS    ${ECAL_BUILD_TESTS})
+  add_subdirectory(lang/c)
+endif()
 
 # --------------------------------------------------------
 # console applications
 # --------------------------------------------------------
-if(BUILD_APPS)
+if(ECAL_BUILD_APPS)
   add_subdirectory(app/apps)
-  if (HAS_FTXUI)
+  if (ECAL_USE_FTXUI)
     add_subdirectory(app/mon/mon_tui)
   endif()
   add_subdirectory(app/mon/mon_cli)
@@ -358,7 +468,7 @@ endif()
 # --------------------------------------------------------
 # applications using hdf5
 # --------------------------------------------------------
-if(BUILD_APPS AND HAS_HDF5)
+if(ECAL_BUILD_APPS AND ECAL_USE_HDF5)
   add_subdirectory(app/play/play_core)
   add_subdirectory(app/play/play_cli)
 
@@ -373,7 +483,7 @@ endif()
 # --------------------------------------------------------
 # qt applications
 # --------------------------------------------------------
-if(BUILD_APPS AND (HAS_QT))
+if(ECAL_BUILD_APPS AND (ECAL_USE_QT))
   add_subdirectory(app/sys/sys_gui)
   add_subdirectory(app/mon/mon_gui)
   if(WIN32)
@@ -387,7 +497,7 @@ if(BUILD_APPS AND (HAS_QT))
   # --------------------------------------------------------
   # qt applications using hdf5
   # --------------------------------------------------------
-  if(HAS_HDF5)
+  if(ECAL_USE_HDF5)
     add_subdirectory(app/play/play_gui)
     add_subdirectory(app/rec/rec_gui)
   endif()
@@ -396,7 +506,7 @@ endif()
 # --------------------------------------------------------
 # samples
 # --------------------------------------------------------
-if(BUILD_SAMPLES)
+if(ECAL_BUILD_SAMPLES)
   add_subdirectory(samples)
 endif()
 
@@ -405,34 +515,34 @@ endif()
 # Serialization extensions
 # --------------------------------------------------------
 # Capnroto
-if (HAS_CAPNPROTO)
-set(ECAL_CAPNPROTO_BUILD_SAMPLES                                                                     ${BUILD_SAMPLES})
-set(ECAL_CAPNPROTO_BUILD_TESTS                                                                    ${BUILD_ECAL_TESTS})
+if (ECAL_USE_CAPNPROTO)
+set(ECAL_CAPNPROTO_BUILD_SAMPLES                                                                     ${ECAL_BUILD_SAMPLES})
+set(ECAL_CAPNPROTO_BUILD_TESTS                                                                    ${ECAL_BUILD_TESTS})
 add_subdirectory(serialization/capnproto)
 endif ()
 
 # Flatbuffers
-if (HAS_FLATBUFFERS)
-set(ECAL_FLATBUFFERS_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
-set(ECAL_FLATBUFFERS_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+if (ECAL_USE_FLATBUFFERS)
+set(ECAL_FLATBUFFERS_BUILD_SAMPLES                                                                   ${ECAL_BUILD_SAMPLES})
+set(ECAL_FLATBUFFERS_BUILD_TESTS                                                                  ${ECAL_BUILD_TESTS})
 add_subdirectory(serialization/flatbuffers)
 endif()
 
 # Messagepack
-#if (HAS_MESSAGEPACK)
-#set(ECAL_MESSAGEPACK_BUILD_SAMPLES                                                                   ${BUILD_SAMPLES})
-#set(ECAL_MESSAGEPACK_BUILD_TESTS                                                                  ${BUILD_ECAL_TESTS})
+#if (ECAL_USE_MESSAGEPACK)
+#set(ECAL_MESSAGEPACK_BUILD_SAMPLES                                                                   ${ECAL_BUILD_SAMPLES})
+#set(ECAL_MESSAGEPACK_BUILD_TESTS                                                                  ${ECAL_BUILD_TESTS})
 #add_subdirectory(serialization/messagepack)
 #endif()
 
 # Protobuf
-set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${BUILD_SAMPLES})
-set(ECAL_PROTOBUF_BUILD_TESTS                                                                     ${BUILD_ECAL_TESTS})
+set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${ECAL_BUILD_SAMPLES})
+set(ECAL_PROTOBUF_BUILD_TESTS                                                                     ${ECAL_BUILD_TESTS})
 add_subdirectory(serialization/protobuf)
 
 # String
-set(ECAL_STRING_BUILD_SAMPLES                                                                        ${BUILD_SAMPLES})
-set(ECAL_STRING_BUILD_TESTS                                                                       ${BUILD_ECAL_TESTS})
+set(ECAL_STRING_BUILD_SAMPLES                                                                        ${ECAL_BUILD_SAMPLES})
+set(ECAL_STRING_BUILD_TESTS                                                                       ${ECAL_BUILD_TESTS})
 add_subdirectory(serialization/string)
 
 
@@ -440,25 +550,25 @@ add_subdirectory(serialization/string)
 # --------------------------------------------------------
 # unit tests
 # --------------------------------------------------------
-if(BUILD_ECAL_TESTS)
+if(ECAL_BUILD_TESTS)
   enable_testing()
 
   # ------------------------------------------------------
   # test contrib
   # ------------------------------------------------------
-  if(HAS_HDF5)
+  if(ECAL_USE_HDF5)
     add_subdirectory(tests/contrib/ecalhdf5/hdf5_test)
   endif()
 
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (HAS_HDF5 AND HAS_QT)
+  if (ECAL_USE_HDF5 AND ECAL_USE_QT)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
 
-if(BUILD_DOCS)
+if(ECAL_BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 
@@ -491,6 +601,7 @@ install(FILES ${eCAL_config} ${eCAL_config_version}
 
 install(FILES
   cmake/helper_functions/ecal_add_functions.cmake
+  cmake/helper_functions/ecal_compiler_warnings.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake
   DESTINATION ${${PROJECT_NAME}_install_cmake_dir}/helper_functions
@@ -518,22 +629,22 @@ include(cpack/cpack_variables.cmake)
 message(STATUS "Build Options:")
 message(STATUS "--------------------------------------------------------------------------------")
 message(STATUS "CMAKE_EXPORT_COMPILE_COMMANDS                  : ${CMAKE_EXPORT_COMPILE_COMMANDS}")
-message(STATUS "HAS_HDF5                                       : ${HAS_HDF5}")
-message(STATUS "HAS_QT                                         : ${HAS_QT}")
-message(STATUS "HAS_CURL                                       : ${HAS_CURL}")
-message(STATUS "HAS_CAPNPROTO                                  : ${HAS_CAPNPROTO}")
-message(STATUS "HAS_FLATBUFFERS                                : ${HAS_FLATBUFFERS}")
-message(STATUS "HAS_FTXUI                                      : ${HAS_FTXUI}")
+message(STATUS "ECAL_USE_HDF5                                       : ${ECAL_USE_HDF5}")
+message(STATUS "ECAL_USE_QT                                         : ${ECAL_USE_QT}")
+message(STATUS "ECAL_USE_CURL                                       : ${ECAL_USE_CURL}")
+message(STATUS "ECAL_USE_CAPNPROTO                                  : ${ECAL_USE_CAPNPROTO}")
+message(STATUS "ECAL_USE_FLATBUFFERS                                : ${ECAL_USE_FLATBUFFERS}")
+message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE_FTXUI}")
 message(STATUS "BUILD_SHARED_LIBS                              : ${BUILD_SHARED_LIBS}")
-message(STATUS "BUILD_DOCS                                     : ${BUILD_DOCS}")
-message(STATUS "BUILD_APPS                                     : ${BUILD_APPS}")
-message(STATUS "BUILD_SAMPLES                                  : ${BUILD_SAMPLES}")
-message(STATUS "BUILD_TIME                                     : ${BUILD_TIME}")
-message(STATUS "BUILD_PY_BINDING                               : ${BUILD_PY_BINDING}")
-message(STATUS "BUILD_CSHARP_BINDING                           : ${BUILD_CSHARP_BINDING}")
-message(STATUS "BUILD_ECAL_TESTS                               : ${BUILD_ECAL_TESTS}")
+message(STATUS "ECAL_BUILD_DOCS                                     : ${ECAL_BUILD_DOCS}")
+message(STATUS "ECAL_BUILD_APPS                                     : ${ECAL_BUILD_APPS}")
+message(STATUS "ECAL_BUILD_SAMPLES                                  : ${ECAL_BUILD_SAMPLES}")
+message(STATUS "ECAL_BUILD_TIMEPLUGINS                                     : ${ECAL_BUILD_TIMEPLUGINS}")
+message(STATUS "ECAL_BUILD_PY_BINDING                               : ${ECAL_BUILD_PY_BINDING}")
+message(STATUS "ECAL_BUILD_CSHARP_BINDING                           : ${ECAL_BUILD_CSHARP_BINDING}")
+message(STATUS "ECAL_BUILD_TESTS                               : ${ECAL_BUILD_TESTS}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                    : ${ECAL_INSTALL_SAMPLE_SOURCES}")
-message(STATUS "ECAL_NPCAP_SUPPORT                             : ${ECAL_NPCAP_SUPPORT}")
+message(STATUS "ECAL_USE_NPCAP                             : ${ECAL_USE_NPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                     : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS          : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                     : ${ECAL_THIRDPARTY_BUILD_CURL}")
@@ -552,5 +663,5 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_TINYXML2                 : ${ECAL_THIRDPAR
 message(STATUS "ECAL_THIRDPARTY_BUILD_UDPCAP                   : ${ECAL_THIRDPARTY_BUILD_UDPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_YAML-CPP                 : ${ECAL_THIRDPARTY_BUILD_YAML-CPP}")
 message(STATUS "ECAL_LINK_HDF5_SHARED                          : ${ECAL_LINK_HDF5_SHARED}")
-message(STATUS "CPACK_PACK_WITH_INNOSETUP                      : ${CPACK_PACK_WITH_INNOSETUP}")
+message(STATUS "ECAL_CPACK_PACK_WITH_INNOSETUP                      : ${ECAL_CPACK_PACK_WITH_INNOSETUP}")
 message(STATUS "--------------------------------------------------------------------------------")

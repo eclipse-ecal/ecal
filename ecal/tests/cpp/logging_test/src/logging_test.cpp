@@ -145,10 +145,10 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   // check before the size -> crashes the whole test if it's not checked before
   if (!log.log_messages.empty())
   {
-    EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
-    EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());
-    EXPECT_EQ(log.log_messages.front().uname, unit_name);
-    EXPECT_EQ(log.log_messages.front().level, eCAL::Logging::eLogLevel::log_level_info);
+    EXPECT_EQ(log.log_messages.front().host_name,  eCAL::Process::GetHostName());
+    EXPECT_EQ(log.log_messages.front().process_id, eCAL::Process::GetProcessID());
+    EXPECT_EQ(log.log_messages.front().unit_name,  unit_name);
+    EXPECT_EQ(log.log_messages.front().level,      eCAL::Logging::eLogLevel::log_level_info);
     EXPECT_TRUE(log.log_messages.front().content.find(log_message) != std::string::npos);
   }
 

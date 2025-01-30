@@ -71,13 +71,13 @@ namespace
   {
     const std::lock_guard<std::recursive_mutex> lock(g_sub_event_callback_mtx);
     SSubEventCallbackDataC data{};
-    data.type      = enum_class_to_enum(data_->type);
-    data.time      = data_->time;
-    data.clock     = data_->clock;
-    data.tid       = data_->tid.c_str();
-    data.tname     = data_->tdatatype.name.c_str();
-    data.tencoding = data_->tdatatype.encoding.c_str();
-    data.tdesc     = data_->tdatatype.descriptor.c_str();
+    data.type       = enum_class_to_enum(data_->type);
+    data.time       = data_->time;
+    data.clock      = data_->clock;
+    data.topic_id   = data_->tid.c_str();
+    data.topic_name = data_->tdatatype.name.c_str();
+    data.tencoding  = data_->tdatatype.encoding.c_str();
+    data.tdesc      = data_->tdatatype.descriptor.c_str();
     callback_(topic_name_, &data, par_);
   }
 }

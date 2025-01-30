@@ -69,7 +69,7 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool SetReceiveCallback(v6::ReceiveCallbackT callback_);
+    bool SetReceiveCallback(ReceiveCallbackT callback_);
     bool RemoveReceiveCallback();
 
     // deprecated event callback interface
@@ -77,7 +77,7 @@ namespace eCAL
     bool RemoveEventCallback(eSubscriberEvent type_);
 
     // future event callback interface
-    bool SetEventIDCallback(const v6::SubEventCallbackT callback_);
+    bool SetEventIDCallback(const SubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -96,9 +96,9 @@ namespace eCAL
     bool IsPublished() const;
     size_t GetPublisherCount() const;
 
-    Registration::STopicId GetId() const
+    STopicId GetId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -134,9 +134,8 @@ namespace eCAL
 
     int32_t GetFrequency();
 
-    Registration::EntityIdT                   m_topic_id;
+    EntityIdT                   m_topic_id;
     SDataTypeInformation                      m_topic_info;
-    std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
 
     struct SConnection
@@ -157,7 +156,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    v6::ReceiveCallbackT                      m_receive_callback;
+    ReceiveCallbackT                      m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
@@ -167,7 +166,7 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    v6::SubEventCallbackT                     m_event_id_callback;
+    SubEventCallbackT                     m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
@@ -176,7 +175,7 @@ namespace eCAL
 
     std::set<long long>                       m_id_set;
 
-    using WriterCounterMapT = std::unordered_map<Registration::EntityIdT, long long>;
+    using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
     WriterCounterMapT                         m_writer_counter_map;
     long long                                 m_message_drops = 0;
 

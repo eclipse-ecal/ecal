@@ -30,30 +30,32 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include <map>
+#include <set>
 
 namespace eCAL
 {
   /**
-   * @brief  Service call state.
+   * @brief  Service call state. This enum class is being used when a client is calling a servers.
   **/
   enum class eCallState
   {
     none = 0,    //!< undefined
-    executed,    //!< executed (successfully)
-    timeouted,   //!< timeout
+    executed,    //!< the service call was executed successfully
+    timeouted,   //!< the service call has timeouted
     failed       //!< failed
   };
 
   /**
    * @brief eCAL service client event callback type.
   **/
+  // TODO: add documentation!!!
   enum class eClientEvent
   {
-    none = 0,
-    connected = 1,
-    disconnected = 2,
-    timeout = 3,
+    none = 0,          //!< undefined
+    connected = 1,     //!< a new server has been connected to this client
+    disconnected = 2,  //!< a server has been disconnected from this client
+    // TODO: does it make sense here? the user is already being notified about the timeout via the eCallState
+    timeout = 3,       //!< a service call has timeouted 
   };
 
   inline std::string to_string(eClientEvent event_) {
@@ -70,9 +72,9 @@ namespace eCAL
   **/
   enum class eServerEvent
   {
-    none = 0,
-    connected = 1,
-    disconnected = 2,
+    none = 0,         //!< undefined
+    connected = 1,    //!< a new client has been connected to this server
+    disconnected = 2, //!< a client has been disconnected from this server
   };
 
   inline std::string to_string(eServerEvent event_) {
@@ -84,161 +86,122 @@ namespace eCAL
     }
   }
 
-  namespace Registration
-  {
-
-    struct SServiceId
-    {
-      SEntityId    service_id;
-      std::string  service_name;
-
-      bool operator==(const SServiceId& other) const
-      {
-        return service_id == other.service_id && service_name == other.service_name;
-      }
-
-      bool operator<(const SServiceId& other) const
-      {
-        return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
-      }
-    };
-
-    struct SServiceMethodId
-    {
-      SEntityId    service_id;
-      std::string  service_name;
-      std::string  method_name;
-
-      bool operator==(const SServiceMethodId& other) const
-      {
-        return service_id == other.service_id && service_name == other.service_name && method_name == other.method_name;
-      }
-
-      bool operator<(const SServiceMethodId& other) const
-      {
-        return std::tie(service_id, service_name, method_name) < std::tie(other.service_id, other.service_name, other.method_name);
-      }
-    };
-  }
-
   /**
-   * @brief Service method information struct containing the request and response type information.
+   * @brief Unique ID with which to identify a service (client or server)
+   *        It can be queried from the client or the server, and it can be obtained from the registration layer.
   **/
-  struct SMethodInfo
+  struct SServiceId
   {
-    std::string              method_name; //!< The name of the method.
-    SDataTypeInformation     req_type;    //!< The type of the method request.
-    SDataTypeInformation     resp_type;   //!< The type of the method response.
+    SEntityId    service_id;    //!< the actual ID
+    std::string  service_name;  //!< the name of the service
+
+    bool operator==(const SServiceId& other) const
+    {
+      return service_id == other.service_id && service_name == other.service_name;
+    }
+
+    bool operator<(const SServiceId& other) const
+    {
+      return std::tie(service_id, service_name) < std::tie(other.service_id, other.service_name);
+    }
   };
 
   /**
-   * @brief Optional compile time information associated with a given service method
-   *        (necessary for reflection / runtime type checking)
+   * @brief Service method information struct containing the method name, the request and response type information.
+   *        This type is used when creating services (servers or clients), or when querying information about them from the registration layer.
   **/
   struct SServiceMethodInformation
   {
-    SDataTypeInformation request_type;   //!< Data type description of the request
-    SDataTypeInformation response_type;  //!< Data type description of the response
+    std::string              method_name;     //!< The name of the method.
+    SDataTypeInformation     request_type;    //!< The type of the method request.
+    SDataTypeInformation     response_type;   //!< The type of the method response.
 
-    //!< @cond
     bool operator==(const SServiceMethodInformation& other) const
     {
-      return request_type == other.request_type && response_type == other.response_type;
+      return method_name == other.method_name && request_type == other.request_type && response_type == other.response_type;
     }
 
-    bool operator!=(const SServiceMethodInformation& other) const
+    bool operator<(const SServiceMethodInformation& other) const
     {
-      return !(*this == other);
+      return std::tie(method_name, method_name, response_type) < std::tie(other.method_name, other.method_name, other.response_type);
     }
-
-    bool operator<(const SServiceMethodInformation& rhs) const
-    {
-      return std::tie(request_type, response_type) < std::tie(rhs.request_type, rhs.response_type);
-    }
-    //!< @endcond
   };
 
   /**
-   * @brief Service response struct containing the (responding) server informations and the response itself.
+   * @brief Set SServiceMethodInformation (name, request type, reponse type).
+   *            Used to Create a Client Instance
+   *            Can be queried from eCAL::Registration.
   **/
-  struct SServiceIDResponse
+  using ServiceMethodInformationSetT = std::set<SServiceMethodInformation>;
+
+  /**
+   * @brief Service response struct containing the (responding) server information and the response itself.
+  **/
+  struct SServiceResponse
   {
-    Registration::SServiceMethodId service_method_id;            //!< service method information (service id (entity id, process id, host name), service name, method name)
-    std::string                    error_msg;                    //!< human readable error message
-    int                            ret_state  = 0;               //!< return state of the called service method
-    eCallState                     call_state = eCallState::none; //!< call state (see eCallState)
-    std::string                    response;                     //!< service response
+    eCallState                     call_state = eCallState::none; //!< call state, to indicate if the call was successful or not
+
+    SServiceId                     server_id;                    //!< Id of the server that executed the service (server id (entity id, process id, host name), name)
+    // TODO: the datatypeinformation of the service_method_information are not yet being filled!!!
+    SServiceMethodInformation      service_method_information;   //!< Additional Information about the method that has been called (name & DatatypeInformation of request and reponse)
+    // TODO: does this value even make sense? or should service methods always return void? It's not actually used anywhere
+    int                            ret_state  = 0;               //!< return state of the called service method 
+    std::string                    response;                     //!< the actual response data of the service call
+  
+    std::string                    error_msg;                    //!< human readable error message, in case that the service call could not be executed.
   };
-  using ServiceIDResponseVecT = std::vector<SServiceIDResponse>; //!< vector of multiple service responses
+  using ServiceResponseVecT = std::vector<SServiceResponse>; //!< vector of multiple service responses
 
   /**
-   * @brief Service method callback function type (low level server interface). (deprecated)
-   *
-   * @param method_     The method name.
-   * @param req_type_   The type of the method request.
-   * @param resp_type_  The type of the method response.
-   * @param request_    The request.
-   * @param response_   The response returned from the method call.
+   * @brief Service response callback function type (low level client interface).
+   * 
+   * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
   **/
-  using MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>;
+  using ResponseCallbackT = std::function<void (const SServiceResponse& service_response_)>;
 
   /**
    * @brief Service method callback function type (low level server interface).
+   *        This is the type definition of a function that can be registered for a CServiceServer.
+   *        It callback is then called, a client
    *
    * @param method_info The method information struct containing the request and response type information.
    * @param request_    The request.
    * @param response_   The response returned from the method call.
   **/
-  using MethodInfoCallbackT = std::function<int(const SMethodInfo& method_info_, const std::string& request_, std::string& response_)>;
-
+  using ServiceMethodCallbackT = std::function<int(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)>;
+ 
   /**
-   * @brief Service response callback function type (low level client interface).
-   * 
-   * @param entity_id_         Unique service id (entity id, process id, host name, service name, method name)
-   * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
+   * @brief eCAL client event callback struct.
   **/
-  using ResponseIDCallbackT = std::function<void (const Registration::SEntityId& entity_id_, const struct SServiceIDResponse& service_response_)>;
-
-  /**
-   * @brief Map of <method name, method information (like request type, reponse type)>.
-  **/
-  using ServiceMethodInformationMapT = std::map<std::string, SServiceMethodInformation>;
-  
-  ECAL_CORE_NAMESPACE_V6
+  struct SClientEventCallbackData
   {
-      /**
-     * @brief eCAL client event callback struct.
-    **/
-    struct SClientEventCallbackData
-    {
-      eClientEvent      type{ eClientEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
-    };
+    eClientEvent      type{ eClientEvent::none };  //!< event type
+    long long         time = 0;                  //!< event time in µs
+  };
 
-    /**
-     * @brief Client event callback function type.
-     *
-     * @param service_id_  The service id struct of the connection that triggered the event.
-     * @param data_        Event callback data structure with the event specific information.
-    **/
-    using ClientEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const SClientEventCallbackData& data_)>;
+  /**
+   * @brief Client event callback function type.
+   *
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
+  **/
+  using ClientEventCallbackT = std::function<void(const SServiceId& service_id_, const SClientEventCallbackData& data_)>;
 
-    /**
-     * @brief eCAL server event callback struct.
-    **/
-    struct SServerEventCallbackData
-    {
-      eServerEvent      type{ eServerEvent::none };  //!< event type
-      long long         time = 0;                  //!< event time in µs
-    };
+  /**
+   * @brief eCAL server event callback struct.
+  **/
+  struct SServerEventCallbackData
+  {
+    eServerEvent      type{ eServerEvent::none };  //!< event type
+    long long         time = 0;                  //!< event time in µs
+  };
 
-    /**
-     * @brief Server event callback function type.
-     *
-     * @param service_id_  The service id struct of the connection that triggered the event.
-     * @param data_        Event callback data structure with the event specific information.
-    **/
-    using ServerEventCallbackT = std::function<void(const Registration::SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
-  }
-    
+  /**
+   * @brief Server event callback function type.
+   *
+   * @param service_id_  The service id struct of the connection that triggered the event.
+   * @param data_        Event callback data structure with the event specific information.
+  **/
+  using ServerEventCallbackT = std::function<void(const SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
+
 }

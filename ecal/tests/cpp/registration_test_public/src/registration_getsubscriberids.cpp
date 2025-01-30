@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,24 +60,26 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      subscriber_vec.emplace_back(tname.str(), data_type_info);
+      subscriber_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of subscriber IDs
-    const auto sub_ids1 = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids1;
+    const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids1);
 
     // verify the number of subscribers created
+    ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
     ASSERT_EQ(sub_ids1.size(), GetParam().subscriber_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetSubscriberIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_timeout);
 
   // get the list of subscriber IDs
-  const auto sub_ids2 = eCAL::Registration::GetSubscriberIDs();
+  std::set<eCAL::STopicId> sub_ids2;
+  const bool call_successful = eCAL::Registration::GetSubscriberIDs(sub_ids2);
 
   // all subscriber should be timeouted
+  ASSERT_TRUE(call_successful) << "GetSubscriberIDs returned false";
   ASSERT_EQ(sub_ids2.size(), 0);
 }
 
@@ -95,12 +99,12 @@ TEST_P(TestFixture, SubscriberEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_subscriber_num(0);
   std::atomic<size_t> deleted_subscriber_num(0);
-  std::set<eCAL::Registration::STopicId> created_subscriber_ids;
-  std::set<eCAL::Registration::STopicId> deleted_subscriber_ids;
+  std::set<eCAL::STopicId> created_subscriber_ids;
+  std::set<eCAL::STopicId> deleted_subscriber_ids;
 
   // register the callback
   auto callback_token = eCAL::Registration::AddSubscriberEventCallback(
-    [&](const eCAL::Registration::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
+    [&](const eCAL::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
     {
       if (event_type == eCAL::Registration::RegistrationEventType::new_entity)
       {
@@ -119,15 +123,15 @@ TEST_P(TestFixture, SubscriberEventCallbackIsTriggered)
     std::vector<eCAL::CSubscriber> subscriber_vec;
     for (int i = 0; i < GetParam().subscriber_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      subscriber_vec.emplace_back(tname.str(), data_type_info);
+      subscriber_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
@@ -165,11 +169,11 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     TestParams{10, []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
     TestParams{ 10, []() {

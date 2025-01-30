@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ private:
   const QVector<int> filter_columns_
   {
     LogModel::Columns::HOST_NAME,
-    LogModel::Columns::PID,
+    LogModel::Columns::PROCESS_ID,
     LogModel::Columns::PROCESS_NAME,
     LogModel::Columns::PROCESS_PATH,
     LogModel::Columns::MESSAGE,

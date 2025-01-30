@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace eCAL
       {
         bool        network_enabled;
         bool        loopback;
-        std::string host_group_name;
+        std::string shm_transport_domain;
         std::string host_name;
         int         process_id;
       };

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ int main()
     // call service method "hello" subcalls times (for better time accuracy)
     for (auto i = 0; i < subcalls; ++i)
     {
-      latency_client.CallWithCallback("hello", "", -1, eCAL::ResponseIDCallbackT());
+      latency_client.CallWithCallback("hello", "", -1, eCAL::ResponseCallbackT());
     }
     
     // take return time and store it into the latency array

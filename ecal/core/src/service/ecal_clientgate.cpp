@@ -60,18 +60,18 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<v6::CServiceClientImpl>& client_)
+  bool CClientGate::Register(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
 
     // register internal client
     const std::unique_lock<std::shared_timed_mutex> lock(m_service_client_map_mutex);
-    m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<v6::CServiceClientImpl>>(service_name_, client_));
+    m_service_client_map.emplace(std::pair<std::string, std::shared_ptr<CServiceClientImpl>>(service_name_, client_));
 
     return(true);
   }
 
-  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<v6::CServiceClientImpl>& client_)
+  bool CClientGate::Unregister(const std::string& service_name_, const std::shared_ptr<CServiceClientImpl>& client_)
   {
     if (!m_created) return(false);
     bool ret_state = false;
@@ -97,9 +97,9 @@ namespace eCAL
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
     service.hname = ecal_sample_identifier.host_name;
-    service.pname = ecal_sample_service.pname;
-    service.uname = ecal_sample_service.uname;
-    service.sname = ecal_sample_service.sname;
+    service.pname = ecal_sample_service.process_name;
+    service.uname = ecal_sample_service.unit_name;
+    service.sname = ecal_sample_service.service_name;
     service.sid   = ecal_sample_identifier.entity_id;
     service.pid   = static_cast<int>(ecal_sample_identifier.process_id);
 
@@ -114,7 +114,7 @@ namespace eCAL
       auto res = m_service_client_map.equal_range(service.sname);
       for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
-        Registration::SEntityId service_entity;
+        SEntityId service_entity;
         service_entity.entity_id  = service.sid;
         service_entity.process_id = service.pid;
         service_entity.host_name  = service.hname;

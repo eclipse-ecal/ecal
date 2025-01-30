@@ -23,7 +23,10 @@ find_package(eCAL REQUIRED)
 
 macro(ecal_add_csharp_protobuf_sample sample_name)
   ecal_add_sample(${sample_name} ${sample_name}.cs)
-  target_link_libraries(${sample_name} Continental.eCAL.Protobuf Continental.eCAL.Protobuf.Samples.Datatypes)
+  target_link_libraries(${sample_name} PRIVATE
+    Continental.eCAL.Protobuf
+    Continental.eCAL.Protobuf.Samples.Datatypes
+  )
   set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/protobuf)
   
   set_target_properties(${sample_name} PROPERTIES

@@ -27,7 +27,6 @@
 #include <ecal/namespace.h>
 
 #include <cstddef>
-#include <ecal/callback.h>
 #include <ecal/v5/ecal_callback.h>
 #include <ecal/deprecate.h>
 #include <ecal/os.h>
@@ -196,7 +195,7 @@ namespace eCAL
         * @return  True if succeeded, false if not.
        **/
       ECAL_API_EXPORTED_MEMBER
-        bool AddReceiveCallback(v6::ReceiveCallbackT callback_);
+        bool AddReceiveCallback(eCAL::ReceiveCallbackT callback_);
 
       /**
        * @brief Remove callback function for incoming receives.
@@ -265,7 +264,7 @@ namespace eCAL
        * @return  The topic id.
       **/
       ECAL_API_EXPORTED_MEMBER
-        Registration::STopicId GetId() const;
+        STopicId GetId() const;
 
       /**
        * @brief Gets description of the connected topic.

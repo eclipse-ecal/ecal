@@ -86,7 +86,7 @@ namespace eCAL
     bool RemoveEventCallback(ePublisherEvent type_);
 
     // future event callback interface
-    bool SetEventCallback(const v6::PubEventCallbackT callback_);
+    bool SetEventCallback(const PubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -103,9 +103,9 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    Registration::STopicId GetTopicId() const
+    STopicId GetTopicId() const
     {
-      Registration::STopicId id;
+      STopicId id;
       id.topic_name          = m_attributes.topic_name;
       id.topic_id.entity_id  = m_topic_id;
       id.topic_id.host_name  = m_attributes.host_name;
@@ -138,13 +138,12 @@ namespace eCAL
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
-    Registration::EntityIdT                m_topic_id;
+    EntityIdT                m_topic_id;
     SDataTypeInformation                   m_topic_info;
-    std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
     eCAL::eCALWriter::SAttributes          m_attributes;
 
@@ -166,7 +165,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    v6::PubEventCallbackT                  m_event_id_callback;
+    PubEventCallbackT                  m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

@@ -34,7 +34,7 @@ ecal_add_sample(${PROJECT_NAME} ${minimal_rec_c_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
-target_link_libraries(${PROJECT_NAME} eCAL::core_c)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_c)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

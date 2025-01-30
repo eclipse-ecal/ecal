@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ namespace eCAL
       {
         SAttributes sample_applier_attr;
         
-        sample_applier_attr.network_enabled = attr_.network_enabled;
-        sample_applier_attr.loopback        = attr_.loopback;
-        sample_applier_attr.host_name       = attr_.host_name;
-        sample_applier_attr.host_group_name = attr_.host_group_name;
-        sample_applier_attr.process_id      = attr_.process_id;
+        sample_applier_attr.network_enabled      = attr_.network_enabled;
+        sample_applier_attr.loopback             = attr_.loopback;
+        sample_applier_attr.host_name            = attr_.host_name;
+        sample_applier_attr.shm_transport_domain = attr_.shm_transport_domain;
+        sample_applier_attr.process_id           = attr_.process_id;
         
         return sample_applier_attr;
       }

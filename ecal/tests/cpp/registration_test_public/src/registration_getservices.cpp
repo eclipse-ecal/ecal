@@ -55,26 +55,28 @@ protected:
 
 TEST_P(ServicesTestFixture, ServiceExpiration)
 {
-  std::set<eCAL::Registration::SServiceMethodId> id_set;
+  std::set<eCAL::SServiceId> id_set;
+  bool get_server_ids_succeeded = false;
 
   // create simple service and let it expire
   {
     // create service
     eCAL::CServiceServer service("foo::service");
-    service.SetMethodCallback("foo::method", { { "foo::req_type", "foo::req_desc" }, { "foo::resp_type", "foo::resp_desc" } }, eCAL::MethodInfoCallbackT());
+    service.SetMethodCallback({ "foo::method",  { "foo::req_type", "foo::req_desc" }, { "foo::resp_type", "foo::resp_desc" } }, eCAL::ServiceMethodCallbackT());
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    id_set = eCAL::Registration::GetServerIDs();
+    get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
 
     // check service/method names
     std::set<eCAL::Registration::SServiceMethod> service_method_names;
-    eCAL::Registration::GetServiceMethodNames(service_method_names);
+    eCAL::Registration::GetServerMethodNames(service_method_names);
     EXPECT_EQ(service_method_names.size(), 1);
     for (const auto& name : service_method_names)
     {
@@ -86,7 +88,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
-    id_set = eCAL::Registration::GetServerIDs();
+    get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -97,7 +100,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
 
   // get all services again, all services
   // should be removed from the map
-  id_set = eCAL::Registration::GetServerIDs();
+  get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+  EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
   // check size
   EXPECT_EQ(id_set.size(), 0);
@@ -112,25 +116,28 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
 
     // add method
     eCAL::SServiceMethodInformation service_method_info;
+    service_method_info.method_name = "method";
     service_method_info.request_type.name        = "foo::req_type";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
     service_method_info.response_type.descriptor = "foo::resp_desc";
-    service.SetMethodCallback("method", service_method_info, eCAL::MethodInfoCallbackT());
+    service.SetMethodCallback(service_method_info, eCAL::ServiceMethodCallbackT());
 
     // let's register
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get server
-    auto id_set = eCAL::Registration::GetServerIDs();
-    EXPECT_EQ(1, id_set.size());
+    std::set<eCAL::SServiceId> id_set;
+    const auto success = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(success) << "GetServerIDs should be successfully executed";
+    EXPECT_EQ(1, id_set.size()) << "There should be 1 server in the system";
     if (id_set.size() > 0)
     {
-      eCAL::SServiceMethodInformation info;
-      EXPECT_TRUE(eCAL::Registration::GetServerInfo(*id_set.begin(), info));
+      eCAL::ServiceMethodInformationSetT methods;
+      EXPECT_TRUE(eCAL::Registration::GetServerInfo(*id_set.begin(), methods));
 
       // check service/method names
-      EXPECT_EQ(service_method_info, info);
+      EXPECT_TRUE(methods.find(service_method_info) != methods.end());
     }
   }
 }
@@ -147,11 +154,11 @@ INSTANTIATE_TEST_SUITE_P(
       return config;
     }() },
     ServicesTestParams{ []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.registration.layer.shm.enable     = true;
+      config.registration.layer.udp.enable     = false;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
     ServicesTestParams{[]() {

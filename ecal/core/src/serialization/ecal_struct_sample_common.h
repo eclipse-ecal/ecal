@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ namespace eCAL
     bct_reg_publisher    = 2,
     bct_reg_subscriber   = 3,
     bct_reg_process      = 4,
-    bct_reg_service      = 5,
+    bct_reg_service      = 5,  // TODO: should be named server!
     bct_reg_client       = 6,
     bct_unreg_publisher  = 12,
     bct_unreg_subscriber = 13,
     bct_unreg_process    = 14,
-    bct_unreg_service    = 15,
+    bct_unreg_service    = 15, // TODO: should be named server!
     bct_unreg_client     = 16
   };
 

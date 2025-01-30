@@ -26,7 +26,7 @@ find_package(eCAL REQUIRED)
 
 ecal_add_sample(${PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::hdf5
 )
 

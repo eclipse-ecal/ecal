@@ -1,0 +1,77 @@
+name: Documentation Release Page
+
+on:
+  push:
+
+  release:
+    types:
+      - released
+      - unpublished
+      - deleted
+
+jobs:
+  documentation-release-page:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Get current branch name
+      id: branch
+      run: |
+        # Get the branch name
+        branch=$(echo ${GITHUB_REF#refs/heads/})
+
+        # only publish documentation for master branch
+        if [[ $branch == master ]]; then
+          echo "publish_doc=true" >> $GITHUB_ENV
+        else
+          echo "publish_doc=false" >> $GITHUB_ENV
+        fi
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules:  'false'
+        fetch-depth: 0
+
+        
+    - name: Install Python
+      run: |
+        sudo apt update
+        sudo apt-get -y install python3-dev python3-venv
+
+    - name: Install Python dependencies
+      run: |
+        mkdir ".venv"
+        python3 -m venv ".venv"
+        source ".venv/bin/activate"
+        pip install --upgrade pip
+        pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
+
+    - name: Build Release page with Sphinx
+      env:
+        ECAL_GH_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        source ".venv/bin/activate"
+        sphinx-build -b html doc/release_page build/html
+
+    - name: Zip Release Page
+      run: |
+        cd build/html
+        zip -r ../release-page.zip .
+
+    - name: Upload documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-page
+        path: build/release-page.zip
+
+    - name: Deploy Release Page
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/html
+        destination_dir: releases
+      if: env.publish_doc == 'true'
+  

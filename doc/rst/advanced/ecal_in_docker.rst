@@ -193,13 +193,13 @@ Seamless IPC-Communication across host borders
 
 .. important::
    This will work with eCAL 5.12 and higher.
-   Older versions lack the ability to utilize the ``host_group_name`` in the :file:`ecal.yaml` file, thus it won't work.
+   Older versions lack the ability to utilize the ``shm_transport_domain`` in the :file:`ecal.yaml` file, thus it won't work.
 
 
-In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
+In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``shm_transport_domain`` - in the following steps, you will learn how to set this up.
 
 .. note::
-    If we don't set the same ``host_group_name`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
+    If we don't set the same ``shm_transport_domain`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
 
 #. To encapsulate your container network from your host network, you need to create a new docker network with the following command:
 
@@ -215,7 +215,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    * Search for the line ``registration->network_enabled`` and set it to ``true``.
 
-   * Search for the line ``registration->host_group_name`` and write your preferred name.
+   * Search for the line ``registration->shm_transport_domain`` and write your preferred name.
 
    * Save and close the :file:`ecal.yaml` file.
 

@@ -29,8 +29,6 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
   CServiceServer::CServiceServer(const std::string & service_name_, const ServerEventCallbackT event_callback_)
     : m_service_server_impl(nullptr)
   {
@@ -64,10 +62,10 @@ namespace eCAL
     return *this;
   }
 
-  bool CServiceServer::SetMethodCallback(const std::string & method_, const SServiceMethodInformation & method_info_, const MethodInfoCallbackT & callback_)
+  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
   {
     if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->SetMethodCallback(method_, method_info_, callback_);
+    return m_service_server_impl->SetMethodCallback(method_info_, callback_);
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string & method_)
@@ -82,9 +80,9 @@ namespace eCAL
     return m_service_server_impl->GetServiceName();
   }
 
-  Registration::SServiceId CServiceServer::GetServiceId() const
+  SServiceId CServiceServer::GetServiceId() const
   {
-    if (m_service_server_impl == nullptr) return Registration::SServiceId();
+    if (m_service_server_impl == nullptr) return SServiceId();
     return m_service_server_impl->GetServiceId();
   }
 
@@ -92,6 +90,5 @@ namespace eCAL
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->IsConnected();
-  }
   }
 }

@@ -34,10 +34,11 @@ namespace eCAL
 {
   namespace Registration
   {
-    std::set<STopicId> GetPublisherIDs()
+    bool GetPublisherIDs(std::set<STopicId>& topic_ids_)
     {
-      if (g_descgate() == nullptr) return std::set<STopicId>();
-      return g_descgate()->GetPublisherIDs();
+      if (g_descgate() == nullptr) return false;
+      topic_ids_ = std::move(g_descgate()->GetPublisherIDs());
+      return true;
     }
 
     bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_)
@@ -58,10 +59,11 @@ namespace eCAL
       return g_descgate()->RemPublisherEventCallback(token_);
     }
 
-    std::set<STopicId> GetSubscriberIDs()
+    bool GetSubscriberIDs(std::set<STopicId>& topic_ids_)
     {
-      if (g_descgate() == nullptr) return std::set<STopicId>();
-      return g_descgate()->GetSubscriberIDs();
+      if (g_descgate() == nullptr) return false;
+      topic_ids_ = std::move(g_descgate()->GetSubscriberIDs());
+      return true;
     }
 
     bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_)
@@ -82,69 +84,97 @@ namespace eCAL
       return g_descgate()->RemSubscriberEventCallback(token_);
     }
 
-    std::set<SServiceMethodId> GetServerIDs()
+    bool GetServerIDs(std::set<SServiceId>& service_ids_)
     {
-      if (g_descgate() == nullptr) return std::set<SServiceMethodId>();
-      return g_descgate()->GetServerIDs();
+      if (g_descgate() == nullptr) return false;
+      service_ids_ = std::move(g_descgate()->GetServerIDs());
+      return true;
     }
 
-    bool GetServerInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
+    bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetServerInfo(id_, service_info_);
     }
 
-    std::set<SServiceMethodId> GetClientIDs()
+    bool GetClientIDs(std::set<SServiceId>& service_ids_)
     {
-      if (g_descgate() == nullptr) return std::set<SServiceMethodId>();
-      return g_descgate()->GetClientIDs();
+       if (g_descgate() == nullptr) return false;
+       service_ids_ = std::move(g_descgate()->GetClientIDs());
+       return true;
     }
 
-    bool GetClientInfo(const SServiceMethodId& id_, SServiceMethodInformation& service_info_)
+    bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
       if (g_descgate() == nullptr) return false;
       return g_descgate()->GetClientInfo(id_, service_info_);
     }
 
-    void GetTopicNames(std::set<std::string>& topic_names_)
+    bool GetPublishedTopicNames(std::set<std::string>& topic_names_)
     {
       topic_names_.clear();
 
-      // get publisher & subscriber id sets and insert names into the topic_names set
-      const std::set<STopicId> pub_id_set = GetPublisherIDs();
+      // get publisher id sets and insert names into the topic_names set
+      std::set<STopicId> pub_id_set;
+      bool return_value = GetPublisherIDs(pub_id_set);
       for (const auto& pub_id : pub_id_set)
       {
         topic_names_.insert(pub_id.topic_name);
       }
-      const std::set<STopicId> sub_id_set = GetSubscriberIDs();
+      return return_value;
+    }
+
+    bool GetSubscribedTopicNames(std::set<std::string>& topic_names_)
+    {
+      topic_names_.clear();
+
+      // get subscriber id sets and insert names into the topic_names set
+      std::set<STopicId> sub_id_set;
+      bool return_value = GetSubscriberIDs(sub_id_set);
       for (const auto& sub_id : sub_id_set)
       {
         topic_names_.insert(sub_id.topic_name);
       }
+      return return_value;
     }
-
-    void GetServiceMethodNames(std::set<SServiceMethod>& service_method_names_)
+    
+    bool GetServerMethodNames(std::set<SServiceMethod>& server_method_names_)
     {
-      service_method_names_.clear();
+      server_method_names_.clear();
 
-      // get services id set and insert names into the service_method_names set
-      const std::set<SServiceMethodId> service_id_set = GetServerIDs();
-      for (const auto& service_id : service_id_set)
+      // get servers id set and insert names into the server_method_names_ set
+      std::set<SServiceId> server_id_set;
+      bool return_value   = GetServerIDs(server_id_set);
+      for (const auto& server_id : server_id_set)
       {
-        service_method_names_.insert({ service_id.service_name, service_id.method_name });
+        eCAL::ServiceMethodInformationSetT methods;
+        (void)GetServerInfo(server_id, methods);
+        for (const auto& method : methods)
+        {
+          server_method_names_.insert({ server_id.service_name, method.method_name });
+        }
       }
+      return return_value;
     }
 
-    void GetClientMethodNames(std::set<SServiceMethod>& client_method_names_)
+    bool GetClientMethodNames(std::set<SServiceMethod>& client_method_names_)
     {
       client_method_names_.clear();
 
       // get clients id set and insert names into the client_method_names set
-      const std::set<SServiceMethodId> client_id_set = GetClientIDs();
+      std::set<SServiceId> client_id_set;
+      bool return_value = GetClientIDs(client_id_set);
       for (const auto& client_id : client_id_set)
       {
-        client_method_names_.insert({ client_id.service_name, client_id.method_name });
+        eCAL::ServiceMethodInformationSetT methods;
+        (void)GetClientInfo(client_id, methods);
+        for (const auto& method : methods)
+        {
+          client_method_names_.insert({ client_id.service_name, method.method_name });
+        }
       }
+      return return_value;
     }
+    
   }
 }

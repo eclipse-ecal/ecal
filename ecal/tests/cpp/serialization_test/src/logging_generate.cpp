@@ -29,13 +29,13 @@ namespace eCAL
     SLogMessage GenerateLogMessage()
     {
       SLogMessage logMessage;
-      logMessage.time    = rand() % 1000;
-      logMessage.hname   = GenerateString(10);
-      logMessage.pid     = rand() % 1000;
-      logMessage.pname   = GenerateString(8);
-      logMessage.uname   = GenerateString(6);
-      logMessage.level   = static_cast<eLogLevel>(rand() % 2);
-      logMessage.content = GenerateString(50);
+      logMessage.time         = rand() % 1000;
+      logMessage.host_name    = GenerateString(10);
+      logMessage.process_id   = rand() % 1000;
+      logMessage.process_name = GenerateString(8);
+      logMessage.unit_name    = GenerateString(6);
+      logMessage.level        = static_cast<eLogLevel>(rand() % 2);
+      logMessage.content      = GenerateString(50);
 
       return logMessage;
     }

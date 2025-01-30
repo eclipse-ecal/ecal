@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ void StatePublisherThread::PublishSimtime()
   simtime_pb.set_simulation_time_nsecs(std::chrono::duration_cast<std::chrono::nanoseconds>(state.last_simtime_.time_since_epoch()).count());
   simtime_pb.set_real_time_factor     (state.simtime_rate_);
   simtime_pb.set_local_time_nsecs     (std::chrono::duration_cast<std::chrono::nanoseconds>(state.last_simtime_local_timestamp_.time_since_epoch()).count());
-  simtime_pb.set_hostname             (eCAL::Process::GetHostName());
+  simtime_pb.set_host_name            (eCAL::Process::GetHostName());
   simtime_pb.set_process_id           (eCAL::Process::GetProcessID());
 
   simtime_publisher_.Send(simtime_pb);

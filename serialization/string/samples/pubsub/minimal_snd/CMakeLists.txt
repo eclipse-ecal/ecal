@@ -30,7 +30,7 @@ set(minimal_snd_src
 
 ecal_add_sample(${PROJECT_NAME} ${minimal_snd_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::string_core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::string_core)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

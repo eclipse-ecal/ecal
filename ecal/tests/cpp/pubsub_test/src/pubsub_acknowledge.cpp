@@ -61,7 +61,7 @@ TEST(core_cpp_pubsub, TimeoutAcknowledgment)
   // create publisher
   eCAL::CPublisher pub("topic", {}, pub_config);
   auto sub1 = std::make_shared< eCAL::CSubscriber>("topic");
-  auto sleeper_variable_time = [](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation&  /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
+  auto sleeper_variable_time = [](const eCAL::STopicId& topic_id_, const eCAL::SDataTypeInformation&  /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
                                 {
                                   std::string const sleep_time((const char*)data_.buf, data_.size);
                                   int const sleep = std::stoi(sleep_time);

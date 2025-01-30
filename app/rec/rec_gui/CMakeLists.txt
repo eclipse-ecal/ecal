@@ -170,7 +170,7 @@ ecal_add_app_qt(${PROJECT_NAME}
 )
 
 create_targets_protobuf()
-target_link_libraries (${PROJECT_NAME}
+target_link_libraries (${PROJECT_NAME} PRIVATE
     tclap::tclap
     protobuf::libprotobuf
     eCAL::core
@@ -195,7 +195,7 @@ if (WIN32 AND (${QT_VERSION_MAJOR} EQUAL 5))
     # Maybe we can re-enable the functionality with the following external lib:
     # https://github.com/oblivioncth/Qx
     #
-    target_link_libraries (${PROJECT_NAME}
+    target_link_libraries (${PROJECT_NAME} PRIVATE
         Qt${QT_VERSION_MAJOR}::WinExtras
     )
 endif()

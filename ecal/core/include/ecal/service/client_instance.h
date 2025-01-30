@@ -35,17 +35,14 @@
 
 namespace eCAL
 {
-  ECAL_CORE_NAMESPACE_V6
-  {
-    class CServiceClientImpl;
-  }
+  class CServiceClientImpl;
 
   class ECAL_API_CLASS CClientInstance final
   {
   public:
     // Constructor
     ECAL_API_EXPORTED_MEMBER
-      CClientInstance(const Registration::SEntityId& entity_id_, const std::shared_ptr<v6::CServiceClientImpl>& service_client_id_impl_);
+      CClientInstance(const SEntityId& entity_id_, const std::shared_ptr<CServiceClientImpl>& service_client_id_impl_);
 
     // Defaulted destructor
     ~CClientInstance() = default;
@@ -68,7 +65,7 @@ namespace eCAL
      * @return  success state and service response
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::pair<bool, SServiceIDResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
+      std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_ = -1);
 
     /**
      * @brief Blocking call of a service method, using callback
@@ -81,7 +78,7 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseIDCallbackT& response_callback_);
+      bool CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseCallbackT& response_callback_);
 
     /**
      * @brief Asynchronous call of a service method, using callback
@@ -93,7 +90,7 @@ namespace eCAL
      * @return  True if successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseIDCallbackT& response_callback_);
+      bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_);
 
     /**
      * @brief Check connection state.
@@ -109,10 +106,10 @@ namespace eCAL
      * @return  The client entity id.
     **/
     ECAL_API_EXPORTED_MEMBER
-      Registration::SEntityId GetClientID() const;
+      SEntityId GetClientID() const;
 
   private:
-    Registration::SEntityId                             m_entity_id;
-    const std::shared_ptr<eCAL::v6::CServiceClientImpl> m_service_client_impl;
+    SEntityId                                       m_entity_id;
+    const std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }

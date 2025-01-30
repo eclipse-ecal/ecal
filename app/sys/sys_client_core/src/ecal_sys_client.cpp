@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,19 +55,19 @@ namespace eCAL
         EvaluateEcalParserFunctions(task, true, now);
         MergeRunnerIntoTask(task, EcalUtils::Filesystem::OsStyle::Current);
 
-        int pid = eCAL::Process::StartProcess(task.path.c_str()
+        int process_id = eCAL::Process::StartProcess(task.path.c_str()
                                             , task.arguments.c_str()
                                             , task.working_dir.c_str()
                                             , task_param.create_console
                                             , task_param.window_mode
                                             , false);
 
-        pid_list.push_back(static_cast<int32_t>(pid));
+        pid_list.push_back(static_cast<int32_t>(process_id));
 
-        if (pid != 0)
-          EcalSysClientLogger::Instance()->info("Successfully started process (PID " + std::to_string(pid) + "): " + task.path + " " + task.arguments);
+        if (process_id != 0)
+          EcalSysClientLogger::Instance()->info("Successfully started process (PID " + std::to_string(process_id) + "): " + task.path + " " + task.arguments);
         else
-          EcalSysClientLogger::Instance()->error(std::string("Failed to start Task: ") + std::to_string(pid) + "): " + task.path + " " + task.arguments);
+          EcalSysClientLogger::Instance()->error(std::string("Failed to start Task: ") + std::to_string(process_id) + "): " + task.path + " " + task.arguments);
       }
 
       return pid_list;
@@ -84,18 +84,18 @@ namespace eCAL
       {
         bool success = false;
 
-        if (task_param.pid != 0)
+        if (task_param.process_id != 0)
         {
           // Stop by PID
 
           if (task_param.ecal_shutdown)
           {
-            eCAL::Util::ShutdownProcess(task_param.pid);
+            eCAL::Util::ShutdownProcess(task_param.process_id);
             success = true;
           }
           else
           {
-            success = eCAL::Process::StopProcess(task_param.pid);
+            success = eCAL::Process::StopProcess(task_param.process_id);
           }
         }
         else
@@ -161,16 +161,16 @@ namespace eCAL
         std::vector<int32_t> pid_list;
         for (const auto& process : monitoring_pb.processes())
         {
-          if (process.hname() == eCAL::Process::GetHostName()) // Only handle local tasks!
+          if (process.host_name() == eCAL::Process::GetHostName()) // Only handle local tasks!
           {
 #ifdef _WIN32
             // Windows gives us the proper command line, so we can directly match it
-            if ((process.pparam() == evaluated_task.path)
-              || (process.pparam() == "\"" + evaluated_task.path + "\"")
-              || (process.pparam() == (evaluated_task.path + " " + evaluated_task.arguments))
-              || (process.pparam() == ("\"" + evaluated_task.path + "\" " + evaluated_task.arguments)))
+            if ((process.process_parameter() == evaluated_task.path)
+              || (process.process_parameter() == "\"" + evaluated_task.path + "\"")
+              || (process.process_parameter() == (evaluated_task.path + " " + evaluated_task.arguments))
+              || (process.process_parameter() == ("\"" + evaluated_task.path + "\" " + evaluated_task.arguments)))
             {
-              pid_list.push_back(process.pid());
+              pid_list.push_back(process.process_id());
             }
 #else // _WIN32
             // Linux splits the command line before we get it, so we cannot know
@@ -182,11 +182,11 @@ namespace eCAL
             // 
             // This is also true for macOS and probably most other UNIX systems.
 
-            std::vector<std::string> process_argv  = EcalUtils::CommandLine::ToArgv(process.pparam());
+            std::vector<std::string> process_argv  = EcalUtils::CommandLine::ToArgv(process.process_parameter());
             if ((sys_task_argv.size() == process_argv.size())
               && (sys_task_argv == process_argv))
             {
-              pid_list.push_back(process.pid());
+              pid_list.push_back(process.process_id());
             }
 #endif // _WIN32
           }

@@ -168,7 +168,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << '\n';
       sstream << "Host name                : " << Process::GetHostName() << '\n';
-      sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
+      sstream << "SHM transport domain     : " << Process::GetShmTransportDomain() << '\n';
 
       if (Config::IsNetworkEnabled())
       {
@@ -232,10 +232,10 @@ namespace eCAL
     {
       if (g_host_name.empty())
       {
-        char hname[1024] = { 0 };
-        if (gethostname(hname, 1024) == 0)
+        char host_name[1024] = { 0 };
+        if (gethostname(host_name, 1024) == 0)
         {
-          g_host_name = hname;
+          g_host_name = host_name;
         }
         else
         {
@@ -245,9 +245,9 @@ namespace eCAL
       return(g_host_name);
     }
 
-    std::string GetHostGroupName()
+    std::string GetShmTransportDomain()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      return Config::GetShmTransportDomain().empty() ? GetHostName() : Config::GetShmTransportDomain();
     }
 
     std::string GetUnitName()
@@ -336,9 +336,9 @@ namespace eCAL
     {
       if (g_process_name.empty())
       {
-        WCHAR pname[1024] = { 0 };
-        GetModuleFileNameExW(GetCurrentProcess(), nullptr, pname, 1024);
-        g_process_name = EcalUtils::StrConvert::WideToUtf8(pname);
+        WCHAR process_name[1024] = { 0 };
+        GetModuleFileNameExW(GetCurrentProcess(), nullptr, process_name, 1024);
+        g_process_name = EcalUtils::StrConvert::WideToUtf8(process_name);
       }
       return(g_process_name);
     }
@@ -752,7 +752,7 @@ namespace eCAL
       if (g_process_par.empty())
       {
 #if defined(ECAL_OS_MACOS)
-        int pid = getpid();
+        int process_id = getpid();
 
         int    mib[3], argmax, argc;
         size_t    size;
@@ -812,7 +812,7 @@ namespace eCAL
          */
         mib[0] = CTL_KERN;
         mib[1] = KERN_PROCARGS2;
-        mib[2] = pid;
+        mib[2] = process_id;
 
         size = (size_t)argmax;
         if (sysctl(mib, 3, procargs.data(), &size, NULL, 0) == -1)

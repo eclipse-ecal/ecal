@@ -71,8 +71,8 @@ namespace eCAL
       std::string             pname;            //!< process name
       std::string             uname;            //!< process unit name
       std::string             sname;            //!< service name
-      Registration::EntityIdT sid = 0;  //!< service id
-      int                     pid = 0;  //!< process id
+      EntityIdT sid = 0;                        //!< service id
+      int                     pid = 0;          //!< process id
 
       // internal protocol specifics
       unsigned int   version = 0;  //!< service protocol version
@@ -134,6 +134,18 @@ namespace eCAL
      * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
     **/
     using ResponseCallbackT = std::function<void(const struct v5::SServiceResponse& service_response_)>;
+
+    /**
+     * @brief Service method callback function type (low level server interface). (deprecated)
+     *
+     * @param method_     The method name.
+     * @param req_type_   The type of the method request.
+     * @param resp_type_  The type of the method response.
+     * @param request_    The request.
+     * @param response_   The response returned from the method call.
+    **/
+    using MethodCallbackT = std::function<int(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_)>;
+
 
     /**
      * @brief eCAL server event callback struct.

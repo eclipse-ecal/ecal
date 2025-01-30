@@ -44,9 +44,9 @@ namespace YAML
     eCAL::Publisher::Configuration::LayerPriorityVector layer_priority_vector;
     for (const auto& layer_as_string : string_vector_)
     {
-      if (layer_as_string == "shm") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_shm);
-      if (layer_as_string == "udp") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_udp_mc);
-      if (layer_as_string == "tcp") layer_priority_vector.emplace_back(eCAL::TLayer::tlayer_tcp);
+      if (layer_as_string == "shm") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::shm);
+      if (layer_as_string == "udp") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::udp_mc);
+      if (layer_as_string == "tcp") layer_priority_vector.emplace_back(eCAL::TransportLayer::eType::tcp);
     }
 
     return layer_priority_vector;
@@ -59,13 +59,13 @@ namespace YAML
     {
       switch (layer_as_enum)
       {
-        case eCAL::TLayer::tlayer_shm:
+        case eCAL::TransportLayer::eType::shm:
           layer_priority_vector.emplace_back("shm");
           break;
-        case eCAL::TLayer::tlayer_udp_mc:
+        case eCAL::TransportLayer::eType::udp_mc:
           layer_priority_vector.emplace_back("udp");
           break;
-        case eCAL::TLayer::tlayer_tcp:
+        case eCAL::TransportLayer::eType::tcp:
           layer_priority_vector.emplace_back("tcp");
           break;
         default:
@@ -141,7 +141,7 @@ namespace YAML
     node["registration_refresh"] = config_.registration_refresh;
     node["network_enabled"]      = config_.network_enabled;
     node["loopback"]             = config_.loopback;
-    node["host_group_name"]      = config_.host_group_name;
+    node["shm_transport_domain"] = config_.shm_transport_domain;
     return node;
   }
 
@@ -153,11 +153,11 @@ namespace YAML
     AssignValue<bool>(config_.loopback, node_, "loopback");    
     AssignValue<eCAL::Registration::Layer::Configuration>(config_.layer, node_, "layer");
 
-    // By default the host_group_name is set with the current host name.
-    // If the user does not specify the host group name in the yaml, leave it like it is.
-    std::string host_group_name;
-    AssignValue<std::string>(host_group_name, node_, "host_group_name");
-    if (!host_group_name.empty()) config_.host_group_name = host_group_name;
+    // By default the shm_transport_domain is set with the current host name.
+    // If the user does not specify the shm transport domain in the yaml, leave it like it is.
+    std::string shm_transport_domain;
+    AssignValue<std::string>(shm_transport_domain, node_, "shm_transport_domain");
+    if (!shm_transport_domain.empty()) config_.shm_transport_domain = shm_transport_domain;
 
     return true;
   }

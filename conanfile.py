@@ -45,7 +45,7 @@ class eCALConan(ConanFile):
         tc.variables["ECAL_THIRDPARTY_BUILD_PROTOBUF"] = "OFF"
         tc.variables["ECAL_THIRDPARTY_BUILD_HDF5"] = "OFF"
         tc.variables["ECAL_THIRDPARTY_BUILD_TINYXML2"] = "OFF"
-        tc.variables["BUILD_DOCS"] = "ON"
+        tc.variables["ECAL_BUILD_DOCS"] = "ON"
         tc.variables["CMAKE_FIND_PACKAGE_PREFER_CONFIG"] = "ON"
         if self.settings.os == "Windows":
             tc.variables["Protobuf_PROTOC_EXECUTABLE"] = os.path.join(self.deps_cpp_info["protobuf"].rootpath, "bin", "protoc.exe").replace('\\', '/')
