@@ -52,4 +52,6 @@ message Topic                                      // eCAL topic
   int64               data_id               = 19;  // data send id (publisher setid)
   int64               data_clock            = 20;  // data clock (send / receive action)
   int32               data_frequency        = 21;  // data frequency (send / receive samples per second) [mHz]
+
+  reserved 27;                                     // previously "attr" for generic topic description
 }
