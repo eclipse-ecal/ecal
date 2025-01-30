@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ struct Service
   std::string id;
   std::string host_name;
   std::string process_name;
-  int32_t pid;
+  int32_t process_id;
   std::string unit_name;
   int32_t registration_clock;
   uint32_t tcp_port;

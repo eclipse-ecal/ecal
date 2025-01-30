@@ -47,7 +47,7 @@ message ProcessState                                      // process state
   string                    info                 =  2;    // info string
 }
 
-enum eTSyncState                                          // time synchronisation
+enum eTimeSyncState                                       // time synchronisation
 {
   tsync_none     = 0;                                     // not synchronized
   tsync_realtime = 1;                                     // real time sync mode
@@ -59,20 +59,20 @@ message Process                                           // process
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 7 to 11;
 
-  int32                     rclock               =  1;    // registration clock
-  string                    hname                =  2;    // host name
-  string                    shm_transport_domain = 18;    // shm transport domain
-  int32                     pid                  =  3;    // process id
-  string                    pname                =  4;    // process name
-  string                    uname                =  5;    // unit name
-  string                    pparam               =  6;    // process parameter
-                                                          // 10 = data write bytes per sec
-                                                          // 11 = data read bytes per sec
-  ProcessState              state                = 12;    // process state info
-  eTSyncState               tsync_state          = 13;    // time synchronization state
-  string                    tsync_mod_name       = 14;    // time synchronization module name
-  int32                     component_init_state = 15;    // eCAL component initialization state (eCAL::Initialize(..))
-  string                    component_init_info  = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
-  string                    ecal_runtime_version = 17;    // loaded / runtime eCAL version of a component
-  string                    config_file_path     = 19;    // Path from where the eCAL configuration for this process was loaded 
+  int32                     registration_clock    =  1;    // registration clock
+  string                    host_name             =  2;    // host name
+  string                    shm_transport_domain  = 18;    // shm transport domain
+  int32                     process_id            =  3;    // process id
+  string                    process_name          =  4;    // process name
+  string                    unit_name             =  5;    // unit name
+  string                    process_parameter     =  6;    // process parameter
+                                                           // 10 = data write bytes per sec
+                                                           // 11 = data read bytes per sec
+  ProcessState              state                 = 12;    // process state info
+  eTimeSyncState            time_sync_state       = 13;    // time synchronization state
+  string                    time_sync_module_name = 14;    // time synchronization module name
+  int32                     component_init_state  = 15;    // eCAL component initialization state (eCAL::Initialize(..))
+  string                    component_init_info   = 16;    // like comp_init_state as human readable string (pub|sub|srv|mon|log|time|proc)
+  string                    ecal_runtime_version  = 17;    // loaded / runtime eCAL version of a component
+  string                    config_file_path      = 19;    // Path from where the eCAL configuration for this process was loaded 
 }

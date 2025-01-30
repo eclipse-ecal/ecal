@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ namespace eCAL
         const std::string memfile_event = memfile_name + "_" + process_id;
 
         Payload::TopicInfo topic_info;
-        topic_info.tname = par_.topic_name;
-        topic_info.hname = par_.host_name;
-        topic_info.tid   = par_.topic_id;
-        topic_info.pid   = par_.process_id;
+        topic_info.topic_name = par_.topic_name;
+        topic_info.host_name  = par_.host_name;
+        topic_info.topic_id   = par_.topic_id;
+        topic_info.process_id = par_.process_id;
 
         auto data_callback = [this, topic_info](const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)->size_t
         {

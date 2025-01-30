@@ -631,17 +631,17 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.tname = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
 
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
-      ecal_reg_sample_tdatatype.name = m_topic_info.name;
+      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.datatype_information;
+      ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
+      ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr = m_attr;
-    ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
+    ecal_reg_sample_topic.attr  = m_attr;
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
@@ -653,7 +653,7 @@ namespace eCAL
       udp_tlayer.enabled = m_layers.udp.write_enabled;
       udp_tlayer.active = m_layers.udp.active;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
-      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
@@ -667,7 +667,7 @@ namespace eCAL
       shm_tlayer.enabled = m_layers.shm.write_enabled;
       shm_tlayer.active = m_layers.shm.active;
       shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
-      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
@@ -681,15 +681,15 @@ namespace eCAL
       tcp_tlayer.enabled = m_layers.tcp.write_enabled;
       tcp_tlayer.active = m_layers.tcp.active;
       tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
-      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pname = m_attributes.process_name;
-    ecal_reg_sample_topic.uname = m_attributes.unit_name;
-    ecal_reg_sample_topic.did = m_id;
-    ecal_reg_sample_topic.dclock = m_clock;
-    ecal_reg_sample_topic.dfreq = GetFrequency();
+    ecal_reg_sample_topic.process_name = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_id      = m_id;
+    ecal_reg_sample_topic.data_clock       = m_clock;
+    ecal_reg_sample_topic.data_frequency        = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -704,8 +704,8 @@ namespace eCAL
       }
       ext_connections = m_connection_map.size() - loc_connections;
     }
-    ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
-    ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
+    ecal_reg_sample_topic.connections_local = static_cast<int32_t>(loc_connections);
+    ecal_reg_sample_topic.connections_external = static_cast<int32_t>(ext_connections);
   }
 
   void CPublisherImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -719,9 +719,9 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.pname = m_attributes.process_name;
-    ecal_reg_sample_topic.tname = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname = m_attributes.unit_name;
+    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
+    ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
   }
 
   void CPublisherImpl::FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)

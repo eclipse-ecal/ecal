@@ -1,6 +1,6 @@
 ﻿/* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -184,9 +184,9 @@ void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Mo
   {
     if (!topic_name_.isNull())
     {
-      if ((topic.tname() == topic_name_.toStdString()) && (topic.direction() == std::string("publisher")))
+      if ((topic.topic_name() == topic_name_.toStdString()) && (topic.direction() == std::string("publisher")))
       {
-        publishers.append(QString(QString(topic.hname().c_str()) + QString(": ") + QString(topic.pname().c_str())));
+        publishers.append(QString(QString(topic.host_name().c_str()) + QString(": ") + QString(topic.process_name().c_str())));
       }
     }
   }

@@ -80,7 +80,7 @@ ProcessWidget::ProcessWidget(QWidget *parent)
   {
     (int)ProcessTreeModel::Columns::UNIT_NAME,
     (int)ProcessTreeModel::Columns::HOST_NAME,
-    (int)ProcessTreeModel::Columns::PID,
+    (int)ProcessTreeModel::Columns::PROCESS_ID,
     (int)ProcessTreeModel::Columns::PROCESS_NAME,
     (int)ProcessTreeModel::Columns::PARAMETERS,
     (int)ProcessTreeModel::Columns::STATE,
@@ -108,12 +108,12 @@ ProcessWidget::~ProcessWidget()
 void ProcessWidget::autoSizeColumns()
 {
   eCAL::pb::Process example_process_pb;
-  example_process_pb.set_rclock(999999);
-  example_process_pb.set_hname("HNAME00____");
-  example_process_pb.set_pid(999999);
-  example_process_pb.set_pname("");
-  example_process_pb.set_uname("eCALProcessUnitNameABCDE___");
-  example_process_pb.set_pparam("");
+  example_process_pb.set_registration_clock(999999);
+  example_process_pb.set_host_name("HNAME00____");
+  example_process_pb.set_process_id(999999);
+  example_process_pb.set_process_name("");
+  example_process_pb.set_unit_name("eCALProcessUnitNameABCDE___");
+  example_process_pb.set_process_parameter("");
 
   example_process_pb.mutable_state()->set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
   example_process_pb.mutable_state()->set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
@@ -130,7 +130,7 @@ void ProcessWidget::autoSizeColumns()
     (int)ProcessTreeModel::Columns::GROUP,
     (int)ProcessTreeModel::Columns::UNIT_NAME,
     (int)ProcessTreeModel::Columns::HOST_NAME,
-    (int)ProcessTreeModel::Columns::PID,
+    (int)ProcessTreeModel::Columns::PROCESS_ID,
     (int)ProcessTreeModel::Columns::PROCESS_NAME,
     (int)ProcessTreeModel::Columns::STATE,
     (int)ProcessTreeModel::Columns::HEARTBEAT,

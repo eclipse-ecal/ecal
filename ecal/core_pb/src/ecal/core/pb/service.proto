@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ message ServiceHeader
     failed   = 2;
   }
 
-  string               hname          =  1;  // host name
-  string               sname          =  2;  // service name
-  string               sid            =  7;  // service id
-  string               mname          =  3;  // method name
+  string               host_name      =  1;  // host name
+  string               service_name   =  2;  // service name
+  string               service_id     =  7;  // service id
+  string               method_name    =  3;  // method name
   string               error          =  4;  // error message
   int32                id             =  5;  // session id
   eCallState           state          =  6;  // method call state
@@ -56,29 +56,29 @@ message Response                             // server response
 
 message Method                               // method
 {
-  string               mname          =  1;  // method name
+  string               method_name    =  1;  // method name
 
-  string               req_type       =  2;  // request  type        (deprecated use req_datatype)
-  bytes                req_desc       =  5;  // request  descriptor  (deprecated use req_datatype)
-  string               resp_type      =  3;  // response type        (deprecated use resp_datatype)
-  bytes                resp_desc      =  6;  // response descriptor  (deprecated use resp_datatype)
+  string               req_type       =  2;  // request  type        (deprecated use request_datatype_information)
+  bytes                req_desc       =  5;  // request  descriptor  (deprecated use request_datatype_information)
+  string               resp_type      =  3;  // response type        (deprecated use response_datatype_information)
+  bytes                resp_desc      =  6;  // response descriptor  (deprecated use response_datatype_information)
 
-  DataTypeInformation  req_datatype   =  7;  // request  datatype information  (encoding & type & description)
-  DataTypeInformation  resp_datatype  =  8;  // response datatype information  (encoding & type & description)
+  DataTypeInformation  request_datatype_information   =  7;  // request  datatype information  (encoding & type & description)
+  DataTypeInformation  response_datatype_information  =  8;  // response datatype information  (encoding & type & description)
 
   int64                call_count     =  4;  // call counter
 }
 
 message Service                              // service
 {
-  int32                rclock         =  1;  // registration clock
-  string               hname          =  2;  // host name
-  string               pname          =  3;  // process name
-  string               uname          =  4;  // unit name
-  int32                pid            =  5;  // process id
-  string               sname          =  6;  // service name
-  string               sid            =  9;  // service id
-  repeated Method      methods        =  8;  // list of methods
+  int32                registration_clock =  1;  // registration clock
+  string               host_name          =  2;  // host name
+  string               process_name       =  3;  // process name
+  string               unit_name          =  4;  // unit name
+  int32                process_id         =  5;  // process id
+  string               service_name       =  6;  // service name
+  string               service_id         =  9;  // service id
+  repeated Method      methods            =  8;  // list of methods
 
   // transport specific parameter (for internal use)
   uint32               version        = 10;  // service protocol version
@@ -86,17 +86,17 @@ message Service                              // service
   uint32               tcp_port_v1    = 11;  // the tcp port used for that service
 }
 
-message Client                               // client
+message Client                                   // client
 {
-  int32                rclock         =  1;  // registration clock
-  string               hname          =  2;  // host name
-  string               pname          =  3;  // process name
-  string               uname          =  4;  // unit name
-  int32                pid            =  5;  // process id
-  string               sname          =  6;  // service name
-  string               sid            =  7;  // service id
-  repeated Method      methods        =  9;  // list of methods
+  int32                registration_clock =  1;  // registration clock
+  string               host_name          =  2;  // host name
+  string               process_name       =  3;  // process name
+  string               unit_name          =  4;  // unit name
+  int32                process_id         =  5;  // process id
+  string               service_name       =  6;  // service name
+  string               service_id         =  7;  // service id
+  repeated Method      methods            =  9;  // list of methods
 
   // transport specific parameter (for internal use)
-  uint32               version        =  8;  // client protocol version
+  uint32               version            =  8;  // client protocol version
 }

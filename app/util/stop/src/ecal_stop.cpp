@@ -53,28 +53,28 @@ int main()
   for (const auto& process : monitoring.processes)
   {
     // filter out eCAL system processes
-    const std::string uname = process.uname;
-    if ( (uname != "eCALConfig")
-      && (uname != "eCALMon")
-      && (uname != "eCALMon CLI")
-      && (uname != "eCALMon TUI")
-      && (uname != "eCALPlay")
-      && (uname != "eCALPlayGUI")
-      && (uname != "eCALRec")
-      && (uname != "eCALRecGUI")
-      && (uname != "eCALRecClient")
-      && (uname != "eCALRec-Remote")
-      && (uname != "eCALRec-Server")
-      && (uname != "eCALSys")
-      && (uname != "eCALSysGUI")
-      && (uname != "eCALSysClient")
-      && (uname != "eCALSys-Remote")
-      && (uname != "eCALStop")
-      && (process.hname == host_name)
+    const std::string unit_name = process.unit_name;
+    if ( (unit_name != "eCALConfig")
+      && (unit_name != "eCALMon")
+      && (unit_name != "eCALMon CLI")
+      && (unit_name != "eCALMon TUI")
+      && (unit_name != "eCALPlay")
+      && (unit_name != "eCALPlayGUI")
+      && (unit_name != "eCALRec")
+      && (unit_name != "eCALRecGUI")
+      && (unit_name != "eCALRecClient")
+      && (unit_name != "eCALRec-Remote")
+      && (unit_name != "eCALRec-Server")
+      && (unit_name != "eCALSys")
+      && (unit_name != "eCALSysGUI")
+      && (unit_name != "eCALSysClient")
+      && (unit_name != "eCALSys-Remote")
+      && (unit_name != "eCALStop")
+      && (process.host_name == host_name)
       )
     {
-      std::cout << "Stopping process " << process.pname << " (" << process.pid << ")" << std::endl;
-      eCAL::Util::ShutdownProcess(process.pid);
+      std::cout << "Stopping process " << process.process_name << " (" << process.process_id << ")" << std::endl;
+      eCAL::Util::ShutdownProcess(process.process_id);
     }
   }
 

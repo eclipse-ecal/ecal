@@ -54,11 +54,11 @@ namespace eCAL
     struct StopTaskParameters
     {
       StopTaskParameters()
-        : pid          (0)
+        : process_id          (0)
         , ecal_shutdown(false)
       {}
 
-      int32_t pid;
+      int32_t process_id;
       Task    task;
       bool    ecal_shutdown;
     };

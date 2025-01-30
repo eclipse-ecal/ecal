@@ -44,14 +44,14 @@ namespace
   {
     // time
     pb_log_message_.time = log_message_.time;
-    // hname
-    eCAL::nanopb::encode_string(pb_log_message_.hname, log_message_.hname);
-    // pid
-    pb_log_message_.pid = log_message_.pid;
-    // pname
-    eCAL::nanopb::encode_string(pb_log_message_.pname, log_message_.pname);
-    // uname
-    eCAL::nanopb::encode_string(pb_log_message_.uname, log_message_.uname);
+    // host_name
+    eCAL::nanopb::encode_string(pb_log_message_.host_name, log_message_.host_name);
+    // process_id
+    pb_log_message_.process_id = log_message_.process_id;
+    // process_name
+    eCAL::nanopb::encode_string(pb_log_message_.process_name, log_message_.process_name);
+    // unit_name
+    eCAL::nanopb::encode_string(pb_log_message_.unit_name, log_message_.unit_name);
     // level
     pb_log_message_.level = log_message_.level;
     // content
@@ -113,12 +113,12 @@ namespace
     // assign decoder
     ///////////////////////////////////////////////
 
-    // hname
-    eCAL::nanopb::decode_string(pb_log_message_.hname, log_message_.hname);
-    // pname
-    eCAL::nanopb::decode_string(pb_log_message_.pname, log_message_.pname);
-    // uname
-    eCAL::nanopb::decode_string(pb_log_message_.uname, log_message_.uname);
+    // host_name
+    eCAL::nanopb::decode_string(pb_log_message_.host_name, log_message_.host_name);
+    // process_name
+    eCAL::nanopb::decode_string(pb_log_message_.process_name, log_message_.process_name);
+    // unit_name
+    eCAL::nanopb::decode_string(pb_log_message_.unit_name, log_message_.unit_name);
     // content
     eCAL::nanopb::decode_string(pb_log_message_.content, log_message_.content);
   }
@@ -130,8 +130,8 @@ namespace
     ///////////////////////////////////////////////
     // time
     log_message_.time = pb_log_message_.time;
-    // pid
-    log_message_.pid = pb_log_message_.pid;
+    // process_id
+    log_message_.process_id = pb_log_message_.process_id;
     // level
     log_message_.level = static_cast<eCAL::Logging::eLogLevel>(pb_log_message_.level);
   }

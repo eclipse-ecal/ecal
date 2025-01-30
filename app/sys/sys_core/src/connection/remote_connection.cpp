@@ -41,7 +41,7 @@ namespace eCAL
 
         for(const auto& task_response_pb : response_pb.responses())
         {
-          return_values.push_back(task_response_pb.pid());
+          return_values.push_back(task_response_pb.process_id());
         }
 
         return return_values;

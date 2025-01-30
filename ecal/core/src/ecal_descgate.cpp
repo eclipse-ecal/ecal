@@ -63,9 +63,9 @@ namespace
     eCAL::ServiceMethodInformationSetT methods;
     for (const auto& method : service_.methods)
     {
-      const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.req_datatype, method.req_type, method.req_desc);
-      const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.resp_datatype, method.resp_type, method.resp_desc);
-      methods.insert(eCAL::SServiceMethodInformation{method.mname, request_datatype, response_datatype });
+      const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.request_datatype_information, method.req_type, method.req_desc);
+      const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.response_datatype_information, method.resp_type, method.resp_desc);
+      methods.insert(eCAL::SServiceMethodInformation{method.method_name, request_datatype, response_datatype });
     }
     return methods;
   }
@@ -140,7 +140,7 @@ namespace
     const eCAL::Registration::SampleIdentifier& service_id_,
     const Service& service_)
   {
-    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_), service_.sname };
+    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_), service_.service_name };
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.id_map[service_method_info_key] = Convert(service_);
@@ -151,7 +151,7 @@ namespace
     const eCAL::Registration::SampleIdentifier& service_id_,
     const Service& service_)
   {
-    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_),  service_.sname };
+    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_),  service_.service_name };
 
     const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
     service_method_info_map_.id_map.erase(service_method_info_key);
@@ -311,16 +311,16 @@ namespace eCAL
       RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
       break;
     case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype);
+      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.datatype_information);
       break;
     case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name);
       break;
     case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname, sample_.topic.tdatatype);
+      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.datatype_information);
       break;
     case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.tname);
+      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name);
       break;
     default:
     {

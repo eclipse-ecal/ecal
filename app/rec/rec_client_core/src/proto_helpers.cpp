@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,10 +141,10 @@ namespace eCAL
       void ToProtobuf(const eCAL::rec::RecorderStatus& rec_status, const std::string& hostname, eCAL::pb::rec_client::State&                        rec_status_pb)
       {
         // hostname
-        rec_status_pb.set_hostname                            (hostname);
+        rec_status_pb.set_host_name                            (hostname);
 
-        // pid
-        rec_status_pb.set_pid                                 (rec_status.pid_);
+        // process_id
+        rec_status_pb.set_process_id                                 (rec_status.pid_);
 
         // initialized
         rec_status_pb.set_initialized                         (rec_status.initialized_);
@@ -343,12 +343,12 @@ namespace eCAL
         rec_addon_status.info_.second                   = rec_addon_status_pb.info_message();
       }
 
-      void FromProtobuf(const eCAL::pb::rec_client::State& rec_status_pb, std::string& hostname, eCAL::rec::RecorderStatus& rec_status)
+      void FromProtobuf(const eCAL::pb::rec_client::State& rec_status_pb, std::string& host_name, eCAL::rec::RecorderStatus& rec_status)
       {
-        hostname = rec_status_pb.hostname();
+        host_name = rec_status_pb.host_name();
 
         // pid_
-        rec_status.pid_ = rec_status_pb.pid();
+        rec_status.pid_ = rec_status_pb.process_id();
 
         // timestamp_
         rec_status.timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::nanoseconds(rec_status_pb.timestamp_nsecs()));

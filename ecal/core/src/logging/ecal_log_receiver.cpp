@@ -117,7 +117,7 @@ namespace eCAL
       {
         // in "network mode" we accept all log messages
         // in "local mode" we accept log messages from this host only
-        if ((m_attributes.host_name == log_message.hname) || m_attributes.network_enabled)
+        if ((m_attributes.host_name == log_message.host_name) || m_attributes.network_enabled)
         {
           const std::lock_guard<std::mutex> lock(m_log_mtx);
           m_log_msglist.log_messages.emplace_back(log_message);

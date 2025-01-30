@@ -13,7 +13,7 @@
 typedef struct _eCAL_pb_DataTypeInformation {
     pb_callback_t name; /* name of the datatype */
     pb_callback_t encoding; /* encoding of the datatype (e.g. protobuf, flatbuffers, capnproto) */
-    pb_callback_t desc; /* descriptor information of the datatype (necessary for reflection) */
+    pb_callback_t descriptor_information; /* descriptor information of the datatype (necessary for reflection) */
 } eCAL_pb_DataTypeInformation;
 
 
@@ -28,13 +28,13 @@ extern "C" {
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_DataTypeInformation_name_tag     1
 #define eCAL_pb_DataTypeInformation_encoding_tag 2
-#define eCAL_pb_DataTypeInformation_desc_tag     3
+#define eCAL_pb_DataTypeInformation_descriptor_information_tag 3
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_DataTypeInformation_FIELDLIST(X, a) \
 X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
 X(a, CALLBACK, SINGULAR, STRING,   encoding,          2) \
-X(a, CALLBACK, SINGULAR, BYTES,    desc,              3)
+X(a, CALLBACK, SINGULAR, BYTES,    descriptor_information,   3)
 #define eCAL_pb_DataTypeInformation_CALLBACK pb_default_field_callback
 #define eCAL_pb_DataTypeInformation_DEFAULT NULL
 

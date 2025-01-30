@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ QVariant JobHistoryRecorderItem::data(int column, Qt::ItemDataRole role) const
     }
   }
 
-  else if (column == (int)Columns::PID)
+  else if (column == (int)Columns::PROCESS_ID)
   {
     if (role == Qt::ItemDataRole::DisplayRole)
     {
@@ -277,7 +277,7 @@ const QString&                                          JobHistoryRecorderItem::
 const QString&                                          JobHistoryRecorderItem::addonName()               const { return addon_name_; }
 bool                                                    JobHistoryRecorderItem::isAddonItem()             const { return !addon_id_.isEmpty(); }
 
-int                                                     JobHistoryRecorderItem::pid()                     const { return pid_; }
+int                                                     JobHistoryRecorderItem::process_id()                     const { return pid_; }
 bool                                                    JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
 std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
@@ -305,7 +305,7 @@ const std::pair<bool, std::string>&                     JobHistoryRecorderItem::
     return info_;
 }
 
-void JobHistoryRecorderItem::setPid                    (int pid)                                                               { pid_ = pid; }
+void JobHistoryRecorderItem::setPid                    (int process_id)                                                               { pid_ = process_id; }
 void JobHistoryRecorderItem::setStillOnline            (bool still_online)                                                     { still_online_ = still_online; }
 void JobHistoryRecorderItem::setInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response)        { info_last_command_response_ = info_last_command_response; }
 void JobHistoryRecorderItem::setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length) { length_ = length; }
@@ -315,11 +315,11 @@ void JobHistoryRecorderItem::setUploadStatus           (const eCAL::rec::UploadS
 void JobHistoryRecorderItem::setInfo                   (const std::pair<bool, std::string>& info)                              { info_ = info; }
 void JobHistoryRecorderItem::setIsDeleted              (bool is_deleted)                                                       { is_deleted_ = is_deleted; }
 
-bool JobHistoryRecorderItem::updatePid(int pid)
+bool JobHistoryRecorderItem::updatePid(int process_id)
 {
-  if (pid_ != pid)
+  if (pid_ != process_id)
   {
-    pid_ = pid;
+    pid_ = process_id;
     return true;
   }
   return false;

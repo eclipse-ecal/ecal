@@ -37,16 +37,16 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
-    HNAME,
+    REGISTRATION_CLOCK,
+    HOST_NAME,
     SHM_TRANSPORT_DOMAIN,
-    PID,
-    PNAME,
-    UNAME,
-    PPARAM,
+    PROCESS_ID,
+    PROCESS_NAME,
+    UNIT_NAME,
+    PROCESS_PARAMETER,
     SEVERITY,
     INFO,
-    TSYNC_STATE,
+    TIME_SYNC_STATE,
     TSYNC_MOD_NAME,
     COMPONENT_INIT_INFO,
     ECAL_RUNTIME_VERSION,

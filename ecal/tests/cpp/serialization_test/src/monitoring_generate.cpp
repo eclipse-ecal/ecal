@@ -32,22 +32,22 @@ namespace eCAL
     SProcessMon GenerateProcess()
     {
       SProcessMon process;
-      process.rclock               = rand() % 1000;
-      process.hname                = GenerateString(10);
-      process.shm_transport_domain = GenerateString(8);
-      process.pid                  = rand() % 1000;
-      process.pname                = GenerateString(8);
-      process.uname                = GenerateString(6);
-      process.pparam               = GenerateString(20);
-      process.state_severity       = rand() % 5;
-      process.state_severity_level = rand() % 6;
-      process.state_info           = GenerateString(15);
-      process.tsync_state          = rand() % 3;
-      process.tsync_mod_name       = GenerateString(12);
-      process.component_init_state = rand() % 10;
-      process.component_init_info  = GenerateString(20);
-      process.ecal_runtime_version = GenerateString(8);
-      process.config_file_path     = GenerateString(20);
+      process.registration_clock    = rand() % 1000;
+      process.host_name             = GenerateString(10);
+      process.shm_transport_domain  = GenerateString(8);
+      process.process_id            = rand() % 1000;
+      process.process_name          = GenerateString(8);
+      process.unit_name             = GenerateString(6);
+      process.process_parameter     = GenerateString(20);
+      process.state_severity        = rand() % 5;
+      process.state_severity_level  = rand() % 6;
+      process.state_info            = GenerateString(15);
+      process.time_sync_state       = rand() % 3;
+      process.time_sync_module_name = GenerateString(12);
+      process.component_init_state  = rand() % 10;
+      process.component_init_info   = GenerateString(20);
+      process.ecal_runtime_version  = GenerateString(8);
+      process.config_file_path      = GenerateString(20);
       return process;
     }
 
@@ -55,24 +55,24 @@ namespace eCAL
     STopicMon GenerateTopic(const std::string& direction)
     {
       STopicMon topic;
-      topic.rclock               = rand() % 1000;
-      topic.hname                = GenerateString(10);
+      topic.registration_clock   = rand() % 1000;
+      topic.host_name            = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
-      topic.pid                  = rand() % 1000;
-      topic.pname                = GenerateString(8);
-      topic.uname                = GenerateString(6);
-      topic.tid                  = rand();
-      topic.tname                = GenerateString(10);
+      topic.process_id           = rand() % 1000;
+      topic.process_name         = GenerateString(8);
+      topic.unit_name            = GenerateString(6);
+      topic.topic_id             = rand();
+      topic.topic_name           = GenerateString(10);
       topic.direction            = direction;
-      topic.tdatatype            = eCAL::Registration::GenerateDataTypeInformation();
-      topic.tlayer.push_back({ tl_ecal_shm, 1, true });
-      topic.tsize                = rand() % 5000;
-      topic.connections_loc      = rand() % 10;
-      topic.connections_ext      = rand() % 10;
+      topic.datatype_information = eCAL::Registration::GenerateDataTypeInformation();
+      topic.transport_layer.push_back({ eTransportLayerType::shm, 1, true });
+      topic.topic_size           = rand() % 5000;
+      topic.connections_local    = rand() % 10;
+      topic.connections_external = rand() % 10;
       topic.message_drops        = rand() % 100;
-      topic.did                  = rand() % 10000;
-      topic.dclock               = rand() % 10000;
-      topic.dfreq                = rand() % 100;
+      topic.data_id              = rand() % 10000;
+      topic.data_clock           = rand() % 10000;
+      topic.data_frequency       = rand() % 100;
       return topic;
     }
 
@@ -80,10 +80,10 @@ namespace eCAL
     SMethodMon GenerateServiceMethod()
     {
       SMethodMon method;
-      method.mname = GenerateString(8);
+      method.method_name = GenerateString(8);
 
-      method.req_datatype  = eCAL::Registration::GenerateDataTypeInformation();
-      method.resp_datatype = eCAL::Registration::GenerateDataTypeInformation();
+      method.request_datatype_information  = eCAL::Registration::GenerateDataTypeInformation();
+      method.response_datatype_information = eCAL::Registration::GenerateDataTypeInformation();
 
       method.call_count = rand() % 10000;
       return method;
@@ -93,16 +93,16 @@ namespace eCAL
     SServerMon GenerateService()
     {
       SServerMon server;
-      server.rclock      = rand() % 1000;
-      server.hname       = GenerateString(10);
-      server.pname       = GenerateString(8);
-      server.uname       = GenerateString(6);
-      server.pid         = rand() % 1000;
-      server.sname       = GenerateString(10);
-      server.sid         = rand();
-      server.version     = rand() % 100;
-      server.tcp_port_v0 = rand() % 65536;
-      server.tcp_port_v1 = rand() % 65536;
+      server.registration_clock = rand() % 1000;
+      server.host_name          = GenerateString(10);
+      server.process_name       = GenerateString(8);
+      server.unit_name          = GenerateString(6);
+      server.process_id         = rand() % 1000;
+      server.service_name       = GenerateString(10);
+      server.service_id         = rand();
+      server.version            = rand() % 100;
+      server.tcp_port_v0        = rand() % 65536;
+      server.tcp_port_v1        = rand() % 65536;
 
       server.methods.push_back(GenerateServiceMethod());
       server.methods.push_back(GenerateServiceMethod());
@@ -114,17 +114,17 @@ namespace eCAL
     SClientMon GenerateClient()
     {
       SClientMon client;
-      client.rclock  = rand() % 1000;
-      client.hname   = GenerateString(10);
-      client.pname   = GenerateString(8);
-      client.uname   = GenerateString(6);
-      client.pid     = rand() % 1000;
-      client.sname   = GenerateString(10);
-      client.sid     = rand();
+      client.registration_clock = rand() % 1000;
+      client.host_name          = GenerateString(10);
+      client.process_name       = GenerateString(8);
+      client.unit_name          = GenerateString(6);
+      client.process_id         = rand() % 1000;
+      client.service_name       = GenerateString(10);
+      client.service_id         = rand();
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());
-      client.version = rand() % 100;
+      client.version            = rand() % 100;
       return client;
     }
 

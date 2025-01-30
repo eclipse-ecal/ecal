@@ -99,11 +99,11 @@ int main()
     for (int i = 0; i < subscriber_number; i++)
     {
       // publisher topic name
-      std::stringstream tname;
-      tname << "TOPIC_" << i;
+      std::stringstream topic_name;
+      topic_name << "TOPIC_" << i;
 
       // create subscriber
-      vector_of_subscriber.emplace_back(tname.str());
+      vector_of_subscriber.emplace_back(topic_name.str());
     }
     // stop time measurement
     auto end_time = std::chrono::high_resolution_clock::now();
@@ -131,11 +131,11 @@ int main()
     for (int i = 0; i < publisher_number; i++)
     {
       // publisher topic name
-      std::stringstream tname;
-      tname << "TOPIC_" << i;
+      std::stringstream topic_name;
+      topic_name << "TOPIC_" << i;
 
       // create publisher
-      vector_of_publisher.emplace_back(tname.str(), data_type_info);
+      vector_of_publisher.emplace_back(topic_name.str(), data_type_info);
     }
     // stop time measurement
     auto end_time = std::chrono::high_resolution_clock::now();

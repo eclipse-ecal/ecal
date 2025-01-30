@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ message StartTaskParameters
 
 message StopTaskParameters
 {
-  int32 pid            =  1;  // The PID of the process to stop (preferred)
+  int32 process_id            =  1;  // The PID of the process to stop (preferred)
   Task  task           =  2;  // The description of the process to stop (if no PID was given)
   bool  ecal_shutdown  =  3;  // Whether the task shall be gently stopped via eCAL (they are hard killed otherwise!)
 }
@@ -98,7 +98,7 @@ message SingleTaskResponse
 {
   eServiceResult     result          =  1;
   string             error           =  2;
-  int32              pid             =  3;
+  int32              process_id             =  3;
 }
 
 message TaskResponse
@@ -106,14 +106,14 @@ message TaskResponse
   repeated SingleTaskResponse responses = 1;
 }
 
-message PidList
+message ProcessIdList
 {
-  repeated int32 pids = 1;
+  repeated int32 process_ids = 1;
 }
 
 message MatchTaskResponse
 {
-  repeated PidList pid_lists = 1;
+  repeated ProcessIdList process_id_lists = 1;
 }
 
 ///////////////////////////////////////////////////////

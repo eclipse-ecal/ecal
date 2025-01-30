@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,27 +68,27 @@ bool ZombieInstanceKiller::KillZombie(const std::string& process_name)
       do
       {
 #ifdef _UNICODE
-        std::wstring pname     = pe32.szExeFile;
+        std::wstring process_name     = pe32.szExeFile;
         std::wstring wpid_name = String2WString(process_name);
-        DWORD        pid       = pe32.th32ProcessID;
+        DWORD        process_id       = pe32.th32ProcessID;
         // cause warning C4244 with VS2017
-        //std::transform(pname.begin(), pname.end(), pname.begin(), ::tolower);
-        std::transform(pname.begin(), pname.end(), pname.begin(),
+        //std::transform(process_name.begin(), process_name.end(), process_name.begin(), ::tolower);
+        std::transform(process_name.begin(), process_name.end(), process_name.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
-        if (pname == wpid_name)
+        if (process_name == wpid_name)
 #else /* _UNICODE */
-        std::string  pname = pe32.szExeFile;
-        DWORD        pid   = pe32.th32ProcessID;
+        std::string  process_name = pe32.szExeFile;
+        DWORD        process_id   = pe32.th32ProcessID;
         // cause warning C4244 with VS2017
-        //std::transform(pname.begin(), pname.end(), pname.begin(), ::tolower);
-        std::transform(pname.begin(), pname.end(), pname.begin(),
+        //std::transform(process_name.begin(), process_name.end(), process_name.begin(), ::tolower);
+        std::transform(process_name.begin(), process_name.end(), process_name.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
-        if (pname == process_name)
+        if (process_name == process_name)
 #endif /* _UNICODE */
         {
-          if (pid != GetCurrentProcessId())
+          if (process_id != GetCurrentProcessId())
           {
-            eCAL::Process::StopProcess(pid);
+            eCAL::Process::StopProcess(process_id);
             ret_state = true;
           }
         }
@@ -124,20 +124,20 @@ bool ZombieInstanceKiller::KillZombie(const std::string& pid_name)
     char buf[512];
     if (fgets(buf, 512, pipe) == nullptr) return false;
 
-    std::list<std::string> pids;
+    std::list<std::string> process_ids;
     char* pch;
     pch = strtok(buf, " ");
     while (pch != nullptr)
     {
-      pids.push_back(pch);
+      process_ids.push_back(pch);
       pch = strtok(nullptr, " ");
     }
 
-    if (!pids.empty())
+    if (!process_ids.empty())
     {
-      for (const auto& pid : pids)
+      for (const auto& process_id : process_ids)
       {
-        pid_t current_pid = strtoul(pid.c_str(), nullptr, 10);
+        pid_t current_pid = strtoul(process_id.c_str(), nullptr, 10);
 
         if ((current_pid != 0) && (current_pid != getpid()))
         {
