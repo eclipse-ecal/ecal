@@ -150,9 +150,15 @@ namespace eCAL
 
     bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
     {
-      auto v6_callback = [callback_](const STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
+      auto v6_callback = [callback_](const STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& v6_callback_data)
         {
-          callback_(topic_id_.topic_name.c_str(), &data_);
+          eCAL::v5::SReceiveCallbackData v5_callback_data;
+          v5_callback_data.buf = v6_callback_data.buf;
+          v5_callback_data.size = v6_callback_data.size;
+          v5_callback_data.id = v6_callback_data.id;
+          v5_callback_data.time = v6_callback_data.time;
+          v5_callback_data.clock = v6_callback_data.clock;
+          callback_(topic_id_.topic_name.c_str(), &v5_callback_data);
         };
       return AddReceiveCallback(v6_callback);
     }

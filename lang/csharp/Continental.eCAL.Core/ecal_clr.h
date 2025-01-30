@@ -372,7 +372,7 @@ namespace Continental
         /**
          * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
         **/
-        typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::SReceiveCallbackData*);
+        typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::v5::SReceiveCallbackData*);
       };
 
 

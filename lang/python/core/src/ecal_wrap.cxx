@@ -368,7 +368,7 @@ PyObject* sub_receive(PyObject* /*self*/, PyObject* args)
 /****************************************/
 /*      sub_set_callback                */
 /****************************************/
-static void c_subscriber_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, ECAL_HANDLE handle_, const std::string& /*python_formatter*/)
+static void c_subscriber_callback(const char* topic_name_, const struct eCAL::v5::SReceiveCallbackData* data_, ECAL_HANDLE handle_, const std::string& /*python_formatter*/)
 {
 #if ECAL_PY_INIT_THREADS_NEEDED
   if (!g_pygil_init)
