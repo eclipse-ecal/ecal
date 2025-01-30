@@ -137,7 +137,7 @@ namespace eCAL
           monitoring1.server[i].unit_name != monitoring2.server[i].unit_name ||
           monitoring1.server[i].process_id != monitoring2.server[i].process_id ||
           monitoring1.server[i].service_name != monitoring2.server[i].service_name ||
-          monitoring1.server[i].sid != monitoring2.server[i].sid ||
+          monitoring1.server[i].service_id != monitoring2.server[i].service_id ||
           monitoring1.server[i].version != monitoring2.server[i].version ||
           monitoring1.server[i].tcp_port_v0 != monitoring2.server[i].tcp_port_v0 ||
           monitoring1.server[i].tcp_port_v1 != monitoring2.server[i].tcp_port_v1 ||
@@ -172,7 +172,7 @@ namespace eCAL
           monitoring1.clients[i].unit_name != monitoring2.clients[i].unit_name ||
           monitoring1.clients[i].process_id != monitoring2.clients[i].process_id ||
           monitoring1.clients[i].service_name != monitoring2.clients[i].service_name ||
-          monitoring1.clients[i].sid != monitoring2.clients[i].sid ||
+          monitoring1.clients[i].service_id != monitoring2.clients[i].service_id ||
           monitoring1.clients[i].methods.size() != monitoring2.clients[i].methods.size() ||
           monitoring1.clients[i].version != monitoring2.clients[i].version)
         {

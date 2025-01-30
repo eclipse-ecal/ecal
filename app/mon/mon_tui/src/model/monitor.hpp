@@ -229,7 +229,7 @@ class MonitorModel
     for(auto &s: *mon_.mutable_services())
     {
       auto &service = services.emplace_back();
-      service.id = s.sid();
+      service.id = s.service_id();
       service.name = std::move(*s.mutable_service_name());
       service.host_name = std::move(*s.mutable_host_name());
       service.process_name = std::move(*s.mutable_process_name());

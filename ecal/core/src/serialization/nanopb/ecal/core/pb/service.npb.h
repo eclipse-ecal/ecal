@@ -25,7 +25,7 @@ typedef struct _eCAL_pb_ServiceHeader {
     pb_callback_t error; /* error message */
     int32_t id; /* session id */
     eCAL_pb_ServiceHeader_eCallState state; /* method call state */
-    pb_callback_t sid; /* service id */
+    pb_callback_t service_id; /* service id */
 } eCAL_pb_ServiceHeader;
 
 typedef struct _eCAL_pb_Request {
@@ -63,7 +63,7 @@ typedef struct _eCAL_pb_Service {
     pb_callback_t service_name; /* service name */
     uint32_t tcp_port_v0; /* the tcp port used for that service  (deprecated) */
     pb_callback_t methods; /* list of methods */
-    pb_callback_t sid; /* service id */
+    pb_callback_t service_id; /* service id */
     /* transport specific parameter (for internal use) */
     uint32_t version; /* service protocol version */
     uint32_t tcp_port_v1; /* the tcp port used for that service */
@@ -76,7 +76,7 @@ typedef struct _eCAL_pb_Client {
     pb_callback_t unit_name; /* unit name */
     int32_t process_id; /* process id */
     pb_callback_t service_name; /* service name */
-    pb_callback_t sid; /* service id */
+    pb_callback_t service_id; /* service id */
     /* transport specific parameter (for internal use) */
     uint32_t version; /* client protocol version */
     pb_callback_t methods; /* list of methods */
@@ -121,7 +121,7 @@ extern "C" {
 #define eCAL_pb_ServiceHeader_error_tag          4
 #define eCAL_pb_ServiceHeader_id_tag             5
 #define eCAL_pb_ServiceHeader_state_tag          6
-#define eCAL_pb_ServiceHeader_sid_tag            7
+#define eCAL_pb_ServiceHeader_service_id_tag     7
 #define eCAL_pb_Request_header_tag               1
 #define eCAL_pb_Request_request_tag              2
 #define eCAL_pb_Response_header_tag              1
@@ -143,7 +143,7 @@ extern "C" {
 #define eCAL_pb_Service_service_name_tag         6
 #define eCAL_pb_Service_tcp_port_v0_tag          7
 #define eCAL_pb_Service_methods_tag              8
-#define eCAL_pb_Service_sid_tag                  9
+#define eCAL_pb_Service_service_id_tag           9
 #define eCAL_pb_Service_version_tag              10
 #define eCAL_pb_Service_tcp_port_v1_tag          11
 #define eCAL_pb_Client_registration_clock_tag    1
@@ -152,7 +152,7 @@ extern "C" {
 #define eCAL_pb_Client_unit_name_tag             4
 #define eCAL_pb_Client_process_id_tag            5
 #define eCAL_pb_Client_service_name_tag          6
-#define eCAL_pb_Client_sid_tag                   7
+#define eCAL_pb_Client_service_id_tag            7
 #define eCAL_pb_Client_version_tag               8
 #define eCAL_pb_Client_methods_tag               9
 
@@ -164,7 +164,7 @@ X(a, CALLBACK, SINGULAR, STRING,   method_name,       3) \
 X(a, CALLBACK, SINGULAR, STRING,   error,             4) \
 X(a, STATIC,   SINGULAR, INT32,    id,                5) \
 X(a, STATIC,   SINGULAR, UENUM,    state,             6) \
-X(a, CALLBACK, SINGULAR, STRING,   sid,               7)
+X(a, CALLBACK, SINGULAR, STRING,   service_id,        7)
 #define eCAL_pb_ServiceHeader_CALLBACK pb_default_field_callback
 #define eCAL_pb_ServiceHeader_DEFAULT NULL
 
@@ -206,7 +206,7 @@ X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
 X(a, CALLBACK, SINGULAR, STRING,   service_name,      6) \
 X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v0,       7) \
 X(a, CALLBACK, REPEATED, MESSAGE,  methods,           8) \
-X(a, CALLBACK, SINGULAR, STRING,   sid,               9) \
+X(a, CALLBACK, SINGULAR, STRING,   service_id,        9) \
 X(a, STATIC,   SINGULAR, UINT32,   version,          10) \
 X(a, STATIC,   SINGULAR, UINT32,   tcp_port_v1,      11)
 #define eCAL_pb_Service_CALLBACK pb_default_field_callback
@@ -220,7 +220,7 @@ X(a, CALLBACK, SINGULAR, STRING,   process_name,      3) \
 X(a, CALLBACK, SINGULAR, STRING,   unit_name,         4) \
 X(a, STATIC,   SINGULAR, INT32,    process_id,        5) \
 X(a, CALLBACK, SINGULAR, STRING,   service_name,      6) \
-X(a, CALLBACK, SINGULAR, STRING,   sid,               7) \
+X(a, CALLBACK, SINGULAR, STRING,   service_id,        7) \
 X(a, STATIC,   SINGULAR, UINT32,   version,           8) \
 X(a, CALLBACK, REPEATED, MESSAGE,  methods,           9)
 #define eCAL_pb_Client_CALLBACK pb_default_field_callback

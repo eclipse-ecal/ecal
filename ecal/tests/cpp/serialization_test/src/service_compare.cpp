@@ -28,7 +28,7 @@ namespace eCAL
     {
       return (header1.host_name    == header2.host_name &&
               header1.service_name == header2.service_name &&
-              header1.sid          == header2.sid &&
+              header1.service_id   == header2.service_id &&
               header1.method_name  == header2.method_name &&
               header1.error        == header2.error &&
               header1.id           == header2.id &&

@@ -1129,7 +1129,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", service.service_name.c_str());
         PyDict_SetItemString(serviceDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", std::to_string(service.sid).c_str());
+        val = Py_BuildValue("s", std::to_string(service.service_id).c_str());
         PyDict_SetItemString(serviceDict, "sid", val); Py_DECREF(val);
 
         val = Py_BuildValue("i", service.version);
@@ -1201,7 +1201,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         val = Py_BuildValue("s", client.service_name.c_str());
         PyDict_SetItemString(clientDict, "sname", val); Py_DECREF(val);
 
-        val = Py_BuildValue("s", std::to_string(client.sid).c_str());
+        val = Py_BuildValue("s", std::to_string(client.service_id).c_str());
         PyDict_SetItemString(clientDict, "sid", val); Py_DECREF(val);
 
         PyObject* methodsDict = PyDict_New();

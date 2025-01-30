@@ -360,7 +360,7 @@ namespace eCAL
     // set static content
     ServerInfo.host_name    = host_name;
     ServerInfo.service_name        = service_name;
-    ServerInfo.sid          = service_id;
+    ServerInfo.service_id          = service_id;
     ServerInfo.process_name = process_name;
     ServerInfo.unit_name    = unit_name;
     ServerInfo.process_id   = process_id;
@@ -423,7 +423,7 @@ namespace eCAL
     // set static content
     ClientInfo.host_name    = host_name;
     ClientInfo.service_name        = service_name;
-    ClientInfo.sid          = service_id;
+    ClientInfo.service_id          = service_id;
     ClientInfo.process_name = process_name;
     ClientInfo.unit_name    = unit_name;
     ClientInfo.process_id   = process_id;

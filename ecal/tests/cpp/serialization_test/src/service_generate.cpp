@@ -33,7 +33,7 @@ namespace eCAL
       ServiceHeader header;
       header.host_name    = GenerateString(8);
       header.service_name = GenerateString(8);
-      header.sid          = GenerateString(5);
+      header.service_id   = GenerateString(5);
       header.method_name  = GenerateString(8);
       header.error        = GenerateString(15);
       header.id           = rand() % 100;

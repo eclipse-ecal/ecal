@@ -49,7 +49,7 @@ namespace eCAL
     {
       std::string          host_name;       // Host name
       std::string          service_name;    // Service name
-      std::string          sid;             // Service id
+      std::string          service_id;             // Service id
       std::string          method_name;     // Method name
       std::string          error;           // Error message
       int32_t              id = 0;          // Session id
@@ -58,7 +58,7 @@ namespace eCAL
       bool operator==(const ServiceHeader& other) const {
         return host_name == other.host_name &&
           service_name == other.service_name &&
-          sid == other.sid &&
+          service_id == other.service_id &&
           method_name == other.method_name &&
           error == other.error &&
           id == other.id &&
@@ -69,7 +69,7 @@ namespace eCAL
       {
         host_name.clear();
         service_name.clear();
-        sid.clear();
+        service_id.clear();
         method_name.clear();
         error.clear();
         id = 0;

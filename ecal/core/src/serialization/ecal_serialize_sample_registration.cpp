@@ -102,8 +102,8 @@ namespace
     pb_service_.process_id = registration_identifier_.process_id;
     // service_name
     eCAL::nanopb::encode_string(pb_service_.service_name, registration_service_.service_name);
-    // sid
-    eCAL::nanopb::encode_int_to_string(pb_service_.sid, registration_identifier_.entity_id);
+    // service_id
+    eCAL::nanopb::encode_int_to_string(pb_service_.service_id, registration_identifier_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_service_.methods, registration_service_.methods);
     // version
@@ -134,8 +134,8 @@ namespace
     pb_client_.process_id = registration_producer_.process_id;
     // service_name
     eCAL::nanopb::encode_string(pb_client_.service_name, registration_client_.service_name);
-    // sid
-    eCAL::nanopb::encode_int_to_string(pb_client_.sid, registration_producer_.entity_id);
+    // service_id
+    eCAL::nanopb::encode_int_to_string(pb_client_.service_id, registration_producer_.entity_id);
     // methods
     eCAL::nanopb::encode_service_methods(pb_client_.methods, registration_client_.methods);
     // version
@@ -346,8 +346,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.service.unit_name, registration_.service.unit_name);
     // service_name
     eCAL::nanopb::decode_string(pb_sample_.service.service_name, registration_.service.service_name);
-    // sid
-    eCAL::nanopb::decode_int_from_string(pb_sample_.service.sid, registration_.identifier.entity_id);
+    // service_id
+    eCAL::nanopb::decode_int_from_string(pb_sample_.service.service_id, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.service.methods, registration_.service.methods);
 
@@ -362,8 +362,8 @@ namespace
     eCAL::nanopb::decode_string(pb_sample_.client.unit_name, registration_.client.unit_name);
     // service_name
     eCAL::nanopb::decode_string(pb_sample_.client.service_name, registration_.client.service_name);
-    // sid
-    eCAL::nanopb::decode_int_from_string(pb_sample_.client.sid, registration_.identifier.entity_id);
+    // service_id
+    eCAL::nanopb::decode_int_from_string(pb_sample_.client.service_id, registration_.identifier.entity_id);
     // methods
     eCAL::nanopb::decode_service_methods(pb_sample_.client.methods, registration_.client.methods);
 

@@ -38,7 +38,7 @@ namespace eCAL
       process.process_id            = rand() % 1000;
       process.process_name          = GenerateString(8);
       process.unit_name             = GenerateString(6);
-      process.process_parameter                = GenerateString(20);
+      process.process_parameter     = GenerateString(20);
       process.state_severity        = rand() % 5;
       process.state_severity_level  = rand() % 6;
       process.state_info            = GenerateString(15);
@@ -99,7 +99,7 @@ namespace eCAL
       server.unit_name          = GenerateString(6);
       server.process_id         = rand() % 1000;
       server.service_name       = GenerateString(10);
-      server.sid                = rand();
+      server.service_id         = rand();
       server.version            = rand() % 100;
       server.tcp_port_v0        = rand() % 65536;
       server.tcp_port_v1        = rand() % 65536;
@@ -120,7 +120,7 @@ namespace eCAL
       client.unit_name          = GenerateString(6);
       client.process_id         = rand() % 1000;
       client.service_name       = GenerateString(10);
-      client.sid                = rand();
+      client.service_id         = rand();
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());
       client.methods.push_back(GenerateServiceMethod());

@@ -34,7 +34,7 @@ message ServiceHeader
 
   string               host_name      =  1;  // host name
   string               service_name   =  2;  // service name
-  string               sid            =  7;  // service id
+  string               service_id     =  7;  // service id
   string               method_name    =  3;  // method name
   string               error          =  4;  // error message
   int32                id             =  5;  // session id
@@ -77,7 +77,7 @@ message Service                              // service
   string               unit_name          =  4;  // unit name
   int32                process_id         =  5;  // process id
   string               service_name       =  6;  // service name
-  string               sid                =  9;  // service id
+  string               service_id         =  9;  // service id
   repeated Method      methods            =  8;  // list of methods
 
   // transport specific parameter (for internal use)
@@ -94,7 +94,7 @@ message Client                                   // client
   string               unit_name          =  4;  // unit name
   int32                process_id         =  5;  // process id
   string               service_name       =  6;  // service name
-  string               sid                =  7;  // service id
+  string               service_id         =  7;  // service id
   repeated Method      methods            =  9;  // list of methods
 
   // transport specific parameter (for internal use)

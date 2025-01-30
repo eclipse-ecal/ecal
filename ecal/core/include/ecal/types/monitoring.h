@@ -151,7 +151,7 @@ namespace eCAL
       int32_t                  process_id{0};                   //<! process id
 
       std::string              service_name;                    //<! service name
-      EntityIdT                sid{0};                          //<! service id
+      EntityIdT                service_id{0};                          //<! service id
 
       uint32_t                 version{0};                      //<! service protocol version
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
@@ -169,7 +169,7 @@ namespace eCAL
       int32_t                  process_id{0};                   //<! process id
 
       std::string              service_name;                    //<! service name
-      EntityIdT                sid{0};                          //<! service id
+      EntityIdT                service_id{0};                          //<! service id
 
       std::vector<SMethodMon>  methods;                         //<! list of methods
 
