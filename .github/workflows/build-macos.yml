@@ -47,7 +47,7 @@ jobs:
         cmake $GITHUB_WORKSPACE -G "Ninja" \
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DECAL_USE_HDF5=ON \
-        -DECAL_HAS_QT5=ON \
+        -DECAL_USE_QT=ON \
         -DECAL_USE_CURL=ON \
         -DECAL_USE_CAPNPROTO=ON \
         -DECAL_USE_FTXUI=ON \

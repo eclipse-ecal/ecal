@@ -10,8 +10,8 @@ eCAL is using CMake as build system.
 The build makes use of CMake options to configure what features to build and to see what capabilities are available.
 The options are grouped by their prefix:
 
-- ``HAS_`` variables indicate if a certain feature is supported for the build. E.g setting ``ECAL_HAS_QT5`` to off, will disable all components of eCAL that have a GUI attached.
-- ``BUILD_`` variables turn on / off certain eCAL components. Those components can be language bindings, application (like monitor / player / recorder), documentation or tests
+- ``ECAL_USE_`` variables indicate if eCAL shall use a certain dependency. E.g setting ``ECAL_USE_QT`` to off, will disable all components of eCAL that have a (Qt) GUI attached.
+- ``ECAL_BUILD_`` variables turn on / off certain eCAL components. Those components can be language bindings, application (like monitor / player / recorder), documentation or tests
 - ``ECAL_THIRDPARTY_`` variables control on a dependency by dependency basis, if that dependency is to be compiled alongside eCAL.
 
 There are a few addional options which do not fit in these categories, but they are also documentd below.

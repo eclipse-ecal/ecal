@@ -1,7 +1,7 @@
 {
   "cmake-args": [
       "-DECAL_USE_HDF5=OFF",
-      "-DECAL_HAS_QT5=OFF",
+      "-DECAL_USE_QT=OFF",
       "-DBUILD_SAMPLES=OFF",
       "-DECAL_INSTALL_SAMPLE_SOURCES=OFF"
   ]
