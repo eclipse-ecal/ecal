@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 
 #include <iostream>
 

@@ -538,6 +538,7 @@ set(ecal_header_cmn
     include/ecal/service/client_instance.h
     include/ecal/service/server.h
     include/ecal/service/types.h
+    include/ecal/types/custom_data_types.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h

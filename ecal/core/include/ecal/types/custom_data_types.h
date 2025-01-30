@@ -18,7 +18,7 @@
  */
 
 /**
- * @file   types/ecal_custom_types.h
+ * @file   types/custom_types.h
  * @brief  eCAL custom types for configuration declarations
 **/
 
