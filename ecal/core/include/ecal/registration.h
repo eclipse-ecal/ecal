@@ -154,13 +154,24 @@ namespace eCAL
     ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
 
     /**
-     * @brief Get all topic names.
+     * @brief Get all names of topics that are being published.
+     *        This is a convenience function. 
+     *        It calls GetPublisherIDs() and filters by name
      *
      * @param topic_names_ Set to store the topic names.
     **/
-    ECAL_API void GetTopicNames(std::set<std::string>& topic_names_);
+    ECAL_API void GetPublishedTopicNames(std::set<std::string>& topic_names_);
 
     /**
+     * @brief Get all names of topics that are being subscribed
+     *        This is a convenience function. 
+     *        It calls GetSubscriberIDs() and filters by name
+     *
+     * @param topic_names_ Set to store the topic names.
+    **/
+    ECAL_API void GetSubscribedTopicNames(std::set<std::string>& topic_names_);
+
+        /**
      * @brief Get the pairs of service name / method name of all eCAL Servers.
      *
      * @param service_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).

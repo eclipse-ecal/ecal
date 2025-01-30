@@ -106,16 +106,23 @@ namespace eCAL
       return g_descgate()->GetClientInfo(id_, service_info_);
     }
 
-    void GetTopicNames(std::set<std::string>& topic_names_)
+    void GetPublishedTopicNames(std::set<std::string>& topic_names_)
     {
       topic_names_.clear();
 
-      // get publisher & subscriber id sets and insert names into the topic_names set
+      // get publisher id sets and insert names into the topic_names set
       const std::set<STopicId> pub_id_set = GetPublisherIDs();
       for (const auto& pub_id : pub_id_set)
       {
         topic_names_.insert(pub_id.topic_name);
       }
+    }
+
+    void GetSubscribedTopicNames(std::set<std::string>& topic_names_)
+    {
+      topic_names_.clear();
+
+      // get subscriber id sets and insert names into the topic_names set
       const std::set<STopicId> sub_id_set = GetSubscriberIDs();
       for (const auto& sub_id : sub_id_set)
       {

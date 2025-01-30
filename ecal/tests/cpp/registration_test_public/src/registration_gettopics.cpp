@@ -166,14 +166,12 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
     size_t number_publishers_seen = 0;
     size_t max_number_publishers_seen = 0;
 
-    std::set<std::string> tmp_topic_names;
-    std::set<eCAL::STopicId> tmp_topic_ids;
+    std::set<eCAL::STopicId> tmp_publisher_ids;
 
     do {
-      eCAL::Registration::GetTopicNames(tmp_topic_names);
-      tmp_topic_ids = eCAL::Registration::GetPublisherIDs();
+      tmp_publisher_ids = eCAL::Registration::GetPublisherIDs();
 
-      number_publishers_seen = tmp_topic_names.size();
+      number_publishers_seen = tmp_publisher_ids.size();
       max_number_publishers_seen = std::max(max_number_publishers_seen, number_publishers_seen);
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
     } while (!testing_completed);
