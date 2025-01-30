@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -263,7 +263,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
     }
   }
 
-  else if (column == Columns::PID)
+  else if (column == Columns::PROCESS_ID)
   {
     if ((role == Qt::ItemDataRole::DisplayRole)
       && (recorder_list_[row].recording_enabled_)
@@ -1668,6 +1668,6 @@ void RecorderModel::emitDataChangedConfig(int row)
 
 void RecorderModel::emitDataChangedState(int row)
 {
-  emit dataChanged(index(row, (int)Columns::HOSTNAME),  index(row, (int)Columns::PID));
+  emit dataChanged(index(row, (int)Columns::HOSTNAME),  index(row, (int)Columns::PROCESS_ID));
   emit dataChanged(index(row, (int)Columns::TIMESTAMP), index(row, (int)Columns::COLUMN_COUNT - 1));
 }

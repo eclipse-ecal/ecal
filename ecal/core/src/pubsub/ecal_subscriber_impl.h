@@ -136,7 +136,6 @@ namespace eCAL
 
     EntityIdT                   m_topic_id;
     SDataTypeInformation                      m_topic_info;
-    std::map<std::string, std::string>        m_attr;
     std::atomic<size_t>                       m_topic_size;
 
     struct SConnection

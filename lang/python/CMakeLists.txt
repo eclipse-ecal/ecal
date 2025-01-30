@@ -26,7 +26,7 @@ find_package(Python REQUIRED COMPONENTS Development.Module Interpreter)
 
 option(ECAL_PYTHON_BUILD_SAMPLES "Includes the python samples"                  OFF)
 option(ECAL_PYTHON_BUILD_TESTS   "Includes the python tests"                    ON)
-option(ECAL_PYTHON_HAS_HDF5      "Enables eCAL application cmd line interfaces" ON)
+option(ECAL_PYTHON_USE_HDF5      "Enables eCAL application cmd line interfaces" ON)
 
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
@@ -132,7 +132,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH "ON")
 add_subdirectory(core)
 add_dependencies(${PROJECT_NAME} _ecal_core_py)
 
-if(HAS_HDF5)
+if(ECAL_USE_HDF5)
   add_subdirectory(ecalhdf5)
   add_dependencies(${PROJECT_NAME} _ecal_hdf5_py)
 else()

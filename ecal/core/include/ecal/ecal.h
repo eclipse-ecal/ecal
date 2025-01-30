@@ -38,7 +38,6 @@
 #include <ecal/service/types.h>
 #include <ecal/time.h>
 #include <ecal/timer.h>
-#include <ecal/tlayer.h>
 #include <ecal/util.h>
 #include <ecal/config/configuration.h>
 #include <ecal/pubsub/publisher.h>

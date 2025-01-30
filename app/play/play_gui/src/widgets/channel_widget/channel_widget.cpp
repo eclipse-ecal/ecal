@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -430,9 +430,9 @@ void ChannelWidget::uncheckPublished()
     for (const auto& topic : monitoring_pb.topics())
     {
       // Only respect published topics not published by eCAL Play itself
-      if ((topic.direction() == "publisher") && !((topic.uname() == "eCALPlay") || (topic.uname() == "eCALPlayGUI")))
+      if ((topic.direction() == "publisher") && !((topic.unit_name() == "eCALPlay") || (topic.unit_name() == "eCALPlayGUI")))
       {
-        published_topic_names_.emplace(topic.tname());
+        published_topic_names_.emplace(topic.topic_name());
       }
     }
 

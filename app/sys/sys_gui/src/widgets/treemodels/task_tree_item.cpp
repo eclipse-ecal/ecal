@@ -129,9 +129,9 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       auto pid_list = task_->GetPids();
       QStringList pid_strings;
-      for (auto pid : pid_list)
+      for (auto process_id : pid_list)
       {
-        pid_strings.push_back(QString::number(pid));
+        pid_strings.push_back(QString::number(process_id));
       }
       return pid_strings.join(", ");
     }

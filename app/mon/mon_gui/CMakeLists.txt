@@ -32,9 +32,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
 find_package(Protobuf REQUIRED)
 
-if(ECAL_NPCAP_SUPPORT)
+if(ECAL_USE_NPCAP)
   find_package(udpcap REQUIRED)
-endif(ECAL_NPCAP_SUPPORT)
+endif(ECAL_USE_NPCAP)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files
@@ -163,7 +163,7 @@ set(ui_files
     src/widgets/visualisation_widget/visualisation_dock_widget.ui
 )
 
-if(ECAL_NPCAP_SUPPORT)
+if(ECAL_USE_NPCAP)
     set(source_files
         ${source_files}
         src/widgets/npcap_status_dialog/npcap_status_dialog.cpp
@@ -173,7 +173,7 @@ if(ECAL_NPCAP_SUPPORT)
         ${ui_files}
         src/widgets/npcap_status_dialog/npcap_status_dialog.ui
     )
-endif(ECAL_NPCAP_SUPPORT)
+endif(ECAL_USE_NPCAP)
 
 # compile qt resource files and ui files
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -207,12 +207,12 @@ target_link_libraries (${PROJECT_NAME} PRIVATE
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14) 
 
-if(ECAL_NPCAP_SUPPORT)
-  add_definitions(-DECAL_NPCAP_SUPPORT)
+if(ECAL_USE_NPCAP)
+  add_definitions(-DECAL_USE_NPCAP)
     target_link_libraries(${PROJECT_NAME} PRIVATE
     udpcap::udpcap
   )
-endif(ECAL_NPCAP_SUPPORT)
+endif(ECAL_USE_NPCAP)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")

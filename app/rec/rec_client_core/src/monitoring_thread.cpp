@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,21 +80,21 @@ namespace eCAL
           for (const auto& topic : monitoring_pb.topics())
           {
             // Lookup the topic map entry
-            auto topic_info_map_it = topic_info_map_.find(topic.tname());
+            auto topic_info_map_it = topic_info_map_.find(topic.topic_name());
             if (topic_info_map_it == topic_info_map_.end())
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec::TopicInfo("", "", ""));
-              topic_info_map_it = topic_info_map_.find(topic.tname());
+              topic_info_map_.emplace(topic.topic_name(), eCAL::rec::TopicInfo("", "", ""));
+              topic_info_map_it = topic_info_map_.find(topic.topic_name());
             }
 
             // Create combined encoding:type type (to be fully compatible to old behavior)
-            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.tdatatype().encoding(), topic.tdatatype().name());
+            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.datatype_information().encoding(), topic.datatype_information().name());
 
             // Evaluate the quality of the current descriptor information
             int this_topic_info_quality = 0;
 
-            if (!topic.tdatatype().desc().empty())
+            if (!topic.datatype_information().descriptor_information().empty())
             {
               this_topic_info_quality |= DESCRIPTION_AVAILABLE_QUALITYBIT;
             }
@@ -106,14 +106,14 @@ namespace eCAL
               this_topic_info_quality |= INFO_COMES_FROM_PUBLISHER_QUALITYBIT;
 
               // Also update the publisher list
-              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.hname());
+              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
-                existing_publisher_it->second.emplace(topic.uname());
+                existing_publisher_it->second.emplace(topic.unit_name());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.hname(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.unit_name()});
               }
             }
 
@@ -124,18 +124,18 @@ namespace eCAL
 
             // Update the channel_descriptor_map
             {
-              auto channel_descriptor_map_it = channel_descriptor_map.find(topic.tname());
+              auto channel_descriptor_map_it = channel_descriptor_map.find(topic.topic_name());
               if (channel_descriptor_map_it == channel_descriptor_map.end())
               {
                 // Save the new descriptor
-                channel_descriptor_map.emplace(topic.tname(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc())));
+                channel_descriptor_map.emplace(topic.topic_name(), std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().descriptor_information())));
               }
               else
               {
                 if(channel_descriptor_map_it->second.first < this_topic_info_quality)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.tdatatype().desc()));
+                  channel_descriptor_map_it->second = std::make_pair(this_topic_info_quality, std::make_pair(combined_enc_type, topic.datatype_information().descriptor_information()));
                 }
               }
             }
@@ -149,14 +149,14 @@ namespace eCAL
               if (type_descriptor_map_it == type_descriptor_map.end())
               {
                 // Save the new descriptor
-                type_descriptor_map.emplace(combined_enc_type, std::make_pair(quality_for_other_channels, topic.tdatatype().desc()));
+                type_descriptor_map.emplace(combined_enc_type, std::make_pair(quality_for_other_channels, topic.datatype_information().descriptor_information()));
               }
               else
               {
                 if(type_descriptor_map_it->second.first < quality_for_other_channels)
                 {
                   // If the old descriptor has a lower quality than the current descriptor, we may overwrite it!
-                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.tdatatype().desc());
+                  type_descriptor_map_it->second = std::make_pair(quality_for_other_channels, topic.datatype_information().descriptor_information());
                 }
               }
             }

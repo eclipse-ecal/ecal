@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ namespace eCAL
           // Re-create host list
           for (const auto& process : monitoring_pb.processes())
           {
-            std::string host_name = process.hname();
+            std::string host_name = process.host_name();
             auto existing_host_it = hosts_running_ecal_rec_.find(host_name);
 
             // Add host if it didn't exist already
@@ -116,7 +116,7 @@ namespace eCAL
             }
 
             // set whether this host has an eCAL Rec client
-            if (process.uname() == "eCALRecClient")
+            if (process.unit_name() == "eCALRecClient")
             {
               existing_host_it->second = true;
             }
@@ -126,13 +126,13 @@ namespace eCAL
           for (const auto& topic : monitoring_pb.topics())
           {
             // Create combined encoding:type type (to be fully compatible to old behavior)
-            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.tdatatype().encoding(), topic.tdatatype().name());
+            std::string combined_enc_type = eCAL::Util::CombinedTopicEncodingAndType(topic.datatype_information().encoding(), topic.datatype_information().name());
 
-            auto topic_info_map_it = topic_info_map_.find(topic.tname());
+            auto topic_info_map_it = topic_info_map_.find(topic.topic_name());
             if (topic_info_map_it != topic_info_map_.end())
             {
               // Only update the values if there are information available
-              if (!combined_enc_type.empty() || !topic.tdatatype().name().empty())
+              if (!combined_enc_type.empty() || !topic.datatype_information().name().empty())
               {
                 topic_info_map_it->second.type_ = combined_enc_type;
               }
@@ -140,33 +140,33 @@ namespace eCAL
             else
             {
               // Create a new topic entry
-              topic_info_map_.emplace(topic.tname(), eCAL::rec_server::TopicInfo(combined_enc_type));
-              topic_info_map_it = topic_info_map_.find(topic.tname());
+              topic_info_map_.emplace(topic.topic_name(), eCAL::rec_server::TopicInfo(combined_enc_type));
+              topic_info_map_it = topic_info_map_.find(topic.topic_name());
             }
 
             // Set the topic publisher
             if (EcalUtils::String::Icompare(topic.direction(), "publisher"))
             {
-              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.hname());
+              auto existing_publisher_it = topic_info_map_it->second.publishers_.find(topic.host_name());
               if (existing_publisher_it != topic_info_map_it->second.publishers_.end())
               {
-                existing_publisher_it->second.emplace(topic.uname());
+                existing_publisher_it->second.emplace(topic.unit_name());
               }
               else
               {
-                topic_info_map_it->second.publishers_.emplace(topic.hname(), std::set<std::string>{topic.uname()});
+                topic_info_map_it->second.publishers_.emplace(topic.host_name(), std::set<std::string>{topic.unit_name()});
               }
             }
 
             // Set the subscribing eCAL Rec instances
-            if (((topic.uname() == "eCALRecClient") || (topic.uname() == "eCALRecGUI"))
+            if (((topic.unit_name() == "eCALRecClient") || (topic.unit_name() == "eCALRecGUI"))
               && EcalUtils::String::Icompare(topic.direction(), "subscriber"))
             {
-              auto running_enabled_rec_client_it = running_enabled_rec_clients.find(topic.hname());
+              auto running_enabled_rec_client_it = running_enabled_rec_clients.find(topic.host_name());
               if ((running_enabled_rec_client_it != running_enabled_rec_clients.end()
-                && (running_enabled_rec_client_it->second == topic.pid())))
+                && (running_enabled_rec_client_it->second == topic.process_id())))
               {
-                topic_info_map_it->second.rec_subscribers_[{topic.hname(), topic.pid()}] = (static_cast<double>(topic.dfreq()) / 1000.0);
+                topic_info_map_it->second.rec_subscribers_[{topic.host_name(), topic.process_id()}] = (static_cast<double>(topic.data_frequency()) / 1000.0);
               }
             }
           }

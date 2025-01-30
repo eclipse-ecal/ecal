@@ -23,19 +23,19 @@ project(core_c VERSION ${eCAL_VERSION_STRING})
 # c interface
 ######################################
 set(ecal_c_src
-    src/ecal_client_cimpl.cpp
-    src/ecal_common_cimpl.cpp
-    src/ecal_common_cimpl.h
-    src/ecal_core_cimpl.cpp
-    src/ecal_log_cimpl.cpp
-    src/ecal_monitoring_cimpl.cpp
-    src/ecal_process_cimpl.cpp
-    src/ecal_publisher_cimpl.cpp
-    src/ecal_server_cimpl.cpp
-    src/ecal_subscriber_cimpl.cpp
-    src/ecal_time_cimpl.cpp
-    src/ecal_timer_cimpl.cpp
-    src/ecal_util_cimpl.cpp    
+    src/client.cpp
+    src/common.cpp
+    src/common.h
+    src/core.cpp
+    src/log.cpp
+    src/monitoring.cpp
+    src/process.cpp
+    src/publisher.cpp
+    src/server.cpp
+    src/subscriber.cpp
+    src/time.cpp
+    src/timer.cpp
+    src/util.cpp    
 )
 
 ######################################
@@ -51,28 +51,26 @@ endif()
 ######################################
 # public header
 ######################################
-
-
 set(ecal_header_cimpl
-    include/ecal/cimpl/ecal_callback_cimpl.h
-    include/ecal/cimpl/ecal_client_cimpl.h
-    include/ecal/cimpl/ecal_core_cimpl.h
-    include/ecal/cimpl/ecal_init_cimpl.h
-    include/ecal/cimpl/ecal_log_cimpl.h
-    include/ecal/cimpl/ecal_monitoring_cimpl.h
-    include/ecal/cimpl/ecal_process_cimpl.h
-    include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_server_cimpl.h
-    include/ecal/cimpl/ecal_service_info_cimpl.h
-    include/ecal/cimpl/ecal_subscriber_cimpl.h
-    include/ecal/cimpl/ecal_time_cimpl.h
-    include/ecal/cimpl/ecal_timer_cimpl.h
-    include/ecal/cimpl/ecal_util_cimpl.h
-    include/ecal/ecalc.h
-    include/ecal/ecalc_export.h
-    include/ecal/ecalc_types.h
+    include/ecal_c/pubsub/publisher.h
+    include/ecal_c/pubsub/subscriber.h
+    include/ecal_c/service/client.h
+    include/ecal_c/service/server.h
+    include/ecal_c/service/service_info.h
+    include/ecal_c/callback.h
+    include/ecal_c/core.h
+    include/ecal_c/ecal.h
+    include/ecal_c/export.h
+    include/ecal_c/init.h
+    include/ecal_c/log.h
+    include/ecal_c/monitoring.h
+    include/ecal_c/process.h
+    include/ecal_c/time.h
+    include/ecal_c/timer.h
+    include/ecal_c/tlayer.h
+    include/ecal_c/types.h
+    include/ecal_c/util.h
 )
-
 
 set(ecal_c_sources
     ${ecal_c_src}

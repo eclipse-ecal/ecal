@@ -56,6 +56,7 @@ protected:
 TEST_P(ServicesTestFixture, ServiceExpiration)
 {
   std::set<eCAL::SServiceId> id_set;
+  bool get_server_ids_succeeded = false;
 
   // create simple service and let it expire
   {
@@ -67,7 +68,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all services
-    id_set = eCAL::Registration::GetServerIDs();
+    get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -86,7 +88,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all services again, service should not be expired
-    id_set = eCAL::Registration::GetServerIDs();
+    get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -97,7 +100,8 @@ TEST_P(ServicesTestFixture, ServiceExpiration)
 
   // get all services again, all services
   // should be removed from the map
-  id_set = eCAL::Registration::GetServerIDs();
+  get_server_ids_succeeded = eCAL::Registration::GetServerIDs(id_set);
+  EXPECT_TRUE(get_server_ids_succeeded) << "GetServerIDs call failed";
 
   // check size
   EXPECT_EQ(id_set.size(), 0);
@@ -123,8 +127,10 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get server
-    auto id_set = eCAL::Registration::GetServerIDs();
-    EXPECT_EQ(1, id_set.size());
+    std::set<eCAL::SServiceId> id_set;
+    const auto success = eCAL::Registration::GetServerIDs(id_set);
+    EXPECT_TRUE(success) << "GetServerIDs should be successfully executed";
+    EXPECT_EQ(1, id_set.size()) << "There should be 1 server in the system";
     if (id_set.size() > 0)
     {
       eCAL::ServiceMethodInformationSetT methods;

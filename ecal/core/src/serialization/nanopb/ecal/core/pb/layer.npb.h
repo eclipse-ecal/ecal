@@ -10,17 +10,17 @@
 #endif
 
 /* Enum definitions */
-typedef enum _eCAL_pb_eTLayerType { /* Reserved fields in enums are not supported in protobuf 3.0
+typedef enum _eCAL_pb_eTransportLayerType { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 2, 3, 42; */
-    eCAL_pb_eTLayerType_tl_none = 0, /* undefined */
-    eCAL_pb_eTLayerType_tl_ecal_udp_mc = 1, /* ecal udp multicast */
+    eCAL_pb_eTransportLayerType_tl_none = 0, /* undefined */
+    eCAL_pb_eTransportLayerType_tl_ecal_udp_mc = 1, /* ecal udp multicast */
     /* 2 = ecal udp unicast (not supported anymore)
  3 = ecal udp metal (not supported anymore) */
-    eCAL_pb_eTLayerType_tl_ecal_shm = 4, /* ecal shared memory */
-    eCAL_pb_eTLayerType_tl_ecal_tcp = 5, /* ecal tcp */
+    eCAL_pb_eTransportLayerType_tl_ecal_shm = 4, /* ecal shared memory */
+    eCAL_pb_eTransportLayerType_tl_ecal_tcp = 5, /* ecal tcp */
     /* 42 = inproc (not supported anymore) */
-    eCAL_pb_eTLayerType_tl_all = 255 /* all layer */
-} eCAL_pb_eTLayerType;
+    eCAL_pb_eTransportLayerType_tl_all = 255 /* all layer */
+} eCAL_pb_eTransportLayerType;
 
 /* Struct definitions */
 typedef struct _eCAL_pb_LayerParUdpMC {
@@ -46,15 +46,15 @@ typedef struct _eCAL_pb_ConnnectionPar { /* Reserved fields in enums are not sup
     eCAL_pb_LayerParTcp layer_par_tcp; /* parameter for ecal tcp */
 } eCAL_pb_ConnnectionPar;
 
-typedef struct _eCAL_pb_TLayer { /* Reserved fields in enums are not supported in protobuf 3.0
+typedef struct _eCAL_pb_TransportLayer { /* Reserved fields in enums are not supported in protobuf 3.0
  reserved 4; */
-    eCAL_pb_eTLayerType type; /* transport layer type */
+    eCAL_pb_eTransportLayerType type; /* transport layer type */
     int32_t version; /* transport layer version */
     bool active; /* transport layer in use ? */
     bool has_par_layer;
     eCAL_pb_ConnnectionPar par_layer; /* transport layer parameter */
     bool enabled; /* transport layer enabled ? */
-} eCAL_pb_TLayer;
+} eCAL_pb_TransportLayer;
 
 
 #ifdef __cplusplus
@@ -62,15 +62,15 @@ extern "C" {
 #endif
 
 /* Helper constants for enums */
-#define _eCAL_pb_eTLayerType_MIN eCAL_pb_eTLayerType_tl_none
-#define _eCAL_pb_eTLayerType_MAX eCAL_pb_eTLayerType_tl_all
-#define _eCAL_pb_eTLayerType_ARRAYSIZE ((eCAL_pb_eTLayerType)(eCAL_pb_eTLayerType_tl_all+1))
+#define _eCAL_pb_eTransportLayerType_MIN eCAL_pb_eTransportLayerType_tl_none
+#define _eCAL_pb_eTransportLayerType_MAX eCAL_pb_eTransportLayerType_tl_all
+#define _eCAL_pb_eTransportLayerType_ARRAYSIZE ((eCAL_pb_eTransportLayerType)(eCAL_pb_eTransportLayerType_tl_all+1))
 
 
 
 
 
-#define eCAL_pb_TLayer_type_ENUMTYPE eCAL_pb_eTLayerType
+#define eCAL_pb_TransportLayer_type_ENUMTYPE eCAL_pb_eTransportLayerType
 
 
 /* Initializer values for message structs */
@@ -78,12 +78,12 @@ extern "C" {
 #define eCAL_pb_LayerParShm_init_default         {{{NULL}, NULL}}
 #define eCAL_pb_LayerParTcp_init_default         {0}
 #define eCAL_pb_ConnnectionPar_init_default      {false, eCAL_pb_LayerParUdpMC_init_default, false, eCAL_pb_LayerParShm_init_default, false, eCAL_pb_LayerParTcp_init_default}
-#define eCAL_pb_TLayer_init_default              {_eCAL_pb_eTLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_default, 0}
+#define eCAL_pb_TransportLayer_init_default      {_eCAL_pb_eTransportLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_default, 0}
 #define eCAL_pb_LayerParUdpMC_init_zero          {0}
 #define eCAL_pb_LayerParShm_init_zero            {{{NULL}, NULL}}
 #define eCAL_pb_LayerParTcp_init_zero            {0}
 #define eCAL_pb_ConnnectionPar_init_zero         {false, eCAL_pb_LayerParUdpMC_init_zero, false, eCAL_pb_LayerParShm_init_zero, false, eCAL_pb_LayerParTcp_init_zero}
-#define eCAL_pb_TLayer_init_zero                 {_eCAL_pb_eTLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_zero, 0}
+#define eCAL_pb_TransportLayer_init_zero         {_eCAL_pb_eTransportLayerType_MIN, 0, 0, false, eCAL_pb_ConnnectionPar_init_zero, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define eCAL_pb_LayerParShm_memory_file_list_tag 1
@@ -91,11 +91,11 @@ extern "C" {
 #define eCAL_pb_ConnnectionPar_layer_par_udpmc_tag 1
 #define eCAL_pb_ConnnectionPar_layer_par_shm_tag 2
 #define eCAL_pb_ConnnectionPar_layer_par_tcp_tag 4
-#define eCAL_pb_TLayer_type_tag                  1
-#define eCAL_pb_TLayer_version_tag               2
-#define eCAL_pb_TLayer_active_tag                3
-#define eCAL_pb_TLayer_par_layer_tag             5
-#define eCAL_pb_TLayer_enabled_tag               6
+#define eCAL_pb_TransportLayer_type_tag          1
+#define eCAL_pb_TransportLayer_version_tag       2
+#define eCAL_pb_TransportLayer_active_tag        3
+#define eCAL_pb_TransportLayer_par_layer_tag     5
+#define eCAL_pb_TransportLayer_enabled_tag       6
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_LayerParUdpMC_FIELDLIST(X, a) \
@@ -123,33 +123,33 @@ X(a, STATIC,   OPTIONAL, MESSAGE,  layer_par_tcp,     4)
 #define eCAL_pb_ConnnectionPar_layer_par_shm_MSGTYPE eCAL_pb_LayerParShm
 #define eCAL_pb_ConnnectionPar_layer_par_tcp_MSGTYPE eCAL_pb_LayerParTcp
 
-#define eCAL_pb_TLayer_FIELDLIST(X, a) \
+#define eCAL_pb_TransportLayer_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, UENUM,    type,              1) \
 X(a, STATIC,   SINGULAR, INT32,    version,           2) \
 X(a, STATIC,   SINGULAR, BOOL,     active,            3) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  par_layer,         5) \
 X(a, STATIC,   SINGULAR, BOOL,     enabled,           6)
-#define eCAL_pb_TLayer_CALLBACK NULL
-#define eCAL_pb_TLayer_DEFAULT NULL
-#define eCAL_pb_TLayer_par_layer_MSGTYPE eCAL_pb_ConnnectionPar
+#define eCAL_pb_TransportLayer_CALLBACK NULL
+#define eCAL_pb_TransportLayer_DEFAULT NULL
+#define eCAL_pb_TransportLayer_par_layer_MSGTYPE eCAL_pb_ConnnectionPar
 
 extern const pb_msgdesc_t eCAL_pb_LayerParUdpMC_msg;
 extern const pb_msgdesc_t eCAL_pb_LayerParShm_msg;
 extern const pb_msgdesc_t eCAL_pb_LayerParTcp_msg;
 extern const pb_msgdesc_t eCAL_pb_ConnnectionPar_msg;
-extern const pb_msgdesc_t eCAL_pb_TLayer_msg;
+extern const pb_msgdesc_t eCAL_pb_TransportLayer_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define eCAL_pb_LayerParUdpMC_fields &eCAL_pb_LayerParUdpMC_msg
 #define eCAL_pb_LayerParShm_fields &eCAL_pb_LayerParShm_msg
 #define eCAL_pb_LayerParTcp_fields &eCAL_pb_LayerParTcp_msg
 #define eCAL_pb_ConnnectionPar_fields &eCAL_pb_ConnnectionPar_msg
-#define eCAL_pb_TLayer_fields &eCAL_pb_TLayer_msg
+#define eCAL_pb_TransportLayer_fields &eCAL_pb_TransportLayer_msg
 
 /* Maximum encoded size of messages (where known) */
 /* eCAL_pb_LayerParShm_size depends on runtime parameters */
 /* eCAL_pb_ConnnectionPar_size depends on runtime parameters */
-/* eCAL_pb_TLayer_size depends on runtime parameters */
+/* eCAL_pb_TransportLayer_size depends on runtime parameters */
 #define ECAL_PB_LAYER_NPB_H_MAX_SIZE             eCAL_pb_LayerParTcp_size
 #define eCAL_pb_LayerParTcp_size                 11
 #define eCAL_pb_LayerParUdpMC_size               0

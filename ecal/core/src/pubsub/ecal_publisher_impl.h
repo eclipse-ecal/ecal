@@ -138,13 +138,12 @@ namespace eCAL
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
     EntityIdT                m_topic_id;
     SDataTypeInformation                   m_topic_info;
-    std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
     eCAL::eCALWriter::SAttributes          m_attributes;
 

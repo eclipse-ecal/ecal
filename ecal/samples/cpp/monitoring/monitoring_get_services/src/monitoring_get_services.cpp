@@ -43,7 +43,7 @@ int main()
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        server_method_id_set = eCAL::Registration::GetServerIDs();
+        eCAL::Registration::GetServerIDs(server_method_id_set);
       }
 
       auto num_services = server_method_id_set.size();

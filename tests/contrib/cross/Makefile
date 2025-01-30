@@ -37,6 +37,6 @@ ecal: prebuild
 		-DECAL_THIRDPARTY_BUILD_CURL=OFF \
 		-DECAL_THIRDPARTY_BUILD_HDF5=OFF \
 		-DECAL_THIRDPARTY_BUILD_CURL=ON \
-		-DHAS_QT5=OFF
+		-DECAL_USE_QT=OFF
 	
 	cmake --build build -j $(shell nproc)

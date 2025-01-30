@@ -141,23 +141,23 @@ namespace eCAL
   {
     const auto& sample_topic = sample_.topic;
     const int          process_id = sample_.identifier.process_id;
-    const std::string& topic_name = sample_topic.tname;
-    const int32_t      topic_size = sample_topic.tsize;
+    const std::string& topic_name = sample_topic.topic_name;
+    const int32_t      topic_size = sample_topic.topic_size;
     bool               topic_tlayer_ecal_udp(false);
     bool               topic_tlayer_ecal_shm(false);
     bool               topic_tlayer_ecal_tcp(false);
-    for (const auto& layer : sample_topic.tlayer)
+    for (const auto& layer : sample_topic.transport_layer)
     {
       topic_tlayer_ecal_udp |= (layer.type == tl_ecal_udp) && layer.active;
       topic_tlayer_ecal_shm |= (layer.type == tl_ecal_shm) && layer.active;
       topic_tlayer_ecal_tcp |= (layer.type == tl_ecal_tcp) && layer.active;
     }
-    const int32_t      connections_loc = sample_topic.connections_loc;
-    const int32_t      connections_ext = sample_topic.connections_ext;
-    const int64_t      did = sample_topic.did;
-    const int64_t      dclock = sample_topic.dclock;
+    const int32_t      connections_local = sample_topic.connections_local;
+    const int32_t      connections_external = sample_topic.connections_external;
+    const int64_t      data_id = sample_topic.data_id;
+    const int64_t      data_clock = sample_topic.data_clock;
     const int32_t      message_drops = sample_topic.message_drops;
-    const int32_t      dfreq = sample_topic.dfreq;
+    const int32_t      data_frequency = sample_topic.data_frequency;
 
     /////////////////////////////////
     // register in topic map
@@ -171,8 +171,8 @@ namespace eCAL
       // common infos
       const std::string& host_name            = sample_.identifier.host_name;
       const std::string& shm_transport_domain = sample_topic.shm_transport_domain;
-      const std::string& process_name         = sample_topic.pname;
-      const std::string& unit_name            = sample_topic.uname;
+      const std::string& process_name         = sample_topic.process_name;
+      const std::string& unit_name            = sample_topic.unit_name;
       const auto&        topic_id             = sample_.identifier.entity_id;
       std::string        direction;
       switch (pubsub_type_)
@@ -186,65 +186,61 @@ namespace eCAL
       default:
         break;
         }
-      std::string topic_datatype_encoding = sample_topic.tdatatype.encoding;
-      std::string topic_datatype_name     = sample_topic.tdatatype.name;
-      std::string topic_datatype_desc     = sample_topic.tdatatype.descriptor;
-      auto        attr                    = sample_topic.attr;
+      std::string topic_datatype_encoding = sample_topic.datatype_information.encoding;
+      std::string topic_datatype_name     = sample_topic.datatype_information.name;
+      std::string topic_datatype_desc     = sample_topic.datatype_information.descriptor;
 
       // try to get topic info
       const auto& topic_map_key  = topic_id;
       Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
-      TopicInfo.hname                = host_name;
+      TopicInfo.host_name            = host_name;
       TopicInfo.shm_transport_domain = shm_transport_domain;
-      TopicInfo.pid                  = process_id;
-      TopicInfo.pname                = process_name;
-      TopicInfo.uname                = unit_name;
-      TopicInfo.tname                = topic_name;
+      TopicInfo.process_id           = process_id;
+      TopicInfo.process_name         = process_name;
+      TopicInfo.unit_name            = unit_name;
+      TopicInfo.topic_name           = topic_name;
       TopicInfo.direction            = direction;
-      TopicInfo.tid                  = topic_id;
+      TopicInfo.topic_id             = topic_id;
 
       // update flexible content
-      TopicInfo.rclock++;
-      TopicInfo.tdatatype.encoding   = std::move(topic_datatype_encoding);
-      TopicInfo.tdatatype.name       = std::move(topic_datatype_name);
-      TopicInfo.tdatatype.descriptor = std::move(topic_datatype_desc);
-
-      // attributes
-      TopicInfo.attr = std::map<std::string, std::string>{attr.begin(), attr.end()};
+      TopicInfo.registration_clock++;
+      TopicInfo.datatype_information.encoding   = std::move(topic_datatype_encoding);
+      TopicInfo.datatype_information.name       = std::move(topic_datatype_name);
+      TopicInfo.datatype_information.descriptor = std::move(topic_datatype_desc);
 
       // layer
-      TopicInfo.tlayer.clear();
-      // tlayer udp_mc
+      TopicInfo.transport_layer.clear();
+      // transport_layer udp_mc
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_udp_mc;
-        tlayer.active = topic_tlayer_ecal_udp;
-        TopicInfo.tlayer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::udp_mc;
+        transport_layer.active = topic_tlayer_ecal_udp;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
-      // tlayer shm
+      // transport_layer shm
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_shm;
-        tlayer.active = topic_tlayer_ecal_shm;
-        TopicInfo.tlayer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::shm;
+        transport_layer.active = topic_tlayer_ecal_shm;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
-      // tlayer tcp
+      // transport_layer tcp
       {
-        eCAL::Monitoring::TLayer tlayer;
-        tlayer.type   = eCAL::Monitoring::tl_ecal_tcp;
-        tlayer.active = topic_tlayer_ecal_tcp;
-        TopicInfo.tlayer.push_back(tlayer);
+        eCAL::Monitoring::STransportLayer transport_layer;
+        transport_layer.type   = eCAL::Monitoring::eTransportLayerType::tcp;
+        transport_layer.active = topic_tlayer_ecal_tcp;
+        TopicInfo.transport_layer.push_back(transport_layer);
       }
 
-      TopicInfo.tsize           = static_cast<int>(topic_size);
-      TopicInfo.connections_loc = static_cast<int>(connections_loc);
-      TopicInfo.connections_ext = static_cast<int>(connections_ext);
-      TopicInfo.did             = did;
-      TopicInfo.dclock          = dclock;
-      TopicInfo.message_drops   = message_drops;
-      TopicInfo.dfreq           = dfreq;
+      TopicInfo.topic_size           = static_cast<int>(topic_size);
+      TopicInfo.connections_local    = static_cast<int>(connections_local);
+      TopicInfo.connections_external = static_cast<int>(connections_external);
+      TopicInfo.data_id              = data_id;
+      TopicInfo.data_clock           = data_clock;
+      TopicInfo.message_drops        = message_drops;
+      TopicInfo.data_frequency       = data_frequency;
     }
 
     return(true);
@@ -273,16 +269,16 @@ namespace eCAL
     const auto& sample_process = sample_.process;
     const std::string&    host_name                    = sample_.identifier.host_name;
     const std::string&    shm_transport_domain         = sample_process.shm_transport_domain;
-    const std::string&    process_name                 = sample_process.pname;
+    const std::string&    process_name                 = sample_process.process_name;
     const int             process_id                   = sample_.identifier.process_id;
-    const std::string&    process_param                = sample_process.pparam;
-    const std::string&    unit_name                    = sample_process.uname;
+    const std::string&    process_param                = sample_process.process_parameter;
+    const std::string&    unit_name                    = sample_process.unit_name;
     const auto&           sample_process_state         = sample_process.state;
     const int             process_state_severity       = sample_process_state.severity;
     const int             process_state_severity_level = sample_process_state.severity_level;
     const std::string&    process_state_info           = sample_process_state.info;
-    const int             process_tsync_state          = sample_process.tsync_state;
-    const std::string&    process_tsync_mod_name       = sample_process.tsync_mod_name;
+    const int             process_time_sync_state      = sample_process.time_sync_state;
+    const std::string&    process_tsync_mod_name       = sample_process.time_sync_module_name;
     const int             component_init_state         = sample_process.component_init_state;
     const std::string&    component_init_info          = sample_process.component_init_info;
     const std::string&    ecal_runtime_version         = sample_process.ecal_runtime_version;
@@ -298,24 +294,24 @@ namespace eCAL
     Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
-    ProcessInfo.hname                = host_name;
+    ProcessInfo.host_name            = host_name;
     ProcessInfo.shm_transport_domain = shm_transport_domain;
-    ProcessInfo.pname                = process_name;
-    ProcessInfo.uname                = unit_name;
-    ProcessInfo.pid                  = process_id;
-    ProcessInfo.pparam               = process_param;
+    ProcessInfo.process_name         = process_name;
+    ProcessInfo.unit_name            = unit_name;
+    ProcessInfo.process_id           = process_id;
+    ProcessInfo.process_parameter               = process_param;
 
     // update flexible content
-    ProcessInfo.rclock++;
-    ProcessInfo.state_severity       = process_state_severity;
-    ProcessInfo.state_severity_level = process_state_severity_level;
-    ProcessInfo.state_info           = process_state_info;
-    ProcessInfo.tsync_state          = process_tsync_state;
-    ProcessInfo.tsync_mod_name       = process_tsync_mod_name;
-    ProcessInfo.component_init_state = component_init_state;
-    ProcessInfo.component_init_info  = component_init_info;
-    ProcessInfo.ecal_runtime_version = ecal_runtime_version;
-    ProcessInfo.config_file_path     = config_file_path;
+    ProcessInfo.registration_clock++;
+    ProcessInfo.state_severity        = process_state_severity;
+    ProcessInfo.state_severity_level  = process_state_severity_level;
+    ProcessInfo.state_info            = process_state_info;
+    ProcessInfo.time_sync_state       = process_time_sync_state;
+    ProcessInfo.time_sync_module_name = process_tsync_mod_name;
+    ProcessInfo.component_init_state  = component_init_state;
+    ProcessInfo.component_init_info   = component_init_info;
+    ProcessInfo.ecal_runtime_version  = ecal_runtime_version;
+    ProcessInfo.config_file_path      = config_file_path;
 
     return(true);
   }
@@ -341,9 +337,9 @@ namespace eCAL
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_service = sample_.service;
-    const std::string& service_name = sample_service.sname;
-    const std::string& process_name = sample_service.pname;
-    const std::string& unit_name    = sample_service.uname;
+    const std::string& service_name = sample_service.service_name;
+    const std::string& process_name = sample_service.process_name;
+    const std::string& unit_name    = sample_service.unit_name;
 
     const uint32_t     tcp_port_v0  = sample_service.tcp_port_v0;
     const uint32_t     tcp_port_v1  = sample_service.tcp_port_v1;
@@ -358,25 +354,25 @@ namespace eCAL
     Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_map_key];
 
     // set static content
-    ServerInfo.hname       = host_name;
-    ServerInfo.sname       = service_name;
-    ServerInfo.sid         = service_id;
-    ServerInfo.pname       = process_name;
-    ServerInfo.uname       = unit_name;
-    ServerInfo.pid         = process_id;
-    ServerInfo.tcp_port_v0 = tcp_port_v0;
-    ServerInfo.tcp_port_v1 = tcp_port_v1;
+    ServerInfo.host_name    = host_name;
+    ServerInfo.service_name        = service_name;
+    ServerInfo.service_id          = service_id;
+    ServerInfo.process_name = process_name;
+    ServerInfo.unit_name    = unit_name;
+    ServerInfo.process_id   = process_id;
+    ServerInfo.tcp_port_v0  = tcp_port_v0;
+    ServerInfo.tcp_port_v1  = tcp_port_v1;
 
     // update flexible content
-    ServerInfo.rclock++;
+    ServerInfo.registration_clock++;
     ServerInfo.methods.clear();
     for (const auto& sample_service_method : sample_.service.methods)
     {
       struct Monitoring::SMethodMon method;
-      method.mname         = sample_service_method.mname;
+      method.method_name   = sample_service_method.method_name;
 
-      method.req_datatype  = sample_service_method.req_datatype;
-      method.resp_datatype = sample_service_method.resp_datatype;
+      method.request_datatype_information  = sample_service_method.request_datatype_information;
+      method.response_datatype_information = sample_service_method.response_datatype_information;
 
       method.call_count    = sample_service_method.call_count;
       ServerInfo.methods.push_back(method);
@@ -407,9 +403,9 @@ namespace eCAL
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_client = sample_.client;
-    const std::string& service_name = sample_client.sname;
-    const std::string& process_name = sample_client.pname;
-    const std::string& unit_name    = sample_client.uname;
+    const std::string& service_name = sample_client.service_name;
+    const std::string& process_name = sample_client.process_name;
+    const std::string& unit_name    = sample_client.unit_name;
 
     // create map key
     const auto& client_map_key = service_id;
@@ -421,22 +417,22 @@ namespace eCAL
     Monitoring::SClientMon& ClientInfo = (*m_clients_map.map)[client_map_key];
 
     // set static content
-    ClientInfo.hname = host_name;
-    ClientInfo.sname = service_name;
-    ClientInfo.sid   = service_id;
-    ClientInfo.pname = process_name;
-    ClientInfo.uname = unit_name;
-    ClientInfo.pid   = process_id;
+    ClientInfo.host_name    = host_name;
+    ClientInfo.service_name        = service_name;
+    ClientInfo.service_id          = service_id;
+    ClientInfo.process_name = process_name;
+    ClientInfo.unit_name    = unit_name;
+    ClientInfo.process_id   = process_id;
 
     // update flexible content
-    ClientInfo.rclock++;
+    ClientInfo.registration_clock++;
     ClientInfo.methods.clear();
     for (const auto& sample_client_method : sample_.client.methods)
     {
       struct Monitoring::SMethodMon method;
-      method.mname = sample_client_method.mname;
-      method.req_datatype = sample_client_method.req_datatype;
-      method.resp_datatype = sample_client_method.resp_datatype;
+      method.method_name = sample_client_method.method_name;
+      method.request_datatype_information = sample_client_method.request_datatype_information;
+      method.response_datatype_information = sample_client_method.response_datatype_information;
       method.call_count = sample_client_method.call_count;
       ClientInfo.methods.push_back(method);
     }

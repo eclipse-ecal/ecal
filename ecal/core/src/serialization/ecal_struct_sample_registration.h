@@ -60,7 +60,7 @@ namespace eCAL
       proc_sev_level5        = 5
     };
 
-    enum eTSyncState
+    enum eTimeSyncState
     {
       tsync_none     = 0,
       tsync_realtime = 1,
@@ -70,31 +70,31 @@ namespace eCAL
     // Operating system details
     struct OSInfo
     {
-      std::string                         osname;                       // name
+      std::string                         name;                       // name
 
       bool operator==(const OSInfo& other) const {
-        return osname == other.osname;
+        return name == other.name;
       }
 
       void clear()
       {
-        osname.clear();
+        name.clear();
       }
     };
 
     // eCAL host
     struct Host
     {
-      std::string                         hname;                        // host name
+      std::string                         name;                         // host name
       OSInfo                              os;                           // operating system details
 
       bool operator==(const Host& other) const {
-        return hname == other.hname && os == other.os;
+        return name == other.name && os == other.os;
       }
 
       void clear()
       {
-        hname.clear();
+        name.clear();
         os.clear();
       }
     };
@@ -211,28 +211,28 @@ namespace eCAL
     // Process information
     struct Process
     {
-      int32_t                             rclock = 0;                   // registration clock
+      int32_t                             registration_clock = 0;       // registration clock
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         pname;                        // process name
-      std::string                         uname;                        // unit name
-      std::string                         pparam;                       // process parameter
+      std::string                         process_name;                 // process name
+      std::string                         unit_name;                    // unit name
+      std::string                         process_parameter;                       // process parameter
       ProcessState                        state;                        // process state info
-      eTSyncState                         tsync_state = tsync_none;     // time synchronization state
-      std::string                         tsync_mod_name;               // time synchronization module name
+      eTimeSyncState                      time_sync_state = tsync_none; // time synchronization state
+      std::string                         time_sync_module_name;        // time synchronization module name
       int32_t                             component_init_state = 0;     // eCAL component initialization state (eCAL::Initialize(..))
       std::string                         component_init_info;          // like comp_init_state as a human-readable string (pub|sub|srv|mon|log|time|proc)
       std::string                         ecal_runtime_version;         // loaded/runtime eCAL version of a component
       std::string                         config_file_path;             // Path from where the eCAL configuration for this process was loadedloaded/runtime eCAL version of a component
 
       bool operator==(const Process& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
-          pname == other.pname &&
-          uname == other.uname &&
-          pparam == other.pparam &&
+          process_name == other.process_name &&
+          unit_name == other.unit_name &&
+          process_parameter == other.process_parameter &&
           state == other.state &&
-          tsync_state == other.tsync_state &&
-          tsync_mod_name == other.tsync_mod_name &&
+          time_sync_state == other.time_sync_state &&
+          time_sync_module_name == other.time_sync_module_name &&
           component_init_state == other.component_init_state &&
           component_init_info == other.component_init_info &&
           ecal_runtime_version == other.ecal_runtime_version &&
@@ -241,14 +241,14 @@ namespace eCAL
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         shm_transport_domain.clear();
-        pname.clear();
-        uname.clear();
-        pparam.clear();
+        process_name.clear();
+        unit_name.clear();
+        process_parameter.clear();
         state.clear();
-        tsync_state = tsync_none;
-        tsync_mod_name.clear();
+        time_sync_state = tsync_none;
+        time_sync_module_name.clear();
         component_init_state = 0;
         component_init_info.clear();
         ecal_runtime_version.clear();
@@ -259,68 +259,64 @@ namespace eCAL
     // eCAL topic information
     struct Topic
     {
-      int32_t                             rclock = 0;                   // registration clock (heart beat)
+      int32_t                             registration_clock = 0;       // registration clock (heart beat)
       std::string                         shm_transport_domain;         // shm transport domain
-      std::string                         pname;                        // process name
-      std::string                         uname;                        // unit name
-      std::string                         tname;                        // topic name
+      std::string                         process_name;                 // process name
+      std::string                         unit_name;                    // unit name
+      std::string                         topic_name;                   // topic name
       std::string                         direction;                    // direction (publisher, subscriber)
-      SDataTypeInformation                tdatatype;                    // topic datatype information (encoding & type & description)
+      SDataTypeInformation                datatype_information;         // topic datatype information (encoding & type & description)
 
-      Util::CExpandingVector<TLayer>      tlayer;                       // active topic transport layers and its specific parameter
-      int32_t                             tsize = 0;                    // topic size
+      Util::CExpandingVector<TLayer>      transport_layer;              // active topic transport layers and its specific parameter
+      int32_t                             topic_size = 0;               // topic size
 
-      int32_t                             connections_loc = 0;          // number of local connected entities
-      int32_t                             connections_ext = 0;          // number of external connected entities
+      int32_t                             connections_local = 0;        // number of local connected entities
+      int32_t                             connections_external = 0;     // number of external connected entities
       int32_t                             message_drops   = 0;          // dropped messages
 
-      int64_t                             did    = 0;                   // data send id (publisher setid)
-      int64_t                             dclock = 0;                   // data clock (send / receive action)
-      int32_t                             dfreq  = 0;                   // data frequency (send / receive registrations per second) [mHz]
+      int64_t                             data_id    = 0;               // data send id (publisher setid)
+      int64_t                             data_clock = 0;               // data clock (send / receive action)
+      int32_t                             data_frequency  = 0;                   // data frequency (send / receive registrations per second) [mHz]
 
-      std::map<std::string, std::string>  attr;                         // generic topic description
 
       bool operator==(const Topic& other) const {
-        return rclock == other.rclock &&
+        return registration_clock == other.registration_clock &&
           shm_transport_domain == other.shm_transport_domain &&
-          pname == other.pname &&
-          uname == other.uname &&
-          tname == other.tname &&
+          process_name == other.process_name &&
+          unit_name == other.unit_name &&
+          topic_name == other.topic_name &&
           direction == other.direction &&
-          tdatatype == other.tdatatype &&
-          tlayer == other.tlayer &&
-          tsize == other.tsize &&
-          connections_loc == other.connections_loc &&
-          connections_ext == other.connections_ext &&
+          datatype_information == other.datatype_information &&
+          transport_layer == other.transport_layer &&
+          topic_size == other.topic_size &&
+          connections_local == other.connections_local &&
+          connections_external == other.connections_external &&
           message_drops == other.message_drops &&
-          did == other.did &&
-          dclock == other.dclock &&
-          dfreq == other.dfreq &&
-          attr == other.attr;
+          data_id == other.data_id &&
+          data_clock == other.data_clock &&
+          data_frequency == other.data_frequency;
       }
 
       void clear()
       {
-        rclock = 0;
+        registration_clock = 0;
         shm_transport_domain.clear();
-        pname.clear();
-        uname.clear();
-        tname.clear();
+        process_name.clear();
+        unit_name.clear();
+        topic_name.clear();
         direction.clear();
-        tdatatype.clear();
+        datatype_information.clear();
 
-        tlayer.clear();
-        tsize = 0;
+        transport_layer.clear();
+        topic_size = 0;
 
-        connections_loc = 0;
-        connections_ext = 0;
+        connections_local = 0;
+        connections_external = 0;
         message_drops = 0;
 
-        did = 0;
-        dclock = 0;
-        dfreq = 0;
-
-        attr.clear();
+        data_id = 0;
+        data_clock = 0;
+        data_frequency = 0;
       }
     };
 

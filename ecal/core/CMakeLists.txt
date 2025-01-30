@@ -538,6 +538,7 @@ set(ecal_header_cmn
     include/ecal/service/client_instance.h
     include/ecal/service/server.h
     include/ecal/service/types.h
+    include/ecal/types/custom_data_types.h
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
@@ -560,15 +561,8 @@ set(ecal_header_cmn
     include/ecal/v5/ecal_subscriber.h
     include/ecal/time.h
     include/ecal/timer.h
-    include/ecal/tlayer.h
     include/ecal/types.h
     include/ecal/util.h
-)
-
-set(ecal_header_msg
-    include/ecal/msg/dynamic.h
-    include/ecal/msg/publisher.h
-    include/ecal/msg/subscriber.h
 )
 
 set(ecal_sources
@@ -596,7 +590,6 @@ set(ecal_sources
     ${ecal_cmn_src}
     ${ecal_builder_src}
     ${ecal_header_cmn}
-    ${ecal_header_msg}
 )
 
 ecal_add_shared_library(${TARGET_NAME}

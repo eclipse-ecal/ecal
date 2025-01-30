@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ namespace eCAL
 
         if (cmd_line.unlabled_arg.isSet() && !cmd_line.unlabled_arg.getValue().empty())
         {
-          std::cerr << "WARNING: Unrecognized parameters: " + EcalUtils::CommandLine::ToCommandLine(cmd_line.unlabled_arg.getValue()) << std::endl;
+          std::cerr << "WARNING: Unrecognized parameters: " + EcalUtils::CommandLine::ToCommandLine(cmd_line.unlabled_arg.getValue()) << "\n";
         }
 
         if (cmd_line.meas_id_arg.isSet())
@@ -147,9 +147,9 @@ namespace eCAL
         {
           // Code duplicated to printStatus function:
           printRecServerStatus(status, ostream);
-          ostream << std::endl;
+          ostream << "\n";
           printClientList(status, config, ostream);
-          ostream << std::endl;
+          ostream << "\n";
           printJobHistory(status, ostream);
 
           return eCAL::rec::Error::OK;
@@ -179,9 +179,9 @@ namespace eCAL
 
         // Code duplicated from execute function:
         printRecServerStatus(status, std::cout);
-        std::cout << std::endl;
+        std::cout << "\n";
         printClientList(status, config, std::cout);
-        std::cout << std::endl;
+        std::cout << "\n";
         printJobHistory(status, std::cout);
 
         return eCAL::rec::Error::ErrorCode::OK;
@@ -212,7 +212,7 @@ namespace eCAL
 
       void Status::printRecServerStatus(const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const
       {
-        ostream << "Config path: " << (status.config_path_.empty() ? "none" : status.config_path_) << std::endl;
+        ostream << "Config path: " << (status.config_path_.empty() ? "none" : status.config_path_) << "\n";
 
         ostream << "Activated:   ";
         if (status.activated_)
@@ -220,14 +220,14 @@ namespace eCAL
         else
           ostream << termcolor::yellow;
         ostream << (status.activated_ ? "Yes" : "No");
-        ostream << termcolor::reset << std::endl;
+        ostream << termcolor::reset << "\n";
 
         ostream << "Status:      ";
         if (status.recording_meas_id_ != 0)
           ostream << termcolor::red << "REC" << termcolor::reset << " (ID: " << status.recording_meas_id_ << ")";
         else
           ostream << "Stopped";
-        ostream << termcolor::reset << std::endl;
+        ostream << termcolor::reset << "\n";
       }
 
       void Status::printJobHistory(const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const
@@ -566,8 +566,8 @@ namespace eCAL
 
         if (show_time_warning)
         {
-          ostream << std::endl;
-          ostream << termcolor::on_yellow << "WARNING: The timestamps appear out of sync!" << termcolor::reset << std::endl;
+          ostream << "\n";
+          ostream << termcolor::on_yellow << "WARNING: The timestamps appear out of sync!" << termcolor::reset << "\n";
         }
       }
 
@@ -618,28 +618,28 @@ namespace eCAL
           time_ss << "." << std::setfill('0') << std::setw(3) << std::right << remaining_milliseconds;
 
           // Output data
-          ostream << "Timestamp (loc.): " << time_ss.str() << std::endl;
-          ostream << "Name:             " << job_history_entry.local_evaluated_job_config_.GetMeasName() << std::endl;
-          ostream << "ID:               " << job_history_entry.local_evaluated_job_config_.GetJobId() << std::endl;
+          ostream << "Timestamp (loc.): " << time_ss.str() << "\n";
+          ostream << "Name:             " << job_history_entry.local_evaluated_job_config_.GetMeasName() << "\n";
+          ostream << "ID:               " << job_history_entry.local_evaluated_job_config_.GetJobId() << "\n";
 
           ostream << "Status:           ";
           if (combined_state == eCAL::rec::JobState::Recording)
             ostream << termcolor::red;
-          ostream << state_string << termcolor::reset << std::endl;
+          ostream << state_string << termcolor::reset << "\n";
 
-          ostream << "Local meas path:  " << job_history_entry.local_evaluated_job_config_.GetCompleteMeasurementPath() << std::endl;
-          ostream << "HDF5 Split size:  " << job_history_entry.local_evaluated_job_config_.GetMaxFileSize() << " MiB" << std::endl;
-          ostream << "Length:           " << length_ss.str() << std::endl;
-          ostream << "Uploaded:         " << (job_history_entry.is_uploaded_ ? "Yes" : "No") << std::endl;
+          ostream << "Local meas path:  " << job_history_entry.local_evaluated_job_config_.GetCompleteMeasurementPath() << "\n";
+          ostream << "HDF5 Split size:  " << job_history_entry.local_evaluated_job_config_.GetMaxFileSize() << " MiB" << "\n";
+          ostream << "Length:           " << length_ss.str() << "\n";
+          ostream << "Uploaded:         " << (job_history_entry.is_uploaded_ ? "Yes" : "No") << "\n";
 
-          ostream << std::endl;
+          ostream << "\n";
         }
 
         // Table for recorders that participated in the measurement
         enum class Column : int
         {
           NAME,
-          PID,
+          PROCESS_ID,
           STATUS,
           LENGTH,
           INFO,
@@ -652,7 +652,7 @@ namespace eCAL
         {
           std::vector<table_printer::TableEntry> header_data((int)Column::COLUMN_COUNT);
           header_data[(int)Column::NAME]   = table_printer::TableEntry("Recorder");
-          header_data[(int)Column::PID]    = table_printer::TableEntry("PID");
+          header_data[(int)Column::PROCESS_ID]    = table_printer::TableEntry("PROCESS_ID");
           header_data[(int)Column::STATUS] = table_printer::TableEntry("Status");
           header_data[(int)Column::LENGTH] = table_printer::TableEntry("Length");
           header_data[(int)Column::INFO]   = table_printer::TableEntry("Info");
@@ -705,10 +705,10 @@ namespace eCAL
               }
             }
 
-            table_row[(int)Column::NAME]  .content = client_status.first;
-            table_row[(int)Column::PID]   .content = std::to_string(client_status.second.client_pid_);
-            table_row[(int)Column::STATUS]         = rec_state_entry;
-            table_row[(int)Column::LENGTH].content = length_ss.str();
+            table_row[(int)Column::NAME]      .content = client_status.first;
+            table_row[(int)Column::PROCESS_ID].content = std::to_string(client_status.second.client_pid_);
+            table_row[(int)Column::STATUS]             = rec_state_entry;
+            table_row[(int)Column::LENGTH]    .content = length_ss.str();
 
             auto displayed_info = displayedInfo(client_status.second);
             table_row[(int)Column::INFO]  .content = displayed_info.second;
@@ -762,11 +762,11 @@ namespace eCAL
               }
             }
 
-            table_row[(int)Column::NAME]  .content = getHumanReadableAddonName(client_status.first, addon_status.first, status);
-            table_row[(int)Column::PID]   .content = std::to_string(client_status.second.client_pid_);
-            table_row[(int)Column::STATUS]         = rec_state_entry;
-            table_row[(int)Column::LENGTH].content = std::to_string(addon_status.second.total_frame_count_) + " frames";
-            table_row[(int)Column::INFO]  .content = addon_status.second.info_.second;
+            table_row[(int)Column::NAME]      .content = getHumanReadableAddonName(client_status.first, addon_status.first, status);
+            table_row[(int)Column::PROCESS_ID].content = std::to_string(client_status.second.client_pid_);
+            table_row[(int)Column::STATUS]             = rec_state_entry;
+            table_row[(int)Column::LENGTH]    .content = std::to_string(addon_status.second.total_frame_count_) + " frames";
+            table_row[(int)Column::INFO]      .content = addon_status.second.info_.second;
 
             if (!addon_status.second.info_.first)
               table_row[(int)Column::INFO].background_color = eCAL::rec_cli::table_printer::Color::RED;
@@ -783,7 +783,7 @@ namespace eCAL
           }
         }
 
-        ostream << std::endl;
+        ostream << "\n";
         eCAL::rec_cli::table_printer::printTable(recorder_table, ostream);
         
         return eCAL::rec::Error::ErrorCode::OK;
@@ -809,33 +809,33 @@ namespace eCAL
             << std::chrono::duration_cast<std::chrono::duration<double>>(client_status.pre_buffer_length_.second).count()
             << " s / " << client_status.pre_buffer_length_.first << " frames";
 
-          ostream << "Client hostname: " << hostname << std::endl;
-          ostream << "PID:             " << client_status.pid_ << std::endl;
-          ostream << "Timestamp:       " << timeToString(client_status.timestamp_) << std::endl;
-          ostream << "Time-error:      " << time_error_ss.str() << " s" << std::endl;
-          ostream << "Buffer:          " << buffer_ss.str() << std::endl;
+          ostream << "Client hostname: " << hostname << "\n";
+          ostream << "Process Id:      " << client_status.pid_ << "\n";
+          ostream << "Timestamp:       " << timeToString(client_status.timestamp_) << "\n";
+          ostream << "Time-error:      " << time_error_ss.str() << " s" << "\n";
+          ostream << "Buffer:          " << buffer_ss.str() << "\n";
 
           auto rec_client_state_eval = recClientStateToString(client_status);
           ostream << "State:           ";
           if (rec_client_state_eval.second == eCAL::rec::JobState::Recording)
             ostream << termcolor::red;
-          ostream << rec_client_state_eval.first << termcolor::reset << std::endl;
+          ostream << rec_client_state_eval.first << termcolor::reset << "\n";
 
           ostream << "Info:            ";
           if (!client_status.info_.first)
             ostream << termcolor::on_red;
-          ostream << client_status.info_.second << termcolor::reset << std::endl;
+          ostream << client_status.info_.second << termcolor::reset << "\n";
 
-          ostream << "Subscribed topics: " << std::endl;
+          ostream << "Subscribed topics: " << "\n";
           if (client_status.subscribed_topics_.empty())
           {
-            ostream << "  -- None --" << std::endl;
+            ostream << "  -- None --" << "\n";
           }
           else
           {
             for (const std::string& topic_name : client_status.subscribed_topics_)
             {
-              ostream << "  " << topic_name << std::endl;
+              ostream << "  " << topic_name << "\n";
             }
           }
         }
@@ -843,17 +843,17 @@ namespace eCAL
         // Addon information
         for (const auto& addon_status : client_status_it->second.first.addon_statuses_)
         {
-          ostream << std::endl; 
+          ostream << "\n"; 
 
-          ostream << "Addon Name:      " << addon_status.name_ << std::endl;
-          ostream << "Addon ID:        " << addon_status.addon_id_ << std::endl;
-          ostream << "Addon State:     " << (addon_status.initialized_ ? "Initialized" : "Not initialized") << std::endl;
-          ostream << "Addon exe path:  " << addon_status.addon_executable_path_ << std::endl;
-          ostream << "Addon Buffer:    " << std::to_string(addon_status.pre_buffer_length_frame_count_) + " frames" << std::endl;
+          ostream << "Addon Name:      " << addon_status.name_ << "\n";
+          ostream << "Addon ID:        " << addon_status.addon_id_ << "\n";
+          ostream << "Addon State:     " << (addon_status.initialized_ ? "Initialized" : "Not initialized") << "\n";
+          ostream << "Addon exe path:  " << addon_status.addon_executable_path_ << "\n";
+          ostream << "Addon Buffer:    " << std::to_string(addon_status.pre_buffer_length_frame_count_) + " frames" << "\n";
           ostream << "Addon Info:      ";
           if (!addon_status.info_.first)
             ostream << termcolor::on_red;
-          ostream << addon_status.info_.second << termcolor::reset << std::endl;
+          ostream << addon_status.info_.second << termcolor::reset << "\n";
         }
 
         return eCAL::rec::Error::ErrorCode::OK;

@@ -30,7 +30,7 @@
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 
 
 #include "ecal/os.h"
@@ -61,6 +61,6 @@ namespace eCAL
     ECAL_API std::string GetConfigurationFilePath() const;
 
     protected:
-      std::string ecal_yaml_file_path = "abc";
+      std::string ecal_yaml_file_path;
   };
 }

@@ -45,7 +45,7 @@ namespace eCAL
         }
         else if (!task->GetPids().empty() && (task->GetPids()[0] != 0))
         {
-          stop_task_param.pid           = task->GetPids()[0];
+          stop_task_param.process_id           = task->GetPids()[0];
           stop_task_param.ecal_shutdown = true;
         }
 

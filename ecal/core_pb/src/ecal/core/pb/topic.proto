@@ -29,29 +29,29 @@ message Topic                                      // eCAL topic
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 9, 10, 11, 14, 15, 22 to 26, 29;
 
-  int32               rclock                =  1;  // registration clock (heart beat)
-  string              hname                 =  2;  // host name
+  int32               registration_clock    =  1;  // registration clock (heart beat)
+  string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
-  int32               pid                   =  3;  // process id
-  string              pname                 =  4;  // process name
-  string              uname                 =  5;  // unit name
-  string              tid                   =  6;  // topic id
-  string              tname                 =  7;  // topic name
+  int32               process_id            =  3;  // process id
+  string              process_name          =  4;  // process name
+  string              unit_name             =  5;  // unit name
+  string              topic_id              =  6;  // topic id
+  string              topic_name            =  7;  // topic name
   string              direction             =  8;  // direction (publisher, subscriber)
                                                    // 9 = topic type + topic encoding (deprecated)
                                                    // 10 = topic description (protocol descriptor) (deprecated)
-  DataTypeInformation tdatatype             = 30;  // topic datatype information (encoding & type & description)
+  DataTypeInformation datatype_information  = 30;  // topic datatype information (encoding & type & description)
 
-  repeated TLayer     tlayer                = 12;  // active topic transport layers and it's specific parameter
-  int32               tsize                 = 13;  // topic size
+  repeated TransportLayer transport_layer   = 12;  // active topic transport layers and it's specific parameter
+  int32                   topic_size        = 13;  // topic size
                       
-  int32               connections_loc       = 16;  // number of local connected entities
-  int32               connections_ext       = 17;  // number of external connected entities
+  int32               connections_local     = 16;  // number of local connected entities
+  int32               connections_external  = 17;  // number of external connected entities
   int32               message_drops         = 18;  // dropped messages
                       
-  int64               did                   = 19;  // data send id (publisher setid)
-  int64               dclock                = 20;  // data clock (send / receive action)
-  int32               dfreq                 = 21;  // data frequency (send / receive samples per second) [mHz]
+  int64               data_id               = 19;  // data send id (publisher setid)
+  int64               data_clock            = 20;  // data clock (send / receive action)
+  int32               data_frequency        = 21;  // data frequency (send / receive samples per second) [mHz]
 
-  map<string, string> attr                  = 27;  // generic topic description
+  reserved 27;                                     // previously "attr" for generic topic description
 }

@@ -61,8 +61,8 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         return timeToString(logs_[row].time);
       case HOST_NAME:
         return logs_[row].host_name;
-      case PID:
-        return logs_[row].pid;
+      case PROCESS_ID:
+        return logs_[row].process_id;
       case PROCESS_NAME:
         return logs_[row].process_name;
       case PROCESS_PATH:
@@ -83,8 +83,8 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
         return logs_[row].time;
       case HOST_NAME:
         return logs_[row].host_name;
-      case PID:
-        return logs_[row].pid;
+      case PROCESS_ID:
+        return logs_[row].process_id;
       case PROCESS_NAME:
         return logs_[row].process_name;
       case PROCESS_PATH:
@@ -253,10 +253,10 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
       LogModel::LogEntry entry;
 
       entry.time = log_message_pb.time();
-      entry.host_name = log_message_pb.hname().c_str();
-      entry.pid = log_message_pb.pid();
-      entry.process_path = log_message_pb.pname().c_str();
-      entry.process_name = log_message_pb.uname().c_str();
+      entry.host_name = log_message_pb.host_name().c_str();
+      entry.process_id = log_message_pb.process_id();
+      entry.process_path = log_message_pb.process_name().c_str();
+      entry.process_name = log_message_pb.unit_name().c_str();
       entry.log_level = log_message_pb.level();
       entry.message = log_message_pb.content().c_str();
 

@@ -27,7 +27,7 @@ add_library(eCAL::capnproto_core ALIAS capnproto_core)
 target_link_libraries(capnproto_core 
   INTERFACE 
     CapnProto::capnp
-    eCAL::core
+    eCAL::message_core
 )
 
 target_sources(capnproto_core

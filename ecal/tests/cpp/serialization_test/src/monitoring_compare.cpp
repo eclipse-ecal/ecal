@@ -37,18 +37,18 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.processes.size(); ++i)
       {
-        if (monitoring1.processes[i].rclock != monitoring2.processes[i].rclock ||
-          monitoring1.processes[i].hname != monitoring2.processes[i].hname ||
+        if (monitoring1.processes[i].registration_clock != monitoring2.processes[i].registration_clock ||
+          monitoring1.processes[i].host_name != monitoring2.processes[i].host_name ||
           monitoring1.processes[i].shm_transport_domain != monitoring2.processes[i].shm_transport_domain ||
-          monitoring1.processes[i].pid != monitoring2.processes[i].pid ||
-          monitoring1.processes[i].pname != monitoring2.processes[i].pname ||
-          monitoring1.processes[i].uname != monitoring2.processes[i].uname ||
-          monitoring1.processes[i].pparam != monitoring2.processes[i].pparam ||
+          monitoring1.processes[i].process_id != monitoring2.processes[i].process_id ||
+          monitoring1.processes[i].process_name != monitoring2.processes[i].process_name ||
+          monitoring1.processes[i].unit_name != monitoring2.processes[i].unit_name ||
+          monitoring1.processes[i].process_parameter != monitoring2.processes[i].process_parameter ||
           monitoring1.processes[i].state_severity != monitoring2.processes[i].state_severity ||
           monitoring1.processes[i].state_severity_level != monitoring2.processes[i].state_severity_level ||
           monitoring1.processes[i].state_info != monitoring2.processes[i].state_info ||
-          monitoring1.processes[i].tsync_state != monitoring2.processes[i].tsync_state ||
-          monitoring1.processes[i].tsync_mod_name != monitoring2.processes[i].tsync_mod_name ||
+          monitoring1.processes[i].time_sync_state != monitoring2.processes[i].time_sync_state ||
+          monitoring1.processes[i].time_sync_module_name != monitoring2.processes[i].time_sync_module_name ||
           monitoring1.processes[i].component_init_state != monitoring2.processes[i].component_init_state ||
           monitoring1.processes[i].component_init_info != monitoring2.processes[i].component_init_info ||
           monitoring1.processes[i].ecal_runtime_version != monitoring2.processes[i].ecal_runtime_version ||
@@ -67,25 +67,24 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.publisher.size(); ++i)
       {
-        if (monitoring1.publisher[i].rclock != monitoring2.publisher[i].rclock ||
-          monitoring1.publisher[i].hname != monitoring2.publisher[i].hname ||
+        if (monitoring1.publisher[i].registration_clock != monitoring2.publisher[i].registration_clock ||
+          monitoring1.publisher[i].host_name != monitoring2.publisher[i].host_name ||
           monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
-          monitoring1.publisher[i].pid != monitoring2.publisher[i].pid ||
-          monitoring1.publisher[i].pname != monitoring2.publisher[i].pname ||
-          monitoring1.publisher[i].uname != monitoring2.publisher[i].uname ||
-          monitoring1.publisher[i].tid != monitoring2.publisher[i].tid ||
-          monitoring1.publisher[i].tname != monitoring2.publisher[i].tname ||
+          monitoring1.publisher[i].process_id != monitoring2.publisher[i].process_id ||
+          monitoring1.publisher[i].process_name != monitoring2.publisher[i].process_name ||
+          monitoring1.publisher[i].unit_name != monitoring2.publisher[i].unit_name ||
+          monitoring1.publisher[i].topic_id != monitoring2.publisher[i].topic_id ||
+          monitoring1.publisher[i].topic_name != monitoring2.publisher[i].topic_name ||
           monitoring1.publisher[i].direction != monitoring2.publisher[i].direction ||
-          monitoring1.publisher[i].tdatatype != monitoring2.publisher[i].tdatatype ||
-          monitoring1.publisher[i].tlayer.size() != monitoring2.publisher[i].tlayer.size() ||
-          monitoring1.publisher[i].tsize != monitoring2.publisher[i].tsize ||
-          monitoring1.publisher[i].connections_loc != monitoring2.publisher[i].connections_loc ||
-          monitoring1.publisher[i].connections_ext != monitoring2.publisher[i].connections_ext ||
+          monitoring1.publisher[i].datatype_information != monitoring2.publisher[i].datatype_information ||
+          monitoring1.publisher[i].transport_layer.size() != monitoring2.publisher[i].transport_layer.size() ||
+          monitoring1.publisher[i].topic_size != monitoring2.publisher[i].topic_size ||
+          monitoring1.publisher[i].connections_local != monitoring2.publisher[i].connections_local ||
+          monitoring1.publisher[i].connections_external != monitoring2.publisher[i].connections_external ||
           monitoring1.publisher[i].message_drops != monitoring2.publisher[i].message_drops ||
-          monitoring1.publisher[i].did != monitoring2.publisher[i].did ||
-          monitoring1.publisher[i].dclock != monitoring2.publisher[i].dclock ||
-          monitoring1.publisher[i].dfreq != monitoring2.publisher[i].dfreq ||
-          monitoring1.publisher[i].attr != monitoring2.publisher[i].attr)
+          monitoring1.publisher[i].data_id != monitoring2.publisher[i].data_id ||
+          monitoring1.publisher[i].data_clock != monitoring2.publisher[i].data_clock ||
+          monitoring1.publisher[i].data_frequency != monitoring2.publisher[i].data_frequency)
         {
           return false;
         }
@@ -99,25 +98,24 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.subscriber.size(); ++i)
       {
-        if (monitoring1.subscriber[i].rclock != monitoring2.subscriber[i].rclock ||
-          monitoring1.subscriber[i].hname != monitoring2.subscriber[i].hname ||
+        if (monitoring1.subscriber[i].registration_clock != monitoring2.subscriber[i].registration_clock ||
+          monitoring1.subscriber[i].host_name != monitoring2.subscriber[i].host_name ||
           monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
-          monitoring1.subscriber[i].pid != monitoring2.subscriber[i].pid ||
-          monitoring1.subscriber[i].pname != monitoring2.subscriber[i].pname ||
-          monitoring1.subscriber[i].uname != monitoring2.subscriber[i].uname ||
-          monitoring1.subscriber[i].tid != monitoring2.subscriber[i].tid ||
-          monitoring1.subscriber[i].tname != monitoring2.subscriber[i].tname ||
+          monitoring1.subscriber[i].process_id != monitoring2.subscriber[i].process_id ||
+          monitoring1.subscriber[i].process_name != monitoring2.subscriber[i].process_name ||
+          monitoring1.subscriber[i].unit_name != monitoring2.subscriber[i].unit_name ||
+          monitoring1.subscriber[i].topic_id != monitoring2.subscriber[i].topic_id ||
+          monitoring1.subscriber[i].topic_name != monitoring2.subscriber[i].topic_name ||
           monitoring1.subscriber[i].direction != monitoring2.subscriber[i].direction ||
-          monitoring1.subscriber[i].tdatatype != monitoring2.subscriber[i].tdatatype ||
-          monitoring1.subscriber[i].tlayer.size() != monitoring2.subscriber[i].tlayer.size() ||
-          monitoring1.subscriber[i].tsize != monitoring2.subscriber[i].tsize ||
-          monitoring1.subscriber[i].connections_loc != monitoring2.subscriber[i].connections_loc ||
-          monitoring1.subscriber[i].connections_ext != monitoring2.subscriber[i].connections_ext ||
+          monitoring1.subscriber[i].datatype_information != monitoring2.subscriber[i].datatype_information ||
+          monitoring1.subscriber[i].transport_layer.size() != monitoring2.subscriber[i].transport_layer.size() ||
+          monitoring1.subscriber[i].topic_size != monitoring2.subscriber[i].topic_size ||
+          monitoring1.subscriber[i].connections_local != monitoring2.subscriber[i].connections_local ||
+          monitoring1.subscriber[i].connections_external != monitoring2.subscriber[i].connections_external ||
           monitoring1.subscriber[i].message_drops != monitoring2.subscriber[i].message_drops ||
-          monitoring1.subscriber[i].did != monitoring2.subscriber[i].did ||
-          monitoring1.subscriber[i].dclock != monitoring2.subscriber[i].dclock ||
-          monitoring1.subscriber[i].dfreq != monitoring2.subscriber[i].dfreq ||
-          monitoring1.subscriber[i].attr != monitoring2.subscriber[i].attr)
+          monitoring1.subscriber[i].data_id != monitoring2.subscriber[i].data_id ||
+          monitoring1.subscriber[i].data_clock != monitoring2.subscriber[i].data_clock ||
+          monitoring1.subscriber[i].data_frequency != monitoring2.subscriber[i].data_frequency)
         {
           return false;
         }
@@ -131,13 +129,13 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.server.size(); ++i)
       {
-        if (monitoring1.server[i].rclock != monitoring2.server[i].rclock ||
-          monitoring1.server[i].hname != monitoring2.server[i].hname ||
-          monitoring1.server[i].pname != monitoring2.server[i].pname ||
-          monitoring1.server[i].uname != monitoring2.server[i].uname ||
-          monitoring1.server[i].pid != monitoring2.server[i].pid ||
-          monitoring1.server[i].sname != monitoring2.server[i].sname ||
-          monitoring1.server[i].sid != monitoring2.server[i].sid ||
+        if (monitoring1.server[i].registration_clock != monitoring2.server[i].registration_clock ||
+          monitoring1.server[i].host_name != monitoring2.server[i].host_name ||
+          monitoring1.server[i].process_name != monitoring2.server[i].process_name ||
+          monitoring1.server[i].unit_name != monitoring2.server[i].unit_name ||
+          monitoring1.server[i].process_id != monitoring2.server[i].process_id ||
+          monitoring1.server[i].service_name != monitoring2.server[i].service_name ||
+          monitoring1.server[i].service_id != monitoring2.server[i].service_id ||
           monitoring1.server[i].version != monitoring2.server[i].version ||
           monitoring1.server[i].tcp_port_v0 != monitoring2.server[i].tcp_port_v0 ||
           monitoring1.server[i].tcp_port_v1 != monitoring2.server[i].tcp_port_v1 ||
@@ -148,9 +146,9 @@ namespace eCAL
 
         for (size_t j = 0; j < monitoring1.server[i].methods.size(); ++j)
         {
-          if (monitoring1.server[i].methods[j].mname != monitoring2.server[i].methods[j].mname ||
-            monitoring1.server[i].methods[j].req_datatype != monitoring2.server[i].methods[j].req_datatype ||
-            monitoring1.server[i].methods[j].resp_datatype != monitoring2.server[i].methods[j].resp_datatype ||
+          if (monitoring1.server[i].methods[j].method_name != monitoring2.server[i].methods[j].method_name ||
+            monitoring1.server[i].methods[j].request_datatype_information != monitoring2.server[i].methods[j].request_datatype_information ||
+            monitoring1.server[i].methods[j].response_datatype_information != monitoring2.server[i].methods[j].response_datatype_information ||
             monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
           {
             return false;
@@ -166,13 +164,13 @@ namespace eCAL
 
       for (size_t i = 0; i < monitoring1.clients.size(); ++i)
       {
-        if (monitoring1.clients[i].rclock != monitoring2.clients[i].rclock ||
-          monitoring1.clients[i].hname != monitoring2.clients[i].hname ||
-          monitoring1.clients[i].pname != monitoring2.clients[i].pname ||
-          monitoring1.clients[i].uname != monitoring2.clients[i].uname ||
-          monitoring1.clients[i].pid != monitoring2.clients[i].pid ||
-          monitoring1.clients[i].sname != monitoring2.clients[i].sname ||
-          monitoring1.clients[i].sid != monitoring2.clients[i].sid ||
+        if (monitoring1.clients[i].registration_clock != monitoring2.clients[i].registration_clock ||
+          monitoring1.clients[i].host_name != monitoring2.clients[i].host_name ||
+          monitoring1.clients[i].process_name != monitoring2.clients[i].process_name ||
+          monitoring1.clients[i].unit_name != monitoring2.clients[i].unit_name ||
+          monitoring1.clients[i].process_id != monitoring2.clients[i].process_id ||
+          monitoring1.clients[i].service_name != monitoring2.clients[i].service_name ||
+          monitoring1.clients[i].service_id != monitoring2.clients[i].service_id ||
           monitoring1.clients[i].methods.size() != monitoring2.clients[i].methods.size() ||
           monitoring1.clients[i].version != monitoring2.clients[i].version)
         {
@@ -181,9 +179,9 @@ namespace eCAL
 
         for (size_t j = 0; j < monitoring1.clients[i].methods.size(); ++j)
         {
-          if (monitoring1.clients[i].methods[j].mname != monitoring2.clients[i].methods[j].mname ||
-            monitoring1.clients[i].methods[j].req_datatype != monitoring2.clients[i].methods[j].req_datatype ||
-            monitoring1.clients[i].methods[j].resp_datatype != monitoring2.clients[i].methods[j].resp_datatype ||
+          if (monitoring1.clients[i].methods[j].method_name != monitoring2.clients[i].methods[j].method_name ||
+            monitoring1.clients[i].methods[j].request_datatype_information != monitoring2.clients[i].methods[j].request_datatype_information ||
+            monitoring1.clients[i].methods[j].response_datatype_information != monitoring2.clients[i].methods[j].response_datatype_information ||
             monitoring1.clients[i].methods[j].call_count != monitoring2.clients[i].methods[j].call_count)
           {
             return false;

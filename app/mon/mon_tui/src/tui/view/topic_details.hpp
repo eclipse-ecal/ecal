@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,14 +73,14 @@ class TopicDetailsView : public View
       vizualization_view = ftxui::Renderer([]{ return ftxui::emptyElement(); });
     }
 
-    const auto tname = topic->name;
+    const auto topic_name = topic->name;
     const auto tencoding = topic->encoding;
     const auto ttype = topic->type;
-    if(tname != prev_topic)
+    if(topic_name != prev_topic)
     {
-      prev_topic = tname;
+      prev_topic = topic_name;
       vizualization_view->Detach();
-      vizualization_view = CreateVisualizationView(view_factory, view_model->view_model_factory, tname, tencoding, ttype);
+      vizualization_view = CreateVisualizationView(view_factory, view_model->view_model_factory, topic_name, tencoding, ttype);
       Add(vizualization_view);
     }
     return vizualization_view;

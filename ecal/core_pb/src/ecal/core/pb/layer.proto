@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ message ConnnectionPar                          // connection parameter for read
   LayerParTcp      layer_par_tcp      =   4;    // parameter for ecal tcp
 }
 
-enum eTLayerType                                // transport layer
+enum eTransportLayerType                                // transport layer
 {
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 2, 3, 42;
@@ -61,14 +61,14 @@ enum eTLayerType                                // transport layer
   tl_all                              = 255;    // all layer
 }
 
-message TLayer
+message TransportLayer
 {
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 4;
 
-  eTLayerType      type               =   1;    // transport layer type
-  int32            version            =   2;    // transport layer version
-  bool             enabled            =   6;    // transport layer enabled ?
-  bool             active             =   3;    // transport layer in use ?
-  ConnnectionPar   par_layer          =   5;    // transport layer parameter
+  eTransportLayerType   type               =   1;    // transport layer type
+  int32                 version            =   2;    // transport layer version
+  bool                  enabled            =   6;    // transport layer enabled ?
+  bool                  active             =   3;    // transport layer in use ?
+  ConnnectionPar        par_layer          =   5;    // transport layer parameter
 }

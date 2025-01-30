@@ -40,7 +40,7 @@ namespace
   std::shared_ptr<std::string> SerializeRequest(const std::string& method_name_, const std::string& request_)
   {
     eCAL::Service::Request request;
-    request.header.mname = method_name_;
+    request.header.method_name = method_name_;
     request.request = request_;
     auto request_shared_ptr = std::make_shared<std::string>();
     eCAL::SerializeToBuffer(request, *request_shared_ptr);
@@ -51,8 +51,8 @@ namespace
   {
     eCAL::SServiceResponse error_response;
     // service/method id
-    error_response.service_method_id.service_id   = entity_id_;
-    error_response.service_method_id.service_name = service_name_;
+    error_response.server_id.service_id   = entity_id_;
+    error_response.server_id.service_name = service_name_;
     error_response.service_method_information.method_name  = method_name_;
     // TODO we need to fill SDatatypeInformation
 
@@ -361,9 +361,9 @@ namespace eCAL
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname = Process::GetProcessName();
-    service_client.uname = Process::GetUnitName();
-    service_client.sname = m_service_name;
+    service_client.process_name = Process::GetProcessName();
+    service_client.unit_name = Process::GetUnitName();
+    service_client.service_name = m_service_name;
 
     const std::lock_guard<std::mutex> lock(m_method_information_set_mutex);
     for (const auto& method_information : m_method_information_set)
@@ -371,7 +371,7 @@ namespace eCAL
       const auto& method_name = method_information.method_name;
 
       Service::Method method;
-      method.mname = method_name;
+      method.method_name = method_name;
 
       // old type and descriptor fields
       method.req_type = method_information.request_type.name;
@@ -380,8 +380,8 @@ namespace eCAL
       method.resp_desc = method_information.response_type.descriptor;
 
       // new type and descriptor fields
-      method.req_datatype = method_information.request_type;
-      method.resp_datatype = method_information.response_type;
+      method.request_datatype_information = method_information.request_type;
+      method.response_datatype_information = method_information.response_type;
 
       {
         const auto& call_count_iter = m_method_call_count_map.find(method_name);
@@ -407,9 +407,9 @@ namespace eCAL
 
     auto& service_client = ecal_reg_sample.client;
     service_client.version = m_client_version;
-    service_client.pname = Process::GetProcessName();
-    service_client.uname = Process::GetUnitName();
-    service_client.sname = m_service_name;
+    service_client.process_name = Process::GetProcessName();
+    service_client.unit_name = Process::GetUnitName();
+    service_client.service_name = m_service_name;
 
     return ecal_reg_sample;
   }
@@ -481,13 +481,13 @@ namespace eCAL
       auto state = client_data.client_session->get_state();
 
       SEntityId entity_id;
-      entity_id.entity_id = client_data.service_attr.sid;
+      entity_id.entity_id  = client_data.service_attr.sid;
       entity_id.process_id = client_data.service_attr.pid;
-      entity_id.host_name = client_data.service_attr.hname;
+      entity_id.host_name  = client_data.service_attr.hname;
 
       SServiceId service_id;
       service_id.service_name = m_service_name;
-      service_id.service_id = entity_id;
+      service_id.service_id   = entity_id;
 
       if (!client_data.connected && state == ecal_service::State::CONNECTED)
       {
@@ -536,11 +536,11 @@ namespace eCAL
     auto data = std::make_shared<SResponseData>();
     data->response->first = false;
 
-    data->response->second.service_method_id.service_id.entity_id = client_.service_attr.sid;
-    data->response->second.service_method_id.service_id.process_id = client_.service_attr.pid;
-    data->response->second.service_method_id.service_id.host_name = client_.service_attr.hname;
+    data->response->second.server_id.service_id.entity_id = client_.service_attr.sid;
+    data->response->second.server_id.service_id.process_id = client_.service_attr.pid;
+    data->response->second.server_id.service_id.host_name = client_.service_attr.hname;
 
-    data->response->second.service_method_id.service_name = client_.service_attr.sname;
+    data->response->second.server_id.service_name = client_.service_attr.sname;
     data->response->second.service_method_information.method_name = method_name_;
     // TODO we need to fill SDatatypeInformation
 
@@ -582,13 +582,13 @@ namespace eCAL
     {
       const auto& response_header = response.header;
       // service/method id
-      service_reponse.service_method_id.service_id.entity_id = client_.service_attr.sid;
-      service_reponse.service_method_id.service_id.process_id = client_.service_attr.pid;
-      service_reponse.service_method_id.service_id.host_name = response_header.hname;
+      service_reponse.server_id.service_id.entity_id = client_.service_attr.sid;
+      service_reponse.server_id.service_id.process_id = client_.service_attr.pid;
+      service_reponse.server_id.service_id.host_name = response_header.host_name;
 
       // service and method name
-      service_reponse.service_method_id.service_name = response_header.sname;
-      service_reponse.service_method_information.method_name = response_header.mname;
+      service_reponse.server_id.service_name = response_header.service_name;
+      service_reponse.service_method_information.method_name = response_header.method_name;
       // TODO fill in information about datatypes. Do we have them? from the other clients? we should???
 
       // error message and return state

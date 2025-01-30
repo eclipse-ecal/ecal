@@ -52,7 +52,7 @@ public:
     UNIT_NAME,
     HOST_NAME,
     SHM_TRANSPORT_DOMAIN,
-    PID,
+    PROCESS_ID,
     PROCESS_NAME,
     TOPIC_TYPE,
     HEARTBEAT,
@@ -76,7 +76,7 @@ public:
 
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-  QVector<QPair<int, QString>> getTreeItemColumnNameMapping() const;
+  QVector<QPair<int, QVariant>> getTreeItemColumnNameMapping() const;
 
   void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
 
@@ -91,7 +91,7 @@ private:
     { Columns::HEARTBEAT,              "Heartbeat" },
     { Columns::HOST_NAME,              "Host" },
     { Columns::SHM_TRANSPORT_DOMAIN,   "SHM Transport Domain" },
-    { Columns::PID,                    "PID" },
+    { Columns::PROCESS_ID,             "Process Id" },
     { Columns::PROCESS_NAME,           "Process Path" },
     { Columns::UNIT_NAME,              "Process" },
     { Columns::TOPIC_ID,               "Topic ID" },
@@ -112,26 +112,35 @@ private:
   std::map<Columns, int> topic_tree_item_column_mapping =
   {
     { Columns::GROUP,                  -1 },
-    { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::RCLOCK },
-    { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HNAME },
+    { Columns::HEARTBEAT,              (int)TopicTreeItem::Columns::REGISTRATION_CLOCK },
+    { Columns::HOST_NAME,              (int)TopicTreeItem::Columns::HOST_NAME },
     { Columns::SHM_TRANSPORT_DOMAIN,   (int)TopicTreeItem::Columns::SHM_TRANSPORT_DOMAIN },
-    { Columns::PID,                    (int)TopicTreeItem::Columns::PID },
-    { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PNAME },
-    { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNAME },
-    { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TID },
-    { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TNAME },
+    { Columns::PROCESS_ID,             (int)TopicTreeItem::Columns::PROCESS_ID },
+    { Columns::PROCESS_NAME,           (int)TopicTreeItem::Columns::PROCESS_NAME },
+    { Columns::UNIT_NAME,              (int)TopicTreeItem::Columns::UNIT_NAME },
+    { Columns::TOPIC_ID,               (int)TopicTreeItem::Columns::TOPIC_ID },
+    { Columns::TOPIC_NAME,             (int)TopicTreeItem::Columns::TOPIC_NAME },
     { Columns::DIRECTION,              (int)TopicTreeItem::Columns::DIRECTION },
     { Columns::TOPIC_ENCODING,         (int)TopicTreeItem::Columns::TENCODING },
     { Columns::TOPIC_TYPE,             (int)TopicTreeItem::Columns::TTYPE },
     { Columns::TOPIC_DESCRIPTOR,       (int)TopicTreeItem::Columns::TDESC },
-    { Columns::TRANSPORT_LAYER,        (int)TopicTreeItem::Columns::TLAYER },
-    { Columns::TOPIC_SIZE,             (int)TopicTreeItem::Columns::TSIZE },
-    { Columns::CONNECTIONS_LOCAL,      (int)TopicTreeItem::Columns::CONNECTIONS_LOC },
-    { Columns::CONNECTIONS_EXTERNAL,   (int)TopicTreeItem::Columns::CONNECTIONS_EXT },
+    { Columns::TRANSPORT_LAYER,        (int)TopicTreeItem::Columns::TRANSPORT_LAYER },
+    { Columns::TOPIC_SIZE,             (int)TopicTreeItem::Columns::TOPIC_SIZE },
+    { Columns::CONNECTIONS_LOCAL,      (int)TopicTreeItem::Columns::CONNECTIONS_LOCAL },
+    { Columns::CONNECTIONS_EXTERNAL,   (int)TopicTreeItem::Columns::CONNECTIONS_EXTERNAL },
     { Columns::MESSAGE_DROPS,          (int)TopicTreeItem::Columns::MESSAGE_DROPS },
-    { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DCLOCK },
+    { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DATA_CLOCK },
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
   };
 
-  std::map<std::string, TopicTreeItem*> topic_tree_item_map_;
+  struct STopicTreeEntry
+  {
+    TopicTreeItem*  tree_item = nullptr;
+    bool            default_font = false;
+    bool            new_topic_timer = false;
+    bool            striked_out = false;
+    bool            deleted_topic_timer = false;
+    bool            topic_removed = false;
+  };
+  std::map<std::string, STopicTreeEntry> topic_tree_item_map_;
 };

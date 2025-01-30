@@ -48,8 +48,10 @@ namespace
 
   bool GetTopicDataTypeInformation(const char* topic_name_, eCAL::SDataTypeInformation& topic_info_)
   {
+    std::set<eCAL::STopicId> pub_ids;
+    eCAL::Registration::GetPublisherIDs(pub_ids);
     // try to find topic name in publisher set
-    for (const auto& pub_id : eCAL::Registration::GetPublisherIDs())
+    for (const auto& pub_id : pub_ids)
     {
       if (pub_id.topic_name == topic_name_)
       {
@@ -57,7 +59,8 @@ namespace
       }
     }
     // try to find topic name in subscriber set
-    const auto& sub_ids = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids;
+    eCAL::Registration::GetSubscriberIDs(sub_ids);
     for (const auto& sub_id : sub_ids)
     {
       if (sub_id.topic_name == topic_name_)
@@ -385,13 +388,13 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.tid       = data_->tid.c_str();
-  data.tname     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -563,13 +566,13 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.tid       = data_->tid.c_str();
-  data.tname     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 

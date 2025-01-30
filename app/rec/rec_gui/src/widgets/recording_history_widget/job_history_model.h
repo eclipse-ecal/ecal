@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public:
   {
     JOB,
     ID,
-    PID,
+    PROCESS_ID,
     STILL_ONLINE,
     STATUS,
     HOSTNAME,
@@ -108,7 +108,7 @@ private:
   {
     { Columns::JOB,                    "Job" } ,
     { Columns::ID,                     "ID" } ,
-    { Columns::PID,                    "PID" } ,
+    { Columns::PROCESS_ID,             "Process Id" } ,
     { Columns::STILL_ONLINE,           "Still online" } ,
     { Columns::STATUS,                 "Status" } ,
     { Columns::HOSTNAME,               "Host" } ,

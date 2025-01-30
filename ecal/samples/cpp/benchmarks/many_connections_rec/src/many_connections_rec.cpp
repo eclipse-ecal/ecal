@@ -36,9 +36,9 @@ public:
 
     for (int i = 0; i < publisher_count; ++i)
     {
-      std::ostringstream tname;
-      tname << std::setw(5) << std::setfill('0') << i;
-      subscribers.emplace_back("Topic" + tname.str(), eCAL::SDataTypeInformation{ ttype, "", tdesc });
+      std::ostringstream topic_name;
+      topic_name << std::setw(5) << std::setfill('0') << i;
+      subscribers.emplace_back("Topic" + topic_name.str(), eCAL::SDataTypeInformation{ ttype, "", tdesc });
       auto on_receive = [this](const eCAL::STopicId&, const eCAL::SDataTypeInformation&, const eCAL::SReceiveCallbackData&)
       {
         Receive();

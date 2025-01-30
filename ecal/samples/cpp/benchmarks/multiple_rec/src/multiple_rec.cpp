@@ -67,18 +67,18 @@ int main()
   for(int i = 0; i < SUBSCRIBER_NUMBER; i++)
   {
     // publisher topic name
-    std::stringstream tname;
-    tname << "PUB_" << i;
+    std::stringstream topic_name;
+    topic_name << "PUB_" << i;
 
     // create subscriber
-    eCAL::CSubscriber* sub = new eCAL::CSubscriber(tname.str());
+    eCAL::CSubscriber* sub = new eCAL::CSubscriber(topic_name.str());
     struct SSubCount sub_count;
     sub_count.sub = sub;
 
     // add subscriber
     {
       std::lock_guard<std::mutex> lock(g_sub_map_sync);
-      g_sub_map[tname.str()] = sub_count;
+      g_sub_map[topic_name.str()] = sub_count;
     }
 
     // setup receive callback

@@ -35,6 +35,7 @@
 #include <list>
 #include <QVector>
 #include <QPair>
+#include <QFont>
 
 class GroupTreeModel : public QAbstractTreeModel
 {
@@ -102,4 +103,6 @@ private:
   QVariant group_column_header_;
 
   QVector<int> group_by_columns_;
+
+  QFont standardFont;
 };

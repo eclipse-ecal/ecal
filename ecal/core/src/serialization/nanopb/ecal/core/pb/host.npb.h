@@ -11,11 +11,11 @@
 
 /* Struct definitions */
 typedef struct _eCAL_pb_OSInfo {
-    pb_callback_t osname; /* name */
+    pb_callback_t name; /* name */
 } eCAL_pb_OSInfo;
 
 typedef struct _eCAL_pb_Host {
-    pb_callback_t hname; /* host name */
+    pb_callback_t name; /* host name */
     bool has_os;
     eCAL_pb_OSInfo os; /* operating system details */
 } eCAL_pb_Host;
@@ -32,18 +32,18 @@ extern "C" {
 #define eCAL_pb_Host_init_zero                   {{{NULL}, NULL}, false, eCAL_pb_OSInfo_init_zero}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define eCAL_pb_OSInfo_osname_tag                1
-#define eCAL_pb_Host_hname_tag                   1
+#define eCAL_pb_OSInfo_name_tag                  1
+#define eCAL_pb_Host_name_tag                    1
 #define eCAL_pb_Host_os_tag                      2
 
 /* Struct field encoding specification for nanopb */
 #define eCAL_pb_OSInfo_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   osname,            1)
+X(a, CALLBACK, SINGULAR, STRING,   name,              1)
 #define eCAL_pb_OSInfo_CALLBACK pb_default_field_callback
 #define eCAL_pb_OSInfo_DEFAULT NULL
 
 #define eCAL_pb_Host_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   hname,             1) \
+X(a, CALLBACK, SINGULAR, STRING,   name,              1) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  os,                2)
 #define eCAL_pb_Host_CALLBACK pb_default_field_callback
 #define eCAL_pb_Host_DEFAULT NULL

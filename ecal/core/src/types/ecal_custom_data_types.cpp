@@ -21,7 +21,7 @@
  * @brief  Definition of custom data types.
 **/
 
-#include "ecal/types/ecal_custom_data_types.h"
+#include "ecal/types/custom_data_types.h"
 
 #include <array>
 #include <regex>

@@ -60,24 +60,26 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of publisher IDs
-    const auto pub_ids1 = eCAL::Registration::GetPublisherIDs();
+    std::set<eCAL::STopicId> pub_ids1;
+    const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids1);
 
     // verify the number of publishers created
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     ASSERT_EQ(pub_ids1.size(), GetParam().publisher_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(GetParam().configuration.registration.registration_timeout);
 
   // get the list of publisher IDs
-  const auto pub_ids2 = eCAL::Registration::GetPublisherIDs();
+  std::set<eCAL::STopicId> pub_ids2;
+  const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids2);
 
   // all publisher should be timeouted
+  EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 
@@ -119,15 +123,15 @@ TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register

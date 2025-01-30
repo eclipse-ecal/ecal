@@ -266,26 +266,26 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  bool CSubscriberImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
 
-    m_attr[attr_name_] = attr_value_;
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute - Setting subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
-  bool CSubscriberImpl::ClearAttribute(const std::string& attr_name_)
+  bool CSubscriberImpl::ClearAttribute(const std::string& /* attr_name_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
 
-    m_attr.erase(attr_name_);
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute - Clear subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
@@ -490,9 +490,9 @@ namespace eCAL
     //  - an out-of-order message
     //  - a multiple sent message
     SPublicationInfo publication_info;
-    publication_info.entity_id  = topic_info_.tid;
-    publication_info.host_name  = topic_info_.hname;
-    publication_info.process_id = topic_info_.pid;
+    publication_info.entity_id  = topic_info_.topic_id;
+    publication_info.host_name  = topic_info_.host_name;
+    publication_info.process_id = topic_info_.process_id;
     if (!CheckMessageClock(publication_info, clock_))
     {
       // we will not process that message
@@ -539,15 +539,15 @@ namespace eCAL
         cb_data.clock = clock_;
 
         STopicId topic_id;
-        topic_id.topic_name          = topic_info_.tname;
-        topic_id.topic_id.host_name  = topic_info_.hname;
-        topic_id.topic_id.entity_id  = topic_info_.tid;
-        topic_id.topic_id.process_id = topic_info_.pid;
+        topic_id.topic_name          = topic_info_.topic_name;
+        topic_id.topic_id.host_name  = topic_info_.host_name;
+        topic_id.topic_id.entity_id  = topic_info_.topic_id;
+        topic_id.topic_id.process_id = topic_info_.process_id;
 
         SPublicationInfo pub_info;
-        pub_info.entity_id  = topic_info_.tid;
-        pub_info.host_name  = topic_info_.hname;
-        pub_info.process_id = topic_info_.pid;
+        pub_info.entity_id  = topic_info_.topic_id;
+        pub_info.host_name  = topic_info_.host_name;
+        pub_info.process_id = topic_info_.process_id;
 
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
@@ -632,16 +632,15 @@ namespace eCAL
 
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.tdatatype;
+      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.datatype_information;
       ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr  = m_attr;
-    ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
@@ -651,7 +650,7 @@ namespace eCAL
       udp_tlayer.version   = ecal_transport_layer_version;
       udp_tlayer.enabled   = m_layers.udp.read_enabled;
       udp_tlayer.active    = m_layers.udp.active;
-      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
@@ -663,7 +662,7 @@ namespace eCAL
       shm_tlayer.version   = ecal_transport_layer_version;
       shm_tlayer.enabled   = m_layers.shm.read_enabled;
       shm_tlayer.active    = m_layers.shm.active;
-      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
@@ -675,19 +674,19 @@ namespace eCAL
       tcp_tlayer.version   = ecal_transport_layer_version;
       tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
       tcp_tlayer.active    = m_layers.tcp.active;
-      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pname         = m_attributes.process_name;
-    ecal_reg_sample_topic.uname         = m_attributes.unit_name;
-    ecal_reg_sample_topic.dclock        = m_clock;
-    ecal_reg_sample_topic.dfreq         = GetFrequency();
-    ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
+    ecal_reg_sample_topic.process_name   = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_clock     = m_clock;
+    ecal_reg_sample_topic.data_frequency = GetFrequency();
+    ecal_reg_sample_topic.message_drops  = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
-    ecal_reg_sample_topic.connections_loc = 0;
-    ecal_reg_sample_topic.connections_ext = 0;
+    ecal_reg_sample_topic.connections_local = 0;
+    ecal_reg_sample_topic.connections_external = 0;
   }
 
   void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -696,14 +695,14 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id = m_topic_id;
-    ecal_reg_sample_identifier.host_name = m_attributes.host_name;
+    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
-    ecal_reg_sample_topic.pname                = m_attributes.process_name;
-    ecal_reg_sample_topic.tname                = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname                = m_attributes.unit_name;
+    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
+    ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()
