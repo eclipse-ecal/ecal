@@ -55,6 +55,7 @@ protected:
 TEST_P(ClientsTestFixture, ClientExpiration)
 {
   std::set<eCAL::SServiceId> id_set;
+  bool get_client_ids_succeeded = false;
 
   // create simple client and let it expire
   {
@@ -71,7 +72,8 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get all clients
-    id_set = eCAL::Registration::GetClientIDs();
+    get_client_ids_succeeded = eCAL::Registration::GetClientIDs(id_set);
+    EXPECT_TRUE(get_client_ids_succeeded) << "GetClientIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -90,7 +92,8 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     eCAL::Process::SleepMS(CMN_MONITORING_TIMEOUT_MS);
 
     // get all clients again, client should not be expired
-    id_set = eCAL::Registration::GetClientIDs();
+    get_client_ids_succeeded = eCAL::Registration::GetClientIDs(id_set);
+    EXPECT_TRUE(get_client_ids_succeeded) << "GetClientIDs call failed";
 
     // check size
     EXPECT_EQ(id_set.size(), 1);
@@ -101,7 +104,8 @@ TEST_P(ClientsTestFixture, ClientExpiration)
 
   // get all clients again, all clients 
   // should be removed from the map
-  id_set = eCAL::Registration::GetClientIDs();
+  get_client_ids_succeeded = eCAL::Registration::GetClientIDs(id_set);
+  EXPECT_TRUE(get_client_ids_succeeded) << "GetClientIDs call failed";
 
   // check size
   EXPECT_EQ(id_set.size(), 0);
@@ -124,7 +128,9 @@ TEST_P(ClientsTestFixture, GetClientIDs)
     eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
     // get client
-    auto id_set = eCAL::Registration::GetClientIDs();
+    std::set<eCAL::SServiceId> id_set;
+    auto call_successful = eCAL::Registration::GetClientIDs(id_set);
+    EXPECT_TRUE(call_successful);
     EXPECT_EQ(1, id_set.size());
     if (id_set.size() > 0)
     {

@@ -51,7 +51,9 @@ int main()
   std::string req_desc;
   std::string resp_type;
   std::string resp_desc;
-  auto service_ids = eCAL::Registration::GetServerIDs();
+
+  std::set<eCAL::SServiceId> service_ids;
+  eCAL::Registration::GetServerIDs(service_ids);
   bool service_info_found(false);
   for (const auto& service_id : service_ids)
   {

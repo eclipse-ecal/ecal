@@ -44,8 +44,8 @@ int main()
       start_time = std::chrono::steady_clock::now();
       for (run = 0; run < runs; ++run)
       {
-        topic_id_pub_set = eCAL::Registration::GetPublisherIDs();
-        topic_id_sub_set = eCAL::Registration::GetSubscriberIDs();
+        eCAL::Registration::GetPublisherIDs(topic_id_pub_set);
+        eCAL::Registration::GetSubscriberIDs(topic_id_pub_set);
       }
 
       auto num_entities = topic_id_pub_set.size() + topic_id_sub_set.size();
