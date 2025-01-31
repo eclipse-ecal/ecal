@@ -19,7 +19,7 @@ int main(int argc, char** argv)
   eCAL::string::CSubscriber<std::string> subscriber("hello_world_topic");
 
   // Set the Callback
-  subscriber.AddReceiveCallback(std::bind(&HelloWorldCallback, std::placeholders::_2));
+  subscriber.SetReceiveCallback(std::bind(&HelloWorldCallback, std::placeholders::_2));
 
   // Just don't exit
   while (eCAL::Ok())
