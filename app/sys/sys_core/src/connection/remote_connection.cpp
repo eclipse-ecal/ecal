@@ -128,7 +128,14 @@ namespace eCAL
       std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
 
       eCAL::v5::ServiceResponseVecT service_response_vec;
-      constexpr int timeout_ms = 1000;
+      
+      // We changed timeout value, as with the new v6 implementation the behaviour changed.
+      // Now, when there are applications in the list that are not available/cannot be called,
+      // all apps on this host become failed, however if the app was reachable, it was started.
+      // The -1 prevents this from happening, so the call gets recognized for each application
+      // as expected.
+      // Timeout happens in ecal_service_client_impl.cpp in method CallMethodWithTimeout(...).
+      constexpr int timeout_ms = -1;
 
       // After client creation it takes some time for the client to be actually connected.
       // As the call and the creation is too close together, the first call will fail.
