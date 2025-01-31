@@ -22,6 +22,9 @@ project(ecal_generate_config)
 set(ECAL_YAML "ecal.yaml")
 set(TIME_YAML "ecaltime.yaml")
 
+set(ECAL_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML})
+set(TIME_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${TIME_YAML})
+
 add_executable(${PROJECT_NAME} 
   ${ECAL_CORE_PROJECT_ROOT}/core/cfg/generate_configuration_yaml.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_writer.cpp
@@ -31,8 +34,8 @@ add_executable(${PROJECT_NAME}
 
 # Set the output paths for the generated YAML files
 set(YAML_PATHS
-  ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML}
-  ${CMAKE_CURRENT_BINARY_DIR}/${TIME_YAML}
+  ${ECAL_YAML_PATH}
+  ${TIME_YAML_PATH}
 )
 
 # Add a custom command to generate the YAML file
@@ -73,14 +76,24 @@ else()
 endif()
 
 # Install the generated YAML file if not cross-compiling
-if(ECAL_SHARED_CONFIG)
+if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
   install(
     FILES
-      ${YAML_PATHS}                 # Files to install
+      ${ECAL_YAML_PATH}             # Files to install
     DESTINATION
       ${ECAL_SHARED_CONFIG}         # Destination directory
     COMPONENT configuration         # Installation component
   )
+
+  if (ECAL_BUILD_TIMEPLUGINS)
+    install(
+      FILES
+        ${TIME_YAML_PATH}             # Files to install
+      DESTINATION
+        ${ECAL_SHARED_CONFIG}         # Destination directory
+      COMPONENT configuration         # Installation component
+    )
+  endif()
 endif()
 
 ecal_install_app(${PROJECT_NAME})
