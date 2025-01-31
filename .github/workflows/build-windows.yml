@@ -144,7 +144,7 @@ jobs:
     - name: Create config path and copy ecal.yaml
       run: |
            mkdir "%ALLUSERSPROFILE%\eCAL"
-           copy ".\ecal\core\cfg\gen\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
+           copy ".\ecal\core\cfg\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
       working-directory: ${{ runner.workspace }}/_build/complete
       shell: cmd
     

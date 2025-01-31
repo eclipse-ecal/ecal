@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
       exitWithMessage("Failed to write default configuration to file.", 1, false);
     }
 
-    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "time.yaml")) {
+    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), "ecaltime.yaml")) {
       exitWithMessage("Failed to write time configuration to file.", 1, false);
     }
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
     if (!eCAL::Config::dumpDefaultConfig(created_path)) {
       exitWithMessage("Failed to write default configuration to file.", 1);
     }
-    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/time.yaml")) {
+    if (!eCAL::Config::dumpToFile(eCAL::Config::getTimeConfigAsYamlSS(), created_path + "/ecaltime.yaml")) {
       exitWithMessage("Failed to write time configuration to file.", 1);
     }
 
