@@ -101,7 +101,7 @@ int main()
       //////////////////////////////////////
       // Service call (with callback)
       //////////////////////////////////////
-      if (client_instance.CallWithCallback(method_name, request, -1, service_response_callback))
+      if (client_instance.CallWithCallback(method_name, request, service_response_callback))
       {
         std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
       }
