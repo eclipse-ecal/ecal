@@ -528,7 +528,7 @@ bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf
 /*      sub_add_receive_callback        */
 /****************************************/
 static std::mutex g_sub_receive_callback_mtx;
-static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
+static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::v5::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_sub_receive_callback_mtx);
   SReceiveCallbackDataC data{};

@@ -115,7 +115,7 @@ int main()
   // create a subscriber (topic name "addressbook")
   eCAL::capnproto::CDynamicSubscriber sub("addressbook");
 
-  auto lambda = [](const eCAL::STopicId& /*topic_id_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/, long long /*id_*/) -> void {
+  auto lambda = [](const eCAL::STopicId& /*topic_id_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/) -> void {
     dynamicPrintValue(msg_);
   };
   sub.SetReceiveCallback(lambda);

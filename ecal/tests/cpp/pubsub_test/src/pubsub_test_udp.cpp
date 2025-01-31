@@ -41,7 +41,7 @@ namespace
   std::atomic<size_t> g_callback_received_count;
   void OnReceive(const eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_.size;
+    g_callback_received_bytes += data_.buffer_size;
     g_callback_received_count++;
   }
 }
@@ -116,8 +116,8 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
   // add callback
   auto save_data = [&last_received_msg, &last_received_timestamp](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
   {
-    last_received_msg = std::string{ (const char*)data_.buf, (size_t)data_.size };
-    last_received_timestamp = data_.time;
+    last_received_msg = std::string{ (const char*)data_.buffer, (size_t)data_.buffer_size };
+    last_received_timestamp = data_.send_timestamp;
   };
   EXPECT_TRUE(sub.SetReceiveCallback(save_data));
 

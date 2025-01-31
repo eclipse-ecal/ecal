@@ -32,7 +32,7 @@
 #include <monster/monster_generated.h>
 
 
-void OnMonster(const eCAL::STopicId& topic_id_, const flatbuffers::FlatBufferBuilder& msg_, long long time_, long long /*clock_*/, long long /*id_*/)
+void OnMonster(const eCAL::STopicId& topic_id_, const flatbuffers::FlatBufferBuilder& msg_, long long time_, long long /*clock_*/)
 {
   // create monster
   auto monster(Game::Sample::GetMonster(msg_.GetBufferPointer()));

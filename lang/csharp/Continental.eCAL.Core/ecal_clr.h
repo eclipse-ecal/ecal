@@ -365,14 +365,14 @@ namespace Continental
         /**
          * @brief The callback of the subscriber, that is registered with the unmanaged code
         **/
-        delegate void subCallback(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
+        delegate void subCallback(const char* topic_name_, const ::eCAL::v5::SReceiveCallbackData* data_);
         subCallback^ m_sub_callback;
-        void OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
-        void OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_);
+        void OnReceive(const char* topic_name_, const ::eCAL::v5::SReceiveCallbackData* data_);
+        void OnReceiveUnsafe(const char* topic_name_, const ::eCAL::v5::SReceiveCallbackData* data_);
         /**
          * @brief stdcall function pointer definition of eCAL::ReceiveCallbackT
         **/
-        typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::SReceiveCallbackData*);
+        typedef void(__stdcall * stdcall_eCAL_ReceiveCallbackT)(const char*, const ::eCAL::v5::SReceiveCallbackData*);
       };
 
 

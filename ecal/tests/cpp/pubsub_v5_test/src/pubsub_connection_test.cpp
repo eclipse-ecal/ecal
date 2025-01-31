@@ -73,7 +73,7 @@ TEST(core_cpp_pubsub_v5, TestSubscriberIsPublishedTiming)
     eCAL::v5::CSubscriber sub("blob");
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::v5::SReceiveCallbackData* data_) {
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.IsPublished();
@@ -172,7 +172,7 @@ TEST(core_cpp_pubsub_v5, TestPublisherIsSubscribedTiming)
     eCAL::v5::CSubscriber sub("blob");
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::SReceiveCallbackData* data_) {
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const char* /*topic_name_*/, const struct eCAL::v5::SReceiveCallbackData* data_) {
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.IsPublished();
@@ -253,7 +253,7 @@ TEST(core_cpp_pubsub_v5, TestChainedPublisherSubscriberCallback)
 
   // Subscriber1 with callback that triggers Publisher2
   eCAL::v5::CSubscriber sub1("topic1");
-  auto subscriber1_callback = [&pub2](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* data) {
+  auto subscriber1_callback = [&pub2](const char* /*topic_name*/, const eCAL::v5::SReceiveCallbackData* data) {
     // On receiving data from Publisher1, Publisher2 sends the same data
     const std::string received_data(static_cast<const char*>(data->buf), data->size);
     pub2.Send(received_data);
@@ -262,7 +262,7 @@ TEST(core_cpp_pubsub_v5, TestChainedPublisherSubscriberCallback)
 
   // Subscriber2 that receives data from Publisher2
   eCAL::v5::CSubscriber sub2("topic2");
-  auto subscriber2_callback = [&subscriber2_received_count](const char* /*topic_name*/, const eCAL::SReceiveCallbackData* /*data*/) {
+  auto subscriber2_callback = [&subscriber2_received_count](const char* /*topic_name*/, const eCAL::v5::SReceiveCallbackData* /*data*/) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
     //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data->buf), data->size) << std::endl;

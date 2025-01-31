@@ -45,7 +45,7 @@ namespace
   std::atomic<size_t> g_callback_received_count;
   void OnReceive(const struct eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_.size;
+    g_callback_received_bytes += data_.buffer_size;
     g_callback_received_count++;
   }
 

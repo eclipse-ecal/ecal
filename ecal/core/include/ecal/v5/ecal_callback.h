@@ -38,6 +38,19 @@ namespace eCAL
   ECAL_CORE_NAMESPACE_V5
   {
     /**
+     * @brief eCAL subscriber receive callback struct.
+     **/
+    struct SReceiveCallbackData
+    {
+      void* buf = nullptr;  //!< payload buffer
+      long      size = 0;        //!< payload buffer size
+      long long id = 0;        //!< publisher id (SetId())
+      long long time = 0;        //!< publisher send time in µs
+      long long clock = 0;        //!< publisher send clock
+    };
+
+
+    /**
    * @brief eCAL publisher event callback struct.
   **/
     struct SPubEventCallbackData
@@ -162,7 +175,7 @@ namespace eCAL
      * @param topic_name_  The topic name of the received message.
      * @param data_        Data struct containing payload, timestamp and publication clock.
     **/
-    using ReceiveCallbackT = std::function<void(const char* topic_name_, const struct SReceiveCallbackData* data_)>;
+    using ReceiveCallbackT = std::function<void(const char* topic_name_, const struct v5::SReceiveCallbackData* data_)>;
 
     /**
      * @brief Publisher event callback function type. (deprecated)

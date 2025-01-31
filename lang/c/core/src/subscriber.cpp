@@ -54,7 +54,7 @@ namespace
   }
 
   std::recursive_mutex g_sub_receive_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
+  void g_sub_receive_callback(const char* topic_name_, const struct eCAL::v5::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
   {
     const std::lock_guard<std::recursive_mutex> lock(g_sub_receive_callback_mtx);
     SReceiveCallbackDataC data{};

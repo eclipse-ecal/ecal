@@ -56,20 +56,19 @@ std::ostream& operator<<(std::ostream& os, const SSimpleStruct& s)
 // subscriber callback function
 void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
 {
-  if (data_.size < 1) return;
+  if (data_.buffer_size < 1) return;
 
   std::cout << "------------------------------------"   << std::endl;
   std::cout << "Binary buffer header :"                 << std::endl;
   std::cout << "------------------------------------"   << std::endl;
-  std::cout << " Size   : " << data_.size              << std::endl;
-  std::cout << " Id     : " << data_.id                << std::endl;
-  std::cout << " Time   : " << data_.time              << std::endl;
-  std::cout << " Clock  : " << data_.clock             << std::endl;
+  std::cout << " Size    : " << data_.buffer_size       << std::endl;
+  std::cout << " Time    : " << data_.send_timestamp    << std::endl;
+  std::cout << " Clock   : " << data_.send_clock        << std::endl;
   std::cout                                             << std::endl;
   std::cout << "------------------------------------"   << std::endl;
   std::cout << "SSimpleStruct :"                        << std::endl;
   std::cout << "------------------------------------"   << std::endl;
-  std::cout << *static_cast<SSimpleStruct*>(data_.buf) << std::endl;
+  std::cout << *static_cast<const SSimpleStruct*>(data_.buffer) << std::endl;
 }
 
 int main()

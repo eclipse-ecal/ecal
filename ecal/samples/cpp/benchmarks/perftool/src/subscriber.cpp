@@ -81,9 +81,9 @@ void Subscriber::callback(const eCAL::SReceiveCallbackData& data_)
   SubscribedMessage message_info;
   message_info.local_receive_time = std::chrono::steady_clock::now();
   message_info.ecal_receive_time  = eCAL::Time::ecal_clock::now();
-  message_info.ecal_send_time     = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(data_.time));
-  message_info.ecal_counter       = data_.clock;
-  message_info.size_bytes         = data_.size;
+  message_info.ecal_send_time     = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(data_.send_timestamp));
+  message_info.ecal_counter       = data_.send_clock;
+  message_info.size_bytes         = data_.buffer_size;
 
   std::chrono::steady_clock::duration time_to_waste_this_iteration(time_to_waste_);
 
