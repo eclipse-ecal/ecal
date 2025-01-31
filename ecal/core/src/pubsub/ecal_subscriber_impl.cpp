@@ -534,7 +534,7 @@ namespace eCAL
         // prepare data struct
         SReceiveCallbackData cb_data;
         cb_data.buffer   = static_cast<const void*>(payload_);
-        cb_data.buffer_size  = long(size_);
+        cb_data.buffer_size  = size_;
         cb_data.send_timestamp  = time_;
         cb_data.send_clock = clock_;
 

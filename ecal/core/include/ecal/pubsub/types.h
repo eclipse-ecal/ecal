@@ -67,7 +67,7 @@ namespace eCAL
     const void* buffer = nullptr;       //!< payload buffer, containing the sent data
     size_t      buffer_size = 0;        //!< payload buffer size
     int64_t     send_timestamp = 0;     //!< publisher send timestamp in µs
-    uint64_t    send_clock = 0;         //!< publisher send clock. Each publisher increases the counter by one, every time a message is sent. It can be used to detect message drops.
+    int64_t     send_clock = 0;         //!< publisher send clock. Each publisher increases the counter by one, every time a message is sent. It can be used to detect message drops.
   };
 
   /**
