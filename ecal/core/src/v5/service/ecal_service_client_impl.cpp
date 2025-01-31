@@ -204,7 +204,7 @@ namespace eCAL
       {
         if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
-          success |= instance.CallWithCallback(method_name_, request_, timeout_, callback);
+          success |= instance.CallWithCallback(method_name_, request_, callback, timeout_);
         }
       }
       // Call the method using the new API

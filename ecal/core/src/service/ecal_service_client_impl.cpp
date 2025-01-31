@@ -162,10 +162,11 @@ namespace eCAL
     return entity_vector;
   }
 
+  // TODO: We need to reimplment this function. It makes no sense to call a service with response callback and to return a pair<bool, SServiceResponse>
   // Calls a service method synchronously, blocking until a response is received or timeout occurs
   std::pair<bool, SServiceResponse> CServiceClientImpl::CallWithCallback(
-      const SEntityId & entity_id_, const std::string & method_name_,
-      const std::string & request_, int timeout_ms_, const ResponseCallbackT & response_callback_)
+      const SEntityId& entity_id_, const std::string& method_name_,
+      const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_ms_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Performing synchronous call for service: " + m_service_name + ", method: " + method_name_);

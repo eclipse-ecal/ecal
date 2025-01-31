@@ -1,6 +1,6 @@
 ; ========================= eCAL LICENSE =================================
 ;
-; Copyright (C) 2016 - 2024 Continental Corporation
+; Copyright (C) 2016 - 2025 Continental Corporation
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -78,12 +78,12 @@ Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\"; Fla
 ; we need to change the location of these configuration file (as hotfix we use skipifsourcedoesntexist flag)
 Source: "{#ComponentStagingDir}\configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
 Source: "{#ComponentStagingDir}\configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.ini";  DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.yaml";  DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 
 ; we need to change the location of these configuration file (as hotfix we use skipifsourcedoesntexist flag)
 Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";    DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
 Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";    DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecaltime.ini"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\cfg\ecaltime.yaml"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications

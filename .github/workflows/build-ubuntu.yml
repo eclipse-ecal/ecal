@@ -144,7 +144,7 @@ jobs:
     - name: Create config path and copy ecal.yaml
       run: |
            sudo mkdir /etc/ecal
-           sudo cp "./ecal/core/cfg/gen/ecal.yaml" /etc/ecal
+           sudo cp "./ecal/core/cfg/ecal.yaml" /etc/ecal
       working-directory: ${{ runner.workspace }}/_build
       shell: bash
 

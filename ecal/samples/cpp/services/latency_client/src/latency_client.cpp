@@ -59,7 +59,7 @@ int main()
     // call service method "hello" subcalls times (for better time accuracy)
     for (auto i = 0; i < subcalls; ++i)
     {
-      latency_client.CallWithCallback("hello", "", -1, eCAL::ResponseCallbackT());
+      latency_client.CallWithCallback("hello", "", eCAL::ResponseCallbackT());
     }
     
     // take return time and store it into the latency array

@@ -134,9 +134,8 @@ namespace eCAL
      * @param msg_       Message content.
      * @param time_      Message time stamp.
      * @param clock_     Message writer clock.
-     * @param id_        Message id.
      **/
-    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_, long long id_)>;
+    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_)>;
 
     /**
      * @brief Set receive callback for incoming messages.
@@ -221,8 +220,8 @@ namespace eCAL
 
       try
       {
-        auto msg = m_deserializer.Deserialize(data_.buf, data_.size, topic_info_);
-        fn_callback(topic_id_, msg, data_.time, data_.clock, data_.id);
+        auto msg = m_deserializer.Deserialize(data_.buffer, data_.buffer_size, topic_info_);
+        fn_callback(topic_id_, msg, data_.send_timestamp, data_.send_clock);
       }
       catch (const DynamicReflectionException& e)
       {

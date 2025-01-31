@@ -62,7 +62,7 @@ namespace eCAL
       // if a callback is provided call the callback as well
       std::pair<bool, SServiceResponse> CallWithCallback(
         const SEntityId& entity_id_, const std::string& method_name_,
-        const std::string& request_, int timeout_ms_, const ResponseCallbackT& response_callback_ = nullptr);
+        const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_ms_);
 
       // Asynchronous call to a specific service using callback
       bool CallWithCallbackAsync(

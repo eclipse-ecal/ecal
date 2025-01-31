@@ -353,7 +353,7 @@ System::String^ Subscriber::Dump()
   return(StlStringToString(m_sub->Dump()));
 }
 
-void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
+void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::v5::SReceiveCallbackData* data_)
 {
   std::string received_bytes = std::string(static_cast<const char*>(data_->buf), static_cast<size_t>(data_->size));
   ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
@@ -364,7 +364,7 @@ void Subscriber::OnReceive(const char* topic_name_, const ::eCAL::SReceiveCallba
   std::string topic_name = std::string(topic_name_);
   m_callbacks(StlStringToString(topic_name), data);
 }
-void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::SReceiveCallbackData* data_)
+void Subscriber::OnReceiveUnsafe(const char* topic_name_, const ::eCAL::v5::SReceiveCallbackData* data_)
 {
   ReceiveCallbackDataUnsafe^ data = gcnew ReceiveCallbackDataUnsafe();
   data->data    = data_->buf;

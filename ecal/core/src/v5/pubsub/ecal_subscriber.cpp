@@ -150,9 +150,16 @@ namespace eCAL
 
     bool CSubscriber::AddReceiveCallback(ReceiveCallbackT callback_)
     {
-      auto v6_callback = [callback_](const STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
+      auto v6_callback = [callback_](const STopicId& topic_id_, const SDataTypeInformation&, const eCAL::SReceiveCallbackData& v6_callback_data)
         {
-          callback_(topic_id_.topic_name.c_str(), &data_);
+          eCAL::v5::SReceiveCallbackData v5_callback_data;
+          // we all know the const_cast is evil, however, the old api didn't define the buffer as const.
+          v5_callback_data.buf = const_cast<void*>(v6_callback_data.buffer);
+          v5_callback_data.size = static_cast<long>(v6_callback_data.buffer_size);
+          v5_callback_data.id = 0; // v6 callbacks do not communicate this data any more, hence it is always set to 0.
+          v5_callback_data.time = v6_callback_data.send_timestamp;
+          v5_callback_data.clock = v6_callback_data.send_clock;
+          callback_(topic_id_.topic_name.c_str(), &v5_callback_data);
         };
       return AddReceiveCallback(v6_callback);
     }
