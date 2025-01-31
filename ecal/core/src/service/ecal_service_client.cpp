@@ -145,9 +145,9 @@ namespace eCAL
     for (auto& instance : instances)
     {
       futures.emplace_back(std::async(std::launch::async,
-        [&instance, method_name_ = method_name_, request_ = request_, timeout_, response_callback_]()
+        [&instance, method_name_ = method_name_, request_ = request_, response_callback_, timeout_]()
         {
-          return instance.CallWithCallback(method_name_, request_, timeout_, response_callback_);
+          return instance.CallWithCallback(method_name_, request_, response_callback_, timeout_);
         }));
     }
 

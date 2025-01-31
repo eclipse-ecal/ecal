@@ -100,12 +100,12 @@ namespace eCAL
      * @param       method_name_           Method name.
      * @param       request_               Request string.
      * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-     * @param       timeout_               Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
+     * @param       timeout_ms_            Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
      *
      * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithResponse(const std::string& method_name_, const std::string& request_, ServiceResponseVecT& service_response_vec_, int timeout_ = DEFAULT_TIME_ARGUMENT) const;
+      bool CallWithResponse(const std::string& method_name_, const std::string& request_, ServiceResponseVecT& service_response_vec_, int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
@@ -113,12 +113,12 @@ namespace eCAL
      * @param method_name_        Method name.
      * @param request_            Request string.
      * @param response_callback_  Callback function for the service method response.
-     * @param timeout_            Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
+     * @param timeout_ms_         Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
      *
      * @return  True if all calls were successful.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool CallWithCallback(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_ = DEFAULT_TIME_ARGUMENT) const;
+      bool CallWithCallback(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const;
 
     /**
      * @brief Asynchronous call of a service method for all existing service instances, using callback

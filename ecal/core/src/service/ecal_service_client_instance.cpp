@@ -34,12 +34,12 @@ namespace eCAL
 
   std::pair<bool, SServiceResponse> CClientInstance::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_)
   {
-    return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_);
+    return m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, nullptr, timeout_);
   }
 
-  bool CClientInstance::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseCallbackT& response_callback_)
+  bool CClientInstance::CallWithCallback(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_)
   {
-    auto response = m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, timeout_, response_callback_);
+    auto response = m_service_client_impl->CallWithCallback(m_entity_id, method_name_, request_, response_callback_, timeout_);
     return response.first;
   }
 
