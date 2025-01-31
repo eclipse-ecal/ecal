@@ -78,7 +78,7 @@ namespace eCAL
     return instances;
   }
 
-  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, int timeout_, ServiceResponseVecT& service_response_vec_) const
+  bool CServiceClient::CallWithResponse(const std::string& method_name_, const std::string& request_, ServiceResponseVecT& service_response_vec_, int timeout_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
@@ -133,7 +133,7 @@ namespace eCAL
     return overall_success;
   }
 
-  bool CServiceClient::CallWithCallback(const std::string& method_name_, const std::string& request_, int timeout_, const ResponseCallbackT& response_callback_) const
+  bool CServiceClient::CallWithCallback(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_) const
   {
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();

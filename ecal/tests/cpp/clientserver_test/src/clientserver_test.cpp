@@ -306,11 +306,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -323,11 +323,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -425,11 +425,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -454,11 +454,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", method_process_time * 4, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback, method_process_time * 4);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", method_process_time * 4, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback, method_process_time * 4);
       methods_called++;
     }
   }
@@ -483,12 +483,12 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", method_process_time / 10, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback, method_process_time / 10);
       eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", method_process_time / 10, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback, method_process_time / 10);
       eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
     }
@@ -741,7 +741,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
     for (const auto& client : client_vec)
     {
       // call method 1
-      if (client->CallWithResponse("foo::method1", "my request for method 1", -1, service_response_vec))
+      if (client->CallWithResponse("foo::method1", "my request for method 1", service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
 
@@ -755,7 +755,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
       }
 
       // call method 2
-      if (client->CallWithResponse("foo::method2", "my request for method 2", -1, service_response_vec))
+      if (client->CallWithResponse("foo::method2", "my request for method 2", service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
 
@@ -831,7 +831,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
-      success &= client2.CallWithCallback("foo::method2", "my request for method 2", -1, response_callback2);
+      success &= client2.CallWithCallback("foo::method2", "my request for method 2", response_callback2);
       methods_called++;
       responses_executed++;
     };
@@ -843,7 +843,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   for (auto i = 0; i < calls; ++i)
   {
     // call method 1
-    success &= client1.CallWithCallback("foo::method1", "my request for method 1", -1, response_callback1);
+    success &= client1.CallWithCallback("foo::method1", "my request for method 1", response_callback1);
     eCAL::Process::SleepMS(sleep);
     methods_called++;
   }

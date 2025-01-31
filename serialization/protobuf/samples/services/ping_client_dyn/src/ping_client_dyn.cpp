@@ -105,7 +105,7 @@ int main()
     {
       // call Ping service method
       eCAL::ServiceResponseVecT service_response_vec;
-      if (ping_client.CallWithResponse("Ping", ping_request, -1, service_response_vec))
+      if (ping_client.CallWithResponse("Ping", ping_request, service_response_vec))
       {
         std::cout << '\n' << "PingService::Ping method called with message (JSON) : " << req_json << '\n';
 
