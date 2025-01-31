@@ -135,7 +135,7 @@ int main(int argc, char** argv)
   std::cout << app_version_header << std::endl << ecal_version_header << std::endl << std::endl;
 
   // initialize eCAL API
-  if (eCAL::Initialize(MMA_APPLICATION_NAME, eCAL::Init::Publisher))
+  if (!eCAL::Initialize(MMA_APPLICATION_NAME, eCAL::Init::Publisher))
   {
     std::cout << "eCAL initialization failed !";
     return 1;
