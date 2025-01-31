@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   eCAL::protobuf::CSubscriber<proto_messages::HelloWorld> subscriber("hello_world_protobuf");
 
   // Set the Callback
-  subscriber.AddReceiveCallback(std::bind(&HelloWorldCallback, std::placeholders::_2));
+  subscriber.SetReceiveCallback(std::bind(&HelloWorldCallback, std::placeholders::_2));
 
   // Just don't exit
   while (eCAL::Ok())
