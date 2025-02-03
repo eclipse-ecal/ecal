@@ -360,8 +360,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 if(WIN32)
   set(CMAKE_DEBUG_POSTFIX            d)
-  set(CMAKE_MINSIZEREL_POSTFIX       minsize)
-  set(CMAKE_RELWITHDEBINFO_POSTFIX   reldbg)
 endif()
 
 # --------------------------------------------------------
