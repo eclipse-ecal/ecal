@@ -39,9 +39,8 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 install(TARGETS ${PROJECT_NAME}
     # IMPORTANT: Add the library to the "export-set"
     EXPORT eCALTargets
-    RUNTIME DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime
-    LIBRARY DESTINATION "${eCAL_install_lib_dir}" COMPONENT sdk
-    PUBLIC_HEADER DESTINATION "${eCAL_install_include_dir}/ecal" COMPONENT sdk
+    RUNTIME COMPONENT runtime
+    LIBRARY COMPONENT sdk
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/csharp)
