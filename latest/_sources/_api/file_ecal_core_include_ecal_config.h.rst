@@ -116,6 +116,10 @@ Functions
 
 - :ref:`exhale_function_config_8h_1a5163d960ca5891f6cca4303709565265`
 
+- :ref:`exhale_function_config_8h_1ad37f5a6bde4bb5e92e3711a8255efe3a`
+
+- :ref:`exhale_function_config_8h_1a52d7c8d986007ec10687d7fae7e3e4fe`
+
 - :ref:`exhale_function_config_8h_1abda92e1cc50e7f3c3b65acf8765e344d`
 
 - :ref:`exhale_function_config_8h_1a159d41c9cf64a883becf2b2c5a8a099e`

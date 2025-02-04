@@ -91,6 +91,11 @@ Program Listing for File config.h
        // sys
    
        ECAL_API std::string              GetEcalSysFilterExcludeList          ();
+   
+       // publisher
+       
+       ECAL_API bool                     IsTopicTypeSharingEnabled            ();
+       ECAL_API bool                     IsTopicDescriptionSharingEnabled     ();
        
        // subscriber
        
