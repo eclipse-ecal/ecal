@@ -53,7 +53,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY
-  "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+  "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
    FILES_MATCHING PATTERN "*.h")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/mon)

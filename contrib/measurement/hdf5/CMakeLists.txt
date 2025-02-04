@@ -42,7 +42,7 @@ target_link_libraries(${PROJECT_NAME}
 ecal_install_library(${PROJECT_NAME})
 
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)

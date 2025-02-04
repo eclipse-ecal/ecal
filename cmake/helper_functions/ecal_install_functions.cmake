@@ -102,7 +102,7 @@ endfunction()
 
 
 # Samples are sample applications that demonstrate eCAL capability
-# They will be installed to "${INSTALL_BIN_DIR}/ecal_samples"
+# They will be installed to `${prefix}/share/ecal/samples`
 function(ecal_install_sample TARGET_NAME)
   install(TARGETS ${TARGET_NAME}
     RUNTIME DESTINATION  "${eCAL_install_samples_dir}" COMPONENT samples

@@ -31,7 +31,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 
 #install(
 #  DIRECTORY "include/" 
-#  DESTINATION "${INSTALL_INCLUDE_DIR}" 
+#  DESTINATION "${eCAL_install_include_dir}"
 #  COMPONENT sdk
 #  FILES_MATCHING PATTERN "*.h"
 #)

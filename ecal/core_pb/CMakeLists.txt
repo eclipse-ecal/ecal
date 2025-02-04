@@ -56,7 +56,10 @@ endif()
 
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
+protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src
+  INSTALL_FOLDER "${eCAL_install_include_dir}"
+  ${ProtoFiles}
+)
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE
