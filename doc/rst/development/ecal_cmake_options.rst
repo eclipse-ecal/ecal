@@ -21,37 +21,37 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | CMake option                              | Default | Description                                                     |
 +===========================================+=========+=================================================================+
-| ``ECAL_USE_HDF5``                              | ``ON``  | Platform supports HDF5 library                                  |
+| ``ECAL_USE_HDF5``                         | ``ON``  | Platform supports HDF5 library                                  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_QT``                                | ``ON``  | Platform supports Qt 5 6 library.                               |
+| ``ECAL_USE_QT``                           | ``ON``  | Platform supports Qt 5 6 library.                               |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_CURL``                              | ``ON``  | Build with CURL (i.e. upload support in the recorder app)       |
+| ``ECAL_USE_CURL``                         | ``ON``  | Build with CURL (i.e. upload support in the recorder app)       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_CAPNPROTO``                         | ``OFF`` | Platform supports Cap'n Proto library                           |
+| ``ECAL_USE_CAPNPROTO``                    | ``OFF`` | Platform supports Cap'n Proto library                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_FLATBUFFERS``                       | ``OFF`` | Platform supports flatbuffers library                           |
+| ``ECAL_USE_FLATBUFFERS``                  | ``OFF`` | Platform supports flatbuffers library                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_FTXUI``                             | ``ON``  | Platform supports FTXUI library. Requires C++17 and up.         |
+| ``ECAL_USE_FTXUI``                        | ``ON``  | Platform supports FTXUI library. Requires C++17 and up.         |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_DOCS``                            | ``OFF`` | Build the eCAL documentation                                    |
+| ``ECAL_BUILD_DOCS``                       | ``OFF`` | Build the eCAL documentation                                    |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_APPS``                            | ``ON``  | Build the eCAL applications                                     |
+| ``ECAL_BUILD_APPS``                       | ``ON``  | Build the eCAL applications                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_SAMPLES``                         | ``ON``  | Build the eCAL samples                                          |
+| ``ECAL_BUILD_SAMPLES``                    | ``ON``  | Build the eCAL samples                                          |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_TIMEPLUGINS``                            | ``ON``  | Build the eCAL time interfaces                                  |
+| ``ECAL_BUILD_TIMEPLUGINS``                | ``ON``  | Build the eCAL time interfaces                                  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_PY_BINDING``                      | ``OFF`` | Build eCAL python binding                                       |
+| ``ECAL_BUILD_PY_BINDING``                 | ``OFF`` | Build eCAL python binding                                       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``BUILD_STANDAL``ON``E_PY_WHEEL``         | ``OFF`` | Build eCAL python binding as standalone wheel                   |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_CSHARP_BINDING``                  | ``OFF`` | Build eCAL C# binding                                           |
+| ``ECAL_BUILD_CSHARP_BINDING``             | ``OFF`` | Build eCAL C# binding                                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_BUILD_TESTS``                      | ``OFF`` | Build the eCAL google tests                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_INSTALL_SAMPLE_SOURCES``           | ``ON``  | Install the sources of eCAL samples                             |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_USE_NPCAP``                    | ``OFF`` | Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix) |
+| ``ECAL_USE_NPCAP``                        | ``OFF`` | Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix) |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_USE_CLOCKLOCK_MUTEX``              | ``OFF`` | Use native mutex with monotonic clock (requires glibc >= 2.30)  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
@@ -91,7 +91,7 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_LINK_HDF5_SHARED``                 | ``ON``  | Link shared libs of HDF5                                        |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_CPACK_PACK_WITH_INNOSETUP``             | ``ON``  | Create Innosetup installer for the Windows build                |
+| ``ECAL_CPACK_PACK_WITH_INNOSETUP``        | ``ON``  | Create Innosetup installer for the Windows build                |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 
 To build the eCAL csharp extension you need to set the CMake option ``ECAL_BUILD_CSHARP_BINDING`` to ``ON``.

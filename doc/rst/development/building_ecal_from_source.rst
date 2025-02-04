@@ -166,5 +166,8 @@ We support building on currently supported Ubuntu LTS releases.
 
    .. code-block:: bash
 
-      cmake --build . --target create_python_wheel --config Release
-      sudo pip3 install _deploy/ecal5-*
+      pip install wheel
+      pip install -r ../doc/requirements.txt
+      python -m pip install build
+      python -m build .. --outdir _deploy
+      sudo pip install _deploy/ecal5-*
