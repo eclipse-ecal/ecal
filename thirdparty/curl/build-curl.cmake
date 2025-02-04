@@ -5,7 +5,14 @@ if(WIN32)
 endif()
 
 set(BUILD_CURL_EXE OFF CACHE BOOL "Don't build the curl executable" FORCE)
-set(ENABLE_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
+set(ENABLE_CURL_MANUAL  OFF CACHE BOOL "Disable built-in manual" FORCE)
+set(PICKY_COMPILER  OFF CACHE BOOL "Disable extra compiler options" FORCE)
+set(BUILD_LIBCURL_DOCS  OFF CACHE BOOL "Disable libcurl man pages" FORCE)
+set(BUILD_MISC_DOCS  OFF CACHE BOOL "Disable misc man pages" FORCE)
+set(BUILD_EXAMPLES  OFF CACHE BOOL "Disable curl examples" FORCE)
+
+# All targets made by curl will go in the correct IDE folder
+set(CMAKE_FOLDER "thirdparty/curl")
 
 ecal_disable_all_warnings()
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/curl thirdparty/curl EXCLUDE_FROM_ALL SYSTEM)
