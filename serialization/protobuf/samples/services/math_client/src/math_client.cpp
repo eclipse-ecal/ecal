@@ -26,12 +26,10 @@
 
 #include "math.pb.h"
 
-// client state callback
-void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
+// Client state callback: prints connection, disconnection, or timeout information.
+void OnClientState(const eCAL::SServiceId& service_id_, const eCAL::SClientEventCallbackData& data_)
 {
-  assert(data_);
-
-  switch (data_->type)
+  switch (data_.type)
   {
   case eCAL::eClientEvent::connected:
     std::cout << "---------------------------------" << std::endl;
@@ -53,91 +51,124 @@ void OnClientState(const eCAL::v5::SClientEventCallbackData* data_)
     break;
   }
 
-  std::cout << "Server Hostname      : " << data_->attr.hname       << std::endl;
-  std::cout << "Server Name          : " << data_->attr.sname       << std::endl;
-  std::cout << "Server Process       : " << data_->attr.pname       << std::endl;
-  std::cout << "Server PID           : " << data_->attr.pid         << std::endl;
-  std::cout << "Server TCP Port (V1) : " << data_->attr.tcp_port_v1 << std::endl;
-  std::cout << "---------------------------------"                  << std::endl << std::endl;
+  std::cout << "Server Hostname      : " << service_id_.service_id.host_name << std::endl;
+  std::cout << "Server Name          : " << service_id_.service_name << std::endl;
+  std::cout << "Server PID           : " << service_id_.service_id.process_id << std::endl;
+  std::cout << "---------------------------------" << std::endl << std::endl;
 }
 
-// callback for math service response
-void OnMathResponse(const struct eCAL::v5::SServiceResponse& service_response_)
+// Callback for math service responses (for the callback variants).
+void OnMathResponse(const eCAL::protobuf::TMsgServiceResponse<SFloat>& service_response_)
 {
-  switch(service_response_.call_state)
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+  const int32_t&     process_id  = service_response_.server_id.service_id.process_id;
+
+  if (service_response_.call_state == eCAL::eCallState::executed && service_response_.response)
   {
-  // service successful executed
-  case eCAL::eCallState::executed:
-    {
-      SFloat response;
-      response.ParseFromString(service_response_.response);
-      std::cout << "Received response MathService / " << service_response_.method_name << " : " << response.out() << " from host " << service_response_.host_name << std::endl;
-    }
-    break;
-  // service execution failed
-  case eCAL::eCallState::failed:
-    std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
-    break;
-  default:
-    break;
+    std::cout << "Callback: Received response MathService / " << method_name
+      << " : " << service_response_.response->out()
+      << " from host " << host_name << " with pid " << process_id << std::endl;
+  }
+  else
+  {
+    std::cout << "Callback: Received error MathService / " << method_name
+      << " : " << service_response_.error_msg
+      << " from host " << host_name << " with pid " << process_id << std::endl;
   }
 }
 
-// main entry
 int main()
 {
-  // initialize eCAL API
+  // Initialize the eCAL API.
   eCAL::Initialize("math client");
 
-  // create math service client
-  eCAL::protobuf::CServiceClient<MathService> math_client;
+  // Create a math service client using the protobuf service type MathService.
+  eCAL::protobuf::CServiceClient<MathService> math_client(OnClientState);
 
-  // add response callback
-  math_client.AddResponseCallback(OnMathResponse);
-
-  // add event callbacks
-  math_client.AddEventCallback(eCAL::eClientEvent::connected,    std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(eCAL::eClientEvent::disconnected, std::bind(OnClientState, std::placeholders::_2));
-  math_client.AddEventCallback(eCAL::eClientEvent::timeout,      std::bind(OnClientState, std::placeholders::_2));
-
-  // loop variables
-  int inp1(0);
-  int inp2(0);
-
-  // waiting for service
+  // Wait until the client is connected to at least one service.
   while (eCAL::Ok() && !math_client.IsConnected())
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::cout << "Waiting for the service .." << std::endl;
   }
 
-  while(eCAL::Ok())
+  // Prepare a request message.
+  SFloatTuple math_request;
+  int counter = 0;
+
+  while (eCAL::Ok())
   {
     if (math_client.IsConnected())
     {
-      //////////////////////////////////////
-      // Math service (callback variant)
-      //////////////////////////////////////
-      SFloatTuple math_request;
-      math_request.set_inp1(inp1++);
-      math_request.set_inp2(inp2++);
+      math_request.set_inp1(counter);
+      math_request.set_inp2(counter + 1);
 
-      std::cout << std::endl << "Calling MathService::Add method with      : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-      if (!math_client.Call("Add", math_request))
+      // --- CallWithCallback variant using the top-level service client ---
       {
-        std::cout << "MathService::Add method call failed .." << std::endl << std::endl;
+        std::cout << std::endl << "Calling MathService::Add (callback) with      : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
+        if (!math_client.CallWithCallback<SFloat>("Add", math_request, OnMathResponse))
+        {
+          std::cout << "MathService::Add method call (callback) failed .." << std::endl;
+        }
       }
 
-      std::cout << std::endl << "Calling MathService::Multiply method with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-      if (!math_client.Call("Multiply", math_request))
+      // --- CallWithResponse variant using the top-level service client ---
       {
-        std::cout << "MathService::Multiply method call failed .." << std::endl << std::endl;
+        std::cout << std::endl << "Calling MathService::Multiply (blocking) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
+        auto multiply_response = math_client.CallWithResponse<SFloat>("Multiply", math_request);
+        if (multiply_response.first)
+        {
+          // Iterate over all responses
+          for (const auto& resp : multiply_response.second)
+          {
+            if (resp.response)
+            {
+              std::cout << "Blocking: Received response MathService / Multiply : " << resp.response->out() << std::endl;
+            }
+            else
+            {
+              std::cout << "Blocking: Received error MathService / Multiply : " << resp.error_msg << std::endl;
+            }
+          }
+        }
+        else
+        {
+          std::cout << "Blocking: MathService::Multiply call failed!" << std::endl;
+        }
       }
 
-      std::cout << std::endl << "Calling MathService::Divide method with   : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
-      if (!math_client.Call("Divide", math_request))
+      // --- Iterative CallWithCallback variant calling each client instance individually ---
       {
-        std::cout << "MathService::Divide method call failed .." << std::endl << std::endl;
+        std::cout << std::endl << "Iterating over client instances to call MathService::Divide" << std::endl;
+        auto instances = math_client.GetClientInstances();
+        for (auto& instance : instances)
+        {
+          std::cout << std::endl << "Calling MathService::Divide (callback inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
+          if (!instance.CallWithCallback<SFloat>("Divide", math_request, OnMathResponse))
+          {
+            std::cout << "MathService::Divide call on an instance failed." << std::endl;
+          }
+        }
+      }
+
+      // --- Iterative CallWithResponse variant calling each client instance individually ---
+      {
+        std::cout << std::endl << "Iterating over client instances to call MathService::Divide" << std::endl;
+        auto instances = math_client.GetClientInstances();
+        for (auto& instance : instances)
+        {
+          std::cout << std::endl << "Calling MathService::Divide (blocking inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
+          auto divide_response = instance.CallWithResponse<SFloat>("Divide", math_request);
+          if (divide_response.first)
+          {
+            std::cout << "Blocking: Received response MathService / Divide : " << divide_response.second.response->out() << std::endl;
+          }
+          else
+          {
+            std::cout << "Blocking: MathService::Divide call failed: " << divide_response.second.error_msg << std::endl;
+          }
+        }
       }
     }
     else
@@ -145,12 +176,11 @@ int main()
       std::cout << "Waiting for the service .." << std::endl;
     }
 
-    // sleep a second
+    counter++;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 
-  // finalize eCAL API
+  // Finalize the eCAL API.
   eCAL::Finalize();
-  
-  return(0);
+  return 0;
 }

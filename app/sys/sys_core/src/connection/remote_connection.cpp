@@ -15,7 +15,6 @@ namespace eCAL
     RemoteConnection::RemoteConnection(const std::string& hostname)
       : AbstractConnection(hostname)
     {
-      sys_client_service_.SetHostName(hostname);
     }
 
     RemoteConnection::~RemoteConnection()
@@ -127,9 +126,6 @@ namespace eCAL
     {
       std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
 
-      eCAL::v5::ServiceResponseVecT service_response_vec;
-      constexpr int timeout_ms = 1000;
-
       // After client creation it takes some time for the client to be actually connected.
       // As the call and the creation is too close together, the first call will fail.
       // Here we wait until the connection is established.
@@ -148,16 +144,24 @@ namespace eCAL
         }
       }
 
-      if (sys_client_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      eCAL::ServiceResponseVecT service_response_vec;
+      constexpr int timeout_ms = 1000;
+
+      auto client_instances = sys_client_service_.GetClientInstances();
+      for (auto& client_instance : client_instances)
       {
-        if (service_response_vec.size() > 0)
+        // TODO: We need to filter for pid as well in the future?
+        if (client_instance.GetClientID().host_name == m_hostname)
         {
-          response.ParseFromString(service_response_vec[0].response);
-          return true;
+          auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+          if (client_instance_response.first)
+          {
+            response.ParseFromString(client_instance_response.second.response);
+            return true;
+          }
         }
       }
       return false;
     }
-
   }
 }

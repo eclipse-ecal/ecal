@@ -53,10 +53,8 @@ namespace eCAL
       , last_response_                      ({true, ""})
       , should_be_connected_to_ecal_        (false)
       , complete_settings_                  (initial_settings)
+      , hostname_                           (hostname)
     {
-      // Bind the recorder_service_ to the hostname
-      recorder_service_.SetHostName(hostname);
-
       // Initial Ping => to perform auto recovery, which also sets the initial settings
       actions_to_perform_.emplace_back(Action());
 
@@ -667,16 +665,20 @@ namespace eCAL
 
     bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
     {
-      // The target (i.e. the hostname) has already been set in the Constructor.
+      constexpr int timeout_ms(1000);
 
-      eCAL::v5::ServiceResponseVecT service_response_vec;
-      constexpr int timeout_ms = 1000;
-      if (recorder_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      auto client_instances = recorder_service_.GetClientInstances();
+      for (auto& client_instance : client_instances)
       {
-        if (service_response_vec.size() > 0)
+        // TODO: We need to filter for pid as well in the future?
+        if (client_instance.GetClientID().host_name == hostname_)
         {
-          response.ParseFromString(service_response_vec[0].response);
-          return true;
+          auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+          if (client_instance_response.first)
+          {
+            response.ParseFromString(client_instance_response.second.response);
+            return true;
+          }
         }
       }
       return false;

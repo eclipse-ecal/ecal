@@ -82,31 +82,34 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
 
   // response callback function
   double math_response(0.0);
-  auto response_callback = [&](const struct eCAL::v5::SServiceResponse& service_response_)
+  auto response_callback = [&](const eCAL::protobuf::TMsgServiceResponse<SFloat>& service_response_)
   {
+    const std::string& method_name = service_response_.service_method_information.method_name;
+    const std::string& host_name   = service_response_.server_id.service_id.host_name;
+    const int32_t&     process_id  = service_response_.server_id.service_id.process_id;
+
     math_response = 0.0;
     switch (service_response_.call_state)
     {
     // service successful executed
     case eCAL::eCallState::executed:
     {
-      SFloat response;
-      response.ParseFromString(service_response_.response);
-      std::cout << "Received response MathService / " << service_response_.method_name << " : " << response.out() << " from host " << service_response_.host_name << std::endl;
-      math_response = response.out();
+      std::cout << "Callback: Received response MathService / " << method_name
+        << " : " << service_response_.response->out()
+        << " from host " << host_name << " with pid " << process_id << std::endl;
+      math_response = service_response_.response->out();
     }
     break;
     // service execution failed
     case eCAL::eCallState::failed:
-      std::cout << "Received error MathService / " << service_response_.method_name << " : " << service_response_.error_msg << " from host " << service_response_.host_name << std::endl;
+      std::cout << "Callback: Received error MathService / " << method_name
+        << " : " << service_response_.error_msg
+        << " from host " << host_name << " with pid " << process_id << std::endl;
       break;
     default:
       break;
     }
   };
-
-  // add callback for server response
-  math_client.AddResponseCallback(response_callback);
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
@@ -117,20 +120,19 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
   double inp2 = 22.0;
   math_request.set_inp1(inp1);
   math_request.set_inp2(inp2);
-  std::string math_request_s = math_request.SerializeAsString();
 
   math_response = 0.0;
-  math_client.Call("Add", math_request_s);
+  math_client.CallWithCallback<SFloat>("Add", math_request, response_callback);
   std::cout << std::endl << "Add method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
   EXPECT_EQ(inp1 + inp2, static_cast<double>(math_response));
 
   math_response = 0.0;
-  math_client.Call("Multiply", math_request_s);
+  math_client.CallWithCallback<SFloat>("Multiply", math_request, response_callback);
   std::cout << std::endl << "Multiply method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
   EXPECT_EQ(inp1 * inp2, static_cast<double>(math_response));
 
   math_response = 0.0;
-  math_client.Call("Divide", math_request_s);
+  math_client.CallWithCallback<SFloat>("Divide", math_request, response_callback);
   std::cout << std::endl << "Divide method called with : " << math_request.inp1() << " and " << math_request.inp1() << std::endl;
   EXPECT_EQ(inp1 / inp2, static_cast<double>(math_response));
 
@@ -173,12 +175,11 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
   eCAL::Process::SleepMS(2000);
 
   // test ping service
-  eCAL::v5::ServiceResponseVecT service_response_vec;
   PingRequest ping_request;
   ping_request.set_message("PING");
-  ping_client.Call("Ping", ping_request, -1, &service_response_vec);
+  auto ping_client_response = ping_client.CallWithResponse<PingResponse>("Ping", ping_request);
   std::cout << std::endl << "Ping method called with message : " << ping_request.message() << std::endl;
-  for (const auto& service_response : service_response_vec)
+  for (const auto& service_response : ping_client_response.second)
   {
     EXPECT_EQ(eCAL::eCallState::executed, service_response.call_state);
     switch (service_response.call_state)
@@ -186,15 +187,13 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
       // service successful executed
     case eCAL::eCallState::executed:
     {
-      PingResponse response;
-      response.ParseFromString(service_response.response);
-      std::cout << "Received response PingService / Ping : " << response.answer() << " from host " << service_response.host_name << std::endl;
-      EXPECT_STREQ(response.answer().c_str(), "PONG");
+      std::cout << "Received response PingService / Ping : " << service_response.response->answer() << " from host " << service_response.server_id.service_id.host_name << std::endl;
+      EXPECT_STREQ(service_response.response->answer().c_str(), "PONG");
     }
     break;
     // service execution failed
     case eCAL::eCallState::failed:
-      std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
+      std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.server_id.service_id.host_name << std::endl;
       break;
     default:
       break;

@@ -79,17 +79,20 @@ namespace eCAL
                                                         , const google::protobuf::Message&  request
                                                         , google::protobuf::Message&        response)
       {
-        remote_ecalsys_service->SetHostName(hostname);
+        constexpr int timeout_ms(1000);
 
-        eCAL::v5::ServiceResponseVecT service_response_vec;
-        constexpr int timeout_ms = 1000;
-
-        if (remote_ecalsys_service->Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+        auto client_instances = remote_ecalsys_service->GetClientInstances();
+        for (auto& client_instance : client_instances)
         {
-          if (service_response_vec.size() > 0)
+          // TODO: We need to filter for pid as well in the future?
+          if (client_instance.GetClientID().host_name == hostname)
           {
-            response.ParseFromString(service_response_vec[0].response);
-            return eCAL::rec::Error::ErrorCode::OK;
+            auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+            if (client_instance_response.first)
+            {
+              response.ParseFromString(client_instance_response.second.response);
+              return eCAL::rec::Error::ErrorCode::OK;
+            }
           }
         }
         return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);

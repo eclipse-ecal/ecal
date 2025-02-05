@@ -1,4 +1,4 @@
-/* ========================= eCAL LICENSE =================================
+﻿/* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
  *
@@ -19,7 +19,7 @@
 
 /**
  * @file   client.h
- * @brief  eCAL Client interface based on protobuf service description
+ * @brief  eCAL client interface based on protobuf service description
 **/
 
 #pragma once
@@ -27,8 +27,8 @@
 #include <ecal/deprecate.h>
 #include <ecal/service/client.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
+#include <ecal/msg/protobuf/client_instance.h>  // our new templated CClientInstance<T>
 
-// protobuf includes
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
 #endif
@@ -37,10 +37,10 @@
 #pragma warning(pop)
 #endif
 
-// stl includes
 #include <string>
 #include <functional>
 #include <map>
+#include <vector>
 
 namespace eCAL
 {
@@ -48,14 +48,20 @@ namespace eCAL
   {
     /**
      * @brief Google Protobuf Client wrapper class.
-    **/
+     *
+     * This class is templated on the service type T
+     * and automatically generates method information from the service descriptor.
+     *
+     * In addition to its base functionality, it now provides typed call overloads
+     * so that the responses can be obtained in a type‐safe way (using TMsgServiceResponse<ResponseT>).
+     */
     template <typename T>
     class CServiceClient : public eCAL::CServiceClient
     {
     public:
       /**
-       * @brief Constructor (using protobuf-defined service name).
-      **/
+       * @brief Constructor (using protobuf‐defined service name).
+       */
       CServiceClient(const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
         : eCAL::CServiceClient(GetServiceNameFromDescriptor(), CreateServiceMethodInformationSet(), event_callback_)
       {
@@ -64,63 +70,178 @@ namespace eCAL
       /**
        * @brief Constructor.
        *
-       * @param service_name_  Unique service name.
-      **/
+       * @param service_name_ Unique service name.
+       */
       explicit CServiceClient(const std::string& service_name_, const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
         : eCAL::CServiceClient(service_name_, CreateServiceMethodInformationSet(), event_callback_)
       {
       }
 
-      /**
-       * @brief CServiceClients are non-copyable.
-      **/
+      // Delete copy constructor and assignment operator.
       CServiceClient(const CServiceClient&) = delete;
       CServiceClient& operator=(const CServiceClient&) = delete;
 
       /**
-       * @brief Blocking call of a service method for all existing service instances, response will be returned as ServiceResponseVecT
+       * @brief Get the client instances for all matching services as our templated, typed instances.
        *
-       * @param       method_name_           Method name.
-       * @param       request_               Request message.
-       * @param       timeout_               Maximum time before operation returns (in milliseconds, -1 means infinite).
-       * @param [out] service_response_vec_  Response vector containing service responses from every called service.
-       *
-       * @return  True if all calls were successful.
-      **/
-      bool CallWithResponse(const std::string& method_name_, const google::protobuf::Message& request_, int timeout_, ServiceResponseVecT& service_response_vec_)
+       * @return A vector of CClientInstance<T>.
+       */
+      std::vector<CClientInstance<T>> GetClientInstances() const
       {
-        return CallWithResponse(method_name_, request_.SerializeAsString(), timeout_, service_response_vec_);
+        // Get the base client instances.
+        std::vector<eCAL::CClientInstance> base_instances = eCAL::CServiceClient::GetClientInstances();
+
+        std::vector<CClientInstance<T>> proto_instances;
+        proto_instances.reserve(base_instances.size());
+
+        // Wrap each base instance into our protobuf-enhanced instance.
+        for (auto& inst : base_instances)
+        {
+          // Use the conversion constructor (which moves the base instance).
+          proto_instances.push_back(CClientInstance<T>(std::move(inst)));
+        }
+        return proto_instances;
       }
 
       /**
-       * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
+       * @brief Blocking call of a service method for all matching service instances, returning typed responses.
        *
-       * @param method_name_        Method name.
-       * @param request_            Request message.
-       * @param timeout_            Maximum time before operation returns (in milliseconds, -1 means infinite).
-       * @param response_callback_  Callback function for the service method response.
+       * @tparam ResponseT     Expected protobuf response type (e.g. SFloat).
+       * 
+       * @param  method_name_  Method name.
+       * @param  request_      Request message.
+       * @param  timeout_      Timeout in milliseconds (DEFAULT_TIME_ARGUMENT for infinite).
        *
-       * @return  True if all calls were successful.
-      **/
-      bool CallWithCallback(const std::string& method_name_, const google::protobuf::Message& request_, int timeout_, const ResponseCallbackT& response_callback_)
+       * @return A pair where the first element is true if all calls succeeded and the second element
+       *         is a vector of typed responses.
+       */
+      template <typename ResponseT>
+      std::pair<bool, TMsgServiceResponseVecT<ResponseT>> CallWithResponse( const std::string& method_name_, const google::protobuf::Message& request_,
+        int timeout_ = DEFAULT_TIME_ARGUMENT) const
       {
-        return CallWithCallback(method_name_, request_.SerializeAsString(), timeout_, response_callback_);
+        bool all_success = true;
+        TMsgServiceResponseVecT<ResponseT> responses;
+
+        // Get all client instances.
+        auto instances = GetClientInstances();
+        for (auto& instance : instances)
+        {
+          auto ret = instance.template CallWithResponse<ResponseT>(method_name_, request_, timeout_);
+          responses.push_back(std::move(ret.second));
+          if (!ret.first)
+          {
+            all_success = false;
+          }
+        }
+        return std::pair<bool, TMsgServiceResponseVecT<ResponseT>>(all_success, responses);
       }
 
       /**
-       * @brief Asynchronous call of a service method for all existing service instances, using callback
+       * @brief Blocking call of a service method for all matching service instances.
        *
-       * @param method_name_        Method name.
-       * @param request_            Request message.
-       * @param response_callback_  Callback function for the service method response.
+       * @param  method_name_  Method name.
+       * @param  request_      Request message.
+       * @param  timeout_      Timeout in milliseconds (DEFAULT_TIME_ARGUMENT for infinite).
        *
-       * @return  True if all calls were successful.
-      **/
-      bool CallWithCallbackAsync(const std::string& method_name_, const google::protobuf::Message& request_, const ResponseCallbackT& response_callback_)
+       * @return A pair where the first element is true if all calls succeeded and the second element
+       *         is a vector of responses.
+       */
+      std::pair<bool, ServiceResponseVecT> CallWithResponse(const std::string& method_name_, const google::protobuf::Message& request_,
+        int timeout_ = DEFAULT_TIME_ARGUMENT) const
       {
-        return CallWithCallbackAsync(method_name_, request_.SerializeAsString(), response_callback_);
+        bool all_success = true;
+        ServiceResponseVecT responses;
+
+        // Get all client instances.
+        auto instances = GetClientInstances();
+        for (auto& instance : instances)
+        {
+          auto ret = instance.CallWithResponse(method_name_, request_, timeout_);
+          responses.push_back(std::move(ret.second));
+          if (!ret.first)
+          {
+            all_success = false;
+          }
+        }
+        return std::pair<bool, ServiceResponseVecT>(all_success, responses);
       }
 
+      /**
+       * @brief Blocking call with callback for all matching service instances, providing typed responses.
+       *
+       * @tparam ResponseT           Expected protobuf response type.
+       * 
+       * @param  method_name_        Method name.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback that accepts a typed response.
+       * @param  timeout_            Timeout in milliseconds.
+       *
+       * @return True if the call was successfully initiated for all instances.
+       */
+      template <typename ResponseT>
+      bool CallWithCallback(const std::string& method_name_, const google::protobuf::Message& request_, const TMsgResponseCallbackT<ResponseT>& response_callback_,
+        int timeout_ = DEFAULT_TIME_ARGUMENT) const
+      {
+        bool overall_success = true;
+        auto instances = GetClientInstances();
+        for (auto& instance : instances)
+        {
+          bool success = instance.CallWithCallback<ResponseT>(method_name_, request_, response_callback_, timeout_);
+          if (!success) overall_success = false;
+        }
+        return overall_success;
+      }
+
+      /**
+       * @brief Blocking call with callback for all matching service instances.
+       *
+       * @param  method_name_        Method name.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback that accepts a typed response.
+       * @param  timeout_            Timeout in milliseconds.
+       *
+       * @return True if the call was successfully initiated for all instances.
+       */
+      bool CallWithCallback(const std::string& method_name_, const google::protobuf::Message& request_, const ResponseCallbackT& response_callback_,
+        int timeout_ = DEFAULT_TIME_ARGUMENT) const
+      {
+        bool overall_success = true;
+        auto instances = GetClientInstances();
+        for (auto& instance : instances)
+        {
+          bool success = instance.CallWithCallback(method_name_, request_, response_callback_, timeout_);
+          if (!success) overall_success = false;
+        }
+        return overall_success;
+      }
+
+      /**
+       * @brief Asynchronous call with callback for all matching service instances, providing typed responses.
+       *
+       * @tparam ResponseT           Expected protobuf response type.
+       * 
+       * @param  method_name_        Method name.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback that accepts a typed response.
+       *
+       * @return True if the call was successfully initiated for all instances.
+       */
+      template <typename ResponseT>
+      bool CallWithCallbackAsync(const std::string& method_name_,
+        const google::protobuf::Message& request_,
+        const TMsgResponseCallbackT<ResponseT>& response_callback_) const
+      {
+        bool overall_success = true;
+        auto instances = GetClientInstances();
+        for (auto& instance : instances)
+        {
+          bool success = instance.CallWithCallbackAsync<ResponseT>(method_name_, request_, response_callback_);
+          if (!success) overall_success = false;
+        }
+        return overall_success;
+      }
+
+      // Optionally, also expose the base class overloads.
       using eCAL::CServiceClient::CallWithResponse;
       using eCAL::CServiceClient::CallWithCallback;
       using eCAL::CServiceClient::CallWithCallbackAsync;
@@ -128,21 +249,22 @@ namespace eCAL
     private:
       /**
        * @brief Retrieves the full service name from the Protobuf descriptor.
-      **/
+       */
       static std::string GetServiceNameFromDescriptor()
       {
-        struct U : T {};  // Temporary subclass to access protected descriptor method
+        struct U : T {};  // Temporary subclass to access protected GetDescriptor()
         U temp_instance;
         return temp_instance.GetDescriptor()->full_name();
       }
 
       /**
-       * @brief Generates the method information map for the service.
-       * @return A set containing service method information.
-      **/
+       * @brief Generates the method information set for the service.
+       *
+       * @return A set containing method information.
+       */
       static ServiceMethodInformationSetT CreateServiceMethodInformationSet()
       {
-        struct U : T {};  // Temporary subclass to access protected descriptor method
+        struct U : T {};  // Temporary subclass to access protected GetDescriptor()
         U temp_instance;
         const google::protobuf::ServiceDescriptor* service_descriptor = temp_instance.GetDescriptor();
 
@@ -160,7 +282,7 @@ namespace eCAL
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
           std::string method_name = method_descriptor->name();
 
-          std::string request_type_name  = method_descriptor->input_type()->name();
+          std::string request_type_name = method_descriptor->input_type()->name();
           std::string response_type_name = method_descriptor->output_type()->name();
 
           std::string request_type_descriptor;
@@ -179,5 +301,5 @@ namespace eCAL
         return method_information_map;
       }
     };
-  }
-}
+  } // namespace protobuf
+} // namespace eCAL

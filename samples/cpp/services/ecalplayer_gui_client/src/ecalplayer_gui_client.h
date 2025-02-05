@@ -52,7 +52,7 @@ signals:
   void setResponseSignal(QString response);
 
 private:
-  void onPlayerResponse(const struct eCAL::v5::SServiceResponse& service_response_);
+  void onPlayerResponse(const struct eCAL::SServiceResponse& service_response_);
 
 private:
   Ui::EcalplayGuiServiceMainWindow ui_;

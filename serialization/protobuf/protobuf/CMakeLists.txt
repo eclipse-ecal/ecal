@@ -76,6 +76,7 @@ target_sources(protobuf_core
     BASE_DIRS include
     FILES
       include/ecal/msg/protobuf/client.h
+      include/ecal/msg/protobuf/client_instance.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
       include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h
