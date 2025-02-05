@@ -68,27 +68,27 @@ bool ZombieInstanceKiller::KillZombie(const std::string& process_name)
       do
       {
 #ifdef _UNICODE
-        std::wstring process_name     = pe32.szExeFile;
+        std::wstring pname     = pe32.szExeFile;
         std::wstring wpid_name = String2WString(process_name);
-        DWORD        process_id       = pe32.th32ProcessID;
+        DWORD        pid       = pe32.th32ProcessID;
         // cause warning C4244 with VS2017
-        //std::transform(process_name.begin(), process_name.end(), process_name.begin(), ::tolower);
-        std::transform(process_name.begin(), process_name.end(), process_name.begin(),
+        //std::transform(pname.begin(), pname.end(), pname.begin(), ::tolower);
+        std::transform(pname.begin(), pname.end(), pname.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
-        if (process_name == wpid_name)
+        if (pname == wpid_name)
 #else /* _UNICODE */
-        std::string  process_name = pe32.szExeFile;
-        DWORD        process_id   = pe32.th32ProcessID;
+        std::string  pname = pe32.szExeFile;
+        DWORD        pid   = pe32.th32ProcessID;
         // cause warning C4244 with VS2017
-        //std::transform(process_name.begin(), process_name.end(), process_name.begin(), ::tolower);
-        std::transform(process_name.begin(), process_name.end(), process_name.begin(),
+        //std::transform(pname.begin(), pname.end(), pname.begin(), ::tolower);
+        std::transform(pname.begin(), pname.end(), pname.begin(),
           [](char c) {return static_cast<char>(::tolower(c)); });
-        if (process_name == process_name)
+        if (pname == process_name)
 #endif /* _UNICODE */
         {
-          if (process_id != GetCurrentProcessId())
+          if (pid != GetCurrentProcessId())
           {
-            eCAL::Process::StopProcess(process_id);
+            eCAL::Process::StopProcess(pid);
             ret_state = true;
           }
         }

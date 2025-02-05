@@ -4,11 +4,12 @@ include(cmake_functions.cmake)
 
 project(CMakeFunctions VERSION 0.4.1)
 
+include(GNUInstallDirs)
 if (MSVC)
 # Variable definitions
 set(cmake_functions_install_cmake_dir   cmake)
 else (MSVC)
-set(cmake_functions_install_cmake_dir   lib/cmake/${PROJECT_NAME}-${PROJECT_VERSION})
+set(cmake_functions_install_cmake_dir   "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")
 endif (MSVC)
 set(cmake_functions_config              ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake)
 set(cmake_functions_config_version      ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)

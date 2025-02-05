@@ -113,7 +113,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/c)
 ecal_install_shared_library(${PROJECT_NAME})
 
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 

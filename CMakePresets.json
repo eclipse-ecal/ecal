@@ -51,14 +51,7 @@
         "ECAL_BUILD_APPS": "OFF",
         "ECAL_BUILD_SAMPLES": "OFF",
         "ECAL_CORE_CONFIGURATION": "OFF",
-        "ECAL_INSTALL_SAMPLE_SOURCES": "OFF",
-        "ECAL_THIRDPARTY_BUILD_FINEFTP": "OFF",
-        "ECAL_THIRDPARTY_BUILD_FTXUI": "OFF",
-        "ECAL_THIRDPARTY_BUILD_SPDLOG": "OFF",
-        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "OFF",
-        "ECAL_THIRDPARTY_BUILD_TINYXML2": "OFF",
-        "ECAL_THIRDPARTY_BUILD_CURL": "OFF",
-        "ECAL_THIRDPARTY_BUILD_HDF5": "OFF"
+        "ECAL_INSTALL_SAMPLE_SOURCES": "OFF"
       }
     },
     {
@@ -69,8 +62,7 @@
       "cacheVariables": {
         "ECAL_USE_HDF5": "ON",
         "ECAL_BUILD_PY_BINDING": "ON",
-        "BUILD_SHARED": "OFF",
-        "ECAL_THIRDPARTY_BUILD_HDF5": "ON"
+        "BUILD_SHARED": "OFF"
       }
     },
     {
@@ -92,14 +84,7 @@
         "ECAL_USE_CURL": "ON",
         "ECAL_USE_FTXUI": "ON",
         "ECAL_BUILD_APPS": "ON",
-        "ECAL_BUILD_SAMPLES": "ON",
-        "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
-        "ECAL_THIRDPARTY_BUILD_FTXUI": "ON",
-        "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
-        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "ON",
-        "ECAL_THIRDPARTY_BUILD_TINYXML2": "ON",
-        "ECAL_THIRDPARTY_BUILD_CURL": null,
-        "ECAL_THIRDPARTY_BUILD_HDF5": null
+        "ECAL_BUILD_SAMPLES": "ON"
       }
     },
     {

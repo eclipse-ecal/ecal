@@ -122,12 +122,6 @@ if(DEFINED BUILD_APPS AND NOT DEFINED ECAL_BUILD_APPS)
   message(WARNING "The option BUILD_APPS is deprecated and may be removed at any time. Please use ECAL_BUILD_APPS instead.")
 endif()
 
-# Legacy Compatibility option for BUILD_APP_REC_ADDON_SDK
-if(DEFINED BUILD_APP_REC_ADDON_SDK AND NOT DEFINED ECAL_BUILD_APP_REC_ADDON_SDK)
-  set(ECAL_BUILD_APP_REC_ADDON_SDK ${BUILD_APP_REC_ADDON_SDK})
-  message(WARNING "The option BUILD_APP_REC_ADDON_SDK is deprecated and may be removed at any time. Please use ECAL_BUILD_APP_REC_ADDON_SDK instead.")
-endif()
-
 # Legacy Compatibility option for BUILD_SAMPLES
 if(DEFINED BUILD_SAMPLES AND NOT DEFINED ECAL_BUILD_SAMPLES)
   set(ECAL_BUILD_SAMPLES ${BUILD_SAMPLES})
@@ -194,7 +188,7 @@ option(ECAL_USE_MESSAGEPACK                         "Platform supports messagepa
 
 option(ECAL_BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
 option(ECAL_BUILD_APPS                              "Build the eCAL applications"                                       ON)
-option(ECAL_BUILD_APP_REC_ADDON_SDK                 "Build eCAL rec addon SDK"                               ${ECAL_BUILD_APPS})
+option(ECAL_BUILD_APP_SDK                           "Build SDK components of eCAL applications"         ${ECAL_BUILD_APPS})
 option(ECAL_BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
 option(ECAL_BUILD_TIMEPLUGINS                       "Build the eCAL time interfaces"                                    ON)
 option(ECAL_BUILD_C_BINDING                         "Build eCAL C binding"                                              ON)
@@ -315,18 +309,6 @@ endif()
 # --------------------------------------------------------
 # offer the user the choice of overriding the installation directories
 # --------------------------------------------------------
-set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
-set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
-set(INSTALL_INCLUDE_DIR include CACHE PATH
-  "Installation directory for header files")
-if(WIN32 AND NOT CYGWIN)
-  set(DEF_INSTALL_CMAKE_DIR CMake)
-else()
-  set(DEF_INSTALL_CMAKE_DIR lib/CMake/eCAL)
-endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
-  "Installation directory for CMake files")
-
 include(GNUInstallDirs)
 set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
 set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
@@ -392,14 +374,14 @@ endif()
 # --------------------------------------------------------
 # ecal mon plugin sdk
 # --------------------------------------------------------
-if(ECAL_USE_QT AND ECAL_BUILD_APPS)
+if(ECAL_USE_QT AND ECAL_BUILD_APP_SDK)
   add_subdirectory(app/mon/mon_plugin_lib)
 endif()
 
 # --------------------------------------------------------
 # ecal rec addon sdk
 # --------------------------------------------------------
-if(ECAL_BUILD_APP_REC_ADDON_SDK)
+if(ECAL_BUILD_APP_SDK)
   add_subdirectory(app/rec/rec_addon_core)
   add_subdirectory(app/rec/rec_addon_dummy)
 endif()
@@ -640,6 +622,7 @@ message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE
 message(STATUS "BUILD_SHARED_LIBS                                   : ${BUILD_SHARED_LIBS}")
 message(STATUS "ECAL_BUILD_DOCS                                     : ${ECAL_BUILD_DOCS}")
 message(STATUS "ECAL_BUILD_APPS                                     : ${ECAL_BUILD_APPS}")
+message(STATUS "ECAL_BUILD_APP_SDK                                  : ${ECAL_BUILD_APP_SDK}")
 message(STATUS "ECAL_BUILD_SAMPLES                                  : ${ECAL_BUILD_SAMPLES}")
 message(STATUS "ECAL_BUILD_TIMEPLUGINS                              : ${ECAL_BUILD_TIMEPLUGINS}")
 message(STATUS "ECAL_BUILD_PY_BINDING                               : ${ECAL_BUILD_PY_BINDING}")

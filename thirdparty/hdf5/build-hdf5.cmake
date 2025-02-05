@@ -30,7 +30,8 @@ include_guard(GLOBAL)
   set(HDF5_BUILD_EXAMPLES       OFF CACHE BOOL "Do not build HDF5 Library Examples" FORCE)
   set(HDF5_BUILD_CPP_LIB        OFF CACHE BOOL "Do not build C++ lib" FORCE)
   set(HDF5_BUILD_HL_LIB         OFF CACHE BOOL "Do not build hdf5-hl" FORCE)
-  
+  set(HDF5_USE_GNU_DIRS         ON  CACHE BOOL "Use GNU install dirs" FORCE)
+
   # TODO: Let HDF5 use its own targets.
   # Adding the HDF5 targets to the eCALCoreTargets is a hack that we have had
   # before and so I am adding it again, to not break compatibility in eCAL 5.8

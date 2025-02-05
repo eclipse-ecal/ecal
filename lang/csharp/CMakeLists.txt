@@ -19,6 +19,8 @@
 # C# build, can be executed standalone against an eCAL installation
 project(ecal_csharp)
 
+include(GNUInstallDirs)
+
 # Macro to determine the matching protobuf C# version compatible with protoc found.
 # We should do this differently, but then we need to install protoc via nuget or similar...
 # Because the Prototbuf Version used for C# bindings is independent from the one we get from the submodules / conan

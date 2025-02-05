@@ -33,7 +33,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 ecal_install_library(${PROJECT_NAME})
 
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
 )
 
 
