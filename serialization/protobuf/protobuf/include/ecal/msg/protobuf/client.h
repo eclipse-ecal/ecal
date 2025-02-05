@@ -186,7 +186,7 @@ namespace eCAL
         auto instances = GetClientInstances();
         for (auto& instance : instances)
         {
-          bool success = instance.CallWithCallback<ResponseT>(method_name_, request_, response_callback_, timeout_);
+          bool success = instance.template CallWithCallback<ResponseT>(method_name_, request_, response_callback_, timeout_);
           if (!success) overall_success = false;
         }
         return overall_success;
@@ -235,7 +235,7 @@ namespace eCAL
         auto instances = GetClientInstances();
         for (auto& instance : instances)
         {
-          bool success = instance.CallWithCallbackAsync<ResponseT>(method_name_, request_, response_callback_);
+          bool success = instance.template CallWithCallbackAsync<ResponseT>(method_name_, request_, response_callback_);
           if (!success) overall_success = false;
         }
         return overall_success;
