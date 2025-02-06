@@ -190,7 +190,8 @@ bool RecServerServiceGui::callService(const std::string& method, const RequestT&
   for (auto& client_instance : client_instances)
   {
     // TODO: We need to filter for pid as well in the future?
-    if (client_instance.GetClientID().host_name == hostname_)
+    // Currently empty hostname means "all hosts"
+    if ((client_instance.GetClientID().host_name == hostname_) || hostname_.empty())
     {
       success |= client_instance.CallWithCallback(method, request,
         [this](const struct eCAL::SServiceResponse& service_response)

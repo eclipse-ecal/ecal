@@ -42,7 +42,8 @@ namespace eCAL
         for (auto& client_instance : client_instances)
         {
           // TODO: We need to filter for pid as well in the future?
-          if (client_instance.GetClientID().host_name == hostname)
+          // Currently empty hostname means "all hosts"
+          if (client_instance.GetClientID().host_name == hostname || hostname.empty())
           {
             auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
             if (client_instance_response.first)

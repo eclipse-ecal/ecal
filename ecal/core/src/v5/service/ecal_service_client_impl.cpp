@@ -202,6 +202,7 @@ namespace eCAL
       bool success = false;
       for (auto& instance : instances)
       {
+        // Currently empty hostname means "all hosts"
         if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
           success |= instance.CallWithCallback(method_name_, request_, callback, timeout_);
@@ -231,6 +232,7 @@ namespace eCAL
       bool success = false;
       for (auto& instance : instances)
       {
+        // Currently empty hostname means "all hosts"
         if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
           responses.emplace_back(instance.CallWithResponse(method_name_, request_, timeout_));
@@ -277,6 +279,7 @@ namespace eCAL
       bool success = false;
       for (auto& instance : instances)
       {
+        // Currently empty hostname means "all hosts"
         if (instance.GetClientID().host_name == m_host_name || m_host_name.empty())
         {
           success |= instance.CallWithCallbackAsync(method_name_, request_, callback);

@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   typed_response.h
+ * @file   client_typed_response.h
  * @brief  eCAL client protobuf templated response type
 **/
 

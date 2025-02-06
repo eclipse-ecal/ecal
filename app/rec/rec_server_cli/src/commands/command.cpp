@@ -73,7 +73,7 @@ namespace eCAL
         }
       }
 
-      eCAL::rec::Error Command::CallRemoteEcalrecService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_ecalsys_service
+      eCAL::rec::Error Command::CallRemoteEcalrecService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_ecalrec_service
                                                         , const std::string&                hostname
                                                         , const std::string&                method_name
                                                         , const google::protobuf::Message&  request
@@ -81,11 +81,12 @@ namespace eCAL
       {
         constexpr int timeout_ms(1000);
 
-        auto client_instances = remote_ecalsys_service->GetClientInstances();
+        auto client_instances = remote_ecalrec_service->GetClientInstances();
         for (auto& client_instance : client_instances)
         {
           // TODO: We need to filter for pid as well in the future?
-          if (client_instance.GetClientID().host_name == hostname)
+          // Currently empty hostname means "all hosts"
+          if (client_instance.GetClientID().host_name == hostname || hostname.empty())
           {
             auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
             if (client_instance_response.first)

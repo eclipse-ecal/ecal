@@ -77,12 +77,25 @@ target_sources(protobuf_core
     FILES
       include/ecal/msg/protobuf/client.h
       include/ecal/msg/protobuf/client_instance.h
+      include/ecal/msg/protobuf/client_types_response.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
       include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h
+      include/ecal/msg/protobuf/client.h
+      include/ecal/msg/protobuf/client_instance.h
+      include/ecal/msg/protobuf/client_typed_response.h
+      include/ecal/msg/protobuf/dynamic_json_subscriber.h
+      include/ecal/msg/protobuf/dynamic_publisher.h
+      include/ecal/msg/protobuf/dynamic_subscriber.h
+      include/ecal/msg/protobuf/ecal_proto_decoder.h
+      include/ecal/msg/protobuf/ecal_proto_dyn.h
+      include/ecal/msg/protobuf/ecal_proto_hlp.h
+      include/ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h
+      include/ecal/msg/protobuf/ecal_proto_message_filter.h
+      include/ecal/msg/protobuf/ecal_proto_visitor.h
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
-      include/ecal/msg/protobuf/subscriber.h
+      include/ecal/msg/protobuf/subscriber.h	  
 )
 
 target_compile_features(protobuf_core INTERFACE cxx_std_14)

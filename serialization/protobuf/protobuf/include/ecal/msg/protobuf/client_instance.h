@@ -26,7 +26,7 @@
 
 #include <ecal/service/client_instance.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
-#include <ecal/msg/protobuf/typed_response.h>
+#include <ecal/msg/protobuf/client_typed_response.h>
 
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.h>

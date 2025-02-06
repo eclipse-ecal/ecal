@@ -124,6 +124,8 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)
   {
+    // TODO: We need to filter for pid as well in the future?
+    // hostname is fixed to the current host
     if (client_instance.GetClientID().host_name == hostname)
     {
       eCAL::pb::rec_server::GenericRequest request;
@@ -152,6 +154,8 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_se
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)
   {
+    // TODO: We need to filter for pid as well in the future?
+    // hostname is fixed to the current host
     if (client_instance.GetClientID().host_name == hostname)
     {
       auto client_instance_reponse = client_instance.CallWithResponse("SetConfig", config_pb, timeout_ms);

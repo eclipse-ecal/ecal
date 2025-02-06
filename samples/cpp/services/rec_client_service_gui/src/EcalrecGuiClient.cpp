@@ -216,12 +216,10 @@ void EcalrecGuiClient::callService(const std::string& method, const RequestT& re
   for (auto& client_instance : client_instances)
   {
     // TODO: We need to filter for pid as well in the future?
-    if (client_instance.GetClientID().host_name == hostname_)
+    // Currently empty hostname means "all hosts"
+    if ((client_instance.GetClientID().host_name == hostname_) || hostname_.empty())
     {
-      if (client_instance.GetClientID().host_name == hostname_)
-      {
-        client_instance.CallWithCallback(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
-      }
+      client_instance.CallWithCallback(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
     }
   }
 }
