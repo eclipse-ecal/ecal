@@ -33,7 +33,7 @@ int main()
   eCAL::Initialize("ping client");
 
   // create ping service client
-  eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
+  const eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
 
   // waiting for service
   while (eCAL::Ok() && !ping_client.IsConnected())
@@ -56,7 +56,7 @@ int main()
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;
 
-        for (auto service_response : ping_response.second)
+        for (const auto& service_response : ping_response.second)
         {
           switch (service_response.call_state)
           {

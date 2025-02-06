@@ -77,7 +77,20 @@ namespace eCAL
       {
       }
 
-      // Delete copy constructor and assignment operator.
+      /**
+       * @brief Destructor.
+      **/
+      ~CServiceClient() override = default;
+
+      /**
+       * @brief CServiceClients are non-movable.
+      **/
+      CServiceClient(CServiceClient&& other) = delete;
+      CServiceClient& operator=(CServiceClient&& other) = delete;
+
+      /**
+       * @brief CServiceClients are non-copyable.
+      **/
       CServiceClient(const CServiceClient&) = delete;
       CServiceClient& operator=(const CServiceClient&) = delete;
 
@@ -119,7 +132,7 @@ namespace eCAL
       std::pair<bool, TMsgServiceResponseVecT<ResponseT>> CallWithResponse( const std::string& method_name_, const google::protobuf::Message& request_,
         int timeout_ = DEFAULT_TIME_ARGUMENT) const
       {
-        bool all_success = true;
+        bool overall_success = true;
         TMsgServiceResponseVecT<ResponseT> responses;
 
         // Get all client instances.
@@ -130,10 +143,10 @@ namespace eCAL
           responses.push_back(std::move(ret.second));
           if (!ret.first)
           {
-            all_success = false;
+            overall_success = false;
           }
         }
-        return std::pair<bool, TMsgServiceResponseVecT<ResponseT>>(all_success, responses);
+        return std::pair<bool, TMsgServiceResponseVecT<ResponseT>>(overall_success, responses);
       }
 
       /**
@@ -149,7 +162,7 @@ namespace eCAL
       std::pair<bool, ServiceResponseVecT> CallWithResponse(const std::string& method_name_, const google::protobuf::Message& request_,
         int timeout_ = DEFAULT_TIME_ARGUMENT) const
       {
-        bool all_success = true;
+        bool overall_success = true;
         ServiceResponseVecT responses;
 
         // Get all client instances.
@@ -160,10 +173,10 @@ namespace eCAL
           responses.push_back(std::move(ret.second));
           if (!ret.first)
           {
-            all_success = false;
+            overall_success = false;
           }
         }
-        return std::pair<bool, ServiceResponseVecT>(all_success, responses);
+        return std::pair<bool, ServiceResponseVecT>(overall_success, responses);
       }
 
       /**
@@ -268,7 +281,7 @@ namespace eCAL
         U temp_instance;
         const google::protobuf::ServiceDescriptor* service_descriptor = temp_instance.GetDescriptor();
 
-        if (!service_descriptor)
+        if (service_descriptor == nullptr)
         {
           throw std::runtime_error("Failed to retrieve service descriptor.");
         }
@@ -280,10 +293,10 @@ namespace eCAL
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          std::string method_name = method_descriptor->name();
+          const std::string& method_name = method_descriptor->name();
 
-          std::string request_type_name = method_descriptor->input_type()->name();
-          std::string response_type_name = method_descriptor->output_type()->name();
+          const std::string& request_type_name = method_descriptor->input_type()->name();
+          const std::string& response_type_name = method_descriptor->output_type()->name();
 
           std::string request_type_descriptor;
           std::string response_type_descriptor;

@@ -144,11 +144,10 @@ namespace eCAL
         }
       }
 
-      eCAL::ServiceResponseVecT service_response_vec;
       constexpr int timeout_ms = 1000;
 
       auto client_instances = sys_client_service_.GetClientInstances();
-      for (auto& client_instance : client_instances)
+        for (auto& client_instance : client_instances)
       {
         // TODO: We need to filter for pid as well in the future?
         // Currently empty hostname means "all hosts"

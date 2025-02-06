@@ -979,7 +979,7 @@ namespace
       PyDict_SetItemString(topicDict, "tdatatype_descriptor", val); Py_DECREF(val);
 
       PyObject* layerList = PyList_New(0);
-      for (auto layer : topic.transport_layer)
+      for (const auto& layer : topic.transport_layer)
       {
         PyObject* layerDict = PyDict_New();
         PyList_Append(layerList, layerDict); Py_DECREF(layerDict);
@@ -1144,7 +1144,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         PyObject* methodsDict = PyDict_New();
         PyDict_SetItemString(serviceDict, "methods", methodsDict); Py_DECREF(methodsDict);
 
-        for (const auto method : service.methods)
+        for (const auto& method : service.methods)
         {
           val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);
@@ -1207,7 +1207,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
         PyObject* methodsDict = PyDict_New();
         PyDict_SetItemString(clientDict, "methods", methodsDict); Py_DECREF(methodsDict);
 
-        for (const auto method : client.methods)
+        for (const auto& method : client.methods)
         {
           val = Py_BuildValue("s", method.method_name.c_str());
           PyDict_SetItemString(methodsDict, "mname", val); Py_DECREF(val);

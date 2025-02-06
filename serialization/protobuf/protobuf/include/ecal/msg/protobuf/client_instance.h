@@ -55,7 +55,7 @@ namespace eCAL
     class CClientInstance
     {
     public:
-      // Constructors
+      // Constructor
       CClientInstance(eCAL::CClientInstance&& base_instance_) noexcept
         : m_instance(std::move(base_instance_))
       {
