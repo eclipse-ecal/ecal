@@ -250,6 +250,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   // Alltogether the eCALLogDirImpl function will be called 11 times.
 
   const std::string ecal_data_env_var = "/ecal/data/env";
+  const std::string ecal_data_env_log_var = ecal_data_env_var + path_separator + ECAL_FOLDER_NAME_LOG;
   const std::string ecal_log_env_var = "/ecal/log/env";
   const std::string ecal_config_logging_dir = "/config/logging/dir";
   const std::string ecal_yaml_dir = "/dir/to/current/yaml";
@@ -265,12 +266,12 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
     .InSequence(seq_env_log)
     .WillRepeatedly(testing::Return(ecal_log_env_var));
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
-    .Times(7)
+    .Times(8)
     .InSequence(seq_env_log)
     .WillRepeatedly(testing::Return(""));
 
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
-    .Times(4)
+    .Times(5)
     .InSequence(seq_env_data)
     .WillRepeatedly(testing::Return(ecal_data_env_var));
 
@@ -282,7 +283,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   // log is the third one
 
   EXPECT_CALL(mock_dir_manager, getDirectoryPath(testing::_))
-    .Times(8)
+    .Times(9)
     .InSequence(yaml_dir)
     .WillRepeatedly(testing::Return(ecal_yaml_dir));
   
@@ -307,6 +308,11 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
     .WillOnce(testing::Return(true))
     .WillRepeatedly(testing::Return(false));
   
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_log_var))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+
   EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_var))
     .Times(3)
     .WillOnce(testing::Return(true))
@@ -328,6 +334,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   
   // Testing with eCALData and eCALLog -DirImpl
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_log_env_var);
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_data_env_log_var);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_data_env_var);
   
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_var);
