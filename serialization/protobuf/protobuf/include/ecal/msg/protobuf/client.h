@@ -121,7 +121,7 @@ namespace eCAL
       /**
        * @brief Blocking call of a service method for all matching service instances, returning typed responses.
        *
-       * @tparam ResponseT     Expected protobuf response type (e.g. SFloat).
+       * @tparam ResponseT     Expected protobuf response type.
        * 
        * @param  method_name_  Method name.
        * @param  request_      Request message.

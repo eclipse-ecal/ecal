@@ -42,7 +42,7 @@ namespace eCAL
      * This structure holds a typed response for a service call. The response is stored
      * as a smart pointer to the expected protobuf message type.
      *
-     * @tparam ResponseT The expected protobuf response type (for example, SFloat).
+     * @tparam ResponseT The expected protobuf response type.
      */
     template <typename ResponseT>
     struct TMsgServiceResponse
