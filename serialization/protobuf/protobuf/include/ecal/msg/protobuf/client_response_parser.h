@@ -21,6 +21,7 @@
  * @file   client_response_parser.h
  * @brief  eCAL client response message parser
 **/
+
 #include <ecal/service/types.h>
 #include <ecal/msg/protobuf/client_typed_response.h>
 

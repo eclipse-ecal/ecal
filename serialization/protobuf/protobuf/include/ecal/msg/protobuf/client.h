@@ -26,8 +26,10 @@
 
 #include <ecal/deprecate.h>
 #include <ecal/service/client.h>
+
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
-#include <ecal/msg/protobuf/client_instance.h>  // our new templated CClientInstance<T>
+#include <ecal/msg/protobuf/client_instance.h>
+#include <ecal/msg/protobuf/client_protobuf_utils.h>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
@@ -63,7 +65,7 @@ namespace eCAL
        * @brief Constructor (using protobuf‐defined service name).
        */
       CServiceClient(const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
-        : eCAL::CServiceClient(GetServiceNameFromDescriptor(), CreateServiceMethodInformationSet(), event_callback_)
+        : eCAL::CServiceClient(GetServiceNameFromDescriptor<T>(), CreateServiceMethodInformationSet<T>(), event_callback_)
       {
       }
 
@@ -73,7 +75,7 @@ namespace eCAL
        * @param service_name_ Unique service name.
        */
       explicit CServiceClient(const std::string& service_name_, const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
-        : eCAL::CServiceClient(service_name_, CreateServiceMethodInformationSet(), event_callback_)
+        : eCAL::CServiceClient(service_name_, CreateServiceMethodInformationSet<T>(), event_callback_)
       {
       }
 
@@ -258,61 +260,6 @@ namespace eCAL
       using eCAL::CServiceClient::CallWithResponse;
       using eCAL::CServiceClient::CallWithCallback;
       using eCAL::CServiceClient::CallWithCallbackAsync;
-
-    private:
-      /**
-       * @brief Retrieves the full service name from the Protobuf descriptor.
-       */
-      static std::string GetServiceNameFromDescriptor()
-      {
-        struct U : T {};  // Temporary subclass to access protected GetDescriptor()
-        U temp_instance;
-        return temp_instance.GetDescriptor()->full_name();
-      }
-
-      /**
-       * @brief Generates the method information set for the service.
-       *
-       * @return A set containing method information.
-       */
-      static ServiceMethodInformationSetT CreateServiceMethodInformationSet()
-      {
-        struct U : T {};  // Temporary subclass to access protected GetDescriptor()
-        U temp_instance;
-        const google::protobuf::ServiceDescriptor* service_descriptor = temp_instance.GetDescriptor();
-
-        if (service_descriptor == nullptr)
-        {
-          throw std::runtime_error("Failed to retrieve service descriptor.");
-        }
-
-        ServiceMethodInformationSetT method_information_map;
-        CProtoDynDecoder dyn_decoder;
-        std::string error_s;
-
-        for (int i = 0; i < service_descriptor->method_count(); ++i)
-        {
-          const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          const std::string& method_name = method_descriptor->name();
-
-          const std::string& request_type_name = method_descriptor->input_type()->name();
-          const std::string& response_type_name = method_descriptor->output_type()->name();
-
-          std::string request_type_descriptor;
-          std::string response_type_descriptor;
-
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, request_type_name, request_type_descriptor, error_s);
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, response_type_name, response_type_descriptor, error_s);
-
-          method_information_map.emplace(SServiceMethodInformation{
-            method_name,
-            SDataTypeInformation{request_type_name,  "proto", request_type_descriptor},
-            SDataTypeInformation{response_type_name, "proto", response_type_descriptor}
-            });
-        }
-
-        return method_information_map;
-      }
     };
   } // namespace protobuf
 } // namespace eCAL
