@@ -1,89 +1,73 @@
-///* =========================== LICENSE =================================
-// *
-// * Copyright (C) 2016 - 2025 Continental Corporation
-// *
-// * Licensed under the Apache License, Version 2.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License at
-// *
-// *      http://www.apache.org/licenses/LICENSE-2.0
-// *
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// *
-// * =========================== LICENSE =================================
-// */
-//
-///**
-// * @file   config/transport_layer.h
-// * @brief  eCAL configuration for the transport layer
-//**/
-//
-//#pragma once
-//
-//#include <ecal/types/custom_data_types.h>
-//#include <ecal/os.h>
-//
-//namespace eCAL
-//{
-//  namespace TransportLayer
-//  {
-//    enum class eType
-//    {
-//      none,
-//      udp_mc,
-//      shm,
-//      tcp,
-//    };
-//
-//    namespace UDP
-//    {      
-//      struct MulticastConfiguration
-//      {
-//        Types::IpAddressV4 group{"239.0.0.1"}; //!< UDP multicast group base
-//        unsigned int       ttl;                /*!< UDP ttl value, also known as hop limit, is used in determining 
-//                                                    the intermediate routers being traversed towards the destination */
-//      };
-//
-//      struct Configuration
-//      {
-//        Types::UdpConfigVersion config_version      { Types::UdpConfigVersion::V2 }; /*!< UDP configuration version (Since eCAL 5.12.)
-//                                                                                             v1: default behavior
-//                                                                                             v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v2) */
-//        unsigned int            port                { 14002 };                       /*!< UDP multicast port number (Default: 14002) */
-//        Types::UDPMode          mode                { Types::UDPMode::LOCAL };       /*!< Valid modes: local, network (Default: local)*/
-//        Types::IpAddressV4      mask                { "255.255.255.240" };           /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
-//                                                                                             v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
-//                  
-//        unsigned int            send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
-//        unsigned int            receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
-//        bool                    join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
-//                                                                         independent of their link state. Enabling this makes sure that eCAL processes
-//                                                                         receive data if they are started before network devices are up and running. (Default: false)*/
-//        bool                    npcap_enabled       { false };   //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
-//      
-//        MulticastConfiguration  network             { "239.0.0.1", 3U };      //!< default: "239.0.0.1", 3U
-//        MulticastConfiguration  local               { "127.255.255.255", 1U}; //!< default: "127.255.255.255", 1U
-//      }; 
-//    }
-//
-//    namespace TCP
-//    {
-//      struct Configuration
-//      {
-//        size_t number_executor_reader { 4 }; //!< Reader amount of threads that shall execute workload (Default: 4)
-//        size_t number_executor_writer { 4 }; //!< Writer amount of threads that shall execute workload (Default: 4)
-//        int    max_reconnections      { 5 }; //!< Reconnection attemps the session will try to reconnect in (Default: 5)
-//      };
-//    }
-//
-//    struct Configuration
-//    {
-//      UDP::Configuration udp;
-//      TCP::Configuration tcp;
-//    };
-//  }
-//}
+/* =========================== LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * =========================== LICENSE =================================
+ */
+
+#include <core/config/py_transport_layer.h>
+#include <ecal/config/transport_layer.h>
+
+namespace nb = nanobind;
+using namespace eCAL::TransportLayer;
+
+
+void AddConfigTransportLayer(nanobind::module_& module)
+{
+  // Bind TransportLayer::eType enum
+  nb::enum_<eType>(module, "TransportType")
+    .value("none", eType::none)
+    .value("udp_mc", eType::udp_mc)
+    .value("shm", eType::shm)
+    .value("tcp", eType::tcp);
+
+  // Bind TransportLayer::UDP::MulticastConfiguration struct
+  nb::class_<UDP::MulticastConfiguration>(module, "MulticastConfiguration")
+    .def(nb::init<>()) // Default constructor
+    .def_rw("group", &UDP::MulticastConfiguration::group, "UDP multicast group base")
+    .def_rw("ttl", &UDP::MulticastConfiguration::ttl, "Time-to-live (TTL) for UDP packets");
+
+  // Bind TransportLayer::UDP::Configuration struct
+  nb::class_<UDP::Configuration>(module, "UDPConfiguration")
+    .def(nb::init<>()) // Default constructor
+    .def_rw("config_version", &UDP::Configuration::config_version, "UDP configuration version (Default: v2)")
+    .def_rw("port", &UDP::Configuration::port, "UDP multicast port number (Default: 14002)")
+    .def_rw("mode", &UDP::Configuration::mode, "UDP mode (local/network)")
+    .def_rw("mask", &UDP::Configuration::mask, "Multicast mask for group routing")
+    .def_rw("send_buffer", &UDP::Configuration::send_buffer, "UDP send buffer size in bytes")
+    .def_rw("receive_buffer", &UDP::Configuration::receive_buffer, "UDP receive buffer size in bytes")
+    .def_rw("join_all_interfaces", &UDP::Configuration::join_all_interfaces,
+      "Enable joining multicast groups on all network interfaces (Linux-specific)")
+    .def_rw("npcap_enabled", &UDP::Configuration::npcap_enabled,
+      "Enable UDP traffic reception with Npcap-based receiver")
+    .def_rw("network", &UDP::Configuration::network, "Network multicast configuration")
+    .def_rw("local", &UDP::Configuration::local, "Local multicast configuration");
+
+  // Bind TransportLayer::TCP::Configuration struct
+  nb::class_<TCP::Configuration>(module, "TCPConfiguration")
+    .def(nb::init<>()) // Default constructor
+    .def_rw("number_executor_reader", &TCP::Configuration::number_executor_reader,
+      "Number of reader threads for TCP execution")
+    .def_rw("number_executor_writer", &TCP::Configuration::number_executor_writer,
+      "Number of writer threads for TCP execution")
+    .def_rw("max_reconnections", &TCP::Configuration::max_reconnections,
+      "Maximum number of reconnection attempts (Default: 5)");
+
+  // Bind TransportLayer::Configuration struct
+  nb::class_<Configuration>(module, "TransportLayerConfiguration")
+    .def(nb::init<>()) // Default constructor
+    .def_rw("udp", &Configuration::udp, "UDP transport layer configuration")
+    .def_rw("tcp", &Configuration::tcp, "TCP transport layer configuration");
+}

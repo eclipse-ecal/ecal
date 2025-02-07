@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   py_init.h
+ * @file   config/py_logging.h
  * @brief  eCAL core function interface
 **/
 
