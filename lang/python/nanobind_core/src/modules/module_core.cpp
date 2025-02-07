@@ -22,7 +22,7 @@
 **/
 
 #include <modules/module_core.h>
-#include <ecal/ecal_core.h>
+#include <ecal/core.h>
 #include <nanobind/stl/tuple.h>
 
 void AddCoreFuncToModule(nanobind::module_& module)

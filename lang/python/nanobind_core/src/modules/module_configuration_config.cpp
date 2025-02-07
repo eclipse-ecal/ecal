@@ -29,27 +29,22 @@ namespace nb = nanobind;
 
 void AddConfigurationConfigStructToModule(nanobind::module_& m)
 {
-    nb::class_<eCAL::Configuration>(m, "Configuration")
-        // Constructors
-        .def(nb::init<>())  // Default constructor
-  //      .def(nb::init<int, char**>(), nb::arg("argc_"), nb::arg("argv_"))
-  //      .def(nb::init<const std::vector<std::string>&>(), nb::arg("args_"))
+  nb::class_<eCAL::Configuration>(m, "Configuration")
+    // Constructors
+    .def(nb::init<>())  // Default constructor
 
-        // Methods
-        .def("InitFromConfig", &eCAL::Configuration::InitFromConfig, "Initialize configuration from default settings")
-        .def("InitFromFile", &eCAL::Configuration::InitFromFile, nb::arg("yaml_path_"), "Initialize configuration from a YAML file")
-        .def("GetYamlFilePath", &eCAL::Configuration::GetYamlFilePath, "Get the YAML configuration file path")
+    // Methods
+    .def("init_from_config", &eCAL::Configuration::InitFromConfig, "Initialize configuration from default settings")
+    .def("init_from_file", &eCAL::Configuration::InitFromFile, nb::arg("yaml_path_"), "Initialize configuration from a YAML file")
+    .def("get_configuration_file_path", &eCAL::Configuration::GetConfigurationFilePath, "Get the YAML configuration file path")
 
-        // Public members
-        .def_rw("transport_layer", &eCAL::Configuration::transport_layer)
-        .def_rw("registration", &eCAL::Configuration::registration)
-        .def_rw("monitoring", &eCAL::Configuration::monitoring)
-        .def_rw("subscriber", &eCAL::Configuration::subscriber)
-        .def_rw("publisher", &eCAL::Configuration::publisher)
-        .def_rw("timesync", &eCAL::Configuration::timesync)
-        .def_rw("service", &eCAL::Configuration::service)
-        .def_rw("application", &eCAL::Configuration::application)
-        .def_rw("logging", &eCAL::Configuration::logging)
-        .def_rw("command_line_arguments", &eCAL::Configuration::command_line_arguments);
+    // Public members
+    .def_rw("transport_layer", &eCAL::Configuration::transport_layer)
+    .def_rw("registration", &eCAL::Configuration::registration)
+    .def_rw("subscriber", &eCAL::Configuration::subscriber)
+    .def_rw("publisher", &eCAL::Configuration::publisher)
+    .def_rw("timesync", &eCAL::Configuration::timesync)
+    .def_rw("application", &eCAL::Configuration::application)
+    .def_rw("logging", &eCAL::Configuration::logging);
 }
 

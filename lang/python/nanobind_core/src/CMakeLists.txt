@@ -6,6 +6,74 @@ find_package(Python
 # Import nanobind through CMake's find_package mechanism
 find_package(nanobind CONFIG REQUIRED)
 
+set(nanobind_sources
+  core/py_config.cpp
+  core/py_config.h
+  core/py_core.cpp
+  core/py_core.h
+  core/py_init.cpp
+  core/py_init.h
+  core/py_log.cpp
+  core/py_log.h
+  core/py_log_level.cpp
+  core/py_log_level.h
+  core/py_monitoring.cpp
+  core/py_monitoring.h
+  core/py_process.cpp
+  core/py_process.h
+  core/py_process_severity.cpp
+  core/py_process_severity.h
+  core/py_registration.cpp
+  core/py_registration.h
+  core/py_time.cpp
+  core/py_time.h
+  core/py_timer.cpp
+  core/py_timer.h
+  core/py_types.cpp
+  core/py_types.h
+  core/py_util.cpp
+  core/py_util.h
+  core/config/py_application.cpp
+  core/config/py_application.h
+  core/config/py_configuration.cpp
+  core/config/py_configuration.h
+  core/config/py_logging.cpp
+  core/config/py_logging.h
+  core/config/py_publisher.cpp
+  core/config/py_publisher.h
+  core/config/py_registration.cpp
+  core/config/py_registration.h
+  core/config/py_subscriber.cpp
+  core/config/py_subscriber.h
+  core/config/py_time.cpp
+  core/config/py_time.h
+  core/config/py_transport_layer.cpp
+  core/config/py_transport_layer.h
+  core/pubsub/py_payload_writer.cpp
+  core/pubsub/py_payload_writer.h
+  core/pubsub/py_publisher.cpp
+  core/pubsub/py_publisher.h
+  core/pubsub/py_subscriber.cpp
+  core/pubsub/py_subscriber.h
+  core/pubsub/py_types.cpp
+  core/pubsub/py_types.h
+  core/service/py_client.cpp
+  core/service/py_client.h
+  core/service/py_client_instance.cpp
+  core/service/py_client_instance.h
+  core/service/py_server.cpp
+  core/service/py_server.h
+  core/service/py_types.cpp
+  core/service/py_types.h
+  core/types/py_custom_data_types.cpp
+  core/types/py_custom_data_types.h
+  core/types/py_logging.cpp
+  core/types/py_logging.h
+  core/types/py_monitoring.cpp
+  core/types/py_monitoring.h
+  nanobind_core.cpp
+)
+
 # We are now ready to compile the actual extension module
 nanobind_add_module(
   # Name of the extension
@@ -17,55 +85,11 @@ nanobind_add_module(
   STABLE_ABI
 
   # Source code goes here
-  modules/module_client.cpp
-  modules/module_client.h
-  modules/module_core.cpp
-  modules/module_core.h
-  modules/module_datatypeinfo.cpp
-  modules/module_datatypeinfo.h
-  modules/module_publisher.cpp
-  modules/module_publisher.h
-  modules/module_server.cpp
-  modules/module_server.h
-  modules/module_subscriber.cpp
-  modules/module_subscriber.h
-  modules/module_application_config.cpp
-  modules/module_application_config.h
-  modules/module_configuration_config.cpp
-  modules/module_configuration_config.h
-  modules/module_monitoring_config.cpp
-  modules/module_monitoring_config.h
-  modules/module_publisher_config.cpp
-  modules/module_publisher_config.h
-  modules/module_logging_config.cpp
-  modules/module_logging_config.h
-  modules/module_registration_config.cpp
-  modules/module_registration_config.h
-  modules/module_service_config.cpp
-  modules/module_service_config.h
-  modules/module_subscriber_config.cpp
-  modules/module_subscriber_config.h
-  modules/module_time_config.cpp
-  modules/module_time_config.h
-  modules/module_transport_layer_config.cpp
-  modules/module_transport_layer_config.h
-  modules/module_user_arguments_config.cpp
-  modules/module_user_arguments_config.h
-  modules/module_util.cpp
-  modules/module_util.h
+  ${nanobind_sources}
+)
 
-  wrappers/wrapper_client.cpp
-  wrappers/wrapper_client.h
-  wrappers/wrapper_datatypeinfo.cpp
-  wrappers/wrapper_datatypeinfo.h
-  wrappers/wrapper_publisher.cpp
-  wrappers/wrapper_publisher.h
-  wrappers/wrapper_server.cpp
-  wrappers/wrapper_server.h
-  wrappers/wrapper_subscriber.cpp
-  wrappers/wrapper_subscriber.h
-
-  nanobind_core.cpp
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+  ${nanobind_sources}
 )
 
 target_include_directories(nanobind_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
