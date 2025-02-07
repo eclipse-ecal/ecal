@@ -38,6 +38,8 @@ namespace eCAL
 {
   namespace protobuf
   {
+    static constexpr long long DEFAULT_TIME_ARGUMENT = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `CallWithResponse()` and `CallWithCallback()` functions for blocking calls */
+
     /**
      * @brief Base class for a templated Protobuf service client.
      *
@@ -49,8 +51,6 @@ namespace eCAL
     class CServiceClientBase : public eCAL::CServiceClient
     {
     public:
-      static constexpr long long DEFAULT_TIME_ARGUMENT = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `CallWithResponse()` and `CallWithCallback()` functions for blocking calls */
-
       CServiceClientBase(const ClientEventCallbackT& event_callback = ClientEventCallbackT())
         : eCAL::CServiceClient(GetServiceNameFromDescriptor<T>(), CreateServiceMethodInformationSet<T>(), event_callback)
       {
