@@ -83,4 +83,6 @@ NB_MODULE(nanobind_core, m) {
   AddConfigSubscriber(m);
   AddConfigTime(m);
   AddConfigTransportLayer(m);
+
+  AddPubsubPublisher(m);
 }
