@@ -179,7 +179,6 @@ TEST(core_cpp_registration_public, GetTopicsParallel)
     std::set<eCAL::STopicId> tmp_publisher_ids;
 
     do {
-      std::set<eCAL::STopicId> tmp_publisher_ids;
       eCAL::Registration::GetPublisherIDs(tmp_publisher_ids);
 
       number_publishers_seen = tmp_publisher_ids.size();
