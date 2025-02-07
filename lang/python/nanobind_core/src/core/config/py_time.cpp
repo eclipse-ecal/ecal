@@ -1,47 +1,35 @@
-///* ========================= eCAL LICENSE =================================
-// *
-// * Copyright (C) 2016 - 2025 Continental Corporation
-// *
-// * Licensed under the Apache License, Version 2.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License at
-// * 
-// *      http://www.apache.org/licenses/LICENSE-2.0
-// * 
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// *
-// * ========================= eCAL LICENSE =================================
-//*/
-//
-///**
-// * @file   config/time.h
-// * @brief  eCAL time configuration
-//**/
-//
-//#pragma once
-//
-//#include <string>
-//
-//namespace eCAL
-//{
-//  namespace Time
-//  {
-//    struct Configuration
-//    {
-//      std::string timesync_module_rt     { "ecaltime-localtime" }; /*!< Time synchronisation interface name (dynamic library)
-//                                                                        The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
-//                                                                        Available modules are:
-//                                                                          - ecaltime-localtime    local system time without synchronization        
-//                                                                          - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
-//                                                                                                  (device configuration in ecaltime.ini) 
-//                                                                        (Default: ecaltime-localtime)*/
-//      std::string timesync_module_replay { "" };                   //!< (Default: "")
-//    };
-//  }
-//}
-//
-//
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+#include <core/config/py_time.h>
+#include <ecal/config/time.h>
+
+namespace nb = nanobind;
+using namespace eCAL::Time;
+
+void AddConfigTime(nanobind::module_& module)
+{
+  // Bind Time::Configuration struct
+  nb::class_<Configuration>(module, "TimeConfiguration")
+    .def(nb::init<>()) // Default constructor
+    .def_rw("timesync_module_rt", &Configuration::timesync_module_rt,
+      "Time synchronization interface module name (default: ecaltime-localtime)")
+    .def_rw("timesync_module_replay", &Configuration::timesync_module_replay,
+      "Time synchronization replay module (default: empty");
+}
