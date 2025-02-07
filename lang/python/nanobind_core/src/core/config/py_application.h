@@ -18,7 +18,7 @@
  */
 
  /**
-  * @file   py_application.h
+  * @file   config/py_application.h
   * @brief  Nanobind module for config file of application.h
  **/
 

@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   py_init.h
+ * @file   config/py_registration.h
  * @brief  eCAL core function interface
 **/
 
@@ -26,4 +26,4 @@
 
 #include <nanobind/nanobind.h>
 
-void AddConfigPublisher(nanobind::module_& module);
+void AddConfigRegistration(nanobind::module_& module);
