@@ -30,7 +30,7 @@
 #include <functional>
 #include <cstddef>
 #include <mutex>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 #include <nanobind/nanobind.h>
 
