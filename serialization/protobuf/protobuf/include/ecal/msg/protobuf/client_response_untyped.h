@@ -37,7 +37,7 @@ namespace eCAL
     /**
      * @brief Client class for untyped synchronous responses.
      *
-     * Provides only the CallWithResponse method that returns a vector of ServiceResponse.
+     * Provides only the CallWithResponse method that returns a vector of SServiceResponse.
      */
     template <typename T>
     class CServiceClientUntypedResponse : public CServiceClientResponseBase<T>
@@ -51,13 +51,13 @@ namespace eCAL
        * @param method_name Method name.
        * @param request     Request message.
        * @param timeout     Timeout in milliseconds (DEFAULT_TIME_ARGUMENT for infinite).
-       * @return A pair of overall success and a vector of ServiceResponse.
+       * @return A pair of overall success and a vector of SServiceResponse.
        */
       std::pair<bool, ServiceResponseVecT> CallWithResponse(const std::string& method_name,
                                                             const google::protobuf::Message& request,
                                                             int timeout = DEFAULT_TIME_ARGUMENT) const
       {
-        return this->template ProcessInstances<ServiceResponse>(
+        return this->template ProcessInstances<SServiceResponse>(
           [&](auto& instance) {
             return instance.CallWithResponse(method_name, request, timeout);
           }
