@@ -66,4 +66,3 @@ void AddConfigLogging(nanobind::module_& module)
     .def_rw("provider", &eCAL::Logging::Configuration::provider, "Logging provider configuration")
     .def_rw("receiver", &eCAL::Logging::Configuration::receiver, "Logging receiver configuration");
 }
-}
