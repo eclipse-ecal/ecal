@@ -105,7 +105,7 @@ namespace eCAL
         std::string Example()  const override;
 
         eCAL::rec::Error Execute(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::vector<std::string>& argv) const override;
-        eCAL::rec::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const override;
+        eCAL::rec::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const override;
 
       private:
         eCAL::rec::Error Execute(const eCAL::rec_server::RecServerStatus& status, const eCAL::rec_server::RecServerConfig& config, const std::vector<std::string>& argv) const;
@@ -116,11 +116,11 @@ namespace eCAL
       //////////////////////////////////////////////
       
       public:
-        eCAL::rec::Error printStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service) const;
+        eCAL::rec::Error printStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service) const;
 
-        eCAL::rec::Error printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const;
+        eCAL::rec::Error printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const;
 
-        eCAL::rec::Error printClientInformation(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& client_hostname) const;
+        eCAL::rec::Error printClientInformation(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& client_hostname) const;
 
       private:
         void printRecServerStatus(const eCAL::rec_server::RecServerStatus& status, std::ostream& ostream) const;

@@ -35,7 +35,7 @@ namespace eCAL
         std::string Example()  const override;
 
         eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const override;
-        eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const override;
+        eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const override;
       };
     }
   }

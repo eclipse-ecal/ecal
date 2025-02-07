@@ -149,7 +149,7 @@ namespace eCAL
         return Error(Error::ErrorCode::PARAMETER_ERROR);
       }
 
-      eCAL::sys::Error List::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
+      eCAL::sys::Error List::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
       {
         bool task_mode = false;
         bool group_mode = false;

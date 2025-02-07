@@ -70,7 +70,7 @@ namespace eCAL
         return rec_server_instance->DeleteMeasurement(meas_id);
       }
 
-      eCAL::rec::Error Delete::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
+      eCAL::rec::Error Delete::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
       {
         // Arg check
         if (argv.size() == 0)

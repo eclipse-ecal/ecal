@@ -33,7 +33,7 @@ int main()
   eCAL::Initialize("ping client");
 
   // create ping service client
-  const eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
+  const eCAL::protobuf::CServiceClientTypedResponse<PingService> ping_client("ping service");
 
   // waiting for service
   while (eCAL::Ok() && !ping_client.IsConnected())

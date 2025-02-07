@@ -166,7 +166,7 @@ int main(int argc, char** argv)
   
   // Ecalsys instance and ecalsys service. We will only use one of those, depending on the remote-control setting
   std::shared_ptr<EcalSys>                                                ecalsys_instance;
-  std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>> remote_ecalsys_service;
+  std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>> remote_ecalsys_service;
   
   // Ptrs for eCAL Sys Service (only used in non-remote control mode)
   std::shared_ptr<eCALSysServiceImpl>                                     ecalsys_service_impl;
@@ -240,7 +240,7 @@ int main(int argc, char** argv)
     eCAL::Initialize("eCALSys-Remote", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
-    remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
+    remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>();
   }
   else                            // Non-remote control mode
   {

@@ -44,7 +44,7 @@ namespace eCAL
     // Constructor & Destructor
     /////////////////////////////////
 
-    CommandExecutor::CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service)
+    CommandExecutor::CommandExecutor(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service)
       : ecalsys_instance_      (ecalsys_instance)
       , remote_hostname_       (remote_hostname)
       , remote_ecalsys_service_(remote_ecalsys_service)

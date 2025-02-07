@@ -69,7 +69,7 @@ int main()
   eCAL::Initialize("ecalsys client");
 
   // create player service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service> sys_service;
+  eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service> sys_service;
 
   // sleep for service matching
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));

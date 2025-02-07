@@ -55,7 +55,7 @@ namespace eCAL
         return Execute(argv);
       }
 
-      eCAL::sys::Error Sleep::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& argv) const
+      eCAL::sys::Error Sleep::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& argv) const
       {
         return Execute(argv);
       }

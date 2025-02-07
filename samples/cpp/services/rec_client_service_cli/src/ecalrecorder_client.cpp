@@ -100,7 +100,7 @@ int main()
   eCAL::Initialize("RecClientServiceCli");
 
   // create recorder service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
+  eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
 
   // waiting for service
   while (!recorder_service.IsConnected())

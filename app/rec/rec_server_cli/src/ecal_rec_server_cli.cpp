@@ -119,7 +119,7 @@ bool IsBuiltInFtpServerBusy(bool print_status = false);
 
 // Rec Sever instance and rec_server_service. We will only use one of those, depending on the remote-control setting
 std::shared_ptr<eCAL::rec_server::RecServer>                                                rec_server_instance;
-std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
+std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
 
 // Ptrs for eCAL Rec Server Service (only used in non-remote control mode)
 std::shared_ptr<eCAL::rec_cli::RecServerService>                                            rec_server_service;
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
     eCAL::Initialize("eCALRec-Remote", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
-    remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
+    remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>();
   }
   else                            // Non-remote control mode
   {

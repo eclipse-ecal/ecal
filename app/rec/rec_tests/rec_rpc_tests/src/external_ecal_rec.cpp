@@ -40,7 +40,7 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 
   eCAL::Initialize("Ecal Rec Tester");
   
-  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
+  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>();
 
   if (gui)
   {

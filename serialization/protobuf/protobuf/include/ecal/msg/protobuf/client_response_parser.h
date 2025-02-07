@@ -22,8 +22,10 @@
  * @brief  eCAL client response message parser
 **/
 
+#pragma once
+
 #include <ecal/service/types.h>
-#include <ecal/msg/protobuf/client_typed_response.h>
+#include <ecal/msg/protobuf/client_protobuf_types.h>
 
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.h>
@@ -109,6 +111,7 @@ namespace eCAL
         typed_response_.error_msg                  = generic_response_.error_msg;
         return true;
       }
+
     } // namespace ResponseParser
   } // namespace protobuf
 } // namespace eCAL

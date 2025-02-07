@@ -69,5 +69,5 @@ public:
 ///////////////////////////////////////////////
 private:
   int process_id;
-  std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
+  std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
 };

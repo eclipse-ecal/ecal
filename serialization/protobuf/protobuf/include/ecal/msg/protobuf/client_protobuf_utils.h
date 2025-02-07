@@ -101,5 +101,6 @@ namespace eCAL
 
       return method_information_set;
     }
+
   } // namespace protobuf
 } // namespace eCAL

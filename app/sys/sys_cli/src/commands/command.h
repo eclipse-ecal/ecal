@@ -54,11 +54,11 @@ namespace eCAL
         virtual std::string Example()  const = 0;
 
         virtual eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const = 0;
-        virtual eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const = 0;
+        virtual eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const = 0;
 
-        static eCAL::sys::Error GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output);
+        static eCAL::sys::Error GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output);
 
-        static eCAL::sys::Error CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service
+        static eCAL::sys::Error CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service
                                                         , const std::string&                hostname
                                                         , const std::string&                method_name
                                                         , const google::protobuf::Message&  request

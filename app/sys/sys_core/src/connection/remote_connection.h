@@ -42,7 +42,7 @@ namespace eCAL
     //////////////////////////////////////////
     private:
       std::mutex connection_mutex_;
-      eCAL::protobuf::CServiceClient<eCAL::pb::sys_client::EcalSysClientService> sys_client_service_;
+      eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys_client::EcalSysClientService> sys_client_service_;
     };
   }
 }

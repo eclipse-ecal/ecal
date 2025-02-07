@@ -18,20 +18,28 @@
 */
 
 /**
- * @file   client.h
- * @brief  eCAL client interface based on protobuf service description
+ * @file   client_response_base.h
 **/
 
 #pragma once
 
 #include <ecal/msg/protobuf/client_base.h>
-#include <ecal/msg/protobuf/client_callback_base.h>
-#include <ecal/msg/protobuf/client_callback_typed.h>
-#include <ecal/msg/protobuf/client_callback_untyped.h>
-#include <ecal/msg/protobuf/client_instance.h>
-#include <ecal/msg/protobuf/client_protobuf_types.h>
-#include <ecal/msg/protobuf/client_protobuf_utils.h>
-#include <ecal/msg/protobuf/client_response_base.h>
-#include <ecal/msg/protobuf/client_response_parser.h>
-#include <ecal/msg/protobuf/client_response_typed.h>
-#include <ecal/msg/protobuf/client_response_untyped.h>
+
+namespace eCAL
+{
+  namespace protobuf
+  {
+    /**
+     * @brief Base class for synchronous (blocking) response calls.
+     *
+     * This class will serve as the parent for the typed and untyped variants.
+     */
+    template <typename T>
+    class CServiceClientResponseBase : public CServiceClientBase<T>
+    {
+    public:
+      using CServiceClientBase<T>::CServiceClientBase; // Inherit constructors
+      virtual ~CServiceClientResponseBase() override = default;
+    };
+  }
+}
