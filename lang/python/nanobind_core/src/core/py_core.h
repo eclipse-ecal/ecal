@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   core.h
+ * @file   py_core.h
  * @brief  eCAL core function interface
 **/
 
