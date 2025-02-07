@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file   config/py_publisher.h
+ * @brief  eCAL core function interface
+**/
+
 #pragma once
 
 #include <nanobind/nanobind.h>
