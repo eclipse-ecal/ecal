@@ -77,4 +77,6 @@ NB_MODULE(nanobind_core, m) {
   AddConfigApplication(m);
   AddConfigConfiguration(m);
   AddConfigLogging(m);
+  AddConfigPublisher(m);
+  AddConfigRegistration(m);
 }
