@@ -36,7 +36,7 @@
 #include <cstddef>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
 /**
  * @brief  Function to Add Nanobind module
