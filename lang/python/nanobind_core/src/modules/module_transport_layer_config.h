@@ -36,8 +36,8 @@
 #include <memory>
 #include <string>
 #include <cstddef>
-#include <ecal/ecal_types.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types.h>
+#include <ecal/types/custom_data_types.h>
 
 /**
  * @brief  Function to Add Nanobind module

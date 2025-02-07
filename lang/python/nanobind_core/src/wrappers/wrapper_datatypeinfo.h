@@ -29,7 +29,7 @@
 #include <string>
 #include <cstddef>
 
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 #include <nanobind/nanobind.h>
 
 namespace eCAL

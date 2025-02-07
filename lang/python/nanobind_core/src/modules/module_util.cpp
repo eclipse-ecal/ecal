@@ -22,7 +22,7 @@
 **/
 
 #include <modules/module_core.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 void AddUtilFuncToModule(nanobind::module_& module)
 {

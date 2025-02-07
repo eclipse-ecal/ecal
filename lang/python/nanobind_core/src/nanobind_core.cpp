@@ -33,47 +33,43 @@
 #include <memory>
 #include <string>
 #include <cstddef>
-#include <ecal/ecal_types.h>
+#include <ecal/types.h>
 
-#include <modules/module_client.h>
-#include <modules/module_core.h>
-#include <modules/module_datatypeinfo.h>
-#include <modules/module_publisher.h>
-#include <modules/module_application_config.h>
-#include <modules/module_configuration_config.h>
-#include <modules/module_monitoring_config.h>
-#include <modules/module_publisher_config.h>
-#include <modules/module_registration_config.h>
-#include <modules/module_service_config.h>
-#include <modules/module_server.h>
-#include <modules/module_subscriber.h>
-#include <modules/module_logging_config.h>
-#include <modules/module_subscriber_config.h>
-#include <modules/module_time_config.h>
-#include <modules/module_transport_layer_config.h>
-#include <modules/module_user_arguments_config.h>
-#include <modules/module_util.h>
+#include <core/py_config.h>
+#include <core/py_core.h>
+#include <core/py_init.h>
+#include <core/py_log.h>
+#include <core/py_log_level.h>
+#include <core/py_monitoring.h>
+#include <core/py_process.h>
+#include <core/py_process_severity.h>
+#include <core/py_registration.h>
+#include <core/py_time.h>
+#include <core/py_timer.h>
+#include <core/py_types.h>
+#include <core/py_util.h>
+#include <core/config/py_application.h>
+#include <core/config/py_configuration.h>
+#include <core/config/py_logging.h>
+#include <core/config/py_publisher.h>
+#include <core/config/py_registration.h>
+#include <core/config/py_subscriber.h>
+#include <core/config/py_time.h>
+#include <core/config/py_transport_layer.h>
+#include <core/pubsub/py_payload_writer.h>
+#include <core/pubsub/py_publisher.h>
+#include <core/pubsub/py_subscriber.h>
+#include <core/pubsub/py_types.h>
+#include <core/service/py_client.h>
+#include <core/service/py_client_instance.h>
+#include <core/service/py_server.h>
+#include <core/service/py_types.h>
+#include <core/types/py_custom_data_types.h>
+#include <core/types/py_logging.h>
+#include <core/types/py_monitoring.h>
 
 
 NB_MODULE(nanobind_core, m) {
-
-    AddDataTypeInfoStructToModule(m);
-    AddSubscriberClassToModule(m);
-    AddPublisherClassToModule(m);
-    AddClientClassToModule(m);
-    AddServerClassToModule(m);
-    AddApplicationConfigStructToModule(m);
-    AddConfigurationConfigStructToModule(m);
-    AddLoggingConfigStructToModule(m);
-    AddServiceConfigStructToModule(m);
-    AddRegistrationConfigStructToModule(m);
-    AddMonitoringConfigStructToModule(m);
-    AddPublisherConfigStructToModule(m);
-    AddSubscriberConfigStructToModule(m);
-    AddTimeConfigStructToModule(m);
-    AddTransportLayerConfigStructToModule(m);
-    AddUserArgumentsConfigStructToModule(m);
-
-    AddCoreFuncToModule(m);
-    AddUtilFuncToModule(m);
+  AddConfig(m);
+  AddCore(m);
 }
