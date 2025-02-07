@@ -23,3 +23,7 @@
 **/
 
 #pragma once
+
+#include <nanobind/nanobind.h>
+
+void AddTypes(nanobind::module_& module);

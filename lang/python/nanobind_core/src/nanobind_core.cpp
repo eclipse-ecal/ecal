@@ -73,6 +73,7 @@ NB_MODULE(nanobind_core, m) {
   AddConfig(m);
   AddCore(m);
   AddInit(m);
+  AddTypes(m);
 
   AddConfigApplication(m);
   AddConfigConfiguration(m);
