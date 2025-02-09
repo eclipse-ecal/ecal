@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,14 +19,30 @@
 
 /**
  * @file   client_base.h
-**/
+ * @brief  Base class for templated Protobuf service clients.
+ *
+ * This file defines a base class for Protobuf-based service clients. It encapsulates
+ * common functionality such as converting the underlying generic client instances into
+ * templated ones and provides a helper for uniformly processing these instances.
+ *
+ * The class is now parameterized on two template arguments:
+ *   - T: The service description type (which must provide or allow access to a protobuf ServiceDescriptor,
+ *        typically via a protected GetDescriptor() method).
+ *   - ClientInstanceT: The client instance wrapper type used for each service call.
+ *
+ * For example:
+ *   - For untyped service calls, you might instantiate with ClientInstanceT = CClientInstanceUntyped<T>.
+ *   - For typed service calls, you might instantiate with ClientInstanceT = CClientInstanceTyped<T>.
+ *
+ * This design allows the derived service client classes (such as the untyped and typed variants)
+ * to use the same base functionality while receiving the appropriately wrapped client instance.
+ */
 
 #pragma once
 
 #include <ecal/deprecate.h>
 #include <ecal/service/client.h>
 
-#include <ecal/msg/protobuf/client_instance.h>
 #include <ecal/msg/protobuf/client_protobuf_types.h>
 #include <ecal/msg/protobuf/client_protobuf_utils.h>
 
@@ -38,26 +54,41 @@ namespace eCAL
 {
   namespace protobuf
   {
-    static constexpr long long DEFAULT_TIME_ARGUMENT = -1;  /*!< Use DEFAULT_TIME_ARGUMENT in the `CallWithResponse()` and `CallWithCallback()` functions for blocking calls */
+    /// Default timeout value for blocking calls.
+    static constexpr long long DEFAULT_TIME_ARGUMENT = -1;
 
     /**
      * @brief Base class for a templated Protobuf service client.
      *
-     * Contains common functionality such as converting base client
-     * instances into templated ones and a helper method for processing
-     * each client instance.
+     * This class provides common functionality for service clients that use Protobuf.
+     * It converts the underlying generic eCAL client instances into templated client instances,
+     * and it supplies a helper method to process each instance uniformly.
+     *
+     * @tparam T                The Protobuf service description type.
+     * @tparam ClientInstanceT  The client instance wrapper type (e.g., CClientInstanceUntyped<T> or CClientInstanceTyped<T>).
      */
-    template <typename T>
+    template <typename T, typename ClientInstanceT>
     class CServiceClientBase : public eCAL::CServiceClient
     {
     public:
-      CServiceClientBase(const ClientEventCallbackT& event_callback = ClientEventCallbackT())
-        : eCAL::CServiceClient(GetServiceNameFromDescriptor<T>(), CreateServiceMethodInformationSet<T>(), event_callback)
+      /**
+       * @brief Constructor using a default service name from the service descriptor.
+       *
+       * @param event_callback_  Optional event callback.
+       */
+      CServiceClientBase(const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
+        : eCAL::CServiceClient(GetServiceNameFromDescriptor<T>(), CreateServiceMethodInformationSet<T>(), event_callback_)
       {
       }
 
-      explicit CServiceClientBase(const std::string& service_name, const ClientEventCallbackT& event_callback = ClientEventCallbackT())
-        : eCAL::CServiceClient(service_name, CreateServiceMethodInformationSet<T>(), event_callback)
+      /**
+       * @brief Constructor specifying an explicit service name.
+       *
+       * @param service_name_    The name of the service.
+       * @param event_callback_  Optional event callback.
+       */
+      explicit CServiceClientBase(const std::string& service_name_, const ClientEventCallbackT& event_callback_ = ClientEventCallbackT())
+        : eCAL::CServiceClient(service_name_, CreateServiceMethodInformationSet<T>(), event_callback_)
       {
       }
 
@@ -70,42 +101,43 @@ namespace eCAL
       virtual ~CServiceClientBase() override = default;
 
       /**
-       * @brief Converts base client instances to templated instances.
+       * @brief Converts base client instances to templated client instances.
        *
-       * @return A vector of CClientInstance<T>.
+       * @return A vector of ClientInstanceT objects.
        */
-      std::vector<CClientInstance<T>> GetClientInstances() const
+      std::vector<ClientInstanceT> GetClientInstances() const
       {
         std::vector<eCAL::CClientInstance> base_instances = eCAL::CServiceClient::GetClientInstances();
-        std::vector<CClientInstance<T>> proto_instances;
-        proto_instances.reserve(base_instances.size());
+        std::vector<ClientInstanceT> instances;
+        instances.reserve(base_instances.size());
         for (auto& inst : base_instances)
         {
-          proto_instances.push_back(CClientInstance<T>(std::move(inst)));
+          instances.push_back(ClientInstanceT(std::move(inst)));
         }
-        return proto_instances;
+        return instances;
       }
 
     protected:
       /**
-       * @brief Generic helper that iterates over all client instances,
-       *        applies a callable, and aggregates results.
+       * @brief Generic helper that iterates over all client instances, applies a callable, and aggregates results.
        *
        * The callable should return a std::pair<bool, ResponseT> for each instance.
        *
        * @tparam ResponseT The type of response expected.
-       * @tparam Func      The type of callable.
-       * @param func       A callable that is passed each client instance.
+       * @tparam FuncT     The type of callable.
+       * 
+       * @param  func_     A callable that is passed each client instance.
+       * 
        * @return A pair consisting of an overall success flag and a vector of responses.
        */
-      template <typename ResponseT, typename Func>
-      std::pair<bool, std::vector<ResponseT>> ProcessInstances(Func&& func) const
+      template <typename ResponseT, typename FuncT>
+      std::pair<bool, std::vector<ResponseT>> ProcessInstances(FuncT&& func_) const
       {
         bool overall_success = true;
         std::vector<ResponseT> responses;
         for (auto& instance : GetClientInstances())
         {
-          auto ret = func(instance);
+          auto ret = func_(instance);
           overall_success &= ret.first;
           responses.push_back(std::move(ret.second));
         }
