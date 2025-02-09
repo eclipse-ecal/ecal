@@ -260,7 +260,7 @@ namespace eCAL
       template <typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
         const google::protobuf::Message& request_,
-        const TMsgResponseCallbackT<ResponseT>& response_callback) const
+        const TMsgResponseCallbackT<ResponseT>& response_callback_) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())
