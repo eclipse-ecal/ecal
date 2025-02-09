@@ -52,7 +52,7 @@ namespace eCAL
         exit(EXIT_SUCCESS);
       }
 
-      eCAL::sys::Error Exit::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& argv) const
+      eCAL::sys::Error Exit::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& argv) const
       {
         if (!argv.empty())
           return Error(Error::ErrorCode::TOO_MANY_PARAMETERS, EcalUtils::String::Join(" ", std::vector<std::string>(std::next(argv.begin()), argv.end())));

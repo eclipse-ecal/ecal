@@ -43,10 +43,6 @@ namespace eCAL
 {
   namespace protobuf
   {
-    // A typed callback for responses.
-    template <typename ResponseT>
-    using TMsgResponseCallbackT = std::function<void(const TMsgServiceResponse<ResponseT>&)>;
-
     /**
      * @brief Templated client instance that supports typed responses.
      *

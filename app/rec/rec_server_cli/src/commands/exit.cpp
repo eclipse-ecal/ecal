@@ -48,7 +48,7 @@ namespace eCAL
         return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error Exit::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& /*remote_rec_server_service*/, const std::vector<std::string>& /*argv*/) const
+      eCAL::rec::Error Exit::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& /*remote_rec_server_service*/, const std::vector<std::string>& /*argv*/) const
       {
         return eCAL::rec::Error::ErrorCode::OK;
       }

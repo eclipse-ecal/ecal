@@ -154,7 +154,7 @@ namespace eCAL
       mutable std::mutex              io_mutex_;
       mutable std::condition_variable io_cv_;
 
-      eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
+      eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
 
       std::chrono::steady_clock::time_point next_ping_time_;
       bool currently_executing_action_;

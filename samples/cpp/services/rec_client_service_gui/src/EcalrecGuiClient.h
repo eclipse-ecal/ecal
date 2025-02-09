@@ -60,5 +60,5 @@ private:
 
   Ui::EcalrecGuiServiceMainWindow ui_;
   std::string hostname_;
-  eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
+  eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
 };

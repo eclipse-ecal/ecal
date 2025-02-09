@@ -57,5 +57,5 @@ private:
 private:
   Ui::EcalplayGuiServiceMainWindow ui_;
 
-  eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::play::EcalPlayService> player_service_;
+  eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service_;
 };

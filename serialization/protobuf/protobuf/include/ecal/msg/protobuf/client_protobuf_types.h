@@ -47,12 +47,12 @@ namespace eCAL
     template <typename ResponseT>
     struct TMsgServiceResponse
     {
-      eCallState                         call_state = eCallState::none; //!< Call state (success/failure)
-      SServiceId                         server_id;                     //!< Identifier of the server that executed the call
-      SServiceMethodInformation          service_method_information;    //!< Information about the called method
-      int                                ret_state = 0;                 //!< Return state of the service call
-      std::shared_ptr<ResponseT>         response;                      //!< The typed response message
-      std::string                        error_msg;                     //!< Error message if the call failed
+      eCallState                  call_state = eCallState::none; //!< Call state (success/failure)
+      SServiceId                  server_id;                     //!< Identifier of the server that executed the call
+      SServiceMethodInformation   service_method_information;    //!< Information about the called method
+      int                         ret_state = 0;                 //!< Return state of the service call
+      std::shared_ptr<ResponseT>  response;                      //!< The typed response message
+      std::string                 error_msg;                     //!< Error message if the call failed
     };
 
     /**
@@ -62,5 +62,13 @@ namespace eCAL
      */
     template <typename ResponseT>
     using TMsgServiceResponseVecT = std::vector<TMsgServiceResponse<ResponseT>>;
+
+    /**
+     * @brief Typed callback for responses.
+     *
+     * @tparam ResponseT The expected protobuf response type.
+     */
+    template <typename ResponseT>
+    using TMsgResponseCallbackT = std::function<void(const TMsgServiceResponse<ResponseT>&)>;
   }
 }

@@ -78,7 +78,7 @@ TEST(core_cpp_clientserver_proto, ProtoCallback)
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service_impl);
 
   // create MathService client
-  eCAL::protobuf::CServiceClientTypedCallback<MathService> math_client;
+  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
 
   // response callback function
   double math_response(0.0);
@@ -169,7 +169,7 @@ TEST(core_cpp_clientserver_proto, ProtoBlocking)
   eCAL::protobuf::CServiceServer<PingService> ping_server(ping_service_impl);
 
   // create PingService client
-  eCAL::protobuf::CServiceClientTypedResponse<PingService> ping_client;
+  eCAL::protobuf::CServiceClientTyped<PingService> ping_client;
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);

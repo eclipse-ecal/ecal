@@ -82,7 +82,7 @@ namespace eCAL
         return Execute(status, config, argv);
       }
 
-      eCAL::rec::Error Status::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
+      eCAL::rec::Error Status::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
       {
         eCAL::rec_server::RecServerStatus status;
         eCAL::rec_server::RecServerConfig config;
@@ -160,7 +160,7 @@ namespace eCAL
       /// Print various information
       //////////////////////////////////////////////
       
-      eCAL::rec::Error Status::printStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service) const
+      eCAL::rec::Error Status::printStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service) const
       {
         eCAL::rec_server::RecServerStatus status;
         eCAL::rec_server::RecServerConfig config;
@@ -187,7 +187,7 @@ namespace eCAL
         return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error Status::printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const
+      eCAL::rec::Error Status::printJobState(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, int64_t meas_id) const
       {
         eCAL::rec_server::RecServerStatus status;
         auto error = GetRemoteStatus(hostname, remote_rec_server_service, status);
@@ -198,7 +198,7 @@ namespace eCAL
         return printJobState(meas_id, status, std::cout);
       }
 
-      eCAL::rec::Error Status::printClientInformation(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& client_hostname) const
+      eCAL::rec::Error Status::printClientInformation(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& client_hostname) const
       {
         eCAL::rec_server::RecServerStatus status;
         auto error = GetRemoteStatus(hostname, remote_rec_server_service, status);

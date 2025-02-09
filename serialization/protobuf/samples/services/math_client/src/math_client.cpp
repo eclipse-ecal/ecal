@@ -84,11 +84,10 @@ int main()
   eCAL::Initialize("math client");
 
   // Create 2 math services client using the protobuf service type MathService.
-  const eCAL::protobuf::CServiceClientTypedResponse<MathService> math_client1(OnClientState);
-  const eCAL::protobuf::CServiceClientTypedCallback<MathService> math_client2(OnClientState);
+  const eCAL::protobuf::CServiceClientTyped<MathService> math_client(OnClientState);
 
   // Wait until the client is connected to at least one service.
-  while (eCAL::Ok() && !math_client1.IsConnected() && !math_client2.IsConnected())
+  while (eCAL::Ok() && !math_client.IsConnected())
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::cout << "Waiting for the service .." << std::endl;
@@ -100,7 +99,7 @@ int main()
 
   while (eCAL::Ok())
   {
-    if (math_client1.IsConnected() && math_client2.IsConnected())
+    if (math_client.IsConnected())
     {
       math_request.set_inp1(counter);
       math_request.set_inp2(counter + 1);
@@ -108,7 +107,7 @@ int main()
       // --- CallWithCallback variant using the top-level service client ---
       {
         std::cout << std::endl << "Calling MathService::Add (callback) with      : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-        if (!math_client2.CallWithCallback<SFloat>("Add", math_request, OnMathResponse))
+        if (!math_client.CallWithCallback<SFloat>("Add", math_request, OnMathResponse))
         {
           std::cout << "MathService::Add method call (callback) failed .." << std::endl;
         }
@@ -117,7 +116,7 @@ int main()
       // --- CallWithResponse variant using the top-level service client ---
       {
         std::cout << std::endl << "Calling MathService::Multiply (blocking) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-        auto multiply_response = math_client1.CallWithResponse<SFloat>("Multiply", math_request);
+        auto multiply_response = math_client.CallWithResponse<SFloat>("Multiply", math_request);
         if (multiply_response.first)
         {
           // Iterate over all responses
@@ -142,7 +141,7 @@ int main()
       // --- Iterative CallWithCallback variant calling each client instance individually ---
       {
         std::cout << std::endl << "Iterating over client instances to call MathService::Divide" << std::endl;
-        auto instances = math_client2.GetClientInstances();
+        auto instances = math_client.GetClientInstances();
         for (auto& instance : instances)
         {
           std::cout << std::endl << "Calling MathService::Divide (callback inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
@@ -156,7 +155,7 @@ int main()
       // --- Iterative CallWithResponse variant calling each client instance individually ---
       {
         std::cout << std::endl << "Iterating over client instances to call MathService::Divide" << std::endl;
-        auto instances = math_client1.GetClientInstances();
+        auto instances = math_client.GetClientInstances();
         for (auto& instance : instances)
         {
           std::cout << std::endl << "Calling MathService::Divide (blocking inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;

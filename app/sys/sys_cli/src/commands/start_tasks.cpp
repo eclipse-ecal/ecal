@@ -66,7 +66,7 @@ namespace eCAL
         }
       }
 
-      eCAL::sys::Error StartTask::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntypedCallback<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
+      eCAL::sys::Error StartTask::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const
       {
         eCAL::pb::sys::TaskRequest task_request_pb;
         eCAL::pb::sys::Response    response_pb;

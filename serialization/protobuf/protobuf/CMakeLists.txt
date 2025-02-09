@@ -77,16 +77,10 @@ target_sources(protobuf_core
     FILES
       include/ecal/msg/protobuf/client.h
       include/ecal/msg/protobuf/client_base.h
-      include/ecal/msg/protobuf/client_callback_base.h
-      include/ecal/msg/protobuf/client_callback_typed.h
-      include/ecal/msg/protobuf/client_callback_untyped.h
       include/ecal/msg/protobuf/client_instance.h
       include/ecal/msg/protobuf/client_protobuf_types.h
       include/ecal/msg/protobuf/client_protobuf_utils.h
-      include/ecal/msg/protobuf/client_response_base.h
       include/ecal/msg/protobuf/client_response_parser.h
-      include/ecal/msg/protobuf/client_response_typed.h
-      include/ecal/msg/protobuf/client_response_untyped.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
       include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h
