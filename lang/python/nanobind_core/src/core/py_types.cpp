@@ -32,19 +32,19 @@ void AddTypes(nb::module_& m) {
   // Wrap SVersion
   // Note: Since SVersion members are const, we provide a constructor that takes
   // three ints for initialization.
-  nb::class_<eCAL::SVersion>(m, "SVersion")
+  nb::class_<eCAL::SVersion>(m, "Version")
     .def(nb::init<int, int, int>(), "major"_a, "minor"_a, "patch"_a)
     .def_ro("major", &eCAL::SVersion::major)
     .def_ro("minor", &eCAL::SVersion::minor)
     .def_ro("patch", &eCAL::SVersion::patch)
     .def("__repr__", [](const eCAL::SVersion& v) {
-    return "<SVersion major=" + std::to_string(v.major) +
+    return "<Version major=" + std::to_string(v.major) +
       ", minor=" + std::to_string(v.minor) +
       ", patch=" + std::to_string(v.patch) + ">";
       });
 
   // Wrap SDataTypeInformation
-  nb::class_<eCAL::SDataTypeInformation>(m, "SDataTypeInformation")
+  nb::class_<eCAL::SDataTypeInformation>(m, "DataTypeInformation")
     .def(nb::init<>())
     .def_rw("name", &eCAL::SDataTypeInformation::name)
     .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
@@ -58,7 +58,7 @@ void AddTypes(nb::module_& m) {
         return a < b;
       })
     .def("__repr__", [](const eCAL::SDataTypeInformation& info) {
-      return "<SDataTypeInformation name='" + info.name +
+      return "<DataTypeInformation name='" + info.name +
         "', encoding='" + info.encoding +
         "', descriptor='" + info.descriptor + "'>";
       });
