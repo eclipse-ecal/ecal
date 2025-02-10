@@ -85,4 +85,5 @@ NB_MODULE(nanobind_core, m) {
   AddConfigTransportLayer(m);
 
   AddPubsubPublisher(m);
+  AddPubsubTypes(m);
 }
