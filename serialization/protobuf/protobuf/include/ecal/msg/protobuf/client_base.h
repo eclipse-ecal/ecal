@@ -137,7 +137,7 @@ namespace eCAL
         std::vector<ResponseT> responses;
         for (auto& instance : GetClientInstances())
         {
-          auto ret = func_(instance);
+          auto ret = std::forward<FuncT>(func_)(instance);
           overall_success &= ret.first;
           responses.push_back(std::move(ret.second));
         }

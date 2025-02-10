@@ -111,7 +111,21 @@ namespace eCAL
     public:
       using Base = CServiceClientBase<T, CClientInstance<T>>;
       using Base::Base;  // Inherit constructors from the base class.
-      virtual ~CServiceClient() override = default;
+
+      CServiceClient() = default;
+      ~CServiceClient() override = default;
+
+      /**
+       * @brief CServiceClients are non-copyable.
+       */
+      CServiceClient(const CServiceClient&) = delete;
+      CServiceClient& operator=(const CServiceClient&) = delete;
+
+      /**
+       * @brief CServiceClients are movable.
+       */
+      CServiceClient(CServiceClient&& rhs) = default;
+      CServiceClient& operator=(CServiceClient&& rhs) = default;
 
       /**
        * @brief Synchronous call returning untyped responses.
@@ -195,7 +209,21 @@ namespace eCAL
     public:
       using Base = CServiceClientBase<T, CClientInstanceTyped<T>>;
       using Base::Base;  // Inherit constructors from the base class.
-      virtual ~CServiceClientTyped() override = default;
+
+      CServiceClientTyped() = default;
+      ~CServiceClientTyped() override = default;
+
+      /**
+       * @brief Typed CServiceClients are non-copyable.
+       */
+      CServiceClientTyped(const CServiceClientTyped&) = delete;
+      CServiceClientTyped& operator=(const CServiceClientTyped&) = delete;
+
+      /**
+       * @brief Typed CServiceClients are movable.
+       */
+      CServiceClientTyped(CServiceClientTyped&& rhs) = default;
+      CServiceClientTyped& operator=(CServiceClientTyped&& rhs) = default; 
 
       /**
        * @brief Synchronous call returning typed responses.
