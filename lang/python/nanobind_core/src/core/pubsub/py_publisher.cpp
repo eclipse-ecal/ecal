@@ -25,10 +25,6 @@ using namespace eCAL;
 
 void AddPubsubPublisher(nanobind::module_& module)
 {
-  // Define static default values for correct nb::arg_v() usage
-  static SDataTypeInformation default_data_type_info;
-  static Publisher::Configuration default_publisher_config;
-
   // Define CPublisher class
   nb::class_<CPublisher>(module, "Publisher")
     .def(nb::init<const std::string&, const SDataTypeInformation&, const Publisher::Configuration&>(),
@@ -39,6 +35,15 @@ void AddPubsubPublisher(nanobind::module_& module)
       nb::arg("data_type_info"),
       nb::arg("config"),
       "Initialize a Publisher with a topic name, data type, and optional configuration.")
+
+    //.def(nb::init([](const std::string& topic_name,
+    //  const SDataTypeInformation& data_type_info,
+    //  const Publisher::Configuration& config) -> eCAL::CPublisher* {
+    //    return new eCAL::CPublisher(topic_name, data_type_info, config);
+    //  }),
+    //  nb::arg("topic_name"),
+    //  nb::arg("data_type_info") = SDataTypeInformation(),
+    //  nb::arg("config") = GetPublisherConfiguration())
 
     // Send function for Python bytes
     .def("send", [](CPublisher& pub, nb::bytes payload, long long time) {
