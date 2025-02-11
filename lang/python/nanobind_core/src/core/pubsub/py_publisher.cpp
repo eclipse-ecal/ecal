@@ -27,28 +27,19 @@ void AddPubsubPublisher(nanobind::module_& module)
 {
   // Define CPublisher class
   nb::class_<CPublisher>(module, "Publisher")
-    .def(nb::init<const std::string&, const SDataTypeInformation&, const Publisher::Configuration&>(),
+    .def("__init__", [](CPublisher* t, nb::str topic_name, const SDataTypeInformation& datatype_info/*, const PubEventCallbackT& event_callback_*/, const Publisher::Configuration& config_) { new (t) CPublisher(topic_name.c_str(), datatype_info/*, event_callback_*/, config_ ); },
       nb::arg("topic_name"),
-      // need to figure out how arg_v works
-      //nb::arg_v("data_type_info", nb::cast(SDataTypeInformation())),
-      //nb::arg_v("config", default_publisher_config, "Default publisher configuration"),
-      nb::arg("data_type_info"),
-      nb::arg("config"),
-      "Initialize a Publisher with a topic name, data type, and optional configuration.")
-
-    //.def(nb::init([](const std::string& topic_name,
-    //  const SDataTypeInformation& data_type_info,
-    //  const Publisher::Configuration& config) -> eCAL::CPublisher* {
-    //    return new eCAL::CPublisher(topic_name, data_type_info, config);
-    //  }),
-    //  nb::arg("topic_name"),
-    //  nb::arg("data_type_info") = SDataTypeInformation(),
-    //  nb::arg("config") = GetPublisherConfiguration())
+      nb::arg("data_type_info") = SDataTypeInformation(),
+      //nb::arg("event_callback") = nullptr
+      nb::arg("config") = GetPublisherConfiguration()
+      )
 
     // Send function for Python bytes
     .def("send", [](CPublisher& pub, nb::bytes payload, long long time) {
     const char* data = payload.c_str();
     size_t length = payload.size();
+    // we need to release the GIL, so that we don't potentially deadlock ourselves.
+    nb::gil_scoped_release release_gil;
     return pub.Send(data, length, time);
       }, nb::arg("payload"), nb::arg("time") = CPublisher::DEFAULT_TIME_ARGUMENT,
         "Send a message as raw bytes.")

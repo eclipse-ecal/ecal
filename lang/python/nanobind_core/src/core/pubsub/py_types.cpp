@@ -75,14 +75,16 @@ void AddPubsubTypes(nanobind::module_& module)
       // This data will always be set by C++, hence it's not changeable
       nb::class_<eCAL::SReceiveCallbackData>(module, "ReceiveCallbackData")
         .def(nb::init<>())
-        .def_ro("buffer", &eCAL::SReceiveCallbackData::buffer, "Pointer to the payload buffer")
-        .def_ro("buffer_size", &eCAL::SReceiveCallbackData::buffer_size, "Size of the payload buffer")
+        .def("buffer", [](const SReceiveCallbackData& data) -> nb::bytes {
+          // Cast the void* to const char* and create a nb::bytes from it.
+          return nb::bytes(static_cast<const char*>(data.buffer), data.buffer_size);
+          }, "Return the payload buffer as Python bytes")
         .def_ro("send_timestamp", &eCAL::SReceiveCallbackData::send_timestamp, "Publisher send timestamp (µs)")
         .def_ro("send_clock", &eCAL::SReceiveCallbackData::send_clock, "Publisher send clock counter");
 
       //-------------------------------------------------------------------------
       // Bind SPubEventCallbackData struct
-      nb::class_<eCAL::SPubEventCallbackData>(module, "SPubEventCallbackData")
+      nb::class_<eCAL::SPubEventCallbackData>(module, "PubEventCallbackData")
         .def(nb::init<>())
         .def_ro("event_type", &eCAL::SPubEventCallbackData::event_type, "Publisher event type")
         .def_ro("event_time", &eCAL::SPubEventCallbackData::event_time, "Event time in µs (eCAL time)")
@@ -91,7 +93,7 @@ void AddPubsubTypes(nanobind::module_& module)
 
       //-------------------------------------------------------------------------
       // Bind SSubEventCallbackData struct
-      nb::class_<eCAL::SSubEventCallbackData>(module, "SSubEventCallbackData")
+      nb::class_<eCAL::SSubEventCallbackData>(module, "SubEventCallbackData")
         .def(nb::init<>())
         .def_ro("event_type", &eCAL::SSubEventCallbackData::event_type, "Subscriber event type")
         .def_ro("event_time", &eCAL::SSubEventCallbackData::event_time, "Event time in µs (eCAL time)")
