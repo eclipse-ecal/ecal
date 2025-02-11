@@ -54,7 +54,7 @@ QEcalPlay::QEcalPlay()
   periodic_update_timer_->start(40);
 
   play_service_ = std::make_shared<EcalPlayService>();
-  play_service_server_.Create(play_service_);
+  play_service_server_ = std::make_unique<eCAL::protobuf::CServiceServer<eCAL::pb::play::EcalPlayService>>(play_service_);
 
   // Load default channel mapping setting
   QSettings settings;

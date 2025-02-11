@@ -29,7 +29,7 @@
 
 namespace eCAL
 {
-  CServiceServer::CServiceServer(const std::string & service_name_, const ServerEventCallbackT& event_callback_)
+  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
     : m_service_server_impl(nullptr)
   {
     // create server implementation
@@ -48,12 +48,12 @@ namespace eCAL
     if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
   }
 
-  CServiceServer::CServiceServer(CServiceServer && rhs) noexcept
+  CServiceServer::CServiceServer(CServiceServer&& rhs) noexcept
     : m_service_server_impl(std::move(rhs.m_service_server_impl))
   {
   }
 
-  CServiceServer & CServiceServer::operator=(CServiceServer && rhs) noexcept
+  CServiceServer& CServiceServer::operator=(CServiceServer&& rhs) noexcept
   {
     if (this != &rhs)
     {
@@ -62,13 +62,13 @@ namespace eCAL
     return *this;
   }
 
-  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
+  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_)
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->SetMethodCallback(method_info_, callback_);
   }
 
-  bool CServiceServer::RemoveMethodCallback(const std::string & method_)
+  bool CServiceServer::RemoveMethodCallback(const std::string& method_)
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->RemoveMethodCallback(method_);

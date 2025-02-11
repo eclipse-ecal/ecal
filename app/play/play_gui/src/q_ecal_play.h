@@ -181,7 +181,7 @@ private:
 
   // Service provider
   std::shared_ptr<eCAL::pb::play::EcalPlayService> play_service_;
-  eCAL::protobuf::CServiceServer<eCAL::pb::play::EcalPlayService> play_service_server_;
+  std::unique_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::play::EcalPlayService>> play_service_server_;
 
   // State Update
   QTimer* periodic_update_timer_;
