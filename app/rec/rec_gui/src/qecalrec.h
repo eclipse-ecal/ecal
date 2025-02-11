@@ -327,7 +327,7 @@ private:
 
   // Service provider
   std::shared_ptr<eCAL::pb::rec_server::EcalRecServerService> rec_server_service_;
-  eCAL::protobuf::CServiceServer<eCAL::pb::rec_server::EcalRecServerService> rec_server_service_server_;
+  std::unique_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::rec_server::EcalRecServerService>> rec_server_service_server_;
 
   QTimer* recorder_status_poll_timer_;
   const int recorder_status_poll_time_ms_ = 100;

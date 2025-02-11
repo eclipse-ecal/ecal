@@ -189,7 +189,7 @@ EcalsysGui::EcalsysGui(QWidget *parent)
 
   // Create the eCALSys service
   std::shared_ptr<eCALSysServiceImpl> ecalsys_service_impl = std::make_shared<eCALSysServiceImpl>(this);
-  ecalsys_service_.Create(ecalsys_service_impl);
+  ecalsys_service_ = std::make_unique<eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service>>(ecalsys_service_impl);
 
   //Drag & Drop
   setAcceptDrops(true);

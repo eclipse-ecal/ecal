@@ -354,7 +354,7 @@ int main(int argc, char** argv)
   std::cout << header_ss.str();
 
   std::shared_ptr<eCAL::pb::rec_client::EcalRecClientService> rec_service_(std::make_shared<EcalRecService>(ecal_rec));
-  eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService> rec_service_server_(rec_service_);
+  std::unique_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService>> rec_service_server_(std::make_unique<eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService>>(rec_service_));
 
   while (eCAL::Ok())
   {
@@ -370,8 +370,8 @@ int main(int argc, char** argv)
   }
 
   // Shutdown service
-  rec_service_server_.Destroy();
-  rec_service_ = nullptr;
+  rec_service_server_ = nullptr;
+  rec_service_        = nullptr;
 
   // Stop recording
   ecal_rec->StopRecording();
