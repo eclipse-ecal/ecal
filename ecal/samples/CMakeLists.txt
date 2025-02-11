@@ -90,8 +90,8 @@ endif()
 
 # services
 if(ECAL_CORE_SERVICE)
-  add_subdirectory(cpp/services/latency_client)
-  add_subdirectory(cpp/services/latency_server)
+  add_subdirectory(cpp/benchmarks/latency_client)
+  add_subdirectory(cpp/benchmarks/latency_server)
   add_subdirectory(cpp/services/minimal_client)
   add_subdirectory(cpp/services/minimal_server)
 endif()
