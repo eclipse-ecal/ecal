@@ -56,7 +56,6 @@
 #include <core/config/py_subscriber.h>
 #include <core/config/py_time.h>
 #include <core/config/py_transport_layer.h>
-#include <core/pubsub/py_payload_writer.h>
 #include <core/pubsub/py_publisher.h>
 #include <core/pubsub/py_subscriber.h>
 #include <core/pubsub/py_types.h>
@@ -85,5 +84,6 @@ NB_MODULE(nanobind_core, m) {
   AddConfigTransportLayer(m);
 
   AddPubsubPublisher(m);
+  AddPubsubSubscriber(m);
   AddPubsubTypes(m);
 }
