@@ -347,6 +347,7 @@ namespace eCAL
         buildPath(ecal_data_env_dir, ECAL_FOLDER_NAME_LOG),
         ecal_data_env_dir,
         config_.logging.provider.file_config.path,
+        buildPath(config_file_dir, ECAL_FOLDER_NAME_LOG),
         config_file_dir
       };
 
