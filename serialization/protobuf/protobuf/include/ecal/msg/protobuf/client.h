@@ -39,7 +39,7 @@
  *    - Offers methods for synchronous and asynchronous service invocations that support
  *      automatic parsing of the responses into user-defined protobuf message types.
  *    - Uses templated call methods to ensure that responses are converted to the expected
- *      type (TMsgServiceResponse) as specified by the caller.
+ *      type (SMsgServiceResponse) as specified by the caller.
  *
  * Both classes inherit from the common base class, CServiceClientBase, which now is parameterized
  * on both the service description type and the client instance wrapper type. This base class encapsulates
@@ -55,11 +55,11 @@
  * Key Features:
  *    - Blocking calls using CallWithResponse:
  *         * Untyped version returns a vector of SServiceResponse.
- *         * Typed version returns a vector of TMsgServiceResponse<ResponseT>.
+ *         * Typed version returns a vector of SMsgServiceResponse<ResponseT>.
  *
  *    - Asynchronous calls using CallWithCallback and CallWithCallbackAsync:
  *         * Untyped version uses ResponseCallbackT for generic response handling.
- *         * Typed version uses TMsgResponseCallbackT<ResponseT> to automatically parse and
+ *         * Typed version uses SMsgResponseCallbackT<ResponseT> to automatically parse and
  *           deliver typed responses.
  *
  * Usage Examples:
@@ -237,11 +237,11 @@ namespace eCAL
        * @return A pair containing an overall success flag and a vector of typed responses.
        */
       template <typename ResponseT>
-      std::pair<bool, TMsgServiceResponseVecT<ResponseT>> CallWithResponse(const std::string& method_name_,
+      std::pair<bool, SMsgServiceResponseVecT<ResponseT>> CallWithResponse(const std::string& method_name_,
         const google::protobuf::Message& request_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
-        return this->template ProcessInstances<TMsgServiceResponse<ResponseT>>(
+        return this->template ProcessInstances<SMsgServiceResponse<ResponseT>>(
           [&](auto& instance) {
             return instance.template CallWithResponse<ResponseT>(method_name_, request_, timeout_ms_);
           }
@@ -263,7 +263,7 @@ namespace eCAL
       template <typename ResponseT>
       bool CallWithCallback(const std::string& method_name_,
         const google::protobuf::Message& request_,
-        const TMsgResponseCallbackT<ResponseT>& response_callback_,
+        const SMsgResponseCallbackT<ResponseT>& response_callback_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         bool overall_success = true;
@@ -288,7 +288,7 @@ namespace eCAL
       template <typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
         const google::protobuf::Message& request_,
-        const TMsgResponseCallbackT<ResponseT>& response_callback_) const
+        const SMsgResponseCallbackT<ResponseT>& response_callback_) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())

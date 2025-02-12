@@ -84,7 +84,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Math)
   std::promise<double> prom;
   auto fut = prom.get_future();
 
-  auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<SFloat>& resp)
+  auto callback = [&prom](const eCAL::protobuf::SMsgServiceResponse<SFloat>& resp)
   {
     prom.set_value(resp.response.out());
   };
@@ -115,7 +115,7 @@ TEST(core_cpp_clientserver_proto, TypedCallbackAsync_Math)
   std::promise<double> prom;
   auto fut = prom.get_future();
 
-  auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<SFloat>& resp)
+  auto callback = [&prom](const eCAL::protobuf::SMsgServiceResponse<SFloat>& resp)
     {
       prom.set_value(resp.response.out());
     };
@@ -177,7 +177,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Ping)
   std::promise<std::string> prom;
   auto fut = prom.get_future();
 
-  auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<PingResponse>& resp)
+  auto callback = [&prom](const eCAL::protobuf::SMsgServiceResponse<PingResponse>& resp)
   {
     prom.set_value(resp.response.answer());
   };

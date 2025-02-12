@@ -102,7 +102,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math_Callback)
   std::promise<std::vector<double>> prom;
   auto fut = prom.get_future();
 
-  auto callback = [&mtx, &responses, expected_responses, &prom](const eCAL::protobuf::TMsgServiceResponse<SFloat>& resp)
+  auto callback = [&mtx, &responses, expected_responses, &prom](const eCAL::protobuf::SMsgServiceResponse<SFloat>& resp)
   {
     {
       std::lock_guard<std::mutex> lock(mtx);

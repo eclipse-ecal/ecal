@@ -58,7 +58,7 @@ void OnClientState(const eCAL::SServiceId& service_id_, const eCAL::SClientEvent
 }
 
 // Callback for math service responses (for the callback variants).
-void OnMathResponse(const eCAL::protobuf::TMsgServiceResponse<SFloat>& service_response_)
+void OnMathResponse(const eCAL::protobuf::SMsgServiceResponse<SFloat>& service_response_)
 {
   const std::string& method_name = service_response_.service_method_information.method_name;
   const std::string& host_name   = service_response_.server_id.service_id.host_name;

@@ -41,7 +41,7 @@ namespace eCAL
      * @tparam ResponseT The expected protobuf response type.
      */
     template <typename ResponseT>
-    struct TMsgServiceResponse
+    struct SMsgServiceResponse
     {
       eCallState                 call_state = eCallState::none; //!< Call state (success/failure)
       SServiceId                 server_id;                     //!< Identifier of the server that executed the call
@@ -57,7 +57,7 @@ namespace eCAL
      * @tparam ResponseT The expected protobuf response type.
      */
     template <typename ResponseT>
-    using TMsgServiceResponseVecT = std::vector<TMsgServiceResponse<ResponseT>>;
+    using SMsgServiceResponseVecT = std::vector<SMsgServiceResponse<ResponseT>>;
 
     /**
      * @brief Typed callback for responses.
@@ -65,6 +65,6 @@ namespace eCAL
      * @tparam ResponseT The expected protobuf response type.
      */
     template <typename ResponseT>
-    using TMsgResponseCallbackT = std::function<void(const TMsgServiceResponse<ResponseT>&)>;
+    using SMsgResponseCallbackT = std::function<void(const SMsgServiceResponse<ResponseT>&)>;
   }
 }

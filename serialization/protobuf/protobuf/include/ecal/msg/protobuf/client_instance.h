@@ -47,7 +47,7 @@
  *
  *    Key functionalities include:
  *      - **CallWithResponse**: A templated blocking call that, given an expected response type (ResponseT),
- *        returns a pair of a success flag and a parsed response encapsulated in a TMsgServiceResponse<ResponseT> structure.
+ *        returns a pair of a success flag and a parsed response encapsulated in a SMsgServiceResponse<ResponseT> structure.
  *      - **CallWithCallback**: A templated callback-based call that parses the raw response and delivers it
  *        to a callback expecting a typed response.
  *      - **CallWithCallbackAsync**: A non-blocking variant of the typed callback-based call.
@@ -241,14 +241,14 @@ namespace eCAL
        * @return A pair consisting of a success flag and a typed response.
        */
       template <typename ResponseT>
-      std::pair<bool, TMsgServiceResponse<ResponseT>> CallWithResponse(const std::string& method_name_,
+      std::pair<bool, SMsgServiceResponse<ResponseT>> CallWithResponse(const std::string& method_name_,
         const google::protobuf::Message& request_,
         int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
       {
         const std::string serialized_request = request_.SerializeAsString();
 
         auto ret = m_instance.CallWithResponse(method_name_, serialized_request, timeout_ms_);
-        TMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(ret.second);
+        SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(ret.second);
 
         bool success = ret.first && (msg_response.call_state == eCallState::executed);
         return std::make_pair(success, msg_response);
@@ -269,13 +269,13 @@ namespace eCAL
       template <typename ResponseT>
       bool CallWithCallback(const std::string& method_name_,
         const google::protobuf::Message& request_,
-        const TMsgResponseCallbackT<ResponseT>& response_callback_,
+        const SMsgResponseCallbackT<ResponseT>& response_callback_,
         int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
       {
         const std::string serialized_request = request_.SerializeAsString();
         auto wrapper = [this, method_name_, response_callback_](const SServiceResponse& service_response)
           {
-            TMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
+            SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
             response_callback_(msg_response);
           };
         return m_instance.CallWithCallback(method_name_, serialized_request, wrapper, timeout_ms_);
@@ -295,12 +295,12 @@ namespace eCAL
       template <typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
         const google::protobuf::Message& request_,
-        const TMsgResponseCallbackT<ResponseT>& response_callback_)
+        const SMsgResponseCallbackT<ResponseT>& response_callback_)
       {
         const std::string serialized_request = request_.SerializeAsString();
         auto wrapper = [this, method_name_, response_callback_](const SServiceResponse& service_response)
           {
-            TMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
+            SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
             response_callback_(msg_response);
           };
         return m_instance.CallWithCallbackAsync(method_name_, serialized_request, wrapper);
@@ -328,12 +328,12 @@ namespace eCAL
        *
        * @tparam ResponseT The expected protobuf response type.
        * @param service_response The raw service response.
-       * @return A TMsgServiceResponse<ResponseT> structure containing the parsed response and metadata.
+       * @return A SMsgServiceResponse<ResponseT> structure containing the parsed response and metadata.
        */
       template <typename ResponseT>
-      static TMsgServiceResponse<ResponseT> ConvertResponse(const SServiceResponse& service_response)
+      static SMsgServiceResponse<ResponseT> ConvertResponse(const SServiceResponse& service_response)
       {
-        TMsgServiceResponse<ResponseT> msg_response;
+        SMsgServiceResponse<ResponseT> msg_response;
         // Attempt to parse the raw response into a ResponseT object.
         if (!msg_response.response.ParseFromString(service_response.response))
         {
