@@ -96,11 +96,6 @@ They are used by Eclipse eCAL, but not associated to it in any way.
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
 
-   * - `empy_helpers <https://github.com/ros2/rosidl/blob/master/rosidl_adapter/rosidl_adapter/resource/__init__.py>`_
-     - :ref:`apache_2_0`
-     - 2018 Open Source Robotics Foundation, Inc.
-     - - |fa-file-alt| Copy in repository: :file:`/doc/extensions/empy_helpers/__init__.py` (modified)
-
    * - `Findqwt.cmake <https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt>`_
      - :ref:`findqwt-bsd-2`
      - Copyright 2010-2013, Julien Schueller

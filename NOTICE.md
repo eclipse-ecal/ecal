@@ -129,13 +129,6 @@ convert_utf
     - Binary distributions for Windows
     - Binary distributions for Linux
 
-empy_helpers
-  - License: Apache 2.0
-  - Project: https://github.com/ros2/rosidl/blob/master/rosidl_adapter/rosidl_adapter/resource/__init__.py
-  - Copyright: 2018 Open Source Robotics Foundation, Inc.
-  - Included in:
-    - Copy in repository: `/doc/extensions/empy_helpers/__init__.py` (modified)
-
 Findqwt.cmake
   - License: Modified BSD 2-Clause
   - Project: https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt
