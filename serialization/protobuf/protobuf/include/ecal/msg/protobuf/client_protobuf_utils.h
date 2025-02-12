@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client_protobuf_utils.h
+ * @file   msg/protobuf/client_protobuf_utils.h
  * @brief  eCAL client protobuf service utility functions
 **/
 

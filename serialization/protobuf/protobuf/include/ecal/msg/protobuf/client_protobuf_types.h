@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client_typed_response.h
+ * @file   msg/protobuf/client_protobuf_types.h
  * @brief  eCAL client protobuf templated response type
 **/
 
@@ -26,11 +26,7 @@
 
 #include <ecal/service/types.h>
 
-#include <google/protobuf/message.h>
-
-#include <memory>
 #include <string>
-#include <vector>
 
 namespace eCAL
 {

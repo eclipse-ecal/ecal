@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client_base.h
+ * @file   msg/protobuf/client_base.h
  * @brief  Base class for templated Protobuf service clients.
  *
  * This file defines a base class for Protobuf-based service clients. It encapsulates

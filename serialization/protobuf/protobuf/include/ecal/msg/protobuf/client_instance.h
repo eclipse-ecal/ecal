@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client_instance.h
+ * @file   msg/protobuf/client_instance.h
  * @brief  eCAL client instance interface based on protobuf service description
  *
  * This header file provides the implementation of client instance interfaces for eCAL services

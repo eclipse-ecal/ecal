@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   client.h
+ * @file   msg/protobuf/client.h
  * @brief  eCAL Protobuf Client Interface
  *
  * This header file defines two primary templated client classes for interacting with
