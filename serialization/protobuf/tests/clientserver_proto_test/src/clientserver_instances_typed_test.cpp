@@ -66,7 +66,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math)
   EXPECT_EQ(result.second.size(), instances.size());
   for (const auto &resp : result.second)
   {
-    EXPECT_DOUBLE_EQ(resp.response->out(), 5000.0);
+    EXPECT_DOUBLE_EQ(resp.response.out(), 5000.0);
   }
 
   eCAL::Finalize();
@@ -106,7 +106,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math_Callback)
   {
     {
       std::lock_guard<std::mutex> lock(mtx);
-      responses.push_back(resp.response->out());
+      responses.push_back(resp.response.out());
       if (responses.size() == expected_responses)
       {
         prom.set_value(responses);

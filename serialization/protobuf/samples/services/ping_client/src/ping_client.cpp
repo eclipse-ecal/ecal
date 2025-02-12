@@ -63,7 +63,7 @@ int main()
             // service successful executed
           case eCAL::eCallState::executed:
           {
-            std::cout << "Received response PingService / Ping : " << service_response.response->answer() << " from host " << service_response.server_id.service_id.host_name << std::endl;
+            std::cout << "Received response PingService / Ping : " << service_response.response.answer() << " from host " << service_response.server_id.service_id.host_name << std::endl;
           }
           break;
           // service execution failed

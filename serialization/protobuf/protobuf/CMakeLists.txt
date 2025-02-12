@@ -80,7 +80,6 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/client_instance.h
       include/ecal/msg/protobuf/client_protobuf_types.h
       include/ecal/msg/protobuf/client_protobuf_utils.h
-      include/ecal/msg/protobuf/client_response_parser.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
       include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h

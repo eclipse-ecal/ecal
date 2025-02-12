@@ -61,7 +61,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Math)
   EXPECT_TRUE(result.first);
   ASSERT_FALSE(result.second.empty());
 
-  double out = result.second[0].response->out();
+  double out = result.second[0].response.out();
   EXPECT_DOUBLE_EQ(out, 42.0);
 
   eCAL::Finalize();
@@ -86,7 +86,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Math)
 
   auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<SFloat>& resp)
   {
-    prom.set_value(resp.response->out());
+    prom.set_value(resp.response.out());
   };
 
   bool initiated = math_client.CallWithCallback<SFloat>("Divide", request, callback);
@@ -117,7 +117,7 @@ TEST(core_cpp_clientserver_proto, TypedCallbackAsync_Math)
 
   auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<SFloat>& resp)
     {
-      prom.set_value(resp.response->out());
+      prom.set_value(resp.response.out());
     };
 
   auto start = std::chrono::steady_clock::now();
@@ -155,7 +155,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Ping)
   EXPECT_TRUE(result.first);
   ASSERT_FALSE(result.second.empty());
 
-  std::string answer = result.second[0].response->answer();
+  std::string answer = result.second[0].response.answer();
   EXPECT_EQ(answer, "PONG");
 
   eCAL::Finalize();
@@ -179,7 +179,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Ping)
 
   auto callback = [&prom](const eCAL::protobuf::TMsgServiceResponse<PingResponse>& resp)
   {
-    prom.set_value(resp.response->answer());
+    prom.set_value(resp.response.answer());
   };
 
   bool initiated = ping_client.CallWithCallback<PingResponse>("Ping", request, callback);

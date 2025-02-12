@@ -64,10 +64,10 @@ void OnMathResponse(const eCAL::protobuf::TMsgServiceResponse<SFloat>& service_r
   const std::string& host_name   = service_response_.server_id.service_id.host_name;
   const int32_t&     process_id  = service_response_.server_id.service_id.process_id;
 
-  if (service_response_.call_state == eCAL::eCallState::executed && service_response_.response)
+  if (service_response_.call_state == eCAL::eCallState::executed)
   {
     std::cout << "Callback: Received response MathService / " << method_name
-      << " : " << service_response_.response->out()
+      << " : " << service_response_.response.out()
       << " from host " << host_name << " with pid " << process_id << std::endl;
   }
   else
@@ -122,14 +122,7 @@ int main()
           // Iterate over all responses
           for (const auto& resp : multiply_response.second)
           {
-            if (resp.response)
-            {
-              std::cout << "Blocking: Received response MathService / Multiply : " << resp.response->out() << std::endl;
-            }
-            else
-            {
-              std::cout << "Blocking: Received error MathService / Multiply : " << resp.error_msg << std::endl;
-            }
+            std::cout << "Blocking: Received response MathService / Multiply : " << resp.response.out() << std::endl;
           }
         }
         else
@@ -162,7 +155,7 @@ int main()
           auto divide_response = instance.CallWithResponse<SFloat>("Divide", math_request);
           if (divide_response.first)
           {
-            std::cout << "Blocking: Received response MathService / Divide : " << divide_response.second.response->out() << std::endl;
+            std::cout << "Blocking: Received response MathService / Divide : " << divide_response.second.response.out() << std::endl;
           }
           else
           {
