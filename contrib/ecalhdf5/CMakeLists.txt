@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,8 +18,15 @@
 
 project(hdf5 LANGUAGES C CXX)
 
-find_package(HDF5 COMPONENTS C REQUIRED)
-find_package(Threads REQUIRED)
+if(NOT CMAKE_CROSSCOMPILING)
+  find_package(HDF5 COMPONENTS C REQUIRED)
+  find_package(Threads REQUIRED)
+else()
+  find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
+  find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
+  set(HDF5_LIBRARIES "${hdf5_path};m;dl;z;sz;pthread")
+  set(HDF5_INCLUDE_DIRS "${hdf5_include}")
+endif()
 
 set(ecalhdf5_src
     src/datatype_helper.cpp
