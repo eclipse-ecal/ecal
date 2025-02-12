@@ -49,8 +49,6 @@ set(nanobind_sources
   core/config/py_time.h
   core/config/py_transport_layer.cpp
   core/config/py_transport_layer.h
-  core/pubsub/py_payload_writer.cpp
-  core/pubsub/py_payload_writer.h
   core/pubsub/py_publisher.cpp
   core/pubsub/py_publisher.h
   core/pubsub/py_subscriber.cpp

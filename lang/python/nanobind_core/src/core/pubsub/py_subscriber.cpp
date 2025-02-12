@@ -1,149 +1,79 @@
-///* ========================= eCAL LICENSE =================================
-// *
-// * Copyright (C) 2016 - 2025 Continental Corporation
-// *
-// * Licensed under the Apache License, Version 2.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License at
-// *
-// *      http://www.apache.org/licenses/LICENSE-2.0
-// *
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// *
-// * ========================= eCAL LICENSE =================================
-//*/
-//
-///**
-// * @file   pubsub/subscriber.h
-// * @brief  eCAL subscriber interface
-//**/
-//
-//#pragma once
-//
-//#include <ecal/deprecate.h>
-//#include <ecal/namespace.h>
-//#include <ecal/os.h>
-//
-//#include <ecal/pubsub/types.h>
-//#include <ecal/config.h>
-//
-//#include <memory>
-//#include <string>
-//
-//namespace eCAL
-//{
-//  class CSubscriberImpl;
-//
-//  /**
-//   * @brief eCAL subscriber class.
-//  **/
-//  class ECAL_API_CLASS CSubscriber
-//  {
-//  public:
-//    /**
-//     * @brief Constructor.
-//     *
-//     * @param topic_name_      Unique topic name.
-//     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-//     * @param config_          Optional configuration parameters.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_ = SDataTypeInformation(), const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
-//
-//    /**
-//     * @brief Constructor with event callback registration.
-//     *
-//     * @param topic_name_      Unique topic name.
-//     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-//     * @param event_callback_  Callback for subscriber events.
-//     * @param config_          Configuration parameters.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration());
-//
-//    /**
-//     * @brief Destructor.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      virtual ~CSubscriber();
-//
-//    /**
-//     * @brief CSubscribers are non-copyable.
-//    **/
-//    CSubscriber(const CSubscriber&) = delete;
-//
-//    /**
-//     * @brief CSubscribers are non-copyable.
-//    **/
-//    CSubscriber& operator=(const CSubscriber&) = delete;
-//
-//    /**
-//     * @brief CSubscribers are move-enabled.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      CSubscriber(CSubscriber&& rhs) noexcept;
-//
-//    /**
-//     * @brief CSubscribers are move-enabled.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      CSubscriber& operator=(CSubscriber&& rhs) noexcept;
-//
-//    /**
-//     * @brief Set/overwrite callback function for incoming receives.
-//     *
-//     * @param callback_  The callback function to set.
-//     *
-//     * @return  True if succeeded, false if not.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      bool SetReceiveCallback(ReceiveCallbackT callback_);
-//
-//    /**
-//     * @brief Remove callback function for incoming receives.
-//     *
-//     * @return  True if succeeded, false if not.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      bool RemoveReceiveCallback();
-//
-//    /**
-//     * @brief Query the number of connected publishers.
-//     *
-//     * @return  Number of publishers.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      size_t GetPublisherCount() const;
-//
-//    /**
-//     * @brief Retrieve the topic name.
-//     *
-//     * @return  The topic name.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      std::string GetTopicName() const;
-//
-//    /**
-//     * @brief Retrieve the topic id.
-//     *
-//     * @return  The topic id.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      STopicId GetTopicId() const;
-//
-//    /**
-//     * @brief Retrieve the topic information.
-//     *
-//     * @return  The topic information.
-//    **/
-//    ECAL_API_EXPORTED_MEMBER
-//      SDataTypeInformation GetDataTypeInformation() const;
-//
-//  private:
-//    std::shared_ptr<CSubscriberImpl> m_subscriber_impl;
-//  };
-//}
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+/**
+ * @file   pubsub/subscriber.h
+ * @brief  eCAL subscriber interface
+**/
+
+#pragma once
+
+#include <core/pubsub/py_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
+
+#include <exception>
+
+namespace nb = nanobind;
+using namespace eCAL;
+
+void AddPubsubSubscriber(nanobind::module_& module)
+{
+  // --- Wrap the CSubscriber class ------------------------------------------------
+  nb::class_<CSubscriber>(module, "Subscriber")
+    // Define CPublisher class
+    .def("__init__", [](CSubscriber* t, nb::str topic_name, const SDataTypeInformation& datatype_info/*, const PubEventCallbackT& event_callback_*/, const Subscriber::Configuration& config_) { new (t) CSubscriber(topic_name.c_str(), datatype_info/*, event_callback_*/, config_); },
+      nb::arg("topic_name"),
+      nb::arg("data_type_info") = SDataTypeInformation(),
+      nb::arg("config") = GetSubscriberConfiguration()
+      //nb::arg("event_callback") = nullptr
+    )
+
+    .def("set_receive_callback",
+      [](CSubscriber& self, nb::object py_callback) {
+        // Wrap the Python callback with a lambda that acquires the GIL.
+        // Adjust the callback parameters according to the actual signature of ReceiveCallbackT.
+        auto wrapped_callback = [py_callback](auto&&... args) {
+          try {
+            nb::gil_scoped_acquire acquire;
+            // Call the Python callback, forwarding the arguments.
+            py_callback(std::forward<decltype(args)>(args)...);
+          }
+          catch (std::exception e)
+          {
+            std::cout << "Error invoking callback: " << e.what() << std::endl;
+          }
+        };
+
+        nb::gil_scoped_release release;
+        return self.SetReceiveCallback(wrapped_callback);
+      },
+      nb::arg("callback"))
+
+    .def("remove_receive_callback", &CSubscriber::RemoveReceiveCallback)
+    .def("get_publisher_count", &CSubscriber::GetPublisherCount)
+    .def("get_topic_name", &CSubscriber::GetTopicName)
+    .def("get_topic_id", &CSubscriber::GetTopicId)
+    .def("get_data_type_information", &CSubscriber::GetDataTypeInformation)
+
+    .def("__repr__", [](const CSubscriber& pub) {
+    return "<Publisher topic='" + pub.GetTopicName() + "' subscribers=" +
+      std::to_string(pub.GetPublisherCount()) + ">";
+      });
+    ;
+}
