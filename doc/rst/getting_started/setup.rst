@@ -63,7 +63,7 @@ You can choose from different PPAs, depending on your desired upgrade path.
 
    We usually recommend installing from a PPA (:ref:`see above <getting_started_setup_ubuntu_ppa>`).
 
-#. Choose your desired eCAL Version from the :ref:`eCAL Download Archive<download_archive>`.
+#. Choose your desired eCAL Version from the `Download Page <https://eclipse-ecal.github.io/ecal/releases/>`__.
 
 #. Install the eCAL Dependencies:
 
