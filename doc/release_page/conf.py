@@ -11,6 +11,8 @@ import sys
 
 # -- Generate download archive and tables for the homepage --------------------
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, r'../extensions')
+
 import generate_release_documentation
 
 gh_api_key = os.getenv("ECAL_GH_API_KEY")

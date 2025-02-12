@@ -108,7 +108,7 @@ Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with 
    :caption: Advanced
    
    versions/ecal_versions
-   Downloads <https://eclipse-ecal.github.io/ecal/releases/index.html>
+   Downloads <https://eclipse-ecal.github.io/ecal/releases/>
    advanced/tutorials
    advanced/ecal_internals
    advanced/ros_comparison
