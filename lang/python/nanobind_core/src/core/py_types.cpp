@@ -48,7 +48,15 @@ void AddTypes(nb::module_& m) {
     .def(nb::init<>())
     .def_rw("name", &eCAL::SDataTypeInformation::name)
     .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
-    .def_rw("descriptor", &eCAL::SDataTypeInformation::descriptor)
+    .def_prop_rw("descriptor",
+        // Getter: convert std::string to nb::bytes
+        [](const eCAL::SDataTypeInformation &self) -> nb::bytes {
+            return nb::bytes(self.descriptor.c_str(), self.descriptor.size());
+        },
+        // Setter: convert nb::bytes back to std::string
+        [](eCAL::SDataTypeInformation &self, nb::bytes b) {
+            self.descriptor = std::string(b.c_str(), b.size());
+        })
     //.def("clear", &eCAL::SDataTypeInformation::clear,
     //  "Clears the name, encoding, and descriptor strings.")
     .def("__eq__", [](const eCAL::SDataTypeInformation& a, const eCAL::SDataTypeInformation& b) {
@@ -64,7 +72,7 @@ void AddTypes(nb::module_& m) {
       });
 
     // Wrap SEntityId
-    nb::class_<eCAL::SEntityId>(m, "SEntityId")
+    nb::class_<eCAL::SEntityId>(m, "EntityId")
         .def(nb::init<>())
         .def_rw("entity_id", &eCAL::SEntityId::entity_id)
         .def_rw("process_id", &eCAL::SEntityId::process_id)

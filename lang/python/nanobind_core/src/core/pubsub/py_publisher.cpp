@@ -30,9 +30,9 @@ void AddPubsubPublisher(nanobind::module_& module)
     .def("__init__", [](CPublisher* t, nb::str topic_name, const SDataTypeInformation& datatype_info/*, const PubEventCallbackT& event_callback_*/, const Publisher::Configuration& config_) { new (t) CPublisher(topic_name.c_str(), datatype_info/*, event_callback_*/, config_ ); },
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),
-      //nb::arg("event_callback") = nullptr
       nb::arg("config") = GetPublisherConfiguration()
-      )
+      //nb::arg("event_callback") = nullptr
+    )
 
     // Send function for Python bytes
     .def("send", [](CPublisher& pub, nb::bytes payload, long long time) {
