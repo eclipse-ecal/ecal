@@ -431,9 +431,11 @@ def generate_ppa_instructions(gh_api_key, ecal_doc_version, output_rst_file_path
     if ecal_doc_version < latest_version:
         # Legacy eCAL => don't instruct to use eCAL rolling release PPA
         template_file       = "ppa_instructions_singleversion.rst.jinja"
+        ecal_version        = ecal_doc_version
     else:
         # Latest version => instruct to use eCAL rolling release PPA
         template_file       = "ppa_instructions_multiversion_tabs.rst.jinja"
+        ecal_version        = latest_version
 
 
     # Load the Jinja2 template
@@ -446,7 +448,7 @@ def generate_ppa_instructions(gh_api_key, ecal_doc_version, output_rst_file_path
 
     # Render the template with the context
     context = {
-        'ecal_version': ecal_doc_version,
+        'ecal_version': ecal_version,
     }
     output = template.render(context)
 
