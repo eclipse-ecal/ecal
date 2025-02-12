@@ -84,7 +84,7 @@ int main()
   std::cout << "Service call average latency : " << avg_time << " us"               << std::endl;
   std::cout << "Service call min latency     : " << min_time << " us @ " << min_pos << std::endl;
   std::cout << "Service call max latency     : " << max_time << " us @ " << max_pos << std::endl;
-  std::cout << "Service throughput           : " << static_cast<int>((calls * subcalls) / (sum_time / 1000.0 / 1000.0)) << " calls/s" << std::endl;
+  std::cout << "Service throughput           : " << static_cast<int>((calls) / (sum_time / 1000.0 / 1000.0)) << " calls/s" << std::endl;
 
   // finalize eCAL API
   eCAL::Finalize();
