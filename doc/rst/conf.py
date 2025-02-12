@@ -82,7 +82,13 @@ if not gh_api_key:
 elif not ecal_doc_version:
     print("WARNING: Environment variable ECAL_DOC_VERSION not set. Skipping generating PPA instructions.")
 else:
-    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version), ppa_instructions_rst_file)
+    # Sanitize the version string by removing leading 'v' and '.' characters
+    ecal_doc_version_sanitized = ecal_doc_version
+    if ecal_doc_version_sanitized.startswith('v'):
+        ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
+    if ecal_doc_version_sanitized.startswith('.'):
+        ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
+    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version_sanitized, partial=True), ppa_instructions_rst_file)
   
 
 # -- General configuration ---------------------------------------------------
