@@ -77,10 +77,13 @@ import generate_release_documentation
 ppa_instructions_rst_file = os.path.join(rst_source_dir, r"getting_started/_ppa_instructions.rst.txt")
 
 gh_api_key = os.getenv("ECAL_GH_API_KEY")
-if gh_api_key:
-    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version), ppa_instructions_rst_file)
-else:  
+if not gh_api_key:
     print("WARNING: Environment variable ECAL_GH_API_KEY not set. Skipping generating PPA instructions.")
+elif not ecal_doc_version:
+    print("WARNING: Environment variable ECAL_DOC_VERSION not set. Skipping generating PPA instructions.")
+else:
+    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version), ppa_instructions_rst_file)
+  
 
 # -- General configuration ---------------------------------------------------
 
