@@ -62,11 +62,9 @@ public:
 };
 
 // server state callback
-void OnServerEvent(const eCAL::v5::SServerEventCallbackData* data_)
+void OnServerEvent(const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_)
 {
-  assert(data_);
-
-  switch (data_->type)
+  switch (data_.type)
   {
   case eCAL::eServerEvent::connected:
     std::cout << "-----------------------------------" << std::endl;
@@ -92,11 +90,7 @@ int main()
 
   // create Math service server
   std::shared_ptr<MathService> math_service = std::make_shared<MathServiceImpl>();
-  eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
-  
-  // register event callbacks
-  math_server.AddEventCallback(eCAL::eServerEvent::connected,    std::bind(OnServerEvent, std::placeholders::_2));
-  math_server.AddEventCallback(eCAL::eServerEvent::disconnected, std::bind(OnServerEvent, std::placeholders::_2));
+  eCAL::protobuf::CServiceServer<MathService> math_server(math_service, OnServerEvent);
 
   while(eCAL::Ok())
   {

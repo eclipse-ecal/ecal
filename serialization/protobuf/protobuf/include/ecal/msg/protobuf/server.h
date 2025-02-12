@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/v5/ecal_server.h>
+#include <ecal/service/server.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 #include <functional>
 
@@ -51,175 +51,139 @@ namespace eCAL
      * @brief Google Protobuf Server wrapper class.
     **/
     template <typename T>
-    class CServiceServer : public eCAL::v5::CServiceServer
+    class CServiceServer : public eCAL::CServiceServer
     {
     public:
       /**
        * @brief Constructor.
+       *
+       * @param service_        Google protobuf service instance.
+       * @param event_callback_ Callback function for server events.
       **/
-      CServiceServer() : m_service(nullptr)
+      CServiceServer(std::shared_ptr<T> service_, const ServerEventCallbackT& event_callback_ = ServerEventCallbackT())
+        : eCAL::CServiceServer(GetServiceNameFromDescriptor(service_), event_callback_), m_service(service_)
       {
+        RegisterMethods();
       }
 
       /**
        * @brief Constructor.
        *
-       * @param service_  Google protobuf service instance.
+       * @param service_        Google protobuf service instance.
+       * @param service_name_   Unique service name.
+       * @param event_callback_ Callback function for server events.
       **/
-      CServiceServer(std::shared_ptr<T> service_) : m_service(nullptr)
+      CServiceServer(std::shared_ptr<T> service_, const std::string& service_name_, const ServerEventCallbackT& event_callback_ = ServerEventCallbackT())
+        : eCAL::CServiceServer(service_name_.empty() ? GetServiceNameFromDescriptor(service_) : service_name_, event_callback_),
+        m_service(service_)
       {
-        Create(service_);
-      }
-
-      /**
-       * @brief Constructor.
-       *
-       * @param service_       Google protobuf service instance.
-       * @param service_name_  Unique service name.
-      **/
-      CServiceServer(std::shared_ptr<T> service_, const std::string& service_name_) : m_service(nullptr)
-      {
-        Create(service_, service_name_);
+        RegisterMethods();
       }
 
       /**
        * @brief Destructor.
       **/
-      ~CServiceServer() override
-      {
-        Destroy();
-      }
+      ~CServiceServer() override = default;
 
       /**
-       * @brief CServiceServers are non-copyable
+       * @brief CServiceServers are non-movable.
+      **/
+      CServiceServer(CServiceServer&& other) = delete;
+      CServiceServer& operator=(CServiceServer&& other) = delete;
+
+      /**
+       * @brief CServiceServers are non-copyable.
       **/
       CServiceServer(const CServiceServer&) = delete;
-
-      /**
-       * @brief CServiceServers are non-copyable
-      **/
       CServiceServer& operator=(const CServiceServer&) = delete;
 
+    private:
+      using eCAL::CServiceServer::SetMethodCallback;
+      using eCAL::CServiceServer::RemoveMethodCallback;
+      using eCAL::CServiceServer::GetServiceName;
+
       /**
-       * @brief Create service.
-       *
-       * @param service_ Google protobuf service instance.
-       *
-       * @return  True if successful.
+       * @brief Retrieves the full service name from the Protobuf descriptor.
       **/
-      bool Create(std::shared_ptr<T> service_)
+      static std::string GetServiceNameFromDescriptor(std::shared_ptr<T> service_)
       {
-        return Create(service_, "");
+        if (!service_)
+          throw std::runtime_error("CServiceServer: Null service instance.");
+
+        return service_->GetDescriptor()->full_name();
       }
-        
+
       /**
-       * @brief Create service.
-       *
-       * @param service_       Google protobuf service instance.
-       * @param service_name_  Unique service name.
-       *
-       * @return  True if successful.
+       * @brief Registers all Protobuf methods as service callbacks.
       **/
-      bool Create(std::shared_ptr<T> service_, const std::string& service_name_)
+      void RegisterMethods()
       {
-        if (service_ == nullptr) return false;
-        m_service = service_;
+        if (!m_service)
+          return;
 
-        const google::protobuf::ServiceDescriptor* service_descriptor = service_->GetDescriptor();
-        if (service_name_.empty())
-        {
-          Create(service_descriptor->full_name());
-        }
-        else
-        {
-          Create(service_name_);
-        }
-
-        std::string error_s;
+        const google::protobuf::ServiceDescriptor* service_descriptor = m_service->GetDescriptor();
         CProtoDynDecoder dyn_decoder;
+        std::string error_s;
 
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
-          // get method name and descriptor
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
           std::string method_name = method_descriptor->name();
           m_methods[method_name] = method_descriptor;
 
-          // get message type names
-          std::string input_type_name  = method_descriptor->input_type()->name();
-          std::string output_type_name = method_descriptor->output_type()->name();
+          std::string input_type_desc, output_type_desc;
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, method_descriptor->input_type()->name(), input_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, method_descriptor->output_type()->name(), output_type_desc, error_s);
 
-          // get message type descriptors
-          std::string input_type_desc;
-          std::string output_type_desc;
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
+          SServiceMethodInformation method_info{
+            method_name,
+            method_descriptor->input_type()->name(),
+            method_descriptor->output_type()->name(),
+            input_type_desc,
+            output_type_desc
+          };
 
-          // store descriptions
-          AddDescription(method_name, input_type_name, input_type_desc, output_type_name, output_type_desc);
-
-          // add callback
-          AddMethodCallback(method_name,
-            input_type_name,
-            output_type_name,
-            std::bind(&CServiceServer::RequestCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5)
-          );
+          SetMethodCallback(method_info,
+            [this, method_name](const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)
+            {
+              return this->RequestCallback(method_info_, request_, response_);
+            });
         }
-        return true;
       }
 
       /**
-       * @brief Destroy service.
-       *
-       * @return  True if successful.
+       * @brief Handles service requests.
       **/
-      bool Destroy()
+      int RequestCallback(const SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)
       {
-        m_service = nullptr;
-        return true;
-      }
+        if (!m_service)
+          return -1;
 
-      using eCAL::v5::CServiceServer::Create;
+        auto iter = m_methods.find(method_info_.method_name);
+        if (iter == m_methods.end())
+          return -1;
 
-    protected:
-      int RequestCallback(const std::string& method_, const std::string& /*req_type_*/, const std::string& /*resp_type_*/, const std::string& request_, std::string& response_)
-      {
-        if (m_service == nullptr) return -1;
-
-        auto iter = m_methods.find(method_);
-        if (iter == m_methods.end()) return -1;
-
-        // method descriptor
         const google::protobuf::MethodDescriptor* method_descriptor = iter->second;
 
-        // create request
-        google::protobuf::Message* request(m_service->GetRequestPrototype(method_descriptor).New());
+        // Use smart pointers to ensure proper cleanup
+        std::unique_ptr<google::protobuf::Message> request(m_service->GetRequestPrototype(method_descriptor).New());
         if (!request->ParseFromString(request_))
         {
           std::cerr << "Protobuf Service " << GetServiceName() << " failed to parse request message!" << std::endl;
-          delete request;
           return -1;
         }
 
-        // create response
-        google::protobuf::Message* response(m_service->GetResponsePrototype(method_descriptor).New());
-        // call method
-        m_service->CallMethod(method_descriptor, nullptr, request, response, nullptr);
+        std::unique_ptr<google::protobuf::Message> response(m_service->GetResponsePrototype(method_descriptor).New());
+
+        // Call the actual method
+        m_service->CallMethod(method_descriptor, nullptr, request.get(), response.get(), nullptr);
         response_ = response->SerializeAsString();
 
-        delete request;
-        delete response;
-
         return 0;
-      };
+      }
 
-      std::shared_ptr<T>                                                m_service;
-      std::map<std::string, const google::protobuf::MethodDescriptor*>  m_methods;
-
-      private:
-        using eCAL::v5::CServiceServer::AddMethodCallback;
-        using eCAL::v5::CServiceServer::RemMethodCallback;
-        using eCAL::v5::CServiceServer::GetServiceName;
+      std::shared_ptr<T>                                               m_service;
+      std::map<std::string, const google::protobuf::MethodDescriptor*> m_methods;
     };
   }
 }

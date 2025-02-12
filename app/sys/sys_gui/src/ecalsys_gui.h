@@ -103,7 +103,7 @@ private:
 
   QActionGroup*          theme_action_group_;
 
-  eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service> ecalsys_service_;
+  std::unique_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::sys::Service>> ecalsys_service_;
 
   // Custom Widgets
   TaskWidget*            task_widget_;
