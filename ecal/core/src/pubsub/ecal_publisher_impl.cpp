@@ -346,7 +346,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetAttribute(const std::string& /* attr_name_ */_, const std::string& /* attr_value_ */)
+  bool CPublisherImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetAttribute");

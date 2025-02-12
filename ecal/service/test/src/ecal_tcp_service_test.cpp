@@ -1682,7 +1682,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
 
     const ecal_service::ClientSession::EventCallbackT client_event_callback
               = [&num_client_event_callback_called, &client]
-                (ecal_service::ClientEventType event, const std::string& /*message*/) -> void
+                (ecal_service::ClientEventType /* event */, const std::string& /*message*/) -> void
                 {
                   if (client)
                   {
@@ -1772,13 +1772,13 @@ TEST(ecal_service, BackupHost)
             };
     
     const ecal_service::Server::EventCallbackT server_event_callback
-            = [&num_server_event_callback_called](ecal_service::ServerEventType event, const std::string& /*message*/) -> void
+            = [&num_server_event_callback_called](ecal_service::ServerEventType /* event */, const std::string& /*message*/) -> void
             {
               num_server_event_callback_called++;
             };
     
     const ecal_service::ClientSession::EventCallbackT client_event_callback
-            = [&num_client_event_callback_called](ecal_service::ClientEventType event, const std::string& /*message*/) -> void
+            = [&num_client_event_callback_called](ecal_service::ClientEventType /* event */, const std::string& /*message*/) -> void
             {
               num_client_event_callback_called++;
             };
