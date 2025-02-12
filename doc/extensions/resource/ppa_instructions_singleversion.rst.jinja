@@ -1,0 +1,11 @@
+You can use the following commands to install eCAL {{ ecal_version.major }}.{{ ecal_version.minor }} from our PPA.
+This PPA will always stay on eCAL {{ ecal_version.major }}.{{ ecal_version.minor }}.
+You will receive patches within that version though. 
+
+.. code-block:: bash
+
+    sudo add-apt-repository ppa:ecal/ecal-{{ ecal_version.major }}.{{ ecal_version.minor }}
+    sudo apt-get update
+    sudo apt-get install ecal
+
+Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-{{ ecal_version.major }}.{{ ecal_version.minor }}>`_!
