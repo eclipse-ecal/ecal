@@ -278,7 +278,10 @@ def generate_release_index_page(releases_dict, list_of_supported_minor_versions,
         os.makedirs(output_dir)
 
     # Load the Jinja2 template
-    template_loader     = jinja2.FileSystemLoader(searchpath="resource/")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    resource_path = os.path.join(script_dir, "resource")
+    
+    template_loader     = jinja2.FileSystemLoader(searchpath=resource_path)
     template_env        = jinja2.Environment(loader=template_loader)
     template_file       = "release_page_index.rst.jinja"
     template            = template_env.get_template(template_file)
@@ -317,7 +320,10 @@ def generate_release_page(gh_release,
         f.write(changelog)
 
     # Load the Jinja2 template
-    template_loader     = jinja2.FileSystemLoader(searchpath="resource/")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    resource_path = os.path.join(script_dir, "resource")
+    
+    template_loader     = jinja2.FileSystemLoader(searchpath=resource_path)
     template_env        = jinja2.Environment(loader=template_loader)
     template_file       = "release_page.rst.jinja"
     template            = template_env.get_template(template_file)
@@ -431,7 +437,10 @@ def generate_ppa_instructions(gh_api_key, ecal_doc_version, output_rst_file_path
 
 
     # Load the Jinja2 template
-    template_loader     = jinja2.FileSystemLoader(searchpath="resource/")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    resource_path = os.path.join(script_dir, "resource")
+    
+    template_loader     = jinja2.FileSystemLoader(searchpath=resource_path)
     template_env        = jinja2.Environment(loader=template_loader)
     template            = template_env.get_template(template_file)
 
@@ -449,7 +458,7 @@ if __name__=="__main__":
     gh_api_key = os.getenv("ECAL_GH_API_KEY")
     if gh_api_key:
         # generate_release_documentation(gh_api_key, "index.rst", "release")
-        generate_ppa_tabs(gh_api_key, semantic_version.Version("5.13.0"), "ppa_tabs.rst")
+        generate_ppa_instructions(gh_api_key, semantic_version.Version("5.13.0"), "ppa_instructions.rst.txt")
     else:
         sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Without an API key, GitHub will not provide enough API calls to generate the download tables.\n")
         exit(1)
