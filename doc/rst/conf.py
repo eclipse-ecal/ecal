@@ -88,7 +88,10 @@ else:
         ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
     if ecal_doc_version_sanitized.startswith('.'):
         ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
-    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version_sanitized, partial=True), ppa_instructions_rst_file)
+    # Ensure the version string has a patch version
+    if len(ecal_doc_version_sanitized.split('.')) == 2:
+        ecal_doc_version_sanitized += '.0'
+    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version_sanitized), ppa_instructions_rst_file)
   
 
 # -- General configuration ---------------------------------------------------
