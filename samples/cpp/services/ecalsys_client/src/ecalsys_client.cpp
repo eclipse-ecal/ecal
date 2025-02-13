@@ -34,8 +34,11 @@
 #include <iostream>
 
 // callback for sys service response
-void OnSysResponse(const struct eCAL::v5::SServiceResponse& service_response_)
+void OnSysResponse(const struct eCAL::SServiceResponse& service_response_)
 {
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+
   switch (service_response_.call_state)
   {
   // service successful executed
@@ -43,7 +46,7 @@ void OnSysResponse(const struct eCAL::v5::SServiceResponse& service_response_)
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "SysService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+      std::cout << "SysService " << method_name << " called successfully on host " << host_name << std::endl;
     }
     break;
   // service execution failed
@@ -51,7 +54,7 @@ void OnSysResponse(const struct eCAL::v5::SServiceResponse& service_response_)
     {
       eCAL::pb::sys::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "SysService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
+      std::cout << "SysService " << method_name << " failed with \"" << response.error() << "\" on host " << host_name << std::endl;
     }
     break;
   default:
@@ -67,7 +70,6 @@ int main()
 
   // create player service client
   eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service> sys_service;
-  sys_service.AddResponseCallback(OnSysResponse);
 
   // sleep for service matching
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -78,19 +80,19 @@ int main()
   // "StartTasks - All"
   std::cout << "eCALPB.Sys.Service:StartTasks()" << std::endl;
   trequest.set_all(true);
-  sys_service.Call("StartTasks", trequest);
+  sys_service.CallWithCallback("StartTasks", trequest, OnSysResponse);
   std::cout << trequest.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "RestartTasks - All"
   std::cout << "eCALPB.Sys.Service:RestartTasks()" << std::endl;
   trequest.set_all(true);
-  sys_service.Call("RestartTasks", trequest);
+  sys_service.CallWithCallback("RestartTasks", trequest, OnSysResponse);
   std::cout << trequest.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "StopTasks - All"
   std::cout << "eCALPB.Sys.Service:StopTasks()" << std::endl;
   trequest.set_all(true);
-  sys_service.Call("StopTasks", trequest);
+  sys_service.CallWithCallback("StopTasks", trequest, OnSysResponse);
   std::cout << trequest.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // finalize eCAL API

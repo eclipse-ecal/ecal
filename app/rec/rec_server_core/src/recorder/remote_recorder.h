@@ -175,6 +175,8 @@ namespace eCAL
       std::deque<Action> actions_to_perform_;
 
       RecorderSettings complete_settings_;
+
+      std::string hostname_;
     };
   }
 }

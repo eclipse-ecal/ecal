@@ -63,15 +63,12 @@ signals:
   void setResponseSignal(QString response);
 
 private:
-  void onRecorderResponse(const struct eCAL::v5::SServiceResponse& service_response_);
+  template <typename RequestT>
+  bool callService(const std::string& method, const RequestT& request);
 
+  void onRecorderResponse(const struct eCAL::SServiceResponse& service_response_);
 
-
-
-
-
-private:
   Ui::RecServerServiceGui ui_;
-
+  std::string hostname_;
   eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService> recorder_service_;
 };

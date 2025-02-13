@@ -1520,7 +1520,7 @@ int main(int argc, char** argv)
   else
   {
     std::cout << "Shutting down remote-control for eCAL Rec..." << std::endl;
-    remote_rec_server_service->Destroy();
+    remote_rec_server_service = nullptr;
   }
 
   // TODO: On rare occations, eCAL rec hangs when hitting ctrl+c on linux. Remove the debug output, once that bug is found.

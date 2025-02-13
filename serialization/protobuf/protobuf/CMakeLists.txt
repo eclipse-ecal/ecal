@@ -76,9 +76,19 @@ target_sources(protobuf_core
     BASE_DIRS include
     FILES
       include/ecal/msg/protobuf/client.h
+      include/ecal/msg/protobuf/client_base.h
+      include/ecal/msg/protobuf/client_instance.h
+      include/ecal/msg/protobuf/client_protobuf_types.h
+      include/ecal/msg/protobuf/client_protobuf_utils.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
       include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h
+      include/ecal/msg/protobuf/ecal_proto_decoder.h
+      include/ecal/msg/protobuf/ecal_proto_dyn.h
+      include/ecal/msg/protobuf/ecal_proto_hlp.h
+      include/ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h
+      include/ecal/msg/protobuf/ecal_proto_message_filter.h
+      include/ecal/msg/protobuf/ecal_proto_visitor.h
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
       include/ecal/msg/protobuf/subscriber.h

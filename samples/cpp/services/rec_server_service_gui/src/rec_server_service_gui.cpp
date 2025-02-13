@@ -31,10 +31,7 @@ RecServerServiceGui::RecServerServiceGui(QWidget *parent)
   // initialize eCAL API
   eCAL::Initialize("RecServerServiceGui");
 
-  // create player service client
-  recorder_service_.AddResponseCallback([this](const struct eCAL::v5::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
-
-  connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {recorder_service_.SetHostName(ui_.hostname_lineedit->text().toStdString()); });
+  connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {this->hostname_ = ui_.hostname_lineedit->text().toStdString(); });
 
   connect(ui_.send_request_button,       &QPushButton::clicked,                 this,                   &RecServerServiceGui::sendRequest);
   connect(ui_.response_clear_button,     &QPushButton::clicked,                 ui_.response_texteedit, &QTextEdit::clear);
@@ -66,174 +63,158 @@ void RecServerServiceGui::sendRequest()
 void RecServerServiceGui::getStatus()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("GetStatus", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("GetStatus", request);
 }
 
 void RecServerServiceGui::loadConfigFile()
 {
   eCAL::pb::rec_server::LoadConfigRequest request;
   request.set_config_path(ui_.request_load_config_file_param_config_path_lineedit->text().toStdString());
-  bool success = recorder_service_.Call("LoadConfigFile", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("LoadConfigFile", request);
 }
 
 void RecServerServiceGui::getConfig()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("GetConfig", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("GetConfig", request);
 }
-
 
 void RecServerServiceGui::activate()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("Activate", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("Activate", request);
 }
 
 void RecServerServiceGui::deActivate()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("DeActivate", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("DeActivate", request);
 }
 
 void RecServerServiceGui::startRecording()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("StartRecording", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("StartRecording", request);
 }
 
 void RecServerServiceGui::stopRecording()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("StopRecording", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("StopRecording", request);
 }
 
 void RecServerServiceGui::saveBuffer()
 {
   eCAL::pb::rec_server::GenericRequest request;
-  bool success = recorder_service_.Call("SaveBuffer", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("SaveBuffer", request);
 }
 
 void RecServerServiceGui::uploadMeasurement()
 {
   eCAL::pb::rec_server::GenericMeasurementRequest request;
-
-  if(!ui_.request_upload_measurement_param_meas_id_lineedit->text().isEmpty())
+  if (!ui_.request_upload_measurement_param_meas_id_lineedit->text().isEmpty())
   {
     try
     {
       int64_t meas_id = std::stoll(ui_.request_upload_measurement_param_meas_id_lineedit->text().toStdString());
-      request.set_meas_id(meas_id);      
+      request.set_meas_id(meas_id);
     }
-    catch(...)
+    catch (...)
     {
       QMessageBox error_message;
-      error_message.setIcon       (QMessageBox::Icon::Critical);
+      error_message.setIcon(QMessageBox::Icon::Critical);
       error_message.setWindowTitle("Error");
-      error_message.setText       ("Unable to parse meas_id");
+      error_message.setText("Unable to parse meas_id");
       error_message.exec();
-
       return;
     }
   }
-
-  bool success = recorder_service_.Call("UploadMeasurement", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("UploadMeasurement", request);
 }
 
 void RecServerServiceGui::deleteMeasurement()
 {
   eCAL::pb::rec_server::GenericMeasurementRequest request;
-
-  if(!ui_.request_delete_measurement_lineedit->text().isEmpty())
+  if (!ui_.request_delete_measurement_lineedit->text().isEmpty())
   {
     try
     {
       int64_t meas_id = std::stoll(ui_.request_delete_measurement_lineedit->text().toStdString());
-      request.set_meas_id(meas_id);      
+      request.set_meas_id(meas_id);
     }
-    catch(...)
+    catch (...)
     {
       QMessageBox error_message;
-      error_message.setIcon       (QMessageBox::Icon::Critical);
+      error_message.setIcon(QMessageBox::Icon::Critical);
       error_message.setWindowTitle("Error");
-      error_message.setText       ("Unable to parse meas_id");
+      error_message.setText("Unable to parse meas_id");
       error_message.exec();
-
       return;
     }
   }
-
-  bool success = recorder_service_.Call("DeleteMeasurement", request);
-
-  if (!success)
-    ui_.response_texteedit->setText("Unable to call service");
+  callService("DeleteMeasurement", request);
 }
 
 void RecServerServiceGui::addComment()
 {
   eCAL::pb::rec_server::AddCommentRequest request;
-
-  if(!ui_.request_add_comment_param_meas_id_lineedit->text().isEmpty())
+  if (!ui_.request_add_comment_param_meas_id_lineedit->text().isEmpty())
   {
     try
     {
       int64_t meas_id = std::stoll(ui_.request_add_comment_param_meas_id_lineedit->text().toStdString());
-      request.set_meas_id(meas_id);      
+      request.set_meas_id(meas_id);
     }
-    catch(...)
+    catch (...)
     {
       QMessageBox error_message;
-      error_message.setIcon       (QMessageBox::Icon::Critical);
+      error_message.setIcon(QMessageBox::Icon::Critical);
       error_message.setWindowTitle("Error");
-      error_message.setText       ("Unable to parse meas_id");
+      error_message.setText("Unable to parse meas_id");
       error_message.exec();
-
       return;
     }
   }
-
   request.set_comment(ui_.request_add_comment_param_comment_textedit->toPlainText().toStdString());
+  callService("AddComment", request);
+}
 
-  bool success = recorder_service_.Call("AddComment", request);
-
+////////////////////////////////////////////////////////////////////////////////
+//// Request                                                                ////
+////////////////////////////////////////////////////////////////////////////////
+template <typename RequestT>
+bool RecServerServiceGui::callService(const std::string& method, const RequestT& request)
+{
+  bool success = false;
+  auto client_instances = recorder_service_.GetClientInstances();
+  for (auto& client_instance : client_instances)
+  {
+    // TODO: We need to filter for pid as well in the future?
+    // Currently empty hostname means "all hosts"
+    if ((client_instance.GetClientID().host_name == hostname_) || hostname_.empty())
+    {
+      success |= client_instance.CallWithCallback(method, request,
+        [this](const struct eCAL::SServiceResponse& service_response)
+        {
+          onRecorderResponse(service_response);
+        });
+    }
+  }
   if (!success)
     ui_.response_texteedit->setText("Unable to call service");
+  return success;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
-
-void RecServerServiceGui::onRecorderResponse(const struct eCAL::v5::SServiceResponse& service_response_)
+void RecServerServiceGui::onRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 {
   QString     response_string;
   QTextStream response_stream(&response_string);
+
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
 
   switch (service_response_.call_state)
   {
@@ -241,31 +222,31 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::v5::SServiceResp
   // service successful executed
   case eCAL::eCallState::executed:
   {
-    if ((service_response_.method_name == "StartRecording")
-      || (service_response_.method_name == "SaveBuffer"))
+    if ((method_name == "StartRecording")
+      || (method_name == "SaveBuffer"))
     {
       eCAL::pb::rec_server::JobStartedResponse response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_response_.method_name == "GetStatus")
+    else if (method_name == "GetStatus")
     {
       eCAL::pb::rec_server::Status response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_response_.method_name == "GetConfig")
+    else if (method_name == "GetConfig")
     {
       eCAL::pb::rec_server::RecServerConfig response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -273,7 +254,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::v5::SServiceResp
     {
       eCAL::pb::rec_server::ServiceResult response;
       response.ParseFromString(service_response_.response);
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -285,7 +266,7 @@ void RecServerServiceGui::onRecorderResponse(const struct eCAL::v5::SServiceResp
   {
     //eCAL::pb::Response response;
     //response.ParseFromString(response_);
-    //response_stream << "RecorderService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
+    //response_stream << "RecorderService " << method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << host_name.c_str() << "\n";
     //response_stream << "------------------------------------------------\n\n";
     //response_stream << response.DebugString().c_str();
     response_stream << "Service call failed.\n";

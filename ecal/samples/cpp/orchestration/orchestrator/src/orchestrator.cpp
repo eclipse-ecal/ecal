@@ -29,15 +29,14 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("orchestrator");
 
-  eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component1("component1");
-  eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component2("component2");
+  const eCAL::protobuf::CServiceClientTyped<orchestrator::ComponentService> component1("component1");
+  const eCAL::protobuf::CServiceClientTyped<orchestrator::ComponentService> component2("component2");
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);
 
   // prepare service request and response vector
-  orchestrator::request     srv_request;
-  eCAL::v5::ServiceResponseVecT srv_response_vec;
+  orchestrator::request srv_request;
 
   // call components 1 and 2
   uint64_t cycle = 0;
@@ -46,10 +45,10 @@ int main()
     srv_request.set_id(cycle);
 
     std::cout << "call component 1" << std::endl;
-    component1.Call("execute", srv_request, -1, &srv_response_vec);
+    component1.CallWithResponse<orchestrator::request, orchestrator::response>("execute", srv_request);
 
     std::cout << "call component 2" << std::endl << std::endl;
-    component2.Call("execute", srv_request, -1, &srv_response_vec);
+    component2.CallWithResponse<orchestrator::request, orchestrator::response>("execute", srv_request);
 
     ++cycle;
   }

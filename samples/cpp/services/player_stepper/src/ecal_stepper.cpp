@@ -137,12 +137,14 @@ int main(int argc, char** argv)
                 command_request.set_command(eCAL::pb::play::CommandRequest::step_channel);
                 command_request.set_step_reference_channel(pauseName);
             }
-            player_service.Call("SetCommand", command_request);
+            // we are not interested in the response
+            player_service.CallWithCallback("SetCommand", command_request, nullptr);
         }
         else if (lastCallbackTopic == pauseName)
         {
             command_request.set_command(eCAL::pb::play::CommandRequest::pause);
-            player_service.Call("SetCommand", command_request);
+            // we are not interested in the response
+            player_service.CallWithCallback("SetCommand", command_request, nullptr);
         }
     }
     // finalize eCAL API

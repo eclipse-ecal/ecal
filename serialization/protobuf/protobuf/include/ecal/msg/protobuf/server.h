@@ -18,9 +18,35 @@
 */
 
 /**
- * @file   server.h
+ * @file   msg/protobuf/server.h
  * @brief  eCAL Server interface based on protobuf service description
-**/
+ *
+ * This header defines the CServiceServer class, a Google Protocol Buffers server wrapper
+ * for eCAL. The class automatically extracts service method information from a provided
+ * protobuf service instance and registers all available methods with the underlying eCAL
+ * service server infrastructure.
+ *
+ * Key Features:
+ *  - Automatic extraction of the full service name from the protobuf descriptor.
+ *  - Dynamic generation of method information (input/output types and their descriptors)
+ *    using the CProtoDynDecoder.
+ *  - Registration of all protobuf-defined methods as callbacks with the underlying
+ *    eCAL::CServiceServer.
+ *  - Handling of incoming requests by deserializing the request message, invoking
+ *    the appropriate service method, and serializing the response.
+ *
+ * Usage Example:
+ *   // Create a protobuf service implementation instance (e.g., MathServiceImpl)
+ *   std::shared_ptr<MathServiceImpl> service_impl = std::make_shared<MathServiceImpl>();
+ *
+ *   // Create a server for the protobuf service
+ *   eCAL::protobuf::CServiceServer<MathService> server(service_impl);
+ *
+ *   // The server automatically registers all methods and is ready to process incoming requests.
+ *
+ * @note The service instance must provide access to its protobuf ServiceDescriptor (typically
+ *       via a GetDescriptor() method) so that the server can correctly extract method information.
+ */
 
 #pragma once
 
@@ -185,5 +211,6 @@ namespace eCAL
       std::shared_ptr<T>                                               m_service;
       std::map<std::string, const google::protobuf::MethodDescriptor*> m_methods;
     };
-  }
-}
+
+  } // namespace protobuf
+} // namespace eCAL
