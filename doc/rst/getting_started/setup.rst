@@ -21,7 +21,7 @@ So, let's get started!
 |fa-windows| Installing eCAL on Windows
 =======================================
 
-#. Choose your desired eCAL Version from the :ref:`eCAL Download Archive<download_archive>` and download the Windows installer.
+#. Choose your desired eCAL Version from the `eCAL Download Page <https://eclipse-ecal.github.io/ecal/releases/>`__ and download the Windows installer.
    New users should download the latest Version.
    
 #. Install eCAL with default options (Full installation):
@@ -54,7 +54,7 @@ But you can :ref:`log in with X11 <faq_ubuntu_22_04_graphical_issues>`, which so
 Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
 You can choose from different PPAs, depending on your desired upgrade path.
 
-.. include:: _ppa_tabs.rst.txt
+.. include:: _ppa_instructions.rst.txt
 
 |fa-ubuntu| Manually install eCAL from a .deb file
 --------------------------------------------------
@@ -63,7 +63,7 @@ You can choose from different PPAs, depending on your desired upgrade path.
 
    We usually recommend installing from a PPA (:ref:`see above <getting_started_setup_ubuntu_ppa>`).
 
-#. Choose your desired eCAL Version from the :ref:`eCAL Download Archive<download_archive>`.
+#. Choose your desired eCAL Version from the `Download Page <https://eclipse-ecal.github.io/ecal/releases/>`__.
 
 #. Install the eCAL Dependencies:
 
