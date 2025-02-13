@@ -29,8 +29,8 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("orchestrator");
 
-  const eCAL::protobuf::CServiceClientTyped<orchestrator::ComponentService> component1("component1");
-  const eCAL::protobuf::CServiceClientTyped<orchestrator::ComponentService> component2("component2");
+  const eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component1("component1");
+  const eCAL::protobuf::CServiceClient<orchestrator::ComponentService> component2("component2");
 
   // sleep 2 seconds
   eCAL::Process::SleepMS(2000);

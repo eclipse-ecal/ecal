@@ -26,13 +26,7 @@
  *
  * The file defines two primary templated classes that wrap an underlying eCAL client instance:
  *
- * 1. CClientInstance<T>
- *    - Supports untyped responses.
- *    - Implements blocking and asynchronous service calls that deliver generic responses
- *      (i.e., SServiceResponse) without performing any type conversion.
- *    - The call methods are now templated on the request type.
- *
- * 2. CClientInstanceTyped<T>
+ * CClientInstanceTyped<T>
  *    - Supports typed responses.
  *    - Implements methods that not only perform the service call but also automatically parse and convert
  *      the raw response into a strongly-typed response object.
@@ -40,15 +34,7 @@
  *
  * Usage Examples:
  *
- *   // Untyped client instance usage:
- *   eCAL::protobuf::CClientInstance<MyService> instance(std::move(myBaseInstance));
- *   auto result = instance.CallWithResponse(myMethod, myRequest);
- *   if (result.first)
- *   {
- *     // Process the untyped response in result.second.
- *   }
- *
- *   // Typed client instance usage:
+ *   // Client instance usage:
  *   eCAL::protobuf::CClientInstanceTyped<MyService> typedInstance(std::move(myBaseInstance));
  *   auto typedResult = typedInstance.CallWithResponse<MyRequestType, MyResponseType>(myMethod, myRequest);
  *   if (typedResult.first)
@@ -80,119 +66,6 @@ namespace eCAL
 {
   namespace protobuf
   {
-    ////////////////////////////////////////////////////////////////////////////
-    // Untyped Client Instance
-    ////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @brief Templated client instance that supports untyped responses.
-     *
-     * The template parameter T is the service description type that provides a GetDescriptor() method.
-     *
-     * This class provides:
-     *   - Blocking calls (CallWithResponse) that return untyped responses (SServiceResponse).
-     *   - Callback-based calls (CallWithCallback and CallWithCallbackAsync) that deliver untyped responses.
-     *
-     * The call methods are now templated on the request type.
-     */
-    template <typename T>
-    class CClientInstance
-    {
-    public:
-      // Constructors
-      CClientInstance(eCAL::CClientInstance&& base_instance_) noexcept
-        : m_instance(std::move(base_instance_))
-      {
-      }
-
-      CClientInstance(const SEntityId& entity_id_,
-        const std::shared_ptr<eCAL::CServiceClientImpl>& service_client_impl_)
-        : m_instance(entity_id_, service_client_impl_)
-      {
-      }
-
-      /**
-       * @brief Blocking call that returns an untyped response.
-       *
-       * @tparam RequestT     The type of the request message (must provide SerializeAsString()).
-       * 
-       * @param  method_name_ The name of the service method.
-       * @param  request_     The request message.
-       * @param  timeout_ms_  Timeout in milliseconds.
-       * 
-       * @return A pair consisting of a success flag and an untyped response.
-       */
-      template <typename RequestT>
-      std::pair<bool, SServiceResponse> CallWithResponse(const std::string& method_name_,
-        const RequestT& request_,
-        int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
-      {
-        const std::string serialized_request = request_.SerializeAsString();
-        auto ret = m_instance.CallWithResponse(method_name_, serialized_request, timeout_ms_);
-        return std::make_pair(ret.first, ret.second);
-      }
-
-      /**
-       * @brief Call with callback that returns an untyped response.
-       *
-       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
-       * 
-       * @param  method_name_        The name of the service method.
-       * @param  request_            The request message.
-       * @param  response_callback_  Callback accepting an untyped response.
-       * @param  timeout_ms_         Timeout in milliseconds.
-       * 
-       * @return True if the call was successfully initiated.
-       */
-      template <typename RequestT>
-      bool CallWithCallback(const std::string& method_name_,
-        const RequestT& request_,
-        const ResponseCallbackT& response_callback_,
-        int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
-      {
-        const std::string serialized_request = request_.SerializeAsString();
-        return m_instance.CallWithCallback(method_name_, serialized_request, response_callback_, timeout_ms_);
-      }
-
-      /**
-       * @brief Asynchronous call with callback that returns an untyped response.
-       *
-       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
-       * 
-       * @param  method_name_        The name of the service method.
-       * @param  request_            The request message.
-       * @param  response_callback_  Callback accepting an untyped response.
-       * 
-       * @return True if the call was successfully initiated.
-       */
-      template <typename RequestT>
-      bool CallWithCallbackAsync(const std::string& method_name_,
-        const RequestT& request_,
-        const ResponseCallbackT& response_callback_)
-      {
-        const std::string serialized_request = request_.SerializeAsString();
-        return m_instance.CallWithCallbackAsync(method_name_, serialized_request, response_callback_);
-      }
-
-      /**
-       * @brief Get unique client entity id.
-       *
-       * @return The client entity id.
-       */
-      SEntityId GetClientID() const
-      {
-        return m_instance.GetClientID();
-      }
-
-    private:
-      // The underlying base client instance.
-      eCAL::CClientInstance m_instance;
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Typed Client Instance
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * @brief Templated client instance that supports typed responses.
      *
@@ -205,16 +78,16 @@ namespace eCAL
      * The call methods are now templated on both the request and response types, where the request type is specified first.
      */
     template <typename T>
-    class CClientInstanceTyped
+    class CClientInstance
     {
     public:
       // Constructors
-      CClientInstanceTyped(eCAL::CClientInstance&& base_instance_) noexcept
+      CClientInstance(eCAL::CClientInstance&& base_instance_) noexcept
         : m_instance(std::move(base_instance_))
       {
       }
 
-      CClientInstanceTyped(const SEntityId& entity_id_,
+      CClientInstance(const SEntityId& entity_id_,
         const std::shared_ptr<eCAL::CServiceClientImpl>& service_client_impl_)
         : m_instance(entity_id_, service_client_impl_)
       {
@@ -336,11 +209,11 @@ namespace eCAL
         }
         else
         {
-          msg_response.call_state = service_response.call_state;
-          msg_response.server_id = service_response.server_id;
+          msg_response.call_state                 = service_response.call_state;
+          msg_response.server_id                  = service_response.server_id;
           msg_response.service_method_information = service_response.service_method_information;
-          msg_response.ret_state = service_response.ret_state;
-          msg_response.error_msg = service_response.error_msg;
+          msg_response.ret_state                  = service_response.ret_state;
+          msg_response.error_msg                  = service_response.error_msg;
         }
         return msg_response;
       }
