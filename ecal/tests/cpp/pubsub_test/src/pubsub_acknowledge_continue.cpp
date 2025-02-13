@@ -129,19 +129,22 @@ TEST(core_cpp_pubsub, sub)
   EXPECT_EQ(true, eCAL::Initialize(config, "TimeoutAcknowledgmentContinuation-sub", eCAL::Init::All));
   
   std::unique_ptr<eCAL::CSubscriber> sub_ptr;
+  createSubscriber(sub_ptr);
 
   unsigned int counter = 0;
-  while(eCAL::Ok())
+  while(eCAL::Ok() && counter < 12)
   {
     if (++counter % 2 == 0)
     {
-      sub_ptr.reset();
+      // sub_ptr.reset();
     }
     else
     {
-      createSubscriber(sub_ptr);
-    }
+      
+    };
 
-    std::this_thread::sleep_for(std::chrono::seconds(4));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
+
+  eCAL::Finalize();
 }

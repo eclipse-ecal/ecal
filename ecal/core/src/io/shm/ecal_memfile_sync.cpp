@@ -99,16 +99,17 @@ namespace eCAL
     // remove them from the event handle map
 
     const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    const EventHandleMapT::const_iterator iter = m_event_handle_map.find(process_id_);
+    EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
     if (iter != m_event_handle_map.end())
     {
-      const SEventHandlePair event_pair = iter->second;
+      SEventHandlePair& event_pair = iter->second;
       // fire acknowledge events, to unlock blocking send function
       gSetEvent(event_pair.event_ack);
       // close the snd and ack event
-      gCloseEvent(event_pair.event_snd);
-      gCloseEvent(event_pair.event_ack);
-      m_event_handle_map.erase(iter);
+      // gCloseEvent(event_pair.event_snd);
+      // gCloseEvent(event_pair.event_ack);
+      // m_event_handle_map.erase(iter);
+      event_pair.event_ack_is_invalid = true;
       return true;
     }
 
