@@ -66,6 +66,7 @@ using DirAvailabilityMap = std::map<std::string, bool>;
 TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
 {
   const std::string env_ecal_conf_value = "/path/to/conf";
+  const std::string env_ecal_conf_log_value = env_ecal_conf_value + path_separator + ECAL_FOLDER_NAME_LOG;
   const std::string env_ecal_log_value = "/path/to/log";
   const std::string unique_tmp_dir = "/tmp/unique";
 
@@ -107,7 +108,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
 
   EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), env_ecal_conf_value);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager), env_ecal_log_value);
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager), env_ecal_conf_value);
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager), env_ecal_conf_log_value);
   
   // Now nothing is set, GeteCALDataDirImpl should return empty string
   EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), "");
@@ -245,14 +246,16 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   // the return value of "dirExists" can also return false.
   // So the first call will return first value. Value is set and direxists.
   // The second call will return the second value, even if the variable is still set, because dirExists will return false.
-  // Then the first call of the expected 2nd value follows: First value unset, 2nd value set and direxists = 2nd Value.
+  // The next call will return the third value, and so on.
   // This continues until the last: UniqueTmpDir call
-  // Alltogether the eCALLogDirImpl function will be called 11 times.
+  // Alltogether the eCALLogDirImpl function will be called 7 times.
 
-  const std::string ecal_data_env_var = "/ecal/data/env";
   const std::string ecal_log_env_var = "/ecal/log/env";
+  const std::string ecal_data_env_var = "/ecal/data/env";
+  const std::string ecal_data_env_log_var = ecal_data_env_var + path_separator + ECAL_FOLDER_NAME_LOG;
   const std::string ecal_config_logging_dir = "/config/logging/dir";
   const std::string ecal_yaml_dir = "/dir/to/current/yaml";
+  const std::string ecal_yaml_log_dir = ecal_yaml_dir + path_separator + ECAL_FOLDER_NAME_LOG;
   const std::string unique_tmp_dir = "/tmp/unique";
 
   const MockDirProvider mock_dir_provider;
@@ -260,39 +263,62 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
 
   ::testing::Sequence seq_env_log, seq_env_data, yaml_dir;
 
+  // this gets called twice with path set, 2nd time path is set but dirExists returns false
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
     .Times(2)
     .InSequence(seq_env_log)
     .WillRepeatedly(testing::Return(ecal_log_env_var));
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
-    .Times(7)
+    .Times(5)
     .InSequence(seq_env_log)
     .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_log_env_var))
+    .Times(2)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
 
+  // this will get called 4 times with path set, because 2 times with log subfolder
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
     .Times(4)
     .InSequence(seq_env_data)
     .WillRepeatedly(testing::Return(ecal_data_env_var));
-
   EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
-    .Times(5)
+    .Times(3)
     .InSequence(seq_env_data)
     .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_log_var))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_var))
+    .Times(2)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
 
-  // log is the third one
+  // logdir from config is the third one
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_config_logging_dir))
+    .Times(1)
+    .WillOnce(testing::Return(true));
 
+  // used ecal.yaml directory
   EXPECT_CALL(mock_dir_manager, getDirectoryPath(testing::_))
-    .Times(8)
+    .Times(6)
     .InSequence(yaml_dir)
     .WillRepeatedly(testing::Return(ecal_yaml_dir));
-  
   EXPECT_CALL(mock_dir_manager, getDirectoryPath(testing::_))
     .Times(1)
     .InSequence(yaml_dir)
     .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_yaml_log_dir))
+    .Times(2)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_yaml_dir))
+    .Times(1)
+    .WillOnce(testing::Return(true));
 
   EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
-    .Times(2)
+    .Times(1)
     .WillRepeatedly(testing::Return(unique_tmp_dir));
 
   auto config = eCAL::GetConfiguration();
@@ -301,45 +327,14 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   // let's assume all directories exist
   ON_CALL(mock_dir_manager, dirExists(testing::_)).WillByDefault(testing::Return(false));
   ON_CALL(mock_dir_manager, canWriteToDirectory(testing::_)).WillByDefault(testing::Return(true));
-
-  EXPECT_CALL(mock_dir_manager, dirExists(ecal_log_env_var))
-    .Times(2)
-    .WillOnce(testing::Return(true))
-    .WillRepeatedly(testing::Return(false));
-  
-  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_var))
-    .Times(3)
-    .WillOnce(testing::Return(true))
-    .WillOnce(testing::Return(true))
-    .WillRepeatedly(testing::Return(false));
-
-  EXPECT_CALL(mock_dir_manager, dirExists(ecal_config_logging_dir))
-    .Times(3)
-    .WillOnce(testing::Return(true))
-    .WillOnce(testing::Return(true))
-    .WillRepeatedly(testing::Return(false));
-
-  EXPECT_CALL(mock_dir_manager, dirExists(ecal_yaml_dir))
-    .Times(3)
-    .WillOnce(testing::Return(true))
-    .WillOnce(testing::Return(true))
-    .WillRepeatedly(testing::Return(false));
-
   
   // Testing with eCALData and eCALLog -DirImpl
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_log_env_var);
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config),  ecal_data_env_var);
-  
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_log_env_var);
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_log_var);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_var);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_config_logging_dir);
-
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_config_logging_dir);
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_dir);
-
   config.logging.provider.file_config.path = "";
-
+  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_log_dir);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_dir);
-  EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
-
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
 }

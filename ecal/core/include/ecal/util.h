@@ -48,20 +48,19 @@ namespace eCAL
     ECAL_API std::string GeteCALDataDir();
 
     /**
-     * @brief Retrieve eCAL standard logging path.
-     *          This is path is for the eCAL logging files.
-     *          This path has read/write permissions for standard users.
-     * 
-     *        1. ECAL_LOG_DIR environment variable path
-     *        2. ECAL_DATA environment variable path
-     *        3. Path provided by eCAL configuration
-     *        4. Path to local eCAL directory
-     *        5. For windows: ProgramData/eCAL if available
-     *        6. System temp path if available
-     *        7. Fallback path /ecal_tmp
+     * @brief Returns the path to the eCAL log directory. Searches in following order:
      *
-     * @return  eCAL logging path if exists.
-     *          Returns empty string if no valid path is found.
+     *        1. Environment variable ECAL_LOG_DIR
+     *        2. Environment variable ECAL_DATA (also checking for logs subdirectory)
+     *        3. The path provided from the configuration
+     *        4. The path where ecal.yaml was loaded from (also checking for logs subdirectory)
+     *        5. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        6. Fallback path /ecal_tmp
+     * 
+     *        In case of 5/6, a unique temporary folder will be created.
+     *        
+     * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
+     *          Returns empty string if no root path could be found.
     **/
     ECAL_API std::string GeteCALLogDir();
 

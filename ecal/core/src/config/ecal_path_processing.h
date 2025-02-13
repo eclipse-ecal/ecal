@@ -208,14 +208,13 @@ namespace eCAL
      * @brief Returns the path to the eCAL log directory. Searches in following order:
      *
      *        1. Environment variable ECAL_LOG_DIR
-     *        2. Environment variable ECAL_DATA
+     *        2. Environment variable ECAL_DATA (also checking for logs subdirectory)
      *        3. The path provided from the configuration
-     *        4. The path to the local eCAL data directory
-     *        5. For windows: the system data path if available (ProgramData/eCAL)
-     *        6. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
-     *        7. Fallback path /ecal_tmp
+     *        4. The path where ecal.yaml was loaded from (also checking for logs subdirectory)
+     *        5. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        6. Fallback path /ecal_tmp
      * 
-     *        In case of 6/7, a unique temporary folder will be created.
+     *        In case of 5/6, a unique temporary folder will be created.
      *        
      * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
      *          Returns empty string if no root path could be found.
