@@ -73,4 +73,7 @@ list(REMOVE_ITEM CPACK_COMPONENTS_ALL
   "testing"
 )
 
+message("************************************************")
+message("${CPACK_COMPONENTS_ALL}")
+
 include(CPack)
