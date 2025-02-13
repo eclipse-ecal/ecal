@@ -131,16 +131,6 @@ def log_setlevel(level):
   return _ecal.log_setlevel(level)
 
 
-def log_setcoretime(time):
-  """ log core time
-
-  :param time: module core time in ms
-  :type time: int
-  
-  """
-  return _ecal.log_setcoretime(time)
-
-
 def log_message(message):
   """ log message
 
