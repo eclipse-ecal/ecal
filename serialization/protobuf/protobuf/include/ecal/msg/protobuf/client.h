@@ -19,7 +19,7 @@
 
 /**
  * @file   msg/protobuf/client.h
- * @brief  eCAL Protobuf Client Interface
+ * @brief  eCAL Protobuf Client Interface (adapted for templated request types)
  *
  * This header file defines two primary templated client classes for interacting with
  * eCAL services that use Google Protocol Buffers (protobuf) for message serialization.
@@ -31,49 +31,20 @@
  *    - Provides methods for both synchronous (blocking) and asynchronous (callback)
  *      service invocations where responses are delivered in a generic (untyped) format
  *      (i.e., SServiceResponse).
- *    - Suitable for scenarios where the user prefers to handle raw service responses or
- *      perform custom parsing.
+ *    - The call methods are now templated on the request type.
  *
  * 2. CServiceClientTyped (Typed Interface)
  *    - Implements a typed service client interface for protobuf-based services.
  *    - Offers methods for synchronous and asynchronous service invocations that support
  *      automatic parsing of the responses into user-defined protobuf message types.
- *    - Uses templated call methods to ensure that responses are converted to the expected
- *      type (SMsgServiceResponse) as specified by the caller.
+ *    - The call methods are now templated on both the request and response types.
  *
- * Both classes inherit from the common base class, CServiceClientBase, which now is parameterized
- * on both the service description type and the client instance wrapper type. This base class encapsulates
- * core functionality such as:
- *    - Converting the underlying base client instances into templated client instance wrappers.
- *    - Providing helper functions (like ProcessInstances) to uniformly process all available client instances.
+ * Both classes inherit from the common base class, CServiceClientBase, which is parameterized
+ * on both the service description type and the client instance wrapper type.
  *
  * The header also brings in necessary utility functions from client_protobuf_utils.h,
  * which extract service descriptors and method information from the provided protobuf
- * service descriptions. This enables proper registration, serialization, and deserialization
- * of service messages.
- *
- * Key Features:
- *    - Blocking calls using CallWithResponse:
- *         * Untyped version returns a vector of SServiceResponse.
- *         * Typed version returns a vector of SMsgServiceResponse<ResponseT>.
- *
- *    - Asynchronous calls using CallWithCallback and CallWithCallbackAsync:
- *         * Untyped version uses ResponseCallbackT for generic response handling.
- *         * Typed version uses SMsgResponseCallbackT<ResponseT> to automatically parse and
- *           deliver typed responses.
- *
- * Usage Examples:
- *
- *    // Using the untyped service client:
- *    eCAL::protobuf::CServiceClient<MyService> client;
- *    auto [success, responses] = client.CallWithResponse("MyMethod", requestMessage);
- *
- *    // Using the typed service client:
- *    eCAL::protobuf::CServiceClientTyped<MyService> typedClient;
- *    auto [success, typedResponses] = typedClient.CallWithResponse<MyResponseType>("MyMethod", requestMessage);
- *
- * @note The template parameter T for both classes must be a protobuf service description
- *       type that provides access to the service descriptor (e.g., via a GetDescriptor() method).
+ * service descriptions.
  */
 
 #pragma once
@@ -103,6 +74,8 @@ namespace eCAL
      *   - CallWithCallback: asynchronous call with callback returning untyped responses.
      *   - CallWithCallbackAsync: asynchronous (non-blocking) call with callback returning untyped responses.
      *
+     * The call methods are now templated on the request type.
+     *
      * @tparam T The service description type.
      */
     template <typename T>
@@ -130,14 +103,17 @@ namespace eCAL
       /**
        * @brief Synchronous call returning untyped responses.
        *
-       * @param method_name_  Name of the service method.
-       * @param request_      Request message.
-       * @param timeout_ms_   Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
+       * @tparam RequestT      The type of the request message (must provide SerializeAsString()).
        * 
+       * @param  method_name_  Name of the service method.
+       * @param  request_      Request message.
+       * @param  timeout_ms_   Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
+       *
        * @return A pair containing an overall success flag and a vector of untyped responses (SServiceResponse).
        */
+      template <typename RequestT>
       std::pair<bool, std::vector<SServiceResponse>> CallWithResponse(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         return this->template ProcessInstances<SServiceResponse>(
@@ -150,15 +126,18 @@ namespace eCAL
       /**
        * @brief Asynchronous call with callback returning untyped responses.
        *
-       * @param method_name_        Name of the service method.
-       * @param request_            Request message.
-       * @param response_callback_  Callback to receive the untyped response.
-       * @param timeout_ms_         Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
+       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
        * 
+       * @param  method_name_        Name of the service method.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback to receive the untyped response.
+       * @param  timeout_ms_         Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
+       *
        * @return True if the call was successfully initiated.
        */
+      template <typename RequestT>
       bool CallWithCallback(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         const ResponseCallbackT& response_callback_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
@@ -173,14 +152,17 @@ namespace eCAL
       /**
        * @brief Asynchronous call with callback (async variant) returning untyped responses.
        *
-       * @param method_name_        Name of the service method.
-       * @param request_            Request message.
-       * @param response_callback_  Callback to receive the untyped response.
+       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
        * 
+       * @param  method_name_        Name of the service method.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback to receive the untyped response.
+       *
        * @return True if the call was successfully initiated.
        */
+      template <typename RequestT>
       bool CallWithCallbackAsync(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         const ResponseCallbackT& response_callback_) const
       {
         bool overall_success = true;
@@ -200,6 +182,8 @@ namespace eCAL
      *   - CallWithResponse: synchronous call returning typed responses.
      *   - CallWithCallback: asynchronous call with callback returning typed responses.
      *   - CallWithCallbackAsync: asynchronous (non-blocking) call with callback returning typed responses.
+     *
+     * The call methods are now templated on both the request and response types.
      *
      * @tparam T The service description type.
      */
@@ -223,27 +207,28 @@ namespace eCAL
        * @brief Typed CServiceClients are movable.
        */
       CServiceClientTyped(CServiceClientTyped&& rhs) = default;
-      CServiceClientTyped& operator=(CServiceClientTyped&& rhs) = default; 
+      CServiceClientTyped& operator=(CServiceClientTyped&& rhs) = default;
 
       /**
        * @brief Synchronous call returning typed responses.
        *
+       * @tparam RequestT      The type of the request message (must provide SerializeAsString()).
        * @tparam ResponseT     Expected Protobuf response type.
-       * 
+       *
        * @param  method_name_  Name of the service method.
        * @param  request_      Request message.
        * @param  timeout_ms_   Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
-       * 
+       *
        * @return A pair containing an overall success flag and a vector of typed responses.
        */
-      template <typename ResponseT>
+      template <typename RequestT, typename ResponseT>
       std::pair<bool, SMsgServiceResponseVecT<ResponseT>> CallWithResponse(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         return this->template ProcessInstances<SMsgServiceResponse<ResponseT>>(
           [&](auto& instance) {
-            return instance.template CallWithResponse<ResponseT>(method_name_, request_, timeout_ms_);
+            return instance.template CallWithResponse<RequestT, ResponseT>(method_name_, request_, timeout_ms_);
           }
         );
       }
@@ -251,25 +236,26 @@ namespace eCAL
       /**
        * @brief Asynchronous call with callback returning typed responses.
        *
+       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
        * @tparam ResponseT           Expected Protobuf response type.
-       * 
+       *
        * @param  method_name_        Name of the service method.
        * @param  request_            Request message.
        * @param  response_callback_  Callback to receive the typed response.
        * @param  timeout_ms_         Timeout in milliseconds (use DEFAULT_TIME_ARGUMENT for infinite wait).
-       * 
+       *
        * @return True if the call was successfully initiated.
        */
-      template <typename ResponseT>
+      template <typename RequestT, typename ResponseT>
       bool CallWithCallback(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         const SMsgResponseCallbackT<ResponseT>& response_callback_,
         int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())
         {
-          overall_success &= instance.template CallWithCallback<ResponseT>(method_name_, request_, response_callback_, timeout_ms_);
+          overall_success &= instance.template CallWithCallback<RequestT, ResponseT>(method_name_, request_, response_callback_, timeout_ms_);
         }
         return overall_success;
       }
@@ -277,23 +263,24 @@ namespace eCAL
       /**
        * @brief Asynchronous call with callback (async variant) returning typed responses.
        *
-       * @tparam ResponseT          Expected Protobuf response type.
-       * 
-       * @param  method_name_       Name of the service method.
-       * @param  request_           Request message.
-       * @param  response_callback_ Callback to receive the typed response.
-       * 
+       * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
+       * @tparam ResponseT           Expected Protobuf response type.
+       *
+       * @param  method_name_        Name of the service method.
+       * @param  request_            Request message.
+       * @param  response_callback_  Callback to receive the typed response.
+       *
        * @return True if the call was successfully initiated.
        */
-      template <typename ResponseT>
+      template <typename RequestT, typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
-        const google::protobuf::Message& request_,
+        const RequestT& request_,
         const SMsgResponseCallbackT<ResponseT>& response_callback_) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())
         {
-          overall_success &= instance.template CallWithCallbackAsync<ResponseT>(method_name_, request_, response_callback_);
+          overall_success &= instance.template CallWithCallbackAsync<RequestT, ResponseT>(method_name_, request_, response_callback_);
         }
         return overall_success;
       }

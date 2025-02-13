@@ -62,7 +62,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math)
   request.set_inp1(100.0);
   request.set_inp2(50.0);
 
-  auto result = math_client.CallWithResponse<SFloat>("Multiply", request);
+  auto result = math_client.CallWithResponse<SFloatTuple, SFloat>("Multiply", request);
   EXPECT_EQ(result.second.size(), instances.size());
   for (const auto &resp : result.second)
   {
@@ -117,7 +117,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math_Callback)
   bool overall_success = true;
   for (auto& instance : instances)
   {
-    overall_success &= instance.CallWithCallback<SFloat>("Multiply", request, callback, eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT);
+    overall_success &= instance.CallWithCallback<SFloatTuple, SFloat>("Multiply", request, callback, eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT);
   }
   EXPECT_TRUE(overall_success);
 

@@ -51,7 +51,7 @@ int main()
       //////////////////////////////////////
       PingRequest               ping_request;
       ping_request.set_message("PING");
-      auto ping_response = ping_client.CallWithResponse<PingResponse>("Ping", ping_request);
+      auto ping_response = ping_client.CallWithResponse<PingRequest, PingResponse>("Ping", ping_request);
       if (ping_response.first)
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;

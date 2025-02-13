@@ -57,7 +57,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Math)
   request.set_inp1(20.0);
   request.set_inp2(22.0);
 
-  auto result = math_client.CallWithResponse<SFloat>("Add", request);
+  auto result = math_client.CallWithResponse<SFloatTuple, SFloat>("Add", request);
   EXPECT_TRUE(result.first);
   ASSERT_FALSE(result.second.empty());
 
@@ -89,7 +89,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Math)
     prom.set_value(resp.response.out());
   };
 
-  bool initiated = math_client.CallWithCallback<SFloat>("Divide", request, callback);
+  bool initiated = math_client.CallWithCallback<SFloatTuple, SFloat>("Divide", request, callback);
   EXPECT_TRUE(initiated);
 
   double result = fut.get();
@@ -122,7 +122,7 @@ TEST(core_cpp_clientserver_proto, TypedCallbackAsync_Math)
 
   auto start = std::chrono::steady_clock::now();
 
-  bool initiated = math_client.CallWithCallbackAsync<SFloat>("Divide", request, callback);
+  bool initiated = math_client.CallWithCallbackAsync<SFloatTuple, SFloat>("Divide", request, callback);
   EXPECT_TRUE(initiated);
 
   auto async_call_end = std::chrono::steady_clock::now();
@@ -151,7 +151,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Ping)
   PingRequest request;
   request.set_message("PING");
 
-  auto result = ping_client.CallWithResponse<PingResponse>("Ping", request);
+  auto result = ping_client.CallWithResponse<PingRequest, PingResponse>("Ping", request);
   EXPECT_TRUE(result.first);
   ASSERT_FALSE(result.second.empty());
 
@@ -182,7 +182,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Ping)
     prom.set_value(resp.response.answer());
   };
 
-  bool initiated = ping_client.CallWithCallback<PingResponse>("Ping", request, callback);
+  bool initiated = ping_client.CallWithCallback<PingRequest, PingResponse>("Ping", request, callback);
   EXPECT_TRUE(initiated);
 
   std::string answer = fut.get();

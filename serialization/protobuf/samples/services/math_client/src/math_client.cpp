@@ -107,7 +107,7 @@ int main()
       // --- CallWithCallback variant using the top-level service client ---
       {
         std::cout << std::endl << "Calling MathService::Add (callback) with      : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-        if (!math_client.CallWithCallback<SFloat>("Add", math_request, OnMathResponse))
+        if (!math_client.CallWithCallback<SFloatTuple, SFloat>("Add", math_request, OnMathResponse))
         {
           std::cout << "MathService::Add method call (callback) failed .." << std::endl;
         }
@@ -116,7 +116,7 @@ int main()
       // --- CallWithResponse variant using the top-level service client ---
       {
         std::cout << std::endl << "Calling MathService::Multiply (blocking) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-        auto multiply_response = math_client.CallWithResponse<SFloat>("Multiply", math_request);
+        auto multiply_response = math_client.CallWithResponse<SFloatTuple, SFloat>("Multiply", math_request);
         if (multiply_response.first)
         {
           // Iterate over all responses
@@ -138,7 +138,7 @@ int main()
         for (auto& instance : instances)
         {
           std::cout << std::endl << "Calling MathService::Divide (callback inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-          if (!instance.CallWithCallback<SFloat>("Divide", math_request, OnMathResponse))
+          if (!instance.CallWithCallback<SFloatTuple, SFloat>("Divide", math_request, OnMathResponse))
           {
             std::cout << "MathService::Divide call on an instance failed." << std::endl;
           }
@@ -152,7 +152,7 @@ int main()
         for (auto& instance : instances)
         {
           std::cout << std::endl << "Calling MathService::Divide (blocking inst) with : " << math_request.inp1() << " and " << math_request.inp2() << std::endl;
-          auto divide_response = instance.CallWithResponse<SFloat>("Divide", math_request);
+          auto divide_response = instance.CallWithResponse<SFloatTuple, SFloat>("Divide", math_request);
           if (divide_response.first)
           {
             std::cout << "Blocking: Received response MathService / Divide : " << divide_response.second.response.out() << std::endl;

@@ -45,10 +45,10 @@ int main()
     srv_request.set_id(cycle);
 
     std::cout << "call component 1" << std::endl;
-    component1.CallWithResponse<orchestrator::response>("execute", srv_request);
+    component1.CallWithResponse<orchestrator::request, orchestrator::response>("execute", srv_request);
 
     std::cout << "call component 2" << std::endl << std::endl;
-    component2.CallWithResponse<orchestrator::response>("execute", srv_request);
+    component2.CallWithResponse<orchestrator::request, orchestrator::response>("execute", srv_request);
 
     ++cycle;
   }
