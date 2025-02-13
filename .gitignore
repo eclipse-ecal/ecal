@@ -35,7 +35,7 @@ CMakeLists.txt.user
 # Sphinx live output
 doc/rst/_build/
 doc/rst/_include_ecalicons.txt
-doc/rst/getting_started/_ppa_tabs.rst.txt
+doc/rst/getting_started/_ppa_instructions.rst.txt
 doc/rst/_download_archive
 doc/rst/_download_main_page
 doc/extensions/_autogen
