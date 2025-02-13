@@ -38,7 +38,7 @@ set(ecal_utils_src
     src/win_cp_changer.cpp
 )
 
-ecal_add_static_library(${PROJECT_NAME}
+ecal_add_library(${PROJECT_NAME}
     ${ecal_utils_includes}
     ${ecal_utils_src}
 )

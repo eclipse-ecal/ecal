@@ -33,7 +33,10 @@ set(threading_utils_src
   src/dummy.cpp # Workaround to make this project generate an output. Header only librarys do not work well with Visual Studio
 )
 
-add_library (${PROJECT_NAME} 
+# WARNING: This is only used for the play and recorder applications (CLI and GUI)
+# so it is never needed by the SDK portion of the codebase and thus can be:
+# Internal implementation - not exported/installed
+ecal_add_static_library(${PROJECT_NAME}
   ${threading_utils_includes}
   ${threading_utils_src}
 )

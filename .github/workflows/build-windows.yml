@@ -377,6 +377,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy
 
     - name: Determine name of the installer for zip file
+      if: env.IS_DOWNLOAD_AVAILABLE == 'true'
       shell: powershell
       run: |
         $INSTALLER_NAME = "${{ env.ASSET_NAME }}"
