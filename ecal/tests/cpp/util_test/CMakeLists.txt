@@ -37,8 +37,6 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_gtest(${PROJECT_NAME})
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/util)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 

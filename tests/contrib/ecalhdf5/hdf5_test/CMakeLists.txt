@@ -36,6 +36,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::hdf5,
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_EH5_NO_DEPRECATION_WARNINGS)
 
-ecal_install_gtest(${PROJECT_NAME})
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/contrib/ecalhdf5)
