@@ -8,6 +8,7 @@
 
 import os
 import sys
+import semantic_version
 
 # -- Variable setup ----------------------------------------------------------
 
@@ -38,38 +39,6 @@ if is_cmake_build:
 
 sys.path.insert(0, sphinx_custom_extension_dir)
 
-# -- Generate ecalicons include file-------------------------------------------
-
-import generate_ecalicons
-qresource_list = [
-    os.path.join(ecal_source_root_dir, r"app/iconset/ecalicons.qrc"),
-    os.path.join(ecal_source_root_dir, r"lib/QEcalParser/resources/qecalparser.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/mon/mon_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/play/play_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/rec/rec_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/sys/sys_gui/resources/resources.qrc"),
-    os.path.join(ecal_source_root_dir, r"app/util/launcher/resources/resources.qrc")
-]
-generate_ecalicons.generate_ecalicons(qresource_list, os.path.join(rst_source_dir, r"_include_ecalicons.txt"))
-
-# -- Generate download archive and tables for the homepage --------------------
-import generate_download_tables
-
-download_tables_main_page_dir = os.path.join(rst_source_dir, r"_download_main_page")
-download_archive_dir          = os.path.join(rst_source_dir, r"_download_archive")
-ppa_tabs_file                 = os.path.join(rst_source_dir, r"getting_started/_ppa_tabs.rst.txt")
-
-if not os.path.exists(download_tables_main_page_dir) or not os.path.exists(download_archive_dir):
-    # Only generate download tables, if the directories do not exist.
-    # Otherwise we may run out of API calls very quickly.
-    gh_api_key = os.getenv("ECAL_GH_API_KEY")
-    if gh_api_key:
-        os.makedirs(download_tables_main_page_dir)
-        os.makedirs(download_archive_dir)
-        generate_download_tables.generate_download_tables(gh_api_key, download_tables_main_page_dir, download_archive_dir, ppa_tabs_file)
-    else:  
-        print("WARNING: Environment variable ECAL_GH_API_KEY not set. Skipping generating download tables.")
-
 # -- Project information -----------------------------------------------------
 
 project = u'Eclipse eCAL™'
@@ -87,6 +56,43 @@ if not ecal_doc_version:
     ecal_doc_version = ""
 
 release = ecal_doc_version
+
+# -- Generate ecalicons include file-------------------------------------------
+
+import generate_ecalicons
+qresource_list = [
+    os.path.join(ecal_source_root_dir, r"app/iconset/ecalicons.qrc"),
+    os.path.join(ecal_source_root_dir, r"lib/QEcalParser/resources/qecalparser.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/mon/mon_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/play/play_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/rec/rec_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/sys/sys_gui/resources/resources.qrc"),
+    os.path.join(ecal_source_root_dir, r"app/util/launcher/resources/resources.qrc")
+]
+generate_ecalicons.generate_ecalicons(qresource_list, os.path.join(rst_source_dir, r"_include_ecalicons.txt"))
+
+# -- Generate download archive and tables for the homepage --------------------
+import generate_release_documentation
+
+ppa_instructions_rst_file = os.path.join(rst_source_dir, r"getting_started/_ppa_instructions.rst.txt")
+
+gh_api_key = os.getenv("ECAL_GH_API_KEY")
+if not gh_api_key:
+    print("WARNING: Environment variable ECAL_GH_API_KEY not set. Skipping generating PPA instructions.")
+elif not ecal_doc_version:
+    print("WARNING: Environment variable ECAL_DOC_VERSION not set. Skipping generating PPA instructions.")
+else:
+    # Sanitize the version string by removing leading 'v' and '.' characters
+    ecal_doc_version_sanitized = ecal_doc_version
+    if ecal_doc_version_sanitized.startswith('v'):
+        ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
+    if ecal_doc_version_sanitized.startswith('.'):
+        ecal_doc_version_sanitized = ecal_doc_version_sanitized[1:]
+    # Ensure the version string has a patch version
+    if len(ecal_doc_version_sanitized.split('.')) == 2:
+        ecal_doc_version_sanitized += '.0'
+    generate_release_documentation.generate_ppa_instructions(gh_api_key, semantic_version.Version(ecal_doc_version_sanitized), ppa_instructions_rst_file)
+  
 
 # -- General configuration ---------------------------------------------------
 
