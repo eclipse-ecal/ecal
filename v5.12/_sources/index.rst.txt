@@ -22,22 +22,34 @@ This chapter will walk you through
 * The :ref:`applications <getting_started_applications>` that come with eCAL
 * Writing your first :ref:`Hello World <getting_started_hello_world>` program 
 
-.. include:: _download_main_page/_main_page_download_section.rst.txt
+Download
+========
 
-Links
-=====
+- |fa-windows| Windows / |fa-ubuntu| Ubuntu:
 
-To contribute, please visit our github repository:
+  Go to the Release Page to get the latest version of eCAL:
+  
+  .. raw:: html
+  
+     <p>
+        <a class="btn btn-sm btn-primary" href="https://eclipse-ecal.github.io/ecal/releases/" target="_blank" style="color: #fff;">
+           <span class="btn-icon"><span class="fa fa-download"></span></span>
+           <span class="btn-text">Download eCAL</span>
+        </a>
+     </p>
 
-.. raw:: html
+- |fa-ubuntu| Ubuntu (from PPA):
 
-   <p>
-      <a class="btn btn-sm btn-primary" href="https://github.com/eclipse-ecal/ecal" target="_blank" style="color: #fff;">
-         <span class="btn-icon"><span class="fab fa-github"></span></span>
-         <span class="btn-text">eCAL on Github</span>
-      </a>
-   </p>
-   
+  Install eCAL from our PPA:
+  
+  .. code-block:: bash
+
+     sudo add-apt-repository ppa:ecal/ecal-latest
+     sudo apt-get update
+     sudo apt-get install ecal
+  
+  This PPA will always upgrade you to the latest eCAL Release (-> Rolling Release PPA). If you intend to stay on an specific release, check out other PPAs :ref:`here <getting_started_setup_ubuntu_ppa>`.
+
 License
 =======
 
@@ -88,7 +100,7 @@ Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with 
    :caption: Advanced
    
    versions/ecal_versions
-   _download_archive/download_archive
+   Downloads <https://eclipse-ecal.github.io/ecal/releases/>
    advanced/tutorials
    advanced/ecal_internals
    advanced/ros_comparison

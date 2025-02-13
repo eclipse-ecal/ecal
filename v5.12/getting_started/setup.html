@@ -40,7 +40,6 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
-    <script src="../_static/tabs.js"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.png"/>
@@ -2076,8 +2075,8 @@ function checkPageExistsAndRedirect(event) {
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../_download_archive/download_archive.html">
-   All releases
+  <a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">
+   Downloads
   </a>
  </li>
  <li class="toctree-l1 has-children">
@@ -2613,7 +2612,7 @@ We will cover both scenarios in the next sections.</p>
 <section id="fa-windows-installing-ecal-on-windows">
 <span id="getting-started-setup-windows"></span><h2><span class="section-number">2.1. </span><i class="fab fa-windows"></i> Installing eCAL on Windows<a class="headerlink" href="#fa-windows-installing-ecal-on-windows" title="Permalink to this headline">#</a></h2>
 <ol class="arabic">
-<li><p>Choose your desired eCAL Version from the <a class="reference internal" href="../_download_archive/download_archive.html#download-archive"><span class="std std-ref">eCAL Download Archive</span></a> and download the Windows installer.
+<li><p>Choose your desired eCAL Version from the <a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">eCAL Download Page</a> and download the Windows installer.
 New users should download the latest Version.</p></li>
 <li><p>Install eCAL with default options (Full installation):</p>
 <img alt="eCAL Setup" src="../_images/setup.png" />
@@ -2636,48 +2635,15 @@ But you can <a class="reference internal" href="../faq.html#faq-ubuntu-22-04-gra
 <span id="getting-started-setup-ubuntu-ppa"></span><h3><span class="section-number">2.2.1. </span><i class="fab fa-ubuntu"></i> Automatically install eCAL from a PPA<a class="headerlink" href="#fa-ubuntu-automatically-install-ecal-from-a-ppa" title="Permalink to this headline">#</a></h3>
 <p>Installing eCAL from a PPA will cause apt-get to automatically update eCAL for you.
 You can choose from different PPAs, depending on your desired upgrade path.</p>
-<div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Rolling Release</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">eCAL 5.13</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">eCAL 5.12</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">eCAL 5.11</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>This is the rolling release PPA.
-It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-latest
-sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
-</pre></div>
-</div>
-<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.13.
-You will receive patches as long as eCAL 5.13 is supported.
-If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.13 is the latest supported version.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.13
-sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
-</pre></div>
-</div>
-<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.13">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.12.
-You will receive patches as long as eCAL 5.12 is supported.
-If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>At the moment, eCAL 5.12 is the supported legacy-version.
-Support will be dropped when the next eCAL Version is released.</p>
+<p>You can use the following commands to install eCAL 5.12 from our PPA.
+This PPA will always stay on eCAL 5.12.
+You will receive patches within that version though.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.12
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
 </pre></div>
 </div>
 <p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.12">Launchpad</a>!</p>
-</div><div aria-labelledby="tab-0-0-3" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-3" name="0-3" role="tabpanel" tabindex="0"><p>This PPA will always stay on eCAL 5.11.
-If you want to upgrade to a new eCAL Version, you will have to manually add the new PPA.</p>
-<p>eCAL 5.11 is not supported any more and will not receive patches.
-You can still use the PPA to install the latest eCAL 5.11.
-Please consider upgrading to a newer version.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ecal/ecal-5.11
-sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ecal
-</pre></div>
-</div>
-<p>Also check out this PPA on <a class="reference external" href="https://launchpad.net/~ecal/+archive/ubuntu/ecal-5.11">Launchpad</a>!</p>
-</div></div>
 </section>
 <section id="fa-ubuntu-manually-install-ecal-from-a-deb-file">
 <h3><span class="section-number">2.2.2. </span><i class="fab fa-ubuntu"></i> Manually install eCAL from a .deb file<a class="headerlink" href="#fa-ubuntu-manually-install-ecal-from-a-deb-file" title="Permalink to this headline">#</a></h3>
@@ -2686,7 +2652,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <p>We usually recommend installing from a PPA (<a class="reference internal" href="#getting-started-setup-ubuntu-ppa"><span class="std std-ref">see above</span></a>).</p>
 </div>
 <ol class="arabic">
-<li><p>Choose your desired eCAL Version from the <a class="reference internal" href="../_download_archive/download_archive.html#download-archive"><span class="std std-ref">eCAL Download Archive</span></a>.</p></li>
+<li><p>Choose your desired eCAL Version from the <a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">Download Page</a>.</p></li>
 <li><p>Install the eCAL Dependencies:</p>
 <ul>
 <li><p>Ubuntu 18.04:</p>
