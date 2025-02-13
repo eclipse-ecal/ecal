@@ -70,6 +70,7 @@ list(REMOVE_ITEM CPACK_COMPONENTS_ALL
   "tinyxml2_config"
   "tinyxml2_headers"
   "tinyxml2_libraries"
+  "testing"
 )
 
 include(CPack)
