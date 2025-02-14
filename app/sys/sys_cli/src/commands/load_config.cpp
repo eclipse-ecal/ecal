@@ -64,7 +64,7 @@ namespace eCAL
         return Error::ErrorCode::OK;
       }
 
-      eCAL::sys::Error LoadConfig::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& /*argv*/) const
+      eCAL::sys::Error LoadConfig::Execute(const std::string& /*hostname*/, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& /*remote_ecalsys_service*/, const std::vector<std::string>& /*argv*/) const
       {
         return eCAL::sys::Error::ErrorCode::COMMAND_NOT_AVAILABLE_IN_REMOTE_MODE;
       }
