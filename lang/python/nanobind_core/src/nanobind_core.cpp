@@ -72,6 +72,9 @@ NB_MODULE(nanobind_core, m) {
   AddConfig(m);
   AddCore(m);
   AddInit(m);
+  AddLog(m);
+  AddLogLevel(m);
+
   AddTypes(m);
 
   AddConfigApplication(m);
@@ -86,4 +89,8 @@ NB_MODULE(nanobind_core, m) {
   AddPubsubPublisher(m);
   AddPubsubSubscriber(m);
   AddPubsubTypes(m);
+
+
+  AddTypesCustomDataTypes(m);
+  AddTypesLogging(m);
 }

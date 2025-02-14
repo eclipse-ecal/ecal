@@ -27,6 +27,8 @@
 #include <core/pubsub/py_subscriber.h>
 #include <ecal/pubsub/subscriber.h>
 
+#include <nanobind/stl/function.h>
+
 #include <exception>
 
 namespace nb = nanobind;
@@ -35,24 +37,45 @@ using namespace eCAL;
 void AddPubsubSubscriber(nanobind::module_& module)
 {
   // --- Wrap the CSubscriber class ------------------------------------------------
+  // TODO: Currently, providing the callback as last argument leads to runtime errors, so this needs to be adresses.
   nb::class_<CSubscriber>(module, "Subscriber")
     // Define CPublisher class
-    .def("__init__", [](CSubscriber* t, nb::str topic_name, const SDataTypeInformation& datatype_info/*, const PubEventCallbackT& event_callback_*/, const Subscriber::Configuration& config_) { new (t) CSubscriber(topic_name.c_str(), datatype_info/*, event_callback_*/, config_); },
+    .def("__init__", [](CSubscriber* t, nb::str topic_name, const SDataTypeInformation& datatype_info, const Subscriber::Configuration& config_/*, const nb::callable& event_callback_*/)
+      { 
+        SubEventCallbackT event_callback_cpp = nullptr;
+        //if (!event_callback_.is_none())
+        //{
+        //  event_callback_cpp = [event_callback_](auto&&... args) {
+        //    try {
+        //      nb::gil_scoped_acquire acquire;
+        //      // Call the Python callback, forwarding the arguments.
+        //      event_callback_(std::forward<decltype(args)>(args)...);
+        //    }
+        //    catch (std::exception e)
+        //    {
+        //      std::cout << "Error invoking callback: " << e.what() << std::endl;
+        //    }
+        //  };
+        //}
+        new (t) CSubscriber(topic_name.c_str(), datatype_info, event_callback_cpp, config_);
+      },
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),
-      nb::arg("config") = GetSubscriberConfiguration()
-      //nb::arg("event_callback") = nullptr
+      nb::arg("config") = GetSubscriberConfiguration()/*,
+      nb::arg("event_callback") = nb::none()*/
     )
 
     .def("set_receive_callback",
-      [](CSubscriber& self, nb::object py_callback) {
+      [](CSubscriber& self, nb::callable py_callback) {
         // Wrap the Python callback with a lambda that acquires the GIL.
         // Adjust the callback parameters according to the actual signature of ReceiveCallbackT.
         auto wrapped_callback = [py_callback](auto&&... args) {
+        //auto wrapped_callback = [py_callback](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_) {
           try {
             nb::gil_scoped_acquire acquire;
             // Call the Python callback, forwarding the arguments.
             py_callback(std::forward<decltype(args)>(args)...);
+            //py_callback(nb::cast(publisher_id_), nb::cast(data_type_info_), nb::cast(data_));
           }
           catch (std::exception e)
           {
