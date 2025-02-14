@@ -79,4 +79,5 @@ list(REMOVE_ITEM CPACK_COMPONENTS_ALL
 message("************************************************")
 message("${CPACK_COMPONENTS_ALL}")
 
+set(CPACK_DEB_COMPONENT_INSTALL ON)
 include(CPack)
