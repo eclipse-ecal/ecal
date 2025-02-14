@@ -104,6 +104,10 @@ namespace eCAL
     }
   }
 
+  /*
+  * Potentially, a publisher has multiple subscribers within the same process
+  * 
+  */
   void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_)
   {
     // we accept local disconnections only
@@ -131,12 +135,11 @@ namespace eCAL
         }
       }
     }
-    // Disconnect events immediately if there is no longer an existing subscription.
-
     // memory file is still connected to at least one topic id of this process id
     // no need to Disconnect process id
     if (memfile_has_subscriptions) return;
 
+    // If the removed subscription was the last one, we need to temporarily disconnect the process
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Disconnect(std::to_string(process_id_));
