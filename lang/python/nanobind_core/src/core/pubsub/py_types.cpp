@@ -62,13 +62,13 @@ void AddPubsubTypes(nanobind::module_& module)
         return self < other;
       },
       "Less-than comparison")
-        .def("__repr__",
-          [](const eCAL::STopicId& self) {
-            std::ostringstream oss;
-            oss << self;  // uses the provided operator<< overload
-            return oss.str();
-          },
-          "Return the string representation of STopicId");
+    .def("__repr__",
+      [](const eCAL::STopicId& self) {
+        std::ostringstream oss;
+        oss << self;  // uses the provided operator<< overload
+        return oss.str().c_str();
+      },
+      "Return the string representation of TopicId");
 
       //-------------------------------------------------------------------------
       // Bind SReceiveCallbackData struct
