@@ -22,7 +22,7 @@
 #include <rec_server_core/proto_helpers.h>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/server.h>
 
 #include <string>
@@ -40,7 +40,7 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 
   eCAL::Initialize("Ecal Rec Tester");
   
-  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
+  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>();
 
   if (gui)
   {

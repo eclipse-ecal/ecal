@@ -23,7 +23,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4100 4505 4800)
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/rec/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -100,7 +100,7 @@ int main()
   eCAL::Initialize("RecClientServiceCli");
 
   // create recorder service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
 
   // waiting for service
   while (!recorder_service.IsConnected())

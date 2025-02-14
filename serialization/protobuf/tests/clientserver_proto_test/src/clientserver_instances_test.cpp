@@ -51,7 +51,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math)
   eCAL::protobuf::CServiceServer<MathService> math_server1(math_service1);
   eCAL::protobuf::CServiceServer<MathService> math_server2(math_service2);
 
-  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 
@@ -85,7 +85,7 @@ TEST(core_cpp_clientserver_proto, IterativeClientInstances_Typed_Math_Callback)
   eCAL::protobuf::CServiceServer<MathService> math_server1(math_service1);
   eCAL::protobuf::CServiceServer<MathService> math_server2(math_service2);
 
-  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 

@@ -63,7 +63,7 @@ namespace eCAL
         return Execute(rec_server_instance, time_to_rec);
       }
 
-      eCAL::rec::Error Record::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
+      eCAL::rec::Error Record::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
       {
         std::chrono::duration<double> time_to_rec(0);
 
@@ -111,7 +111,7 @@ namespace eCAL
         return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error Record::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, std::chrono::duration<double> time_to_rec) const
+      eCAL::rec::Error Record::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, std::chrono::duration<double> time_to_rec) const
       {
         // Retrieve Status
         eCAL::rec_server::RecServerStatus status;

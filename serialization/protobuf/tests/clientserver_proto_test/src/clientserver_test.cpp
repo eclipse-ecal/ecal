@@ -49,7 +49,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Math)
 
   auto math_service = std::make_shared<MathServiceImpl>();
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
-  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 
@@ -73,7 +73,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Math)
 
   auto math_service = std::make_shared<MathServiceImpl>();
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
-  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 
@@ -104,7 +104,7 @@ TEST(core_cpp_clientserver_proto, TypedCallbackAsync_Math)
 
   auto math_service = std::make_shared<MathServiceImpl>();
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service);
-  eCAL::protobuf::CServiceClientTyped<MathService> math_client;
+  eCAL::protobuf::CServiceClient<MathService> math_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 
@@ -144,7 +144,7 @@ TEST(core_cpp_clientserver_proto, TypedBlocking_Ping)
 
   auto ping_service = std::make_shared<PingServiceImpl>();
   eCAL::protobuf::CServiceServer<PingService> ping_server(ping_service);
-  eCAL::protobuf::CServiceClientTyped<PingService> ping_client;
+  eCAL::protobuf::CServiceClient<PingService> ping_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 
@@ -167,7 +167,7 @@ TEST(core_cpp_clientserver_proto, TypedCallback_Ping)
 
   auto ping_service = std::make_shared<PingServiceImpl>();
   eCAL::protobuf::CServiceServer<PingService> ping_server(ping_service);
-  eCAL::protobuf::CServiceClientTyped<PingService> ping_client;
+  eCAL::protobuf::CServiceClient<PingService> ping_client;
 
   std::this_thread::sleep_for(std::chrono::milliseconds(CMN_REGISTRATION_REFRESH_MS));
 

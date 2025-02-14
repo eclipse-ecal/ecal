@@ -30,7 +30,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4100 4505 4800)
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/rec/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -154,7 +154,7 @@ namespace eCAL
       mutable std::mutex              io_mutex_;
       mutable std::condition_variable io_cv_;
 
-      eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
+      eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
 
       std::chrono::steady_clock::time_point next_ping_time_;
       bool currently_executing_action_;
