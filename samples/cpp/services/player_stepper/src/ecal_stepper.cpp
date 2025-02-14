@@ -18,7 +18,7 @@
  */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/subscriber.h>
 #include "tclap/CmdLine.h"
 
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
     eCAL::Initialize("ecal stepper", eCAL::Init::Default);
 
     // create player service client
-    eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;
+    eCAL::protobuf::CServiceClientUntyped<eCAL::pb::play::EcalPlayService> player_service;
 
     // sleep for service matching
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));

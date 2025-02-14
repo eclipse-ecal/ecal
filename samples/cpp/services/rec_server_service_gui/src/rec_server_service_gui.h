@@ -22,7 +22,7 @@
 #include <QtWidgets/QMainWindow>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -70,5 +70,5 @@ private:
 
   Ui::RecServerServiceGui ui_;
   std::string hostname_;
-  eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService> recorder_service_;
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService> recorder_service_;
 };

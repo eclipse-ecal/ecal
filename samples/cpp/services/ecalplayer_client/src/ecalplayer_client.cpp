@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -92,7 +92,7 @@ int main()
   eCAL::Initialize("ecalplayer client");
 
   // create player service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::play::EcalPlayService> player_service;
 
   // sleep for service matching
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
