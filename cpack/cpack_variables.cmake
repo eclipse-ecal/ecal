@@ -79,6 +79,7 @@ list(REMOVE_ITEM CPACK_COMPONENTS_ALL
 message("************************************************")
 message("${CPACK_COMPONENTS_ALL}")
 
-set(CPACK_DEBIAN_TESTING_PACKAGE_NAME "")
+set(CPACK_DEB_COMPONENT_INSTALL ON)
+set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 
 include(CPack)
