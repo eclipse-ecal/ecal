@@ -19,21 +19,18 @@
 
 /**
  * @file   msg/protobuf/client.h
- * @brief  eCAL Protobuf Client Interface (adapted for templated request types)
+ * @brief  eCAL Protobuf Typed Client Interface
  *
- * This header file defines two primary templated client classes for interacting with
- * eCAL services that use Google Protocol Buffers (protobuf) for message serialization.
+ * This header file defines a templated client class for interacting with eCAL services
+ * that use Google Protocol Buffers (protobuf) for message serialization.
  *
- * The file provides:
+ * It provides the CServiceClient class which implements a typed service client interface.
+ * This interface offers synchronous and asynchronous (callback) calls that automatically parse
+ * responses into user-defined protobuf message types.
  *
- * CServiceClientTyped
- *    - Implements a typed service client interface for protobuf-based services.
- *    - Offers methods for synchronous and asynchronous service invocations that support
- *      automatic parsing of the responses into user-defined protobuf message types.
- *    - The call methods are now templated on both the request and response types.
+ * The call methods are templated on both the request and response types.
  *
- * Class inherits from the common base class, CServiceClientBase, which is parameterized
- * on both the service description type and the client instance wrapper type.
+ * @note This class inherits from CServiceClientBase.
  */
 
 #pragma once
@@ -55,15 +52,10 @@ namespace eCAL
   namespace protobuf
   {
     /**
-     * @brief Service client for Protobuf services.
+     * @brief Typed service client for Protobuf services.
      *
-     * Implements synchronous (blocking) and asynchronous (callback) calls with
-     * typed responses. The following methods are provided:
-     *   - CallWithResponse: synchronous call returning typed responses.
-     *   - CallWithCallback: asynchronous call with callback returning typed responses.
-     *   - CallWithCallbackAsync: asynchronous (non-blocking) call with callback returning typed responses.
-     *
-     * The call methods are now templated on both the request and response types.
+     * Implements synchronous (blocking) and asynchronous (callback) calls with typed responses.
+     * The call methods are templated on both the request and response types.
      *
      * @tparam T The service description type.
      */
@@ -77,15 +69,11 @@ namespace eCAL
       CServiceClient() = default;
       ~CServiceClient() override = default;
 
-      /**
-       * @brief Typed CServiceClients are non-copyable.
-       */
+      // Non-copyable
       CServiceClient(const CServiceClient&) = delete;
       CServiceClient& operator=(const CServiceClient&) = delete;
 
-      /**
-       * @brief Typed CServiceClients are movable.
-       */
+      // Movable
       CServiceClient(CServiceClient&& rhs) = default;
       CServiceClient& operator=(CServiceClient&& rhs) = default;
 
@@ -103,8 +91,8 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       std::pair<bool, SMsgServiceResponseVecT<ResponseT>> CallWithResponse(const std::string& method_name_,
-        const RequestT& request_,
-        int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
+                                                                           const RequestT& request_,
+                                                                           int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         return this->template ProcessInstances<SMsgServiceResponse<ResponseT>>(
           [&](auto& instance) {
@@ -128,9 +116,9 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       bool CallWithCallback(const std::string& method_name_,
-        const RequestT& request_,
-        const SMsgResponseCallbackT<ResponseT>& response_callback_,
-        int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
+                            const RequestT& request_,
+                            const SMsgResponseCallbackT<ResponseT>& response_callback_,
+                            int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())
@@ -154,8 +142,8 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
-        const RequestT& request_,
-        const SMsgResponseCallbackT<ResponseT>& response_callback_) const
+                                 const RequestT& request_,
+                                 const SMsgResponseCallbackT<ResponseT>& response_callback_) const
       {
         bool overall_success = true;
         for (auto& instance : this->GetClientInstances())

@@ -19,31 +19,17 @@
 
 /**
  * @file   msg/protobuf/client_instance.h
- * @brief  eCAL client instance interface based on protobuf service description
+ * @brief  eCAL Protobuf Typed Client Instance Interface
  *
- * This header file provides the implementation of client instance interfaces for eCAL services
- * that leverage Google Protocol Buffers (protobuf) for message serialization and deserialization.
+ * This header file provides the implementation of the client instance interface for eCAL services
+ * using Google Protocol Buffers (protobuf) for message serialization and deserialization.
  *
- * The file defines two primary templated classes that wrap an underlying eCAL client instance:
- *
- * CClientInstanceTyped<T>
- *    - Supports typed responses.
- *    - Implements methods that not only perform the service call but also automatically parse and convert
- *      the raw response into a strongly-typed response object.
- *    - The call methods are now templated on both the request and response types, with the request type specified first.
- *
- * Usage Examples:
- *
- *   // Client instance usage:
- *   eCAL::protobuf::CClientInstanceTyped<MyService> typedInstance(std::move(myBaseInstance));
- *   auto typedResult = typedInstance.CallWithResponse<MyRequestType, MyResponseType>(myMethod, myRequest);
- *   if (typedResult.first)
- *   {
- *     // Process the typed response contained in typedResult.second.
- *   }
+ * It defines the CClientInstance class which supports typed responses.
+ * This class provides methods for synchronous and asynchronous service calls that automatically
+ * parse raw responses into strongly-typed response objects.
  *
  * @note The service description type T must provide access to its protobuf ServiceDescriptor
- *       (typically via a GetDescriptor() method) to enable correct parsing of responses.
+ *       to enable correct parsing of responses.
  */
 
 #pragma once
@@ -51,6 +37,7 @@
 #include <ecal/service/client_instance.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 #include <ecal/msg/protobuf/client_protobuf_types.h>
+#include <ecal/msg/protobuf/client_protobuf_utils.h>
 
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.h>
@@ -67,15 +54,12 @@ namespace eCAL
   namespace protobuf
   {
     /**
-     * @brief Templated client instance that supports typed responses.
+     * @brief Templated client instance for Protobuf services with typed responses.
      *
-     * The template parameter T is the service description type that provides a GetDescriptor() method.
+     * Provides blocking and callback-based methods that automatically parse raw responses
+     * into strongly-typed response objects.
      *
-     * This class provides:
-     *   - Blocking calls (CallWithResponse) that return a parsed, typed response.
-     *   - Callback-based calls (CallWithCallback and CallWithCallbackAsync) that deliver a typed response.
-     *
-     * The call methods are now templated on both the request and response types, where the request type is specified first.
+     * @tparam T The service description type.
      */
     template <typename T>
     class CClientInstance
@@ -88,7 +72,7 @@ namespace eCAL
       }
 
       CClientInstance(const SEntityId& entity_id_,
-        const std::shared_ptr<eCAL::CServiceClientImpl>& service_client_impl_)
+                      const std::shared_ptr<eCAL::CServiceClientImpl>& service_client_impl_)
         : m_instance(entity_id_, service_client_impl_)
       {
       }
@@ -107,8 +91,8 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       std::pair<bool, SMsgServiceResponse<ResponseT>> CallWithResponse(const std::string& method_name_,
-        const RequestT& request_,
-        int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
+                                                                       const RequestT& request_,
+                                                                       int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
       {
         const std::string serialized_request = request_.SerializeAsString();
         auto ret = m_instance.CallWithResponse(method_name_, serialized_request, timeout_ms_);
@@ -118,7 +102,7 @@ namespace eCAL
       }
 
       /**
-       * @brief Call with callback that returns a typed response.
+       * @brief Call with callback returning a typed response.
        *
        * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
        * @tparam ResponseT           Expected protobuf response type.
@@ -132,21 +116,21 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       bool CallWithCallback(const std::string& method_name_,
-        const RequestT& request_,
-        const SMsgResponseCallbackT<ResponseT>& response_callback_,
-        int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
+                            const RequestT& request_,
+                            const SMsgResponseCallbackT<ResponseT>& response_callback_,
+                            int timeout_ms_ = eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT)
       {
         const std::string serialized_request = request_.SerializeAsString();
         auto wrapper = [this, method_name_, response_callback_](const SServiceResponse& service_response)
-          {
-            SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
-            response_callback_(msg_response);
-          };
+        {
+          SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
+          response_callback_(msg_response);
+        };
         return m_instance.CallWithCallback(method_name_, serialized_request, wrapper, timeout_ms_);
       }
 
       /**
-       * @brief Asynchronous call with callback that returns a typed response.
+       * @brief Asynchronous call with callback returning a typed response.
        *
        * @tparam RequestT            The type of the request message (must provide SerializeAsString()).
        * @tparam ResponseT           Expected protobuf response type.
@@ -159,15 +143,15 @@ namespace eCAL
        */
       template <typename RequestT, typename ResponseT>
       bool CallWithCallbackAsync(const std::string& method_name_,
-        const RequestT& request_,
-        const SMsgResponseCallbackT<ResponseT>& response_callback_)
+                                 const RequestT& request_,
+                                 const SMsgResponseCallbackT<ResponseT>& response_callback_)
       {
         const std::string serialized_request = request_.SerializeAsString();
         auto wrapper = [this, method_name_, response_callback_](const SServiceResponse& service_response)
-          {
-            SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
-            response_callback_(msg_response);
-          };
+        {
+          SMsgServiceResponse<ResponseT> msg_response = ConvertResponse<ResponseT>(service_response);
+          response_callback_(msg_response);
+        };
         return m_instance.CallWithCallbackAsync(method_name_, serialized_request, wrapper);
       }
 
