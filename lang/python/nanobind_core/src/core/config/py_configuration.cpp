@@ -27,6 +27,9 @@
 #include <core/config/py_configuration.h>
 #include <ecal/config/configuration.h>
 
+// Nanobind includes to map stl types to python types
+#include <nanobind/stl/string.h>
+
 namespace nb = nanobind;
 
 void AddConfigConfiguration(nanobind::module_& module)

@@ -26,6 +26,7 @@
 #include <ecal/types/logging.h>
 
 #include <nanobind/stl/list.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 using namespace eCAL::Logging;
