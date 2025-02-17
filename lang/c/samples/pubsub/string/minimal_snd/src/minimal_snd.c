@@ -21,10 +21,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main()
 {
-  ECAL_HANDLE pub     = 0;
+  eCAL_Publisher* publisher;
+  struct eCAL_SDataTypeInformation data_type_information;
   char        snd_s[] = "HELLO WORLD FROM C";
   int         sent    = 0;
 
@@ -32,14 +34,21 @@ int main()
   eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
 
   // create publisher "Hello"
-  pub = eCAL_Pub_New();
-  eCAL_Pub_Create(pub, "Hello", "std::string", "base", "", 0);
+  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
+  data_type_information.name = "std::string";
+  data_type_information.encoding = "base";
+
+  publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL);
+
+  char* topic_name;
+  topic_name = eCAL_Publisher_GetTopicName(publisher);
+  free(topic_name);
 
   // send updates
   while(eCAL_Ok())
   {
     // send content
-    sent = eCAL_Pub_Send(pub, snd_s, (int)strlen(snd_s), -1);
+    sent = eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), -1);
     if(sent <= 0) printf("Sending topic \"Hello\" failed !\n");
     else          printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
 

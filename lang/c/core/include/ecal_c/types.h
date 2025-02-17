@@ -25,6 +25,8 @@
 #ifndef ecal_c_types_h_included
 #define ecal_c_types_h_included
 
+#include <stdint.h>
+
 /**
  * @brief Flag to indicate eCAL to allocate/deallocate memory.
 **/

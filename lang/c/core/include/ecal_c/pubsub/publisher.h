@@ -34,125 +34,117 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  /**
-   * @brief Instance a publisher.
-   *
-   * @return  Handle to new publisher or NULL if failed.
-  **/
-  ECALC_API ECAL_HANDLE eCAL_Pub_New();
+  typedef struct eCAL_Publisher eCAL_Publisher;
+  typedef struct eCAL_PayloadWriter eCAL_PayloadWriter;
 
-  /**
-   * @brief Create a publisher. 
-   *
-   * @param handle_                   Publisher handle.
-   * @param topic_name_               Unique topic name.
-   * @param topic_type_name_          Topic type name     (like 'string', 'person').
-   * @param topic_type_encoding_      Topic type encoding (like 'base', 'proto').
-   * @param topic_desc_               Topic type description.
-   * @param topic_desc_len_           Topic type description length. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_);
+  struct eCAL_SDataTypeInformation
+  {
+    const char* name;
+    const char* encoding;
+    const char* descriptor;
+    size_t descriptor_len;
+  };
 
-  /**
-   * @brief Destroy a publisher. 
-   *
-   * @param handle_  Publisher handle. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_Destroy(ECAL_HANDLE handle_);
+  enum eCAL_TransportLayer_eType
+  {
+    eCAL_TransportLayer_eType_none,
+    eCAL_TransportLayer_eType_udp_mc,
+    eCAL_TransportLayer_eType_shm,
+    eCAL_TransportLayer_eType_tcp,
+  };
 
-  /**
-   * @brief Sets publisher attribute. 
-   *
-   * @param handle_             Publisher handle. 
-   * @param attr_name_          Attribute name. 
-   * @param attr_name_len_      Attribute name length. 
-   * @param attr_value_         Attribute value. 
-   * @param attr_value_len_     Attribute value length. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_);
+  struct eCAL_Publisher_Layer_SHM_Configuration
+  {
+    int enable;
+    int zero_copy_mode;
+    unsigned int acknowledge_timeout_ms;
+    unsigned int memfile_buffer_count;
+    unsigned int memfile_min_size_bytes;
+    unsigned int memfile_reserve_percent;
+  };
 
-  /**
-   * @brief Removes publisher attribute. 
-   *
-   * @param handle_             Publisher handle. 
-   * @param attr_name_          Attribute name. 
-   * @param attr_name_len_      Attribute name length. 
-   *
-   * @return  None zero if succeeded.
-   * @experimental
-  **/
-  ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_);
+  struct eCAL_Publisher_Layer_UDP_Configuration
+  {
+    int enable;
+  };
 
-  /**
-   * @brief Set the specific topic id.
-   *
-   * @param handle_  Publisher handle.
-   * @param id_      The topic id for subscriber side filtering (0 == no id).
-   *
-   * @return  True if it succeeds, false if it fails.
-  **/
-  ECALC_API int eCAL_Pub_SetID(ECAL_HANDLE handle_, long long id_);
+  struct eCAL_Publisher_Layer_TCP_Configuration
+  {
+    int enable;
+  };
 
-  /**
-   * @brief Query if the publisher is subscribed. 
-   *
-   * @param handle_  Publisher handle. 
-   *
-   * @return  None zero if subscribed. 
-  **/
-  ECALC_API int eCAL_Pub_IsSubscribed(ECAL_HANDLE handle_);
+  struct eCAL_Publisher_Layer_Configuration
+  {
+    eCAL_Publisher_Layer_SHM_Configuration shm;
+    eCAL_Publisher_Layer_UDP_Configuration udp;
+    eCAL_Publisher_Layer_TCP_Configuration tcp;
+  };
 
-  /**
-   * @brief Send a message to all subscribers. 
-   *
-   * @param handle_   Publisher handle. 
-   * @param buf_      Buffer that contains content to send. 
-   * @param buf_len_  Send buffer length. 
-   * @param time_     Send time (-1 = use eCAL system time in us, default = -1).
-   *
-   * @return  Number of bytes sent. 
-  **/
-  ECALC_API int eCAL_Pub_Send(ECAL_HANDLE handle_, const void* const buf_, int buf_len_, long long time_);
+  struct eCAL_Publisher_Configuration
+  {
+    eCAL_Publisher_Layer_Configuration layer;
 
-  /**
-   * @brief Add callback function for publisher events.
-   *
-   * @param handle_    Publisher handle.
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_);
+    eCAL_TransportLayer_eType* layer_priority_local;
+    size_t layer_priority_local_length;
+    eCAL_TransportLayer_eType* layer_priority_remote;
+    size_t layer_priority_remote_length;
+  };
 
-  /**
-   * @brief Remove callback function for publisher events.
-   *
-   * @param handle_  Publisher handle.
-   * @param type_    The event type to remove.
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Pub_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_);
 
-  /**
-   * @brief Dump the whole class state into a string buffer. 
-   *
-   * @param handle_         Publisher handle. 
-   * @param [out] buf_      Pointer to store the monitoring information. 
-   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem). 
-   *
-   * @return  Dump buffer length or zero if failed. 
-  **/
-  ECALC_API int eCAL_Pub_Dump(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+  typedef uint64_t eCAL_EntityIdT;
+
+  struct eCAL_SEntityId
+  {
+    eCAL_EntityIdT entity_id;
+    int32_t process_id;
+    const char* host_name;
+  };
+
+  struct eCAL_STopicId
+  {
+    struct eCAL_SEntityId topic_id;
+    const char* topic_name;
+  };
+
+  struct eCAL_SPubEventCallbackData
+  {
+    int __placeholder;
+  };
+
+  typedef void (*eCAL_PubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SPubEventCallbackData*);
+
+
+  struct eCAL_PayloadWriter
+  {
+    int (*WriteFull)(void*, size_t);
+    int (*WriteModified)(void*, size_t);
+    size_t (*GetSize)();
+  };
+
+
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_);
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback, const struct eCAL_Publisher_Configuration* publisher_configuration_);
+
+  ECALC_API void eCAL_Publisher_Delete(eCAL_Publisher* publisher_);
+
+  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, long long timestamp_);
+  ECALC_API int eCAL_Publisher_Send2(eCAL_Publisher* publisher_, struct eCAL_PayloadWriter* payload_writer_, long long timestamp_);
+
+  ECALC_API size_t eCAL_Publisher_GetSubscriberCount(eCAL_Publisher* publisher_);
+
+  ECALC_API char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
+
+  ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
+
+  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_);
+
+
+  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
+  ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
+
+  ECALC_API struct eCAL_Publisher_Configuration eCAL_GetPublisherConfiguration();
+  ECALC_API void eCAL_Publisher_Configuration_Free(eCAL_Publisher_Configuration* publisher_configuration_);
+
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
