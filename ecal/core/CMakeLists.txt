@@ -712,6 +712,8 @@ target_link_libraries(${TARGET_NAME}
     eCAL::ecal-utils
 )
 
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
+
 set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
 
 ecal_install_shared_library(${TARGET_NAME})
