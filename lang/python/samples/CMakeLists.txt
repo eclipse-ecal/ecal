@@ -29,6 +29,7 @@ set(python_samples_nanobind_core
   nanobind_core/pubsub/nb_binary_snd.py
   nanobind_core/service/nb_minimal_service_client.py
   nanobind_core/service/nb_minimal_service_server.py
+  nanobind_core/nb_logging.py
 )
 
 function(add_sample_to_solution python_filenname)

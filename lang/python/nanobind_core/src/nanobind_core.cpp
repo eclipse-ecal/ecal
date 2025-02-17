@@ -67,30 +67,34 @@
 #include <core/types/py_logging.h>
 #include <core/types/py_monitoring.h>
 
+namespace nb = nanobind;
 
-NB_MODULE(nanobind_core, m) {
-  AddConfig(m);
-  AddCore(m);
-  AddInit(m);
-  AddLog(m);
-  AddLogLevel(m);
+NB_MODULE(nanobind_core, core) {
+  auto init = core.def_submodule("init", "Initialization related functions and classes");
 
-  AddTypes(m);
+  AddCore(core);
 
-  AddConfigApplication(m);
-  AddConfigConfiguration(m);
-  AddConfigLogging(m);
-  AddConfigPublisher(m);
-  AddConfigRegistration(m);
-  AddConfigSubscriber(m);
-  AddConfigTime(m);
-  AddConfigTransportLayer(m);
+  AddInit(init);
+  AddLog(core);
+  AddLogLevel(core);
 
-  AddPubsubPublisher(m);
-  AddPubsubSubscriber(m);
-  AddPubsubTypes(m);
+  AddTypes(core);
+
+  AddConfigApplication(core);
+  AddConfigLogging(core);
+  AddConfigPublisher(core);
+  AddConfigRegistration(core);
+  AddConfigSubscriber(core);
+  AddConfigTime(core);
+  AddConfigTransportLayer(core);
+  AddConfigConfiguration(core); // need to add last, so the others are available.
+  AddConfig(core);
+
+  AddPubsubPublisher(core);
+  AddPubsubSubscriber(core);
+  AddPubsubTypes(core);
 
 
-  AddTypesCustomDataTypes(m);
-  AddTypesLogging(m);
+  AddTypesCustomDataTypes(core);
+  AddTypesLogging(core);
 }
