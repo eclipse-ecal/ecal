@@ -111,7 +111,7 @@ namespace eCAL
     const EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
     if (iter != m_event_handle_map.end())
     {
-      SEventHandlePair event_pair = iter->second;
+      SEventHandlePair& event_pair = iter->second;
       // fire acknowledge events, to unlock blocking send function
       gSetEvent(event_pair.event_ack);
       // mark the event to be ignored by the send function.
