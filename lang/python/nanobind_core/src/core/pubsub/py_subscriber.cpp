@@ -28,6 +28,7 @@
 #include <ecal/pubsub/subscriber.h>
 
 #include <nanobind/stl/function.h>
+#include <nanobind/stl/string.h>
 
 #include <exception>
 
