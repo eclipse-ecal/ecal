@@ -20,6 +20,10 @@
 #include <core/pubsub/py_publisher.h>
 #include <ecal/pubsub/publisher.h>
 
+// Nanobind includes to map stl types to python types
+#include <nanobind/stl/function.h>
+#include <nanobind/stl/string.h>
+
 namespace nb = nanobind;
 using namespace eCAL;
 

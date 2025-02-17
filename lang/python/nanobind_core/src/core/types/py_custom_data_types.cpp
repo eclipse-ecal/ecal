@@ -20,6 +20,8 @@
 #include <core/types/py_custom_data_types.h>
 #include <ecal/types/custom_data_types.h>
 
+#include <nanobind/stl/string.h>
+
 namespace nb = nanobind;
 using namespace eCAL;
 
