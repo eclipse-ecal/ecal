@@ -19,10 +19,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(ecal_service)
 
-if(TARGET _ecal_warnings)
-  # _ecal_warnings is the internal eCAL target containing the warning flags
+if(TARGET _ecal_compiler_args)
+  # _ecal_compiler_args is the internal eCAL target containing the warning flags
   # and will be absent if this is being built standalone
-  add_library(_ecal_service_warnings ALIAS _ecal_warnings)
+  add_library(_ecal_service_warnings ALIAS _ecal_compiler_args)
 else()
   # Otherwise, use a fallback implementation
   if("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
