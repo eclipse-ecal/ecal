@@ -202,6 +202,13 @@ option(ECAL_INSTALL_SAMPLE_SOURCES                  "Install the sources of eCAL
 option(ECAL_USE_NPCAP                               "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
 option(ECAL_USE_CLOCKLOCK_MUTEX                     "Use native mutex with monotonic clock (requires glibc >= 2.30)"   OFF)
 
+set(ECAL_EXTRA_COMPILER_ARGS "" CACHE STRING "; separated list of additional compiler arguments to use for eCAL code")
+include(./cmake/helper_functions/ecal_compiler_warnings.cmake)
+ecal_get_default_compiler_warnings(ecal_default_warnings)
+list(APPEND ecal_default_warnings ${ECAL_EXTRA_COMPILER_ARGS})
+set(ECAL_COMPILER_WARNINGS "${ecal_default_warnings}" CACHE STRING "Warning flags used for eCAL code")
+mark_as_advanced(FORCE ECAL_COMPILER_WARNINGS)
+
 # --------------------------------------------------------
 # ecal core configuration
 # --------------------------------------------------------
@@ -583,7 +590,6 @@ install(FILES ${eCAL_config} ${eCAL_config_version}
 
 install(FILES
   cmake/helper_functions/ecal_add_functions.cmake
-  cmake/helper_functions/ecal_compiler_warnings.cmake
   cmake/helper_functions/ecal_helper_functions.cmake
   cmake/helper_functions/ecal_install_functions.cmake
   DESTINATION ${${PROJECT_NAME}_install_cmake_dir}/helper_functions

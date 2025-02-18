@@ -18,7 +18,17 @@
 
 include_guard(GLOBAL)
 
-include("${CMAKE_CURRENT_LIST_DIR}/ecal_compiler_warnings.cmake")
+# ECAL_COMPILER_WARNINGS is set by the root CMakeLists and may be user customized
+add_library(_ecal_warnings INTERFACE)
+target_compile_options(_ecal_warnings INTERFACE
+  "$<$<COMPILE_LANGUAGE:C,CXX>:${ECAL_COMPILER_WARNINGS}>"
+)
+
+function(ecal_add_compiler_warnings TARGET_NAME)
+  target_link_libraries("${TARGET_NAME}" PRIVATE
+    "$<BUILD_INTERFACE:_ecal_warnings>"
+  )
+endfunction()
 
 # This function will set the output names of the target according to eCAL conventions.
 function(ecal_add_app_console TARGET_NAME)
