@@ -127,7 +127,6 @@ endfunction()
 
 function(ecal_add_shared_library TARGET_NAME)
   add_library(${TARGET_NAME} SHARED ${ARGN})
-  add_library(eCAL::${TARGET_NAME} ALIAS ${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
@@ -137,7 +136,6 @@ endfunction()
 
 function(ecal_add_static_library TARGET_NAME)
   add_library(${TARGET_NAME} STATIC ${ARGN})
-  add_library(eCAL::${TARGET_NAME} ALIAS ${TARGET_NAME})
   set_target_properties(${TARGET_NAME} PROPERTIES 
     VERSION ${eCAL_VERSION_STRING}
     SOVERSION ${eCAL_VERSION_MAJOR}
@@ -149,7 +147,6 @@ endfunction()
 
 function(ecal_add_interface_library TARGET_NAME)
   add_library(${TARGET_NAME} INTERFACE)
-  add_library(eCAL::${TARGET_NAME} ALIAS ${TARGET_NAME})
 endfunction()
 
 function(ecal_add_library TARGET_NAME)

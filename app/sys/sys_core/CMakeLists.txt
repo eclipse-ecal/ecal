@@ -75,6 +75,7 @@ set(ecalsyscore_src
 )
 
 ecal_add_library(${PROJECT_NAME} ${ecalsyscore_src})
+add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>

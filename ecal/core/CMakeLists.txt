@@ -605,6 +605,8 @@ if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
+add_library(eCAL::${TARGET_NAME}   ALIAS ${TARGET_NAME})
+
 target_compile_definitions(${TARGET_NAME}
   PUBLIC
     ASIO_STANDALONE

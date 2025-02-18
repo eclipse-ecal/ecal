@@ -21,6 +21,7 @@
 ##########################
 find_package(Protobuf REQUIRED)
 ecal_add_library(protobuf_base)
+add_library(eCAL::protobuf_base ALIAS protobuf_base)
 
 target_sources(protobuf_base
   PUBLIC
