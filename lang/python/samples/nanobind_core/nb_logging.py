@@ -29,11 +29,11 @@ def main():
   ecal_core.log(ecal_core.LogLevel.INFO, "Hello Hello")
   ecal_core.log(ecal_core.LogLevel.WARNING, "Help") 
   
-  
   all_logging = ecal_core.get_logging()
   
-  for log in all_logging.log_messages:
-    print(log)  
+  for log in all_logging:
+    print(log)
+    print("\n")
   
   ecal_core.finalize()
   

@@ -53,8 +53,8 @@ void AddTypesLogging(nanobind::module_& module)
       " content='" + msg.content + "'>";
       });
 
-  // Bind SLogging struct
-  nb::class_<SLogging>(module, "Logging")
-    .def(nb::init<>())
-    .def_rw("log_messages", &SLogging::log_messages);
+  // We are not binding the SLogging struct, because the function directly returns a list of log entries.
+  //nb::class_<SLogging>(module, "Logging")
+  //  .def(nb::init<>())
+  //  .def_rw("log_messages", &SLogging::log_messages);
 }
