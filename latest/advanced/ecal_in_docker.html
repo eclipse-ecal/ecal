@@ -870,24 +870,23 @@ It will contain the Hello World Sample from the <a class="reference internal" hr
 </li>
 <li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/CMakeLists.txt</span></code></p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
-<span class="linenos"> 2</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 7</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">12</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">13</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">16</span>
-<span class="linenos">17</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">19</span><span class="p">)</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
+<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
+<span class="linenos">12</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
+<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
+<span class="linenos">18</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -953,24 +952,23 @@ sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> 
 </li>
 <li><p>Create file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/CMakeLists.txt</span></code></p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
-<span class="linenos"> 2</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_FIND_PACKAGE_PREFER_CONFIG</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 7</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">12</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">13</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">16</span>
-<span class="linenos">17</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">19</span><span class="p">)</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
+<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
+<span class="linenos">12</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
+<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
+<span class="linenos">18</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
