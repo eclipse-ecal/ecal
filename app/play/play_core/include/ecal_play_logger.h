@@ -50,8 +50,8 @@ private:
     static const int MAXIMUM_ROTATING_FILES = 5;
     static const int FIVE_MEGABYTES = 5 * 1024 * 1024;
 
-    auto ecal_log_dir = eCAL::Util::GeteCALLogDir();
-    std::string log_filename = ecal_log_dir + EcalUtils::Filesystem::NativeSeparator() + EcalPlayGlobals::ECAL_PLAY_NAME + ".log";
+    const auto ecal_log_dir = eCAL::Util::GeteCALLogDir();
+    const std::string log_filename = ecal_log_dir + EcalUtils::Filesystem::NativeSeparator() + EcalPlayGlobals::ECAL_PLAY_NAME + ".log";
 
     // create console logger and rotating file logger with maximum size 5MB and maximum 5 rotating files
     try

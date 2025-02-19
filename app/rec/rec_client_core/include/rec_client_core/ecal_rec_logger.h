@@ -32,7 +32,6 @@
 
 #include <ecal/ecal.h>
 #include <ecal_utils/filesystem.h>
-#include <ecal_utils/string.h>
 
 namespace eCAL
 {
@@ -54,8 +53,8 @@ namespace eCAL
         static const int MAXIMUM_ROTATING_FILES = 5;
         static const int FIVE_MEGABYTES = 5 * 1024 * 1024;
 
-        auto ecal_log_dir = eCAL::Util::GeteCALLogDir();
-        std::string log_filename = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), std::vector<std::string>{ecal_log_dir, ECAL_REC_NAME, ".log"});
+        const auto ecal_log_dir = eCAL::Util::GeteCALLogDir();
+        const std::string log_filename = ecal_log_dir + EcalUtils::Filesystem::NativeSeparator() + ECAL_REC_NAME + ".log";
 
         // create console logger and rotating file logger with maximum size 5MB and maximum 5 rotating files
         try
