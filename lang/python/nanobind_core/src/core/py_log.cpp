@@ -28,6 +28,7 @@
 #include <optional>
 
 #include <nanobind/stl/optional.h>
+#include <nanobind/stl/list.h>
 #include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
@@ -37,9 +38,9 @@ void AddLog(nanobind::module_& module)
 {
   module.def("log", &Log, "Log a message", nb::arg("level"), nb::arg("message"));
   
-  module.def("get_logging", []() -> std::optional<SLogging> {
+  module.def("get_logging", []() -> std::optional<std::list<SLogMessage>> {
     SLogging log_output;
-    if (GetLogging(log_output)) return log_output;
+    if (GetLogging(log_output)) return log_output.log_messages;
     return std::nullopt;
     }, "Get logging as Logging | None");
 }
