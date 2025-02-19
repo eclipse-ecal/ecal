@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@
 #include <rec_client_core/ecal_rec_defs.h>
 
 #include <ecal/ecal.h>
+#include <ecal_utils/filesystem.h>
+#include <ecal_utils/string.h>
 
 namespace eCAL
 {
@@ -52,8 +54,8 @@ namespace eCAL
         static const int MAXIMUM_ROTATING_FILES = 5;
         static const int FIVE_MEGABYTES = 5 * 1024 * 1024;
 
-        auto ecal_data_path = eCAL::Util::GeteCALLogDir();
-        std::string log_filename = ecal_data_path + ECAL_REC_NAME + ".log";
+        auto ecal_log_dir = eCAL::Util::GeteCALLogDir();
+        std::string log_filename = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), std::vector<std::string>{ecal_log_dir, ECAL_REC_NAME, ".log"});
 
         // create console logger and rotating file logger with maximum size 5MB and maximum 5 rotating files
         try

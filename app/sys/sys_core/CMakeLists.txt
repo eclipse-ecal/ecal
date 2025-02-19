@@ -96,6 +96,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::app_pb
   EcalParser
   eCAL::sys_client_core
+  eCAL::ecal-utils
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
