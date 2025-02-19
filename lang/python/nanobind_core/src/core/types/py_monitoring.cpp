@@ -174,7 +174,7 @@
 //      uint32_t                 version{0};                      //<! client protocol version
 //    };
 //
-//    struct SMonitoring                                          //<! eCAL Monitoring struct
+//    struct                                            //<! eCAL Monitoring struct
 //    {
 //      std::vector<SProcessMon>  processes;                      //<! process info
 //      std::vector<STopicMon>    publisher;                      //<! publisher info vector
