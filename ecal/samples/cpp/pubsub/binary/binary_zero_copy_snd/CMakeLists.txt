@@ -21,7 +21,6 @@ cmake_minimum_required(VERSION 3.10)
 project(binary_zero_copy_snd)
 
 # set project properties
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 set(binary_zero_copy_snd_src src/binary_zero_copy_snd.cpp)
 
 # find packages

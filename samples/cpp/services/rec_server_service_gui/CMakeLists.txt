@@ -23,7 +23,6 @@ if(POLICY CMP0087)
     cmake_policy(SET CMP0087 NEW)
 endif()
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
 project(rec_server_service_gui)
 
