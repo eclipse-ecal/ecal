@@ -249,8 +249,11 @@ extern "C"
 
   ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_)
   {
-    Free_STopicId(topic_id_);
-    std::free(reinterpret_cast<void*>(topic_id_));
+    if (topic_id_ != NULL)
+    {
+      Free_STopicId(topic_id_);
+      std::free(reinterpret_cast<void*>(topic_id_));
+    }
   }
 
   ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_)
@@ -263,8 +266,11 @@ extern "C"
 
   ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_)
   {
-    Free_SDataTypeInformation(data_type_information_);
-    std::free(reinterpret_cast<void*>(data_type_information_));
+    if (data_type_information_ != NULL)
+    {
+      Free_SDataTypeInformation(data_type_information_);
+      std::free(reinterpret_cast<void*>(data_type_information_));
+    }
   }
 
   ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration()

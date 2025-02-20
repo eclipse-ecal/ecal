@@ -40,10 +40,6 @@ int main()
 
   publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL);
 
-  char* topic_name;
-  topic_name = eCAL_Publisher_GetTopicName(publisher);
-  free(topic_name);
-
   // send updates
   while(eCAL_Ok())
   {

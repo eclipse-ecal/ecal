@@ -35,134 +35,90 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  /**
-   * @brief Create a client. 
-   *
-   * @param service_name_  Service name. 
-   *
-   * @return  Handle to created client or NULL if failed.
-  **/
-  ECALC_API ECAL_HANDLE eCAL_Client_Create(const char* service_name_);
+  typedef struct eCAL_ServiceClient eCAL_ServiceClient;
+  typedef struct eCAL_ClientInstance eCAL_ClientInstance;
 
-  /**
-   * @brief Destroy a client. 
-   *
-   * @param handle_  Client handle. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_Destroy(ECAL_HANDLE handle_);
+  typedef void (*eCAL_ClientEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SClientEventCallbackData*);
+  typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*);
 
-  /**
-   * @brief Change the host name filter for that client instance
-   *
-   * @param handle_     Client handle.
-   * @param host_name_  Host name filter (empty == all hosts)
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_SetHostName(ECAL_HANDLE handle_, const char* host_name_);
+  enum eCAL_eClientEvent
+  {
+    eCAL_eClientEvent_none,
+    eCAL_eClientEvent_connected,
+    eCAL_eClientEvent_disconnected,
+    eCAL_eClientEvent_timeout
+  };
 
-  /**
-   * @brief Call a method of this service (none blocking variant with callback). 
-   *
-   * @param handle_       Client handle. 
-   * @param method_name_  Method name.
-   * @param request_      Request message buffer. 
-   * @param request_len_  Request message length. 
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_Call(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
+  enum eCAL_eCallState
+  {
+    eCAL_eCallState_none,
+    eCAL_eCallState_executed,
+    eCAL_eCallState_timeouted,
+    eCAL_eCallState_failed
+  };
 
-  /**
-   * @brief Call a method of this service (blocking variant). 
-   *
-   * @param       handle_            Client handle. 
-   * @param       method_name_       Method name.
-   * @param       request_           Request message buffer. 
-   * @param       request_len_       Request message length. 
-   * @param       timeout_           Maximum time before operation returns (in milliseconds, -1 means infinite).
-   * @param [out] service_response_  Service response struct with additional infos like call state and
-   *                                 error message.
-   * @param [out] response_          Pointer to the allocated buffer for the response message.
-   *                                 In case of more then one connected server, only the reponse of the first
-   *                                 answering server is returned (use callback variant to get all responses).
-   * @param       response_len_      Response message buffer length or ECAL_ALLOCATE_4ME if
-   *                                 eCAL should allocate the buffer for you (see eCAL_FreeMem). 
-   *
-   * @return  Size of response buffer if succeeded, otherwise zero.
-  **/
-  ECALC_API int eCAL_Client_Call_Wait(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_, struct SServiceResponseC* service_response_, void* response_, int response_len_);
+  struct eCAL_SServiceId
+  {
+    struct eCAL_SEntityId service_id;
+    const char* service_name;
+  };
 
-  /**
-   * @brief Call a method of this service (asynchronously with callback).
-   *
-   * @param handle_       Client handle.
-   * @param method_name_  Method name.
-   * @param request_      Request message buffer.
-   * @param request_len_  Request message length.
-   * @param timeout_      Maximum time before operation returns (in milliseconds, -1 means infinite).
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_Call_Async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
+  struct eCAL_SClientEventCallbackData
+  {
+    eCAL_eClientEvent type;
+    long long time;
+  };
 
- /**
-   * @brief Add server response callback. 
-   * @since eCAL 5.10.0
-   *
-   * @param handle_    Client handle. 
-   * @param callback_  Callback function for server response.  
-   * @param par_       User defined context that will be forwarded to the callback function.  
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_AddResponseCallback(ECAL_HANDLE handle_, ResponseCallbackCT callback_, void* par_);
+  struct eCAL_SServiceMethodInformation
+  {
+    const char* method_name;
+    struct eCAL_SDataTypeInformation request_type;
+    struct eCAL_SDataTypeInformation response_type;
+  };
 
-  /**
-   * @brief Remove server response callback. 
-   *
-   * @param handle_  Client handle. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Client_RemResponseCallback(ECAL_HANDLE handle_);
+  struct eCAL_SServiceResponse
+  {
+    eCAL_eCallState call_state;
+    struct eCAL_SServiceId server_id;
+    struct eCAL_SServiceMethodInformation service_method_information;
+    int ret_state;
+    const void* response;
+    size_t response_length;
+    const char* error_msg;
+  };
 
-  /**
-   * @brief Add client event callback function.
-   *
-   * @param handle_    Client handle.
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
-   *
-   * @return  True if succeeded, false if not.
-  **/
-  ECALC_API int eCAL_Client_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Client_Event type_, ClientEventCallbackCT callback_, void* par_);
+  struct eCAL_SServiceResponseResult
+  {
+    int result;
+    eCAL_SServiceResponse service_response;
+  };
+  
 
-  /**
-   * @brief Remove client event callback function.
-   *
-   * @param handle_  Client handle.
-   * @param type_    The event type to remove.
-   *
-   * @return  True if succeeded, false if not.
-  **/
-  ECALC_API int eCAL_Client_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Client_Event type_);
+  ECALC_API eCAL_ServiceClient* eCAL_ServiceClient_New(const char* service_name_, const struct eCAL_SServiceMethodInformation* method_information_set_, size_t method_information_set_length_, eCAL_ClientEventCallbackT event_callback_);
+  ECALC_API void eCAL_ServiceClient_Delete(eCAL_ServiceClient* service_client_);
 
-  /**
-   * @brief Retrieve the service name.
-   *
-   * @param       handle_   Server handle.
-   * @param [out] buf_      Pointer to store the server service string.
-   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   *
-   * @return  Description buffer length or zero if failed.
-  **/
-  ECALC_API int eCAL_Client_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+  ECALC_API eCAL_ClientInstance** eCAL_ServiceClient_GetClientInstances(eCAL_ServiceClient* service_client_);
+  ECALC_API int eCAL_ServiceClient_CallWithResponse(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, struct eCAL_SServiceResponse** service_response_vec_, size_t* service_response_vec_length_, int timeout_ms_);
+  ECALC_API int eCAL_ServiceClient_CallWithCallback(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, int timeout_ms_);
+  ECALC_API int eCAL_ServiceClient_CallWithCallbackAsync(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_);
+
+  ECALC_API const char* eCAL_ServiceClient_GetServiceName(eCAL_ServiceClient* service_client_);
+
+  ECALC_API struct eCAL_SServiceId* eCAL_ServiceClient_GetServiceId(eCAL_ServiceClient* service_client_);
+  ECALC_API void eCAL_SServiceId_Free(struct eCAL_SServiceId* service_id_);
+  
+  ECALC_API int eCAL_ServiceClient_IsConnected(eCAL_ServiceClient* service_client_);
+
+  ECALC_API void eCAL_ClientInstance_Delete(eCAL_ClientInstance* client_instance_);
+  ECALC_API void eCAL_ClientInstances_Delete(eCAL_ClientInstance** client_instances_);
+  
+  ECALC_API struct eCAL_SServiceResponseResult* eCAL_ClientInstance_CallWithResponse(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, int timeout_ms_);
+  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, int timeout_ms_);
+  ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_);
+
+  ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_);
+  ECALC_API struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_);
+  ECALC_API void eCAL_SEntityId_Free(struct eCAL_SEntityId* entity_id_);
 
 #ifdef __cplusplus
 }

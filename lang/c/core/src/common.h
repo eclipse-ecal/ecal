@@ -28,6 +28,9 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <ecal/ecal.h>
+#include <ecal_c/types.h>
+
 int CopyBuffer(void* target_, int target_len_, const std::string& source_s_);
 
 namespace
@@ -85,13 +88,25 @@ namespace
     std::free(const_cast<void*>(reinterpret_cast<const void*>(data_type_information_->name)));
     std::free(const_cast<void*>(reinterpret_cast<const void*>(data_type_information_->encoding)));
     std::free(const_cast<void*>(reinterpret_cast<const void*>(data_type_information_->descriptor)));
+    std::memset(data_type_information_, 0, sizeof(struct eCAL_SDataTypeInformation));
+  }
+
+  void Convert_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_)
+  {
+    entity_id_c_->entity_id = entity_id_.entity_id;
+    entity_id_c_->process_id = entity_id_.process_id;
+    entity_id_c_->host_name = Clone_CString(entity_id_.host_name.c_str());
+  }
+
+  void Free_SEntityId(struct eCAL_SEntityId* entity_id_)
+  {
+    std::free(const_cast<void*>(reinterpret_cast<const void*>(entity_id_->host_name)));
+    std::memset(entity_id_, 0, sizeof(eCAL_SEntityId));
   }
 
   void Convert_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_)
   {
-    topic_id_c_->topic_id.entity_id = topic_id_.topic_id.entity_id;
-    topic_id_c_->topic_id.process_id = topic_id_.topic_id.process_id;
-    topic_id_c_->topic_id.host_name = Clone_CString(topic_id_.topic_id.host_name.c_str());
+    Convert_SEntityId(&topic_id_c_->topic_id, topic_id_.topic_id);
     topic_id_c_->topic_name = Clone_CString(topic_id_.topic_name.c_str());
   }
 
@@ -105,7 +120,8 @@ namespace
 
   void Free_STopicId(struct eCAL_STopicId* topic_id_)
   {
-    std::free(const_cast<void*>(reinterpret_cast<const void*>(topic_id_->topic_id.host_name)));
+    Free_SEntityId(&topic_id_->topic_id);
     std::free(const_cast<void*>(reinterpret_cast<const void*>(topic_id_->topic_name)));
+    std::memset(topic_id_, 0, sizeof(struct eCAL_STopicId));
   }
 }

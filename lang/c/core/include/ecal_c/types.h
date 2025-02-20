@@ -36,7 +36,6 @@ struct eCAL_SDataTypeInformation
   size_t descriptor_len;
 };
 
-
 typedef uint64_t eCAL_EntityIdT;
 
 struct eCAL_SEntityId

@@ -115,7 +115,7 @@ extern "C"
 
   ECALC_API size_t eCAL_Publisher_GetSubscriberCount(eCAL_Publisher* publisher_);
 
-  ECALC_API char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
+  ECALC_API const char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
 
   ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
   ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
