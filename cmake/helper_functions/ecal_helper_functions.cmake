@@ -67,3 +67,11 @@ macro(ecal_restore_warning_level)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
   endif()
 endmacro()
+
+macro(ecal_variable_push var_name)
+  list(APPEND ecal_${var_name}_old "${${var_name}}")
+endmacro()
+
+macro(ecal_variable_pop var_name)
+  list(POP_BACK ecal_${var_name}_old "${var_name}")
+endmacro()
