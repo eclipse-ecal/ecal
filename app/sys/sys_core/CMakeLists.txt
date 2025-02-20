@@ -93,6 +93,7 @@ target_link_libraries(${PROJECT_NAME}
   eCAL::sys_client_core
   eCAL::core_pb
   eCAL::app_pb
+  eCAL::ecal-utils
   PRIVATE
   Threads::Threads
   tinyxml2::tinyxml2
