@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::ProtobufDeserializer<T>>;
+    using CSubscriber = CMessageSubscriber<T, eCAL::internal::ProtobufDeserializer<T>>;
 
     /** @example person_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .

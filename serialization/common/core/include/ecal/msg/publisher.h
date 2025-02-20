@@ -37,35 +37,55 @@
 namespace eCAL
 {
   /**
-   * @brief eCAL abstract message publisher class.
+   * @brief eCAL google::protobuf publisher class.
    *
-   * Abstract publisher template class for messages. For details see documentation of CPublisher class.
-   * 
+   * Publisher template  class for google::protobuf messages. For details see documentation of CPublisher class.
+   *
   **/
-  template <typename T>
-  class CMsgPublisher : public CPublisher
+  template <typename T, typename Serializer>
+  class CMsgPublisher
   {
+    template<typename T, typename Serializer>
+    class CPayload : public eCAL::CPayloadWriter
+    {
+    public:
+      explicit CPayload(const typename T& message_, const Serializer& serializer_) :
+        message(message_),
+        serializer(serializer_)
+      {};
+
+      ~CPayload() override = default;
+
+      CPayload(const CPayload&) = default;
+      CPayload(CPayload&&) noexcept = default;
+
+      CPayload& operator=(const CPayload&) = delete;
+      CPayload& operator=(CPayload&&) noexcept = delete;
+
+      bool WriteFull(void* buf_, size_t len_) override
+      {
+        return serializer.Serialize(message, buf_, len_);
+      }
+
+      size_t GetSize() override {
+        return serializer.MessageSize(message);
+      };
+
+    private:
+      const typename T& message;
+      const typename Serializer& serializer;
+    };
+
   public:
     /**
      * @brief  Constructor.
      *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param config_          Optional configuration parameters.
+     * @param topic_name_  Unique topic name.
+     * @param config_      Optional configuration parameters.
     **/
-    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, config_)
-    {
-    }
-
-    /**
-     * @brief  Constructor.
-     *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param event_callback_  The publisher event callback funtion.
-     * @param config_          Optional configuration parameters.
-    **/
-    explicit CMsgPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration()) : CPublisher(topic_name_, data_type_info_, event_callback_, config_)
+    explicit CMsgPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
+      : m_serializer{}
+      , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), config_)
     {
     }
 
@@ -75,69 +95,82 @@ namespace eCAL
     CMsgPublisher(const CMsgPublisher&) = delete;
 
     /**
-     * @brief  Copy Constructor is not available.
-    **/
-    CMsgPublisher& operator=(const CMsgPublisher&) = delete;
-
-    /**
      * @brief  Move Constructor
     **/
     CMsgPublisher(CMsgPublisher&&) = default;
+
+    /**
+     * @brief  Destructor.
+    **/
+    ~CMsgPublisher() = default;
+
+    /**
+     * @brief  Copy assignment is not available.
+    **/
+    CMsgPublisher& operator=(const CMsgPublisher&) = delete;
 
     /**
      * @brief  Move assignment
     **/
     CMsgPublisher& operator=(CMsgPublisher&&) = default;
 
-    ~CMsgPublisher() override = default;
-
     /**
-     * @brief  Send serialized message. 
+     * @brief Send a serialized message to all subscribers.
      *
-     * @param msg_   The message object. 
-     * @param time_  Optional time stamp. 
+     * @param msg_                     The message object.
+     * @param time_                    Time stamp.
      *
-     * @return  True if succeeded, false if not.
+     * @return  Number of bytes sent.
     **/
-    bool Send(const T& msg_, long long time_ = DEFAULT_TIME_ARGUMENT)
+    size_t Send(const T& msg_, long long time_ = CPublisher::DEFAULT_TIME_ARGUMENT)
     {
-      // this is an optimization ...
-      // if there is no subscription we do not waste time for
-      // serialization, but we send an empty payload
-      // to still do some statistics like message clock
-        // counting and frequency calculation for the monitoring layer
-      if (CPublisher::GetSubscriberCount() == 0)
-      {
-        return(CPublisher::Send(nullptr, 0, time_));
-      }
-
-      // if we have a subscription allocate memory for the
-      // binary stream, serialize the message into the
-      // buffer and finally send it with a binary publisher
-      size_t size = GetSize(msg_);
-      if (size > 0)
-      {
-        m_buffer.resize(size);
-        if (Serialize(msg_, m_buffer.data(), m_buffer.size()))
-        {
-          return(CPublisher::Send(m_buffer.data(), size, time_));
-        }
-      }
-      else
-      {
-        // send a zero payload length message to trigger the subscriber side
-        return(CPublisher::Send(nullptr, 0, time_));
-      }
-      return false;
+      CPayload<T, Serializer> payload{ msg_, m_serializer };
+      return m_publisher.Send(payload, time_);
     }
 
-  protected:
-    // We cannot make it pure virtual, as it would break a bunch of implementations, who are not (yet) implementing this function
-    virtual SDataTypeInformation GetDataTypeInformation() const { return SDataTypeInformation{}; }
-  private:
-    virtual size_t GetSize(const T& msg_) const = 0;
-    virtual bool Serialize(const T& msg_, char* buffer_, size_t size_) const = 0;
+    /**
+     * @brief Query the number of subscribers.
+     *
+     * @return  Number of subscribers.
+    **/
+    size_t GetSubscriberCount() const
+    {
+      return m_publisher.GetSubscriberCount();
+    };
 
-    std::vector<char> m_buffer;
+    /**
+     * @brief Retrieve the topic name.
+     *
+     * @return  The topic name.
+    **/
+    std::string GetTopicName() const
+    {
+      return m_publisher.GetTopicName();
+    };
+
+    /**
+     * @brief Retrieve the topic id.
+     *
+     * @return  The topic id.
+    **/
+    STopicId GetTopicId() const
+    {
+      return m_publisher.GetTopicId();
+    };
+
+    /**
+     * @brief Gets description of the connected topic.
+     *
+     * @return  The topic information.
+    **/
+    SDataTypeInformation GetDataTypeInformation() const
+    {
+      return m_publisher.GetDataTypeInformation();
+    };
+
+
+  private:
+    Serializer         m_serializer;
+    CPublisher         m_publisher;
   };
 }
