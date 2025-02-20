@@ -23,7 +23,11 @@ if(MSVC)
 endif()
 
 ecal_disable_all_warnings()
+# TODO: Remove this once protobuf has been updated!
+ecal_variable_push(CMAKE_POLICY_VERSION_MINIMUM)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/protobuf/cmake thirdparty/protobuf SYSTEM)
+ecal_variable_pop(CMAKE_POLICY_VERSION_MINIMUM)
 ecal_restore_warning_level()
 
 if (NOT TARGET protobuf::libprotobuf)
