@@ -140,13 +140,6 @@ jobs:
     - name: Build Release
       run: cmake --build . --parallel -- -k 0
       working-directory: ${{ runner.workspace }}/_build
-    
-    - name: Create config path and copy ecal.yaml
-      run: |
-           sudo mkdir /etc/ecal
-           sudo cp "./ecal/core/cfg/ecal.yaml" /etc/ecal
-      working-directory: ${{ runner.workspace }}/_build
-      shell: bash
 
     - name: Run Tests
       run: ctest -V
