@@ -28,22 +28,12 @@
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
 
-#include <ecal_c/callback.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
   typedef struct eCAL_Publisher eCAL_Publisher;
   typedef struct eCAL_PayloadWriter eCAL_PayloadWriter;
-
-  struct eCAL_SDataTypeInformation
-  {
-    const char* name;
-    const char* encoding;
-    const char* descriptor;
-    size_t descriptor_len;
-  };
 
   enum eCAL_TransportLayer_eType
   {
@@ -90,25 +80,19 @@ extern "C"
     size_t layer_priority_remote_length;
   };
 
-
-  typedef uint64_t eCAL_EntityIdT;
-
-  struct eCAL_SEntityId
+  enum eCAL_ePublisherEvent
   {
-    eCAL_EntityIdT entity_id;
-    int32_t process_id;
-    const char* host_name;
-  };
-
-  struct eCAL_STopicId
-  {
-    struct eCAL_SEntityId topic_id;
-    const char* topic_name;
+    eCAL_ePublisherEvent_none,
+    eCAL_ePublisherEvent_connected,
+    eCAL_ePublisherEvent_disconnected,
+    eCAL_ePublisherEvent_dropped
   };
 
   struct eCAL_SPubEventCallbackData
   {
-    int __placeholder;
+    eCAL_ePublisherEvent event_type;  
+    long long event_time;
+    struct eCAL_SDataTypeInformation subscriber_datatype;
   };
 
   typedef void (*eCAL_PubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SPubEventCallbackData*);
@@ -120,7 +104,6 @@ extern "C"
     int (*WriteModified)(void*, size_t);
     size_t (*GetSize)();
   };
-
 
   ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_);
   ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback, const struct eCAL_Publisher_Configuration* publisher_configuration_);
@@ -135,14 +118,13 @@ extern "C"
   ECALC_API char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
 
   ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
+  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
+
 
   ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_);
-
-
-  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
   ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
 
-  ECALC_API struct eCAL_Publisher_Configuration eCAL_GetPublisherConfiguration();
+  ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
   ECALC_API void eCAL_Publisher_Configuration_Free(eCAL_Publisher_Configuration* publisher_configuration_);
 
 #ifdef __cplusplus

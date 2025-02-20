@@ -27,6 +27,30 @@
 
 #include <stdint.h>
 
+
+struct eCAL_SDataTypeInformation
+{
+  const char* name;
+  const char* encoding;
+  const void* descriptor;
+  size_t descriptor_len;
+};
+
+
+typedef uint64_t eCAL_EntityIdT;
+
+struct eCAL_SEntityId
+{
+  eCAL_EntityIdT entity_id;
+  int32_t process_id;
+  const char* host_name;
+};
+
+struct eCAL_STopicId
+{
+  struct eCAL_SEntityId topic_id;
+  const char* topic_name;
+};
 /**
  * @brief Flag to indicate eCAL to allocate/deallocate memory.
 **/
