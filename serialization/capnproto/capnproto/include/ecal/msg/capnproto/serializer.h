@@ -1,0 +1,92 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+/**
+ * @file   publisher.h
+ * @brief  eCAL publisher interface for google::protobuf message definitions
+**/
+
+#pragma once
+
+#include <cstddef>
+#include <ecal/msg/capnproto/helper.h>
+
+// capnp includes
+#ifdef _MSC_VER
+#pragma warning(push, 0)
+#endif /*_MSC_VER*/
+#include <capnp/serialize.h>
+#include <capnp/message.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif /*_MSC_VER*/
+
+namespace eCAL
+{
+  namespace capnproto
+  {
+    namespace internal
+    {
+      template <typename T>
+      class Serializer
+      {
+      public:
+        static SDataTypeInformation GetDataTypeInformation()
+        {
+          SDataTypeInformation topic_info;
+          topic_info.encoding = eCAL::capnproto::EncodingAsString();
+          topic_info.name = eCAL::capnproto::TypeAsString<T>();
+          topic_info.descriptor = eCAL::capnproto::SchemaAsString<T>();
+          return topic_info;
+        }
+
+        size_t MessageSize(const capnp::MallocMessageBuilder& message_builder_) const
+        {
+          return(capnp::computeSerializedSizeInWords(const_cast<capnp::MallocMessageBuilder&>(message_builder_)) * sizeof(capnp::word));
+        }
+
+        bool Serialize(const capnp::MallocMessageBuilder& message_builder_, void* buffer_, size_t size_) const
+        {
+          kj::Array<capnp::word> words = capnp::messageToFlatArray(const_cast<capnp::MallocMessageBuilder&>(message_builder_));
+          kj::ArrayPtr<kj::byte> bytes = words.asBytes();
+          if (size_ < bytes.size()) return(false);
+          memcpy(buffer_, bytes.begin(), bytes.size());
+          return(true);
+        }
+
+        bool Deserialize(typename T::Reader& msg_, const void* buffer_, size_t size_)
+        {
+          // TODO: It seems that the MessageBuilder needs to persist.
+          // We will probably have to lock this function?
+          // This really needs to be analyzed!!!
+          kj::ArrayPtr<const capnp::word> words = kj::arrayPtr(reinterpret_cast<const capnp::word*>(buffer_), size_ / sizeof(capnp::word));
+          kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
+
+          typename T::Builder root_builder = typename T::Builder(m_msg_builder.getRoot<T>());
+          msg_ = root_builder.asReader();
+
+          return(rest.size() == 0);
+        }
+
+      private:
+        capnp::MallocMessageBuilder m_msg_builder;
+      };
+    }
+  }
+}
