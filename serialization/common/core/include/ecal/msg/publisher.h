@@ -43,7 +43,7 @@ namespace eCAL
    *
   **/
   template <typename T, typename Serializer>
-  class CMsgPublisher
+  class CMessagePublisher
   {
     template<typename T, typename Serializer>
     class CPayload : public eCAL::CPayloadWriter
@@ -83,36 +83,50 @@ namespace eCAL
      * @param topic_name_  Unique topic name.
      * @param config_      Optional configuration parameters.
     **/
-    explicit CMsgPublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
+    explicit CMessagePublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
       : m_serializer{}
       , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), config_)
     {
     }
 
     /**
+     * @brief Constructor.
+     *
+     * @param topic_name_      Unique topic name.
+     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
+     * @param event_callback_  The publisher event callback funtion.
+     * @param config_          Optional configuration parameters.
+    **/
+    explicit CMessagePublisher(const std::string& topic_name_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
+      : m_serializer{}
+      , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), event_callback_, config_)
+    {
+    }
+
+    /**
      * @brief  Copy Constructor is not available.
     **/
-    CMsgPublisher(const CMsgPublisher&) = delete;
+    CMessagePublisher(const CMessagePublisher&) = delete;
 
     /**
      * @brief  Move Constructor
     **/
-    CMsgPublisher(CMsgPublisher&&) = default;
+    CMessagePublisher(CMessagePublisher&&) = default;
 
     /**
      * @brief  Destructor.
     **/
-    ~CMsgPublisher() = default;
+    ~CMessagePublisher() = default;
 
     /**
      * @brief  Copy assignment is not available.
     **/
-    CMsgPublisher& operator=(const CMsgPublisher&) = delete;
+    CMessagePublisher& operator=(const CMessagePublisher&) = delete;
 
     /**
      * @brief  Move assignment
     **/
-    CMsgPublisher& operator=(CMsgPublisher&&) = default;
+    CMessagePublisher& operator=(CMessagePublisher&&) = default;
 
     /**
      * @brief Send a serialized message to all subscribers.

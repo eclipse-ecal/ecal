@@ -47,7 +47,7 @@ namespace eCAL
           return topic_info;
         }
 
-        static bool MessageSize(const T& msg_)
+        static size_t MessageSize(const T& msg_)
         {
 #if GOOGLE_PROTOBUF_VERSION >= 3001000
           size_t size = static_cast<size_t>(msg_.ByteSizeLong());

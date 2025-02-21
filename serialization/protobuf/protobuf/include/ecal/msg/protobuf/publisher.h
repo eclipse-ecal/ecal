@@ -24,25 +24,8 @@
 
 #pragma once
 
-#include <cstddef>
-#include <ecal/deprecate.h>
-#include <ecal/msg/protobuf/ecal_proto_hlp.h>
 #include <ecal/msg/publisher.h>
 #include <ecal/msg/protobuf/serializer.h>
-
-// protobuf includes
-#ifdef _MSC_VER
-#pragma warning(push, 0) // disable proto warnings
-#endif
-#include <google/protobuf/descriptor.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-// stl includes
-#include <map>
-#include <memory>
-#include <string>
 
 namespace eCAL
 {
@@ -51,11 +34,11 @@ namespace eCAL
     /**
      * @brief eCAL google::protobuf publisher class.
      *
-     * Publisher template  class for google::protobuf messages. For details see documentation of CPublisher class.
+     * Publisher template class for google::protobuf messages. For details see documentation of CPublisher class.
      *
     **/
     template <typename T>
-    using CPublisher = CMsgPublisher<T, internal::Serializer<T>>;
+    using CPublisher = CMessagePublisher<T, internal::Serializer<T>>;
   }
   /** @example person_snd.cpp
    * This is an example how to use eCAL::CPublisher to send google::protobuf data with eCAL. To receive the data, see @ref person_rec.cpp .
