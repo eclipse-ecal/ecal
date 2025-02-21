@@ -17,6 +17,13 @@ jobs:
       QT_QPA_PLATFORM: offscreen
 
     steps:
+
+      # TODO: Remove once CMake 4 is included in the runner image
+      # TODO: Waiting for 4.0.0-rc1 to be added...
+    - uses: lukka/get-cmake@5f6e04f5267c8133f1273bf2103583fc72c46b17 #3.31.5
+      with:
+        cmakeVersion: 4.0.0-rc1
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
