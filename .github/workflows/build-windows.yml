@@ -19,10 +19,9 @@ jobs:
     steps:
 
       # TODO: Remove once CMake 4 is included in the runner image
-      # TODO: Waiting for 4.0.0-rc1 to be added...
-    - uses: lukka/get-cmake@5f6e04f5267c8133f1273bf2103583fc72c46b17 #3.31.5
+    - uses: lukka/get-cmake@28983e0d3955dba2bb0a6810caae0c6cf268ec0c # 4.0.0
       with:
-        cmakeVersion: 4.0.0-rc1
+        cmakeVersion: 4.0.0
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
