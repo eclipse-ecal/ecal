@@ -22,8 +22,7 @@ jobs:
     steps:
 
       # TODO: Remove once CMake 4 is included in the runner image
-      # TODO: Waiting for 4.0.0-rc1 to be added...
-    - uses: lukka/get-cmake@5f6e04f5267c8133f1273bf2103583fc72c46b17 #3.31.5
+    - uses: lukka/get-cmake@b0c3ffaff0d0aa44027f5d61fef6302c43b23fe4 # 4.0.0-rc1
       with:
         cmakeVersion: 4.0.0-rc1
 
