@@ -32,31 +32,66 @@
 #include <monster/monster_generated.h>
 
 
-void OnMonster(const eCAL::STopicId& topic_id_, const flatbuffers::FlatBufferBuilder& msg_, long long time_, long long /*clock_*/)
+void OnFlatMonster(const eCAL::STopicId& topic_id_, const Game::Sample::Monster* const & monster_, long long time_, long long /*clock_*/)
 {
-  // create monster
-  auto monster(Game::Sample::GetMonster(msg_.GetBufferPointer()));
-
   // print content
   std::cout << "topic name        : " << topic_id_.topic_name      << std::endl;
   std::cout << "time              : " << time_                     << std::endl;
   std::cout                                                        << std::endl;
-  std::cout << "monster pos x     : " << monster->pos()->x()       << std::endl;
-  std::cout << "monster pos y     : " << monster->pos()->y()       << std::endl;
-  std::cout << "monster pos z     : " << monster->pos()->z()       << std::endl;
-  std::cout << "monster mana      : " << monster->mana()           << std::endl;
-  std::cout << "monster hp        : " << monster->hp()             << std::endl;
-  std::cout << "monster name      : " << monster->name()->c_str()  << std::endl;
+  std::cout << "monster pos x     : " << monster_->pos()->x()       << std::endl;
+  std::cout << "monster pos y     : " << monster_->pos()->y()       << std::endl;
+  std::cout << "monster pos z     : " << monster_->pos()->z()       << std::endl;
+  std::cout << "monster mana      : " << monster_->mana()           << std::endl;
+  std::cout << "monster hp        : " << monster_->hp()             << std::endl;
+  std::cout << "monster name      : " << monster_->name()->c_str()  << std::endl;
 
   std::cout << "monster inventory : ";
-  for(auto iter = monster->inventory()->begin(); iter != monster->inventory()->end(); ++iter)
+  for(auto iter = monster_->inventory()->begin(); iter != monster_->inventory()->end(); ++iter)
   {
     std::cout << static_cast<int>(*iter) << " ";
   }
   std::cout << std::endl;
 
   std::cout << "monster color     : ";
-  switch (monster->color())
+  switch (monster_->color())
+  {
+  case Game::Sample::Color_Red:
+    std::cout << "Red";
+    break;
+  case Game::Sample::Color_Green:
+    std::cout << "Green";
+    break;
+  case Game::Sample::Color_Blue:
+    std::cout << "Blue";
+    break;
+  }
+  std::cout << std::endl;
+
+  std::cout << std::endl;
+}
+
+void OnObjectMonster(const eCAL::STopicId& topic_id_, const Game::Sample::MonsterT* const& monster_, long long time_, long long /*clock_*/)
+{
+  // print content
+  std::cout << "topic name        : " << topic_id_.topic_name << std::endl;
+  std::cout << "time              : " << time_ << std::endl;
+  std::cout << std::endl;
+  std::cout << "monster pos x     : " << monster_->pos->x() << std::endl;
+  std::cout << "monster pos y     : " << monster_->pos->y() << std::endl;
+  std::cout << "monster pos z     : " << monster_->pos->z() << std::endl;
+  std::cout << "monster mana      : " << monster_->mana << std::endl;
+  std::cout << "monster hp        : " << monster_->hp << std::endl;
+  std::cout << "monster name      : " << monster_->name << std::endl;
+
+  std::cout << "monster inventory : ";
+  for (const auto& inventory : monster_->inventory)
+  {
+    std::cout << (int)inventory << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "monster color     : ";
+  switch (monster_->color)
   {
   case Game::Sample::Color_Red:
     std::cout << "Red";
@@ -82,10 +117,15 @@ int main(int argc, char **argv)
   // set process state
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
-  // create a subscriber (topic name "monster")
-  eCAL::flatbuffers::CSubscriber<flatbuffers::FlatBufferBuilder> sub("monster");
+  // There are two different types of Flatbuffer subscribers
+  // One type is a "flat" type, e.g. it uses the API which is backed by raw memory
+  // The other type is an "object" type, where the type is directly mapped to e.g. std::string / std::vector ... types.
 
-  sub.SetReceiveCallback(OnMonster);
+  eCAL::flatbuffers::CFlatSubscriber<Game::Sample::Monster> flat_subscriber("monster");
+  flat_subscriber.SetReceiveCallback(OnFlatMonster);
+
+  eCAL::flatbuffers::CObjectSubscriber<Game::Sample::MonsterT> object_subscriber("monster");
+  object_subscriber.SetReceiveCallback(OnObjectMonster);
 
   while(eCAL::Ok())
   {
