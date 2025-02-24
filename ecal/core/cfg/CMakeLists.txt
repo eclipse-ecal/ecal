@@ -61,9 +61,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${ECAL_CORE_PROJECT_ROOT}/core/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-  eCAL::core
-  eCAL::ecal-utils
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
+    eCAL::core
+    eCAL::ecal-utils
 )
 
 # Select the correct ecal config directory on Linux and Windows
