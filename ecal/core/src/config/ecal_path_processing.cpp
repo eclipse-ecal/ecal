@@ -193,13 +193,13 @@ namespace
     
     Dl_info dl_info;
     if (dladdr((void *)getLibraryPath, &dl_info)) {
-        return dirmanager_.getDirectoryPath(dl_info.dli_fname);
+        return dir_manager_.getDirectoryPath(dl_info.dli_fname);
     }
 
   #else
 
     return "";
-    
+
   #endif
   }
 }
