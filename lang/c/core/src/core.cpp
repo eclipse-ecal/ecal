@@ -29,12 +29,14 @@ extern "C"
 {
   ECALC_API const char* eCAL_GetVersionString()
   {
-    return ECAL_VERSION;
+    static const auto version_string = eCAL::GetVersionString();
+    return version_string.c_str();
   }
 
   ECALC_API const char* eCAL_GetVersionDateString()
   {
-    return ECAL_DATE;
+    static const auto version_date_string = eCAL::GetVersionDateString();
+    return version_date_string.c_str();
   }
 
   ECALC_API eCAL_SVersion eCAL_GetVersion()
@@ -61,10 +63,5 @@ extern "C"
   ECALC_API int eCAL_Ok()
   {
     return static_cast<int>(eCAL::Ok());
-  }
-
-  ECALC_API void eCAL_FreeMem(void* mem_)
-  {
-    free(mem_); // NOLINT(*-owning-memory, *-no-malloc)
   }
 }

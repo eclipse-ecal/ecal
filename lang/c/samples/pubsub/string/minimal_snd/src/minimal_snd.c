@@ -40,6 +40,19 @@ int main()
 
   publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL);
 
+  char stack_buffer[256];
+  size_t stack_buffer_size = sizeof(stack_buffer);
+  const struct eCAL_STopicId* stack_tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, stack_buffer, &stack_buffer_size);
+
+  size_t heap_buffer_size = 0;
+  eCAL_Publisher_GetTopicId_NoMalloc(publisher, NULL, heap_buffer_size);
+  char* heap_buffer = (char*)malloc(heap_buffer_size);
+  const struct eCAL_STopicId* heap_tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, heap_buffer, &heap_buffer_size);
+  free(heap_tid);
+
+  const struct eCAL_STopicId* tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, NULL, NULL);
+  free(tid);
+  
   // send updates
   while(eCAL_Ok())
   {

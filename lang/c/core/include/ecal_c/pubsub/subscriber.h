@@ -55,7 +55,7 @@ extern "C"
 
   struct eCAL_SSubEventCallbackData
   {
-    eCAL_eSubscriberEvent event_type;
+    enum eCAL_eSubscriberEvent event_type;
     long long event_time;
     struct eCAL_SDataTypeInformation publisher_datatype;
   };

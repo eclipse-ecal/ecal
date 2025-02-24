@@ -247,6 +247,37 @@ extern "C"
     return topic_id;
   }
 
+  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_)
+  {
+    const auto topic_id = publisher_->handle->GetTopicId();
+    const auto allocation_size = aligned_size(sizeof(eCAL_STopicId)) + ExtSize_STopicId(topic_id);
+    
+    struct eCAL_STopicId* topic_id_c = NULL;
+    
+    if (buffer_length_ == NULL)
+    {
+      topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(std::malloc(allocation_size));
+      if (topic_id_c != NULL)
+      {
+        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+        Convert_STopicId(topic_id_c, topic_id, &ptr);
+      }
+    }
+    else
+    {
+      if (*buffer_length_ >= allocation_size)
+      {
+        topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(buffer);
+        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+        Convert_STopicId(topic_id_c, topic_id, &ptr);
+      }
+      else
+        *buffer_length_ = allocation_size;
+    }
+
+    return topic_id_c;
+  }
+
   ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_)
   {
     if (topic_id_ != NULL)

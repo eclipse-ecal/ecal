@@ -110,6 +110,44 @@ namespace
     topic_id_c_->topic_name = Clone_CString(topic_id_.topic_name.c_str());
   }
 
+
+  inline size_t aligned_size(size_t size)
+  {
+    return (size + (sizeof(void*) - 1)) & ~(sizeof(void*) - 1);
+  }
+
+  char* Convert_String(const std::string& string_, char** ptr_)
+  {
+    auto* destination_ptr = *ptr_;
+    std::strcpy(destination_ptr, string_.c_str());
+    *ptr_ += aligned_size(string_.size() + 1);
+    return destination_ptr;
+  }
+
+  void Convert_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_, char** ptr_)
+  {
+    entity_id_c_->entity_id = entity_id_.entity_id;
+    entity_id_c_->process_id = entity_id_.process_id;
+    entity_id_c_->host_name = Convert_String(entity_id_.host_name.c_str(), ptr_);
+  }
+
+  void Convert_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_, char** ptr_)
+  {
+    topic_id_c_->topic_name = Convert_String(topic_id_.topic_name, ptr_);
+    Convert_SEntityId(&topic_id_c_->topic_id, topic_id_.topic_id);
+  }
+
+  size_t ExtSize_SEntityId(const eCAL::SEntityId& entity_id_)
+  {
+    return aligned_size(entity_id_.host_name.size() + 1);
+  }
+
+  size_t ExtSize_STopicId(const eCAL::STopicId& topic_id_)
+  {
+    return aligned_size(topic_id_.topic_name.size() + 1) +
+      ExtSize_SEntityId(topic_id_.topic_id);
+  }
+
   void Assign_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_)
   {
     topic_id_c_->topic_id.entity_id = topic_id_.topic_id.entity_id;
@@ -123,5 +161,49 @@ namespace
     Free_SEntityId(&topic_id_->topic_id);
     std::free(const_cast<void*>(reinterpret_cast<const void*>(topic_id_->topic_name)));
     std::memset(topic_id_, 0, sizeof(struct eCAL_STopicId));
+  }
+
+  void Assign_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_)
+  {
+    service_id_c_->service_id.entity_id = service_id_.service_id.entity_id;
+    service_id_c_->service_id.process_id = service_id_.service_id.process_id;
+    service_id_c_->service_id.host_name = service_id_.service_id.host_name.c_str();
+    service_id_c_->service_name = service_id_.service_name.c_str();
+  }
+
+  void Convert_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_)
+  {
+    service_id_c_->service_id.entity_id = service_id_.service_id.entity_id;
+    service_id_c_->service_id.process_id = service_id_.service_id.process_id;
+    service_id_c_->service_id.host_name = Clone_CString(service_id_.service_id.host_name.c_str());
+    service_id_c_->service_name = Clone_CString(service_id_.service_name.c_str());
+  }
+
+  void Free_SServiceId(struct eCAL_SServiceId* service_id_)
+  {
+    std::free(const_cast<char*>(service_id_->service_id.host_name));
+    std::free(const_cast<char*>(service_id_->service_name));
+  }
+
+
+  void Assign_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_)
+  {
+    method_info_c_->method_name = method_info_.method_name.c_str();
+    Assign_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type);
+    Assign_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type);
+  }
+
+  void Convert_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_)
+  {
+    method_info_c_->method_name = Clone_CString(method_info_.method_name.c_str());
+    Convert_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type);
+    Convert_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type);
+  }
+
+  void Convert_SServiceMethodInformation(eCAL::SServiceMethodInformation& method_info_, const struct eCAL_SServiceMethodInformation* method_info_c_)
+  {
+    method_info_.method_name = method_info_c_->method_name;
+    Convert_SDataTypeInformation(method_info_.request_type, &method_info_c_->request_type);
+    Convert_SDataTypeInformation(method_info_.response_type, &method_info_c_->response_type);
   }
 }

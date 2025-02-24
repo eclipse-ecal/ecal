@@ -38,8 +38,7 @@ extern "C"
   typedef struct eCAL_ServiceClient eCAL_ServiceClient;
   typedef struct eCAL_ClientInstance eCAL_ClientInstance;
 
-  typedef void (*eCAL_ClientEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SClientEventCallbackData*);
-  typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*);
+
 
   enum eCAL_eClientEvent
   {
@@ -57,28 +56,15 @@ extern "C"
     eCAL_eCallState_failed
   };
 
-  struct eCAL_SServiceId
-  {
-    struct eCAL_SEntityId service_id;
-    const char* service_name;
-  };
-
   struct eCAL_SClientEventCallbackData
   {
-    eCAL_eClientEvent type;
+    enum eCAL_eClientEvent type;
     long long time;
-  };
-
-  struct eCAL_SServiceMethodInformation
-  {
-    const char* method_name;
-    struct eCAL_SDataTypeInformation request_type;
-    struct eCAL_SDataTypeInformation response_type;
   };
 
   struct eCAL_SServiceResponse
   {
-    eCAL_eCallState call_state;
+    enum eCAL_eCallState call_state;
     struct eCAL_SServiceId server_id;
     struct eCAL_SServiceMethodInformation service_method_information;
     int ret_state;
@@ -90,8 +76,11 @@ extern "C"
   struct eCAL_SServiceResponseResult
   {
     int result;
-    eCAL_SServiceResponse service_response;
+    struct eCAL_SServiceResponse service_response;
   };
+
+  typedef void (*eCAL_ClientEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SClientEventCallbackData*);
+  typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*);
   
 
   ECALC_API eCAL_ServiceClient* eCAL_ServiceClient_New(const char* service_name_, const struct eCAL_SServiceMethodInformation* method_information_set_, size_t method_information_set_length_, eCAL_ClientEventCallbackT event_callback_);
@@ -117,6 +106,7 @@ extern "C"
   ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_);
 
   ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_);
+
   ECALC_API struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_);
   ECALC_API void eCAL_SEntityId_Free(struct eCAL_SEntityId* entity_id_);
 

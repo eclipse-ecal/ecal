@@ -50,6 +50,19 @@ struct eCAL_STopicId
   struct eCAL_SEntityId topic_id;
   const char* topic_name;
 };
+
+struct eCAL_SServiceId
+{
+  struct eCAL_SEntityId service_id;
+  const char* service_name;
+};
+
+struct eCAL_SServiceMethodInformation
+{
+  const char* method_name;
+  struct eCAL_SDataTypeInformation request_type;
+  struct eCAL_SDataTypeInformation response_type;
+};
 /**
  * @brief Flag to indicate eCAL to allocate/deallocate memory.
 **/

@@ -32,28 +32,6 @@
 #if ECAL_CORE_SERVICE
 namespace
 {
-  void Assign_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_)
-  {
-    service_id_c_->service_id.entity_id = service_id_.service_id.entity_id;
-    service_id_c_->service_id.process_id = service_id_.service_id.process_id;
-    service_id_c_->service_id.host_name = service_id_.service_id.host_name.c_str();
-    service_id_c_->service_name = service_id_.service_name.c_str();
-  }
-
-  void Convert_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_)
-  {
-    service_id_c_->service_id.entity_id = service_id_.service_id.entity_id;
-    service_id_c_->service_id.process_id = service_id_.service_id.process_id;
-    service_id_c_->service_id.host_name = Clone_CString(service_id_.service_id.host_name.c_str());
-    service_id_c_->service_name = Clone_CString(service_id_.service_name.c_str());
-  }
-
-  void Free_SServiceId(struct eCAL_SServiceId* service_id_)
-  {
-    std::free(const_cast<char*>(service_id_->service_id.host_name));
-    std::free(const_cast<char*>(service_id_->service_name));
-  }
-
   void Assign_SClientEventCallbackData(struct eCAL_SClientEventCallbackData* client_event_callback_data_c_, const eCAL::SClientEventCallbackData& client_event_callback_data_)
   {
     static const std::map<eCAL::eClientEvent, eCAL_eClientEvent> client_event_map
@@ -66,20 +44,6 @@ namespace
 
     client_event_callback_data_c_->type = client_event_map.at(client_event_callback_data_.type);
     client_event_callback_data_c_->time = client_event_callback_data_.time;
-  }
-
-  void Assign_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_)
-  {
-    method_info_c_->method_name = method_info_.method_name.c_str();
-    Assign_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type);
-    Assign_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type);
-  }
-
-  void Convert_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_)
-  {
-    method_info_c_->method_name = Clone_CString(method_info_.method_name.c_str());
-    Convert_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type);
-    Convert_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type);
   }
 
   void Assign_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, const eCAL::SServiceResponse& service_response_)
