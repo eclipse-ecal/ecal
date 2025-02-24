@@ -244,7 +244,7 @@ namespace eCAL
           return false;
         
         const std::string file_path = buildPath(path_, file_name_);
-                
+        
         return isValidFile(file_path);
       });
 
@@ -435,7 +435,11 @@ namespace eCAL
       // -----------------------------------------------------------
       // precedence 4: library path
       // -----------------------------------------------------------
-      ecal_default_paths.emplace_back(dir_provider_.eCALLibraryDir(dir_manager_));
+      const std::string library_dir = dir_provider_.eCALLibraryDir(dir_manager_);
+      if (!library_dir.empty())
+      {
+        ecal_default_paths.emplace_back(buildPath(library_dir, ECAL_FOLDER_RELATIVE_ETC));
+      }
 
       return ecal_default_paths;
     }
