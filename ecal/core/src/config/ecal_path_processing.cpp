@@ -179,24 +179,28 @@ namespace
   #endif
   }
 
-  std::string getLibraryPath() 
+  std::string getLibraryPath(const eCAL::Util::IDirManager& dir_manager_) 
   {
   #ifdef ECAL_OS_WINDOWS
+    
     HMODULE hModule = NULL;
     char path[MAX_PATH];
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)getLibraryPath, &hModule);
     GetModuleFileName(hModule, path, sizeof(path));
-    std::cout << "Library Path: " << path << "\n";
-    return path;
+    return dir_manager_.getDirectoryPath(path);
+  
   #elif defined(ECAL_OS_LINUX)
+    
     Dl_info dl_info;
     if (dladdr((void *)getLibraryPath, &dl_info)) {
-        std::cout << "Library Path: " << dl_info.dli_fname << "\n";
-        return dl_info.dli_fname;
+        return dirmanager_.getDirectoryPath(dl_info.dli_fname);
     }
-  #endif
+
+  #else
 
     return "";
+    
+  #endif
   }
 }
 
@@ -357,7 +361,7 @@ namespace eCAL
 
     std::string DirProvider::eCALLibraryDir(const Util::IDirManager& dir_manager_) const
     {
-      return getLibraryPath();
+      return getLibraryPath(dir_manager_);
     }
   } // namespace Util
 
