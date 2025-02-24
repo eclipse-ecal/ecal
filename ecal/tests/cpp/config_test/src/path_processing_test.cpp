@@ -58,6 +58,7 @@ class MockDirProvider  : public eCAL::Util::IDirProvider
     MOCK_METHOD(std::string, eCALEnvVar, (const std::string& var_), (const, override));
     MOCK_METHOD(std::string, eCALLocalUserDir, (), (const, override));
     MOCK_METHOD(std::string, eCALDataSystemDir, (const eCAL::Util::IDirManager& dir_manager_), (const, override));
+    MOCK_METHOD(std::string, eCALLibraryDir, (const eCAL::Util::IDirManager& dir_manager_), (const, override));
     MOCK_METHOD(std::string, uniqueTmpDir, (const eCAL::Util::IDirManager& dir_manager_), (const, override));
 };
 
@@ -82,6 +83,9 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_log_env_vars /*unused*/)
     .Times(expected_call_count_data_dir)
     .WillRepeatedly(testing::Return(""));
   EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
+    .Times(expected_call_count_data_dir)
+    .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALLibraryDir(::testing::Ref(mock_dir_manager)))
     .Times(expected_call_count_data_dir)
     .WillRepeatedly(testing::Return(""));
   
@@ -137,6 +141,9 @@ TEST(core_cpp_path_processing /*unused*/, ecal_local_user_dir /*unused*/)
   EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
     .Times(expected_call_count_data_dir)
     .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALLibraryDir(::testing::Ref(mock_dir_manager)))
+    .Times(expected_call_count_data_dir)
+    .WillRepeatedly(testing::Return(""));
   
   // set the tmp directory
   EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
@@ -177,6 +184,9 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_system_dir /*unused*/)
   EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
     .Times(expected_call_count)
     .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALLibraryDir(::testing::Ref(mock_dir_manager)))
+    .Times(expected_call_count)
+    .WillRepeatedly(testing::Return(""));
 
   // set the tmp directory
   EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
@@ -194,6 +204,49 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_system_dir /*unused*/)
 
   // Testing with eCALData and eCALLog -DirImpl
   EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), ecal_data_system_dir);
+  EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), "");
+}
+
+TEST(core_cpp_path_processing /*unused*/, ecal_library_dir /*unused*/)
+{
+  const std::string ecal_library_dir = "/data/library/dir";
+  const std::string unique_tmp_dir = "/tmp/unique";
+  
+  const int expected_call_count = 2;
+
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
+
+  // mock the environment variables to be empty
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
+    .Times(expected_call_count)
+    .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_LOG_VAR))
+    .Times(0);
+  EXPECT_CALL(mock_dir_provider, eCALLocalUserDir())
+    .Times(expected_call_count)
+    .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALDataSystemDir(::testing::Ref(mock_dir_manager)))
+    .Times(expected_call_count)
+    .WillRepeatedly(testing::Return(""));
+  
+  // set the tmp directory
+  EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
+    .Times(0);
+  
+  // let's assume all directories exist
+  ON_CALL(mock_dir_manager, dirExists(testing::_)).WillByDefault(testing::Return(true));
+  ON_CALL(mock_dir_manager, canWriteToDirectory(testing::_)).WillByDefault(testing::Return(true));
+  
+  // mock the library dir to be existent
+  EXPECT_CALL(mock_dir_provider, eCALLibraryDir(::testing::Ref(mock_dir_manager)))
+    .Times(expected_call_count)
+    .WillOnce(testing::Return(ecal_library_dir))
+    .WillRepeatedly(testing::Return(""));
+
+
+  // Testing with eCALData and eCALLog -DirImpl
+  EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), ecal_library_dir);
   EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), "");
 }
 
