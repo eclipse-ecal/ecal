@@ -181,26 +181,26 @@ namespace
 
   std::string getLibraryPath(const eCAL::Util::IDirManager& dir_manager_) 
   {
+    std::string return_path = {};
   #ifdef ECAL_OS_WINDOWS
     
     HMODULE hModule = NULL;
     char path[MAX_PATH];
     GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)getLibraryPath, &hModule);
     GetModuleFileName(hModule, path, sizeof(path));
-    return dir_manager_.getDirectoryPath(path);
+    return_path = dir_manager_.getDirectoryPath(path);
   
   #elif defined(ECAL_OS_LINUX)
     
     Dl_info dl_info;
-    if (dladdr((void *)getLibraryPath, &dl_info)) {
-        return dir_manager_.getDirectoryPath(dl_info.dli_fname);
+    if (dladdr((void *)getLibraryPath, &dl_info)) 
+    {
+      return_path = dir_manager_.getDirectoryPath(dl_info.dli_fname);
     }
 
-  #else
-
-    return "";
-
   #endif
+
+    return return_path;
   }
 }
 
