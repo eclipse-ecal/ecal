@@ -42,6 +42,7 @@
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
+  #include <dlfcn.h>
 #endif
 
 namespace
@@ -177,6 +178,26 @@ namespace
     
   #endif
   }
+
+  std::string getLibraryPath() 
+  {
+  #ifdef ECAL_OS_WINDOWS
+    HMODULE hModule = NULL;
+    char path[MAX_PATH];
+    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)getLibraryPath, &hModule);
+    GetModuleFileName(hModule, path, sizeof(path));
+    std::cout << "Library Path: " << path << "\n";
+    return path;
+  #elif defined(ECAL_OS_LINUX)
+    Dl_info dl_info;
+    if (dladdr((void *)getLibraryPath, &dl_info)) {
+        std::cout << "Library Path: " << dl_info.dli_fname << "\n";
+        return dl_info.dli_fname;
+    }
+  #endif
+
+    return "";
+  }
 }
 
 namespace eCAL
@@ -219,7 +240,7 @@ namespace eCAL
           return false;
         
         const std::string file_path = buildPath(path_, file_name_);
-        
+                
         return isValidFile(file_path);
       });
 
@@ -333,6 +354,11 @@ namespace eCAL
         
       return eCALPlatformSpecificFolder(system_dir, ECAL_FOLDER_NAME_LINUX);
     }
+
+    std::string DirProvider::eCALLibraryDir(const Util::IDirManager& dir_manager_) const
+    {
+      return getLibraryPath();
+    }
   } // namespace Util
 
   namespace Config
@@ -401,6 +427,12 @@ namespace eCAL
       // precedence 3: eCAL data system path 
       // -----------------------------------------------------------
       ecal_default_paths.emplace_back(dir_provider_.eCALDataSystemDir(dir_manager_));
+
+      // -----------------------------------------------------------
+      // precedence 4: library path
+      // -----------------------------------------------------------
+      ecal_default_paths.emplace_back(dir_provider_.eCALLibraryDir(dir_manager_));
+
       return ecal_default_paths;
     }
 
