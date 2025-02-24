@@ -177,7 +177,7 @@ namespace eCAL
 
       if (fn_callback == nullptr) return;
 
-      T msg;
+      T msg{};
       // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
       if (m_deserializer.Deserialize(msg, data_.buffer, data_.buffer_size))
       {

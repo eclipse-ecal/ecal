@@ -33,26 +33,18 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a dynamic publisher (topic name "person")
-  eCAL::protobuf::CDynamicPublisher pub1("person", std::make_shared<pb::People::Person>());
-  std::shared_ptr<pb::People::Person> person1 = pub1.GetAs<pb::People::Person>();
+  eCAL::protobuf::CDynamicPublisher pub1("person", pb::People::Person);
 
   // create a dynamic publisher (topic name "person")
   eCAL::protobuf::CDynamicPublisher pub2("person", "pb.People.Person");
-  std::shared_ptr<pb::People::Person> person2 = pub2.GetAs<pb::People::Person>();
+  pb::People::Person person;
 
   // set person1 object content
-  person1->set_name("Max");
-  person1->set_stype(pb::People::Person_SType_MALE);
-  person1->set_email("max@mail.net");
-  person1->mutable_dog()->set_name("Brandy");
-  person1->mutable_house()->set_rooms(4);
-
-  // set person2 object content
-  person2->set_name("Romy");
-  person2->set_stype(pb::People::Person_SType_FEMALE);
-  person2->set_email("romy@mail.net");
-  person2->mutable_dog()->set_name("Gorky");
-  person2->mutable_house()->set_rooms(4);
+  person.set_name("Max");
+  person.set_stype(pb::People::Person_SType_MALE);
+  person.set_email("max@mail.net");
+  person.mutable_dog()->set_name("Brandy");
+  person.mutable_house()->set_rooms(4);
 
   // enter main loop
   auto                                cnt = 0;
@@ -60,32 +52,25 @@ int main()
 
   while(eCAL::Ok())
   {
+    person.set_id(cnt);
     if (++cnt % 2)
     {
       // modify and send the person1 object
-      person1->set_id(cnt);
-      pub1.Send();
-
-      // for later printing
-      person = person1;
+      pub1.Send(person);
     }
     else
     {
       // modify and send the person2 object
-      person2->set_id(cnt);
-      pub2.Send();
-
-      // for later printing
-      person = person2;
+      pub2.Send(person);
     }
 
     // print current person message
-    std::cout << "person id    : " << person->id()            << std::endl;
-    std::cout << "person name  : " << person->name()          << std::endl;
-    std::cout << "person stype : " << person->stype()         << std::endl;
-    std::cout << "person email : " << person->email()         << std::endl;
-    std::cout << "dog.name     : " << person->dog().name()    << std::endl;
-    std::cout << "house.rooms  : " << person->house().rooms() << std::endl;
+    std::cout << "person id    : " << person.id()            << std::endl;
+    std::cout << "person name  : " << person.name()          << std::endl;
+    std::cout << "person stype : " << person.stype()         << std::endl;
+    std::cout << "person email : " << person.email()         << std::endl;
+    std::cout << "dog.name     : " << person.dog().name()    << std::endl;
+    std::cout << "house.rooms  : " << person.house().rooms() << std::endl;
     std::cout << std::endl;
 
     // sleep 500 ms

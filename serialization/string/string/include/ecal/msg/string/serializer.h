@@ -39,8 +39,8 @@ namespace eCAL
         static SDataTypeInformation GetDataTypeInformation()
         {
           SDataTypeInformation data_type_info;
-          data_type_info.encoding = "base";
-          data_type_info.name = "std::string";
+          data_type_info.encoding = "utf-8";
+          data_type_info.name = "string";
           // empty descriptor
           return data_type_info;
         }
