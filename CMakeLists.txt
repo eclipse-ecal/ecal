@@ -330,7 +330,7 @@ set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
 file(MAKE_DIRECTORY ${eCAL_config_dir})
 
 if(WIN32)
-  set(eCAL_install_config_dir            cfg)
+  set(eCAL_install_config_dir            etc)
   set(eCAL_install_doc_dir               doc)
   set(eCAL_install_samples_dir           samples/bin/)
   set(eCAL_install_samples_src_dir       samples/src/)
