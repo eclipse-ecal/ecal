@@ -66,7 +66,6 @@ Name: sdk\hdf5;       Description: "HDF5";                                     T
 
 [Tasks]
 Name: "desktopicon";  Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";     Flags: unchecked
-Name: "replaceconf";  Description: "Overwrite existing configuration";                                     Flags: checkedonce
 Name: "modifypath";   Description: "Add application directory to your environmental path";                 Flags: checkedonce
 
 [Files]
