@@ -68,23 +68,19 @@ namespace eCAL
 
 
   template <typename T, typename DynamicDeserializer>
-  class CDynamicMessageSubscriber final : public CSubscriber
+  class CDynamicMessageSubscriber
   {
   public:
-    /**
-     * @brief Constructor.
-    **/
-    CDynamicMessageSubscriber() = default;
-
     /**
     * @brief Constructor.
     *
     * @param topic_name_  Unique topic name.
     **/
-    CDynamicMessageSubscriber(const std::string& topic_name_) : CSubscriber(topic_name_)
-      , m_cb_callback(nullptr)
+    CDynamicMessageSubscriber(const std::string& topic_name_) 
+      : m_deserializer()
+      , m_subscriber(topic_name_)
+      , m_data_callback(nullptr)
       , m_error_callback(nullptr)
-      , m_deserializer()
     {
     }
 
@@ -107,9 +103,10 @@ namespace eCAL
     * @brief Move Constructor
     **/
     CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
-      : CSubscriber(std::move(rhs))
+      : m_deserializer(std::move(rhs.m_deserializer))
+      , m_subscriber(std::move(rhs.subscriber))
       , m_cb_callback(std::move(rhs.m_cb_callback))
-      , m_deserializer(std::move(rhs.m_deserializer))
+      , m_error_callback(std::move(rhs.m_error_callback))
     {
       bool has_callback = (m_cb_callback != nullptr);
 
@@ -149,12 +146,12 @@ namespace eCAL
       RemoveReceiveCallback();
 
       {
-        std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
-        m_cb_callback = callback_;
+        std::lock_guard<std::mutex> callback_lock(m_data_callback_mutex);
+        m_data_callback = callback_;
       }
 
       ReceiveCallbackT callback = std::bind(&CDynamicMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-      return(CSubscriber::SetReceiveCallback(callback));
+      return(m_subscriber.SetReceiveCallback(callback));
     }
 
     /**
@@ -164,11 +161,11 @@ namespace eCAL
     **/
     bool RemoveReceiveCallback()
     {
-      bool ret = CSubscriber::RemoveReceiveCallback();
+      bool ret = m_subscriber.RemoveReceiveCallback();
 
-      std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
-      if (m_cb_callback == nullptr) return(false);
-      m_cb_callback = nullptr;
+      std::lock_guard<std::mutex> callback_lock(m_data_callback_mutex);
+      if (m_data_callback == nullptr) return(false);
+      m_data_callback = nullptr;
       return(ret);
     }
 
@@ -212,8 +209,8 @@ namespace eCAL
     {
       MsgReceiveCallbackT fn_callback = nullptr;
       {
-        std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
-        fn_callback = m_cb_callback;
+        std::lock_guard<std::mutex> callback_lock(m_data_callback_mutex);
+        fn_callback = m_data_callback;
       }
 
       if (fn_callback == nullptr) return;
@@ -242,11 +239,13 @@ namespace eCAL
       }
     }
 
-    std::mutex           m_cb_callback_mutex;
-    MsgReceiveCallbackT  m_cb_callback;
+    DynamicDeserializer  m_deserializer;
+    CSubscriber          m_subscriber;
+
+    std::mutex           m_data_callback_mutex;
+    MsgReceiveCallbackT  m_data_callback;
     std::mutex           m_error_callback_mutex;
     ErrorCallbackT       m_error_callback;
-    DynamicDeserializer  m_deserializer;
   };
 
 }

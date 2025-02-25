@@ -47,7 +47,7 @@ namespace eCAL
    *
   **/
   template <typename T, typename Deserializer>
-  class CMessageSubscriber final : public CSubscriber
+  class CMessageSubscriber
   {
   public:
     /**
@@ -56,19 +56,19 @@ namespace eCAL
     * @param topic_name_  Unique topic name.
     * @param config_      Optional configuration parameters.
     **/
-    explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
-      , m_deserializer()
+    explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) 
+      : m_deserializer()
+      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
     {
     }
 
-    explicit CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) : CSubscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
-      , m_deserializer()
+    explicit CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
+      : m_deserializer()
+      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
     {
     }
 
-    ~CMessageSubscriber() noexcept
-    {
-    };
+    ~CMessageSubscriber() noexcept = default;
 
     /**
     * @brief  Copy Constructor is not available.
@@ -84,43 +84,25 @@ namespace eCAL
     * @brief  Move Constructor
     **/
     CMessageSubscriber(CMessageSubscriber&& rhs)
-      : CSubscriber(std::move(rhs))
+      : m_deserializer(std::move(rhs.m_deserializer))
+      , m_subscriber(std::move(rhs.m_subscriber))
       , m_cb_callback(std::move(rhs.m_cb_callback))
-      , m_deserializer(std::move(rhs.m_deserializer))
     {
       bool has_callback = (m_cb_callback != nullptr);
 
       if (has_callback)
       {
         // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead
-        CSubscriber::RemoveReceiveCallback();
+        m_subscriber.RemoveReceiveCallback();
         auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_3);
-        CSubscriber::SetReceiveCallback(callback);
+        m_subscriber.SetReceiveCallback(callback);
       }
     }
 
     /**
     * @brief  Move assignment
     **/
-    CMessageSubscriber& operator=(CMessageSubscriber&& rhs)
-    {
-      CSubscriber::operator=(std::move(rhs));
-
-      m_cb_callback = std::move(rhs.m_cb_callback);
-      m_deserializer = std::move(rhs.m_deserializer);
-        
-      bool has_callback(m_cb_callback != nullptr);
-
-      if (has_callback)
-      {
-        // the callback bound to the CSubscriber belongs to rhs, bind to this callback instead;
-        CSubscriber::RemoveReceiveCallback();
-        auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_3);
-        CSubscriber::SetReceiveCallback(callback);
-      }
-
-      return *this;
-    }
+    CMessageSubscriber& operator=(CMessageSubscriber&& rhs) = delete;
 
     /**
      * @brief eCAL message receive callback function
@@ -142,13 +124,12 @@ namespace eCAL
     bool SetReceiveCallback(MsgReceiveCallbackT callback_)
     {
       RemoveReceiveCallback();
-
       {
         std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
         m_cb_callback = callback_;
       }
       auto callback = std::bind(&CMessageSubscriber::ReceiveCallback, this, std::placeholders::_1, std::placeholders::_3);
-      return(CSubscriber::SetReceiveCallback(callback));
+      return(m_subscriber.SetReceiveCallback(callback));
     }
 
     /**
@@ -158,13 +139,54 @@ namespace eCAL
     **/
     bool RemoveReceiveCallback()
     {
-      bool ret = CSubscriber::RemoveReceiveCallback();
+      bool ret = m_subscriber.RemoveReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(m_cb_callback_mutex);
       if (m_cb_callback == nullptr) return(false);
       m_cb_callback = nullptr;
       return(ret);
     }
+
+    /**
+     * @brief Query the number of connected publishers.
+     *
+     * @return  Number of publishers.
+    **/
+    size_t GetPublisherCount() const
+    {
+      return m_subscriber.GetPublisherCount();
+    }
+
+    /**
+     * @brief Retrieve the topic name.
+     *
+     * @return  The topic name.
+    **/
+    std::string GetTopicName() const
+    {
+      return m_subscriber.GetTopicName();
+    }
+
+    /**
+     * @brief Retrieve the topic id.
+     *
+     * @return  The topic id.
+    **/
+    STopicId GetTopicId() const
+    {
+      return m_subscriber.GetTopicId();
+    }
+
+    /**
+     * @brief Retrieve the topic information.
+     *
+     * @return  The topic information.
+    **/
+    SDataTypeInformation GetDataTypeInformation() const
+    {
+      return m_subscriber.GetDataTypeInformation();
+    }
+
 
   private:
     void ReceiveCallback(const STopicId& topic_id_, const SReceiveCallbackData& data_)
@@ -178,15 +200,17 @@ namespace eCAL
       if (fn_callback == nullptr) return;
 
       T msg{};
-      // In the future, I would like to get m_datatype_info from the ReceiveBuffer function!
       if (m_deserializer.Deserialize(msg, data_.buffer, data_.buffer_size))
       {
         (fn_callback)(topic_id_, msg, data_.send_timestamp, data_.send_clock);
       }
+      // TODO: Here we should handle error callbacks
     }
+
+    Deserializer         m_deserializer;
+    CSubscriber          m_subscriber;
 
     std::mutex           m_cb_callback_mutex;
     MsgReceiveCallbackT  m_cb_callback;
-    Deserializer         m_deserializer;
   };
 }
