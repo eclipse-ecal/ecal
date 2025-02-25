@@ -69,21 +69,19 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Select the correct ecal config directory on Linux and Windows
-if(UNIX)
-  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
-elseif(WIN32)
-  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
+if(UNIX OR WIN32)
+  set(ECAL_DEFAULT_CONFIG_LOCATION ${eCAL_install_config_dir})
 else()
   message(STATUS "Unsupported OS, not installing configs")
 endif()
 
 # Install the generated YAML file if not cross-compiling
-if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
+if(ECAL_DEFAULT_CONFIG_LOCATION AND NOT CMAKE_CROSSCOMPILING)
   install(
     FILES
       ${ECAL_YAML_PATH}             # Files to install
     DESTINATION
-      ${ECAL_SHARED_CONFIG}         # Destination directory
+      ${ECAL_DEFAULT_CONFIG_LOCATION}         # Destination directory
     COMPONENT configuration         # Installation component
   )
 
@@ -92,7 +90,7 @@ if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
       FILES
         ${TIME_YAML_PATH}             # Files to install
       DESTINATION
-        ${ECAL_SHARED_CONFIG}         # Destination directory
+        ${ECAL_DEFAULT_CONFIG_LOCATION}         # Destination directory
       COMPONENT configuration         # Installation component
     )
   endif()
