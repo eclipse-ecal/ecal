@@ -22,12 +22,12 @@
 **/
 
 #include "ecal/config.h"
-
 #include "ecal/util.h"
 
-#include "ecal_path_processing.h"
 #include "ecal_global_accessors.h"
-
+#include "ecal_path_processing.h"
+#include "ecal_utils/filesystem.h"
+#include "ecal_utils/string.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
@@ -43,8 +43,9 @@ namespace eCAL
       {
 #ifdef ECAL_CORE_CONFIGURATION
         eCAL::Config::YamlFileToConfig(yaml_path, *this);
-        ecal_yaml_file_path = yaml_path;
-        std::cout << "[eCAL][Config] Yaml configuration loaded from \"" << yaml_path << "\"." << "\n";
+        auto path_components = EcalUtils::Filesystem::CleanPathComponentList(yaml_path);
+        ecal_yaml_file_path = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), path_components);
+        std::cout << "[eCAL][Config] Yaml configuration loaded from \"" << ecal_yaml_file_path << "\"." << "\n";
 #else
         std::cout << "[eCAL][Config] Yaml file found at \"" << yaml_path << "\" but eCAL core configuration is not enabled." << "\n";
 #endif
