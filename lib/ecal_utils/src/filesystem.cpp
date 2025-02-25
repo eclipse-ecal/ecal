@@ -603,11 +603,6 @@ namespace EcalUtils
         }
       }
 
-      if (is_absolute)
-      {
-        components.emplace(components.begin(), root);
-      }
-
       return components;
     }
 
