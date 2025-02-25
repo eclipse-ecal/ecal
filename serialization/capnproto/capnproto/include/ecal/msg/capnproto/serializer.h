@@ -114,7 +114,7 @@ namespace eCAL
           kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
 
           capnp::Schema schema = GetSchema(datatype_info_);
-          capnp::DynamicStruct::Builder root_builder = m_msg_builder.getRoot<capnp::DynamicStruct>(schema.asStruct());
+          auto root_builder = m_msg_builder.getRoot<capnp::DynamicStruct>(schema.asStruct());
           return root_builder.asReader();
         }
         catch (...)
@@ -127,7 +127,7 @@ namespace eCAL
       capnp::Schema GetSchema(const DatatypeInformation& datatype_info_)
       {
         auto schema = m_schema_map.find(datatype_info_);
-        if (schema != m_schema_map.end())
+        if (schema == m_schema_map.end())
         {
           m_schema_map[datatype_info_] = ::eCAL::capnproto::SchemaFromDescriptor(datatype_info_.descriptor, m_loader);
         }
