@@ -48,7 +48,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CPublisher = CMessagePublisher<typename capnp::MallocMessageBuilder, internal::Serializer<T>>;
+    using CPublisher = CMessagePublisher<typename capnp::MallocMessageBuilder, internal::Serializer<T, SDataTypeInformation>>;
 
     /** @example addressbook_snd.cpp
     * This is an example how to use eCAL::capnproto::CPublisher to send capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .

@@ -66,7 +66,7 @@ namespace eCAL
           return((size_t)builder.GetSize());
         }
 
-        bool Serialize(const ObjectType& msg_, void* buffer_, size_t size_)
+        bool Serialize(const ObjectType& /*msg_*/, void* buffer_, size_t size_)
         {
           if (size_ < builder.GetSize()) return(false);
           memcpy(buffer_, builder.GetBufferPointer(), builder.GetSize());

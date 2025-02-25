@@ -35,17 +35,6 @@
 namespace eCAL
 {
   /* @cond */
-  class DynamicReflectionException : public std::exception
-  {
-  public:
-    DynamicReflectionException(const std::string& message) : message_(message) {}
-    virtual const char* what() const noexcept { return message_.c_str(); }
-  private:
-    std::string message_;
-  };
-  /* @endcond */
-
-  /* @cond */
   inline bool StrEmptyOrNull(const std::string& str)
   {
     if (str.empty())
@@ -72,17 +61,31 @@ namespace eCAL
   {
   public:
     /**
-    * @brief Constructor.
-    *
-    * @param topic_name_  Unique topic name.
+     * @param topic_name_      Unique topic name.
+     * @param event_callback_  Callback for subscriber events.
+     * @param config_          Configuration parameters.
     **/
-    CDynamicMessageSubscriber(const std::string& topic_name_) 
+    CDynamicMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
       : m_deserializer()
-      , m_subscriber(topic_name_)
+      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
       , m_data_callback(nullptr)
       , m_error_callback(nullptr)
     {
     }
+
+    /**
+     * @param topic_name_      Unique topic name.
+     * @param event_callback_  Callback for subscriber events.
+     * @param config_          Configuration parameters.
+    **/
+    CDynamicMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
+      : m_deserializer()
+      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
+      , m_data_callback(nullptr)
+      , m_error_callback(nullptr)
+    {
+    }
+
 
     ~CDynamicMessageSubscriber() noexcept
     {
@@ -239,6 +242,7 @@ namespace eCAL
       }
     }
 
+    //It's important that m_deserializer is created before m_suubscriber, because it needs to retrieve the DatatypeInformation
     DynamicDeserializer  m_deserializer;
     CSubscriber          m_subscriber;
 

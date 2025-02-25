@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a publisher (topic name "monster")
-  eCAL::flatbuffers::CPublisher<Game::Sample::MonsterT> pub("monster");
+  eCAL::flatbuffers::CObjectPublisher<Game::Sample::MonsterT> pub("monster");
   
   Game::Sample::MonsterT my_monster;
   my_monster.name = "Monster";

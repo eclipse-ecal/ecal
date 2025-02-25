@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <ecal/msg/capnproto/helper.h>
+#include <ecal/serialization/common/exception.h>
 
 // capnp includes
 #ifdef _MSC_VER
@@ -43,13 +44,13 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename T>
+      template <typename T, typename DatatypeInformation>
       class Serializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info;
           topic_info.encoding = eCAL::capnproto::EncodingAsString();
           topic_info.name = eCAL::capnproto::TypeAsString<T>();
           topic_info.descriptor = eCAL::capnproto::SchemaAsString<T>();
@@ -87,6 +88,56 @@ namespace eCAL
       private:
         capnp::MallocMessageBuilder m_msg_builder;
       };
+      
+    template <typename DatatypeInformation>
+    class DynamicSerializer
+    {
+    public:
+      static DatatypeInformation GetDataTypeInformation()
+      {
+        DatatypeInformation topic_info;
+        topic_info.encoding = eCAL::capnproto::EncodingAsString();
+        topic_info.name = "*";
+        topic_info.descriptor = "*";
+        return topic_info;
+      }
+
+      // This function is NOT threadsafe!!!
+      // what about the lifetime of the objects?
+      // It's totally unclear to me :/
+      capnp::DynamicStruct::Reader Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& datatype_info_)
+      {
+        try
+        {
+          // Put the pointer into a capnp::MallocMessageBuilder, it holds the memory to later access the object via a capnp::Dynami
+          kj::ArrayPtr<const capnp::word> words = kj::arrayPtr(reinterpret_cast<const capnp::word*>(buffer_), size_ / sizeof(capnp::word));
+          kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
+
+          capnp::Schema schema = GetSchema(datatype_info_);
+          capnp::DynamicStruct::Builder root_builder = m_msg_builder.getRoot<capnp::DynamicStruct>(schema.asStruct());
+          return root_builder.asReader();
+        }
+        catch (...)
+        {
+          throw serialization::DynamicReflectionException("Error deserializing Capnproto data.");
+        }
+      }
+
+    private:
+      capnp::Schema GetSchema(const DatatypeInformation& datatype_info_)
+      {
+        auto schema = m_schema_map.find(datatype_info_);
+        if (schema != m_schema_map.end())
+        {
+          m_schema_map[datatype_info_] = ::eCAL::capnproto::SchemaFromDescriptor(datatype_info_.descriptor, m_loader);
+        }
+        return m_schema_map[datatype_info_];
+      }
+
+      capnp::MallocMessageBuilder                   m_msg_builder;
+      std::map<DatatypeInformation, capnp::Schema>  m_schema_map;
+      capnp::SchemaLoader                           m_loader;
+    };
     }
   }
 }

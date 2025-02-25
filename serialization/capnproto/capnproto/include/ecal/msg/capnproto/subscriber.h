@@ -47,7 +47,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<typename T::Reader, internal::Serializer<T>>;
+    using CSubscriber = CMessageSubscriber<typename T::Reader, internal::Serializer<T, SDataTypeInformation>>;
 
     /** @example addressbook_rec.cpp
     * This is an example how to use eCAL::capnproto::CSubscriber to receive capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .

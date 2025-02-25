@@ -51,6 +51,16 @@ namespace eCAL
       class ProtobufDynamicDeserializer
       {
       public:
+        static SDataTypeInformation GetDataTypeInformation()
+        {
+          SDataTypeInformation topic_info;
+          topic_info.encoding = "proto";
+          topic_info.name = "*";
+          topic_info.descriptor = "*";
+          return topic_info;
+        }
+
+
         std::shared_ptr<google::protobuf::Message> Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& datatype_info_)
         {
           auto message_prototype = GetMessagePointer(datatype_info_);
