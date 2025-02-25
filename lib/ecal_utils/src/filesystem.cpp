@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -563,7 +563,7 @@ namespace EcalUtils
       EcalUtils::String::Split(unix_style_path, "/", splitted_path);
 
       // The components-stack that will increase and shrink depending on the folders and .. elements in the splitted path
-            for (auto part_it = splitted_path.begin(); part_it != splitted_path.end(); part_it++)
+      for (auto part_it = splitted_path.begin(); part_it != splitted_path.end(); part_it++)
       {
         if ((part_it == splitted_path.begin()) && (*part_it == ".") && !is_absolute)
         {
@@ -601,6 +601,11 @@ namespace EcalUtils
         {
           components.push_back(*part_it);
         }
+      }
+
+      if (is_absolute)
+      {
+        components.emplace(components.begin(), root);
       }
 
       return components;
