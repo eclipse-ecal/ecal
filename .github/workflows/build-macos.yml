@@ -18,6 +18,11 @@ jobs:
       run: |
           echo Killing XProtect.; sudo pkill -9 XProtect >/dev/null || true;
     
+      # TODO: Remove once CMake 4 is included in the runner image
+    - uses: lukka/get-cmake@b0c3ffaff0d0aa44027f5d61fef6302c43b23fe4 # 4.0.0-rc1
+      with:
+        cmakeVersion: 4.0.0-rc1
+
     - name: Install latest Python3 via brew
       run: brew install python3 || brew link --overwrite python@3.12
 
