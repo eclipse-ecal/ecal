@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ int main()
   eCAL::Initialize("minimal_snd");
 
   // publisher for topic "Hello"
-  eCAL::string::CPublisher<std::string> pub("Hello");
+  eCAL::string::CPublisher pub("Hello");
 
   // send updates
   int cnt = 0;

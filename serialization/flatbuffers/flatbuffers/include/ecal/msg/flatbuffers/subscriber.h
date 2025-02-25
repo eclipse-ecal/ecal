@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,31 +25,10 @@
 #pragma once
 
 #include <ecal/msg/subscriber.h>
+#include <ecal/msg/flatbuffers/serializer.h>
 
 namespace eCAL
 {
-  namespace internal
-  {
-    template <typename T>
-    class FlatbuffersDeserializer
-    {
-    public:
-      static SDataTypeInformation GetDataTypeInformation()
-      {
-        SDataTypeInformation topic_info;
-        topic_info.encoding = "flatb";
-        // empty type, empty descriptor
-        return topic_info;
-      }
-
-      static bool Deserialize(T& msg_, const void* buffer_, size_t size_)
-      {
-        msg_.PushFlatBuffer(static_cast<const uint8_t*>(buffer_), static_cast<int>(size_));
-        return(true);
-      }
-    };
-  }
-
   namespace flatbuffers
   {
 
@@ -60,7 +39,10 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::FlatbuffersDeserializer<T>>;
+    using CObjectSubscriber = CMessageSubscriber<const T*, internal::ObjectDeserializer<const T*>>;
+
+    template <typename T>
+    using CFlatSubscriber = CMessageSubscriber<const T*, internal::FlatDeserializer<const T*>>;
 
     /** @example monster_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive goggle::flatbuffers data with eCAL. To send the data, see @ref monster_snd.cpp .

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,37 +24,13 @@
 
 #pragma once
 
-#include <cstddef>
 #include <ecal/msg/subscriber.h>
+#include <ecal/msg/string/serializer.h>
 
 #include <string>
-#include <memory.h>
 
 namespace eCAL
 {
-  namespace internal
-  {
-    template <typename T>
-    class StringDeserializer
-    {
-    public:
-      static SDataTypeInformation GetDataTypeInformation()
-      {
-        SDataTypeInformation topic_info;
-        topic_info.encoding = "base";
-        topic_info.name = "std::string";
-        // empty descriptor
-        return topic_info;
-      }
-
-      static bool Deserialize(T& msg_, const void* buffer_, size_t size_)
-      {
-        msg_ = std::string(static_cast<const char*>(buffer_), size_);
-        return true;
-      }
-    };
-  }
-
   namespace string
   {
 
@@ -64,8 +40,7 @@ namespace eCAL
      * Subscriber class for STL standard strings. For details see documentation of CSubscriber class.
      *
     **/
-    template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::StringDeserializer<T>>;
+    using CSubscriber = CMessageSubscriber<std::string, internal::Serializer<std::string>>;
 
     /** @example minimal_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive a std::string with eCAL. To send the strings, see @ref minimal_snd.cpp .

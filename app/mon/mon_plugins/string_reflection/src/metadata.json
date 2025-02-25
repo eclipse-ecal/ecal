@@ -4,14 +4,17 @@
   "Name": "String Reflection",
   
   "Priority": 1,
-  
-  "SupportedTopics": 
-    [
-      {
-        "Type": "std::string",
-        "Format": "base"
-      }
-    ],
+
+  "SupportedTopics": [
+    {
+      "Type": "std::string",
+      "Format": "base"
+    },
+    {
+      "Type": "string",
+      "Format": "utf-8"
+    }
+  ],
   
   "OptionalTopics": []
 }

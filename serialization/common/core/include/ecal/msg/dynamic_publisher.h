@@ -43,7 +43,7 @@ namespace eCAL
    *
   **/
   template <typename T, typename Serializer>
-  class CMessagePublisher
+  class CDynamicMessagePublisher
   {
     template<typename T, typename Serializer>
     class CPayload : public eCAL::CPayloadWriter
@@ -83,7 +83,7 @@ namespace eCAL
      * @param topic_name_  Unique topic name.
      * @param config_      Optional configuration parameters.
     **/
-    explicit CMessagePublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
+    explicit CDynamicMessagePublisher(const std::string& topic_name_, const T& message_prototype_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
       : m_serializer{}
       , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), config_)
     {
@@ -97,7 +97,7 @@ namespace eCAL
      * @param event_callback_  The publisher event callback funtion.
      * @param config_          Optional configuration parameters.
     **/
-    explicit CMessagePublisher(const std::string& topic_name_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
+    explicit CDynamicMessagePublisher(const std::string& topic_name_, const T& message_prototype_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
       : m_serializer{}
       , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), event_callback_, config_)
     {
@@ -106,27 +106,27 @@ namespace eCAL
     /**
      * @brief  Copy Constructor is not available.
     **/
-    CMessagePublisher(const CMessagePublisher&) = delete;
+    CDynamicMessagePublisher(const CDynamicMessagePublisher&) = delete;
 
     /**
      * @brief  Move Constructor
     **/
-    CMessagePublisher(CMessagePublisher&&) = default;
+    CDynamicMessagePublisher(CDynamicMessagePublisher&&) = default;
 
     /**
      * @brief  Destructor.
     **/
-    ~CMessagePublisher() = default;
+    ~CDynamicMessagePublisher() = default;
 
     /**
      * @brief  Copy assignment is not available.
     **/
-    CMessagePublisher& operator=(const CMessagePublisher&) = delete;
+    CDynamicMessagePublisher& operator=(const CDynamicMessagePublisher&) = delete;
 
     /**
      * @brief  Move assignment
     **/
-    CMessagePublisher& operator=(CMessagePublisher&&) = default;
+    CDynamicMessagePublisher& operator=(CDynamicMessagePublisher&&) = default;
 
     /**
      * @brief Send a serialized message to all subscribers.

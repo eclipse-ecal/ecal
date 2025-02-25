@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ int main()
   eCAL::Initialize("minimal_rec_cb");
 
   // subscriber for topic "Hello"
-  eCAL::string::CSubscriber<std::string> sub("Hello");
+  eCAL::string::CSubscriber sub("Hello");
 
   // receive updates in a callback (lambda function)
   auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
