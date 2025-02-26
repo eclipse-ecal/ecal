@@ -29,8 +29,15 @@ In addition, some eCAL applications support providing a path from the command li
 - |fa-ubuntu| Ubuntu:
 
   1. ``$ECAL_DATA/ecal.yaml``
-  2. ``/etc/ecal/ecal.yaml`` (fallback)
+  2. ``/etc/ecal/ecal.yaml`` (from ``CMAKE_INSTALL_SYSCONFDIR``)
+  3. ``/etc/ecal/ecal.yaml`` (fallback)
       
+     .. note::
+
+        This second path is set from CMake to ``CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.yaml``.
+        Official builds are configured to use ``/etc``.
+        If you are compiling eCAL yourself and don't provide the SYSCONFDIR, CMake will usually use ``/usr/local/etc/ecal/ecal.yaml``.
+
 ecal.yaml options
 =================
 
