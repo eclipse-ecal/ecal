@@ -71,7 +71,7 @@ target_link_libraries(${PROJECT_NAME}
 # Select the correct ecal config directory on Linux and Windows
 if(UNIX)
   set(ECAL_DEFAULT_CONFIG_LOCATION ${eCAL_install_config_dir}/ecal)
-if(WIN32)
+elseif(WIN32)
   set(ECAL_DEFAULT_CONFIG_LOCATION ${eCAL_install_config_dir})
 else()
   message(STATUS "Unsupported OS, not installing configs")
