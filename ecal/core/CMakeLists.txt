@@ -33,7 +33,7 @@ if (ECAL_CORE_COMMAND_LINE)
 endif()
 
 if (ECAL_CORE_TRANSPORT_TCP)
-  find_package(tcp_pubsub     REQUIRED)
+  find_package(tcp_pubsub 2   REQUIRED)
 endif()
 
 # If we're currently doing a build within a git repository, we will configure the header files.
