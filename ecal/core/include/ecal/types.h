@@ -83,6 +83,12 @@ namespace eCAL
     int32_t      process_id = 0;    // process id which produced the sample
     std::string  host_name;         // host which produced the sample
 
+    SEntityId() noexcept = default;
+    SEntityId(const SEntityId&) noexcept = default;
+    SEntityId& operator=(const SEntityId&) = default;
+    SEntityId(SEntityId&&) noexcept = default;
+    SEntityId& operator=(SEntityId&&) = default;
+
     bool operator==(const SEntityId& other) const {
       return entity_id == other.entity_id;
     }
