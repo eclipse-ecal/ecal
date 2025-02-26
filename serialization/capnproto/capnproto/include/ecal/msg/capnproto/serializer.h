@@ -26,7 +26,7 @@
 
 #include <cstddef>
 #include <ecal/msg/capnproto/helper.h>
-#include <ecal/serialization/common/exception.h>
+#include <ecal/msg/exception.h>
 
 // capnp includes
 #ifdef _MSC_VER
@@ -119,7 +119,7 @@ namespace eCAL
         }
         catch (...)
         {
-          throw serialization::DynamicReflectionException("Error deserializing Capnproto data.");
+          throw DeserializationException("Error deserializing Capnproto data.");
         }
       }
 

@@ -19,23 +19,18 @@
 
 #pragma once
 
-/*
-A type needs to implement the following functions in order that a measurement object
-can be constructed for that type (read / write)
-*/
+#include <exception>
+
 namespace eCAL
 {
-  namespace serialization
-  {
     /* @cond */
-    class DynamicReflectionException : public std::exception
+    class DeserializationException : public std::exception
     {
     public:
-      DynamicReflectionException(const std::string& message) : message_(message) {}
+      DeserializationException(const std::string& message) : message_(message) {}
       virtual const char* what() const noexcept { return message_.c_str(); }
     private:
       std::string message_;
     };
     /* @endcond */
-  }
 }

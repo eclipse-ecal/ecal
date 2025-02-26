@@ -26,6 +26,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/deprecate.h>
+#include <ecal/msg/exception.h>
 #include <ecal/msg/dynamic.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
@@ -75,7 +76,7 @@ namespace eCAL
           }
           catch (...)
           {
-            throw new DynamicReflectionException("Error deserializing Protobuf data.");
+            throw DeserializationException("Error deserializing Protobuf data.");
           }
         }
 
@@ -97,13 +98,13 @@ namespace eCAL
           topic_type = topic_type.substr(topic_type.find_last_of('.') + 1, topic_type.size());
           if (StrEmptyOrNull(topic_type))
           {
-            throw DynamicReflectionException("ProtobufDynamicDeserializer: Could not get type");
+            throw DeserializationException("ProtobufDynamicDeserializer: Could not get type");
           }
 
           std::string topic_desc = topic_info_.descriptor;
           if (StrEmptyOrNull(topic_desc))
           {
-            throw DynamicReflectionException("ProtobufDynamicDeserializer: Could not get description for type" + std::string(topic_type));
+            throw DeserializationException("ProtobufDynamicDeserializer: Could not get description for type" + std::string(topic_type));
           }
 
           google::protobuf::FileDescriptorSet proto_desc;
@@ -115,7 +116,7 @@ namespace eCAL
             std::stringstream s;
             s << "ProtobufDynamicDeserializer: Message of type " + std::string(topic_type) << " could not be decoded" << std::endl;
             s << error_s;
-            throw DynamicReflectionException(s.str());
+            throw DeserializationException(s.str());
           }
 
           return proto_msg_ptr;
