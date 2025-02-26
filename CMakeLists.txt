@@ -328,8 +328,8 @@ set(eCAL_config_version            ${eCAL_config_dir}/eCALConfigVersion.cmake)
 
 file(MAKE_DIRECTORY ${eCAL_config_dir})
 
-if (DEFINED CMAKE_INSTALL_SYSCONFDIR)
-  set(eCAL_install_config_dir ${CMAKE_INSTALL_SYSCONFDIR})
+if (DEFINED ECAL_CONFIG_INSTALLATION_DIR)
+  set(eCAL_install_config_dir ${ECAL_CONFIG_INSTALLATION_DIR})
 else()
   set(eCAL_install_config_dir etc)
 endif()
