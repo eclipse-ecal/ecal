@@ -210,7 +210,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_data_system_dir /*unused*/)
 TEST(core_cpp_path_processing /*unused*/, ecal_library_dir /*unused*/)
 {
   const std::string ecal_library_dir = "/data/library/dir";
-  const std::string ecal_relative_etc_dir = "/data/library/dir" + path_separator + ECAL_FOLDER_RELATIVE_ETC;
+  const std::string ecal_relative_cfg_dir = "/data/library/dir" + path_separator + ECAL_FOLDER_RELATIVE_CFG;
   const std::string unique_tmp_dir = "/tmp/unique";
   
   const int expected_call_count = 2;
@@ -247,7 +247,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_library_dir /*unused*/)
 
 
   // Testing with eCALData and eCALLog -DirImpl
-  EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), ecal_relative_etc_dir);
+  EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), ecal_relative_cfg_dir);
   EXPECT_EQ(eCAL::Config::GeteCALDataDirImpl(mock_dir_provider, mock_dir_manager), "");
 }
 
