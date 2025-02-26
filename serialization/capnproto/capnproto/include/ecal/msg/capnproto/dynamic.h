@@ -32,7 +32,7 @@
 #pragma warning(pop)
 #endif /*_MSC_VER*/
 
-#include <ecal/msg/dynamic.h>
+#include <ecal/msg/subscriber.h>
 #include <ecal/msg/capnproto/serializer.h>
 
 namespace eCAL
@@ -45,7 +45,7 @@ namespace eCAL
      * Subscriber template  class for capnp messages. For details see documentation of CSubscriber class.
      *
     **/
-    using CDynamicSubscriber = CDynamicMessageSubscriber<typename capnp::DynamicStruct::Reader, internal::DynamicSerializer<SDataTypeInformation>>;
+    using CDynamicSubscriber = CMessageSubscriber<typename capnp::DynamicStruct::Reader, internal::DynamicSerializer<SDataTypeInformation>>;
 
     /** @example addressbook_rec.cpp
     * This is an example how to use eCAL::capnproto::CSubscriber to receive capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .
