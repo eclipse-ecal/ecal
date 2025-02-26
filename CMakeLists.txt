@@ -331,7 +331,7 @@ file(MAKE_DIRECTORY ${eCAL_config_dir})
 if (DEFINED CMAKE_INSTALL_SYSCONFDIR)
   set(eCAL_install_config_dir ${CMAKE_INSTALL_SYSCONFDIR})
 else()
-  set(eCAL_install_config_dir etc)
+  set(eCAL_install_config_dir cfg)
 endif()
 
 if(WIN32)
