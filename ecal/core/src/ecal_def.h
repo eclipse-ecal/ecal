@@ -36,7 +36,7 @@ constexpr const char* ECAL_FOLDER_NAME_LINUX        = "ecal";
 constexpr const char* ECAL_FOLDER_NAME_HOME_LINUX   = ".ecal";
 constexpr const char* ECAL_FOLDER_NAME_LOG          = "logs";
 constexpr const char* ECAL_FOLDER_NAME_TMP_WINDOWS  = "Temp";
-constexpr const char* ECAL_FOLDER_RELATIVE_CFG      = "../cfg";
+constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc";
 
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG              = "ecal.yaml";
