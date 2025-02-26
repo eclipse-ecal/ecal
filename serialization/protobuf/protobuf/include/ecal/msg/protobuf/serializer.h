@@ -25,6 +25,7 @@
 #pragma once
 
 #include <cstddef>
+#include <ecal/msg/exception.h>
 #include <ecal/msg/protobuf/ecal_proto_hlp.h>
 
 namespace eCAL
@@ -62,14 +63,15 @@ namespace eCAL
           return msg_.SerializeToArray(buffer_, static_cast<int>(size_));
         }
 
-        static bool Deserialize(T& msg_, const void* buffer_, size_t size_)
+        static T Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& /*data_type_info_*/)
         {
+          T msg;
           // we try to parse the message from the received buffer
-          if (msg_.ParseFromArray(buffer_, static_cast<int>(size_)))
+          if (msg.ParseFromArray(buffer_, static_cast<int>(size_)))
           {
-            return(true);
+            return msg;
           }
-          return(false);
+          throw DeserializationException("Could not parse protobuf message");
         }
       };
     }

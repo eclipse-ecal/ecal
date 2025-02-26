@@ -27,7 +27,7 @@
 #include <ecal/ecal.h>
 #include <ecal/deprecate.h>
 #include <ecal/msg/exception.h>
-#include <ecal/msg/dynamic.h>
+#include <ecal/msg/subscriber.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <exception>
@@ -44,6 +44,31 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+namespace
+{
+  /* @cond */
+  inline bool StrEmptyOrNull(const std::string& str)
+  {
+    if (str.empty())
+    {
+      return true;
+    }
+    else
+    {
+      for (auto c : str)
+      {
+        if (c != '\0')
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  /* @endcond */
+}
+
 
 namespace eCAL
 {
@@ -135,7 +160,7 @@ namespace eCAL
        * Dynamic subscriber class for protobuf messages. For details see documentation of CDynamicMessageSubscriber class.
        *
       **/
-      using CDynamicSubscriber = CDynamicMessageSubscriber<std::shared_ptr<google::protobuf::Message>, eCAL::internal::ProtobufDynamicDeserializer>;
+      using CDynamicSubscriber = CMessageSubscriber<std::shared_ptr<google::protobuf::Message>, eCAL::internal::ProtobufDynamicDeserializer>;
 
       /** @example proto_dyn_rec.cpp
       * This is an example how to use eCAL::protobuf::CDynamicSubscriber to receive dynamic protobuf data with eCAL. To receive the data, see @ref proto_dyn_rec.cpp .

@@ -60,10 +60,9 @@ namespace eCAL
           return(false);
         }
 
-        static bool Deserialize(T& msg_, const void* buffer_, size_t size_)
+        static T Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& /*data_type_info_*/)
         {
-          msg_ = std::string(static_cast<const char*>(buffer_), size_);
-          return true;
+          return std::string(static_cast<const char*>(buffer_), size_);
         }
       };
     }

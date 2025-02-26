@@ -71,18 +71,26 @@ namespace eCAL
           return(true);
         }
 
-        bool Deserialize(typename T::Reader& msg_, const void* buffer_, size_t size_)
+        typename T::Reader Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& /*data_type_info_*/)
         {
-          // TODO: It seems that the MessageBuilder needs to persist.
-          // We will probably have to lock this function?
-          // This really needs to be analyzed!!!
-          kj::ArrayPtr<const capnp::word> words = kj::arrayPtr(reinterpret_cast<const capnp::word*>(buffer_), size_ / sizeof(capnp::word));
-          kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
+          try
+          {
+            // TODO: It seems that the MessageBuilder needs to persist.
+            // We will probably have to lock this function?
+            // This really needs to be analyzed!!!
+            kj::ArrayPtr<const capnp::word> words = kj::arrayPtr(reinterpret_cast<const capnp::word*>(buffer_), size_ / sizeof(capnp::word));
+            kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
 
-          typename T::Builder root_builder = typename T::Builder(m_msg_builder.getRoot<T>());
-          msg_ = root_builder.asReader();
+            // We should consider somehow validating everything
+            // if (rest.size() != 0)
 
-          return(rest.size() == 0);
+            typename T::Builder root_builder = typename T::Builder(m_msg_builder.getRoot<T>());
+            return root_builder.asReader();
+          }
+          catch (...)
+          {
+            throw DeserializationException("Error deserializing Capnproto data.");
+          }
         }
 
       private:

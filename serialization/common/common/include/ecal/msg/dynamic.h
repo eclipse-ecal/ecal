@@ -35,28 +35,6 @@
 
 namespace eCAL
 {
-  /* @cond */
-  inline bool StrEmptyOrNull(const std::string& str)
-  {
-    if (str.empty())
-    {
-      return true;
-    }
-    else
-    {
-      for (auto c : str)
-      {
-        if (c != '\0')
-        {
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-  /* @endcond */
-
-
   template <typename T, typename DynamicDeserializer>
   class CDynamicMessageSubscriber
   {
@@ -109,10 +87,10 @@ namespace eCAL
     CDynamicMessageSubscriber(CDynamicMessageSubscriber&& rhs)
       : m_deserializer(std::move(rhs.m_deserializer))
       , m_subscriber(std::move(rhs.subscriber))
-      , m_cb_callback(std::move(rhs.m_cb_callback))
+      , m_data_callback(std::move(rhs.m_data_callback))
       , m_error_callback(std::move(rhs.m_error_callback))
     {
-      bool has_callback = (m_cb_callback != nullptr);
+      bool has_callback = (m_data_callback != nullptr);
 
       if (has_callback)
       {
@@ -136,7 +114,7 @@ namespace eCAL
      * @param time_      Message time stamp.
      * @param clock_     Message writer clock.
      **/
-    using MsgReceiveCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_)>;
+    using DataCallbackT = std::function<void(const STopicId& topic_id_, const T& msg_, long long time_, long long clock_)>;
 
     /**
      * @brief Set receive callback for incoming messages.
@@ -145,7 +123,7 @@ namespace eCAL
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    bool SetReceiveCallback(MsgReceiveCallbackT callback_)
+    bool SetReceiveCallback(DataCallbackT callback_)
     {
       RemoveReceiveCallback();
 
@@ -211,7 +189,7 @@ namespace eCAL
   private:
     void ReceiveCallback(const STopicId& topic_id_, const SDataTypeInformation& topic_info_, const struct SReceiveCallbackData& data_)
     {
-      MsgReceiveCallbackT fn_callback = nullptr;
+      DataCallbackT fn_callback = nullptr;
       {
         std::lock_guard<std::mutex> callback_lock(m_data_callback_mutex);
         fn_callback = m_data_callback;
@@ -248,7 +226,7 @@ namespace eCAL
     CSubscriber          m_subscriber;
 
     std::mutex           m_data_callback_mutex;
-    MsgReceiveCallbackT  m_data_callback;
+    DataCallbackT  m_data_callback;
     std::mutex           m_error_callback_mutex;
     ErrorCallbackT       m_error_callback;
   };

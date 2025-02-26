@@ -98,11 +98,11 @@ TEST(SerializerTest, SerializeDeserializeRoundTrip)
   bool serializeResult = serializer.Serialize(message, buffer.data(), buffer.size());
   EXPECT_TRUE(serializeResult);
 
+  DataTypeInformation info = serializer.GetDataTypeInformation();
+
   // Now deserialize.
   eCAL::capnproto::internal::Serializer<AddressBook, DataTypeInformation> deserializer;
-  AddressBook::Reader reader;
-  bool deserializeResult = deserializer.Deserialize(reader, buffer.data(), buffer.size());
-  EXPECT_TRUE(deserializeResult);
+  auto reader = deserializer.Deserialize(buffer.data(), buffer.size(), info);
 
   // Assert that deserialized message is the same as the original message.
   //EXPECT_EQ(reader, addressBook.asReader());

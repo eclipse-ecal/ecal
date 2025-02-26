@@ -87,7 +87,7 @@ namespace eCAL
         : public BaseSerializer<ObjectType>
       {
       public:
-        static bool Deserialize(ObjectType& msg_, const void* buffer_, size_t /*size_*/)
+        static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
         {
           using CleanObjectType = std::remove_const_t<std::remove_pointer_t<ObjectType>>;
 
@@ -96,9 +96,7 @@ namespace eCAL
           //::flatbuffers::Verifier verifier(buffer, size_);
 
           const CleanObjectType::TableType* table_type_ = ::flatbuffers::GetRoot<CleanObjectType::TableType>(buffer);
-          msg_ = table_type_->UnPack();
-
-          return(true);
+          return table_type_->UnPack();
         }
       };
 
@@ -107,18 +105,17 @@ namespace eCAL
        * This class works with Flat Types, but has to be specialized with const *  only.
        * E.g. const Monster*
        */
-      template <typename ObjectType>
+      template <typename FlatType>
       class FlatDeserializer 
-        : public BaseSerializer<ObjectType>
+        : public BaseSerializer<FlatType>
       {
       public:
-        static bool Deserialize(ObjectType& msg_, const void* buffer_, size_t /*size_*/ )
+        static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
         {
-          using CleanFlatType = std::remove_const_t<std::remove_pointer_t<ObjectType>>;
+          using CleanFlatType = std::remove_const_t<std::remove_pointer_t<FlatType>>;
           const uint8_t* buffer = static_cast<const uint8_t*>(buffer_);
 
-          msg_ = ::flatbuffers::GetRoot<CleanFlatType>(buffer);
-          return(true);
+          return ::flatbuffers::GetRoot<CleanFlatType>(buffer);
         }
       };
 

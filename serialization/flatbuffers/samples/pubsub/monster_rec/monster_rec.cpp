@@ -109,7 +109,7 @@ void OnObjectMonster(const eCAL::STopicId& topic_id_, const Game::Sample::Monste
 }
 
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char** /*argv*/)
 {
   // initialize eCAL API
   eCAL::Initialize("monster subscriber");

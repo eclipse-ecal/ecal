@@ -55,6 +55,30 @@
 #pragma GCC diagnostic pop
 #endif
 
+namespace
+{
+  /* @cond */
+  inline bool StrEmptyOrNull(const std::string& str)
+  {
+    if (str.empty())
+    {
+      return true;
+    }
+    else
+    {
+      for (auto c : str)
+      {
+        if (c != '\0')
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  /* @endcond */
+}
+
 namespace eCAL
 {
     namespace internal
