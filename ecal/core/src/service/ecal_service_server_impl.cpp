@@ -50,7 +50,9 @@ namespace eCAL
 
   // Constructor
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-    : m_service_name(service_name_), m_created(false), m_event_callback(event_callback_)
+    : m_service_name(service_name_), m_created(false), m_event_callback(event_callback_),
+      m_server_id(std::chrono::steady_clock::now().time_since_epoch().count()),
+      m_service_id({ {m_server_id , Process::GetProcessID(), Process::GetHostName()},  m_service_name })
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CServiceServerImpl: Initializing service server for: " + m_service_name);
@@ -217,23 +219,6 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
-  SServiceId CServiceServerImpl::GetServiceId() const
-  {
-    SServiceId service_id;
-
-    service_id.service_id.entity_id = m_service_id;
-    service_id.service_id.process_id = Process::GetProcessID();
-    service_id.service_id.host_name = Process::GetHostName();
-    service_id.service_name = m_service_name;
-
-    return service_id;
-  }
-
-  std::string CServiceServerImpl::GetServiceName() const
-  {
-    return m_service_name;
-  }
-
   void CServiceServerImpl::Start()
   {
     if (m_created)
@@ -245,9 +230,6 @@ namespace eCAL
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl: Starting service server for: " + m_service_name);
 #endif
-
-    // Create service ID
-    m_service_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // Get global server manager
     auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
@@ -265,7 +247,7 @@ namespace eCAL
         {
           SServiceId service_id;
           service_id.service_name = me->m_service_name;
-          service_id.service_id.entity_id = me->m_service_id;
+          service_id.service_id.entity_id = me->m_server_id;
           // TODO: Also fill process ID and hostname?
           me->NotifyEventCallback(service_id, event == ecal_service::ServerEventType::Connected
             ? eServerEvent::connected
@@ -354,7 +336,7 @@ namespace eCAL
     if (server_tcp_port == 0) return ecal_reg_sample;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id = m_service_id;
+    identifier.entity_id = m_server_id;
     identifier.process_id = Process::GetProcessID();
     identifier.host_name = Process::GetHostName();
 
@@ -397,7 +379,7 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_unreg_service;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id = m_service_id;
+    identifier.entity_id = m_server_id;
     identifier.process_id = Process::GetProcessID();
     identifier.host_name = Process::GetHostName();
 
@@ -421,7 +403,7 @@ namespace eCAL
     auto& response_header = response.header;
     response_header.host_name = Process::GetHostName();
     response_header.service_name = m_service_name;
-    response_header.service_id = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
+    response_header.service_id = std::to_string(m_server_id); // TODO: Service ID currently defined as string, should be integer as well
 
     // try to parse request
     Service::Request request;

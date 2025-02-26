@@ -109,10 +109,10 @@ namespace eCAL
      * @return  The client entity id.
     **/
     ECAL_API_EXPORTED_MEMBER
-      SEntityId GetClientID() const;
+      const SEntityId& GetClientID() const;
 
   private:
-    SEntityId                                       m_entity_id;
+    const SEntityId                                 m_entity_id;
     const std::shared_ptr<eCAL::CServiceClientImpl> m_service_client_impl;
   };
 }

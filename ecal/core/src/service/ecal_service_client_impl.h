@@ -79,10 +79,10 @@ namespace eCAL
       Registration::Sample GetRegistration();
 
       // Retrieves the service id
-      SServiceId GetServiceId() const;
+      const SServiceId& GetServiceId() const { return m_service_id; }
 
       // Retrieves the service name
-      std::string GetServiceName() const;
+      const std::string& GetServiceName() const { return m_service_name; };
 
       // Prevent copy and move operations
       CServiceClientImpl(const CServiceClientImpl&) = delete;
@@ -146,8 +146,9 @@ namespace eCAL
       static constexpr int         m_client_version = 1;
 
       // Service attributes
-      std::string                  m_service_name;
-      EntityIdT      m_client_id;
+      const std::string            m_service_name;
+      const EntityIdT              m_client_id;
+      const SServiceId             m_service_id;
 
       // Client session map and synchronization
       using ClientSessionsMapT = std::map<SEntityId, SClient>;
