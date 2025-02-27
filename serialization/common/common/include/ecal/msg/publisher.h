@@ -45,11 +45,10 @@ namespace eCAL
   template <typename T, typename Serializer>
   class CMessagePublisher
   {
-    template<typename T, typename Serializer>
     class CPayload : public eCAL::CPayloadWriter
     {
     public:
-      explicit CPayload(const typename T& message_, Serializer& serializer_) :
+      explicit CPayload(const T& message_, Serializer& serializer_) :
         message(message_),
         serializer(serializer_)
       {};
@@ -72,8 +71,8 @@ namespace eCAL
       };
 
     private:
-      const typename T& message;
-      typename Serializer& serializer;
+      const T& message;
+      Serializer& serializer;
     };
 
   public:
@@ -138,7 +137,7 @@ namespace eCAL
     **/
     size_t Send(const T& msg_, long long time_ = CPublisher::DEFAULT_TIME_ARGUMENT)
     {
-      CPayload<T, Serializer> payload{ msg_, m_serializer };
+      CPayload payload{ msg_, m_serializer };
       return m_publisher.Send(payload, time_);
     }
 

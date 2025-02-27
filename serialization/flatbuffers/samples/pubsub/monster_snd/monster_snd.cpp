@@ -31,7 +31,7 @@
 #include <monster/monster_generated.h>
 
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char **/*argv*/)
 {
   // initialize eCAL API
   eCAL::Initialize("monster publisher");

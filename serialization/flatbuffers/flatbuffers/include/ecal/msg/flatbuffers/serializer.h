@@ -95,7 +95,7 @@ namespace eCAL
           // We should probably verify the message
           //::flatbuffers::Verifier verifier(buffer, size_);
 
-          const CleanObjectType::TableType* table_type_ = ::flatbuffers::GetRoot<CleanObjectType::TableType>(buffer);
+          const typename CleanObjectType::TableType* table_type_ = ::flatbuffers::GetRoot<typename CleanObjectType::TableType>(buffer);
           return table_type_->UnPack();
         }
       };
