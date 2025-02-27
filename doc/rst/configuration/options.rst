@@ -16,27 +16,37 @@ Loading strategy (Priority)
 
 The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
 If you want a specific eCAL Node to run with another ``ecal.yaml`` than the others, you can set the ``ECAL_DATA`` variable before starting the process, e.g. from a batch or shell skript.
-In addition, some eCAL applications support providing a path from the command line option ``--ecal-config-file``.
+Also, if you place a ``ecal.yaml`` in the working directory of the process, it will be loaded if ``ECAL_DATA`` is not specified first.
+
+In order to create the eCAL configuration files in the marked (*) directories, you can use the ``ecal_generate_config`` tool, which is part of the eCAL installation.
+It will generate the files only in the first found base path.
 
 .. important::
-   This loading strategy is valid for eCAL 5.10 and up.
+   This loading strategy is valid for eCAL 6.0 and up.
 
 - |fa-windows| Windows:
 
   1. ``%ECAL_DATA%/ecal.yaml``
-  2. ``%ProgramData%/ecal/ecal.yaml``
+  2. ``%cd%/ecal.yaml``
+  3. ``%UserProfile%/AppData/Local/eCAL/ecal.yaml``*
+  4. ``%ProgramData%/eCAL/ecal.yaml``*
+  5. ``%ECAL_HOME%/etc/ecal.yaml``
 
 - |fa-ubuntu| Ubuntu:
 
   1. ``$ECAL_DATA/ecal.yaml``
-  2. ``/etc/ecal/ecal.yaml`` (from ``CMAKE_INSTALL_SYSCONFDIR``)
+  2. ``$PWD/ecal.yaml``
+  3. ``$HOME/.ecal/ecal.yaml``*
   3. ``/etc/ecal/ecal.yaml`` (fallback)
       
-     .. note::
+      
+.. note::
 
-        This second path is set from CMake to ``CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.yaml``.
-        Official builds are configured to use ``/etc``.
-        If you are compiling eCAL yourself and don't provide the SYSCONFDIR, CMake will usually use ``/usr/local/etc/ecal/ecal.yaml``.
+  In previous versions (previous eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it.
+  This is not the case anymore. 
+  Instead, when installing your build to a custom path, a directory next to ``lib``/ ``bin`` named ``etc`` will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
+  That file in etc relativ to the ecal_core library will be used if no other is found.
+  
 
 ecal.yaml options
 =================
