@@ -133,10 +133,11 @@ namespace eCAL
     
     int32_t GetFrequency();
 
+    const eCAL::eCALWriter::SAttributes m_attributes;
+
     const STopicId                      m_topic_id;
     const EntityIdT                     m_publisher_id;
     /*const*/ SDataTypeInformation      m_topic_info;
-    const eCAL::eCALWriter::SAttributes m_attributes;
 
     size_t                              m_topic_size = 0;
 

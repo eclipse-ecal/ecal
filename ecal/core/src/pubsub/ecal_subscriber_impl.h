@@ -125,6 +125,8 @@ namespace eCAL
 
     int32_t GetFrequency();
 
+    eCAL::eCALReader::SAttributes     m_attributes;
+
     const STopicId                    m_topic_id;
     const EntityIdT                   m_subscriber_id;
     const SDataTypeInformation        m_topic_info;
@@ -174,7 +176,5 @@ namespace eCAL
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;
-
-    eCAL::eCALReader::SAttributes             m_attributes;
   };
 }
