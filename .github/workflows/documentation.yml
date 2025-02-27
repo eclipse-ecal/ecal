@@ -99,7 +99,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=OFF \
         -DCMAKE_BUILD_TYPE=Release \
-        -DECAL_CONFIG_INSTALLATION_DIR=/etc/ecal \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc/ecal \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
         -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu \
