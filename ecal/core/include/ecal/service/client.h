@@ -138,7 +138,7 @@ namespace eCAL
      * @return  The service name.
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::string GetServiceName() const;
+      const std::string& GetServiceName() const;
 
     /**
      * @brief Retrieve the service id.
@@ -146,7 +146,7 @@ namespace eCAL
      * @return  The service id.
     **/
     ECAL_API_EXPORTED_MEMBER
-      SServiceId GetServiceId() const;
+      const SServiceId& GetServiceId() const;
 
     /**
      * @brief Check connection to at least one service.
