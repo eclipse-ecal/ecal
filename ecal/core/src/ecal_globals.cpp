@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ namespace eCAL
     bool new_initialization(false);
 
 #if ECAL_CORE_REGISTRATION
-    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(GetRegistrationConfiguration(), GetTransportLayerConfiguration().udp, eCAL::Process::GetProcessID());
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////

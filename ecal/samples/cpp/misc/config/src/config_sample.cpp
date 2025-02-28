@@ -28,7 +28,7 @@ int main()
   eCAL::Configuration my_config;
 
   // setting a configuration
-  my_config.operation_mode = eCAL::eOperationMode::cloud;
+  my_config.communication_mode = eCAL::eCommunicationMode::network;
 
   // initialize eCAL API
   eCAL::Initialize(my_config, "config sample");

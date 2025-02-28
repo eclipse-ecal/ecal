@@ -37,10 +37,10 @@ namespace eCAL
 
       switch (attr_.udp.mode)
       {
-        case eCAL::eOperationMode::cloud:
+        case eCAL::eCommunicationMode::network:
           attributes.address = attr_.udp.network.group;
           break;
-        case eCAL::eOperationMode::local:
+        case eCAL::eCommunicationMode::local:
           attributes.address = attr_.udp.local.group;
           break;
         default:
@@ -69,11 +69,11 @@ namespace eCAL
       
       switch (attr_.udp.mode)
       {
-        case eCAL::eOperationMode::cloud:
+        case eCAL::eCommunicationMode::network:
           attributes.address = attr_.udp.network.group;
           attributes.ttl     = attr_.udp.network.ttl;
           break;
-        case eCAL::eOperationMode::local:
+        case eCAL::eCommunicationMode::local:
           attributes.address = attr_.udp.local.group;
           attributes.ttl     = attr_.udp.local.ttl;
           break;

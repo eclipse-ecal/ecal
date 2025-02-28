@@ -27,7 +27,7 @@ namespace eCAL
   {
     eCALReader::SAttributes attributes;
 
-    attributes.network_enabled            = eCAL::GetConfiguration().operation_mode == eCAL::eOperationMode::cloud;
+    attributes.network_enabled            = eCAL::GetConfiguration().communication_mode == eCAL::eCommunicationMode::network;
     attributes.loopback                   = reg_config_.loopback;
     attributes.drop_out_of_order_messages = sub_config_.drop_out_of_order_messages;
     attributes.registration_timeout_ms    = reg_config_.registration_timeout;
@@ -39,7 +39,7 @@ namespace eCAL
     attributes.unit_name                  = Process::GetUnitName();
 
     attributes.udp.enable        = sub_config_.layer.udp.enable;
-    attributes.udp.mode          = eCAL::GetConfiguration().operation_mode;
+    attributes.udp.mode          = eCAL::GetConfiguration().communication_mode;
     attributes.udp.port          = tl_config_.udp.port;
     attributes.udp.receivebuffer = tl_config_.udp.receive_buffer;
 

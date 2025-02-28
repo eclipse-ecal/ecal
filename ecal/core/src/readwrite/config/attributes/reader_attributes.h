@@ -35,7 +35,7 @@ namespace eCAL
     struct SUDPAttributes
     {
       bool           enable;
-      eOperationMode mode;
+      eCommunicationMode mode;
       int            port;
       int            receivebuffer;
       SUDPModeAttributes   network;

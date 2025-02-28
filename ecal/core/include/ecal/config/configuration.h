@@ -43,10 +43,10 @@
 
 namespace eCAL
 {
-  enum class eOperationMode
+  enum class eCommunicationMode
   {
     local,
-    cloud
+    network
   };
 
   struct Configuration
@@ -59,9 +59,9 @@ namespace eCAL
     Application::Configuration    application;
     Logging::Configuration        logging;
 
-    eOperationMode operation_mode{ eOperationMode::local };       /*!< eCAL components communication mode:
-                                                                        local: local host only communication (default)
-                                                                        cloud: communication across network boundaries */
+    eCommunicationMode            communication_mode { eCommunicationMode::local }; /*!< eCAL components communication mode:
+                                                                                           local: local host only communication (default)
+                                                                                           cloud: communication across network boundaries */
 
     ECAL_API Configuration();
 

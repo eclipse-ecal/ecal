@@ -27,7 +27,7 @@ namespace eCAL
   {
     eCALWriter::SAttributes attributes;
 
-    attributes.network_enabled         = eCAL::GetConfiguration().operation_mode == eCAL::eOperationMode::cloud;
+    attributes.network_enabled         = eCAL::GetConfiguration().communication_mode == eCAL::eCommunicationMode::network;
     attributes.loopback                = reg_config_.loopback;
 
     attributes.layer_priority_local    = pub_config_.layer_priority_local;
@@ -51,7 +51,7 @@ namespace eCAL
     attributes.udp.enable        = pub_config_.layer.udp.enable;
     attributes.udp.port          = tl_config_.udp.port;
     attributes.udp.send_buffer   = tl_config_.udp.send_buffer;
-    attributes.udp.mode          = eCAL::GetConfiguration().operation_mode;
+    attributes.udp.mode          = eCAL::GetConfiguration().communication_mode;
 
     attributes.udp.network.group = tl_config_.udp.network.group;
     attributes.udp.network.ttl   = tl_config_.udp.network.ttl;

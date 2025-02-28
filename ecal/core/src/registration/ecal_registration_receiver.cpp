@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,18 +93,24 @@ namespace eCAL
     m_timeout_provider_thread = std::make_unique<CCallbackThread>([this]() {m_timeout_provider->CheckForTimeouts(); });
     m_timeout_provider_thread->start(std::chrono::milliseconds(100));
 
-    // Why do we have here different behaviour than in the registration provider?
-    if (m_attributes.udp_enabled)    
+#if ECAL_CORE_REGISTRATION_SHM
+    if (m_attributes.communication_mode == eCommunicationMode::local && m_attributes.transport_type == eCAL::Registration::eTransportType::shm)
+    {
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes));
+    } else
+#endif
+    // Start receiving for local and network configuration, if udp as transport type is specified
+    if (m_attributes.transport_type == eCAL::Registration::eTransportType::udp)    
     {
       m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_);}, Registration::BuildUDPReceiverAttributes(m_attributes));
     }
-
-#if ECAL_CORE_REGISTRATION_SHM
-    if (m_attributes.shm_enabled)
+    else
     {
-      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes));
+      // TO DISCUSS: Handling
+      eCAL::Logging::Log(Logging::log_level_warning, "[CRegistrationReceiver] No registration layer enabled.");
+      m_created = false;
+      return;
     }
-#endif
 
     m_created = true;
   }
@@ -114,23 +120,17 @@ namespace eCAL
     if(!m_created) return;
 
     // stop network registration receive thread
-    if (m_attributes.udp_enabled)
-    {
-      m_registration_receiver_udp = nullptr;
-    }
+      m_registration_receiver_udp.reset();
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_attributes.shm_enabled)
-    {
-      m_registration_receiver_shm = nullptr;
-    }
+      m_registration_receiver_shm.reset();
 #endif
 
-    m_timeout_provider_thread = nullptr;
+    m_timeout_provider_thread.reset();
     m_sample_applier.RemCustomApplySampleCallback("timeout");
-    m_timeout_provider = nullptr;
+    m_timeout_provider.reset();
 
-    m_created          = false;
+    m_created = false;
   }
 
   void CRegistrationReceiver::SetCustomApplySampleCallback(const std::string& customer_, const ApplySampleCallbackT& callback_)

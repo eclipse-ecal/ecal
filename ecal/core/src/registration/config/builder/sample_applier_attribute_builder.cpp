@@ -29,7 +29,7 @@ namespace eCAL
       {
         SAttributes sample_applier_attr;
         
-        sample_applier_attr.network_enabled      = attr_.network_enabled;
+        sample_applier_attr.network_enabled      = attr_.communication_mode == eCommunicationMode::network;
         sample_applier_attr.loopback             = attr_.loopback;
         sample_applier_attr.host_name            = attr_.host_name;
         sample_applier_attr.shm_transport_domain = attr_.shm_transport_domain;

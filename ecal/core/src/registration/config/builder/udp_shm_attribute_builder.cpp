@@ -27,58 +27,37 @@ namespace eCAL
     UDP::SSenderAttributes BuildUDPSenderAttributes(const SAttributes& provider_attr_)
     {
       UDP::SSenderAttributes sender_attr;
-      sender_attr.broadcast      = !provider_attr_.network_enabled;
-      sender_attr.loopback       = provider_attr_.loopback;
-      
-      sender_attr.sndbuf         = provider_attr_.udp.sendbuffer;
-      sender_attr.port           = provider_attr_.udp.port;
-      
-      switch (provider_attr_.udp.mode)
-      {
-        case eCAL::eOperationMode::cloud:
-          sender_attr.address = provider_attr_.udp.network.group;
-          sender_attr.ttl     = provider_attr_.udp.network.ttl;
-          break;
-        case eCAL::eOperationMode::local:
-          sender_attr.address = provider_attr_.udp.local.group;
-          sender_attr.ttl     = provider_attr_.udp.local.ttl;
-          break;
-        default:
-          break;
-      }
+
+      sender_attr.broadcast = provider_attr_.communication_mode == eCommunicationMode::local ? true : false;
+      sender_attr.loopback  = provider_attr_.loopback;
+      sender_attr.sndbuf    = provider_attr_.udp.sendbuffer;
+      sender_attr.port      = provider_attr_.udp.port;
+      sender_attr.address   = provider_attr_.udp.group;
+      sender_attr.ttl       = provider_attr_.udp.ttl;
 
       return sender_attr;
     }
 
     UDP::SReceiverAttributes BuildUDPReceiverAttributes(const SAttributes& provider_attr_)
     {
-      UDP::SReceiverAttributes receiver_attr;      
-      receiver_attr.broadcast = !provider_attr_.network_enabled;
-      receiver_attr.loopback  = true;
-      
-      receiver_attr.receive_buffer    = provider_attr_.udp.receivebuffer;
-      receiver_attr.port      = provider_attr_.udp.port;
+      UDP::SReceiverAttributes receiver_attr;
 
-      switch (provider_attr_.udp.mode)
-      {
-        case eCAL::eOperationMode::cloud:
-          receiver_attr.address = provider_attr_.udp.network.group;
-          break;
-        case eCAL::eOperationMode::local:
-          receiver_attr.address = provider_attr_.udp.local.group;
-          break;
-        default:
-          break;
-      }
-
+      receiver_attr.broadcast      = provider_attr_.communication_mode == eCommunicationMode::local ? true : false;
+      receiver_attr.loopback       = true;
+      receiver_attr.receive_buffer = provider_attr_.udp.receivebuffer;
+      receiver_attr.port           = provider_attr_.udp.port;
+      receiver_attr.address        = provider_attr_.udp.group;
+   
       return receiver_attr;
     }
 
     SHM::SAttributes BuildSHMAttributes(const SAttributes& provider_attr_)
     {
-      SHM::SAttributes sender_attr;      
+      SHM::SAttributes sender_attr; 
+
       sender_attr.domain     = provider_attr_.shm.domain;
       sender_attr.queue_size = provider_attr_.shm.queue_size;
+
       return sender_attr;
     }
   }

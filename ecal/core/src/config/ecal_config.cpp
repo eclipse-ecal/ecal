@@ -39,8 +39,8 @@ namespace eCAL
     // network
     /////////////////////////////////////
 
-    bool              IsNetworkEnabled                     () { return GetConfiguration().operation_mode == eOperationMode::cloud ? true : false; }
-    bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.layer.shm.enable; }
+    bool              IsNetworkEnabled                     () { return GetConfiguration().communication_mode == eCommunicationMode::network ? true : false; }
+    bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.local.transport_type == eCAL::Registration::eTransportType::shm && GetConfiguration().communication_mode == eCAL::eCommunicationMode::local; }
 
     Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.udp.config_version; }
 
@@ -94,8 +94,8 @@ namespace eCAL
     // registration
     /////////////////////////////////////
     
-    size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.layer.shm.queue_size; }
-    std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.layer.shm.domain;}
+    size_t            GetShmMonitoringQueueSize          () { return GetConfiguration().registration.local.shm.queue_size; }
+    std::string       GetShmMonitoringDomain             () { return GetConfiguration().registration.local.shm.domain;}
 
   }
 

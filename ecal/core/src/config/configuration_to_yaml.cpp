@@ -86,51 +86,84 @@ namespace YAML
     /_/|_|\__/\_, /_/___/\__/_/  \_,_/\__/_/\___/_//_/
              /___/                                    
   */
-  Node convert<eCAL::Registration::Layer::UDP::Configuration>::encode(const eCAL::Registration::Layer::UDP::Configuration& config_)
+
+  Node convert<eCAL::Registration::Network::UDP::Configuration>::encode(const eCAL::Registration::Network::UDP::Configuration& config_)
   {
     Node node;
-    node["enable"] = config_.enable;
-    node["port"]   = config_.port;
+    node["port"] = config_.port;
     return node;
   }
 
-  bool convert<eCAL::Registration::Layer::UDP::Configuration>::decode(const Node& node_, eCAL::Registration::Layer::UDP::Configuration& config_)
+  bool convert<eCAL::Registration::Network::UDP::Configuration>::decode(const Node& node_, eCAL::Registration::Network::UDP::Configuration& config_)
   {
-    AssignValue<bool>(config_.enable, node_, "enable");
     AssignValue<unsigned int>(config_.port, node_, "port");
     return true;
   }
 
-  
-  Node convert<eCAL::Registration::Layer::SHM::Configuration>::encode(const eCAL::Registration::Layer::SHM::Configuration& config_)
+  Node convert<eCAL::Registration::Network::Configuration>::encode(const eCAL::Registration::Network::Configuration& config_)
   {
     Node node;
-    node["enable"]     = config_.enable;
+    node["udp"]   = config_.udp;
+    return node;
+  }
+
+  bool convert<eCAL::Registration::Network::Configuration>::decode(const Node& node_, eCAL::Registration::Network::Configuration& config_)
+  {
+    std::string transport_type;
+    AssignValue<std::string>(transport_type, node_, "transport_mode");
+    // Right now we only support udp
+    config_.transport_type = transport_type == "udp" ? eCAL::Registration::eTransportType::udp : eCAL::Registration::eTransportType::udp;
+
+    AssignValue<eCAL::Registration::Network::UDP::Configuration>(config_.udp, node_, "udp");
+    return true;
+  }
+
+  
+  Node convert<eCAL::Registration::Local::SHM::Configuration>::encode(const eCAL::Registration::Local::SHM::Configuration& config_)
+  {
+    Node node;
     node["domain"]     = config_.domain;
     node["queue_size"] = config_.queue_size;
     return node;
   }
 
-  bool convert<eCAL::Registration::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Registration::Layer::SHM::Configuration& config_)
+  bool convert<eCAL::Registration::Local::SHM::Configuration>::decode(const Node& node_, eCAL::Registration::Local::SHM::Configuration& config_)
   {
-    AssignValue<bool>(config_.enable, node_, "enable");
     AssignValue<std::string>(config_.domain, node_, "domain");
     AssignValue<size_t>(config_.queue_size, node_, "queue_size");
     return true;
   }
   
-  Node convert<eCAL::Registration::Layer::Configuration>::encode(const eCAL::Registration::Layer::Configuration& config_)
+  Node convert<eCAL::Registration::Local::UDP::Configuration>::encode(const eCAL::Registration::Local::UDP::Configuration& config_)
   {
     Node node;
-    node["shm"] = config_.shm;
-    node["udp"] = config_.udp;
+    node["port"] = config_.port;
     return node;
   }
 
-  bool convert<eCAL::Registration::Layer::Configuration>::decode(const Node& node_, eCAL::Registration::Layer::Configuration& config_)
+  bool convert<eCAL::Registration::Local::UDP::Configuration>::decode(const Node& node_, eCAL::Registration::Local::UDP::Configuration& config_)
   {
-    AssignValue<eCAL::Registration::Layer::SHM::Configuration>(config_.shm, node_, "shm");
-    AssignValue<eCAL::Registration::Layer::UDP::Configuration>(config_.udp, node_, "udp");
+    AssignValue<unsigned int>(config_.port, node_, "port");
+    return true;
+  }
+
+  Node convert<eCAL::Registration::Local::Configuration>::encode(const eCAL::Registration::Local::Configuration& config_)
+  {
+    Node node;
+    node["transport_type"] = config_.transport_type == eCAL::Registration::eTransportType::shm ? "shm" : "udp";
+    node["shm"]            = config_.shm;
+    node["udp"]            = config_.udp;
+    return node;
+  }
+
+  bool convert<eCAL::Registration::Local::Configuration>::decode(const Node& node_, eCAL::Registration::Local::Configuration& config_)
+  {
+    std::string transport_type;
+    AssignValue<std::string>(transport_type, node_, "transport_type");
+    config_.transport_type = transport_type == "shm" ? eCAL::Registration::eTransportType::shm : eCAL::Registration::eTransportType::udp;
+
+    AssignValue<eCAL::Registration::Local::SHM::Configuration>(config_.shm, node_, "shm");
+    AssignValue<eCAL::Registration::Local::UDP::Configuration>(config_.udp, node_, "udp");
     return true;
   }
   
@@ -149,13 +182,12 @@ namespace YAML
     AssignValue<unsigned int>(config_.registration_timeout, node_, "registration_timeout");
     AssignValue<unsigned int>(config_.registration_refresh, node_, "registration_refresh");
     AssignValue<bool>(config_.loopback, node_, "loopback");    
-    AssignValue<eCAL::Registration::Layer::Configuration>(config_.layer, node_, "layer");
+    AssignValue<eCAL::Registration::Local::Configuration>(config_.local, node_, "local");
+    AssignValue<eCAL::Registration::Network::Configuration>(config_.network, node_, "network");
 
-    // By default the shm_transport_domain is set with the current host name.
-    // If the user does not specify the shm transport domain in the yaml, leave it like it is.
     std::string shm_transport_domain;
     AssignValue<std::string>(shm_transport_domain, node_, "shm_transport_domain");
-    if (!shm_transport_domain.empty()) config_.shm_transport_domain = shm_transport_domain;
+    config_.shm_transport_domain = shm_transport_domain;
 
     return true;
   }
@@ -633,13 +665,13 @@ namespace YAML
   Node convert<eCAL::Configuration>::encode(const eCAL::Configuration& config_)
   {
     Node node;
-    node["publisher"]    = config_.publisher;
-    node["subscriber"]   = config_.subscriber;
-    node["registration"] = config_.registration;
-    node["time"]         = config_.timesync;
-    node["application"]  = config_.application;
-    node["logging"]      = config_.logging;
-    node["operation_mode"] = config_.operation_mode == eCAL::eOperationMode::cloud ? "cloud" : "local";
+    node["publisher"]          = config_.publisher;
+    node["subscriber"]         = config_.subscriber;
+    node["registration"]       = config_.registration;
+    node["time"]               = config_.timesync;
+    node["application"]        = config_.application;
+    node["logging"]            = config_.logging;
+    node["communication_mode"] = config_.communication_mode == eCAL::eCommunicationMode::network ? "network" : "local";
     
     return node;
   }
@@ -654,12 +686,9 @@ namespace YAML
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
     
-    if (node_["operation_mode"])
-    {
-      std::string operation_mode;
-      AssignValue<std::string>(operation_mode, node_, "operation_mode");
-      config_.operation_mode = operation_mode == "cloud" ? eCAL::eOperationMode::cloud : eCAL::eOperationMode::local;
-    }
+    std::string communication_mode;
+    AssignValue<std::string>(communication_mode, node_, "communication_mode");
+    config_.communication_mode = communication_mode == "network" ? eCAL::eCommunicationMode::network : eCAL::eCommunicationMode::local;
 
     return true;
   }

@@ -149,23 +149,30 @@ INSTANTIATE_TEST_SUITE_P(
     ServicesTestParams{[]() {
       // shm
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
+      config.communication_mode = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::eTransportType::shm;
       return config;
     }() },
     ServicesTestParams{ []() {
       // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable     = true;
-      config.registration.layer.udp.enable     = false;
+      config.communication_mode = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::eTransportType::shm;
       config.registration.shm_transport_domain = "abc";
       return config;
     }() },
     ServicesTestParams{[]() {
-      // udp
+      // udp network
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = false;
-      config.registration.layer.udp.enable = true;
+      config.communication_mode = eCAL::eCommunicationMode::network;
+      config.registration.local.transport_type = eCAL::Registration::eTransportType::udp;
+      return config;
+    }() },
+    ServicesTestParams{[]() {
+      // udp local
+      eCAL::Configuration config;
+      config.communication_mode = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::eTransportType::udp;
       return config;
     }() }
       )
