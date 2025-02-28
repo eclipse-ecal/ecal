@@ -42,9 +42,9 @@ namespace eCAL
   namespace capnproto
   {
     /**
-     * @brief  eCAL capnp subscriber class.
+     * @brief  eCAL capnp publisher class.
      *
-     * Subscriber template  class for capnp messages. For details see documentation of CSubscriber class.
+     * Publisher template class for capnp messages. For details see documentation of CSubscriber class.
      *
     **/
     template <typename T>
