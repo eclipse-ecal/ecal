@@ -19,6 +19,7 @@
 
 #include "registration_attribute_builder.h"
 #include "ecal/process.h"
+#include "ecal/config.h"
 
 namespace eCAL
 {
@@ -28,7 +29,7 @@ namespace eCAL
     
     attr.timeout              = std::chrono::milliseconds(reg_config_.registration_timeout);
     attr.refresh              = reg_config_.registration_refresh;
-    attr.network_enabled      = reg_config_.network_enabled;
+    attr.network_enabled      =eCAL::GetConfiguration().operation_mode == eCAL::eOperationMode::cloud;
     attr.loopback             = reg_config_.loopback;
     attr.host_name            = eCAL::Process::GetHostName();
     attr.shm_transport_domain = reg_config_.shm_transport_domain;
@@ -44,7 +45,7 @@ namespace eCAL
     attr.udp.port          = reg_config_.layer.udp.port;
     attr.udp.sendbuffer    = tl_udp_confi_.send_buffer;
     attr.udp.receivebuffer = tl_udp_confi_.receive_buffer;
-    attr.udp.mode          = tl_udp_confi_.mode;
+    attr.udp.mode          = eCAL::GetConfiguration().operation_mode;
 
     attr.udp.network.group = tl_udp_confi_.network.group;
     attr.udp.network.ttl   = tl_udp_confi_.network.ttl;

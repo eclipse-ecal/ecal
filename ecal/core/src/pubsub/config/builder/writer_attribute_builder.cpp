@@ -19,6 +19,7 @@
 
 #include "writer_attribute_builder.h"
 #include "ecal/process.h"
+#include "ecal/config.h"
 
 namespace eCAL
 {
@@ -26,7 +27,7 @@ namespace eCAL
   {
     eCALWriter::SAttributes attributes;
 
-    attributes.network_enabled         = reg_config_.network_enabled;
+    attributes.network_enabled         = eCAL::GetConfiguration().operation_mode == eCAL::eOperationMode::cloud;
     attributes.loopback                = reg_config_.loopback;
 
     attributes.layer_priority_local    = pub_config_.layer_priority_local;
@@ -50,7 +51,7 @@ namespace eCAL
     attributes.udp.enable        = pub_config_.layer.udp.enable;
     attributes.udp.port          = tl_config_.udp.port;
     attributes.udp.send_buffer   = tl_config_.udp.send_buffer;
-    attributes.udp.mode          = tl_config_.udp.mode;
+    attributes.udp.mode          = eCAL::GetConfiguration().operation_mode;
 
     attributes.udp.network.group = tl_config_.udp.network.group;
     attributes.udp.network.ttl   = tl_config_.udp.network.ttl;
