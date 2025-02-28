@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,20 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto3";
+#pragma once
 
-import "animal.proto";
-import "house.proto";
+#include <exception>
 
-package pb.People;
-
-message Person
+namespace eCAL
 {
-  enum SType
-  {
-    MALE   = 0;
-    FEMALE = 1;
-  }
-
-  int32  id               = 1;
-  string name             = 2;
-  SType  stype            = 3;
-  string email            = 4;
-
-  Animal.Dog        dog   = 5;
-  Environment.House house = 6;
+    /* @cond */
+    class DeserializationException : public std::exception
+    {
+    public:
+      DeserializationException(const std::string& message) : message_(message) {}
+      virtual const char* what() const noexcept { return message_.c_str(); }
+    private:
+      std::string message_;
+    };
+    /* @endcond */
 }

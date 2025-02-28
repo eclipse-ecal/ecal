@@ -19,6 +19,37 @@
 find_package(CapnProto REQUIRED)
 
 ##########################
+# Capnproto base functionality (serialization ...)
+##########################
+add_library(capnproto_base INTERFACE)
+add_library(eCAL::capnproto_base ALIAS capnproto_base)
+
+target_link_libraries(capnproto_base 
+  INTERFACE 
+    CapnProto::capnp
+    eCAL::message_base
+)
+
+target_sources(capnproto_base
+  INTERFACE
+    FILE_SET capnproto_base_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/capnproto/helper.h
+      include/ecal/msg/capnproto/serializer.h
+)
+
+target_compile_features(capnproto_base INTERFACE cxx_std_17)
+
+install(
+  TARGETS capnproto_base
+  EXPORT eCALCoreTargets  
+  FILE_SET capnproto_base_headers COMPONENT sdk
+)
+
+
+##########################
 # Capnproto core communication extension
 ##########################
 add_library(capnproto_core INTERFACE)
@@ -26,8 +57,8 @@ add_library(eCAL::capnproto_core ALIAS capnproto_core)
 
 target_link_libraries(capnproto_core 
   INTERFACE 
-    CapnProto::capnp
     eCAL::message_core
+    eCAL::capnproto_base
 )
 
 target_sources(capnproto_core
@@ -37,9 +68,8 @@ target_sources(capnproto_core
     BASE_DIRS include
     FILES
       include/ecal/msg/capnproto/dynamic.h
-      include/ecal/msg/capnproto/helper.h
       include/ecal/msg/capnproto/publisher.h
-      include/ecal/msg/capnproto/subscriber.h      
+      include/ecal/msg/capnproto/subscriber.h
 )
 
 target_compile_features(capnproto_core INTERFACE cxx_std_17)

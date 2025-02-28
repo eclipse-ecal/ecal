@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,9 +98,7 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
   auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
   person_rec.SetReceiveCallback(person_callback);
 
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved("ProtoSubscriberTest");
-
-  person_moved = std::move(person_rec);
+  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved{ std::move(person_rec) };
 
   ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
 

@@ -331,7 +331,7 @@ void ProcEcho(const std::string& topic_name, int msg_count)
   std::cout << "echo string message output for topic " << topic_name << "\n" << "\n";
 
   // create string subscriber for topic topic_name_ and assign callback
-  eCAL::string::CSubscriber<std::string> sub(topic_name);
+  eCAL::string::CSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
   auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << "\n"; if (cnt > 0) cnt--; } };
   sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
@@ -545,7 +545,7 @@ void ProcPub(const std::string& topic_name, const std::string& data)
   std::cout << "publish " << data << " on topic " << topic_name << "\n" << "\n";;
 
   // create string publisher for topic topic_name_
-  eCAL::string::CPublisher<std::string> pub(topic_name);
+  eCAL::string::CPublisher pub(topic_name);
 
   // sleep 1 s
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));

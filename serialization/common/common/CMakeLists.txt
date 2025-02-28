@@ -16,6 +16,27 @@
 #
 # ========================= eCAL LICENSE =================================
 
+add_library(message_base INTERFACE)
+add_library(eCAL::message_base ALIAS message_base)
+
+target_sources(message_base
+  INTERFACE
+    FILE_SET message_base_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/exception.h
+)
+
+target_compile_features(message_base INTERFACE cxx_std_14)
+
+install(
+  TARGETS message_base
+  EXPORT eCALCoreTargets  
+  FILE_SET message_base_headers COMPONENT sdk
+)
+
+
 ################################
 # eCAL core Message extensions #
 ################################
@@ -33,7 +54,6 @@ target_sources(message_core
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/dynamic.h
       include/ecal/msg/publisher.h
       include/ecal/msg/subscriber.h
 )

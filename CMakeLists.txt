@@ -494,7 +494,7 @@ endif()
 # --------------------------------------------------------
 # Serialization extensions
 # --------------------------------------------------------
-add_subdirectory(serialization/common/core)
+add_subdirectory(serialization/common/common)
 
 # Capnroto
 if (ECAL_USE_CAPNPROTO)

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@
 
 #include <ecal/ecal.h>
 #include <ecal/os.h>
-#include <ecal/msg/dynamic.h>
+#include <ecal/msg/exception.h>
+#include <ecal/msg/subscriber.h>
 #include <ecal/msg/protobuf/ecal_proto_dyn.h>
 
 #include <iostream>
@@ -54,6 +55,30 @@
 #pragma GCC diagnostic pop
 #endif
 
+namespace
+{
+  /* @cond */
+  inline bool StrEmptyOrNull(const std::string& str)
+  {
+    if (str.empty())
+    {
+      return true;
+    }
+    else
+    {
+      for (auto c : str)
+      {
+        if (c != '\0')
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  /* @endcond */
+}
+
 namespace eCAL
 {
     namespace internal
@@ -61,6 +86,15 @@ namespace eCAL
       class ProtobufDynamicJSONDeserializer
       {
       public:
+        static SDataTypeInformation GetDataTypeInformation()
+        {
+          SDataTypeInformation topic_info;
+          topic_info.encoding = "proto";
+          topic_info.name = "*";
+          topic_info.descriptor = "*";
+          return topic_info;
+        }
+
         std::string Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& datatype_info_)
         {
           google::protobuf::util::JsonPrintOptions options;
@@ -80,7 +114,7 @@ namespace eCAL
           }
           else
           {
-            throw new DynamicReflectionException("Error deserializing Protobuf data to json object.");
+            throw DeserializationException("Error deserializing Protobuf data to json object.");
           }
         }
 
@@ -101,13 +135,13 @@ namespace eCAL
 
           if (StrEmptyOrNull(unqualified_topic_type))
           {
-            throw DynamicReflectionException("ProtobufDynamicJSONDeserializer: Could not get type");
+            throw DeserializationException("ProtobufDynamicJSONDeserializer: Could not get type");
           }
 
           std::string topic_desc = datatype_info_.descriptor;
           if (StrEmptyOrNull(topic_desc))
           {
-            throw DynamicReflectionException("ProtobufDynamicJSONDeserializer: Could not get description for type" + std::string(unqualified_topic_type));
+            throw DeserializationException("ProtobufDynamicJSONDeserializer: Could not get description for type" + std::string(unqualified_topic_type));
           }
 
           google::protobuf::FileDescriptorSet proto_desc;
@@ -121,7 +155,7 @@ namespace eCAL
             std::stringstream s;
             s << "ProtobufDynamicJSONDeserializer: Message of type " + unqualified_topic_type << " could not be decoded" << std::endl;
             s << error_s;
-            throw DynamicReflectionException(s.str());
+            throw DeserializationException(s.str());
           }
 
           return resolver;
@@ -152,7 +186,7 @@ namespace eCAL
        * Dynamic subscriber class for protobuf messages. For details see documentation of CDynamicMessageSubscriber class.
        *
       **/
-      using CDynamicJSONSubscriber = CDynamicMessageSubscriber<std::string, internal::ProtobufDynamicJSONDeserializer>;
+      using CDynamicJSONSubscriber = CMessageSubscriber<std::string, internal::ProtobufDynamicJSONDeserializer>;
 
       /** @example proto_dyn_rec.cpp
       * This is an example how to use eCAL::protobuf::CDynamicSubscriber to receive dynamic protobuf data with eCAL. To receive the data, see @ref proto_dyn_rec.cpp .
