@@ -33,8 +33,7 @@
 
 namespace eCAL
 {
-  CGlobals*                     g_globals_ctx(nullptr);
-  std::atomic<int>              g_globals_ctx_ref_cnt;
+  std::unique_ptr<CGlobals>     g_globals_ctx(nullptr);
 
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
   Configuration                 g_ecal_configuration{};
@@ -52,12 +51,6 @@ namespace eCAL
   eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
   eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
 
-  void InitGlobals()
-  {
-    if (g_globals_ctx == nullptr)
-      g_globals_ctx = new CGlobals;
-  }
-
   void SetGlobalUnitName(const char *unit_name_)
   {
     if(unit_name_ != nullptr) g_unit_name = unit_name_;
@@ -70,7 +63,7 @@ namespace eCAL
 
   CGlobals* g_globals()
   {
-    return g_globals_ctx;
+    return g_globals_ctx.get();
   }
 
   Logging::CLogReceiver* g_log_udp_receiver()
