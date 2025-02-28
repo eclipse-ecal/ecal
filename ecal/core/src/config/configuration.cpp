@@ -22,12 +22,12 @@
 **/
 
 #include "ecal/config.h"
-
 #include "ecal/util.h"
 
-#include "ecal_path_processing.h"
 #include "ecal_global_accessors.h"
-
+#include "ecal_path_processing.h"
+#include "ecal_utils/filesystem.h"
+#include "ecal_utils/string.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
   #include "configuration_reader.h"
@@ -42,9 +42,23 @@ namespace eCAL
       if (!yaml_path.empty())
       {
 #ifdef ECAL_CORE_CONFIGURATION
-        eCAL::Config::YamlFileToConfig(yaml_path, *this);
-        ecal_yaml_file_path = yaml_path;
-        std::cout << "[eCAL][Config] Yaml configuration loaded from \"" << yaml_path << "\"." << "\n";
+        
+        const auto absolute_path = EcalUtils::Filesystem::AbsolutePath(yaml_path);
+        try
+        {
+          eCAL::Config::YamlFileToConfig(absolute_path, *this);
+          ecal_yaml_file_path = absolute_path;
+
+          std::cout << "[eCAL][Config] Yaml configuration loaded from \"" << ecal_yaml_file_path << "\"." << "\n";
+        }
+        catch (std::exception& e)
+        {
+          std::cout << "[eCAL][Config] Error reading yaml configuration from \"" << yaml_path     << "\n";
+          std::cout << "[eCAL][Config] Interpreted path: "                       << absolute_path << "\n";
+          std::cout << "[eCAL][Config] Error: "                                  << e.what()      << "\n\n";
+          std::cout << "[eCAL][Config] Using default configuration."                              << "\n";
+        }
+        
 #else
         std::cout << "[eCAL][Config] Yaml file found at \"" << yaml_path << "\" but eCAL core configuration is not enabled." << "\n";
 #endif

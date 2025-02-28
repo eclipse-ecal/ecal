@@ -82,12 +82,6 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build
-    
-    - name: Create config path and copy ecal.yaml
-      run: | 
-           sudo mkdir /etc/ecal
-           sudo cp "./ecal/core/cfg/ecal.yaml" /etc/ecal
-      working-directory: ${{ runner.workspace }}/_build
 
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
