@@ -54,7 +54,6 @@ target_sources(message_core
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/dynamic.h
       include/ecal/msg/publisher.h
       include/ecal/msg/subscriber.h
 )
