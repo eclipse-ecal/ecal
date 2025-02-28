@@ -21,7 +21,7 @@
 
 #include <string>
 #include <cstddef>
-#include "ecal/types/custom_data_types.h"
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {
@@ -35,7 +35,7 @@ namespace eCAL
     struct SUDPAttributes
     {
       bool           enable;
-      Types::UDPMode mode;
+      eOperationMode mode;
       int            port;
       int            receivebuffer;
       SUDPModeAttributes   network;

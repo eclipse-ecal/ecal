@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 */
 
 #include "udp_shm_attribute_builder.h"
+#include "ecal/config/configuration.h"
 
 namespace eCAL
 {
@@ -34,11 +35,11 @@ namespace eCAL
       
       switch (provider_attr_.udp.mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           sender_attr.address = provider_attr_.udp.network.group;
           sender_attr.ttl     = provider_attr_.udp.network.ttl;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           sender_attr.address = provider_attr_.udp.local.group;
           sender_attr.ttl     = provider_attr_.udp.local.ttl;
           break;
@@ -60,10 +61,10 @@ namespace eCAL
 
       switch (provider_attr_.udp.mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           receiver_attr.address = provider_attr_.udp.network.group;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           receiver_attr.address = provider_attr_.udp.local.group;
           break;
         default:

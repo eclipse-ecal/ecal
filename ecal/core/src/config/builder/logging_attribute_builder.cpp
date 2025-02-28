@@ -1,6 +1,7 @@
 #include "logging_attribute_builder.h"
 #include "ecal/process.h"
 #include "ecal/util.h"
+#include "ecal/config.h"
 
 namespace eCAL
 {
@@ -27,19 +28,19 @@ namespace eCAL
       attributes.console_sink.filter_log = log_config_.provider.console.filter_log;
 
       // UDP related configuration part
-      attributes.udp_config.broadcast    = !reg_config_.network_enabled;
+      attributes.udp_config.broadcast    = eCAL::Configuration().operation_mode == eCAL::eOperationMode::local;
       attributes.udp_config.loopback     = reg_config_.loopback;
       
       attributes.udp_config.sndbuf       = tl_config_.udp.send_buffer;
       attributes.udp_config.port         = log_config_.provider.udp_config.port;
       
-      switch (tl_config_.udp.mode)
+      switch (eCAL::Configuration().operation_mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           attributes.udp_config.address = tl_config_.udp.network.group;
           attributes.udp_config.ttl     = tl_config_.udp.network.ttl;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           attributes.udp_config.address = tl_config_.udp.local.group;
           attributes.udp_config.ttl     = tl_config_.udp.local.ttl;
           break;
@@ -54,23 +55,23 @@ namespace eCAL
     {
       SReceiverAttributes attributes;
 
-      attributes.network_enabled          = reg_config_.network_enabled;
+      attributes.network_enabled          = eCAL::GetConfiguration().operation_mode == eCAL::eOperationMode::cloud;
       attributes.host_name                = Process::GetHostName();
 
       attributes.receive_enabled          = log_config_.receiver.enable;
 
-      attributes.udp_receiver.broadcast   = !reg_config_.network_enabled;
+      attributes.udp_receiver.broadcast   = eCAL::Configuration().operation_mode == eCAL::eOperationMode::local;
       attributes.udp_receiver.loopback    = true;
       
       attributes.udp_receiver.rcvbuf      = tl_config_.udp.receive_buffer;
       attributes.udp_receiver.port        = log_config_.receiver.udp_config.port;
 
-      switch (tl_config_.udp.mode)
+      switch (eCAL::Configuration().operation_mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           attributes.udp_receiver.address = tl_config_.udp.network.group;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           attributes.udp_receiver.address = tl_config_.udp.local.group;
           break;
         default:

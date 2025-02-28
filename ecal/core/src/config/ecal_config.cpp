@@ -39,7 +39,7 @@ namespace eCAL
     // network
     /////////////////////////////////////
 
-    bool              IsNetworkEnabled                     () { return GetConfiguration().registration.network_enabled; }
+    bool              IsNetworkEnabled                     () { return GetConfiguration().operation_mode == eOperationMode::cloud ? true : false; }
     bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.layer.shm.enable; }
 
     Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.udp.config_version; }

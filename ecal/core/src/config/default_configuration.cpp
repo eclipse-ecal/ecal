@@ -86,15 +86,15 @@ namespace
     }
   }
 
-  std::string quoteString(const eCAL::Types::UDPMode mode_)
+  std::string quoteString(const eCAL::eOperationMode mode_)
   {
     switch (mode_)
     {
-      case eCAL::Types::UDPMode::LOCAL:
+      case eCAL::eOperationMode::local:
         return "\"local\"";
         break;
-      case eCAL::Types::UDPMode::NETWORK:
-        return "\"network\"";
+      case eCAL::eOperationMode::cloud:
+        return "\"cloud\"";
         break;
       
       default:
@@ -142,9 +142,6 @@ namespace eCAL
       ss << R"(  # SHM transport domain that enables interprocess mechanisms across (virtual))"                                     << "\n";
       ss << R"(  # host borders (e.g, Docker); by default equivalent to local host name)"                                           << "\n";
       ss << R"(  shm_transport_domain: )"                            << quoteString(config_.registration.shm_transport_domain)      << "\n";
-      ss << R"(  # true  = all eCAL components communicate over network boundaries)"                                                << "\n";
-      ss << R"(  # false = local host only communication (Default: false))"                                                         << "\n";
-      ss << R"(  network_enabled: )"                                 << config_.registration.network_enabled                        << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(  layer:)"                                                                                                           << "\n";
       ss << R"(    shm:)"                                                                                                           << "\n";
@@ -166,8 +163,6 @@ namespace eCAL
       ss << R"(    # v1: default behavior)"                                                                                         << "\n";
       ss << R"(    # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups)"                   << "\n";
       ss << R"(    config_version: )"                                << quoteString(config_.transport_layer.udp.config_version)     << "\n";
-      ss << R"(    # Valid modes: local, network (Default: local))"                                                                 << "\n";
-      ss << R"(    mode: )"                                          << quoteString(config_.transport_layer.udp.mode)               << "\n";
       ss << R"(    # Multicast port number)"                                                                                        << "\n";
       ss << R"(    port: )"                                          << config_.transport_layer.udp.port                            << "\n";
       ss << R"(    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255))"                                 << "\n";

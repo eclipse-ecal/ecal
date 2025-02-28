@@ -139,7 +139,6 @@ namespace YAML
     Node node;
     node["registration_timeout"] = config_.registration_timeout;
     node["registration_refresh"] = config_.registration_refresh;
-    node["network_enabled"]      = config_.network_enabled;
     node["loopback"]             = config_.loopback;
     node["shm_transport_domain"] = config_.shm_transport_domain;
     return node;
@@ -149,7 +148,6 @@ namespace YAML
   {
     AssignValue<unsigned int>(config_.registration_timeout, node_, "registration_timeout");
     AssignValue<unsigned int>(config_.registration_refresh, node_, "registration_refresh");
-    AssignValue<bool>(config_.network_enabled, node_, "network_enabled");
     AssignValue<bool>(config_.loopback, node_, "loopback");    
     AssignValue<eCAL::Registration::Layer::Configuration>(config_.layer, node_, "layer");
 
@@ -207,7 +205,6 @@ namespace YAML
   {
     Node node;
     node["config_version"]      = config_.config_version == eCAL::Types::UdpConfigVersion::V1 ? "v1" : "v2";
-    node["mode"]                = config_.mode == eCAL::Types::UDPMode::LOCAL ? "local" : "network";
     node["port"]                = config_.port;
     node["mask"]                = config_.mask.Get();
     node["send_buffer"]         = config_.send_buffer;
@@ -226,7 +223,6 @@ namespace YAML
     config_.config_version = temp_string == "v2" ? eCAL::Types::UdpConfigVersion::V2 : eCAL::Types::UdpConfigVersion::V1;
     temp_string = "local";
     AssignValue<std::string>(temp_string, node_, "mode");
-    config_.mode = temp_string == "local" ? eCAL::Types::UDPMode::LOCAL : eCAL::Types::UDPMode::NETWORK;
     AssignValue<unsigned int>(config_.port, node_, "port");
     AssignValue<std::string>(config_.mask, node_, "mask");
     AssignValue<unsigned int>(config_.send_buffer, node_, "send_buffer");

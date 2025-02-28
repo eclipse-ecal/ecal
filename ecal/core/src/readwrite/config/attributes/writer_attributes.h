@@ -23,9 +23,8 @@
 #include <cstddef>
 #include <vector>
 
+#include <ecal/config/configuration.h>
 #include <ecal/config/transport_layer.h>
-
-#include "ecal/types/custom_data_types.h"
 
 namespace eCAL
 {
@@ -40,7 +39,7 @@ namespace eCAL
     struct SUDPAttributes
     {
       bool           enable;
-      Types::UDPMode mode;
+      eOperationMode mode;
       int            port;
       int            send_buffer;
       SUDPModeAttributes   network;

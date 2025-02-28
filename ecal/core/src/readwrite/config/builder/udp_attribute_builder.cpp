@@ -19,6 +19,7 @@
 
 #include "udp_attribute_builder.h"
 #include "ecal/types/custom_data_types.h"
+#include "ecal/config/configuration.h"
 
 namespace eCAL
 {
@@ -36,10 +37,10 @@ namespace eCAL
 
       switch (attr_.udp.mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           attributes.address = attr_.udp.network.group;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           attributes.address = attr_.udp.local.group;
           break;
         default:
@@ -68,11 +69,11 @@ namespace eCAL
       
       switch (attr_.udp.mode)
       {
-        case Types::UDPMode::NETWORK:
+        case eCAL::eOperationMode::cloud:
           attributes.address = attr_.udp.network.group;
           attributes.ttl     = attr_.udp.network.ttl;
           break;
-        case Types::UDPMode::LOCAL:
+        case eCAL::eOperationMode::local:
           attributes.address = attr_.udp.local.group;
           attributes.ttl     = attr_.udp.local.ttl;
           break;
