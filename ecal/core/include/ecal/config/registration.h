@@ -66,8 +66,6 @@ namespace eCAL
       unsigned int         registration_timeout { 10000U }; //!< Timeout for topic registration in ms (internal) (Default: 10000)
       unsigned int         registration_refresh { 1000U };  //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
 
-      bool                 network_enabled      { false };  /*!< true  = all eCAL components communicate over network boundaries
-                                                                 false = local host only communication (Default: false) */
       bool                 loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
       std::string          shm_transport_domain { "" };     /*!< Common shm transport domain that enables interprocess mechanisms across
                                                                  (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
