@@ -106,7 +106,7 @@ namespace eCAL
   **/
   bool Initialize(eCAL::Configuration& config_, const std::string& unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
-    bool initalized{ false };
+    bool initialized{ false };
 
     if (g_globals_ctx == nullptr)
     {
@@ -114,12 +114,12 @@ namespace eCAL
       SetGlobalUnitName(unit_name_.c_str());
 
       g_globals_ctx = std::make_unique<CGlobals>();
-      initalized = g_globals()->Initialize(components_);
-      if (!initalized)
+      initialized = g_globals()->Initialize(components_);
+      if (!initialized)
         g_globals_ctx.reset();
     }
     
-    return initalized;
+    return initialized;
   }
 
   /**
