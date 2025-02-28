@@ -131,6 +131,12 @@ namespace eCAL
       ss << R"(#  |___/                                               |___/                                   )"                    << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
+      ss << R"(# Operation configuration)"                                                                                          << "\n";
+      ss << R"(# eCAL components communication mode (local or cloud):)"                                                             << "\n";
+      ss << R"(#   local: local host only communication (default))"                                                                 << "\n";
+      ss << R"(#   cloud: communication across network boundaries)"                                                                 << "\n";
+      ss << R"(operation_mode: )"                                    << quoteString(config_.operation_mode)                         << "\n";
+      ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Registration layer configuration)"                                                                                 << "\n";
       ss << R"(registration:)"                                                                                                      << "\n";
       ss << R"(  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000))"                  << "\n";

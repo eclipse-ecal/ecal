@@ -639,6 +639,8 @@ namespace YAML
     node["time"]         = config_.timesync;
     node["application"]  = config_.application;
     node["logging"]      = config_.logging;
+    node["operation_mode"] = config_.operation_mode == eCAL::eOperationMode::cloud ? "cloud" : "local";
+    
     return node;
   }
 
@@ -651,6 +653,14 @@ namespace YAML
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+    
+    if (node_["operation_mode"])
+    {
+      std::string operation_mode;
+      AssignValue<std::string>(operation_mode, node_, "operation_mode");
+      config_.operation_mode = operation_mode == "cloud" ? eCAL::eOperationMode::cloud : eCAL::eOperationMode::local;
+    }
+
     return true;
   }
 }
