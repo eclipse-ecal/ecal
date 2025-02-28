@@ -42,7 +42,9 @@ It will generate the files only in the first found base path.
       
 .. note::
 
-  In previous versions (previous eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it.
+  When compiling eCAL from source:
+  
+  In previous versions (previous eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it on Linux.
   This is not the case anymore. 
   Instead, when installing your build to a custom path, a directory next to ``lib``/ ``bin`` named ``etc`` will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
   That file in etc relativ to the ecal_core library will be used if no other is found.
