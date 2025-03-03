@@ -27,19 +27,13 @@ namespace eCAL
 {
   namespace eCALReader
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      eCommunicationMode mode;
-      int            port;
-      int            receivebuffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         receivebuffer;
+      std::string group;
     };
 
     struct STCPAttributes

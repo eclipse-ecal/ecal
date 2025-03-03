@@ -30,20 +30,14 @@ namespace eCAL
 {
   namespace eCALWriter
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-      int         ttl;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      eCommunicationMode mode;
-      int            port;
-      int            send_buffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         send_buffer;
+      std::string group;
+      int         ttl;
     };
 
     struct STCPAttributes
@@ -80,9 +74,9 @@ namespace eCAL
       std::string          unit_name;
       std::string          topic_name;
 
-      SUDPAttributes     udp;
-      STCPAttributes     tcp;
-      SSHMAttributes     shm;
+      SUDPAttributes       udp;
+      STCPAttributes       tcp;
+      SSHMAttributes       shm;
     };
   }
 }

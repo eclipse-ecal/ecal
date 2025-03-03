@@ -33,8 +33,11 @@ namespace eCAL
 {
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.subscriber = config_;
+
     // create subscriber implementation
-    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
 
     // register subscriber
     if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
