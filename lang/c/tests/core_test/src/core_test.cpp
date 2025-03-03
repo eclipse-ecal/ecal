@@ -53,22 +53,16 @@ TEST(core_c_core, InitializeFinalize)
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL_IsInitialized());
 
-  // initialize eCAL API again we expect return value 1 for yet initialized
+  // initialize eCAL API again we expect return value 1 as it's already initialized
   EXPECT_EQ(1, eCAL_Initialize("initialize_test", 0));
 
-  // finalize eCAL API we expect return value 0 even it will not be really finalized because it's 2 times initialzed and 1 time finalized
+  // finalize eCAL API we expect return value 0
   EXPECT_EQ(0, eCAL_Finalize());
 
-  // Is eCAL API initialized ? yes it' still initialized
-  EXPECT_EQ(1, eCAL_IsInitialized());
-
-  // finalize eCAL API we expect return value 0 because now it will be finalized
-  EXPECT_EQ(0, eCAL_Finalize());
-
-  // Is eCAL API initialized ? no
+  // Is eCAL API initialized? no, as finalize was called before
   EXPECT_EQ(0, eCAL_IsInitialized());
 
-  // finalize eCAL API we expect return value 1 because it was finalized before
+  // finalize eCAL API we expect return value false because it's already finalized
   EXPECT_EQ(1, eCAL_Finalize());
 }
 
