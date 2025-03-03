@@ -30,9 +30,9 @@ namespace eCAL
 
     Registration::SAttributes attr;
     
+    attr.network_enabled      = config_.communication_mode == eCAL::eCommunicationMode::network;
     attr.timeout              = std::chrono::milliseconds(reg_config.registration_timeout);
     attr.refresh              = reg_config.registration_refresh;
-    attr.communication_mode   = config_.communication_mode;
     attr.loopback             = reg_config.loopback;
     attr.host_name            = eCAL::Process::GetHostName();
     attr.shm_transport_domain = reg_config.shm_transport_domain;
@@ -48,20 +48,22 @@ namespace eCAL
         attr.udp.port       = reg_config.network.udp.port;
         attr.udp.group      = tl_udp_config.network.group;
         attr.udp.ttl        = tl_udp_config.network.ttl;
+        attr.udp.broadcast  = false;
         // Only udp transport type is supported for network communication right now
-        attr.transport_type = Registration::eTransportType::udp;
+        attr.transport_mode = Registration::eTransportMode::udp;
         break;
       case eCAL::eCommunicationMode::local:
         attr.udp.port       = reg_config.local.udp.port;
         attr.udp.group      = tl_udp_config.local.group;
         attr.udp.ttl        = tl_udp_config.local.ttl;
+        attr.udp.broadcast  = true;
         switch (reg_config.local.transport_type)
         {
           case Registration::Local::eTransportType::udp:
-            attr.transport_type = Registration::eTransportType::udp;
+            attr.transport_mode = Registration::eTransportMode::udp;
             break;
           case Registration::Local::eTransportType::shm:
-            attr.transport_type = Registration::eTransportType::shm;
+            attr.transport_mode = Registration::eTransportMode::shm;
             break;
           default:
             break;

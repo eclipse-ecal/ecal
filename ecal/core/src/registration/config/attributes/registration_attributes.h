@@ -28,7 +28,7 @@ namespace eCAL
 {
   namespace Registration
   {
-    enum class eTransportType
+    enum class eTransportMode
     {
       shm,
       udp
@@ -36,6 +36,7 @@ namespace eCAL
 
     struct SUDPAttributes
     {
+      bool           broadcast;
       int            port;
       int            sendbuffer;
       int            receivebuffer;
@@ -52,8 +53,8 @@ namespace eCAL
     struct SAttributes
     {
       std::chrono::milliseconds timeout;
-      eCAL::eCommunicationMode  communication_mode;
-      eTransportType            transport_type;
+      eTransportMode            transport_mode;
+      bool                      network_enabled;
       bool                      loopback;
       unsigned int              refresh;
       std::string               host_name;

@@ -28,7 +28,7 @@ namespace eCAL
     {
       UDP::SSenderAttributes sender_attr;
 
-      sender_attr.broadcast = provider_attr_.communication_mode == eCommunicationMode::local ? true : false;
+      sender_attr.broadcast = provider_attr_.udp.broadcast;
       sender_attr.loopback  = provider_attr_.loopback;
       sender_attr.sndbuf    = provider_attr_.udp.sendbuffer;
       sender_attr.port      = provider_attr_.udp.port;
@@ -42,7 +42,7 @@ namespace eCAL
     {
       UDP::SReceiverAttributes receiver_attr;
 
-      receiver_attr.broadcast      = provider_attr_.communication_mode == eCommunicationMode::local ? true : false;
+      receiver_attr.broadcast      = provider_attr_.udp.broadcast;
       receiver_attr.loopback       = true;
       receiver_attr.receive_buffer = provider_attr_.udp.receivebuffer;
       receiver_attr.port           = provider_attr_.udp.port;
