@@ -62,36 +62,20 @@ namespace Continental
         static void Terminate();
 
         /**
-         * @brief Get host, process and topic monitoring as a serialized protobuf string.
-         *
-         * @param entities Specifies which entities to include (default is All).
-         * 
-         * @return The serialized monitoring information.
-         **/
-        static String^ GetMonitoring(MonitoringEntity entities);
-
-        /**
-         * @brief Get global log message as a serialized protobuf string.
-         *
-         * @return The serialized logging information.
-         **/
-        static String^ GetLogging();
-
-        /**
          * @brief Get host, process and topic monitoring as raw message bytes.
          *
          * @param entities Specifies which entities to include (default is All).
          * 
          * @return The monitoring message as a byte array.
          **/
-        static array<Byte>^ GetMonitoringBytes(MonitoringEntity entities);
+        static array<Byte>^ GetMonitoring(MonitoringEntity entities);
 
         /**
          * @brief Get global log message as raw message bytes.
          *
          * @return The logging message as a byte array.
          **/
-        static array<Byte>^ GetLoggingBytes();
+        static array<Byte>^ GetLogging();
       };
     }
   }

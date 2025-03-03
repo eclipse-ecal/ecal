@@ -40,34 +40,16 @@ void Monitoring::Terminate()
   ::eCAL::Finalize();
 }
 
-String^ Monitoring::GetMonitoring(MonitoringEntity entities)
+array<Byte>^ Monitoring::GetMonitoring(MonitoringEntity entities)
 {
   std::string monitoring;
   ::eCAL::Monitoring::GetMonitoring(monitoring, static_cast<unsigned int>(entities));
-  return StlStringToString(monitoring);
+  return StlStringToByteArray(monitoring);
 }
 
-String^ Monitoring::GetLogging()
+array<Byte>^ Monitoring::GetLogging()
 {
   std::string logging;
   ::eCAL::Logging::GetLogging(logging);
-  return StlStringToString(logging);
-}
-
-array<Byte>^ Monitoring::GetMonitoringBytes(MonitoringEntity entities)
-{
-  std::string monitoring;
-  ::eCAL::Monitoring::GetMonitoring(monitoring, static_cast<unsigned int>(entities));
-  array<Byte>^ data = gcnew array<Byte>(static_cast<int>(monitoring.size()));
-  System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)monitoring.data()), data, 0, static_cast<int>(monitoring.size()));
-  return data;
-}
-
-array<Byte>^ Monitoring::GetLoggingBytes()
-{
-  std::string logging;
-  ::eCAL::Logging::GetLogging(logging);
-  array<Byte>^ data = gcnew array<Byte>(static_cast<int>(logging.size()));
-  System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)logging.data()), data, 0, static_cast<int>(logging.size()));
-  return data;
+  return StlStringToByteArray(logging);
 }
