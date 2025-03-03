@@ -18,8 +18,7 @@
 */
 
 /**
- * @file
- * @brief
+ * @file  ecal_clr_client.h
 **/
 
 #pragma once

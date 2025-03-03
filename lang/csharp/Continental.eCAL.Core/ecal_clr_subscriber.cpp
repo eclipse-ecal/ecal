@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
- */
+*/
 
- /**
-  * @file  ecal_clr_subscriber.cpp
-  */
+/**
+ * @file  ecal_clr_subscriber.cpp
+**/
 
 #include "ecal_clr_subscriber.h"
 #include "ecal_clr_common.h"

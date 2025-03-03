@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
- */
+*/
 
- /**
-  * @file  ecal_clr_subscriber.h
-  */
+/**
+ * @file  ecal_clr_subscriber.h
+**/
 
 #pragma once
 
