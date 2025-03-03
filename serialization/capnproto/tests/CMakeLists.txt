@@ -18,30 +18,25 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(proto_dyn_snd)
+project(capnproto_tests)
 
+find_package(CapnProto REQUIRED)
+find_package(GTest REQUIRED)
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
 
-set(proto_dyn_snd_src
-    src/proto_dyn_snd.cpp
-)
+set(CAPNPC_IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS addressbook.capnp)
 
-set(proto_dyn_snd_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto
-)
-ecal_add_sample(${PROJECT_NAME} ${proto_dyn_snd_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${proto_dyn_snd_proto})
+ecal_add_gtest(${PROJECT_NAME} serialization_test.cpp ${CAPNP_SRCS} ${CAPNP_HDRS})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    eCAL::protobuf_core
+    eCAL::capnproto_base
 )
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
-ecal_install_sample(${PROJECT_NAME})
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/protobuf)
+ecal_install_gtest(${PROJECT_NAME})
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/pubsub/capnproto)

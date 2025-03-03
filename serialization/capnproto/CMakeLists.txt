@@ -42,4 +42,5 @@ endif()
 # --------------------------------------------------------
 if(ECAL_CAPNPROTO_BUILD_TESTS)
   enable_testing()
+  add_subdirectory(tests)
 endif()

@@ -52,7 +52,8 @@ int main(int argc, char **argv)
   // create a publisher (topic name "addressbook")
   eCAL::capnproto::CPublisher<AddressBook> pub("addressbook");
 
-  auto addressBook = pub.GetBuilder();
+  capnp::MallocMessageBuilder message;
+  AddressBook::Builder addressBook = message.initRoot<AddressBook>();
   auto people = addressBook.initPeople(2);
 
   auto alice = people[0];
@@ -94,7 +95,7 @@ int main(int argc, char **argv)
   {
     bob.setId(++bobid);
     // send content
-    pub.Send();
+    pub.Send(message);
 
     // print content
     printAddressBook(addressBook);
