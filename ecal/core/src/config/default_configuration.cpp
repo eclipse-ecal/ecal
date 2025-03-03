@@ -201,7 +201,7 @@ namespace eCAL
       ss << R"(    transport_type: )"                                << quoteString(config_.registration.network.transport_type)    << "\n";
       ss << R"(    udp:)"                                                                                                           << "\n";
       ss << R"(    # Specify port for network registration traffic)"                                                                << "\n";
-      ss << R"(    port: )"                                          << config_.registration.network.udp.port                       << "\n";
+      ss << R"(      port: )"                                        << config_.registration.network.udp.port                       << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Transport layer configuration)"                                                                                    << "\n";

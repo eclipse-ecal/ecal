@@ -25,37 +25,37 @@ namespace eCAL
 {
   Registration::SAttributes BuildRegistrationAttributes(const eCAL::Configuration& config_, int process_id_)
   {
-    const auto& reg_config_    = config_.registration;
-    const auto& tl_udp_config_ = config_.transport_layer.udp;
+    const auto& reg_config    = config_.registration;
+    const auto& tl_udp_config = config_.transport_layer.udp;
 
     Registration::SAttributes attr;
     
-    attr.timeout              = std::chrono::milliseconds(reg_config_.registration_timeout);
-    attr.refresh              = reg_config_.registration_refresh;
+    attr.timeout              = std::chrono::milliseconds(reg_config.registration_timeout);
+    attr.refresh              = reg_config.registration_refresh;
     attr.communication_mode   = config_.communication_mode;
-    attr.loopback             = reg_config_.loopback;
+    attr.loopback             = reg_config.loopback;
     attr.host_name            = eCAL::Process::GetHostName();
-    attr.shm_transport_domain = reg_config_.shm_transport_domain;
+    attr.shm_transport_domain = reg_config.shm_transport_domain;
 
     attr.process_id        = process_id_;
 
-    attr.shm.domain        = reg_config_.local.shm.domain;
-    attr.shm.queue_size    = reg_config_.local.shm.queue_size;
+    attr.shm.domain        = reg_config.local.shm.domain;
+    attr.shm.queue_size    = reg_config.local.shm.queue_size;
      
     switch (config_.communication_mode)
     {
       case eCAL::eCommunicationMode::network:
-        attr.udp.port       = reg_config_.network.udp.port;
-        attr.udp.group      = tl_udp_config_.network.group;
-        attr.udp.ttl        = tl_udp_config_.network.ttl;
+        attr.udp.port       = reg_config.network.udp.port;
+        attr.udp.group      = tl_udp_config.network.group;
+        attr.udp.ttl        = tl_udp_config.network.ttl;
         // Only udp transport type is supported for network communication right now
         attr.transport_type = Registration::eTransportType::udp;
         break;
       case eCAL::eCommunicationMode::local:
-        attr.udp.port       = reg_config_.local.udp.port;
-        attr.udp.group      = tl_udp_config_.local.group;
-        attr.udp.ttl        = tl_udp_config_.local.ttl;
-        switch (reg_config_.local.transport_type)
+        attr.udp.port       = reg_config.local.udp.port;
+        attr.udp.group      = tl_udp_config.local.group;
+        attr.udp.ttl        = tl_udp_config.local.ttl;
+        switch (reg_config.local.transport_type)
         {
           case Registration::Local::eTransportType::udp:
             attr.transport_type = Registration::eTransportType::udp;
@@ -71,8 +71,8 @@ namespace eCAL
         break;
     }
 
-    attr.udp.sendbuffer    = tl_udp_config_.send_buffer;
-    attr.udp.receivebuffer = tl_udp_config_.receive_buffer;
+    attr.udp.sendbuffer    = tl_udp_config.send_buffer;
+    attr.udp.receivebuffer = tl_udp_config.receive_buffer;
     
     return attr;
   }
