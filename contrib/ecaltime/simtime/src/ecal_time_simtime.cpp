@@ -45,8 +45,9 @@ bool eCAL::CSimTime::initialize()
     // needs to be fixed with an improved reference counting
     // in eCAL::Initialize ..
 
-    sim_time_subscriber = std::make_unique<eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>>("__sim_time__");
-    sim_time_subscriber->SetReceiveCallback(std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2));
+    eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>::Arguments sim_time_subscriber_arguments;
+    sim_time_subscriber_arguments.data_callback = std::bind(&eCAL::CSimTime::onSimTimeMessage, this, std::placeholders::_2);
+    sim_time_subscriber = std::make_unique<eCAL::protobuf::CSubscriber<eCAL::pb::SimTime>>("__sim_time__", sim_time_subscriber_arguments);
     is_initialized = true;
     return true;
   }

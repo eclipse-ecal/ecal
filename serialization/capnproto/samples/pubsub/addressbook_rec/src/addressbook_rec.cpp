@@ -91,11 +91,10 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
-  eCAL::capnproto::CSubscriber<AddressBook> sub("addressbook");
-
+  eCAL::capnproto::CSubscriber<AddressBook>::Arguments sub_arguments;
   // add receive callback function (_1 = topic_id, _2 = msg, _3 = time)
-  auto callback = std::bind(OnAddressbook, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-  sub.SetReceiveCallback(callback);
+  sub_arguments.data_callback = std::bind(OnAddressbook, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+  eCAL::capnproto::CSubscriber<AddressBook> sub("addressbook", sub_arguments);
 
   // enter main loop
   while (eCAL::Ok())

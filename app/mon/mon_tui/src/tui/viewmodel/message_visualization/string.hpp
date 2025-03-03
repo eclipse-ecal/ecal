@@ -48,10 +48,13 @@ class StringMessageVisualizationViewModel : public MessageVisualizationViewModel
 
 public:
   StringMessageVisualizationViewModel(const std::string &topic)
-    : subscriber{topic}
+    : subscriber{topic, [this]() {
+        using namespace std::placeholders;
+        eCAL::string::CSubscriber::Arguments arguments;
+        arguments.data_callback = std::bind(&StringMessageVisualizationViewModel::OnMessage, this, _2, _3);
+        return arguments;
+      }() }
   {
-    using namespace std::placeholders;
-    subscriber.SetReceiveCallback(std::bind(&StringMessageVisualizationViewModel::OnMessage, this, _2, _3));
   }
 
   std::string message() const

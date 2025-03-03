@@ -35,11 +35,10 @@ int main()
   eCAL::Initialize("minimal_rec_cb");
 
   // subscriber for topic "Hello"
-  eCAL::string::CSubscriber sub("Hello");
+  eCAL::string::CSubscriber::Arguments sub_arguments;
+  sub_arguments.data_callback = [](const eCAL::STopicId& /*publisher_id_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
 
-  // receive updates in a callback (lambda function)
-  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
-  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  eCAL::string::CSubscriber sub("Hello", sub_arguments);
 
   // idle main loop
   while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));

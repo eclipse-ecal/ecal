@@ -121,11 +121,13 @@ int main(int /*argc*/, char** /*argv*/)
   // One type is a "flat" type, e.g. it uses the API which is backed by raw memory
   // The other type is an "object" type, where the type is directly mapped to e.g. std::string / std::vector ... types.
 
-  eCAL::flatbuffers::CFlatSubscriber<Game::Sample::Monster> flat_subscriber("monster");
-  flat_subscriber.SetReceiveCallback(OnFlatMonster);
-
-  eCAL::flatbuffers::CObjectSubscriber<Game::Sample::MonsterT> object_subscriber("monster");
-  object_subscriber.SetReceiveCallback(OnObjectMonster);
+  eCAL::flatbuffers::CFlatSubscriber<Game::Sample::Monster>::Arguments flat_subscriber_arguments;
+  flat_subscriber_arguments.data_callback = OnFlatMonster;
+  eCAL::flatbuffers::CFlatSubscriber<Game::Sample::Monster> flat_subscriber("monster", flat_subscriber_arguments);
+  
+  eCAL::flatbuffers::CObjectSubscriber<Game::Sample::MonsterT>::Arguments object_subscriber_arguments;
+  object_subscriber_arguments.data_callback = OnObjectMonster;
+  eCAL::flatbuffers::CObjectSubscriber<Game::Sample::MonsterT> object_subscriber("monster", object_subscriber_arguments);
 
   while(eCAL::Ok())
   {

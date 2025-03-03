@@ -72,31 +72,32 @@ namespace eCAL
     **/
     using DeserializationErrorCallbackT = std::function<void(const std::string& error_message_, const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)>;
 
+    struct Arguments
+    {
+      eCAL::Subscriber::Configuration config = GetSubscriberConfiguration();
+      DataCallbackT data_callback = nullptr;
+      DeserializationErrorCallbackT error_callback = nullptr;
+      SubEventCallbackT event_callback = nullptr;
+    };
+
+
     /**
     * @brief  Constructor.
     *
     * @param topic_name_  Unique topic name.
     * @param config_      Optional configuration parameters.
     **/
-    explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) 
+    explicit CMessageSubscriber(const std::string& topic_name_, const Arguments& arguments_ = Arguments{})
       : m_deserializer()
-      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
-    {
-      SetInternalReceiveCallback();
-    }
-
-    CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
-      : m_deserializer()
-      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
+      , m_data_callback(arguments_.data_callback)
+      , m_error_callback(arguments_.error_callback)
+      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), arguments_.event_callback, arguments_.config)
     {
       SetInternalReceiveCallback();
     }
 
     ~CMessageSubscriber()
     {
-      RemoveReceiveCallback();
-      RemoveErrorCallback();
-
       RemoveInternalReceiveCallback();
     }
 
@@ -134,54 +135,6 @@ namespace eCAL
     * @brief  Move assignment
     **/
     CMessageSubscriber& operator=(CMessageSubscriber&& rhs) = delete;
-
-    /**
-     * @brief Add a data callback callback for incoming messages.
-     *
-     * @param callback_  The callback function.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void SetReceiveCallback(DataCallbackT callback_)
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_data_callback = callback_;
-    }
-
-    /**
-     * @brief  Remove receive callback for incoming messages.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void RemoveReceiveCallback()
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_data_callback = nullptr;
-    }
-
-    /**
-     * @brief Set Error callback which is called if the deserialization of the incoming data fails.
-     *
-     * @param callback_  The callback function.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void SetErrorCallback(DeserializationErrorCallbackT callback_)
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_error_callback = callback_;
-    }
-
-    /**
-     * @brief  Remove receive callback for incoming messages.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void RemoveErrorCallback()
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_error_callback = nullptr;
-    }
 
     /**
      * @brief Query the number of connected publishers.
@@ -275,10 +228,11 @@ namespace eCAL
     }
 
     Deserializer                   m_deserializer;
-    CSubscriber                    m_subscriber;
 
     std::mutex                     m_callback_mutex; // we need only one mutex to protect both callbacks
     DataCallbackT                  m_data_callback;
     DeserializationErrorCallbackT  m_error_callback;
+
+    CSubscriber                    m_subscriber;
   };
 }

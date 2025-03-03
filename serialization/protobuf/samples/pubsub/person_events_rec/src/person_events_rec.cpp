@@ -54,7 +54,9 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", OnEvent);
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments subscriber_arguments;
+  subscriber_arguments.event_callback = OnEvent;
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", subscriber_arguments);
 
   // start application and wait for events
   std::cout << "Please start 'person_snd_events sample." << std::endl << std::endl;

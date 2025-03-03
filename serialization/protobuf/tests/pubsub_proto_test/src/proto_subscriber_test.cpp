@@ -78,9 +78,9 @@ using core_cpp_pubsub_proto_sub = ProtoSubscriberTest;
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
-  person_rec.SetReceiveCallback(person_callback);
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments person_rec_arguments;
+  person_rec_arguments.data_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest", person_rec_arguments);
 
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
 
@@ -94,9 +94,9 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 {
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
-  person_rec.SetReceiveCallback(person_callback);
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments person_rec_arguments;
+  person_rec_arguments.data_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest", person_rec_arguments);
 
   eCAL::protobuf::CSubscriber<pb::People::Person>person_moved{ std::move(person_rec) };
 
@@ -116,9 +116,9 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 {
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
-  person_rec.SetReceiveCallback(person_callback);
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments person_rec_arguments;
+  person_rec_arguments.data_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest", person_rec_arguments);
 
   eCAL::protobuf::CSubscriber<pb::People::Person> person_moved{ std::move(person_rec) };
 

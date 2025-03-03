@@ -54,7 +54,9 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", OnEvent);
+  eCAL::protobuf::CPublisher<pb::People::Person>::Arguments pub_arguments;
+  pub_arguments.event_callback = OnEvent;
+  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_arguments);
 
   // generate a class instance of Person
   pb::People::Person person;

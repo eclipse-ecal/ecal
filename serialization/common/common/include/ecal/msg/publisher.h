@@ -76,29 +76,23 @@ namespace eCAL
     };
 
   public:
+    struct Arguments
+    {
+      eCAL::Publisher::Configuration config = GetPublisherConfiguration();
+      PubEventCallbackT event_callback = nullptr;
+
+      Arguments() = default;
+    };
+
     /**
      * @brief  Constructor.
      *
      * @param topic_name_  Unique topic name.
      * @param config_      Optional configuration parameters.
     **/
-    explicit CMessagePublisher(const std::string& topic_name_, const eCAL::Publisher::Configuration& config_ = GetPublisherConfiguration())
+    explicit CMessagePublisher(const std::string& topic_name_, const Arguments& arguments_ = Arguments{})
       : m_serializer{}
-      , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), config_)
-    {
-    }
-
-    /**
-     * @brief Constructor.
-     *
-     * @param topic_name_      Unique topic name.
-     * @param data_type_info_  Topic data type information (encoding, type, descriptor).
-     * @param event_callback_  The publisher event callback funtion.
-     * @param config_          Optional configuration parameters.
-    **/
-    explicit CMessagePublisher(const std::string& topic_name_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_ = GetPublisherConfiguration())
-      : m_serializer{}
-      , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), event_callback_, config_)
+      , m_publisher(topic_name_, m_serializer.GetDataTypeInformation(), arguments_.event_callback, arguments_.config)
     {
     }
 

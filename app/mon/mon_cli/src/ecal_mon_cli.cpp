@@ -330,11 +330,12 @@ void ProcEcho(const std::string& topic_name, int msg_count)
 {
   std::cout << "echo string message output for topic " << topic_name << "\n" << "\n";
 
-  // create string subscriber for topic topic_name_ and assign callback
-  eCAL::string::CSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
-  auto msg_cb = [&cnt](const std::string& msg_) { if (cnt != 0) { std::cout << msg_ << "\n"; if (cnt > 0) cnt--; } };
-  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+
+  // create string subscriber for topic topic_name_ and assign callback
+  eCAL::string::CSubscriber::Arguments sub_arguments;
+  sub_arguments.data_callback = [&cnt](const eCAL::STopicId& /*publisher_id_*/, const std::string& msg_, long long /*time_*/, long long /*clock_*/) { if (cnt != 0) { std::cout << msg_ << "\n"; if (cnt > 0) cnt--; } };
+  eCAL::string::CSubscriber sub(topic_name, sub_arguments);
 
   while(eCAL::Ok() && (cnt != 0))
   {
@@ -353,11 +354,11 @@ void ProcProto(const std::string& topic_name, int msg_count)
   // sleep 1000 ms
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-  // create dynamic subscribers for receiving and decoding messages and assign callback
-  eCAL::protobuf::CDynamicSubscriber sub(topic_name);
   std::atomic<int> cnt(msg_count);
-  auto msg_cb = [&cnt](const std::shared_ptr<google::protobuf::Message>& msg_) { if (cnt != 0) { std::cout << msg_->DebugString() << std::endl; if (cnt > 0) cnt--; } };
-  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  // create dynamic subscribers for receiving and decoding messages and assign callback
+  eCAL::protobuf::CDynamicSubscriber::Arguments sub_arguments;
+  sub_arguments.data_callback = [&cnt](const eCAL::STopicId& /*publisher_id_*/, const const std::shared_ptr<google::protobuf::Message>& msg_, long long /*time_*/, long long /*clock_*/) { if (cnt != 0) { std::cout << msg_->DebugString() << std::endl; if (cnt > 0) cnt--; } };
+  eCAL::protobuf::CDynamicSubscriber sub(topic_name, sub_arguments);
 
   // enter main loop
   while(eCAL::Ok() && (cnt != 0))

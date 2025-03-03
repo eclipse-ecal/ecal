@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,9 +94,9 @@ int extract_id(const google::protobuf::Message& msg_)
 TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
 {
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoDynSubscriberTest::OnPerson, this, std::placeholders::_2, std::placeholders::_3);
-  person_dyn_rec.SetReceiveCallback(person_callback);
+  eCAL::protobuf::CDynamicSubscriber::Arguments person_dyn_rec_arguments;
+  person_dyn_rec_arguments.data_callback = std::bind(&ProtoDynSubscriberTest::OnPerson, this, std::placeholders::_2, std::placeholders::_3);
+  eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest", person_dyn_rec_arguments);
 
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
 
