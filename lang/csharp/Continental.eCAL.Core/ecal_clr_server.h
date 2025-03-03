@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,10 +22,13 @@
 **/
 
 #pragma once
+
+#include "ecal_clr_servicemethodinformation.h"
 #include <ecal/ecal.h>
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
+using namespace System::Collections::Generic;
 
 namespace Continental
 {
@@ -36,70 +39,103 @@ namespace Continental
       /**
        * @brief eCAL server class.
        *
-       * The CServiceServer class is used to answer calls from matching eCAL clients.
-       *
-      **/
+       * The ServiceServer class is used to answer calls from matching eCAL clients.
+       */
       public ref class ServiceServer
       {
       public:
-          /**
-           * @brief Constructor.
-           *
-           * @param topic_name_   Unique server name.
-          **/
-          ServiceServer(System::String^ server_name_);
-
-          /**
-           * @brief Destructor.
-          **/
-          ~ServiceServer();
+        /**
+         * @brief Constructor.
+         *
+         * @param serverName Unique server name.
+         */
+        ServiceServer(String^ serverName);
 
         /**
-         * @brief delegate definition for callback functions
-        **/
-        delegate array<Byte>^ MethodCallback(String^ methodName, String^ reqType, String^ responseType, array<Byte>^ request);
+         * @brief Destructor.
+         */
+        ~ServiceServer();
 
         /**
-         * @brief Add callback function for incoming calls.
-         *
-         * @param callback_  The callback function set to connect.
-         *
-         * @return  True if succeeded, false if not.
-        **/
-        bool SetMethodCallback(String^ methodName, String^ reqType, String^ responseType, MethodCallback^ callback_);
+         * @brief Finalizer.
+         */
+        !ServiceServer();
 
         /**
-         * @brief Remove callback function for incoming calls.
+         * @brief Delegate definition for method callbacks.
          *
-         * @param callback_  The callback function set to disconnect.
+         * @param methodInfo The service method information.
+         * @param request The request data as a byte array.
+         * 
+         * @return The response data as a byte array.
+         */
+        delegate array<Byte>^ MethodCallback(ServiceMethodInformation^ methodInfo, array<Byte>^ request);
+
+        /**
+         * @brief Add a callback function for an incoming service method call.
          *
-         * @return  True if succeeded, false if not.
-        **/
-        bool RemoveMethodCallback(String^ methodName, MethodCallback^ callback_);
+         * @param methodInfo The service method information.
+         * @param callback The callback function.
+         * 
+         * @return True if succeeded, false otherwise.
+         */
+        bool SetMethodCallback(ServiceMethodInformation^ methodInfo, MethodCallback^ callback);
+
+        /**
+         * @brief Remove the callback function for the specified service method.
+         *
+         * @param methodName The name of the service method.
+         * 
+         * @return True if succeeded, false otherwise.
+         */
+        bool RemoveMethodCallback(String^ methodName);
 
       private:
-        ::eCAL::CServiceServer* m_serv;
         /**
-         * @brief managed callbacks that will get executed during the eCAL method callback
-        **/
-        MethodCallback^ m_callbacks;
+         * @brief Pointer to the native CServiceServer instance.
+         */
+        ::eCAL::CServiceServer* m_native_service_server;
 
         /**
-         * @brief private member which holds the pointer to OnMethodCall, to avoid function relocation
-        **/
-        GCHandle m_gch;
+         * @brief Dictionary mapping method name to the managed method callback.
+         */
+        Dictionary<String^, MethodCallback^>^ m_managed_callbacks;
 
         /**
-         * @brief The callback of the subscriber, that is registered with the unmanaged code
-        **/
-        delegate int servCallback(const ::eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_);
-        servCallback^ m_serv_callback;
-        int OnMethodCall(const ::eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_);
+         * @brief Internal native callback delegate definition.
+         *
+         * This delegate is used to bridge native calls to managed callbacks.
+         */
+        delegate int servCallback(const ::eCAL::SServiceMethodInformation& methodInfo, const std::string& request, std::string& response);
 
         /**
-         * @brief stdcall function pointer definition of eCAL::MethodCallbackT
-        **/
-        typedef int(__stdcall * stdcall_eCAL_MethodCallbackT)(const ::eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_);
+         * @brief Dictionary mapping method name to the native callback delegate.
+         */
+        Dictionary<String^, servCallback^>^ m_native_callbacks;
+
+        /**
+         * @brief Dictionary mapping method name to the GCHandle for the native callback delegate.
+         */
+        Dictionary<String^, GCHandle>^ m_native_callbacks_handles;
+
+        /**
+         * @brief Internal method callback invoked by the native code.
+         *
+         * This function converts native types to managed types and then invokes the managed callback
+         * corresponding to the method name.
+         *
+         * @param methodInfo The service method information.
+         * @param request The request data as a std::string.
+         * @param response The response data as a std::string (to be filled).
+         * 
+         * @return 0 on success.
+         */
+        int OnMethodCall(const ::eCAL::SServiceMethodInformation& methodInfo, const std::string& request, std::string& response);
+
+        /**
+         * @brief stdcall function pointer definition of eCAL::MethodCallbackT.
+         */
+        typedef int(__stdcall* stdcall_eCAL_MethodCallbackT)(const ::eCAL::SServiceMethodInformation& methodInfo, const std::string& request, std::string& response);
       };
     }
   }

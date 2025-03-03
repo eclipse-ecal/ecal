@@ -105,7 +105,7 @@ namespace
 Subscriber::Subscriber(String^ topicName)
 {
   std::string nativeTopic = StringToStlString(topicName);
-  m_subscriber = new ::eCAL::CSubscriber(nativeTopic);
+  m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic);
 }
 
 Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo)
@@ -114,7 +114,7 @@ Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo)
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = StringToStlString(dataTypeInfo->Descriptor);
-  m_subscriber = new ::eCAL::CSubscriber(StringToStlString(topicName), nativeDataTypeInfo);
+  m_native_subscriber = new ::eCAL::CSubscriber(StringToStlString(topicName), nativeDataTypeInfo);
 }
 
 // Destructor
@@ -126,10 +126,10 @@ Subscriber::~Subscriber()
 // Finalizer
 Subscriber::!Subscriber()
 {
-  if (m_subscriber != nullptr)
+  if (m_native_subscriber != nullptr)
   {
-    delete m_subscriber;
-    m_subscriber = nullptr;
+    delete m_native_subscriber;
+    m_native_subscriber = nullptr;
   }
 }
 
@@ -138,36 +138,36 @@ bool Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
 {
   m_receiveCallback = callback;
   auto nativeCallback = CreateNativeReceiveCallback(callback);
-  return m_subscriber->SetReceiveCallback(nativeCallback);
+  return m_native_subscriber->SetReceiveCallback(nativeCallback);
 }
 
 // RemoveReceiveCallback
 bool Subscriber::RemoveReceiveCallback()
 {
   m_receiveCallback = nullptr;
-  return m_subscriber->RemoveReceiveCallback();
+  return m_native_subscriber->RemoveReceiveCallback();
 }
 
 int Subscriber::GetPublisherCount()
 {
-  return static_cast<int>(m_subscriber->GetPublisherCount());
+  return static_cast<int>(m_native_subscriber->GetPublisherCount());
 }
 
 String^ Subscriber::GetTopicName()
 {
-  std::string nativeTopic = m_subscriber->GetTopicName();
+  std::string nativeTopic = m_native_subscriber->GetTopicName();
   return StlStringToString(nativeTopic);
 }
 
 TopicId^ Subscriber::GetTopicId()
 {
-  ::eCAL::STopicId nativeId = m_subscriber->GetTopicId();
+  ::eCAL::STopicId nativeId = m_native_subscriber->GetTopicId();
   return ConvertTopicId(nativeId);
 }
 
 DataTypeInformation^ Subscriber::GetDataTypeInformation()
 {
-  ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_subscriber->GetDataTypeInformation();
+  ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_native_subscriber->GetDataTypeInformation();
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),

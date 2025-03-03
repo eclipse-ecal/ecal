@@ -23,56 +23,108 @@
 
 #include "ecal_clr_server.h"
 #include "ecal_clr_common.h"
+#include "ecal_clr_datatype.h"
+#include "ecal_clr_topicid.h"
+
+#include <sstream>
 
 using namespace Continental::eCAL::Core;
 using namespace Internal;
+using namespace System::Collections::Generic;
 
-ServiceServer::ServiceServer(System::String^ server_name_)
+ServiceServer::ServiceServer(String^ serverName)
 {
-  m_serv = new ::eCAL::CServiceServer(StringToStlString(server_name_));
+  m_native_service_server = new ::eCAL::CServiceServer(StringToStlString(serverName));
+
+  m_managed_callbacks        = gcnew Dictionary<String^, MethodCallback^>();
+  m_native_callbacks         = gcnew Dictionary<String^, servCallback^>();
+  m_native_callbacks_handles = gcnew Dictionary<String^, GCHandle>();
 }
 
 ServiceServer::~ServiceServer()
 {
-  delete m_serv;
+  this->!ServiceServer();
 }
 
-bool ServiceServer::SetMethodCallback(String^ methodName, String^ reqType, String^ responseType, MethodCallback^ callback_)
+ServiceServer::!ServiceServer()
 {
-  //if (m_callbacks == nullptr)
-  //{
-  //  m_serv_callback = gcnew servCallback(this, &ServiceServer::OnMethodCall);
-  //  m_gch = GCHandle::Alloc(m_serv_callback);
-  //  IntPtr ip = Marshal::GetFunctionPointerForDelegate(m_serv_callback);
-  //  ::eCAL::SServiceMethodInformation method_info;
-  //  method_info.method_name = StringToStlString(methodName);
-  //  method_info.request_type.name = StringToStlString(reqType);
-  //  method_info.response_type.name = StringToStlString(responseType);
-  //  m_serv->SetMethodCallback(method_info, static_cast<stdcall_eCAL_MethodCallbackT>(ip.ToPointer()));
-  //}
-  //m_callbacks += callback_;
-  //return true;
-
-  return false;
+  if (m_native_service_server != nullptr)
+  {
+    delete m_native_service_server;
+    m_native_service_server = nullptr;
+  }
+  // Free any allocated GCHandles.
+  for each(KeyValuePair<String^, GCHandle> kvp in m_native_callbacks_handles)
+  {
+    if (kvp.Value.IsAllocated)
+      kvp.Value.Free();
+  }
 }
 
-bool ServiceServer::RemoveMethodCallback(String^ methodName, MethodCallback^ callback_)
+int ServiceServer::OnMethodCall(const ::eCAL::SServiceMethodInformation& methodInfo, const std::string& request, std::string& response)
 {
-  //if (m_callbacks == callback_)
-  //{
-  //  m_serv->RemoveMethodCallback(StringToStlString(methodName));
-  //  m_gch.Free();
-  //}
-  //m_callbacks -= callback_;
+  // Convert the native method name to managed.
+  String^ methodName = StlStringToString(methodInfo.method_name);
+  // Look up the managed callback for this method.
+  MethodCallback^ managedCb = nullptr;
+  if (!m_managed_callbacks->TryGetValue(methodName, managedCb))
+  {
+    return -1;
+  }
 
-  //return false;
+  // Convert the native request and response types to managed.
+  ServiceMethodInformation^ methodInfoManaged = gcnew ServiceMethodInformation();
+  methodInfoManaged->MethodName   = methodName;
+  methodInfoManaged->RequestType  = gcnew DataTypeInformation(StlStringToString(methodInfo.request_type.name), "", "");
+  methodInfoManaged->ResponseType = gcnew DataTypeInformation(StlStringToString(methodInfo.response_type.name), "", "");
+  array<Byte>^ reqData = StlStringToByteArray(request);
 
-  return false;
-}
-
-int ServiceServer::OnMethodCall(const ::eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)
-{
-  array<Byte>^ result = m_callbacks(StlStringToString(method_info_.method_name), StlStringToString(method_info_.request_type.name), StlStringToString(method_info_.response_type.name), StlStringToByteArray(request_));
-  response_ = ByteArrayToStlString(result);
+  // Invoke the managed delegate.
+  array<Byte>^ respData = managedCb(methodInfoManaged, reqData);
+  response = ByteArrayToStlString(respData);
   return 0;
+}
+
+bool ServiceServer::SetMethodCallback(ServiceMethodInformation^ methodInfo, MethodCallback^ callback)
+{
+  String^ methodName = methodInfo->MethodName;
+  // Store the managed callback in the dictionary.
+  m_managed_callbacks[methodName] = callback;
+
+  // Create a native callback delegate.
+  servCallback^ nativeCb = gcnew servCallback(this, &ServiceServer::OnMethodCall);
+  IntPtr ip = Marshal::GetFunctionPointerForDelegate(nativeCb);
+
+  // Build native SServiceMethodInformation from the managed ServiceMethodInformation.
+  ::eCAL::SServiceMethodInformation nativeMethodInfo;
+  nativeMethodInfo.method_name        = StringToStlString(methodInfo->MethodName);
+  nativeMethodInfo.request_type.name  = StringToStlString(methodInfo->RequestType->Name);
+  nativeMethodInfo.response_type.name = StringToStlString(methodInfo->ResponseType->Name);
+
+  // Register the native callback for this method.
+  m_native_service_server->SetMethodCallback(nativeMethodInfo, static_cast<stdcall_eCAL_MethodCallbackT>(ip.ToPointer()));
+
+  // Store the native callback and its GCHandle.
+  m_native_callbacks[methodName] = nativeCb;
+  GCHandle gch = GCHandle::Alloc(nativeCb);
+  m_native_callbacks_handles[methodName] = gch;
+
+  return true;
+}
+
+bool ServiceServer::RemoveMethodCallback(String^ methodName)
+{
+  // Unregister the native callback for this method.
+  m_native_service_server->RemoveMethodCallback(StringToStlString(methodName));
+  // Remove from our dictionaries.
+  m_managed_callbacks->Remove(methodName);
+  if (m_native_callbacks_handles->ContainsKey(methodName))
+  {
+    GCHandle gch = m_native_callbacks_handles[methodName];
+    if (gch.IsAllocated)
+      gch.Free();
+    m_native_callbacks_handles->Remove(methodName);
+  }
+  m_native_callbacks->Remove(methodName);
+  return true;
 }

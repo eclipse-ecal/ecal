@@ -144,7 +144,7 @@ namespace Continental
         /**
          * @brief Pointer to the native CPublisher instance.
          */
-        ::eCAL::CPublisher* m_publisher;
+        ::eCAL::CPublisher* m_native_publisher;
       };
     }
   }

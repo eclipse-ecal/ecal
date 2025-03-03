@@ -34,7 +34,7 @@ using namespace Internal;
 // Constructor using only a topic name.
 Publisher::Publisher(String^ topicName)
 {
-  m_publisher = new ::eCAL::CPublisher(StringToStlString(topicName));
+  m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName));
 }
 
 // Constructor with topic name and data type information.
@@ -44,7 +44,7 @@ Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo)
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = StringToStlString(dataTypeInfo->Descriptor);
-  m_publisher = new ::eCAL::CPublisher(StringToStlString(topicName), nativeDataTypeInfo);
+  m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName), nativeDataTypeInfo);
 }
 
 Publisher::~Publisher()
@@ -54,10 +54,10 @@ Publisher::~Publisher()
 
 Publisher::!Publisher()
 {
-  if (m_publisher != nullptr)
+  if (m_native_publisher != nullptr)
   {
-    delete m_publisher;
-    m_publisher = nullptr;
+    delete m_native_publisher;
+    m_native_publisher = nullptr;
   }
 }
 
@@ -71,7 +71,7 @@ bool Publisher::Send(array<Byte>^ data, long long time)
   if (data == nullptr || data->Length == 0)
     return false;
   pin_ptr<Byte> pinnedData = &data[0];
-  return m_publisher->Send(static_cast<const void*>(pinnedData), data->Length, time);
+  return m_native_publisher->Send(static_cast<const void*>(pinnedData), data->Length, time);
 }
 
 bool Publisher::Send(String^ payload)
@@ -82,23 +82,23 @@ bool Publisher::Send(String^ payload)
 bool Publisher::Send(String^ payload, long long time)
 {
   std::string nativePayload = StringToStlString(payload);
-  return m_publisher->Send(nativePayload, time);
+  return m_native_publisher->Send(nativePayload, time);
 }
 
 int Publisher::GetSubscriberCount()
 {
-  return static_cast<int>(m_publisher->GetSubscriberCount());
+  return static_cast<int>(m_native_publisher->GetSubscriberCount());
 }
 
 String^ Publisher::GetTopicName()
 {
-  std::string nativeTopic = m_publisher->GetTopicName();
+  std::string nativeTopic = m_native_publisher->GetTopicName();
   return StlStringToString(nativeTopic);
 }
 
 TopicId^ Publisher::GetTopicId()
 {
-  ::eCAL::STopicId nativeTopicId = m_publisher->GetTopicId();
+  ::eCAL::STopicId nativeTopicId = m_native_publisher->GetTopicId();
   // Extract the unique id from the native SEntityId and convert the topic name.
   unsigned __int64 entityId = nativeTopicId.topic_id.entity_id;
   String^ topicName = StlStringToString(nativeTopicId.topic_name);
@@ -107,7 +107,7 @@ TopicId^ Publisher::GetTopicId()
 
 DataTypeInformation^ Publisher::GetDataTypeInformation()
 {
-  ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_publisher->GetDataTypeInformation();
+  ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_native_publisher->GetDataTypeInformation();
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),

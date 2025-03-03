@@ -18,43 +18,58 @@
 */
 
 using System;
+using System.Text;
 using Continental.eCAL.Core;
 
-public class minimal_server
+public class MinimalServiceServer
 {
-  // This is pass by value. This is truly not optimal
-  static byte[] OnMethodCallback(String method_, String request_type_, String response_type_, byte[] request_)
+  /**
+   * @brief Method callback for incoming service calls.
+   *
+   * @param methodInfo The service method information.
+   * @param request The request data as a byte array.
+   * 
+   * @return The response data as a byte array.
+   */
+  static byte[] OnMethodCallback(ServiceMethodInformation methodInfo, byte[] request)
   {
-    System.Console.WriteLine("Method called " + method_);
-    System.Console.WriteLine("Request " + System.Text.Encoding.UTF8.GetString(request_));
-    // Maybe need to copy???
-    return request_;
+    Console.WriteLine("Method called: " + methodInfo.MethodName);
+    Console.WriteLine("Request: " + Encoding.UTF8.GetString(request));
+
+    // Echo the request data back as the response.
+    return request;
   }
 
   static void Main()
   {
-    // initialize eCAL API
-    Core.Initialize("minimal_service_csharp");
+    // Initialize eCAL API.
+    Core.Initialize("minimal server csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    // Print version info.
+    Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a subscriber (topic name "Hello", type "base:std::string")
-    var service_server_ = new ServiceServer("service1");
-    ServiceServer.MethodCallback callback = OnMethodCallback;
-    service_server_.SetMethodCallback("echo", "", "", callback);
+    // Create a service server named "service1".
+    ServiceServer serviceServer = new ServiceServer("service1");
 
-    // idle main thread
+    // Create and populate ServiceMethodInformation.
+    ServiceMethodInformation methodInfo = new ServiceMethodInformation();
+    methodInfo.MethodName = "echo";
+    // Optionally, if you need to provide type information for the request and response,
+    // you can set RequestType and ResponseType here.
+
+    // Register the method callback.
+    serviceServer.SetMethodCallback(methodInfo, OnMethodCallback);
+
+    // Idle main thread until eCAL is no longer OK.
     while (Core.Ok())
     {
       System.Threading.Thread.Sleep(100);
     }
 
-    // dispose service server
-    // Is this neccessary in a C# context?
-    service_server_.Dispose();
+    // Dispose service server.
+    serviceServer.Dispose();
 
-    // finalize eCAL API
+    // Finalize eCAL API.
     Core.Terminate();
   }
 }

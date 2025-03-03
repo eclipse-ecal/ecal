@@ -119,7 +119,7 @@ namespace Continental
         /**
          * @brief Pointer to the native CSubscriber instance.
          */
-        ::eCAL::CSubscriber* m_subscriber;
+        ::eCAL::CSubscriber* m_native_subscriber;
 
         /**
          * @brief Stored managed callback to prevent garbage collection.
