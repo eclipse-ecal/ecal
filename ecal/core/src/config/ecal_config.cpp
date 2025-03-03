@@ -40,7 +40,7 @@ namespace eCAL
     /////////////////////////////////////
 
     bool              IsNetworkEnabled                     () { return GetConfiguration().communication_mode == eCommunicationMode::network ? true : false; }
-    bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.local.transport_type == eCAL::Registration::eTransportType::shm && GetConfiguration().communication_mode == eCAL::eCommunicationMode::local; }
+    bool              IsShmRegistrationEnabled             () { return GetConfiguration().registration.local.transport_type == eCAL::Registration::Local::eTransportType::shm && GetConfiguration().communication_mode == eCAL::eCommunicationMode::local; }
 
     Types::UdpConfigVersion  GetUdpMulticastConfigVersion  () { return GetConfiguration().transport_layer.udp.config_version; }
 

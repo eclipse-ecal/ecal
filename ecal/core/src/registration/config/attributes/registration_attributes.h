@@ -28,6 +28,12 @@ namespace eCAL
 {
   namespace Registration
   {
+    enum class eTransportType
+    {
+      shm,
+      udp
+    };
+
     struct SUDPAttributes
     {
       int            port;

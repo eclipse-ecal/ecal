@@ -192,13 +192,13 @@ namespace eCAL
     {
       if (log_provider_instance == nullptr)
       {
-        log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
         new_initialization = true;
       }
 
       if (log_udp_receiver_instance == nullptr)
       {
-        log_udp_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetLoggingConfiguration(), GetRegistrationConfiguration(), GetTransportLayerConfiguration()));
+        log_udp_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
         new_initialization = true;
       }
     }

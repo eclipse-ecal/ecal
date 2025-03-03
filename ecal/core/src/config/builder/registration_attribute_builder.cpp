@@ -48,13 +48,24 @@ namespace eCAL
         attr.udp.port       = reg_config_.network.udp.port;
         attr.udp.group      = tl_udp_config_.network.group;
         attr.udp.ttl        = tl_udp_config_.network.ttl;
-        attr.transport_type = reg_config_.network.transport_type;
+        // Only udp transport type is supported for network communication right now
+        attr.transport_type = Registration::eTransportType::udp;
         break;
       case eCAL::eCommunicationMode::local:
         attr.udp.port       = reg_config_.local.udp.port;
         attr.udp.group      = tl_udp_config_.local.group;
         attr.udp.ttl        = tl_udp_config_.local.ttl;
-        attr.transport_type = reg_config_.local.transport_type;
+        switch (reg_config_.local.transport_type)
+        {
+          case Registration::Local::eTransportType::udp:
+            attr.transport_type = Registration::eTransportType::udp;
+            break;
+          case Registration::Local::eTransportType::shm:
+            attr.transport_type = Registration::eTransportType::shm;
+            break;
+          default:
+            break;
+        }
         break;
       default:
         break;

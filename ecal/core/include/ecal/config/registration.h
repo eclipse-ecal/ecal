@@ -33,14 +33,13 @@ namespace eCAL
 {
   namespace Registration
   {
-    enum class eTransportType
-    {
-      shm,
-      udp
-    };
-
     namespace Local
     {
+      enum class eTransportType
+      {
+        shm,
+        udp
+      };
       namespace SHM
       {
         struct Configuration
@@ -69,6 +68,10 @@ namespace eCAL
 
     namespace Network
     {
+      enum class eTransportType
+      {
+        udp
+      };
       namespace UDP
       {
         struct Configuration

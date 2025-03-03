@@ -112,7 +112,7 @@ namespace YAML
     std::string transport_type;
     AssignValue<std::string>(transport_type, node_, "transport_mode");
     // Right now we only support udp
-    config_.transport_type = transport_type == "udp" ? eCAL::Registration::eTransportType::udp : eCAL::Registration::eTransportType::udp;
+    config_.transport_type = eCAL::Registration::Network::eTransportType::udp;
 
     AssignValue<eCAL::Registration::Network::UDP::Configuration>(config_.udp, node_, "udp");
     return true;
@@ -150,7 +150,14 @@ namespace YAML
   Node convert<eCAL::Registration::Local::Configuration>::encode(const eCAL::Registration::Local::Configuration& config_)
   {
     Node node;
-    node["transport_type"] = config_.transport_type == eCAL::Registration::eTransportType::shm ? "shm" : "udp";
+    if (config_.transport_type == eCAL::Registration::Local::eTransportType::shm)
+    {
+      node["transport_type"] = "shm";
+    }
+    else if (config_.transport_type == eCAL::Registration::Local::eTransportType::udp)
+    {
+      node["transport_type"] = "udp";
+    }
     node["shm"]            = config_.shm;
     node["udp"]            = config_.udp;
     return node;
@@ -160,8 +167,16 @@ namespace YAML
   {
     std::string transport_type;
     AssignValue<std::string>(transport_type, node_, "transport_type");
-    config_.transport_type = transport_type == "shm" ? eCAL::Registration::eTransportType::shm : eCAL::Registration::eTransportType::udp;
-
+    
+    if (transport_type == "shm")
+    {
+      config_.transport_type = eCAL::Registration::Local::eTransportType::shm;
+    }
+    else if (transport_type == "udp")
+    {
+      config_.transport_type = eCAL::Registration::Local::eTransportType::udp;
+    }
+    
     AssignValue<eCAL::Registration::Local::SHM::Configuration>(config_.shm, node_, "shm");
     AssignValue<eCAL::Registration::Local::UDP::Configuration>(config_.udp, node_, "udp");
     return true;

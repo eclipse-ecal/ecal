@@ -163,7 +163,7 @@ INSTANTIATE_TEST_SUITE_P(
       // shm
       eCAL::Configuration config;
       config.communication_mode                = eCAL::eCommunicationMode::local;
-      config.registration.local.transport_type = eCAL::Registration::eTransportType::shm;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
       return config;
@@ -172,7 +172,7 @@ INSTANTIATE_TEST_SUITE_P(
       // shm + shm transport domain
       eCAL::Configuration config;
       config.communication_mode                = eCAL::eCommunicationMode::local;
-      config.registration.local.transport_type = eCAL::Registration::eTransportType::shm;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
       config.registration.shm_transport_domain = "abc";
       return config;
     }() },
@@ -180,7 +180,7 @@ INSTANTIATE_TEST_SUITE_P(
       // udp network
       eCAL::Configuration config;
       config.communication_mode = eCAL::eCommunicationMode::network;
-      config.registration.local.transport_type = eCAL::Registration::eTransportType::udp;
+      config.registration.network.transport_type = eCAL::Registration::Network::eTransportType::udp;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
       return config;
@@ -189,7 +189,7 @@ INSTANTIATE_TEST_SUITE_P(
       // udp local
       eCAL::Configuration config;
       config.communication_mode = eCAL::eCommunicationMode::local;
-      config.registration.local.transport_type = eCAL::Registration::eTransportType::udp;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::udp;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
       return config;

@@ -58,8 +58,8 @@ int main()
 {
   // set eCAL configuration
   eCAL::Configuration configuration;
-  configuration.registration.registration_timeout = 10000;                                       // registration timeout == 10 sec
-  configuration.registration.local.transport_type = eCAL::Registration::eTransportType::shm;     // switch shm registration on and
+  configuration.registration.registration_timeout = 10000;                                           // registration timeout == 10 sec
+  configuration.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;  // switch shm registration on and
 
   // initialize eCAL API
   eCAL::Initialize(configuration, "massive_pub_sub");

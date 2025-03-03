@@ -103,14 +103,28 @@ namespace
     }
   }
 
-  std::string quoteString(const eCAL::Registration::eTransportType transport_type_)
+  std::string quoteString(const eCAL::Registration::Local::eTransportType transport_type_)
   {
     switch (transport_type_)
     {
-      case eCAL::Registration::eTransportType::shm:
+      case eCAL::Registration::Local::eTransportType::shm:
         return "\"shm\"";
         break;
-      case eCAL::Registration::eTransportType::udp:
+      case eCAL::Registration::Local::eTransportType::udp:
+        return "\"udp\"";
+        break;
+      
+      default:
+        return "";
+        break;
+    }
+  }
+
+  std::string quoteString(const eCAL::Registration::Network::eTransportType transport_type_)
+  {
+    switch (transport_type_)
+    {
+      case eCAL::Registration::Network::eTransportType::udp:
         return "\"udp\"";
         break;
       
