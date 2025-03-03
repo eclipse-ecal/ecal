@@ -59,9 +59,6 @@ namespace eCAL
       settings_.SetAllToDefaults();
       settings_.ClearHostFilter(); // There is no global host filter
 
-      // Initialize eCAL
-      eCAL::Initialize("eCALRec-Server", eCAL::Init::Default | eCAL::Init::Monitoring);
-
       // Start FTP Server
       ftp_server_->start(5);
 
