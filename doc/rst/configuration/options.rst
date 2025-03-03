@@ -30,7 +30,7 @@ It will generate the files only in the first found base path.
   2. ``%cd%/ecal.yaml``
   3. ``%UserProfile%/AppData/Local/eCAL/ecal.yaml``*
   4. ``%ProgramData%/eCAL/ecal.yaml``*
-  5. ``%ECAL_HOME%/etc/ecal.yaml``
+  5. ``<ecal installation directory>/etc/ecal.yaml``
 
 - |fa-ubuntu| Ubuntu:
 
