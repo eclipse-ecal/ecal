@@ -28,7 +28,6 @@ macro(ecal_add_csharp_core_sample sample_name)
 endmacro()
 
 ecal_add_csharp_core_sample(pubsub_minimal_rec)
-ecal_add_csharp_core_sample(pubsub_minimal_rec_cb)
 ecal_add_csharp_core_sample(pubsub_minimal_snd)
 
 ecal_add_csharp_core_sample(service_minimal_client)

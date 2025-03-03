@@ -20,22 +20,22 @@
 using System;
 using Continental.eCAL.Core;
 
-public class minimal_snd
+public class MinimalSend
 {
   static void Main()
   {
     // initialize eCAL API
-    Util.Initialize("minimal_snd");
+    Core.Initialize("minimal_snd");
 
     // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // create a publisher (topic name "Hello", type "base:std::string", description "")
-    Publisher publisher = new Publisher("Hello", "std::string", "base", "");
+    Publisher publisher = new Publisher("Hello");
 
     // idle main thread
     int loop = 0;
-    while (Util.Ok())
+    while (Core.Ok())
     {
       // message to send
       string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
@@ -44,7 +44,7 @@ public class minimal_snd
       System.Console.WriteLine(String.Format("Sending:  {0}", message));
 
       // send the content
-      publisher.Send(message, -1);
+      publisher.Send(message);
 
       // cool down
       System.Threading.Thread.Sleep(100);
@@ -54,6 +54,6 @@ public class minimal_snd
     publisher.Dispose();
 
     // finalize eCAL API
-    Util.Terminate();
+    Core.Terminate();
   }
 }

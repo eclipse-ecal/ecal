@@ -40,16 +40,16 @@ public class minimal_client
     static void Main()
     {
       // initialize eCAL API
-      Util.Initialize("minimal_client_csharp");
+      Core.Initialize("minimal_client_csharp");
 
       // print version info
-      System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+      System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
       // create a subscriber (topic name "Hello", type "base:std::string")
       var service_client = new ServiceClient("service1");
 
       // idle main thread
-      while (Util.Ok())
+      while (Core.Ok())
       {
         var content = System.Text.Encoding.UTF8.GetBytes("hello");
         var result = service_client.Call("echo", content, 100);
@@ -73,7 +73,7 @@ public class minimal_client
       service_client.Dispose();
 
       // finalize eCAL API
-      Util.Terminate();
+      Core.Terminate();
     }
   };
 

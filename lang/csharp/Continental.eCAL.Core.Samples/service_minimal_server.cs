@@ -34,18 +34,18 @@ public class minimal_server
   static void Main()
   {
     // initialize eCAL API
-    Util.Initialize("minimal_service_csharp");
+    Core.Initialize("minimal_service_csharp");
 
     // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // create a subscriber (topic name "Hello", type "base:std::string")
     var service_server_ = new ServiceServer("service1");
     ServiceServer.MethodCallback callback = OnMethodCallback;
-    service_server_.AddMethodCallback("echo", "", "", callback);
+    service_server_.SetMethodCallback("echo", "", "", callback);
 
     // idle main thread
-    while (Util.Ok())
+    while (Core.Ok())
     {
       System.Threading.Thread.Sleep(100);
     }
@@ -55,6 +55,6 @@ public class minimal_server
     service_server_.Dispose();
 
     // finalize eCAL API
-    Util.Terminate();
+    Core.Terminate();
   }
 }

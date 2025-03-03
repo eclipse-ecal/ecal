@@ -20,15 +20,15 @@
 using System;
 using Continental.eCAL.Core;
 
-public class PersonSnd
+public class PersonSend
 {
   static void Main()
   {
     // initialize eCAL API
-    Util.Initialize("Person Send C#");
+    Core.Initialize("Person Send C#");
 
     // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // create a publisher (topic name "Hello", type "base:std::string", description "")
     var publisher = new ProtobufPublisher<Pb.People.Person>("person");
@@ -45,7 +45,7 @@ public class PersonSnd
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    while (Util.Ok())
+    while (Core.Ok())
     {
       // message to send
       person.Id = loop;
@@ -62,6 +62,6 @@ public class PersonSnd
     }
 
     // finalize eCAL API
-    Util.Terminate();
+    Core.Terminate();
   }
 }

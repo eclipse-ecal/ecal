@@ -1,0 +1,72 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+/**
+ * @file  ecal_clr_topicid.h
+**/
+
+#pragma once
+
+using namespace System;
+
+namespace Continental
+{
+  namespace eCAL
+  {
+    namespace Core
+    {
+      /**
+       * @brief Managed wrapper for the native eCAL::STopicId structure.
+       *
+       * This class encapsulates the topic identifier, including the unique topic id 
+       * (extracted from SEntityId) and the topic name.
+       */
+      public ref class TopicId
+      {
+      public:
+        /**
+         * @brief Gets or sets the unique topic id.
+         */
+        property unsigned __int64 EntityId;
+
+        /**
+         * @brief Gets or sets the topic name.
+         */
+        property String^ TopicName;
+
+        /**
+         * @brief Default constructor.
+         */
+        TopicId() {}
+
+        /**
+         * @brief Constructs a TopicId with the specified values.
+         *
+         * @param entityId The unique topic id.
+         * @param topicName The topic name.
+         */
+        TopicId(unsigned __int64 entityId, String^ topicName)
+        {
+          EntityId = entityId;
+          TopicName = topicName;
+        }
+      };
+    }
+  }
+}

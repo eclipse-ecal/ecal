@@ -11,126 +11,98 @@ namespace Continental
     {
       /**
        * @brief eCAL class to subscribe to protobuf Data.
-      **/
+       */
       public class ProtobufSubscriber<T> where T : IMessage<T>, new()
       {
         private Subscriber binarySubscriber;
         private ReceiverCallback callback;
 
         /**
-        * @brief Data which is received from a callback
-        **/
-        public class ReceiveCallbackData
+         * @brief Data which is received from a callback.
+         */
+        public class ProtobufData
         {
-          public T data;           /*!< Message             */
-          public long id;          /*!< Message id          */
-          public long time;        /*!< Message time stamp  */
+          public T data;           /*!< Message */
+          public long id;          /*!< Message id */
+          public long time;        /*!< Message time stamp */
           public long clock;       /*!< Message write clock */
 
-          public ReceiveCallbackData()
+          public ProtobufData()
           {
             data = new T();
           }
         };
 
         /**
-        * @brief Signature for a data callback.
-        **/
-        public delegate void ReceiverCallback(String topic, ReceiveCallbackData data);
-        private ReceiverCallback delMethods;
+         * @brief Signature for a data callback.
+         */
+        public delegate void ReceiverCallback(string topic, ProtobufData data);
 
         /**
-        * @brief Constructor for a Protobuf Subscriber
-        * 
-        * @param topicName Topic name on which the subscriber subscribes to data.
-        **/
+         * @brief Constructor for a Protobuf Subscriber.
+         * 
+         * @param topicName Topic name on which the subscriber subscribes to data.
+         */
         public ProtobufSubscriber(string topicName)
         {
           T msg = new T();
-          binarySubscriber = new Subscriber(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(msg), "proto", Common.ProtobufHelper.GetProtoMessageDescription(msg));
+          DataTypeInformation dataTypeInfo = new DataTypeInformation(
+                  Common.ProtobufHelper.GetProtoMessageTypeName(msg),
+                  "proto",
+                  Common.ProtobufHelper.GetProtoMessageDescription(msg).ToString()
+                );
+          binarySubscriber = new Subscriber(topicName, dataTypeInfo);
         }
 
         /**
-        * @brief Add a callback function to this subscriber
-        * 
-        * @param callbackFunction function which will be called when new data is available.
-        **/
-        public void AddReceiveCallback(ReceiverCallback callbackFunction)
+         * @brief Add a callback function to this subscriber.
+         * 
+         * @param callbackFunction Function which will be called when new data is available.
+         */
+        public void SetReceiveCallback(ReceiverCallback callbackFunction)
         {
           this.callback = callbackFunction;
-          delMethods += callbackFunction;
-          binarySubscriber.AddReceiveCallback(callBack);
+          binarySubscriber.SetReceiveCallback(InternalCallBack);
         }
 
         /**
-        * @brief Remove a callback function from this subscriber
-        * 
-        * @param callbackFunction function to be removed from the callback list.
-        **/
-        public void RemReceiveCallback(ReceiverCallback del)
+         * @brief Remove a callback function from this subscriber.
+         */
+        public void RemoveReceiveCallback()
         {
-          binarySubscriber.RemReceiveCallback(callBack);
-          delMethods -= del;
+          binarySubscriber.RemoveReceiveCallback();
           this.callback = null;
         }
-
-        private void callBack(String topic, Core.Subscriber.ReceiveCallbackData data)
+        
+        private void InternalCallBack(TopicId publisherId, DataTypeInformation dataTypeInfo, Continental.eCAL.Core.ReceiveCallbackData binaryData)
         {
-          //String to Stream
-          byte[] messageBytes = Encoding.Default.GetBytes(data.data);
-          MemoryStream msgStream = new MemoryStream(messageBytes);
+          // Use the topic name from the publisher identifier.
+          string topic = publisherId.TopicName;
 
-          var receivedData = new ReceiveCallbackData();
-          receivedData.data.MergeFrom(msgStream);
-          receivedData.id = data.id;
-          receivedData.clock = data.clock;
-          receivedData.time = data.time;
-          //Execute passed methods
-          delMethods(topic, receivedData);
+          // Create a new instance of our Protobuf data.
+          var receivedData = new ProtobufData();
+          // Create a MemoryStream from the binary data's buffer.
+          using (MemoryStream msgStream = new MemoryStream(binaryData.Buffer))
+          {
+            receivedData.data.MergeFrom(msgStream);
+          }
+          // Copy metadata (set id to 0 if not provided).
+          receivedData.id = 0; // Adjust if binaryData contains an id field.
+          receivedData.time = binaryData.SendTimestamp;
+          receivedData.clock = binaryData.SendClock;
+          // Execute the user-supplied callback.
+          callback(topic, receivedData);
         }
 
         /**
-        * @brief Unregister this subscriber, no more data will be received
-        **/
-        public void finalized()
+         * @brief Unregister this subscriber; no more data will be received.
+         */
+        public void FinalizeSubscriber()
         {
-          delMethods -= callback;
-          binarySubscriber.RemReceiveCallback(callBack);
+          binarySubscriber.RemoveReceiveCallback();
           binarySubscriber.Dispose();
-          binarySubscriber.Destroy();
-        }
-
-        /**
-        * @brief Receive data.
-        * 
-        * @param receiveTimeout Timeout after which the function returns, even if no data was received.
-        *        If -1, it will only return after data was received.
-        *        
-        * @return  The received data, can be null if no data was received.
-        **/
-        public ReceiveCallbackData Receive(int receiveTimeout)
-        {
-          var receivedData = binarySubscriber.Receive(receiveTimeout);
-          if (receivedData != null)
-          {
-            byte[] msgBytes = Encoding.Default.GetBytes(receivedData.data);
-            var msgStream = new MemoryStream(msgBytes);
-
-            var protobufCallbackData = new ReceiveCallbackData();
-            protobufCallbackData.data = new T();
-            protobufCallbackData.data.MergeFrom(msgStream);
-            protobufCallbackData.clock = receivedData.clock;
-            protobufCallbackData.id = receivedData.id;
-            protobufCallbackData.time = receivedData.time;
-            return protobufCallbackData;
-          }
-          else
-          {
-            return null;
-          }
         }
       }
     }
   }
 }
-

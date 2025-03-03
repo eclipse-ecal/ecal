@@ -18,10 +18,10 @@
 */
 
 using System;
-using Continental.eCAL.Core;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 using System.Threading.Tasks;
+using Continental.eCAL.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public class eCALBinaryTest
@@ -29,30 +29,46 @@ public class eCALBinaryTest
   [TestInitialize]
   public void Initialize()
   {
-    Continental.eCAL.Core.Util.Initialize("Binary Test C#");
+    Continental.eCAL.Core.Core.Initialize("Binary Test C#");
   }
 
   [TestCleanup]
   public void Cleanup()
   {
-    Continental.eCAL.Core.Util.Terminate();
+    Continental.eCAL.Core.Core.Terminate();
   }
 
-  // This test ensures that 0  values which are not present on the wire, are still deserialized correctly. (#1593)
   [TestMethod]
-  public void PublishSubscribeTest()
+  public async Task PublishSubscribeTest()
   {
-    // create a subscriber
-    Publisher publisher = new Publisher("Hello", "std::string", "base", "");
-    Subscriber subscriber = new Subscriber("Hello", "std::string", "base", "");
+    // Create publisher and subscriber for topic "Hello"
+    Publisher publisher = new Publisher("Hello");
+    Subscriber subscriber = new Subscriber("Hello");
 
+    // Use TaskCompletionSource to wait asynchronously for the callback
+    var tcs = new TaskCompletionSource<string>();
+
+    // Register a callback that converts the received binary buffer to a string
+    subscriber.SetReceiveCallback((publisherId, dtInfo, data) =>
     {
-      string message = "HELLO WORLD FROM C#";
-      publisher.Send(message, -1);
-      var received_message = subscriber.Receive(100);
-      Assert.IsNotNull(received_message);
-      Assert.IsTrue(message == received_message.data);
-    }
+      // Use the topic name from the publisher identifier
+      string topic = publisherId.TopicName;
+      // Convert the received binary data into a string
+      string received = Encoding.Default.GetString(data.Buffer);
+      tcs.TrySetResult(received);
+    });
 
+    string message = "HELLO WORLD FROM C#";
+    // Send the message
+    publisher.Send(message);
+
+    // Wait for the callback, with a timeout 5 seconds
+    Task delay = Task.Delay(TimeSpan.FromSeconds(5));
+    Task completedTask = await Task.WhenAny(tcs.Task, delay);
+    Assert.IsTrue(completedTask == tcs.Task, "Timeout waiting for message");
+    string result = tcs.Task.Result;
+
+    Assert.IsNotNull(result);
+    Assert.AreEqual(message, result);
   }
 }

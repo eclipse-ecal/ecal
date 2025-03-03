@@ -40,6 +40,5 @@ macro(ecal_add_csharp_protobuf_sample sample_name)
 endmacro()
 
 ecal_add_csharp_protobuf_sample(pubsub_person_rec)
-ecal_add_csharp_protobuf_sample(pubsub_person_rec_cb)
 ecal_add_csharp_protobuf_sample(pubsub_person_snd)
 

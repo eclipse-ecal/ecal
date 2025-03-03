@@ -22,8 +22,28 @@ find_package(eCAL REQUIRED)
 
 set(ecal_clr_src
     AssemblyInfo.cpp
-    ecal_clr.h
-    ecal_clr.cpp
+    ecal_clr_client.cpp
+    ecal_clr_client.h
+    ecal_clr_common.cpp
+    ecal_clr_common.h
+    ecal_clr_core.cpp
+    ecal_clr_core.h
+    ecal_clr_datatype.h
+    ecal_clr_log.cpp
+    ecal_clr_log.h
+    ecal_clr_monitoring.cpp
+    ecal_clr_monitoring.h
+    ecal_clr_publisher.cpp
+    ecal_clr_publisher.h
+    ecal_clr_receivecallbackdata.h
+    ecal_clr_server.cpp
+    ecal_clr_server.h
+    ecal_clr_subscriber.cpp
+    ecal_clr_subscriber.h
+    ecal_clr_subscribercallback.h
+    ecal_clr_time.cpp
+    ecal_clr_time.h
+    ecal_clr_topicid.h
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})

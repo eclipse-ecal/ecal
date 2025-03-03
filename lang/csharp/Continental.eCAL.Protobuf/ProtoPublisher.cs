@@ -23,8 +23,13 @@ namespace Continental
         **/
         public ProtobufPublisher(string topicName)
         {
-          T message = new T();
-          binaryPublisher = new Publisher(topicName, Common.ProtobufHelper.GetProtoMessageTypeName(message), "proto", Common.ProtobufHelper.GetProtoMessageDescription(message));
+          T msg = new T();
+          DataTypeInformation dataTypeInfo = new DataTypeInformation(
+                  Common.ProtobufHelper.GetProtoMessageTypeName(msg),
+                  "proto",
+                  Common.ProtobufHelper.GetProtoMessageDescription(msg).ToString()
+                );
+          binaryPublisher = new Publisher(topicName, dataTypeInfo);
         }
 
         /**
@@ -35,7 +40,21 @@ namespace Continental
         public bool Send(T message)
         {
           var serialized = message.ToByteArray();
-          return (binaryPublisher.Send(serialized, -1) > 0);
+          return binaryPublisher.Send(serialized);
+        }
+
+        /**
+         * @brief Send a protobuf message with a specified send time.
+         *
+         * @param message Message to send out.
+         * @param time Send time in microseconds.
+         * 
+         * @return True if the message was sent successfully; otherwise, false.
+         */
+        public bool Send(T message, long time)
+        {
+          var serialized = message.ToByteArray();
+          return binaryPublisher.Send(serialized, time);
         }
       }
     }

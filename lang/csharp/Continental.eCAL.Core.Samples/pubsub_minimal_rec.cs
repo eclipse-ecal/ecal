@@ -18,35 +18,44 @@
 */
 
 using System;
+using System.Text;
 using Continental.eCAL.Core;
 
-public class minimal_rcv
+public class MinimalReceiveCallback
 {
+  // Callback matching the new delegate signature.
+  static void ReceiveCallback(TopicId publisherId, DataTypeInformation dataTypeInfo, ReceiveCallbackData data)
+  {
+    Console.WriteLine("Topic name: " + publisherId.TopicName);
+    // Convert the received binary buffer to a string.
+    string content = Encoding.Default.GetString(data.Buffer);
+    Console.WriteLine("Topic content: " + content);
+  }
+
   static void Main()
   {
-    // initialize eCAL API
-    Util.Initialize("minimal_rcv");
+    // Initialize eCAL API.
+    Core.Initialize("minimal_rcv_cb");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a subscriber (topic name "Hello", type "base:std::string")
-    Subscriber subscriber = new Subscriber("Hello", "std::string", "base", "");
+    // Create a subscriber (topic name "Hello").
+    Subscriber subscriber = new Subscriber("Hello");
+
+    // Register a callback.
+    subscriber.SetReceiveCallback(ReceiveCallback);
 
     // idle main thread
-    while (Util.Ok())
+    while (Core.Ok())
     {
-      // receive content with 100 ms timeout
-      Subscriber.ReceiveCallbackData message = subscriber.Receive(100);
-
-      // print message
-      if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
+      System.Threading.Thread.Sleep(100);
     }
 
-    // dispose subscriber
+    // Dispose subscriber.
     subscriber.Dispose();
 
-    // finalize eCAL API
-    Util.Terminate();
+    // Finalize eCAL API.
+    Core.Terminate();
   }
 }
