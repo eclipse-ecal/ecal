@@ -43,7 +43,7 @@ Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo)
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
-  nativeDataTypeInfo.descriptor = StringToStlString(dataTypeInfo->Descriptor);
+  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
   m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName), nativeDataTypeInfo);
 }
 
@@ -111,5 +111,5 @@ DataTypeInformation^ Publisher::GetDataTypeInformation()
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),
-    StlStringToString(nativeDataTypeInfo.descriptor));
+    StlStringToByteArray(nativeDataTypeInfo.descriptor));
 }

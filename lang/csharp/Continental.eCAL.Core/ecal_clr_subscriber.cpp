@@ -94,7 +94,7 @@ namespace
         DataTypeInformation^ managedDT = gcnew DataTypeInformation(
           StlStringToString(dataTypeInfo.name),
           StlStringToString(dataTypeInfo.encoding),
-          StlStringToString(dataTypeInfo.descriptor));
+          StlStringToByteArray(dataTypeInfo.descriptor));
         ReceiveCallbackData^ managedData = ConvertReceiveCallbackData(data);
         managedCallback->Invoke(managedId, managedDT, managedData);
       };
@@ -113,7 +113,7 @@ Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo)
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
-  nativeDataTypeInfo.descriptor = StringToStlString(dataTypeInfo->Descriptor);
+  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
   m_native_subscriber = new ::eCAL::CSubscriber(StringToStlString(topicName), nativeDataTypeInfo);
 }
 
@@ -171,5 +171,5 @@ DataTypeInformation^ Subscriber::GetDataTypeInformation()
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),
-    StlStringToString(nativeDataTypeInfo.descriptor));
+    StlStringToByteArray(nativeDataTypeInfo.descriptor));
 }

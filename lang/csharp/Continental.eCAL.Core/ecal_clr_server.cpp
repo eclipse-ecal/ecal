@@ -75,8 +75,14 @@ int ServiceServer::OnMethodCall(const ::eCAL::SServiceMethodInformation& methodI
   // Convert the native request and response types to managed.
   ServiceMethodInformation^ methodInfoManaged = gcnew ServiceMethodInformation();
   methodInfoManaged->MethodName   = methodName;
-  methodInfoManaged->RequestType  = gcnew DataTypeInformation(StlStringToString(methodInfo.request_type.name), "", "");
-  methodInfoManaged->ResponseType = gcnew DataTypeInformation(StlStringToString(methodInfo.response_type.name), "", "");
+  methodInfoManaged->RequestType  = gcnew DataTypeInformation(
+    StlStringToString(methodInfo.request_type.name),
+    StlStringToString(methodInfo.request_type.encoding),
+    StlStringToByteArray(methodInfo.request_type.descriptor));
+  methodInfoManaged->ResponseType = gcnew DataTypeInformation(
+    StlStringToString(methodInfo.response_type.name),
+    StlStringToString(methodInfo.response_type.encoding),
+    StlStringToByteArray(methodInfo.response_type.descriptor));
   array<Byte>^ reqData = StlStringToByteArray(request);
 
   // Invoke the managed delegate.

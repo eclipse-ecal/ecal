@@ -40,33 +40,34 @@ namespace Continental
       public ref class DataTypeInformation
       {
       public:
-        /// <summary>
-        /// Gets or sets the data type name.
-        /// </summary>
+        /**
+         * @brief Gets or sets the data type name.
+         **/
         property String^ Name;
 
-        /// <summary>
-        /// Gets or sets the encoding of the data type.
-        /// </summary>
+        /**
+         * @brief Gets or sets the encoding of the data type.
+         **/
         property String^ Encoding;
 
-        /// <summary>
-        /// Gets or sets the descriptor of the data type.
-        /// </summary>
-        property String^ Descriptor;
+        /**
+         * @brief Gets or sets the descriptor of the data type.
+         **/
+        property array<Byte>^ Descriptor;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        /**
+         * @brief Default constructor.
+         **/
         DataTypeInformation() {}
 
-        /// <summary>
-        /// Initializes a new instance with the specified values.
-        /// </summary>
-        /// <param name="name">Data type name.</param>
-        /// <param name="encoding">Encoding of the data type.</param>
-        /// <param name="descriptor">Descriptor information.</param>
-        DataTypeInformation(String^ name, String^ encoding, String^ descriptor)
+        /**
+         * @brief Initializes a new instance with the specified values.
+         * 
+         * @param name Data type name.
+         * @param encoding Encoding of the data type.
+         * @param descriptor Descriptor information.
+         **/
+        DataTypeInformation(String^ name, String^ encoding, array<Byte>^ descriptor)
         {
           Name = name;
           Encoding = encoding;
