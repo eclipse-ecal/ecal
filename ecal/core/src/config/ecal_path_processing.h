@@ -185,6 +185,12 @@ namespace eCAL
          */
         std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const override;
 
+        /**
+         * @brief Returns the path to the eCAL library directory.
+         * 
+         * @returns The path to the eCAL library directory.
+         *          Returns empty string if the path does not exist.
+         */
         std::string eCALLibraryDir(const eCAL::Util::IDirManager& dir_manager_) const override;
     };
   } // namespace Util
