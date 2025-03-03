@@ -67,18 +67,15 @@ namespace eCAL
     if(m_created) return;
 
 #if ECAL_CORE_REGISTRATION_SHM
-    // Only create SHM registration sender if communication mode is local and transport type is shm
     if (m_attributes.transport_mode == Registration::eTransportMode::shm)
     {
       m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_attributes));
     } else
 #endif
-    // This will enable udp in local and network mode if specified
     if (m_attributes.transport_mode == Registration::eTransportMode::udp)
     {
       m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_attributes));
     }
-    // That will occur when settings are wrong. E.g. communication_mode == network and transport_type == shm
     else
     {
       eCAL::Logging::Log(Logging::log_level_warning, "[CRegistrationProvider] No registration layer enabled.");

@@ -55,9 +55,22 @@ namespace eCAL
     attributes.udp.broadcast     = config_.communication_mode == eCAL::eCommunicationMode::local;
     attributes.udp.port          = transport_tlayer_config.udp.port;
     attributes.udp.send_buffer   = transport_tlayer_config.udp.send_buffer;
-    attributes.udp.group         = transport_tlayer_config.udp.network.group;
-    attributes.udp.ttl           = transport_tlayer_config.udp.network.ttl;
-
+    
+    switch (config_.communication_mode)
+    {
+    case eCAL::eCommunicationMode::network:
+      attributes.udp.group         = transport_tlayer_config.udp.network.group;
+      attributes.udp.ttl           = transport_tlayer_config.udp.network.ttl;
+      break;
+    case eCAL::eCommunicationMode::local:
+      attributes.udp.group         = transport_tlayer_config.udp.local.group;
+      attributes.udp.ttl           = transport_tlayer_config.udp.local.ttl;
+      break;
+    
+    default:
+      break;
+    }
+    
     attributes.tcp.enable           = publisher_config.layer.tcp.enable;
     attributes.tcp.thread_pool_size = transport_tlayer_config.tcp.number_executor_writer;
     

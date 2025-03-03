@@ -99,7 +99,6 @@ namespace eCAL
       m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes));
     } else
 #endif
-    // Start receiving for local and network configuration, if udp as transport type is specified
     if (m_attributes.transport_mode == Registration::eTransportMode::udp)    
     {
       m_registration_receiver_udp = std::make_unique<CRegistrationReceiverUDP>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_);}, Registration::BuildUDPReceiverAttributes(m_attributes));
