@@ -32,6 +32,6 @@ namespace Internal
   System::String^ StlStringToString(const std::string& ss_);
   std::string     StringToStlString(System::String^ s_);
 
-  std::string  ByteArrayToStlString(array<Byte>^ array_);
-  array<Byte>^ StlStringToByteArray(const std::string& string_);
+  std::string  ByteArrayToStlString(array<Byte>^ a_);
+  array<Byte>^ StlStringToByteArray(const std::string& ss_);
 }

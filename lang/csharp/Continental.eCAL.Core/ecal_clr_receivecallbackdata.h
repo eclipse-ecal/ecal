@@ -40,9 +40,6 @@ namespace Continental
         /// @brief Gets the payload buffer as a byte array.
         property array<Byte>^ Buffer;
 
-        /// @brief Gets the size of the payload buffer.
-        property int BufferSize;
-
         /// @brief Gets the publisher send timestamp in microseconds.
         property long long SendTimestamp;
 

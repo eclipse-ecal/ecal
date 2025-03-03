@@ -39,19 +39,19 @@ namespace Internal
     return s;
   }
 
-  std::string ByteArrayToStlString(array<Byte>^ array_)
+  std::string ByteArrayToStlString(array<Byte>^ a_)
   {
-    GCHandle handle = GCHandle::Alloc(array_, GCHandleType::Pinned);
-    size_t len = array_->Length;
+    GCHandle handle = GCHandle::Alloc(a_, GCHandleType::Pinned);
+    size_t len = a_->Length;
     std::string ret((const char*)(void*)handle.AddrOfPinnedObject(), len);
     handle.Free();
     return ret;
   }
 
-  array<Byte>^ StlStringToByteArray(const std::string& string_)
+  array<Byte>^ StlStringToByteArray(const std::string& ss_)
   {
-    array<Byte>^ array_ = gcnew array<Byte>(static_cast<int>(string_.size()));
-    System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)(string_.data())), array_, 0, static_cast<int>(string_.size()));
-    return array_;
+    array<Byte>^ a = gcnew array<Byte>(static_cast<int>(ss_.size()));
+    System::Runtime::InteropServices::Marshal::Copy(IntPtr((void*)(ss_.data())), a, 0, static_cast<int>(ss_.size()));
+    return a;
   }
 }

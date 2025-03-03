@@ -21,6 +21,7 @@ using System;
 using System.Text;
 using System.IO;
 using Google.Protobuf;
+using System.Linq;
 
 namespace Continental
 {
@@ -68,7 +69,7 @@ namespace Continental
           DataTypeInformation dataTypeInfo = new DataTypeInformation(
                   Common.ProtobufHelper.GetProtoMessageTypeName(msg),
                   "proto",
-                  Common.ProtobufHelper.GetProtoMessageDescription(msg).ToString()
+                   Common.ProtobufHelper.GetProtoMessageDescription(msg).ToArray<byte>()
                 );
           binarySubscriber = new Subscriber(topicName, dataTypeInfo);
         }

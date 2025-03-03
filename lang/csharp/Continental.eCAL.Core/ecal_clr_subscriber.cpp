@@ -48,7 +48,6 @@ namespace
   ReceiveCallbackData^ ConvertReceiveCallbackData(const eCAL::SReceiveCallbackData& nativeData)
   {
     ReceiveCallbackData^ data = gcnew ReceiveCallbackData();
-    data->BufferSize = static_cast<int>(nativeData.buffer_size);
     data->SendTimestamp = nativeData.send_timestamp;
     data->SendClock = nativeData.send_clock;
     if (nativeData.buffer && nativeData.buffer_size > 0)
