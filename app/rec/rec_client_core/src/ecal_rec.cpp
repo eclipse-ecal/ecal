@@ -36,14 +36,11 @@ namespace eCAL
 
     EcalRec::EcalRec()
     {
-      eCAL::Initialize("eCALRecClient", eCAL::Init::Default | eCAL::Init::Monitoring);
-
       recorder_ = std::make_unique<EcalRecImpl>();
     }
 
     EcalRec::~EcalRec()
     {
-      eCAL::Finalize();
     }
 
     //////////////////////////////////////
