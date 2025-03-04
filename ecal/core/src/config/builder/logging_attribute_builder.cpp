@@ -19,12 +19,12 @@ namespace eCAL
       attributes.udp_sink.log_level     = log_config_.provider.udp.log_level;
 
       attributes.file_sink.enabled       = log_config_.provider.file.enable;
-      attributes.file_sink.log_level    = log_config_.provider.file.log_level;
+      attributes.file_sink.log_level     = log_config_.provider.file.log_level;
       
       attributes.file_config.path        = Util::GeteCALLogDir();
 
       attributes.console_sink.enabled    = log_config_.provider.console.enable;
-      attributes.console_sink.log_level = log_config_.provider.console.log_level;
+      attributes.console_sink.log_level  = log_config_.provider.console.log_level;
 
       // UDP related configuration part
       attributes.udp_config.broadcast    = !reg_config_.network_enabled;

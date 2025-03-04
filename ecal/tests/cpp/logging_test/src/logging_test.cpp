@@ -58,7 +58,7 @@ eCAL::Configuration GetUDPConfiguration()
   config.logging.provider.console.enable  = false;
   config.logging.provider.udp.enable      = true;
   config.logging.receiver.enable          = true;
-  config.logging.provider.udp.log_level  = eCAL::Logging::log_level_all;
+  config.logging.provider.udp.log_level   = eCAL::Logging::log_level_all;
   return config;
 }
 
@@ -69,7 +69,7 @@ eCAL::Configuration GetFileConfiguration(const std::string& path_)
   config.logging.provider.console.enable   = false;
   config.logging.provider.file.enable      = true;
   config.logging.provider.file_config.path = path_;
-  config.logging.provider.file.log_level  = eCAL::Logging::log_level_all;
+  config.logging.provider.file.log_level   = eCAL::Logging::log_level_all;
   return config;
 }
 
@@ -79,7 +79,7 @@ eCAL::Configuration GetConsoleConfiguration()
   config.logging.provider.file.enable        = false;
   config.logging.provider.udp.enable         = false;
   config.logging.provider.console.enable     = true;
-  config.logging.provider.console.log_level = eCAL::Logging::log_level_all;
+  config.logging.provider.console.log_level  = eCAL::Logging::log_level_all;
   return config;
 }
 
