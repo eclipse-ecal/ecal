@@ -86,15 +86,46 @@ namespace
     }
   }
 
-  std::string quoteString(const eCAL::Types::UDPMode mode_)
+  std::string quoteString(const eCAL::eCommunicationMode mode_)
   {
     switch (mode_)
     {
-      case eCAL::Types::UDPMode::LOCAL:
+      case eCAL::eCommunicationMode::local:
         return "\"local\"";
         break;
-      case eCAL::Types::UDPMode::NETWORK:
+      case eCAL::eCommunicationMode::network:
         return "\"network\"";
+        break;
+      
+      default:
+        return "";
+        break;
+    }
+  }
+
+  std::string quoteString(const eCAL::Registration::Local::eTransportType transport_type_)
+  {
+    switch (transport_type_)
+    {
+      case eCAL::Registration::Local::eTransportType::shm:
+        return "\"shm\"";
+        break;
+      case eCAL::Registration::Local::eTransportType::udp:
+        return "\"udp\"";
+        break;
+      
+      default:
+        return "";
+        break;
+    }
+  }
+
+  std::string quoteString(const eCAL::Registration::Network::eTransportType transport_type_)
+  {
+    switch (transport_type_)
+    {
+      case eCAL::Registration::Network::eTransportType::udp:
+        return "\"udp\"";
         break;
       
       default:
@@ -131,6 +162,13 @@ namespace eCAL
       ss << R"(#  |___/                                               |___/                                   )"                    << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
+      ss << R"(# Operation configuration)"                                                                                          << "\n";
+      ss << R"(# eCAL components communication mode ("local" or "network"):)"                                                       << "\n";
+      ss << R"(#   "local": local host only communication (default))"                                                               << "\n";
+      ss << R"(#   "network": communication across network boundaries)"                                                             << "\n";
+      ss << R"(communication_mode: )"                                << quoteString(config_.communication_mode)                     << "\n";
+      ss << R"()"                                                                                                                   << "\n";
+      ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Registration layer configuration)"                                                                                 << "\n";
       ss << R"(registration:)"                                                                                                      << "\n";
       ss << R"(  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000))"                  << "\n";
@@ -142,21 +180,28 @@ namespace eCAL
       ss << R"(  # SHM transport domain that enables interprocess mechanisms across (virtual))"                                     << "\n";
       ss << R"(  # host borders (e.g, Docker); by default equivalent to local host name)"                                           << "\n";
       ss << R"(  shm_transport_domain: )"                            << quoteString(config_.registration.shm_transport_domain)      << "\n";
-      ss << R"(  # true  = all eCAL components communicate over network boundaries)"                                                << "\n";
-      ss << R"(  # false = local host only communication (Default: false))"                                                         << "\n";
-      ss << R"(  network_enabled: )"                                 << config_.registration.network_enabled                        << "\n";
       ss << R"()"                                                                                                                   << "\n";
-      ss << R"(  layer:)"                                                                                                           << "\n";
+      ss << R"(  local:)"                                                                                                           << "\n";
+      ss << R"(    # Specify the transport type for local registration)"                                                            << "\n";
+      ss << R"(    #   "shm": shared memory based registration)"                                                                    << "\n";
+      ss << R"(    #   "udp": udp based registration (default))"                                                                    << "\n";
+      ss << R"(    transport_type: )"                                << quoteString(config_.registration.local.transport_type)      << "\n";
       ss << R"(    shm:)"                                                                                                           << "\n";
-      ss << R"(      enable: )"                                      << config_.registration.layer.shm.enable                       << "\n";
       ss << R"(      # Domain name for shared memory based registration)"                                                           << "\n";
-      ss << R"(      domain:  )"                                     << quoteString(config_.registration.layer.shm.domain)          << "\n";
+      ss << R"(      domain:  )"                                     << quoteString(config_.registration.local.shm.domain)          << "\n";
       ss << R"(      # Queue size of registration events)"                                                                          << "\n";
-      ss << R"(      queue_size: )"                                  << config_.registration.layer.shm.queue_size                   << "\n";
-      ss << R"()"                                                                                                                   << "\n";
+      ss << R"(      queue_size: )"                                  << config_.registration.local.shm.queue_size                   << "\n";
       ss << R"(    udp:)"                                                                                                           << "\n";
-      ss << R"(      enable: )"                                      << config_.registration.layer.udp.enable                       << "\n";
-      ss << R"(      port: )"                                        << config_.registration.layer.udp.port                         << "\n";
+      ss << R"(      # Specify port for local registration traffic)"                                                                << "\n";
+      ss << R"(      port: )"                                        << config_.registration.local.udp.port                         << "\n";
+      ss << R"()"                                                                                                                   << "\n";
+      ss << R"(  network:)"                                                                                                         << "\n";
+      ss << R"(    # Specify the transport type for network registration)"                                                          << "\n";
+      ss << R"(    #   "udp": udp based registration (default))"                                                                    << "\n";
+      ss << R"(    transport_type: )"                                << quoteString(config_.registration.network.transport_type)    << "\n";
+      ss << R"(    udp:)"                                                                                                           << "\n";
+      ss << R"(    # Specify port for network registration traffic)"                                                                << "\n";
+      ss << R"(      port: )"                                        << config_.registration.network.udp.port                       << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Transport layer configuration)"                                                                                    << "\n";
@@ -166,8 +211,6 @@ namespace eCAL
       ss << R"(    # v1: default behavior)"                                                                                         << "\n";
       ss << R"(    # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups)"                   << "\n";
       ss << R"(    config_version: )"                                << quoteString(config_.transport_layer.udp.config_version)     << "\n";
-      ss << R"(    # Valid modes: local, network (Default: local))"                                                                 << "\n";
-      ss << R"(    mode: )"                                          << quoteString(config_.transport_layer.udp.mode)               << "\n";
       ss << R"(    # Multicast port number)"                                                                                        << "\n";
       ss << R"(    port: )"                                          << config_.transport_layer.udp.port                            << "\n";
       ss << R"(    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255))"                                 << "\n";

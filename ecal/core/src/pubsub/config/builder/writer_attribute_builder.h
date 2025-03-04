@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,9 @@
 #pragma once
 
 #include "readwrite/config/attributes/writer_attributes.h"
-#include "ecal/config/publisher.h"
-#include "ecal/config/registration.h"
+#include "ecal/config/configuration.h"
 
 namespace eCAL
 {
-  eCALWriter::SAttributes BuildWriterAttributes(const std::string& topic_name_, const Publisher::Configuration& config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_);
+  eCALWriter::SAttributes BuildWriterAttributes(const std::string& topic_name_, const eCAL::Configuration& config_);
 }

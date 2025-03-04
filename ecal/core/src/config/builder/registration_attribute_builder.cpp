@@ -19,38 +19,62 @@
 
 #include "registration_attribute_builder.h"
 #include "ecal/process.h"
+#include "ecal/config.h"
 
 namespace eCAL
 {
-  Registration::SAttributes BuildRegistrationAttributes(const eCAL::Registration::Configuration& reg_config_, const eCAL::TransportLayer::UDP::Configuration& tl_udp_confi_, int process_id_)
+  Registration::SAttributes BuildRegistrationAttributes(const eCAL::Configuration& config_, int process_id_)
   {
+    const auto& reg_config    = config_.registration;
+    const auto& tl_udp_config = config_.transport_layer.udp;
+
     Registration::SAttributes attr;
     
-    attr.timeout              = std::chrono::milliseconds(reg_config_.registration_timeout);
-    attr.refresh              = reg_config_.registration_refresh;
-    attr.network_enabled      = reg_config_.network_enabled;
-    attr.loopback             = reg_config_.loopback;
+    attr.network_enabled      = config_.communication_mode == eCAL::eCommunicationMode::network;
+    attr.timeout              = std::chrono::milliseconds(reg_config.registration_timeout);
+    attr.refresh              = reg_config.registration_refresh;
+    attr.loopback             = reg_config.loopback;
     attr.host_name            = eCAL::Process::GetHostName();
-    attr.shm_transport_domain = reg_config_.shm_transport_domain;
+    attr.shm_transport_domain = reg_config.shm_transport_domain;
 
     attr.process_id        = process_id_;
 
-    attr.shm_enabled       = reg_config_.layer.shm.enable;
-    attr.udp_enabled       = reg_config_.layer.udp.enable;
-    
-    attr.shm.domain        = reg_config_.layer.shm.domain;
-    attr.shm.queue_size    = reg_config_.layer.shm.queue_size;
+    attr.shm.domain        = reg_config.local.shm.domain;
+    attr.shm.queue_size    = reg_config.local.shm.queue_size;
      
-    attr.udp.port          = reg_config_.layer.udp.port;
-    attr.udp.sendbuffer    = tl_udp_confi_.send_buffer;
-    attr.udp.receivebuffer = tl_udp_confi_.receive_buffer;
-    attr.udp.mode          = tl_udp_confi_.mode;
+    switch (config_.communication_mode)
+    {
+      case eCAL::eCommunicationMode::network:
+        attr.udp.port       = reg_config.network.udp.port;
+        attr.udp.group      = tl_udp_config.network.group;
+        attr.udp.ttl        = tl_udp_config.network.ttl;
+        attr.udp.broadcast  = false;
+        // Only udp transport type is supported for network communication right now
+        attr.transport_mode = Registration::eTransportMode::udp;
+        break;
+      case eCAL::eCommunicationMode::local:
+        attr.udp.port       = reg_config.local.udp.port;
+        attr.udp.group      = tl_udp_config.local.group;
+        attr.udp.ttl        = tl_udp_config.local.ttl;
+        attr.udp.broadcast  = true;
+        switch (reg_config.local.transport_type)
+        {
+          case Registration::Local::eTransportType::udp:
+            attr.transport_mode = Registration::eTransportMode::udp;
+            break;
+          case Registration::Local::eTransportType::shm:
+            attr.transport_mode = Registration::eTransportMode::shm;
+            break;
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
+    }
 
-    attr.udp.network.group = tl_udp_confi_.network.group;
-    attr.udp.network.ttl   = tl_udp_confi_.network.ttl;
-
-    attr.udp.local.group   = tl_udp_confi_.local.group;
-    attr.udp.local.ttl     = tl_udp_confi_.local.ttl;
+    attr.udp.sendbuffer    = tl_udp_config.send_buffer;
+    attr.udp.receivebuffer = tl_udp_config.receive_buffer;
     
     return attr;
   }

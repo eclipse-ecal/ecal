@@ -25,9 +25,6 @@ registration:
   # Shm transport domain that enables interprocess mechanisms across (virtual)
   # host borders (e.g, Docker); by default equivalent to local host name
   shm_transport_domain: ""
-  # true  = all eCAL components communicate over network boundaries
-  # false = local host only communication (Default: false)
-  network_enabled: false
 
   layer:
     shm:

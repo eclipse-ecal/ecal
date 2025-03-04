@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,12 +71,5 @@ namespace eCAL
       V1 = 1,
       V2 = 2
     };
-
-    enum class UDPMode
-    {
-      NETWORK,
-      LOCAL
-    };
-
   }
 } 

@@ -66,14 +66,13 @@ namespace eCAL
   {
     if(m_created) return;
 
-   // TODO Create the registration sender
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_attributes.shm_enabled)
+    if (m_attributes.transport_mode == Registration::eTransportMode::shm)
     {
       m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_attributes));
     } else
 #endif
-    if (m_attributes.udp_enabled)
+    if (m_attributes.transport_mode == Registration::eTransportMode::udp)
     {
       m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_attributes));
     }

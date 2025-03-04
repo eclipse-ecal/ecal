@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,6 @@ namespace eCAL
                                                                                              v1: default behavior
                                                                                              v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups (Default: v2) */
         unsigned int            port                { 14002 };                       /*!< UDP multicast port number (Default: 14002) */
-        Types::UDPMode          mode                { Types::UDPMode::LOCAL };       /*!< Valid modes: local, network (Default: local)*/
         Types::IpAddressV4      mask                { "255.255.255.240" };           /*!< v1: Mask maximum number of dynamic multicast group (Default: 0.0.0.1-0.0.0.255)
                                                                                              v2: masks are now considered like routes masking (Default: 255.0.0.0-255.255.255.255)*/
                   
