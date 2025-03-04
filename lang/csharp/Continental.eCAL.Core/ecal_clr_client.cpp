@@ -17,53 +17,129 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  ecal_clr_client.cpp
-**/
+#include <msclr/marshal_cppstd.h>
 
 #include "ecal_clr_client.h"
+
 #include "ecal_clr_common.h"
+#include "ecal_clr_servicetypes.h"
+
+#include <vector>
 
 using namespace Continental::eCAL::Core;
 using namespace Internal;
 
-ServiceClient::ServiceClient(System::String^ service_name_)
+using namespace msclr::interop;
+
+// Constructor
+ServiceClient::ServiceClient(String^ serviceName, ServiceMethodInformationList^ methodInformationList)
 {
-  m_client = new ::eCAL::CServiceClient(StringToStlString(service_name_));
+  // Convert serviceName to std::string.
+  std::string nativeServiceName = StringToStlString(serviceName);
+
+  // Create an empty native set.
+  ::eCAL::ServiceMethodInformationSetT nativeSet;
+  
+  // Only convert if methodInformationList is provided.
+  if (methodInformationList != nullptr)
+  {
+    for each(ServiceMethodInformation^ mInfo in methodInformationList->Methods)
+    {
+      ::eCAL::SServiceMethodInformation nativeInfo;
+      nativeInfo.method_name = StringToStlString(mInfo->MethodName);
+
+      nativeInfo.request_type.name        = StringToStlString(mInfo->RequestType->Name);
+      nativeInfo.request_type.encoding    = StringToStlString(mInfo->RequestType->Encoding);
+      nativeInfo.request_type.descriptor  = ByteArrayToStlString(mInfo->RequestType->Descriptor);
+
+      nativeInfo.response_type.name       = StringToStlString(mInfo->ResponseType->Name);
+      nativeInfo.response_type.encoding   = StringToStlString(mInfo->ResponseType->Encoding);
+      nativeInfo.response_type.descriptor = ByteArrayToStlString(mInfo->ResponseType->Descriptor);
+
+      nativeSet.insert(nativeInfo);
+    }
+  }
+  
+  m_native_service_client = new ::eCAL::CServiceClient(nativeServiceName, nativeSet);
 }
 
+// Destructor
 ServiceClient::~ServiceClient()
 {
-  delete m_client;
+  this->!ServiceClient();
 }
 
-// What behavior is expected here
-// should we throw an exception? is that more C# like?
-List<ServiceClient::ServiceClientCallbackData^>^ ServiceClient::Call(System::String^ method_name_, array<Byte>^ request, const int rcv_timeout_)
+// Finalizer
+ServiceClient::!ServiceClient()
 {
-  ::eCAL::ServiceResponseVecT responseVecT;
-
-  if (m_client->CallWithResponse(StringToStlString(method_name_), ByteArrayToStlString(request), responseVecT, rcv_timeout_))
+  if(m_native_service_client != nullptr)
   {
-    List<ServiceClientCallbackData^>^ rcv_Datas = gcnew List<ServiceClientCallbackData^>();
+    delete m_native_service_client;
+    m_native_service_client = nullptr;
+  }
+}
 
-    for each(::eCAL::SServiceResponse response in responseVecT)
+// CallWithResponse: Blocking call that returns a List<ServiceResponse^>.
+List<ServiceResponse^>^ ServiceClient::CallWithResponse(String^ methodName, array<Byte>^ request, int timeoutMs)
+{
+  std::string nativeMethod  = StringToStlString(methodName);
+  std::string nativeRequest = ByteArrayToStlString(request);
+
+  ::eCAL::ServiceResponseVecT nativeResponseVecT;
+  if (m_native_service_client->CallWithResponse(nativeMethod, nativeRequest, nativeResponseVecT, timeoutMs))
+  {
+    List<ServiceResponse^>^ responseList = gcnew List<ServiceResponse^>();
+
+    for each(::eCAL::SServiceResponse nativeResponse in nativeResponseVecT)
     {
-      ServiceClientCallbackData^ rcv_data = gcnew ServiceClientCallbackData;
-      rcv_data->call_state = static_cast<CallState>(response.call_state);
-      rcv_data->error_msg = StlStringToString(response.error_msg);
-      rcv_data->host_name = StlStringToString(response.server_id.service_id.host_name);
-      rcv_data->method_name = StlStringToString(response.service_method_information.method_name);
-      rcv_data->ret_state = response.ret_state;
-      rcv_data->service_id = static_cast<long long>(response.server_id.service_id.entity_id);
-      rcv_data->service_name = StlStringToString(response.server_id.service_name);
-      rcv_data->response = StlStringToByteArray(response.response);
-      rcv_Datas->Add(rcv_data);
+      ServiceResponse^ response = gcnew ServiceResponse();
+      response->CallState    = static_cast<CallState>(nativeResponse.call_state);
+      response->ErrorMessage = StlStringToString(nativeResponse.error_msg);
+      response->ServerId     = gcnew ServiceId(nativeResponse.server_id.service_id.entity_id,
+        StlStringToString(nativeResponse.server_id.service_name));
+
+      response->MethodInformation = gcnew ServiceMethodInformation();
+      response->MethodInformation->MethodName = StlStringToString(nativeResponse.service_method_information.method_name);
+
+      response->MethodInformation->RequestType = gcnew DataTypeInformation(
+        StlStringToString(nativeResponse.service_method_information.request_type.name),
+        StlStringToString(nativeResponse.service_method_information.request_type.encoding),
+        StlStringToByteArray(nativeResponse.service_method_information.request_type.descriptor));
+
+      response->MethodInformation->ResponseType = gcnew DataTypeInformation(
+        StlStringToString(nativeResponse.service_method_information.response_type.name),
+        StlStringToString(nativeResponse.service_method_information.response_type.encoding),
+        StlStringToByteArray(nativeResponse.service_method_information.response_type.descriptor));
+
+      response->RetState = nativeResponse.ret_state;
+      response->Response = StlStringToByteArray(nativeResponse.response);
+
+      responseList->Add(response);
     }
-    return rcv_Datas;
+    return responseList;
   }
   else
   {
-    return nullptr;
+    return gcnew List<ServiceResponse^>();
   }
+}
+
+// IsConnected: Check if at least one client instance is connected.
+bool ServiceClient::IsConnected()
+{
+  return m_native_service_client->IsConnected();
+}
+
+// GetServiceId: Convert native SServiceId to managed ServiceId.
+ServiceId^ ServiceClient::GetServiceId()
+{
+  ::eCAL::SServiceId nativeId = m_native_service_client->GetServiceId();
+  return gcnew ServiceId(nativeId.service_id.entity_id, StlStringToString(nativeId.service_name));
+}
+
+// GetServiceName: Convert native service name to managed string.
+String^ ServiceClient::GetServiceName()
+{
+  std::string nativeName = m_native_service_client->GetServiceName();
+  return StlStringToString(nativeName);
 }

@@ -17,11 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_common.h
 **/
-
-#pragma once
 
 #include <string>
 

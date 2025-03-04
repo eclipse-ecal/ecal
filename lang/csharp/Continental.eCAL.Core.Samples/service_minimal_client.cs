@@ -18,63 +18,69 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 using Continental.eCAL.Core;
 
-public class minimal_client
+public class MinimalServiceClient
 {
-
-  // This is pass by value. This is truly not optimal
-  static void PrintCallbackResult(ServiceClient.ServiceClientCallbackData data)
+  // Print the result of a service call.
+  static void PrintServiceResponse(ServiceResponse serviceResponse)
   {
-    switch (data.call_state)
+    switch (serviceResponse.CallState)
     {
-      case ServiceClient.CallState.Executed:
-        System.Console.WriteLine("Received response for method " + data.method_name + ":  " + System.Text.Encoding.UTF8.GetString(data.response) + " from host " + data.host_name);
+      case CallState.Executed:
+        Console.WriteLine("Received response for method " +
+            serviceResponse.MethodInformation.MethodName +
+            ": " + Encoding.UTF8.GetString(serviceResponse.Response) +
+            " from host " + "TODO");
         break;
-      case ServiceClient.CallState.Failed:
-        System.Console.WriteLine("Received error : " + data.error_msg + " from host " + data.host_name);
+      case CallState.Failed:
+        Console.WriteLine("Received error: " + serviceResponse.ErrorMessage +
+            " from host " + "TODO");
+        break;
+      default:
+        Console.WriteLine("Received response in unknown state.");
         break;
     }
   }
 
-    static void Main()
+  static void Main()
+  {
+    // Initialize eCAL API.
+    Core.Initialize("minimal client csharp");
+
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+
+    // Create a service client for service "service1"
+    ServiceClient serviceClient = new ServiceClient("service1");
+
+    while (Core.Ok())
     {
-      // initialize eCAL API
-      Core.Initialize("minimal_client_csharp");
+      // Create the request payload.
+      byte[] content = Encoding.UTF8.GetBytes("hello");
 
-      // print version info
-      System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
-
-      // create a subscriber (topic name "Hello", type "base:std::string")
-      var service_client = new ServiceClient("service1");
-
-      // idle main thread
-      while (Core.Ok())
+      // Call the service method "echo" with a 100 ms timeout.
+      List<ServiceResponse> responseList = serviceClient.CallWithResponse("echo", content, 100);
+      if (responseList.Count > 0)
       {
-        var content = System.Text.Encoding.UTF8.GetBytes("hello");
-        var result = service_client.Call("echo", content, 100);
-        if (result != null)
+        foreach (ServiceResponse response in responseList)
         {
-          foreach (var res in result)
-          {
-            PrintCallbackResult(res);
-          }
+          PrintServiceResponse(response);
         }
-        else
-        {
-          System.Console.WriteLine("Calling service echo failed!");
-        }
-
-      System.Threading.Thread.Sleep(1000);
+      }
+      else
+      {
+        Console.WriteLine("Calling service echo failed!");
       }
 
-      // dispose service server
-      // Is this neccessary in a C# context?
-      service_client.Dispose();
-
-      // finalize eCAL API
-      Core.Terminate();
+      System.Threading.Thread.Sleep(1000);
     }
-  };
 
+    // Dispose the service client.
+    serviceClient.Dispose();
 
+    // Finalize eCAL API.
+    Core.Terminate();
+  }
+}

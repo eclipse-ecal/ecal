@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_topicid.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Managed wrapper for the native eCAL::STopicId structure.
        *
@@ -67,6 +65,7 @@ namespace Continental
           TopicName = topicName;
         }
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

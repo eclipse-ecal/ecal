@@ -23,14 +23,6 @@ using Continental.eCAL.Core;
 
 public class MinimalServiceServer
 {
-  /**
-   * @brief Method callback for incoming service calls.
-   *
-   * @param methodInfo The service method information.
-   * @param request The request data as a byte array.
-   * 
-   * @return The response data as a byte array.
-   */
   static byte[] OnMethodCallback(ServiceMethodInformation methodInfo, byte[] request)
   {
     Console.WriteLine("Method called: " + methodInfo.MethodName);
@@ -51,13 +43,9 @@ public class MinimalServiceServer
     // Create a service server named "service1".
     ServiceServer serviceServer = new ServiceServer("service1");
 
-    // Create and populate ServiceMethodInformation.
+    // Register the method callback.
     ServiceMethodInformation methodInfo = new ServiceMethodInformation();
     methodInfo.MethodName = "echo";
-    // Optionally, if you need to provide type information for the request and response,
-    // you can set RequestType and ResponseType here.
-
-    // Register the method callback.
     serviceServer.SetMethodCallback(methodInfo, OnMethodCallback);
 
     // Idle main thread until eCAL is no longer OK.

@@ -17,11 +17,8 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file  ecal_clr_server.cpp
-**/
-
 #include "ecal_clr_server.h"
+
 #include "ecal_clr_common.h"
 #include "ecal_clr_datatype.h"
 #include "ecal_clr_topicid.h"

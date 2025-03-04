@@ -17,78 +17,96 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file  ecal_clr_client.h
-**/
-
 #pragma once
-#include <ecal/ecal.h>
+
+/**
+ * @file ecal_clr_client.h
+ * @brief Managed wrapper for the native CServiceClient API.
+ *
+ * This file provides the managed interface for eCAL service clients.
+ */
+
+#include "ecal_clr_servicetypes.h"
+
+#include <ecal/service/client.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::Runtime::InteropServices;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
-       * @brief eCAL service client class.
+       * @brief Managed wrapper for the native CServiceClient.
        *
-       * The CServiceClient class is used to call a matching eCAL server.
-       *
-      **/
+       * The ServiceClient class provides methods to interact with eCAL services
+       * from a client perspective.
+       */
       public ref class ServiceClient
       {
       public:
-          /**
-           * @brief Constructor.
-           *
-           * @param service_name_   Unique service name.
-          **/
-          ServiceClient(System::String^ service_name_);
+        /**
+         * @brief Constructor.
+         *
+         * @param serviceName Unique service name.
+         * @param methodInformationList Optional list of service method information.
+         */
+        ServiceClient(String^ serviceName, [Optional] ServiceMethodInformationList^ methodInformationList);
 
-          /**
-           * @brief Destructor.
-          **/
-          ~ServiceClient();
+        /**
+         * @brief Destructor.
+         */
+        ~ServiceClient();
 
-          enum class CallState
-          {
-            None = 0,    //!< undefined
-            Executed,    //!< executed (successfully)
-            Failed       //!< failed
-          };
-          /**
-           * @brief structure which contains the data for callback functions
-          **/
-          ref struct ServiceClientCallbackData
-          {
-              String^      host_name;      //!< service host name
-              String^      service_name;   //!< name of the service
-              long long    service_id;     //!< id of the service
-              String^      method_name;    //!< name of the service method
-              String^      error_msg;      //!< human readable error message
-              int          ret_state;      //!< return state of the called service method
-              CallState    call_state;     //!< call state (see eCallState)
-              array<Byte>^ response;       //!< service response
-          };
+        /**
+         * @brief Finalizer.
+         */
+        !ServiceClient();
 
-          /**
-           * @brief Call a server.
-           *
-           * @param method_name_
-           * @param request
-           * @param rcv_timeout_  Maximum time before receive operation returns (in milliseconds, -1 means infinite).
-           *
-           * @return  List<ServiceClientCallbackData> or null (if timed out)
-          **/
-          List<ServiceClientCallbackData^>^ Call(System::String^ method_name_, array<Byte>^ request, const int rcv_timeout_);
+        /**
+         * @brief Blocking call of a service method.
+         *
+         * @param methodName The method name.
+         * @param request The request as a string.
+         * @param timeoutMs Maximum time before the operation returns (in milliseconds, use DefaultTimeArgument for infinite timeout).
+         *
+         * @return List of service responses.
+         */
+        List<ServiceResponse^>^ CallWithResponse(String^ methodName, array<Byte>^ request, int timeoutMs);
+
+        /**
+         * @brief Retrieve the service name.
+         *
+         * @return The service name as a System::String^.
+         */
+        String^ GetServiceName();
+
+        /**
+         * @brief Retrieve the service ID.
+         *
+         * @return The service ID as a managed ServiceId.
+         */
+        ServiceId^ GetServiceId();
+
+        /**
+         * @brief Check connection state.
+         *
+         * @return True if at least one client instance is connected, false otherwise.
+         */
+        bool IsConnected();
+
+        /**
+         * @brief Default time argument for service calls.
+         */
+        literal long long DefaultTimeArgument = ::eCAL::CServiceClient::DEFAULT_TIME_ARGUMENT;
 
       private:
-          ::eCAL::CServiceClient* m_client;
+        /// Pointer to the native CServiceClient instance.
+        ::eCAL::CServiceClient* m_native_service_client;
       };
-   }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

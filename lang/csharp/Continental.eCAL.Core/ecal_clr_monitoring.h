@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_monitoring.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       // Managed representation of the native monitoring entities bitmask.
       [Flags]
       public enum class MonitoringEntity : unsigned int
@@ -77,6 +75,7 @@ namespace Continental
          **/
         static array<Byte>^ GetLogging();
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

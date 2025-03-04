@@ -17,25 +17,24 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_server.h
 **/
 
-#pragma once
+#include "ecal_clr_servicetypes.h"
 
-#include "ecal_clr_servicemethodinformation.h"
-#include <ecal/ecal.h>
+#include <ecal/service/server.h>
 
 using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace System::Collections::Generic;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief eCAL server class.
        *
@@ -137,6 +136,7 @@ namespace Continental
          */
         typedef int(__stdcall* stdcall_eCAL_MethodCallbackT)(const ::eCAL::SServiceMethodInformation& methodInfo, const std::string& request, std::string& response);
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_time.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Time
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Time {
+
       /**
        * @brief Managed wrapper for the eCAL Time API.
        *
@@ -108,6 +106,7 @@ namespace Continental
          */
         static void GetStatus([System::Runtime::InteropServices::Out] int% error, [System::Runtime::InteropServices::Out] String^% statusMessage);
       };
-    }
-  }
-}
+
+    } // namespace Time
+  } // namespace eCAL
+} // namespace Continental

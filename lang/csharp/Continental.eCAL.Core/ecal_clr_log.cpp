@@ -17,14 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file  ecal_clr_log.cpp
-**/
-
 #include "ecal_clr_log.h"
 #include "ecal_clr_common.h"
 
-#include <ecal/ecal.h>
+#include <ecal/log.h>
 
 using namespace Continental::eCAL::Core;
 using namespace Internal;

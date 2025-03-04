@@ -17,14 +17,10 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file  ecal_clr_time.cpp
-**/
-
 #include "ecal_clr_time.h"
 #include "ecal_clr_common.h"
 
-#include <ecal/ecal.h>
+#include <ecal/time.h>
 
 using namespace Continental::eCAL::Time;
 using namespace Internal;

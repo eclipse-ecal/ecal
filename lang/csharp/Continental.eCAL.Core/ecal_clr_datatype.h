@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_datatype.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Managed wrapper for the native SDataTypeInformation structure.
        *
@@ -74,6 +72,7 @@ namespace Continental
           Descriptor = descriptor;
         }
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

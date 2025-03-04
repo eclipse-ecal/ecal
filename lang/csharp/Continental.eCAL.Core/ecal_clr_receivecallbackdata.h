@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_receivecallbackdata.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Managed wrapper for the native SReceiveCallbackData structure.
        */
@@ -46,6 +44,7 @@ namespace Continental
         /// @brief Gets the publisher send clock.
         property long long SendClock;
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

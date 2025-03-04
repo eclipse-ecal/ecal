@@ -38,7 +38,7 @@ set(ecal_clr_src
     ecal_clr_receivecallbackdata.h
     ecal_clr_server.cpp
     ecal_clr_server.h
-    ecal_clr_servicemethodinformation.h
+    ecal_clr_servicetypes.h
     ecal_clr_subscriber.cpp
     ecal_clr_subscriber.h
     ecal_clr_subscribercallback.h

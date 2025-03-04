@@ -17,27 +17,25 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_subscriber.h
 **/
-
-#pragma once
 
 #include "ecal_clr_datatype.h"
 #include "ecal_clr_topicid.h"
 #include "ecal_clr_subscribercallback.h"
 #include "ecal_clr_receivecallbackdata.h"
 
-#include <ecal/ecal.h>
+#include <ecal/pubsub/subscriber.h>
 
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Managed wrapper for the native eCAL::CSubscriber class.
        *
@@ -126,6 +124,7 @@ namespace Continental
          */
         ReceiveCallbackDelegate^ m_receiveCallback;
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

@@ -17,25 +17,23 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_publisher.h
 **/
 
-#pragma once
-
 #include "ecal_clr_datatype.h"
 #include "ecal_clr_topicid.h"
 
-#include <ecal/ecal.h>
+#include <ecal/pubsub/publisher.h>
 
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Managed wrapper for the native eCAL::CPublisher class.
        *
@@ -146,6 +144,7 @@ namespace Continental
          */
         ::eCAL::CPublisher* m_native_publisher;
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

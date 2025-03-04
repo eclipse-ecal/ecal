@@ -17,20 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_log.h
 **/
 
-#pragma once
-
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       // Expose a managed log level enum with values matching the native API.
       [System::Flags]
       public enum class LogLevel : unsigned char
@@ -57,6 +55,7 @@ namespace Continental
         **/
         static void Log(LogLevel level, System::String^ message);
       };
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental

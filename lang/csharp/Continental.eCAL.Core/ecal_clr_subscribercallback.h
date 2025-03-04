@@ -17,11 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 /**
  * @file  ecal_clr_subscribercallback.h
 **/
-
-#pragma once
 
 #include "ecal_clr_topicid.h"
 #include "ecal_clr_datatype.h"
@@ -29,12 +29,10 @@
 
 using namespace System;
 
-namespace Continental
-{
-  namespace eCAL
-  {
-    namespace Core
-    {
+namespace Continental {
+  namespace eCAL {
+    namespace Core {
+
       /**
        * @brief Delegate for subscriber receive callbacks.
        *
@@ -43,6 +41,7 @@ namespace Continental
        * @param data Managed wrapper for the received callback data.
        */
       public delegate void ReceiveCallbackDelegate(TopicId^ publisherId, DataTypeInformation^ dataTypeInfo, ReceiveCallbackData^ data);
-    }
-  }
-}
+
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Continental
