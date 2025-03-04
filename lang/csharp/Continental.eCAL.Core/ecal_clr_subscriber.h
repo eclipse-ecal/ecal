@@ -23,10 +23,8 @@
  * @file  ecal_clr_subscriber.h
 **/
 
-#include "ecal_clr_datatype.h"
-#include "ecal_clr_topicid.h"
-#include "ecal_clr_subscribercallback.h"
-#include "ecal_clr_receivecallbackdata.h"
+#include "ecal_clr_types.h"
+#include "ecal_clr_types_pubsub.h"
 
 #include <ecal/pubsub/subscriber.h>
 

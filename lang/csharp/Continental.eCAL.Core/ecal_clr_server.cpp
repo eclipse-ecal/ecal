@@ -20,8 +20,7 @@
 #include "ecal_clr_server.h"
 
 #include "ecal_clr_common.h"
-#include "ecal_clr_datatype.h"
-#include "ecal_clr_topicid.h"
+#include "ecal_clr_types.h"
 
 #include <sstream>
 

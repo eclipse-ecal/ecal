@@ -27,7 +27,7 @@
  * eCAL service types. They can be used by the C++/CLI client and server APIs.
  */
 
-#include "ecal_clr_datatype.h"
+#include "ecal_clr_types.h"
 
 using namespace System;
 using namespace System::Collections::Generic;

@@ -23,7 +23,7 @@
  * @file  ecal_clr_server.h
 **/
 
-#include "ecal_clr_servicetypes.h"
+#include "ecal_clr_types_service.h"
 
 #include <ecal/service/server.h>
 

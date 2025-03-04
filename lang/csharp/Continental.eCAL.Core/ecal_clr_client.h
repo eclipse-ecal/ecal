@@ -26,7 +26,7 @@
  * This file provides the managed interface for eCAL service clients.
  */
 
-#include "ecal_clr_servicetypes.h"
+#include "ecal_clr_types_service.h"
 
 #include <ecal/service/client.h>
 

@@ -23,8 +23,8 @@
  * @file  ecal_clr_publisher.h
 **/
 
-#include "ecal_clr_datatype.h"
-#include "ecal_clr_topicid.h"
+#include "ecal_clr_types.h"
+#include "ecal_clr_types_pubsub.h"
 
 #include <ecal/pubsub/publisher.h>
 

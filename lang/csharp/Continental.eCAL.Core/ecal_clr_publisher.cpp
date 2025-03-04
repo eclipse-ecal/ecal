@@ -20,7 +20,7 @@
 #include "ecal_clr_publisher.h"
 
 #include "ecal_clr_common.h"
-#include "ecal_clr_datatype.h"
+#include "ecal_clr_types.h"
 
 #include <sstream>
 

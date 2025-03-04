@@ -22,7 +22,7 @@
 #include "ecal_clr_client.h"
 
 #include "ecal_clr_common.h"
-#include "ecal_clr_servicetypes.h"
+#include "ecal_clr_types_service.h"
 
 #include <vector>
 

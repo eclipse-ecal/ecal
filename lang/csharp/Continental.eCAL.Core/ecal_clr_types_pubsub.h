@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file  ecal_clr_topicid.h
+ * @file  ecal_clr_types_pubsub.h
 **/
 
 using namespace System;
@@ -65,6 +65,31 @@ namespace Continental {
           TopicName = topicName;
         }
       };
+
+      /**
+       * @brief Managed wrapper for the native SReceiveCallbackData structure.
+       */
+      public ref class ReceiveCallbackData
+      {
+      public:
+        /// @brief Gets the payload buffer as a byte array.
+        property array<Byte>^ Buffer;
+
+        /// @brief Gets the publisher send timestamp in microseconds.
+        property long long SendTimestamp;
+
+        /// @brief Gets the publisher send clock.
+        property long long SendClock;
+      };
+
+      /**
+       * @brief Delegate for subscriber receive callbacks.
+       *
+       * @param publisherId Managed wrapper for the publisher's topic identifier.
+       * @param dataTypeInfo Managed wrapper for the publisher's data type information.
+       * @param data Managed wrapper for the received callback data.
+       */
+      public delegate void ReceiveCallbackDelegate(TopicId^ publisherId, DataTypeInformation^ dataTypeInfo, ReceiveCallbackData^ data);
 
     } // namespace Core
   } // namespace eCAL
