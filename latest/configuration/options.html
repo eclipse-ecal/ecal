@@ -721,33 +721,40 @@
 <h2>Loading strategy (Priority)<a class="headerlink" href="#loading-strategy-priority" title="Link to this heading">#</a></h2>
 <p>The eCAL configuration file is loaded based on the following priorities, whereever it is found first.
 If you want a specific eCAL Node to run with another <code class="docutils literal notranslate"><span class="pre">ecal.yaml</span></code> than the others, you can set the <code class="docutils literal notranslate"><span class="pre">ECAL_DATA</span></code> variable before starting the process, e.g. from a batch or shell skript.
-In addition, some eCAL applications support providing a path from the command line option <code class="docutils literal notranslate"><span class="pre">--ecal-config-file</span></code>.</p>
+Also, if you place a <code class="docutils literal notranslate"><span class="pre">ecal.yaml</span></code> in the working directory of the process, it will be loaded if <code class="docutils literal notranslate"><span class="pre">ECAL_DATA</span></code> is not specified first.</p>
+<p>In order to create the eCAL configuration files in the marked (*) directories, you can use the <code class="docutils literal notranslate"><span class="pre">ecal_generate_config</span></code> tool, which is part of the eCAL installation.
+It will generate the files only in the first found base path.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>This loading strategy is valid for eCAL 5.10 and up.</p>
+<p>This loading strategy is valid for eCAL 6.0 and up.</p>
 </div>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">%ECAL_DATA%/ecal.yaml</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%ProgramData%/ecal/ecal.yaml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%cd%/ecal.yaml</span></code></p></li>
+<li><p><a href="#id1"><span class="problematic" id="id2">``</span></a>%UserProfile%/AppData/Local/eCAL/ecal.yaml``*</p></li>
+<li><p><a href="#id3"><span class="problematic" id="id4">``</span></a>%ProgramData%/eCAL/ecal.yaml``*</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecal</span> <span class="pre">installation</span> <span class="pre">directory&gt;/etc/ecal.yaml</span></code></p></li>
 </ol>
 </li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
-<ol class="arabic">
+<ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$ECAL_DATA/ecal.yaml</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code> (from <code class="docutils literal notranslate"><span class="pre">CMAKE_INSTALL_SYSCONFDIR</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code> (fallback)</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This second path is set from CMake to <code class="docutils literal notranslate"><span class="pre">CMAKE_INSTALL_SYSCONFDIR/ecal/ecal.yaml</span></code>.
-Official builds are configured to use <code class="docutils literal notranslate"><span class="pre">/etc</span></code>.
-If you are compiling eCAL yourself and don’t provide the SYSCONFDIR, CMake will usually use <code class="docutils literal notranslate"><span class="pre">/usr/local/etc/ecal/ecal.yaml</span></code>.</p>
-</div>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$PWD/ecal.yaml</span></code></p></li>
 </ol>
+<p>3. <code class="docutils literal notranslate"><span class="pre">$HOME/.ecal/ecal.yaml``*</span>
+<span class="pre">3.</span> <span class="pre">``/etc/ecal/ecal.yaml</span></code> (fallback)</p>
 </li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When compiling eCAL from source:</p>
+<p>In previous versions (previous eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it on Linux.
+This is not the case anymore.
+Instead, when installing your build to a custom path, a directory next to <code class="docutils literal notranslate"><span class="pre">lib</span></code>/ <code class="docutils literal notranslate"><span class="pre">bin</span></code> named <code class="docutils literal notranslate"><span class="pre">etc</span></code> will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
+That file in etc relativ to the ecal_core library will be used if no other is found.</p>
+</div>
 </section>
 <section id="ecal-yaml-options">
 <h2>ecal.yaml options<a class="headerlink" href="#ecal-yaml-options" title="Link to this heading">#</a></h2>
