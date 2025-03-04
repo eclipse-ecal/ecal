@@ -214,9 +214,9 @@ namespace eCAL
       if(!m_created) return;
       if(msg_.empty()) return;
 
-      const Filter log_con  = level_ & m_attributes.console_sink.filter_log;
-      const Filter log_file = level_ & m_attributes.file_sink.filter_log;
-      const Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
+      const Filter log_con  = level_ & m_attributes.console_sink.level;
+      const Filter log_file = level_ & m_attributes.file_sink.level;
+      const Filter log_udp  = level_ & m_attributes.udp_sink.level;
       if((log_con | log_file | log_udp) == 0) return;
 
       auto log_time = eCAL::Time::ecal_clock::now();

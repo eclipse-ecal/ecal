@@ -39,7 +39,7 @@ namespace eCAL
       struct Sink
       {
         bool enable;                                    //!< Enable sink
-        Filter filter_log;                              //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+        Filter level;                                   //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
       };
 
       namespace File
