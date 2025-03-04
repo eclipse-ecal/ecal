@@ -33,6 +33,29 @@
 #include <iostream>
 #include <string>
 
+void showHelp() {
+#ifdef ECAL_OS_WINDOWS
+  const std::string program_name = "ecal_generate_config.exe";
+#else
+  const std::string program_name = "ecal_generate_config";
+#endif
+
+  std::cout << "Usage: " << program_name << " [OPTIONS]\n\n"
+            << "Options:\n"
+            << "  -d, --dump            Write the default configuration to file in the current folder\n"
+            << "  -h, --help            Show this help message and exit\n\n"
+            << "Description:\n"
+            << "  Generate an ecal.yaml file with default configuration.\n"
+            << "  Use --dump or -d to write the default configuration to file in the current folder.\n"
+            << "  Use with no arguments to create the eCAL directory in the first available of the following paths:\n"
+            << "    1. ECAL_DATA environment variable path if set\n"
+            << "    2. Local user path (/home/[username] ,  C:\\Users\\[username]\\AppData\\Local)\n"
+            << "    3. System path (etc, C:\\ProgramData)\n\n"
+            << "Examples:\n"
+            << "  " << program_name << " --dump\n"
+            << "  " << program_name << "\n";
+}
+
 
 void exitWithMessage(const std::string& message, int exitCode, bool wait_for_it = true) {
   if (!message.empty()) {
@@ -59,7 +82,15 @@ int main(int argc, char* argv[]) {
     const std::string arg = argv[i];
     if (arg == "--dump" || arg == "-d") {
       dump = true;
-    } else {
+    } 
+    else if (arg == "--help" || arg == "-h") 
+    {
+      showHelp();
+      exit(0);
+    }
+    else 
+    {
+      showHelp();
       exitWithMessage("Unknown argument: " + arg, 1);
     }
   }

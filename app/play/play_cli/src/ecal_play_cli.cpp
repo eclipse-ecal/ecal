@@ -252,8 +252,6 @@ int main(int argc, char *argv[])
   ++arg_it;
   TCLAP::Arg& help_arg        = **arg_it;
 
-
-
   TCLAP::ValueArg<std::string> measurement_path_arg      ("m", "measurement",            "Load and play the measurement from the path. If interactive mode is used, the measurement is just loaded. The playback has to be started by the user.",  false, "", "string");
   TCLAP::ValueArg<std::string> channel_rename_file_path  ("c", "channel-mapping",        "Loads the channel mapping from the given file and uses it to filter and intialize eCAL publishers. Otherwise, all publishers from the measurement will keep their default name.", false, "", "string");
   TCLAP::SwitchArg             no_play_speed_limit_arg   ("u", "unlimited-speed",        "Publish frames as fast as possible",                                                                                                                     false);
@@ -337,6 +335,13 @@ int main(int argc, char *argv[])
   //////////////////////////////////////////////////////////////////////////////
   //// EcalPlay instance                                                    ////
   //////////////////////////////////////////////////////////////////////////////
+
+  struct EcalContext
+  {
+    EcalContext() { eCAL::Initialize("eCALPlay"); }
+    ~EcalContext() { eCAL::Finalize(); }
+  };
+  EcalContext global_ecal_context;
 
   std::shared_ptr<EcalPlay> ecal_player(std::make_shared<EcalPlay>());
 

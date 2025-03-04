@@ -66,7 +66,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
     custom_config.transport_layer.udp.network.group           = ip_address;
     custom_config.transport_layer.udp.send_buffer             = upd_snd_buff;
     
-    custom_config.logging.provider.console.filter_log         = mon_log_filter_con;
+    custom_config.logging.provider.console.log_level         = mon_log_filter_con;
 
     custom_config.publisher.layer.shm.enable                  = pub_use_shm;
 
@@ -92,7 +92,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.send_buffer);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
-  EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.provider.console.filter_log);
+  EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.provider.console.log_level);
 
   // Test publisher sendmode assignment
   EXPECT_EQ(pub_use_shm, eCAL::GetConfiguration().publisher.layer.shm.enable);
