@@ -33,13 +33,13 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename ObjectType>
+      template <typename ObjectType, typename DatatypeInformation>
       class BaseSerializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info{};
           topic_info.encoding = "flatb";
           // empty type, empty descriptor
           return topic_info;
@@ -54,9 +54,9 @@ namespace eCAL
       *
       * Can be used with table types, e.g. MonsterT
       */
-      template <typename ObjectType>
+      template <typename ObjectType, typename DatatypeInformation>
       class ObjectSerializer 
-        : public BaseSerializer<ObjectType>
+        : public BaseSerializer<ObjectType, DatatypeInformation>
       {
       public:
         size_t MessageSize(const ObjectType& msg_)
@@ -82,9 +82,9 @@ namespace eCAL
        * This class works with Object Types, but has to be specialized with const *  only.
        * E.g. const MonsterT*
        */
-      template <typename ObjectType>
+      template <typename ObjectType, typename DatatypeInformation>
       class ObjectDeserializer
-        : public BaseSerializer<ObjectType>
+        : public BaseSerializer<ObjectType, DatatypeInformation>
       {
       public:
         static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
@@ -105,9 +105,9 @@ namespace eCAL
        * This class works with Flat Types, but has to be specialized with const *  only.
        * E.g. const Monster*
        */
-      template <typename FlatType>
+      template <typename FlatType, typename DatatypeInformation>
       class FlatDeserializer 
-        : public BaseSerializer<FlatType>
+        : public BaseSerializer<FlatType, DatatypeInformation>
       {
       public:
         static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)

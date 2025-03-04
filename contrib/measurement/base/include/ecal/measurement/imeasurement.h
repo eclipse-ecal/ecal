@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 #include <stdexcept>
 
 #include <ecal/measurement/hdf5/reader.h>
+#include <ecal/measurement/base/types.h>
 #include <ecal/measurement/measurement.h>
 
 namespace eCAL
@@ -36,8 +37,9 @@ namespace eCAL
     {
     public:
       IBinaryChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, experimental::measurement::base::Channel channel_)
-        : channel(channel_)
-        , meas(meas_)
+        : meas(meas_)
+        , channel(channel_)
+        , datatype_info(meas->GetChannelDataTypeInformation(channel))
       {
         meas->GetEntriesInfo(channel, entry_infos);
       }
@@ -51,9 +53,15 @@ namespace eCAL
         return make_frame( data, entry.SndTimestamp, entry.RcvTimestamp );
       }
 
-      std::string name()
+      const std::string& GetName() const
       {
         return channel.name;
+      }
+
+      // We read the data upon request! (directly from the measurement)
+      const eCAL::experimental::measurement::base::DataTypeInformation& GetDatatypeInformation() const
+      {
+        return datatype_info;
       }
 
       class iterator /*: public std::iterator<std::forward_iterator_tag, Entry<T>>*/
@@ -114,104 +122,13 @@ namespace eCAL
       }
 
     private:
-      const experimental::measurement::base::Channel channel;
       std::shared_ptr<experimental::measurement::base::Reader> meas;
+      
+      const experimental::measurement::base::Channel channel;
+      const experimental::measurement::base::DataTypeInformation datatype_info;
+
       mutable experimental::measurement::base::EntryInfoSet entry_infos;
       mutable std::string data;
-    };
-
-
-    template <typename T>
-    class IChannel
-    {
-    public:
-      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, const experimental::measurement::base::Channel& channel_)
-        : binary_channel(meas_, channel_)
-      {
-      }
-
-      bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
-      bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
-
-      //virtual Entry<T> operator[](unsigned long long timestamp);
-      virtual Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
-      {
-        auto binary_entry = binary_channel[entry];
-        eCAL::message::Deserialize(binary_entry.message, message);
-        return make_frame( message, binary_entry.send_timestamp, binary_entry.receive_timestamp );
-      }
-
-      std::string name()
-      {
-        return binary_channel.name();
-      }
-
-      //typedef typename Entry<T> value_type;
-      //typedef typename Alloc::reference reference;
-      //typedef typename Alloc::const_reference const_reference;
-      //typedef typename Alloc::difference_type difference_type;
-      //typedef typename Alloc::size_type size_type;
-
-      class iterator /*: public std::iterator<std::forward_iterator_tag, Entry<T>>*/
-      {
-      public:
-        iterator(const iterator& i)
-          : it(i.it)
-        {};
-
-        iterator(const IBinaryChannel::iterator& i)
-          : it(i)
-        {};
-
-        ~iterator()
-        {};
-
-        iterator& operator=(const iterator& i)
-        {
-          it = i.it;
-          return *this;
-        };
-        iterator& operator++()
-        {
-          ++it;
-          return *this;
-        }; //prefix increment
-        iterator& operator--()
-        {
-          --it;
-          return *this;
-        }; //prefix decrement
-           //reference operator*() const
-
-        virtual Frame<T> operator*() const
-        {
-          //  return m_owner[*m_entry_iterator];
-          BinaryFrame e = *it;
-          eCAL::message::Deserialize(e.message, message);
-          return make_frame(message, e.send_timestamp, e.receive_timestamp);
-        };
-        //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
-        bool operator==(const iterator& rhs) const { return it == rhs.it; };
-        bool operator!=(const iterator& rhs) const { return it != rhs.it; };
-
-      protected:
-        IBinaryChannel::iterator it;
-        mutable T message;
-      };
-
-      iterator begin()
-      {
-        return iterator(binary_channel.begin());
-      }
-
-      iterator end()
-      {
-        return iterator(binary_channel.end());
-      }
-
-    protected:
-      IBinaryChannel binary_channel;
-      mutable T message;
     };
 
     class IMeasurement
@@ -222,8 +139,7 @@ namespace eCAL
       ChannelSet Channels() const;
       ChannelSet Channels(const std::string& channel_name) const;
 
-      template<typename T>
-      IChannel<T> Get(const experimental::measurement::base::Channel& channel) const;
+      IBinaryChannel Get(const experimental::measurement::base::Channel& channel) const;
 
     private:
       std::shared_ptr<experimental::measurement::base::Reader> meas;
@@ -253,12 +169,7 @@ namespace eCAL
       return channels_filtered_by_name;
     }
 
-    // This will return a nullptr if channel name and 
-    // This will throw an exception if 
-    // a) channel does not exist in the IMeasurement
-    // b) the registered type does not match with the descriptor in the chanenel
-    template<typename T>
-    inline IChannel<T> IMeasurement::Get(const experimental::measurement::base::Channel& channel) const
+    inline IBinaryChannel IMeasurement::Get(const experimental::measurement::base::Channel& channel) const
     {
       // Assert that the channel is in the IMeasurement
       auto channels = Channels();
@@ -268,11 +179,8 @@ namespace eCAL
         throw std::out_of_range("The channel {" + channel.name + ", " + std::to_string(channel.id) + "} does not exist in this measurement");
       }
 
-      // Assert that the channel type is compatible with the requested type
-
-      // Construct a channel based 
-      return IChannel<T>{meas, channel};
+      // Construct a binary Channel
+      return IBinaryChannel{meas, channel};
     }
-
   }
 }

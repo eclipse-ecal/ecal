@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,28 +37,27 @@ namespace eCAL
       long long ID;
     };
 
-
     template<class T>
     struct Frame
     {
-      T& message;
+      const T& message;
       long long send_timestamp;
       long long receive_timestamp;
     };
 
     template<typename T>
-    Frame<T> make_frame(T& message, long long send_timestamp, long long receive_timestamp)
+    Frame<T> make_frame(const T& message, long long send_timestamp, long long receive_timestamp)
     {
       return { message, send_timestamp, receive_timestamp };
     }
 
     template<typename T>
-    Frame<T> make_frame(T& message, long long timestamp)
+    Frame<T> make_frame(const T& message, long long timestamp)
     {
       return { message, timestamp, timestamp };
     }
 
+    // This is a frame that holds binary data.
     using BinaryFrame = Frame<std::string>;
- 
   }
 }

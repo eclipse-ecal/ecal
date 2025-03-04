@@ -40,7 +40,7 @@ namespace eCAL
      * Subscriber class for STL standard strings. For details see documentation of CSubscriber class.
      *
     **/
-    using CSubscriber = CMessageSubscriber<std::string, internal::Serializer<std::string>>;
+    using CSubscriber = CMessageSubscriber<std::string, internal::Serializer<std::string, ::eCAL::SDataTypeInformation>>;
 
     /** @example minimal_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive a std::string with eCAL. To send the strings, see @ref minimal_snd.cpp .
