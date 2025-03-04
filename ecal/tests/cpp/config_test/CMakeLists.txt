@@ -31,6 +31,7 @@ endif()
 set(config_test_src
   src/config_test.cpp
   src/path_processing_test.cpp
+  src/yaml_processing.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
