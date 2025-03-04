@@ -39,7 +39,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T>>;
+    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T, ::eCAL::SDataTypeInformation>>;
 
     /** @example person_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .

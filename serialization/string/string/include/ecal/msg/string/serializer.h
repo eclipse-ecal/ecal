@@ -32,13 +32,13 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename T>
+      template <typename T, typename DatatypeInformation>
       class Serializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation data_type_info;
+          DatatypeInformation data_type_info{};
           data_type_info.encoding = "utf-8";
           data_type_info.name = "string";
           // empty descriptor

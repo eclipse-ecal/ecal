@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,26 +17,30 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/measurement/imeasurement.h>
+/**
+ * @file   subscriber.h
+ * @brief  eCAL subscriber interface for google::protobuf message definitions
+**/
 
-#include <iostream>
+#pragma once
 
-int main(int /*argc*/, char** /*argv*/)
+#include <ecal/msg/imeasurement.h>
+#include <ecal/msg/protobuf/serializer.h>
+
+namespace eCAL
 {
-  // create a new measurement
-  eCAL::measurement::IMeasurement meas(MEASUREMENT_PATH);
-
-  // create a channel (topic name "person")
-  auto person_channels = meas.Channels("person");
-  if (person_channels.size() > 0)
+  namespace protobuf
   {
-    eCAL::measurement::IBinaryChannel person_channel = meas.Get(*person_channels.begin());
 
-    // iterate over the messages
-    for (const auto& person_entry : person_channel)
-    {
-      std::cout << "Person object at timestamp " << person_entry.send_timestamp << std::endl;
-    }
+    /**
+     * @brief  eCAL google::protobuf channel class.
+    **/
+    template <typename T>
+    using IChannel = ::eCAL::measurement::IChannel<T, internal::Serializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
+
+    /** @example person_read.cpp
+    * This is an example how to use eCAL::protobuf::IChannel to read protobuf data from a measurement.
+    */
   }
-  return 0;
 }
+

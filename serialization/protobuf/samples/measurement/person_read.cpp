@@ -17,9 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/measurement/imeasurement.h>
+#include <ecal/msg/protobuf/imeasurement.h>
 
 #include <iostream>
+
+#include "person.pb.h"
+
+void print_person(const pb::People::Person& person)
+{
+  std::cout << "person id    : " << person.id()            << std::endl;
+  std::cout << "person name  : " << person.name()          << std::endl;
+  std::cout << "person stype : " << person.stype()         << std::endl;
+  std::cout << "person email : " << person.email()         << std::endl;
+  std::cout << "dog.name     : " << person.dog().name()    << std::endl;
+  std::cout << "house.rooms  : " << person.house().rooms() << std::endl;
+  std::cout << std::endl;
+}
 
 int main(int /*argc*/, char** /*argv*/)
 {
@@ -30,12 +43,13 @@ int main(int /*argc*/, char** /*argv*/)
   auto person_channels = meas.Channels("person");
   if (person_channels.size() > 0)
   {
-    eCAL::measurement::IBinaryChannel person_channel = meas.Get(*person_channels.begin());
+    eCAL::protobuf::IChannel<pb::People::Person> person_channel = eCAL::measurement::Get<eCAL::protobuf::IChannel<pb::People::Person>>(meas, *person_channels.begin());
 
     // iterate over the messages
     for (const auto& person_entry : person_channel)
     {
       std::cout << "Person object at timestamp " << person_entry.send_timestamp << std::endl;
+      print_person(person_entry.message);
     }
   }
   return 0;

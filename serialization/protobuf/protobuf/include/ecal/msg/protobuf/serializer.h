@@ -34,13 +34,13 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename T>
+      template <typename T, typename DatatypeInformation>
       class Serializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info{};
           static T msg{};
           topic_info.encoding = "proto";
           topic_info.name = msg.GetTypeName();
