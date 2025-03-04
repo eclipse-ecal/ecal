@@ -563,7 +563,7 @@ namespace YAML
   {
     Node node;
     node["enable"] = config_.enable;
-    node["level"]  = LogLevelToVector(config_.level);
+    node["log_level"]  = LogLevelToVector(config_.log_level);
     return node;
   }
 
@@ -571,8 +571,8 @@ namespace YAML
   {
     AssignValue<bool>(config_.enable, node_, "enable");
     std::vector<std::string> tmp;
-    AssignValue<std::vector<std::string>>(tmp, node_, "level");
-    config_.level = ParseLogLevel(tmp);
+    AssignValue<std::vector<std::string>>(tmp, node_, "log_level");
+    config_.log_level = ParseLogLevel(tmp);
     return true;
   }
  

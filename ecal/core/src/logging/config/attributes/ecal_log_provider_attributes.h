@@ -32,7 +32,7 @@ namespace eCAL
       struct SSink
       {
         bool                enabled;
-        Filter              level;
+        Filter              log_level;
       };
 
       struct SUDP
