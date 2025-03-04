@@ -95,7 +95,12 @@ List<ServiceResponse^>^ ServiceClient::CallWithResponse(String^ methodName, arra
       ServiceResponse^ response = gcnew ServiceResponse();
       response->CallState    = static_cast<CallState>(nativeResponse.call_state);
       response->ErrorMessage = StlStringToString(nativeResponse.error_msg);
-      response->ServerId     = gcnew ServiceId(nativeResponse.server_id.service_id.entity_id,
+
+      response->ServerId     = gcnew ServiceId(
+        gcnew EntityId(
+          nativeResponse.server_id.service_id.entity_id,
+          nativeResponse.server_id.service_id.process_id,
+          StlStringToString(nativeResponse.server_id.service_id.host_name)),
         StlStringToString(nativeResponse.server_id.service_name));
 
       response->MethodInformation = gcnew ServiceMethodInformation();
@@ -133,8 +138,13 @@ bool ServiceClient::IsConnected()
 // GetServiceId: Convert native SServiceId to managed ServiceId.
 ServiceId^ ServiceClient::GetServiceId()
 {
-  ::eCAL::SServiceId nativeId = m_native_service_client->GetServiceId();
-  return gcnew ServiceId(nativeId.service_id.entity_id, StlStringToString(nativeId.service_name));
+  ::eCAL::SServiceId nativeServiceId = m_native_service_client->GetServiceId();
+  return gcnew ServiceId(
+    gcnew EntityId(
+      nativeServiceId.service_id.entity_id,
+      nativeServiceId.service_id.process_id,
+      StlStringToString(nativeServiceId.service_id.host_name)),
+    StlStringToString(nativeServiceId.service_name));
 }
 
 // GetServiceName: Convert native service name to managed string.

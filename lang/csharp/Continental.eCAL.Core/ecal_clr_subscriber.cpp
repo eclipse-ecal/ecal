@@ -59,14 +59,17 @@ namespace
   /**
    * @brief Helper function to convert native STopicId to managed TopicId.
    *
-   * @param nativeId The native STopicId.
+   * @param nativeTopicId The native STopicId.
    * @return A managed TopicId^ instance.
    */
-  TopicId^ ConvertTopicId(const eCAL::STopicId& nativeId)
+  TopicId^ ConvertTopicId(const eCAL::STopicId& nativeTopicId)
   {
-    unsigned __int64 entityId = nativeId.topic_id.entity_id;
-    String^ topicName = StlStringToString(nativeId.topic_name);
-    return gcnew TopicId(entityId, topicName);
+    return gcnew TopicId(
+      gcnew EntityId(
+        nativeTopicId.topic_id.entity_id,
+        nativeTopicId.topic_id.process_id,
+        StlStringToString(nativeTopicId.topic_id.host_name)),
+      StlStringToString(nativeTopicId.topic_name));
   }
 
   /**

@@ -20,7 +20,8 @@
 #pragma once
 
 /**
- * @file ecal_clr_servicetypes.h
+ * @file ecal_clr_types_service.h
+ *
  * @brief Managed type definitions for eCAL services.
  *
  * This file contains managed wrappers and type definitions that mirror the native
@@ -75,7 +76,7 @@ namespace Continental {
         /**
          * @brief Gets or sets the unique service entity ID.
          */
-        property UInt64 EntityId;
+        property EntityId^ EntityID;
 
         /**
          * @brief Gets or sets the service name.
@@ -92,8 +93,8 @@ namespace Continental {
          * @param entityId Unique service entity ID.
          * @param serviceName Service name.
          */
-        ServiceId(UInt64 entityId, String^ serviceName) {
-          EntityId = entityId;
+        ServiceId(EntityId^ entityId, String^ serviceName) {
+          EntityID = entityId;
           ServiceName = serviceName;
         }
       };

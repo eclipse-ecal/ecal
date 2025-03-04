@@ -33,11 +33,11 @@ public class MinimalServiceClient
         Console.WriteLine("Received response for method " +
             serviceResponse.MethodInformation.MethodName +
             ": " + Encoding.UTF8.GetString(serviceResponse.Response) +
-            " from host " + "TODO");
+            " from host " + serviceResponse.ServerId.EntityID.HostName);
         break;
       case CallState.Failed:
         Console.WriteLine("Received error: " + serviceResponse.ErrorMessage +
-            " from host " + "TODO");
+            " from host " + serviceResponse.ServerId.EntityID.HostName);
         break;
       default:
         Console.WriteLine("Received response in unknown state.");

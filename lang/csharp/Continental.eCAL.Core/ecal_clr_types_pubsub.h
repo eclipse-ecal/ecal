@@ -23,6 +23,8 @@
  * @file  ecal_clr_types_pubsub.h
 **/
 
+#include "ecal_clr_types.h"
+
 using namespace System;
 
 namespace Continental {
@@ -41,7 +43,7 @@ namespace Continental {
         /**
          * @brief Gets or sets the unique topic id.
          */
-        property unsigned __int64 EntityId;
+        property EntityId^ EntityID;
 
         /**
          * @brief Gets or sets the topic name.
@@ -59,9 +61,9 @@ namespace Continental {
          * @param entityId The unique topic id.
          * @param topicName The topic name.
          */
-        TopicId(unsigned __int64 entityId, String^ topicName)
+        TopicId(EntityId^ entityId, String^ topicName)
         {
-          EntityId = entityId;
+          EntityID = entityId;
           TopicName = topicName;
         }
       };

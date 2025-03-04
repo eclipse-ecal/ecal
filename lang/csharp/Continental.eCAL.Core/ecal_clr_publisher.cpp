@@ -96,10 +96,12 @@ String^ Publisher::GetTopicName()
 TopicId^ Publisher::GetTopicId()
 {
   ::eCAL::STopicId nativeTopicId = m_native_publisher->GetTopicId();
-  // Extract the unique id from the native SEntityId and convert the topic name.
-  unsigned __int64 entityId = nativeTopicId.topic_id.entity_id;
-  String^ topicName = StlStringToString(nativeTopicId.topic_name);
-  return gcnew TopicId(entityId, topicName);
+  return gcnew TopicId(
+    gcnew EntityId(
+      nativeTopicId.topic_id.entity_id,
+      nativeTopicId.topic_id.process_id,
+      StlStringToString(nativeTopicId.topic_id.host_name)),
+    StlStringToString(nativeTopicId.topic_name));
 }
 
 DataTypeInformation^ Publisher::GetDataTypeInformation()

@@ -23,7 +23,6 @@
  * @file  ecal_clr_subscriber.h
 **/
 
-#include "ecal_clr_types.h"
 #include "ecal_clr_types_pubsub.h"
 
 #include <ecal/pubsub/subscriber.h>
