@@ -11,6 +11,10 @@ namespace
     YAML::AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     YAML::AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     YAML::AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+
+    std::string communication_mode;
+    YAML::AssignValue<std::string>(communication_mode, node_, "communication_mode");
+    config_.communication_mode = communication_mode == "network" ? eCAL::eCommunicationMode::network : eCAL::eCommunicationMode::local;
   }
 }
 

@@ -163,9 +163,9 @@ namespace eCAL
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Operation configuration)"                                                                                          << "\n";
-      ss << R"(# eCAL components communication mode (local or network):)"                                                           << "\n";
-      ss << R"(#   local: local host only communication (default))"                                                                 << "\n";
-      ss << R"(#   network: communication across network boundaries)"                                                               << "\n";
+      ss << R"(# eCAL components communication mode ("local" or "network"):)"                                                       << "\n";
+      ss << R"(#   "local": local host only communication (default))"                                                               << "\n";
+      ss << R"(#   "network": communication across network boundaries)"                                                             << "\n";
       ss << R"(communication_mode: )"                                << quoteString(config_.communication_mode)                     << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
