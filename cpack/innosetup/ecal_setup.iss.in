@@ -76,14 +76,14 @@ Source: "{#ComponentStagingDir}\Unspecified\*";       DestDir: "{app}";      Fla
 Source: "{#ComponentStagingDir}\libraries\bin\*";     DestDir: "{app}\bin\"; Flags: ignoreversion recursesubdirs; Components: runtime
 
 ; we need to change the location of these configuration file (as hotfix we use skipifsourcedoesntexist flag)
-Source: "{#ComponentStagingDir}\configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\ecal.yaml";     DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
-Source: "{#ComponentStagingDir}\configuration\cfg\ecaltime.yaml";  DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\configuration\etc\ecal.yaml";     DestDir: "{app}\etc\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
+Source: "{#ComponentStagingDir}\configuration\etc\ecal.yaml";     DestDir: "{app}\etc\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\configuration\etc\ecaltime.yaml";  DestDir: "{app}\etc\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 
 ; we need to change the location of these configuration file (as hotfix we use skipifsourcedoesntexist flag)
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";    DestDir: "{commonappdata}\eCAL\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecal.yaml";    DestDir: "{commonappdata}\eCAL\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
-Source: "{#ComponentStagingDir}\_configuration\cfg\ecaltime.yaml"; DestDir: "{commonappdata}\eCAL\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app}\etc\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app}\etc\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+Source: "{#ComponentStagingDir}\_configuration\etc\ecaltime.yaml"; DestDir: "{app}\etc\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
