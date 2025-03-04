@@ -20,8 +20,14 @@
 #pragma once
 
 /**
- * @file  ecal_clr_types_pubsub.h
-**/
+ * @file ecal_clr_types_pubsub.h
+ *
+ * @brief Managed wrappers for eCAL pub/sub types.
+ *
+ * This file contains managed wrappers for native eCAL pub/sub types, including
+ * the topic identifier (TopicId) and the receive callback data (ReceiveCallbackData),
+ * as well as the delegate definition for subscriber receive callbacks.
+ */
 
 #include "ecal_clr_types.h"
 
@@ -32,13 +38,12 @@ namespace Continental {
     namespace Core {
 
       /**
-       * @brief Managed wrapper for the native eCAL::STopicId structure.
+       * @brief Managed wrapper for the native STopicId structure.
        *
-       * This class encapsulates the topic identifier, including the unique topic id 
+       * This class encapsulates the topic identifier, including the unique topic id
        * (extracted from SEntityId) and the topic name.
        */
-      public ref class TopicId
-      {
+      public ref class TopicId {
       public:
         /**
          * @brief Gets or sets the unique topic id.
@@ -58,29 +63,36 @@ namespace Continental {
         /**
          * @brief Constructs a TopicId with the specified values.
          *
-         * @param entityId The unique topic id.
+         * @param entityID The unique topic id.
          * @param topicName The topic name.
          */
-        TopicId(EntityId^ entityId, String^ topicName)
-        {
-          EntityID = entityId;
+        TopicId(EntityId^ entityID, String^ topicName) {
+          EntityID = entityID;
           TopicName = topicName;
         }
       };
 
       /**
        * @brief Managed wrapper for the native SReceiveCallbackData structure.
+       *
+       * This class encapsulates the payload buffer, the publisher send timestamp,
+       * and the send clock.
        */
-      public ref class ReceiveCallbackData
-      {
+      public ref class ReceiveCallbackData {
       public:
-        /// @brief Gets the payload buffer as a byte array.
+        /**
+         * @brief Gets the payload buffer as a byte array.
+         */
         property array<Byte>^ Buffer;
 
-        /// @brief Gets the publisher send timestamp in microseconds.
+        /**
+         * @brief Gets the publisher send timestamp in microseconds.
+         */
         property long long SendTimestamp;
 
-        /// @brief Gets the publisher send clock.
+        /**
+         * @brief Gets the publisher send clock.
+         */
         property long long SendClock;
       };
 

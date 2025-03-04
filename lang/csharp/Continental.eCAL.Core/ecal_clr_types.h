@@ -21,6 +21,7 @@
 
 /**
  * @file ecal_clr_types.h
+ *
  * @brief Managed type definitions for eCAL topics.
  *
  * This file contains managed wrappers for native type definitions associated

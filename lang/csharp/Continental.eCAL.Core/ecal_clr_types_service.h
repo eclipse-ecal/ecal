@@ -90,11 +90,11 @@ namespace Continental {
 
         /**
          * @brief Parameterized constructor.
-         * @param entityId Unique service entity ID.
+         * @param entityID Unique service entity ID.
          * @param serviceName Service name.
          */
-        ServiceId(EntityId^ entityId, String^ serviceName) {
-          EntityID = entityId;
+        ServiceId(EntityId^ entityID, String^ serviceName) {
+          EntityID = entityID;
           ServiceName = serviceName;
         }
       };
