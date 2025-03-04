@@ -36,8 +36,8 @@
 #include "default_configuration.h"
 #include "ecal_def.h"
 
-
-TEST(core_cpp_config /*unused*/, yaml_processing_comparison /*unused*/)
+#ifdef ECAL_CORE_CONFIGURATION
+TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
 {
     eCAL::Configuration config;
 
@@ -162,3 +162,107 @@ TEST(core_cpp_config /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.logging.receiver.enable, config_from_yaml.logging.receiver.enable);
     EXPECT_EQ(config.logging.receiver.udp_config.port, config_from_yaml.logging.receiver.udp_config.port);
 }
+
+TEST(core_cpp_config_yaml /*unused*/, read_write_file_test /*unused*/)
+{
+  // create a custom ini file
+  std::string ini_file_name = "customIni.yml";
+  std::ofstream custom_ini_file(ini_file_name);
+
+  if (custom_ini_file.is_open())
+  {
+    custom_ini_file << ini_file_as_string_yaml;
+    custom_ini_file.close();
+  }
+  else 
+  {
+    std::cerr << "Error opening file for ini writing" << "\n";
+    FAIL() << "Error opening file for ini writing";
+    return;
+  }
+
+  eCAL::Configuration config{};
+  EXPECT_NO_THROW(eCAL::Config::YamlFileToConfig(ini_file_name, config));
+
+  EXPECT_EQ(true, eCAL::Config::ConfigToYamlFile("myTest.yml", config));
+
+  remove(ini_file_name.data());
+  remove("myTest.yml");
+}
+
+TEST(core_cpp_config_yaml /*unused*/, parse_values_test /*unused*/)
+{
+  eCAL::Configuration config{};
+  EXPECT_NO_THROW(eCAL::Config::YamlStringToConfig(ini_file_as_string_yaml, config));
+
+  // Check string 
+  EXPECT_EQ(config.application.startup.terminal_emulator, "myTestTerminal");
+
+  // Check equality of IpAddressV4
+  EXPECT_EQ(config.transport_layer.udp.network.group, "239.5.0.1");
+
+  // Check boolean
+  EXPECT_EQ(config.transport_layer.udp.npcap_enabled, true);
+
+  // Check unsigned size_t
+  EXPECT_EQ(config.transport_layer.tcp.max_reconnections, 7);
+
+  // Check unsigned int
+  EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, 346U);
+} 
+
+TEST(core_cpp_config_yaml /*unused*/, yaml_node_merger /*unused*/)
+{
+  YAML::Node node_1{};
+  YAML::Node node_2{};
+
+  node_1["test"] = 1;
+  node_2["test"] = 2;
+  node_2[3] = "I have an int key!";
+
+  node_1["test2"] = 3;
+  
+  node_1["firstLayer1"]["secondLayer1"] = "192.168.0.2";
+  node_2["firstLayer1"]["secondLayer1"] = "192.168.0.5";
+
+  // try also with a sequence
+  node_2["firstLayer2"]["secondLayer2"] = YAML::Load("[1, 2, 3]");
+  
+  eCAL::Config::MergeYamlNodes(node_1, node_2);
+
+  EXPECT_EQ(node_1["test"], node_2["test"]);
+  EXPECT_EQ(node_1[3], node_2[3]);
+  EXPECT_EQ(node_1["3"], node_2["3"]);  
+  EXPECT_EQ(node_1["firstLayer1"]["secondLayer1"], node_2["firstLayer1"]["secondLayer1"]);
+  EXPECT_EQ(node_1["firstLayer2"]["secondLayer2"], node_2["firstLayer2"]["secondLayer2"]);  
+}
+
+TEST(core_cpp_config_yaml /*unused*/, yaml_to_config_merger /*unused*/)
+{
+  // create a custom ini file
+  std::string ini_file_name = "customIni.yml";
+  std::ofstream custom_ini_file(ini_file_name);
+
+  if (custom_ini_file.is_open())
+  {
+    custom_ini_file << ini_file_as_string_yaml;
+    custom_ini_file.close();
+  }
+  else 
+  {
+    std::cerr << "Error opening file for ini writing" << "\n";
+    FAIL() << "Error opening file for ini writing";
+    return;
+  }
+
+  eCAL::Configuration config{};
+
+  EXPECT_TRUE(config.publisher.layer.shm.enable);
+
+  eCAL::Config::MergeYamlIntoConfiguration(ini_file_name, config);
+
+  EXPECT_FALSE(config.publisher.layer.shm.enable);
+
+  remove(ini_file_name.data());
+}
+#endif
