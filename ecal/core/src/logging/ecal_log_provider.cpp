@@ -251,7 +251,7 @@ namespace eCAL
           log_message.process_id     = m_attributes.process_id;
           log_message.process_name   = m_attributes.process_name;
           log_message.unit_name   = m_attributes.unit_name;
-          log_message.log_level   = level_;
+          log_message.level   = level_;
           log_message.content = msg_;
 
           // sent it
