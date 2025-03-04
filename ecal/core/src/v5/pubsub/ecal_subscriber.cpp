@@ -86,8 +86,11 @@ namespace eCAL
       if (m_subscriber_impl != nullptr) return(false);
       if (topic_name_.empty())     return(false);
 
+      auto config = eCAL::GetConfiguration();
+      config.subscriber = config_;
+
       // create datareader
-      m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+      m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
 
       // register datareader
       g_subgate()->Register(topic_name_, m_subscriber_impl);

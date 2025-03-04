@@ -33,15 +33,19 @@ namespace eCAL
 {
   namespace Registration
   {
-    namespace Layer
+    namespace Local
     {
+      enum class eTransportType
+      {
+        shm,
+        udp
+      };
       namespace SHM
       {
         struct Configuration
         {
-          bool        enable     { false };      /*!< Enable shared memory based registration (Default: false) */
-          std::string domain     { "ecal_mon" }; //!< Domain name for shared memory based registration (Default: ecal_mon)
-          size_t      queue_size { 1024 };       //!< Queue size of registration events (Default: 1024)
+          std::string domain     { "ecal_mon" };          //!< Domain name for shared memory based registration (Default: ecal_mon)
+          size_t      queue_size { 1024 };                //!< Queue size of registration events (Default: 1024)
         };
       }
 
@@ -49,29 +53,50 @@ namespace eCAL
       {
         struct Configuration
         {
-          bool         enable { true };          /*!< Enable UDP based registration (Default: true) */
+          unsigned int port { 14000 };         /*!< UDP broadcast port number (Default: 14000) */
+        };
+      }
+
+      struct Configuration
+      {
+        eTransportType transport_type { eTransportType::udp }; //!< Transport type for registration (Default: udp)
+        
+        SHM::Configuration shm;
+        UDP::Configuration udp;
+      };
+    } // namespeace Local
+
+    namespace Network
+    {
+      enum class eTransportType
+      {
+        udp
+      };
+      namespace UDP
+      {
+        struct Configuration
+        {
           unsigned int port   { 14000 };         /*!< UDP multicast port number (Default: 14000) */
         };
       }
 
       struct Configuration
       {
-        SHM::Configuration shm;                  /*!< Shared memory based registration configuration */
-        UDP::Configuration udp;                  /*!< UDP based registration configuration */
+        eTransportType     transport_type { eTransportType::udp }; //!< Transport type for registration (Default: udp)
+        UDP::Configuration udp;
       };
-    }
+    } // namespace Network
 
     struct Configuration
     {
-      unsigned int         registration_timeout { 10000U }; //!< Timeout for topic registration in ms (internal) (Default: 10000)
-      unsigned int         registration_refresh { 1000U };  //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
+      unsigned int           registration_timeout { 10000U }; //!< Timeout for topic registration in ms (internal) (Default: 10000)
+      unsigned int           registration_refresh { 1000U };  //!< Topic registration refresh cylce (has to be smaller then registration timeout!) (Default: 1000)                                   
 
-      bool                 network_enabled      { false };  /*!< true  = all eCAL components communicate over network boundaries
-                                                                 false = local host only communication (Default: false) */
-      bool                 loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
-      std::string          shm_transport_domain { "" };     /*!< Common shm transport domain that enables interprocess mechanisms across
+      bool                   loopback             { true };   //!< enable to receive udp messages on the same local machine (Default: true)
+      std::string            shm_transport_domain { "" };     /*!< Common shm transport domain that enables interprocess mechanisms across
                                                                  (virtual) host borders (e.g, Docker); by default equivalent to local host name (Default: "") */
-      Layer::Configuration layer;
+      Local::Configuration   local;
+      Network::Configuration network; 
     };
   }
 }

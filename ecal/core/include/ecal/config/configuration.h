@@ -43,6 +43,12 @@
 
 namespace eCAL
 {
+  enum class eCommunicationMode
+  {
+    local,
+    network
+  };
+
   struct Configuration
   {
     TransportLayer::Configuration transport_layer;
@@ -52,6 +58,10 @@ namespace eCAL
     Time::Configuration           timesync;
     Application::Configuration    application;
     Logging::Configuration        logging;
+
+    eCommunicationMode            communication_mode { eCommunicationMode::local }; /*!< eCAL components communication mode:
+                                                                                           local: local host only communication (default)
+                                                                                           cloud: communication across network boundaries */
 
     ECAL_API Configuration();
 
