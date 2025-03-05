@@ -20,8 +20,11 @@
 #pragma once
 
 /**
- * @file  ecal_clr_publisher.h
-**/
+ * @file ecal_clr_publisher.h
+ * @brief Managed wrapper for the native eCAL::CPublisher class.
+ *
+ * This class provides methods to send messages over eCAL and query information about the publisher.
+ */
 
 #include "ecal_clr_types_pubsub.h"
 
@@ -35,8 +38,6 @@ namespace Continental {
 
       /**
        * @brief Managed wrapper for the native eCAL::CPublisher class.
-       *
-       * This class provides methods to send messages over eCAL and query information about the publisher.
        */
       public ref class Publisher
       {
@@ -60,6 +61,15 @@ namespace Continental {
          * @param dataTypeInfo Topic data type information.
          */
         Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo);
+
+        /**
+         * @brief Constructs a Publisher with the given topic name, data type information, and an event callback.
+         *
+         * @param topicName Unique topic name.
+         * @param dataTypeInfo Topic data type information.
+         * @param eventCallback Optional publisher event callback.
+         */
+        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback);
 
         /**
          * @brief Destructor.

@@ -17,16 +17,57 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <msclr/marshal_cppstd.h>
+
 #include "ecal_clr_publisher.h"
 
 #include "ecal_clr_common.h"
 #include "ecal_clr_types.h"
 
 #include <sstream>
+#include <vcclr.h>
+#include <functional>
 
 using namespace Continental::eCAL::Core;
 using namespace System::Runtime::InteropServices;
 using namespace Internal;
+
+using namespace msclr::interop;
+
+namespace
+{
+  /**
+   * @brief Helper function to create a native publisher event callback from a managed PublisherEventCallbackDelegate.
+   *
+   * @param callback The managed publisher event callback delegate.
+   * @return A std::function wrapping the managed callback.
+   */
+  std::function<void(const ::eCAL::STopicId&, const ::eCAL::SPubEventCallbackData&)>
+    CreatePublisherEventCallback(gcroot<PublisherEventCallbackDelegate^> managedCallback)
+  {
+    return [managedCallback](const ::eCAL::STopicId& topicId, const ::eCAL::SPubEventCallbackData& data)
+      {
+        // Convert native topic id to managed TopicId.
+        TopicId^ mTopicId = gcnew TopicId(
+          gcnew EntityId(topicId.topic_id.entity_id,
+            topicId.topic_id.process_id,
+            StlStringToString(topicId.topic_id.host_name)),
+          StlStringToString(topicId.topic_name)
+        );
+        // Convert native SPubEventCallbackData to managed PubEventCallbackData.
+        PubEventCallbackData^ mData = gcnew PubEventCallbackData();
+        mData->EventType = static_cast<PublisherEvent>(data.event_type);
+        mData->EventTime = data.event_time;
+        mData->SubscriberDataType = gcnew DataTypeInformation(
+          StlStringToString(data.subscriber_datatype.name),
+          StlStringToString(data.subscriber_datatype.encoding),
+          StlStringToByteArray(data.subscriber_datatype.descriptor)
+        );
+        // Invoke the managed delegate.
+        managedCallback->Invoke(mTopicId, mData);
+      };
+  }
+}
 
 // Constructor using only a topic name.
 Publisher::Publisher(String^ topicName)
@@ -42,6 +83,32 @@ Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo)
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
   m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName), nativeDataTypeInfo);
+}
+
+// Constructor with topic name, data type information, and an optional event callback.
+Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback)
+{
+  ::eCAL::SDataTypeInformation nativeDataTypeInfo;
+  nativeDataTypeInfo.name = StringToStlString(dataTypeInfo->Name);
+  nativeDataTypeInfo.encoding = StringToStlString(dataTypeInfo->Encoding);
+  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
+
+  std::string nativeTopic = StringToStlString(topicName);
+
+  if (eventCallback != nullptr)
+  {
+    // Create a gcroot to safely capture the managed event callback.
+    gcroot<PublisherEventCallbackDelegate^> managedCallback(eventCallback);
+    // Use the helper to create a native callback.
+    auto nativeCallback = CreatePublisherEventCallback(managedCallback);
+    // Use the native callback constructor.
+    m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nativeCallback);
+  }
+  else
+  {
+    // If no event callback is provided, use the basic constructor.
+    m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo);
+  }
 }
 
 Publisher::~Publisher()
@@ -100,8 +167,10 @@ TopicId^ Publisher::GetTopicId()
     gcnew EntityId(
       nativeTopicId.topic_id.entity_id,
       nativeTopicId.topic_id.process_id,
-      StlStringToString(nativeTopicId.topic_id.host_name)),
-    StlStringToString(nativeTopicId.topic_name));
+      StlStringToString(nativeTopicId.topic_id.host_name)
+    ),
+    StlStringToString(nativeTopicId.topic_name)
+  );
 }
 
 DataTypeInformation^ Publisher::GetDataTypeInformation()
@@ -110,5 +179,6 @@ DataTypeInformation^ Publisher::GetDataTypeInformation()
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),
-    StlStringToByteArray(nativeDataTypeInfo.descriptor));
+    StlStringToByteArray(nativeDataTypeInfo.descriptor)
+  );
 }

@@ -57,6 +57,15 @@ namespace Continental {
         Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo);
 
         /**
+         * @brief Constructs a Subscriber with the given topic name, data type information, and an event callback.
+         *
+         * @param topicName Unique topic name.
+         * @param dataTypeInfo Topic data type information.
+         * @param eventCallback Optional subscriber event callback.
+         */
+        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback);
+
+        /**
          * @brief Destructor.
          */
         ~Subscriber();

@@ -68,8 +68,10 @@ namespace
       gcnew EntityId(
         nativeTopicId.topic_id.entity_id,
         nativeTopicId.topic_id.process_id,
-        StlStringToString(nativeTopicId.topic_id.host_name)),
-      StlStringToString(nativeTopicId.topic_name));
+        StlStringToString(nativeTopicId.topic_id.host_name)
+      ),
+      StlStringToString(nativeTopicId.topic_name)
+    );
   }
 
   /**
@@ -85,15 +87,40 @@ namespace
     return [managedCallback](const ::eCAL::STopicId& publisherId,
       const ::eCAL::SDataTypeInformation& dataTypeInfo,
       const ::eCAL::SReceiveCallbackData& data)
-      {
-        TopicId^ managedId = ConvertTopicId(publisherId);
-        DataTypeInformation^ managedDT = gcnew DataTypeInformation(
-          StlStringToString(dataTypeInfo.name),
-          StlStringToString(dataTypeInfo.encoding),
-          StlStringToByteArray(dataTypeInfo.descriptor));
-        ReceiveCallbackData^ managedData = ConvertReceiveCallbackData(data);
-        managedCallback->Invoke(managedId, managedDT, managedData);
-      };
+    {
+      TopicId^ managedId = ConvertTopicId(publisherId);
+      DataTypeInformation^ managedDT = gcnew DataTypeInformation(
+        StlStringToString(dataTypeInfo.name),
+        StlStringToString(dataTypeInfo.encoding),
+        StlStringToByteArray(dataTypeInfo.descriptor)
+      );
+      ReceiveCallbackData^ managedData = ConvertReceiveCallbackData(data);
+      managedCallback->Invoke(managedId, managedDT, managedData);
+    };
+  }
+
+  /**
+   * @brief Helper function to create a native subscriber event callback from a managed SubscriberEventCallbackDelegate.
+   *
+   * @param callback The managed subscriber event callback delegate.
+   * @return A std::function wrapping the managed callback.
+   */
+  static std::function<void(const ::eCAL::STopicId&, const ::eCAL::SSubEventCallbackData&)>
+    CreateNativeSubscriberEventCallback(gcroot<SubscriberEventCallbackDelegate^> callback)
+  {
+    return [callback](const ::eCAL::STopicId& nativeTopicId, const ::eCAL::SSubEventCallbackData& nativeData)
+    {
+      TopicId^ managedTopicId = ConvertTopicId(nativeTopicId);
+      SubEventCallbackData^ managedData = gcnew SubEventCallbackData();
+      managedData->EventType = static_cast<SubscriberEvent>(nativeData.event_type);
+      managedData->EventTime = nativeData.event_time;
+      managedData->PublisherDataType = gcnew DataTypeInformation(
+        StlStringToString(nativeData.publisher_datatype.name),
+        StlStringToString(nativeData.publisher_datatype.encoding),
+        StlStringToByteArray(nativeData.publisher_datatype.descriptor)
+      );
+      callback->Invoke(managedTopicId, managedData);
+    };
   }
 }
 
@@ -111,6 +138,31 @@ Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo)
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
   m_native_subscriber = new ::eCAL::CSubscriber(StringToStlString(topicName), nativeDataTypeInfo);
+}
+
+Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback)
+{
+  ::eCAL::SDataTypeInformation nativeDataTypeInfo;
+  nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
+  nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
+  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
+
+  std::string nativeTopic = StringToStlString(topicName);
+
+  if (eventCallback != nullptr)
+  {
+    // Create a gcroot for the managed event callback.
+    gcroot<SubscriberEventCallbackDelegate^> managedCallback(eventCallback);
+    // Create a native callback using the helper function.
+    auto nativeCallback = CreateNativeSubscriberEventCallback(managedCallback);
+    // Use the native constructor with event callback.
+    m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nativeCallback);
+  }
+  else
+  {
+    // No event callback provided.
+    m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo);
+  }
 }
 
 // Destructor
@@ -167,5 +219,6 @@ DataTypeInformation^ Subscriber::GetDataTypeInformation()
   return gcnew DataTypeInformation(
     StlStringToString(nativeDataTypeInfo.name),
     StlStringToString(nativeDataTypeInfo.encoding),
-    StlStringToByteArray(nativeDataTypeInfo.descriptor));
+    StlStringToByteArray(nativeDataTypeInfo.descriptor)
+  );
 }
