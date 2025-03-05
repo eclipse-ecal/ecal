@@ -18,30 +18,30 @@
 */
 
 using System;
-using System.Text;
 using Continental.eCAL.Core;
 
-public class MinimalReceiveCallback
+
+public class PersonReceive
 {
-  static void ReceiveCallback(TopicId publisherId, DataTypeInformation dataTypeInfo, ReceiveCallbackData data)
+  static void PersonCallback(String topic, ProtobufSubscriber<Pb.People.Person>.ProtobufData data)
   {
-    string message = Encoding.Default.GetString(data.Buffer);
-    Console.WriteLine(String.Format("Receiving:  {0}", message));
+    System.Console.WriteLine("Topic name " + topic);
+    System.Console.WriteLine("Topic content " + data.data);
   }
 
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal subscriber csharp");
+    Core.Initialize("person subscriber csharp");
 
     // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a subscriber (topic name "Hello", type "base:std::string", description "")
-    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
+    // Create a protobuf subscriber (topic name "person").
+    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
 
     // Register a callback.
-    subscriber.SetReceiveCallback(ReceiveCallback);
+    subscriber.SetReceiveCallback(PersonCallback);
 
     // Idle main thread.
     while (Core.Ok())
@@ -50,7 +50,7 @@ public class MinimalReceiveCallback
     }
 
     // Dispose subscriber.
-    subscriber.Dispose();
+    //subscriber.Dispose();
 
     // Finalize eCAL API.
     Core.Terminate();

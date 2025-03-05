@@ -20,36 +20,40 @@
 using System;
 using Continental.eCAL.Core;
 
-
-public class PersonReceiveCallback
+public class MinimalSend
 {
-  static void PersonCallback(String topic, ProtobufSubscriber<Pb.People.Person>.ProtobufData data)
-  {
-    System.Console.WriteLine("Topic name " + topic);
-    System.Console.WriteLine("Topic content " + data.data);
-  }
-
   static void Main()
   {
-    // initialize eCAL API
-    Core.Initialize("Person Receive Callback C#");
-    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    // Initialize eCAL API.
+    Core.Initialize("minimal publisher csharp");
 
-    // create a subscriber (topic name "Hello", type "base:std::string")
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    ProtobufSubscriber<Pb.People.Person>.ReceiverCallback callback = PersonCallback;
-    subscriber.SetReceiveCallback(callback);
+    // Create a publisher (topic name "Hello", type "std::string", encoding "base", description "")
+    Publisher publisher = new Publisher("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
 
-    // idle main thread
+    // Idle main thread.
+    int loop = 0;
     while (Core.Ok())
     {
-      // receive content with 100 ms timeout
+      // message to send
+      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
+
+      // print message
+      System.Console.WriteLine(String.Format("Sending:  {0}", message));
+
+      // send the message
+      publisher.Send(message);
+
+      // cool down
       System.Threading.Thread.Sleep(100);
     }
 
-    // finalize eCAL API
+    // Dispose publisher.
+    publisher.Dispose();
+
+    // finalize eCAL API.
     Core.Terminate();
   }
 }

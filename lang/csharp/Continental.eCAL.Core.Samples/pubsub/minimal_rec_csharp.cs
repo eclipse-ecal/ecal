@@ -18,42 +18,41 @@
 */
 
 using System;
+using System.Text;
 using Continental.eCAL.Core;
 
-public class MinimalSend
+public class MinimalReceive
 {
+  static void ReceiveCallback(TopicId publisherId, DataTypeInformation dataTypeInfo, ReceiveCallbackData data)
+  {
+    string message = Encoding.Default.GetString(data.Buffer);
+    Console.WriteLine(String.Format("Receiving:  {0}", message));
+  }
+
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal publisher csharp");
+    Core.Initialize("minimal subscriber csharp");
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a publisher (topic name "Hello", type "base:std::string", description "")
-    Publisher publisher = new Publisher("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
+    // Create a subscriber (topic name "Hello", type "std::string", encoding "base", description "")
+    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
+
+    // Register a callback.
+    subscriber.SetReceiveCallback(ReceiveCallback);
 
     // Idle main thread.
-    int loop = 0;
     while (Core.Ok())
     {
-      // message to send
-      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
-
-      // print message
-      System.Console.WriteLine(String.Format("Sending:  {0}", message));
-
-      // send the message
-      publisher.Send(message);
-
-      // cool down
       System.Threading.Thread.Sleep(100);
     }
 
-    // Dispose publisher.
-    publisher.Dispose();
+    // Dispose subscriber.
+    subscriber.Dispose();
 
-    // finalize eCAL API.
+    // Finalize eCAL API.
     Core.Terminate();
   }
 }

@@ -24,16 +24,15 @@ public class PersonSend
 {
   static void Main()
   {
-    // initialize eCAL API
-    Core.Initialize("Person Send C#");
+    // Initialize eCAL API.
+    Core.Initialize("person publisher csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a publisher (topic name "Hello", type "base:std::string", description "")
+    // Create a protobuf publisher (topic name "person").
     var publisher = new ProtobufPublisher<Pb.People.Person>("person");
 
-    // idle main thread
     int loop = 0;
     var person = new Pb.People.Person
     {
@@ -45,6 +44,7 @@ public class PersonSend
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
+    // Idle main thread.
     while (Core.Ok())
     {
       // message to send
@@ -52,7 +52,7 @@ public class PersonSend
       loop++;
 
       // print message
-      System.Console.WriteLine(String.Format("Sending:  {0}", person.ToString()));
+      Console.WriteLine(String.Format("Sending:  {0}", person.ToString()));
 
       // send the content
       publisher.Send(person);
@@ -61,7 +61,10 @@ public class PersonSend
       System.Threading.Thread.Sleep(500);
     }
 
-    // finalize eCAL API
+    // Dispose publisher.
+    //publisher.Dispose();
+
+    // Finalize eCAL API.
     Core.Terminate();
   }
 }
