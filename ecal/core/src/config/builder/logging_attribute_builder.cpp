@@ -20,7 +20,7 @@ namespace eCAL
       attributes.unit_name               = Process::GetUnitName();
 
       attributes.udp_sink.enabled        = logging_config.provider.udp.enable;
-      attributes.udp_sink.log_level     = logging_config.provider.udp.log_level;
+      attributes.udp_sink.log_level      = logging_config.provider.udp.log_level;
 
       attributes.file_sink.enabled       = logging_config.provider.file.enable;
       attributes.file_sink.log_level     = logging_config.provider.file.log_level;
