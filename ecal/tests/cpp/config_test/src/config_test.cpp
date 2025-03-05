@@ -19,14 +19,10 @@
 
 #include <ecal/core.h>
 #include <ecal/config.h>
-#include "ini_file.h"
 
 #include <gtest/gtest.h>
 
-#include <fstream>
-#include <iostream>
 #include <stdexcept>
-#include <stdio.h>
 #include <string>
 #include <vector>
 

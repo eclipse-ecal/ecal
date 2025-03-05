@@ -24,7 +24,7 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 
 #ifdef ECAL_CORE_CONFIGURATION
