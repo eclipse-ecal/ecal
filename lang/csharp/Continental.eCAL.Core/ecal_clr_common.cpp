@@ -31,12 +31,14 @@ namespace Internal
 
   std::string StringToStlString(System::String^ s_)
   {
+    if (s_ == nullptr) return std::string();
     std::string s = std::string((const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(s_).ToPointer(), s_->Length);
     return s;
   }
 
   std::string ByteArrayToStlString(array<Byte>^ a_)
   {
+    if (a_ == nullptr) return std::string();
     GCHandle handle = GCHandle::Alloc(a_, GCHandleType::Pinned);
     size_t len = a_->Length;
     std::string ret((const char*)(void*)handle.AddrOfPinnedObject(), len);

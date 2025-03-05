@@ -99,9 +99,15 @@ bool ServiceServer::SetMethodCallback(ServiceMethodInformation^ methodInfo, Meth
 
   // Build native SServiceMethodInformation from the managed ServiceMethodInformation.
   ::eCAL::SServiceMethodInformation nativeMethodInfo;
-  nativeMethodInfo.method_name        = StringToStlString(methodInfo->MethodName);
-  nativeMethodInfo.request_type.name  = StringToStlString(methodInfo->RequestType->Name);
-  nativeMethodInfo.response_type.name = StringToStlString(methodInfo->ResponseType->Name);
+  nativeMethodInfo.method_name = StringToStlString(methodInfo->MethodName);
+  if (methodInfo->RequestType != nullptr)
+  {
+    nativeMethodInfo.request_type.name = StringToStlString(methodInfo->RequestType->Name);
+  }
+  if (methodInfo->ResponseType != nullptr)
+  {
+    nativeMethodInfo.response_type.name = StringToStlString(methodInfo->ResponseType->Name);
+  }
 
   // Register the native callback for this method.
   m_native_service_server->SetMethodCallback(nativeMethodInfo, static_cast<stdcall_eCAL_MethodCallbackT>(ip.ToPointer()));
