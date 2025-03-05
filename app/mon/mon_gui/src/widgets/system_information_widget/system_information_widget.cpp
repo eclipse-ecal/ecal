@@ -174,7 +174,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
     mimetype_list.reserve(2);
     {
       QMimeDatabase mimedatabase;
-      QMimeType mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
+      const QMimeType mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
       
       // Add the actual mimetype
       if (mime_type.isValid())
@@ -184,7 +184,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
       if (mimetype_list.empty()
           || (mimetype_list.front() != "text/plain"))
       {
-        mimetype_list.push_back("text/plain");
+        mimetype_list.emplace_back("text/plain");
       }
     }
 
