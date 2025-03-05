@@ -24,16 +24,16 @@ public class MinimalSend
 {
   static void Main()
   {
-    // initialize eCAL API
-    Core.Initialize("minimal_snd");
+    // Initialize eCAL API.
+    Core.Initialize("minimal publisher csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a publisher (topic name "Hello", type "base:std::string", description "")
-    Publisher publisher = new Publisher("Hello");
+    // Create a publisher (topic name "Hello", type "base:std::string", description "")
+    Publisher publisher = new Publisher("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
 
-    // idle main thread
+    // Idle main thread.
     int loop = 0;
     while (Core.Ok())
     {
@@ -43,17 +43,17 @@ public class MinimalSend
       // print message
       System.Console.WriteLine(String.Format("Sending:  {0}", message));
 
-      // send the content
+      // send the message
       publisher.Send(message);
 
       // cool down
       System.Threading.Thread.Sleep(100);
     }
 
-    // dispose publisher
+    // Dispose publisher.
     publisher.Dispose();
 
-    // finalize eCAL API
+    // finalize eCAL API.
     Core.Terminate();
   }
 }

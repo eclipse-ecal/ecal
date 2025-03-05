@@ -23,30 +23,27 @@ using Continental.eCAL.Core;
 
 public class MinimalReceiveCallback
 {
-  // Callback matching the new delegate signature.
   static void ReceiveCallback(TopicId publisherId, DataTypeInformation dataTypeInfo, ReceiveCallbackData data)
   {
-    Console.WriteLine("Topic name: " + publisherId.TopicName);
-    // Convert the received binary buffer to a string.
-    string content = Encoding.Default.GetString(data.Buffer);
-    Console.WriteLine("Topic content: " + content);
+    string message = Encoding.Default.GetString(data.Buffer);
+    Console.WriteLine(String.Format("Receiving:  {0}", message));
   }
 
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal_rcv_cb");
+    Core.Initialize("minimal subscriber csharp");
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a subscriber (topic name "Hello").
-    Subscriber subscriber = new Subscriber("Hello");
+    // Create a subscriber (topic name "Hello", type "base:std::string", description "")
+    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("std::string", "base", Array.Empty<byte>()));
 
     // Register a callback.
     subscriber.SetReceiveCallback(ReceiveCallback);
 
-    // idle main thread
+    // Idle main thread.
     while (Core.Ok())
     {
       System.Threading.Thread.Sleep(100);
