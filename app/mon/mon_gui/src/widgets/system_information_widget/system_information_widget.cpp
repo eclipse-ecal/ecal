@@ -169,25 +169,37 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
         return false;
     }
 
-    // 3) Get the MIME type
-    QMimeType mime_type;
+    // 3) Get the MIME type and add a fallback mimetype
+    std::vector<QString> mimetype_list;
+    mimetype_list.reserve(2);
     {
       QMimeDatabase mimedatabase;
-      mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
-
-      if (!mime_type.isValid())
-        return false;
+      QMimeType mime_type = mimedatabase.mimeTypeForFile(url.toLocalFile());
+      
+      // Add the actual mimetype
+      if (mime_type.isValid())
+        mimetype_list.push_back(mime_type.name());
+      
+      // Add the fallback mimetype (text/plain), if the original mimetype didn't indicate that already
+      if (mimetype_list.empty()
+          || (mimetype_list.front() != "text/plain"))
+      {
+        mimetype_list.push_back("text/plain");
+      }
     }
 
-    // 4) Get the associated *.desktop (-> the application) via "xdg-mime"
+    // 4) Get the associated *.desktop (-> the application) via "xdg-mime".
     QString xdg_mime_query_output;
+    for(const QString& mime_type : mimetype_list)
     {
       QProcess xdg_mime_process;
-      xdg_mime_process.start("xdg-mime", {"query", "default", mime_type.name()});
+      xdg_mime_process.start("xdg-mime", {"query", "default", mime_type});
 
       if (xdg_mime_process.waitForFinished(1000) && (xdg_mime_process.exitCode() == 0))
       {
         xdg_mime_query_output = QString::fromUtf8(xdg_mime_process.readAllStandardOutput()).trimmed();
+        if (!xdg_mime_query_output.isEmpty())
+          break;
       }
       else
       {
@@ -196,7 +208,7 @@ void SystemInformationWidget::openEcalIni(const QUrl& url)
       }
     }
 
-    // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit
+    // 5) Check the xdg-mime output. Fallback to plain opening for anything else than gedit / gnome text editor
     if (xdg_mime_query_output.isEmpty()
          || ((xdg_mime_query_output != "org.gnome.gedit.desktop")
              && (xdg_mime_query_output != "org.gnome.TextEditor.desktop"))
