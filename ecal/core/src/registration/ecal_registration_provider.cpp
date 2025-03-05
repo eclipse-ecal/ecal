@@ -78,7 +78,7 @@ namespace eCAL
     }
     else
     {
-      eCAL::Logging::Log(Logging::log_level_warning, "[CRegistrationProvider] No registration layer enabled.");
+      eCAL::Logging::Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
       return;
     }
 
