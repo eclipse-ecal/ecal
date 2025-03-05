@@ -4,13 +4,7 @@ namespace
 {
   void MapConfiguration(const YAML::Node& node_, eCAL::Configuration& config_)
   {
-    YAML::AssignValue<eCAL::TransportLayer::Configuration>(config_.transport_layer, node_, "transport_layer");
-    YAML::AssignValue<eCAL::Publisher::Configuration>(config_.publisher, node_, "publisher");
-    YAML::AssignValue<eCAL::Subscriber::Configuration>(config_.subscriber, node_, "subscriber");
-    YAML::AssignValue<eCAL::Registration::Configuration>(config_.registration, node_, "registration");
-    YAML::AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
-    YAML::AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
-    YAML::AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+    config_ = node_.as<eCAL::Configuration>();
   }
 }
 

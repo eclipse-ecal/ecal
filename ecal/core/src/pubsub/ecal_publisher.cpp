@@ -40,8 +40,11 @@ namespace eCAL
 {
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.publisher = config_;
+
     // create publisher implementation
-    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
 
     // register publisher
     if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);

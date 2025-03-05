@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ namespace YAML
       member = node_[key].as<AS>();
   }
 
-
   /*
        ___           _     __           __  _         
       / _ \___ ___ _(_)__ / /________ _/ /_(_)__  ___ 
@@ -49,28 +48,45 @@ namespace YAML
     /_/|_|\__/\_, /_/___/\__/_/  \_,_/\__/_/\___/_//_/
              /___/                                    
   */
-  template<>
-  struct convert<eCAL::Registration::Layer::UDP::Configuration>
-  {
-    static Node encode(const eCAL::Registration::Layer::UDP::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Registration::Layer::UDP::Configuration& config_);
+  template<>
+  struct convert<eCAL::Registration::Network::UDP::Configuration>
+  {
+    static Node encode(const eCAL::Registration::Network::UDP::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Registration::Network::UDP::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Registration::Layer::SHM::Configuration>
+  struct convert<eCAL::Registration::Network::Configuration>
   {
-    static Node encode(const eCAL::Registration::Layer::SHM::Configuration& config_);
+    static Node encode(const eCAL::Registration::Network::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Registration::Layer::SHM::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Registration::Network::Configuration& config_);
   };
 
   template<>
-  struct convert<eCAL::Registration::Layer::Configuration>
+  struct convert<eCAL::Registration::Local::SHM::Configuration>
   {
-    static Node encode(const eCAL::Registration::Layer::Configuration& config_);
+    static Node encode(const eCAL::Registration::Local::SHM::Configuration& config_);
 
-    static bool decode(const Node& node_, eCAL::Registration::Layer::Configuration& config_);
+    static bool decode(const Node& node_, eCAL::Registration::Local::SHM::Configuration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Registration::Local::UDP::Configuration>
+  {
+    static Node encode(const eCAL::Registration::Local::UDP::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Registration::Local::UDP::Configuration& config_);
+  };
+
+  template<>
+  struct convert<eCAL::Registration::Local::Configuration>
+  {
+    static Node encode(const eCAL::Registration::Local::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Registration::Local::Configuration& config_);
   };
 
   template<>

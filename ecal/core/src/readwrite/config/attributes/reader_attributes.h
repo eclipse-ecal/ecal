@@ -21,25 +21,19 @@
 
 #include <string>
 #include <cstddef>
-#include "ecal/types/custom_data_types.h"
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {
   namespace eCALReader
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      Types::UDPMode mode;
-      int            port;
-      int            receivebuffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         receivebuffer;
+      std::string group;
     };
 
     struct STCPAttributes
