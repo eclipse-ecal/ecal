@@ -113,12 +113,11 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "addressbook")
-  eCAL::capnproto::CDynamicSubscriber sub("addressbook");
-
-  auto lambda = [](const eCAL::STopicId& /*topic_id_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/) -> void {
+  eCAL::capnproto::CDynamicSubscriber::Arguments sub_arguments;
+  sub_arguments.data_callback = [](const eCAL::STopicId& /*topic_id_*/, const capnp::DynamicValue::Reader& msg_, long long /*time_*/, long long /*clock_*/) -> void {
     dynamicPrintValue(msg_);
   };
-  sub.SetReceiveCallback(lambda);
+  eCAL::capnproto::CDynamicSubscriber sub("addressbook", sub_arguments);
 
   // enter main loop
   while (eCAL::Ok())

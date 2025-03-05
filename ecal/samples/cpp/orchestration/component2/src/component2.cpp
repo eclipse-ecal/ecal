@@ -34,12 +34,14 @@ public:
   ComponentServiceImpl()
   {
     // create subscriber for topic 'foo'
-    subscriber_foo = std::make_unique<eCAL::protobuf::CSubscriber<component::foo>>("foo");
-    subscriber_foo->SetReceiveCallback(std::bind(&ComponentServiceImpl::on_foo_message, this, std::placeholders::_2));
+    eCAL::protobuf::CSubscriber<component::foo>::Arguments subscriber_foo_arguments;
+    subscriber_foo_arguments.data_callback = std::bind(&ComponentServiceImpl::on_foo_message, this, std::placeholders::_2);
+    subscriber_foo = std::make_unique<eCAL::protobuf::CSubscriber<component::foo>>("foo", subscriber_foo_arguments);
 
     // create subscriber for topic 'vec'
-    subscriber_vec = std::make_unique<eCAL::protobuf::CSubscriber<component::vec>>("vec");
-    subscriber_vec->SetReceiveCallback(std::bind(&ComponentServiceImpl::on_vec_message, this, std::placeholders::_2));
+    eCAL::protobuf::CSubscriber<component::vec>::Arguments subscriber_vec_arguments;
+    subscriber_vec_arguments.data_callback = std::bind(&ComponentServiceImpl::on_vec_message, this, std::placeholders::_2);
+    subscriber_vec = std::make_unique<eCAL::protobuf::CSubscriber<component::vec>>("vec", subscriber_vec_arguments);
   }
 
   // the component execute method

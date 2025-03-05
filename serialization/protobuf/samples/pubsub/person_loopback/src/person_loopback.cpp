@@ -39,8 +39,8 @@ int main()
   // generate a class instance of Person
   pb::People::Person person;
 
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
-  auto receive_lambda = [](const eCAL::STopicId& /*topic_id_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/){
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments sub_arguments;
+  sub_arguments.data_callback = [](const eCAL::STopicId& /*topic_id_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/){
     std::cout << "------------------------------------------" << std::endl;
     std::cout << " RECEIVED                                 " << std::endl;
     std::cout << "------------------------------------------" << std::endl;
@@ -54,7 +54,7 @@ int main()
     std::cout                                                 << std::endl;
 
   };
-  sub.SetReceiveCallback(receive_lambda);
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_arguments);
 
   // enter main loop
   auto cnt = 0;

@@ -53,8 +53,8 @@ int main()
   // set process state
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
-  // create a subscriber config
-  eCAL::Subscriber::Configuration sub_config;
+  eCAL::protobuf::CSubscriber<pb::People::Person>::Arguments sub_arguments;
+  auto& sub_config = sub_arguments.config;
 
   // activate transport layer
   sub_config.layer.shm.enable = true;
@@ -62,7 +62,7 @@ int main()
   sub_config.layer.tcp.enable = true;
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_config);
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_arguments);
 
   // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
   auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);

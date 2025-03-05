@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,9 +71,10 @@ MmaHostItem::MmaHostItem(QTreeWidget* tree_widget, const QString& hostname)
   setEnabled(false);
 
   // Create eCAL Subscriber
+  eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>::Arguments mma_subscriber_arguments;
+  mma_subscriber_arguments.data_callback = std::bind(&MmaHostItem::mmaReceivedCallback, this, std::placeholders::_1, std::placeholders::_2);
   mma_subscriber = std::unique_ptr<eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>>
-                    (new eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>("machine_state_" + hostname_.toStdString()));
-  mma_subscriber->SetReceiveCallback(std::bind(&MmaHostItem::mmaReceivedCallback, this, std::placeholders::_1, std::placeholders::_2));
+                    (new eCAL::protobuf::CSubscriber<eCAL::pb::mma::State>("machine_state_" + hostname_.toStdString(), mma_subscriber_arguments));
 
   // Register custom Type in order to directly pass the monitoring state
   qRegisterMetaType<eCAL::pb::mma::State>("eCAL::pb::mma::State");

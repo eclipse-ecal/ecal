@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,13 @@ public:
   };
 
   ProtoMessageVisualizationViewModel(const std::string &topic)
-    : subscriber{topic}
+    : subscriber{ topic, [this]() {
+        using namespace std::placeholders;
+        eCAL::protobuf::CDynamicSubscriber::Arguments arguments;
+        arguments.data_callback = std::bind(&ProtoMessageVisualizationViewModel::OnMessage, this, _2, _3);
+        return arguments;
+      }() }
   {
-    using namespace std::placeholders;
-    subscriber.SetReceiveCallback(std::bind(&ProtoMessageVisualizationViewModel::OnMessage, this, _2, _3));
   }
 
   ProtectedMessage message() const

@@ -32,8 +32,8 @@ int main()
   // set process state
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
-  // create a publisher config
-  eCAL::Publisher::Configuration pub_config;
+  eCAL::protobuf::CPublisher<pb::People::Person>::Arguments pub_arguments;
+  auto& pub_config = pub_arguments.config;
   
   // switch shm and udp layer off, tcp layer on
   pub_config.layer.shm.enable = false;
@@ -41,7 +41,7 @@ int main()
   pub_config.layer.tcp.enable = true;
 
   // create a publisher (topic name "person")
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_config);
+  eCAL::protobuf::CPublisher<pb::People::Person> pub("person", pub_arguments);
 
   // generate a class instance of Person
   pb::People::Person person;
