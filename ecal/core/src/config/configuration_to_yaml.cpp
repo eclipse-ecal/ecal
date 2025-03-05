@@ -464,14 +464,14 @@ namespace YAML
   {
     Node node;
     node["layer"] = config_.layer;
-    node["drop_out_of_order_message"] = config_.drop_out_of_order_messages;
+    node["drop_out_of_order_messages"] = config_.drop_out_of_order_messages;
     return node;
   }
 
   bool convert<eCAL::Subscriber::Configuration>::decode(const Node& node_, eCAL::Subscriber::Configuration& config_)
   {
     AssignValue<eCAL::Subscriber::Layer::Configuration>(config_.layer, node_, "layer");
-    AssignValue<bool>(config_.drop_out_of_order_messages, node_, "dropt_out_of_order_messages");
+    AssignValue<bool>(config_.drop_out_of_order_messages, node_, "drop_out_of_order_messages");
     return true;
   }
 
