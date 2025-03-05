@@ -20,20 +20,19 @@
 using System;
 using Continental.eCAL.Core;
 
-public class PersonSnd
+public class PersonSend
 {
   static void Main()
   {
-    // initialize eCAL API
-    Util.Initialize("Person Send C#");
+    // Initialize eCAL API.
+    Core.Initialize("person publisher csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a publisher (topic name "Hello", type "base:std::string", description "")
+    // Create a protobuf publisher (topic name "person").
     var publisher = new ProtobufPublisher<Pb.People.Person>("person");
 
-    // idle main thread
     int loop = 0;
     var person = new Pb.People.Person
     {
@@ -45,14 +44,15 @@ public class PersonSnd
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    while (Util.Ok())
+    // Idle main thread.
+    while (Core.Ok())
     {
       // message to send
       person.Id = loop;
       loop++;
 
       // print message
-      System.Console.WriteLine(String.Format("Sending:  {0}", person.ToString()));
+      Console.WriteLine(String.Format("Sending: {0}", person.ToString()));
 
       // send the content
       publisher.Send(person);
@@ -61,7 +61,10 @@ public class PersonSnd
       System.Threading.Thread.Sleep(500);
     }
 
-    // finalize eCAL API
-    Util.Terminate();
+    // Dispose publisher.
+    //publisher.Dispose();
+
+    // Finalize eCAL API.
+    Core.Terminate();
   }
 }

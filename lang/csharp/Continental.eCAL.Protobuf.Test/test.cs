@@ -18,11 +18,10 @@
 */
 
 using System;
-using Continental.eCAL.Core;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Continental.eCAL.Core;
+using Google.Protobuf;
 
 [TestClass]
 public class ProtobufTest
@@ -30,20 +29,19 @@ public class ProtobufTest
   [TestInitialize]
   public void Initialize()
   {
-    Util.Initialize("Person Test C#");
+    Core.Initialize("Person Test C#");
   }
 
   [TestCleanup]
   public void Cleanup()
   {
-    Util.Terminate();
+    Core.Terminate();
   }
 
-  // This test ensures that 0  values which are not present on the wire, are still deserialized correctly. (#1593)
   [TestMethod]
-  public void PublishSubscribeTest()
+  public async Task PublishSubscribeTest()
   {
-    // Publisher
+    // Create publisher and subscriber for topic "example_topic"
     var publisher = new ProtobufPublisher<Pb.People.Person>("example_topic");
     var subscriber = new ProtobufSubscriber<Pb.People.Person>("example_topic");
 
@@ -67,29 +65,49 @@ public class ProtobufTest
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    Task.Delay(2000).Wait();
+    // Allow time for subscriber initialization.
+    await Task.Delay(2000);
 
+    // Test: publish person0, then wait for callback.
     {
+      var tcs = new TaskCompletionSource<Pb.People.Person>();
+      subscriber.SetReceiveCallback((topic, data) =>
+      {
+        tcs.TrySetResult(data.data);
+      });
       publisher.Send(person0);
-      var person_rec_0 = subscriber.Receive(100);
-      Assert.IsNotNull(person_rec_0);
-      Assert.IsTrue(person0.Id == person_rec_0.data.Id);
+      var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
+      Assert.IsTrue(tcs.Task.IsCompleted, "Timeout waiting for person0");
+      Assert.AreEqual(person0.Id, tcs.Task.Result.Id);
+      subscriber.RemoveReceiveCallback();
     }
 
+    // Test: publish person1, then wait for callback.
     {
+      var tcs = new TaskCompletionSource<Pb.People.Person>();
+      subscriber.SetReceiveCallback((topic, data) =>
+      {
+        tcs.TrySetResult(data.data);
+      });
       publisher.Send(person1);
-      var person_rec_1 = subscriber.Receive(100);
-      Assert.IsNotNull(person_rec_1);
-      Assert.IsTrue(person1.Id == person_rec_1.data.Id);
+      var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
+      Assert.IsTrue(tcs.Task.IsCompleted, "Timeout waiting for person1");
+      Assert.AreEqual(person1.Id, tcs.Task.Result.Id);
+      subscriber.RemoveReceiveCallback();
     }
 
+    // Test: publish person0 again, then wait for callback.
     {
+      var tcs = new TaskCompletionSource<Pb.People.Person>();
+      subscriber.SetReceiveCallback((topic, data) =>
+      {
+        tcs.TrySetResult(data.data);
+      });
       publisher.Send(person0);
-      var person_rec_0 = subscriber.Receive(100);
-      Assert.IsNotNull(person_rec_0);
-      Assert.IsTrue(person0.Id == person_rec_0.data.Id);
+      var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
+      Assert.IsTrue(tcs.Task.IsCompleted, "Timeout waiting for person0 (second time)");
+      Assert.AreEqual(person0.Id, tcs.Task.Result.Id);
+      subscriber.RemoveReceiveCallback();
     }
   }
 }
-
-

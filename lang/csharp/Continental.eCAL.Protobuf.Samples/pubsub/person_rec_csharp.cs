@@ -19,34 +19,39 @@
 
 using System;
 using Continental.eCAL.Core;
+using Pb.People;
 
-public class minimal_rcv
+
+public class PersonReceive
 {
-  static void Main()
+  public static void Main()
   {
-    // initialize eCAL API
-    Util.Initialize("minimal_rcv");
+    // Initialize eCAL API.
+    Core.Initialize("person subscriber csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    // Print version info.
+    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a subscriber (topic name "Hello", type "base:std::string")
-    Subscriber subscriber = new Subscriber("Hello", "std::string", "base", "");
+    // Create a protobuf subscriber (topic name "person").
+    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
 
-    // idle main thread
-    while (Util.Ok())
+    // Register a receive callback.
+    subscriber.SetReceiveCallback((topic, data) =>
     {
-      // receive content with 100 ms timeout
-      Subscriber.ReceiveCallbackData message = subscriber.Receive(100);
+      Console.WriteLine(String.Format("Receiving: {0}", data.data.ToString()));
+    });
 
-      // print message
-      if (message != null) System.Console.WriteLine(String.Format("Received:  {0}", message.data));
+    // Idle main thread.
+    while (Core.Ok())
+    {
+      System.Threading.Thread.Sleep(100);
     }
 
-    // dispose subscriber
-    subscriber.Dispose();
+    // Dispose subscriber.
+    // TODO: Add destructor to protobuf subscriber
+    //subscriber.Dispose();
 
-    // finalize eCAL API
-    Util.Terminate();
+    // Finalize eCAL API.
+    Core.Terminate();
   }
 }
