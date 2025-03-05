@@ -18,12 +18,13 @@
 */
 
 /**
- * @file minimal_snd_csharp.cs
+ * @file minimal_events_snd_csharp.cs
  *
- * @brief Sample demonstrating the use of the publisher API.
+ * @brief Sample demonstrating the use of the publisher event API.
  *
  * This sample initializes the eCAL API, creates a Publisher for the topic "Hello" with a 
- * DataTypeInformation for a std::string message. 
+ * DataTypeInformation for a std::string message, and subscribes to its PublisherEvent. 
+ * The event callback logs all event types (e.g. Connected, Disconnected, Dropped) to the console.
  * Then, the publisher sends messages in a loop.
  */
 
@@ -31,20 +32,28 @@ using System;
 using System.Threading;
 using Continental.eCAL.Core;
 
-public class MinimalSend
+public class MinimalSendWithEvents
 {
   public static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal publisher csharp");
+    Core.Initialize("minimal publisher csharp with events");
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a publisher (topic name "Hello", type "std::string", encoding "base", description "").
-    Publisher publisher = new Publisher("Hello", new DataTypeInformation("std::string", "base", new byte[0]));
+    // Create a publisher with a publisher event callback passed in the constructor.
+    Publisher publisher = new Publisher(
+        "Hello",
+        new DataTypeInformation("std::string", "base", new byte[0]),
+        new PublisherEventCallbackDelegate((topicId, eventData) =>
+        {
+          Console.WriteLine("Publisher Event: {0} on topic {1} at {2} µs",
+                                  eventData.EventType, topicId.TopicName, eventData.EventTime);
+        })
+    );
 
-    // Idle main thread.
+    // Idle main thread and send messages.
     int loop = 0;
     while (Core.Ok())
     {
@@ -58,7 +67,7 @@ public class MinimalSend
       publisher.Send(message);
 
       // Cool down.
-      Thread.Sleep(100);
+      Thread.Sleep(1000);
     }
 
     // Dispose publisher.

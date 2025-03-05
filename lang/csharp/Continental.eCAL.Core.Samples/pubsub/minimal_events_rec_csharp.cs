@@ -17,22 +17,41 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file minimal_events_rec_csharp.cs
+ *
+ * @brief Sample demonstrating the use of the subscriber event API.
+ *
+ * This sample initializes the eCAL API, creates a Subscriber for the topic "Hello" with a 
+ * DataTypeInformation for a std::string message, and subscribes to its SubscriberEvent. 
+ * The event callback logs all event types (e.g. Connected, Disconnected) to the console.
+ */
+
 using System;
 using System.Text;
+using System.Threading;
 using Continental.eCAL.Core;
 
-public class MinimalReceive
+public class MinimalSendWithEvents
 {
   public static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal subscriber csharp");
+    Core.Initialize("minimal subscriber csharp with events");
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a subscriber (topic name "Hello", type "std::string", encoding "base", description "")
-    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("std::string", "base", new byte[0]));
+    // Create a subscriber with a publisher event callback passed in the constructor.
+    Subscriber subscriber = new Subscriber(
+        "Hello",
+        new DataTypeInformation("std::string", "base", new byte[0]),
+        new SubscriberEventCallbackDelegate((topicId, eventData) =>
+        {
+          Console.WriteLine("Subscriber Event: {0} on topic {1} at {2} µs",
+                                  eventData.EventType, topicId.TopicName, eventData.EventTime);
+        })
+    );
 
     // Register a receive callback.
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
@@ -44,7 +63,7 @@ public class MinimalReceive
     // Idle main thread.
     while (Core.Ok())
     {
-      System.Threading.Thread.Sleep(100);
+      Thread.Sleep(100);
     }
 
     // Dispose subscriber.

@@ -19,17 +19,12 @@
 
 using System;
 using Continental.eCAL.Core;
+using Pb.People;
 
 
 public class PersonReceive
 {
-  static void PersonCallback(String topic, ProtobufSubscriber<Pb.People.Person>.ProtobufData data)
-  {
-    System.Console.WriteLine("Topic name " + topic);
-    System.Console.WriteLine("Topic content " + data.data);
-  }
-
-  static void Main()
+  public static void Main()
   {
     // Initialize eCAL API.
     Core.Initialize("person subscriber csharp");
@@ -40,8 +35,11 @@ public class PersonReceive
     // Create a protobuf subscriber (topic name "person").
     var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
 
-    // Register a callback.
-    subscriber.SetReceiveCallback(PersonCallback);
+    // Register a receive callback.
+    subscriber.SetReceiveCallback((topic, data) =>
+    {
+      Console.WriteLine(String.Format("Receiving: {0}", data.data.ToString()));
+    });
 
     // Idle main thread.
     while (Core.Ok())
@@ -50,6 +48,7 @@ public class PersonReceive
     }
 
     // Dispose subscriber.
+    // TODO: Add destructor to protobuf subscriber
     //subscriber.Dispose();
 
     // Finalize eCAL API.

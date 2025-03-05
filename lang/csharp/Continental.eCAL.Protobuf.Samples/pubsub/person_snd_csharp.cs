@@ -52,7 +52,7 @@ public class PersonSend
       loop++;
 
       // print message
-      Console.WriteLine(String.Format("Sending:  {0}", person.ToString()));
+      Console.WriteLine(String.Format("Sending: {0}", person.ToString()));
 
       // send the content
       publisher.Send(person);

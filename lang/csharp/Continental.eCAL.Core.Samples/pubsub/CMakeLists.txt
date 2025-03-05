@@ -27,5 +27,7 @@ macro(ecal_add_csharp_core_sample sample_name)
   set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/pubsub/string)
 endmacro()
 
+ecal_add_csharp_core_sample(minimal_events_rec_csharp)
+ecal_add_csharp_core_sample(minimal_events_snd_csharp)
 ecal_add_csharp_core_sample(minimal_rec_csharp)
 ecal_add_csharp_core_sample(minimal_snd_csharp)
