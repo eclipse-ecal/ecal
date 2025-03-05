@@ -18,7 +18,7 @@
 
 project(measurement_hdf5)
 
-add_library(${PROJECT_NAME} 
+ecal_add_library(${PROJECT_NAME}
   include/ecal/measurement/hdf5/reader.h
   include/ecal/measurement/hdf5/writer.h
   src/reader.cpp

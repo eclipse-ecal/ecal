@@ -22,7 +22,7 @@ set(ecal_message_header
     include/ecal/measurement/base/measurement.h
 )
 
-add_library(${PROJECT_NAME} INTERFACE)
+ecal_add_interface_library(${PROJECT_NAME})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} INTERFACE 
