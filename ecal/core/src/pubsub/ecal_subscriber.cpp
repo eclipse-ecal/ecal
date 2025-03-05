@@ -75,37 +75,31 @@ namespace eCAL
 
   bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
-    if (m_subscriber_impl == nullptr) return false;
     return m_subscriber_impl->SetReceiveCallback(std::move(callback_));
   }
 
   bool CSubscriber::RemoveReceiveCallback()
   {
-    if (m_subscriber_impl == nullptr) return false;
     return m_subscriber_impl->RemoveReceiveCallback();
   }
 
   size_t CSubscriber::GetPublisherCount() const
   {
-    if (m_subscriber_impl == nullptr) return 0;
     return m_subscriber_impl->GetPublisherCount();
   }
 
-  std::string CSubscriber::GetTopicName() const
+  const std::string& CSubscriber::GetTopicName() const
   {
-    if (m_subscriber_impl == nullptr) return "";
     return m_subscriber_impl->GetTopicName();
   }
 
-  STopicId CSubscriber::GetTopicId() const
+  const STopicId& CSubscriber::GetTopicId() const
   {
-    if (m_subscriber_impl == nullptr) return{};
-    return m_subscriber_impl->GetId();
+    return m_subscriber_impl->GetTopicId();
   }
 
-  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
+  const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
-    if (m_subscriber_impl == nullptr) return SDataTypeInformation{};
     return m_subscriber_impl->GetDataTypeInformation();
   }
 }
