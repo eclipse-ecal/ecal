@@ -28,10 +28,6 @@
 #include <array>
 #include <ctime>
 
-#ifdef ECAL_OS_LINUX
-#include <unistd.h>
-#endif
-
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
 
@@ -40,11 +36,19 @@
   #define NOMINMAX
   #include <Windows.h>
   #include <WinSock2.h>
+  #include <ws2tcpip.h> // getaddrinfo, inet_ntop
 
   #include <cctype>
-#elif __linux__
+#else
   #include <unistd.h>
+
+  #include <sys/types.h>   // getaddrinfo
+  #include <sys/socket.h>  // getaddrinfo
+  #include <netdb.h>       // getaddrinfo
+
+  #include <arpa/inet.h>   // inet_ntop
 #endif
+
 
 #include <rec_client_core/ecal_rec_logger.h>
 
@@ -324,13 +328,19 @@ namespace eCAL
     /////////////////////////////////////////////
 
     FtpUploadThread::FtpUploadThread(const std::string&                local_root_dir
-                                   , const std::string&                ftp_server
+                                   , const std::string&                ftp_host
+                                   , uint16_t                          ftp_port
+                                   , const std::string&                ftp_username
+                                   , const std::string&                ftp_password
                                    , const std::string&                ftp_root_dir
                                    , const std::vector<std::string>&   skip_files
                                    , const std::function<Error(void)>& after_successfull_upload_function)
       : curl_handle                       (nullptr)
       , local_root_dir_                   (local_root_dir)
-      , ftp_server_                       (ftp_server)
+      , ftp_host_                         (ftp_host)
+      , ftp_port_                         (ftp_port)
+      , ftp_username_                     (ftp_username)
+      , ftp_password_                     (ftp_password)
       , ftp_root_dir_                     (ftp_root_dir)
       , skip_files_                       (skip_files)
       , finished_files_progress_          {}
@@ -360,6 +370,113 @@ namespace eCAL
 
     void FtpUploadThread::Run()
     {
+      // Try Parsing the ftp_host as an IP address. If it is not an IP address, we try to resolve it.
+      bool ftp_host_is_ipv4 = false;
+      {
+        struct sockaddr_in sa;
+        int result = inet_pton(AF_INET, ftp_host_.c_str(), &(sa.sin_addr));
+        ftp_host_is_ipv4 = result != 0;
+      }
+      bool ftp_host_is_ipv6 = false;
+      {
+        struct sockaddr_in6 sa;
+        int result = inet_pton(AF_INET6, ftp_host_.c_str(), &(sa.sin6_addr));
+        ftp_host_is_ipv6 = result != 0;
+      }
+
+      // Check if the hostname already has a domain (like .local / .localdomain / etc.). If it does, we don't append .local and therefore don't resolve it beforehand.
+      bool hostname_has_domain = (ftp_host_.find('.') != std::string::npos);
+      
+      std::string best_hostname = ftp_host_;
+
+      if (ftp_host_is_ipv4 || ftp_host_is_ipv6)
+      {
+        // If the hostname is an IP address, we don't need to resolve it
+        EcalRecLogger::Instance()->debug("FTP Host " + ftp_host_ + " detected to be an IP address.");
+      }
+      else if (hostname_has_domain)
+      {
+        // If the hostname has a domain, we don't need to resolve it
+        EcalRecLogger::Instance()->debug("FTP Host " + ftp_host_ + " detected to be a hostname with domain.");
+      }
+      else
+      {
+        // Test-Resolve the hostname and hostname.local
+        EcalRecLogger::Instance()->debug("FTP Host " + ftp_host_ + " detected to be a plain hostname. Probing resolver to check for best hostname format...");
+
+        // Create hostnames to test. The hostname has precedence over the hostname.local
+        const std::vector<std::string> hostnames_to_test = { ftp_host_, ftp_host_ + ".local" };
+
+        bool best_hostname_is_resolvable    = false;
+        bool best_hostname_resolves_to_ipv4 = false; // We prefer IPv4 resolvable hostnames, as some FTP servers don't support IPv6
+
+        for (const std::string& hostname : hostnames_to_test)
+        {
+          if (IsInterrupted()) return;
+
+          EcalRecLogger::Instance()->debug("Trying to resolve hostname: " + hostname);
+
+          std::vector<AddressInfo> address_infos = ResolveHostnameBlocking(hostname);
+          bool hostname_resolved        = !address_infos.empty();
+          bool hostname_resoled_to_ipv4 = false;
+          for (const auto& address_info : address_infos)
+          {
+            // Check if the hostname resolves to an IPv4 address
+            if (address_info.family_ == AF_INET)
+            {
+              hostname_resoled_to_ipv4 = true;
+              break;
+            }
+          }
+
+          {
+            // Debug log all resolved addresses
+            if (hostname_resolved)
+            {
+              std::string resolved_addresses;
+              for (size_t i = 0; i < address_infos.size(); i++)
+              {
+                resolved_addresses += address_infos[i].address_;
+                if (i < address_infos.size() - 1)
+                  resolved_addresses += ", ";
+              }
+              EcalRecLogger::Instance()->debug(hostname + " resolved to " + resolved_addresses);
+            }
+            else
+            {
+              EcalRecLogger::Instance()->debug(hostname + " could not be resolved.");
+            }
+          }
+
+          if (hostname_resoled_to_ipv4)
+          {
+            // If the hostname resolves to an IPv4 address, we are done
+            best_hostname                  = hostname;
+            best_hostname_is_resolvable    = true;
+            best_hostname_resolves_to_ipv4 = true;
+            break;
+          }
+          else if (hostname_resolved && !best_hostname_is_resolvable)
+          {
+            // If the hostname resolves to an IPv6 address, we remember it, but continue testing
+            best_hostname                  = hostname;
+            best_hostname_is_resolvable    = true;
+            best_hostname_resolves_to_ipv4 = hostname_resoled_to_ipv4;
+            break;
+          }
+        }
+
+        EcalRecLogger::Instance()->info("Resolver probing lead to best hostname: " + best_hostname + " (Resolvable: " + (best_hostname_is_resolvable ? "Yes" : "No") + ", Resolves to IPv4: " + (best_hostname_resolves_to_ipv4 ? "Yes" : "No") + ")");
+      }
+
+      // Create the FTP Server URL with the best hostname
+      // 
+      // Note: Why didn't I use the already resolved IP address? 
+      //       Pro: This could speed things up a little bit, as curl doesn't need to resolve the hostname again.
+      //       Con: I wanted to give CURL the chance to resolve the hostname itself, as it may choose a different IP address than the one we resolved.
+      //
+      std::string ftp_server     = "ftp://" + ftp_username_ + ":" + ftp_password_ + "@" + best_hostname + ":" + std::to_string(ftp_port_);
+
       // Create a list of all files to upload
       EcalRecLogger::Instance()->info("Scanning directory for upload: " + local_root_dir_);
 
@@ -418,7 +535,7 @@ namespace eCAL
         }
       }
       
-      EcalRecLogger::Instance()->info("Start uploading to " + ftp_server_ + "/" + ftp_root_dir_);
+      EcalRecLogger::Instance()->info("Start uploading to " + ftp_server + "/" + ftp_root_dir_);
 
       for (const auto& file_info : files_to_upload)
       {
@@ -473,8 +590,8 @@ namespace eCAL
 
           // specify target path
           std::string target_path;
-          target_path.reserve(ftp_server_.size() + ftp_root_dir_.size() + temporary_file_path.size() * 3 + 1);
-          target_path += ftp_server_;
+          target_path.reserve(ftp_server.size() + ftp_root_dir_.size() + temporary_file_path.size() * 3 + 1);
+          target_path += ftp_server;
           target_path += ftp_root_dir_;
           for (char c : temporary_file_path)
           {
@@ -621,6 +738,61 @@ namespace eCAL
     /////////////////////////////////////////////
     // Helper methods
     /////////////////////////////////////////////
+
+
+    std::vector<FtpUploadThread::AddressInfo> FtpUploadThread::ResolveHostnameBlocking(const std::string& hostname)
+    { 
+      // Create Address info hints
+      addrinfo addrinfo_hints;
+      memset(&addrinfo_hints, 0, sizeof(addrinfo_hints));
+      addrinfo_hints.ai_family = AF_UNSPEC;
+      addrinfo_hints.ai_socktype = SOCK_STREAM;
+      addrinfo_hints.ai_flags |= AI_CANONNAME;
+
+      // Query the address info for the hostname
+      addrinfo* addrinfo_res = nullptr;
+      int errcode = getaddrinfo(hostname.c_str(), NULL, &addrinfo_hints, &addrinfo_res);
+      if (errcode != 0)
+      {
+        return {};
+      }
+
+      // Convert the address info to our own structure
+      std::vector<AddressInfo> address_infos;
+      addrinfo* addrinfo_it = addrinfo_res;
+      while (addrinfo_it != nullptr)
+      {
+        void* addr_ptr = nullptr;
+        switch (addrinfo_it->ai_family)
+        {
+          case AF_INET:
+            addr_ptr = &((struct sockaddr_in *) addrinfo_it->ai_addr)->sin_addr;
+            break;
+          case AF_INET6:
+            addr_ptr = &((struct sockaddr_in6 *) addrinfo_it->ai_addr)->sin6_addr;
+            break;
+          default:
+            break;
+        }
+
+        if (addr_ptr != nullptr)
+        {
+          char addr_str[100];
+          inet_ntop(addrinfo_it->ai_family, addr_ptr, addr_str, 100);
+          AddressInfo address_info;
+          address_info.family_ = addrinfo_it->ai_family;
+          address_info.address_ = addr_str;
+          address_infos.push_back(address_info);
+        }
+
+        addrinfo_it = addrinfo_it->ai_next;
+      }
+
+      // Free the address info
+      freeaddrinfo(addrinfo_res);
+
+      return address_infos;
+    }
 
     std::list<std::pair<std::string, unsigned long long>> FtpUploadThread::CreateFileList(const std::string& root_dir)
     {
