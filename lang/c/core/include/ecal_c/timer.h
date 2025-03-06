@@ -28,49 +28,21 @@
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
 
-#include <ecal_c/callback.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
-  /**
-   * @brief Create a timer. 
-   *
-   * @return  Handle to created timer or NULL if failed.
-  **/
-  ECALC_API ECAL_HANDLE eCAL_Timer_Create();
+  typedef void (*eCAL_TimerCallbackT)();
 
-  /**
-   * @brief Create a timer. 
-   *
-   * @param handle_  Timer handle. 
-   *
-   * @return  Handle to created timer or NULL if failed.
-  **/
-  ECALC_API int eCAL_Timer_Destroy(ECAL_HANDLE handle_);
+  typedef struct eCAL_Timer eCAL_Timer;
 
-  /**
-   * @brief Start the timer. 
-   *
-   * @param handle_    Timer handle. 
-   * @param timeout_   Timer callback loop time in ms.
-   * @param callback_  The callback function. 
-   * @param delay_     Timer callback delay for first call in ms.
-   * @param par_       User defined context that will be forwarded to the callback function.  
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Timer_Start(ECAL_HANDLE handle_, int timeout_, TimerCallbackCT callback_, int delay_, void* par_);
+  ECALC_API eCAL_Timer* eCAL_Timer_New();
+  ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
+  ECALC_API void eCAL_Timer_Delete(eCAL_Timer* timer_);
 
-  /**
-   * @brief Stop the timer. 
-   *
-   * @param handle_  Timer handle. 
-   *
-   * @return  None zero if succeeded.
-  **/
-  ECALC_API int eCAL_Timer_Stop(ECAL_HANDLE handle_);
+  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
+
+  ECALC_API int eCAL_Timer_Stop(eCAL_Timer* timer_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

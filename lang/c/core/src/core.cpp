@@ -24,19 +24,49 @@
 
 #include <ecal/ecal.h>
 #include <ecal_c/core.h>
+#include <ecal_c/init.h>
+
+#include "common.h"
+
+#include <map>
+
+namespace
+{
+  unsigned int Convert_Components(unsigned int components_c_)
+  {
+    unsigned int components{ 0 };
+    static const std::map<unsigned int, unsigned int> component_map
+    {
+      {eCAL_Init_None, eCAL::Init::None},
+      {eCAL_Init_Logging, eCAL::Init::Logging},
+      {eCAL_Init_Monitoring, eCAL::Init::Monitoring},
+      {eCAL_Init_Publisher, eCAL::Init::Publisher},
+      {eCAL_Init_Service, eCAL::Init::Service},
+      {eCAL_Init_Subscriber, eCAL::Init::Subscriber},
+      {eCAL_Init_TimeSync, eCAL::Init::TimeSync}
+    };
+
+    unsigned int bit_mask = 1 << 0;
+    for (std::size_t i = 0; i < sizeof(unsigned int) * 8; ++i)
+    {
+      components |= component_map.at(bit_mask & components_c_);
+      bit_mask <<= 1;
+    }
+
+    return components;
+  }
+}
 
 extern "C"
 {
-  ECALC_API const char* eCAL_GetVersionString()
+  ECALC_API char* eCAL_GetVersionString()
   {
-    static const auto version_string = eCAL::GetVersionString();
-    return version_string.c_str();
+    return Clone_CString(eCAL::GetVersionString().c_str());
   }
 
-  ECALC_API const char* eCAL_GetVersionDateString()
+  ECALC_API char* eCAL_GetVersionDateString()
   {
-    static const auto version_date_string = eCAL::GetVersionDateString();
-    return version_date_string.c_str();
+    return Clone_CString(eCAL::GetVersionDateString().c_str());
   }
 
   ECALC_API eCAL_SVersion eCAL_GetVersion()
@@ -44,10 +74,11 @@ extern "C"
     return eCAL_SVersion{ eCAL::GetVersion().major, eCAL::GetVersion().minor, eCAL::GetVersion().patch };
   }
 
-  ECALC_API int eCAL_Initialize(const char* unit_name_, unsigned int components_)
+  ECALC_API int eCAL_Initialize(const char* unit_name_, const unsigned int* components_)
   {
     const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-    return static_cast<int>(!eCAL::Initialize(unit_name, components_));
+    const unsigned int components = (components_ != nullptr) ? Convert_Components(*components_) : Convert_Components(eCAL_Init_Default);
+    return static_cast<int>(!eCAL::Initialize(unit_name, components));
   }
 
   ECALC_API int eCAL_Finalize()
@@ -58,6 +89,11 @@ extern "C"
   ECALC_API int eCAL_IsInitialized()
   {
     return static_cast<int>(eCAL::IsInitialized());
+  }
+
+  ECALC_API int eCAL_IsInitialized2(unsigned int components_)
+  {
+    return static_cast<int>(eCAL::IsInitialized(Convert_Components(components_)));
   }
 
   ECALC_API int eCAL_Ok()

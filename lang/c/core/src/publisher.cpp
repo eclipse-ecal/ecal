@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
-*/
+ */
 
 /**
  * @file   publisher.cpp
@@ -278,45 +278,12 @@ extern "C"
     return topic_id_c;
   }
 
-  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_)
-  {
-    if (topic_id_ != NULL)
-    {
-      Free_STopicId(topic_id_);
-      std::free(reinterpret_cast<void*>(topic_id_));
-    }
-  }
-
   ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_)
   {
     auto* data_type_information = reinterpret_cast<eCAL_SDataTypeInformation*>(std::malloc(sizeof(eCAL_SDataTypeInformation)));
     if (data_type_information != NULL)
       Convert_SDataTypeInformation(data_type_information, publisher_->handle->GetDataTypeInformation());
     return data_type_information;
-  }
-
-  ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_)
-  {
-    if (data_type_information_ != NULL)
-    {
-      Free_SDataTypeInformation(data_type_information_);
-      std::free(reinterpret_cast<void*>(data_type_information_));
-    }
-  }
-
-  ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration()
-  {
-    auto* publisher_configuration = reinterpret_cast<eCAL_Publisher_Configuration*>(std::malloc(sizeof(eCAL_Publisher_Configuration)));
-    if (publisher_configuration != NULL)
-      Convert_Publisher_Configuration(publisher_configuration, eCAL::GetPublisherConfiguration());
-    return publisher_configuration;
-  }
-
-  ECALC_API void eCAL_Publisher_Configuration_Free(eCAL_Publisher_Configuration* publisher_configuration_)
-  {
-    std::free(reinterpret_cast<void*>(publisher_configuration_->layer_priority_local));
-    std::free(reinterpret_cast<void*>(publisher_configuration_->layer_priority_remote));
-    std::free(reinterpret_cast<void*>(publisher_configuration_));
   }
 }
 #endif // ECAL_CORE_PUBLISHER

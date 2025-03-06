@@ -39,14 +39,14 @@ extern "C"
    *
    * @return  Full eCAL version string. 
   **/
-  ECALC_API const char* eCAL_GetVersionString();
+  ECALC_API char* eCAL_GetVersionString();
 
   /**
    * @brief  Get eCAL version date. 
    *
    * @return  Full eCAL version date string. 
   **/
-  ECALC_API const char* eCAL_GetVersionDateString();
+  ECALC_API char* eCAL_GetVersionDateString();
 
   /**
    * @brief  Get eCAL version as separated integer values. 
@@ -69,7 +69,7 @@ extern "C"
    *
    * @return Zero if succeeded.
   **/
-  ECALC_API int eCAL_Initialize(const char *unit_name_, unsigned int components_);
+  ECALC_API int eCAL_Initialize(const char *unit_name_, const unsigned int* components_);
 
   /**
    * @brief Finalize eCAL API.
@@ -85,39 +85,14 @@ extern "C"
   **/
   ECALC_API int eCAL_IsInitialized();
 
+  ECALC_API int eCAL_IsInitialized2(unsigned int components_);
+
   /**
    * @brief Return the eCAL process state.
    *
    * @return Non-zero if eCAL is in proper state. 
   **/
   ECALC_API int eCAL_Ok();
-
-  /**
-   * @brief  Free an eCAL memory block allocated by functions like
-   *         eCAL_Monitoring_GetMonitoring, eCAL_Logging_GetLogging, 
-   *         eCAL_Sub_Receive ... that use 'ECAL_ALLOCATE_4ME' as 
-   *         buffer length parameter and let eCAL allocate 
-   *         the memory internally.
-   *
-   **/
-  /**
-   * @code
-   *            // let eCAL allocate memory for the subscriber buffer and return the pointer to 'buf'
-   *            long long time     = 0;
-   *            int       time_out = 100;   // ms
-   *            void*     buf      = NULL;
-   *            int       buf_len  = eCAL_Sub_Receive_Alloc(subscriber_handle, &buf, &time, timeout);
-   *            if(buf_len > 0)
-   *            {
-   *              ...
-   *              // PROCESS THE BUFFER CONTENT HERE
-   *              ...
-   *              // finally free the allocated memory
-   *              eCAL_FreeMem(buf);
-   *            }
-   * @endcode
-  **/
-  ECALC_API void eCAL_FreeMem(void* mem_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

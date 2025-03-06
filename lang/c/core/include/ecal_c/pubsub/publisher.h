@@ -27,83 +27,15 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
+#include <ecal_c/config/publisher.h>
+#include <ecal_c/pubsub/types.h>
+#include <ecal_c/pubsub/payload_writer.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
   typedef struct eCAL_Publisher eCAL_Publisher;
-  typedef struct eCAL_PayloadWriter eCAL_PayloadWriter;
-
-  enum eCAL_TransportLayer_eType
-  {
-    eCAL_TransportLayer_eType_none,
-    eCAL_TransportLayer_eType_udp_mc,
-    eCAL_TransportLayer_eType_shm,
-    eCAL_TransportLayer_eType_tcp,
-  };
-
-  struct eCAL_Publisher_Layer_SHM_Configuration
-  {
-    int enable;
-    int zero_copy_mode;
-    unsigned int acknowledge_timeout_ms;
-    unsigned int memfile_buffer_count;
-    unsigned int memfile_min_size_bytes;
-    unsigned int memfile_reserve_percent;
-  };
-
-  struct eCAL_Publisher_Layer_UDP_Configuration
-  {
-    int enable;
-  };
-
-  struct eCAL_Publisher_Layer_TCP_Configuration
-  {
-    int enable;
-  };
-
-  struct eCAL_Publisher_Layer_Configuration
-  {
-    struct eCAL_Publisher_Layer_SHM_Configuration shm;
-    struct eCAL_Publisher_Layer_UDP_Configuration udp;
-    struct eCAL_Publisher_Layer_TCP_Configuration tcp;
-  };
-
-  struct eCAL_Publisher_Configuration
-  {
-    struct eCAL_Publisher_Layer_Configuration layer;
-
-    enum eCAL_TransportLayer_eType* layer_priority_local;
-    size_t layer_priority_local_length;
-    enum eCAL_TransportLayer_eType* layer_priority_remote;
-    size_t layer_priority_remote_length;
-  };
-
-  enum eCAL_ePublisherEvent
-  {
-    eCAL_ePublisherEvent_none,
-    eCAL_ePublisherEvent_connected,
-    eCAL_ePublisherEvent_disconnected,
-    eCAL_ePublisherEvent_dropped
-  };
-
-  struct eCAL_SPubEventCallbackData
-  {
-    enum eCAL_ePublisherEvent event_type;  
-    long long event_time;
-    struct eCAL_SDataTypeInformation subscriber_datatype;
-  };
-
-  typedef void (*eCAL_PubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SPubEventCallbackData*);
-
-
-  struct eCAL_PayloadWriter
-  {
-    int (*WriteFull)(void*, size_t);
-    int (*WriteModified)(void*, size_t);
-    size_t (*GetSize)();
-  };
 
   ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_);
   ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback, const struct eCAL_Publisher_Configuration* publisher_configuration_);
@@ -118,18 +50,9 @@ extern "C"
   ECALC_API const char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
 
   ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
-
   ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_);
 
-  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
-
-
   ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_);
-  ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
-
-  ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
-  ECALC_API void eCAL_Publisher_Configuration_Free(struct eCAL_Publisher_Configuration* publisher_configuration_);
-
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

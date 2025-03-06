@@ -27,41 +27,14 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
-
-#include <ecal_c/callback.h>
+#include <ecal_c/pubsub/types.h>
+#include <ecal_c/config/subscriber.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
-
   typedef struct eCAL_Subscriber eCAL_Subscriber;
-
-  struct eCAL_SReceiveCallbackData
-  {
-    const void* buffer;
-    size_t buffer_size;
-    int64_t send_timestamp;
-    int64_t send_clock;
-  };
-
-  enum eCAL_eSubscriberEvent
-  {
-    eCAL_eSubscriberEvent_none,
-    eCAL_eSubscriberEvent_connected,
-    eCAL_eSubscriberEvent_disconnected,
-    eCAL_eSubscriberEvent_dropped
-  };
-
-  struct eCAL_SSubEventCallbackData
-  {
-    enum eCAL_eSubscriberEvent event_type;
-    long long event_time;
-    struct eCAL_SDataTypeInformation publisher_datatype;
-  };
-
-  typedef void (*eCAL_ReceiveCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SDataTypeInformation*, const struct eCAL_SReceiveCallbackData*);
-  typedef void (*eCAL_SubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SSubEventCallbackData*);
 
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
@@ -75,13 +48,8 @@ extern "C"
   ECALC_API const char* eCAL_Subscriber_GetTopicName(eCAL_Subscriber* subscriber_);
 
   ECALC_API struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_);
-  //ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
 
   ECALC_API struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_);
-  //ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
-
-  //ECALC_API struct eCAL_Subscriber_Configuration* eCAL_GetSubscriberConfiguration();
-  //ECALC_API void eCAL_Subscriber_Configuration_Free(eCAL_Subscriber_Configuration* subscriber_configuration_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

@@ -25,24 +25,26 @@
 #ifndef ecal_c_init_h_included
 #define ecal_c_init_h_included
 
-#define eCAL_Init_Publisher   0x01                          /*!< Initialize Publisher API            */
-#define eCAL_Init_Subscriber  0x02                          /*!< Initialize Subscriber API           */
-#define eCAL_Init_Service     0x04                          /*!< Initialize Service API              */
-#define eCAL_Init_Monitoring  0x08                          /*!< Initialize Monitoring API           */
-#define eCAL_Init_Logging     0x10                          /*!< Initialize Logging API              */
-#define eCAL_Init_TimeSync    0x20                          /*!< Initialize Time API                 */
+static const unsigned int eCAL_Init_Publisher = 0x001;
+static const unsigned int eCAL_Init_Subscriber = 0x002;
+static const unsigned int eCAL_Init_Service = 0x004;
+static const unsigned int eCAL_Init_Monitoring = 0x008;
+static const unsigned int eCAL_Init_Logging = 0x010;
+static const unsigned int eCAL_Init_TimeSync = 0x020;
 
-#define eCAL_Init_All        (eCAL_Init_Publisher  \
-                            | eCAL_Init_Subscriber \
-                            | eCAL_Init_Service    \
-                            | eCAL_Init_Monitoring \
-                            | eCAL_Init_Logging    \
-                            | eCAL_Init_TimeSync)           /*!< Initialize complete eCAL API        */
+static const unsigned int eCAL_Init_All = eCAL_Init_Publisher
+| eCAL_Init_Subscriber
+| eCAL_Init_Service
+| eCAL_Init_Monitoring
+| eCAL_Init_Logging
+| eCAL_Init_TimeSync;
 
-#define eCAL_Init_Default    (eCAL_Init_Publisher  \
-                            | eCAL_Init_Subscriber \
-                            | eCAL_Init_Service    \
-                            | eCAL_Init_Logging    \
-                            | eCAL_Init_TimeSync)           /*!< Initialize default eCAL API          */
+static const unsigned int eCAL_Init_Default = eCAL_Init_Publisher
+| eCAL_Init_Subscriber
+| eCAL_Init_Service
+| eCAL_Init_Logging
+| eCAL_Init_TimeSync;
+
+static const unsigned int eCAL_Init_None = 0x000;
 
 #endif /*ecal_c_init_h_included*/

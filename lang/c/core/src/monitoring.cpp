@@ -24,20 +24,58 @@
 
 #include <ecal/ecal.h>
 #include <ecal_c/monitoring.h>
+#include <ecal_c/types/monitoring.h>
 
 #include "common.h"
+
+#include <map>
+
+namespace
+{
+  unsigned int Convert_Entities(unsigned int entities_c_)
+  {
+    unsigned int entities{ 0 };
+    static const std::map<unsigned int, unsigned int> entity_map
+    {
+        {eCAL_Monitoring_Entity_None, eCAL::Monitoring::Entity::None},
+        {eCAL_Monitoring_Entity_Publisher, eCAL::Monitoring::Entity::Publisher},
+        {eCAL_Monitoring_Entity_Subscriber, eCAL::Monitoring::Entity::Subscriber},
+        {eCAL_Monitoring_Entity_Server, eCAL::Monitoring::Entity::Server},
+        {eCAL_Monitoring_Entity_Client, eCAL::Monitoring::Entity::Client},
+        {eCAL_Monitoring_Entity_Process, eCAL::Monitoring::Entity::Process},
+        {eCAL_Monitoring_Entity_Host, eCAL::Monitoring::Entity::Host},
+    };
+
+    decltype(entities_c_) bit_mask = 1 << 0;
+    for (std::size_t i = 0; i < sizeof(decltype(entities_c_)) * 8; ++i)
+    {
+      entities |= entity_map.at(bit_mask & entities_c_);
+      bit_mask <<= 1;
+    }
+
+    return entities;
+  }
+}
 
 #if ECAL_CORE_MONITORING
 extern "C"
 {
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void* buf_, int buf_len_)
+  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int entities_)
   {
-    std::string buf;
-    if (eCAL::Monitoring::GetMonitoring(buf))
+    if (monitoring_ == NULL || monitoring_length_ == NULL) return 1;
+    if (*monitoring_ != NULL || *monitoring_length_ != 0) return 1;
+
+    std::string buffer;
+    if (eCAL::Monitoring::GetMonitoring(buffer, Convert_Entities(entities_)))
     {
-      return(CopyBuffer(buf_, buf_len_, buf));
+      *monitoring_ = std::malloc(buffer.size());
+      if (*monitoring_ != NULL)
+      {
+        std::memcpy(*monitoring_, buffer.data(), buffer.size());
+        *monitoring_length_ = buffer.size();
+      }
     }
-    return(0);
+    return !static_cast<int>(*monitoring_ != NULL);
   }
 }
 #endif // ECAL_CORE_MONITORING

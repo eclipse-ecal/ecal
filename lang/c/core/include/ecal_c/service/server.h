@@ -27,31 +27,13 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
-
-#include <ecal_c/service/service_info.h>
-#include <ecal_c/callback.h>
+#include <ecal_c/service/types.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
   typedef struct eCAL_ServiceServer eCAL_ServiceServer;
-
-  enum eCAL_eServerEvent
-  {
-    eCAL_eServerEvent_none,
-    eCAL_eServerEvent_connected,
-    eCAL_eServerEvent_disconnected
-  };
-
-  struct eCAL_SServerEventCallbackData
-  {
-    enum eCAL_eServerEvent type;
-    long long time;
-  };
-
-  typedef void (*eCAL_ServerEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SServerEventCallbackData*);
-  typedef int (*eCAL_ServiceMethodCallbackT)(const struct eCAL_SServiceMethodInformation*, const void*, size_t, void**, size_t*);
 
   ECALC_API eCAL_ServiceServer* eCAL_ServiceServer_New(const char* service_name_, eCAL_ServerEventCallbackT event_callback_);
   ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_);
@@ -62,9 +44,6 @@ extern "C"
   ECALC_API const char* eCAL_ServiceServer_GetServiceName(eCAL_ServiceServer* service_server_);
   ECALC_API struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_);
   ECALC_API int eCAL_ServiceServer_IsConnected(eCAL_ServiceServer* service_server_);
-
-  //ECALC_API void eCAL_SServiceId_Free(struct eCAL_SServiceId* service_id_);
-
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

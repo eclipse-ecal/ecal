@@ -1,13 +1,13 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,34 +18,28 @@
 */
 
 /**
- * @file   ecal_c/tlayer.h
- * @brief  eCAL transport layer
+ * @file   ecal_c/log.h
+ * @brief  eCAL logging c interface
 **/
 
-#ifndef ecal_c_tlayer_h_included
-#define ecal_c_tlayer_h_included
+#ifndef ecal_c_log_level_h_included
+#define ecal_c_log_level_h_included
 
-/**
- * @brief eCAL transport layer types.
-**/
-enum eTransportLayerC
+
+enum eCAL_Logging_eLogLevel
 {
-  tlayer_none       = 0,
-  tlayer_udp_mc     = 1,
-  tlayer_shm        = 4,
-  tlayer_tcp        = 5,
-  tlayer_all        = 255
+  eCAL_Logging_eLogLevel_none = 0,
+  eCAL_Logging_eLogLevel_all = 255,
+  eCAL_Logging_eLogLevel_info = 1,
+  eCAL_Logging_eLogLevel_warning = 2,
+  eCAL_Logging_eLogLevel_error = 4,
+  eCAL_Logging_eLogLevel_fatal = 8,
+  eCAL_Logging_eLogLevel_debug1 = 16,
+  eCAL_Logging_eLogLevel_debug2 = 32,
+  eCAL_Logging_eLogLevel_debug3 = 64,
+  eCAL_Logging_eLogLevel_debug4 = 128,
 };
 
-/**
- * @brief eCAL transport layer modes.
-**/
-enum eSendModeC
-{
-  smode_none = -1,
-  smode_off  = 0,
-  smode_on,
-  smode_auto
-};
+typedef unsigned char eCAL_Logging_Filter;
 
-#endif /*ecal_c_tlayer_h_included*/
+#endif /*ecal_c_log_level_h_included*/
