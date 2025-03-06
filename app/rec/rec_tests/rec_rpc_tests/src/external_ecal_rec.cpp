@@ -119,7 +119,7 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::rec_server::RecS
 eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::RecServerConfig& config_pb_output)
 {
   const auto&   hostname(eCAL::Process::GetHostName());
-  constexpr int timeout_ms(1000);
+  constexpr int timeout_ms(2000);
 
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)
@@ -149,7 +149,7 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::rec_server
 eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_server::RecServerConfig& config_pb)
 {
   const auto&   hostname   (eCAL::Process::GetHostName());
-  constexpr int timeout_ms (1000);
+  constexpr int timeout_ms (2000);
 
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)
