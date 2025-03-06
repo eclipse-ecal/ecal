@@ -65,7 +65,7 @@ public class PubSubReceiveTest
     });
 
     string message = "Hello from string message!";
-    bool sendResult = publisher.Send(message);
+    bool sendResult = publisher.Send(Encoding.UTF8.GetBytes(message));
     Assert.IsTrue(sendResult, "Send(string) failed.");
 
     Task delay = Task.Delay(TimeSpan.FromSeconds(5));
@@ -123,7 +123,7 @@ public class PubSubReceiveTest
     string message = "Message with explicit time";
     // Calculate an explicit time (for example, current time in microseconds).
     long explicitTime = DateTime.UtcNow.Ticks / 10;
-    bool sendResult = publisher.Send(message, explicitTime);
+    bool sendResult = publisher.Send(Encoding.UTF8.GetBytes(message), explicitTime);
     Assert.IsTrue(sendResult, "Send(string, time) failed.");
 
     Task delay = Task.Delay(TimeSpan.FromSeconds(5));
@@ -185,10 +185,10 @@ public class PubSubReceiveTest
             "Third Message"
     };
 
-    foreach (string msg in messages)
+    foreach (string message in messages)
     {
-      bool result = publisher.Send(msg);
-      Assert.IsTrue(result, "Failed to send message: " + msg);
+      bool result = publisher.Send(Encoding.UTF8.GetBytes(message));
+      Assert.IsTrue(result, "Failed to send message: " + message);
       await Task.Delay(200);
     }
 

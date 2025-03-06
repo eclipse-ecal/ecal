@@ -28,6 +28,7 @@
  */
 
 using System;
+using System.Text;
 using System.Threading;
 using Continental.eCAL.Core;
 
@@ -55,7 +56,7 @@ public class MinimalSend
       Console.WriteLine(String.Format("Sending: {0}", message));
 
       // Send the message.
-      publisher.Send(message);
+      publisher.Send(Encoding.UTF8.GetBytes(message));
 
       // Cool down.
       Thread.Sleep(100);

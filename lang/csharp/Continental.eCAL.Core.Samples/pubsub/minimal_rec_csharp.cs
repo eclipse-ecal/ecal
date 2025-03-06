@@ -37,7 +37,7 @@ public class MinimalReceive
     // Register a receive callback.
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
     {
-      string message = Encoding.Default.GetString(data.Buffer);
+      string message = Encoding.UTF8.GetString(data.Buffer);
       Console.WriteLine(String.Format("Receiving: {0}", message));
     });
 

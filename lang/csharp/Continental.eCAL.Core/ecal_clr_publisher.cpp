@@ -138,17 +138,6 @@ bool Publisher::Send(array<Byte>^ data, long long time)
   return m_native_publisher->Send(static_cast<const void*>(pinnedData), data->Length, time);
 }
 
-bool Publisher::Send(String^ payload)
-{
-  return Send(payload, DEFAULT_TIME_ARGUMENT);
-}
-
-bool Publisher::Send(String^ payload, long long time)
-{
-  std::string nativePayload = StringToStlString(payload);
-  return m_native_publisher->Send(nativePayload, time);
-}
-
 int Publisher::GetSubscriberCount()
 {
   return static_cast<int>(m_native_publisher->GetSubscriberCount());

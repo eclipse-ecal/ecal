@@ -101,25 +101,6 @@ namespace Continental {
         bool Send(array<Byte>^ data, long long time);
 
         /**
-         * @brief Sends a message to all subscribers using a string payload (using eCAL time).
-         *
-         * @param payload Payload as a string.
-         *
-         * @return True if the send operation succeeded; otherwise false.
-         */
-        bool Send(String^ payload);
-
-        /**
-         * @brief Sends a message to all subscribers using a string payload.
-         *
-         * @param payload Payload as a string.
-         * @param time Send time in microseconds.
-         * 
-         * @return True if the send operation succeeded; otherwise false.
-         */
-        bool Send(String^ payload, long long time);
-
-        /**
          * @brief Queries the number of subscribers.
          *
          * @return The number of subscribers.
