@@ -25,7 +25,7 @@
  * This example demonstrates how to initialize the eCAL API, print version information,
  * create a protobuf publisher for the topic "person" (using "Person" as the data type), construct
  * and send messages, and keep the application running until eCAL is terminated. It serves as
- * a basic reference for implementing a publisher in C#.
+ * a basic reference for implementing a protobuf publisher in C#.
  */
 
 using System;

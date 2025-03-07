@@ -25,7 +25,7 @@
  * This example demonstrates how to initialize the eCAL API, print version information,
  * create a subscriber for the topic "Hello" (using "std::string" as the data type), register
  * a receive callback to process incoming messages, and keep the application running until eCAL
- * is terminated. It serves as a basic reference for implementing a subscriber in C#.
+ * is terminated. It serves as a basic reference for implementing a string subscriber in C#.
  */
 
 using System;

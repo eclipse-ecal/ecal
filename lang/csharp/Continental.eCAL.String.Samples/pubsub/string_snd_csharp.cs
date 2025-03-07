@@ -25,7 +25,7 @@
  * This example demonstrates how to initialize the eCAL API, print version information,
  * create a string publisher for the topic "Hello", construct and send messages, and keep
  * the application running until eCAL is terminated. It serves as a basic reference for
- * implementing a publisher in C#.
+ * implementing a string publisher in C#.
  */
 
 using System;
