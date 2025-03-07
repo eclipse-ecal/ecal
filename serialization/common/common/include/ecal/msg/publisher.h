@@ -156,7 +156,7 @@ namespace eCAL
      *
      * @return  The topic name.
     **/
-    std::string GetTopicName() const
+    const std::string& GetTopicName() const
     {
       return m_publisher.GetTopicName();
     };
@@ -166,7 +166,7 @@ namespace eCAL
      *
      * @return  The topic id.
     **/
-    STopicId GetTopicId() const
+    const STopicId& GetTopicId() const
     {
       return m_publisher.GetTopicId();
     };
@@ -176,7 +176,7 @@ namespace eCAL
      *
      * @return  The topic information.
     **/
-    SDataTypeInformation GetDataTypeInformation() const
+    const SDataTypeInformation& GetDataTypeInformation() const
     {
       return m_publisher.GetDataTypeInformation();
     };

@@ -49,9 +49,8 @@ TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveAssignment)
   eCAL::protobuf::CPublisher<pb::People::Person>person_moved("ProtoPublisherTest");
   person_moved = std::move(person_pub);
   // New Publisher must have the same topic id
-  ASSERT_EQ(person_moved.GetTopicId(), topic_id);
-  // Old Publisher must have no topic id
-  ASSERT_EQ(person_pub.GetTopicId(), eCAL::STopicId());
+  auto topic_id_moved = person_moved.GetTopicId();
+  ASSERT_EQ(topic_id_moved, topic_id);
 }
 
 TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveConstruction)
@@ -61,7 +60,6 @@ TEST_F(core_cpp_pubsub_proto_pub, ProtoPublisherTest_MoveConstruction)
 
   eCAL::protobuf::CPublisher<pb::People::Person>person_moved{ std::move(person_pub) };
   // New Publisher must have the same topic id
-  ASSERT_EQ(person_moved.GetTopicId(), topic_id);
-  // Old Publisher must have no topic id
-  ASSERT_EQ(person_pub.GetTopicId(), eCAL::STopicId());
+  auto topic_id_moved = person_moved.GetTopicId();
+  ASSERT_EQ(topic_id_moved, topic_id);
 }
