@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   eCAL::Initialize("Hello World Subscriber");
 
   // Create a subscriber that listenes on the "hello_world_topic"
-  eCAL::string::CSubscriber<std::string> subscriber("hello_world_topic");
+  eCAL::string::CSubscriber subscriber("hello_world_topic");
 
   // Set the Callback
   subscriber.SetReceiveCallback(std::bind(&HelloWorldCallback, std::placeholders::_2));
