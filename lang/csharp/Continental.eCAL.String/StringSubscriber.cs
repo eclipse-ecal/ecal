@@ -23,8 +23,7 @@
  * @brief eCAL class to subscribe to string data.
  *
  * This class wraps a binary Subscriber and provides a strongly-typed interface
- * for receiving string messages. It implements IDisposable to ensure that resources
- * are properly released.
+ * for receiving string messages.
  */
 
 using System;

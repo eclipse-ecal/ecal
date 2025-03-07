@@ -62,7 +62,7 @@ public class PersonSend
     }
 
     // Dispose publisher.
-    //publisher.Dispose();
+    publisher.Dispose();
 
     // Finalize eCAL API.
     Core.Terminate();

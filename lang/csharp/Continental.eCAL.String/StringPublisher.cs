@@ -23,8 +23,7 @@
  * @brief eCAL class to publish string data.
  *
  * This class wraps a binary Publisher and provides a strongly-typed
- * interface for sending string messages. It implements IDisposable to ensure that
- * resources are properly released.
+ * interface for sending string messages.
  */
 
 using System;

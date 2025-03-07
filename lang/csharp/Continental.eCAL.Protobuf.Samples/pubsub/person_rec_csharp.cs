@@ -38,7 +38,7 @@ public class PersonReceive
     // Register a receive callback.
     subscriber.SetReceiveCallback((topic, data) =>
     {
-      Console.WriteLine(String.Format("Receiving: {0}", data.data.ToString()));
+      Console.WriteLine(String.Format("Receiving: {0}", data.Data.ToString()));
     });
 
     // Idle main thread.
@@ -48,8 +48,7 @@ public class PersonReceive
     }
 
     // Dispose subscriber.
-    // TODO: Add destructor to protobuf subscriber
-    //subscriber.Dispose();
+    subscriber.Dispose();
 
     // Finalize eCAL API.
     Core.Terminate();
