@@ -23,7 +23,7 @@ add_library(${PROJECT_NAME} SHARED)
 
 target_sources(${PROJECT_NAME}
   PRIVATE
-    test.cs
+    PubSubReceiveTest.cs
 )
 
 target_link_libraries(${PROJECT_NAME} Continental.eCAL.Protobuf Continental.eCAL.Protobuf.Samples.Datatypes)
