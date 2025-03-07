@@ -19,13 +19,13 @@ int main(int argc, char** argv)
   pub_config.layer.tcp.enable = false;
 
   // create publisher 1
-  eCAL::string::CPublisher<std::string> pub_1("topic_1", pub_config);
+  eCAL::string::CPublisher pub_1("topic_1", pub_config);
 
   // enable for the second publisher also tcp
   pub_config.layer.tcp.enable = true;
 
   // create publisher 2
-  eCAL::string::CPublisher<std::string> pub_2("topic_2", pub_config);
+  eCAL::string::CPublisher pub_2("topic_2", pub_config);
 
   int counter {0};
   while (eCAL::Ok())
