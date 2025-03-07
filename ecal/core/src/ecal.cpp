@@ -54,9 +54,10 @@ namespace eCAL
    *
    * @return  Full eCAL version string. 
   **/
-  std::string GetVersionString()
+  const std::string& GetVersionString()
   {
-    return ECAL_VERSION;
+    static const std::string version_string{ ECAL_VERSION };
+    return version_string;
   }
 
   /**
@@ -64,9 +65,10 @@ namespace eCAL
    *
    * @return  Full eCAL version date string. 
   **/
-  std::string GetVersionDateString()
+  const std::string& GetVersionDateString()
   {
-    return ECAL_DATE;
+    static const std::string version_date_string{ ECAL_DATE };
+    return version_date_string;
   }
 
   /**

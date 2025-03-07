@@ -214,7 +214,7 @@ namespace eCAL
     STopicId CSubscriber::GetId() const
     {
       if (m_subscriber_impl == nullptr) return{};
-      return(m_subscriber_impl->GetId());
+      return(m_subscriber_impl->GetTopicId());
     }
 
     SDataTypeInformation CSubscriber::GetDataTypeInformation() const

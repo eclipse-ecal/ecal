@@ -68,7 +68,7 @@ namespace eCAL
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
-    ECAL_API std::string GetConfigurationFilePath() const;
+    ECAL_API const std::string& GetConfigurationFilePath() const;
 
     protected:
       std::string ecal_yaml_file_path;

@@ -67,7 +67,6 @@ namespace eCAL
   std::vector<CClientInstance> CServiceClient::GetClientInstances() const
   {
     std::vector<CClientInstance> instances;
-    if (m_service_client_impl == nullptr) return instances;
 
     auto entity_ids = m_service_client_impl->GetServiceIDs();
     instances.reserve(entity_ids.size());
@@ -179,15 +178,13 @@ namespace eCAL
     return return_state;
   }
 
-  std::string CServiceClient::GetServiceName() const
+  const std::string& CServiceClient::GetServiceName() const
   {
-    if (m_service_client_impl == nullptr) return "";
     return m_service_client_impl->GetServiceName();
   }
 
-  SServiceId CServiceClient::GetServiceId() const
+  const SServiceId& CServiceClient::GetServiceId() const
   {
-    if (m_service_client_impl == nullptr) return SServiceId();
     return m_service_client_impl->GetServiceId();
   }
 

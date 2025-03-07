@@ -53,21 +53,21 @@ namespace eCAL
      *
      * @return  Host name or empty string if failed. 
     **/
-    ECAL_API std::string GetHostName();
+    ECAL_API const std::string& GetHostName();
 
     /**
      * @brief  Get current SHM transport domain.
      *
      * @return  SHM transport domain or empty string if failed.
     **/
-    ECAL_API std::string GetShmTransportDomain();
+    ECAL_API const std::string& GetShmTransportDomain();
 
     /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 
      *
      * @return  Unit name or empty string if failed. 
     **/
-    ECAL_API std::string GetUnitName();
+    ECAL_API const std::string& GetUnitName();
 
     /**
      * @brief  Get current process parameter (defined via eCAL::Initialize(argc, argv). 
@@ -128,21 +128,21 @@ namespace eCAL
      *
      * @return  The process id.
     **/
-    ECAL_API std::string GetProcessIDAsString();
+    ECAL_API const std::string& GetProcessIDAsString();
 
     /**
      * @brief  Get current process name. 
      *
      * @return  Process name length or zero if failed. 
     **/
-    ECAL_API std::string GetProcessName();
+    ECAL_API const std::string& GetProcessName();
 
     /**
      * @brief  Get current process parameter. 
      *
      * @return  Process parameter or empty string if failed. 
     **/
-    ECAL_API std::string GetProcessParameter();
+    ECAL_API const std::string& GetProcessParameter();
 
     /**
      * @brief  Set process state info. 

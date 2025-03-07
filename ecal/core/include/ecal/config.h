@@ -44,7 +44,7 @@ namespace eCAL
     // common
     /////////////////////////////////////
 
-    ECAL_API std::string              GetLoadedEcalIniPath                 ();
+    ECAL_API const std::string&       GetLoadedEcalIniPath                 ();
     ECAL_API int                      GetRegistrationTimeoutMs             ();
     ECAL_API int                      GetRegistrationRefreshMs             ();
 
@@ -55,8 +55,8 @@ namespace eCAL
     ECAL_API bool                     IsNetworkEnabled                     ();
     ECAL_API bool                     IsShmRegistrationEnabled             ();
     ECAL_API Types::UdpConfigVersion  GetUdpMulticastConfigVersion         ();
-    ECAL_API std::string              GetUdpMulticastGroup                 ();
-    ECAL_API std::string              GetUdpMulticastMask                  ();
+    ECAL_API const std::string&       GetUdpMulticastGroup                 ();
+    ECAL_API const std::string&       GetUdpMulticastMask                  ();
     ECAL_API int                      GetUdpMulticastPort                  ();
     ECAL_API int                      GetUdpMulticastTtl                   ();
 
@@ -75,26 +75,26 @@ namespace eCAL
     ECAL_API size_t                   GetTcpPubsubWriterThreadpoolSize     ();
     ECAL_API int                      GetTcpPubsubMaxReconnectionAttemps   ();
 
-    ECAL_API std::string              GetShmTransportDomain                ();
+    ECAL_API const std::string&       GetShmTransportDomain                ();
 
     /////////////////////////////////////
     // time
     /////////////////////////////////////
 
-    ECAL_API std::string              GetTimesyncModuleName                ();
-    ECAL_API std::string              GetTimesyncModuleReplay              ();
+    ECAL_API const std::string&       GetTimesyncModuleName                ();
+    ECAL_API const std::string&       GetTimesyncModuleReplay              ();
     
     /////////////////////////////////////
     // process
     /////////////////////////////////////
 
-    ECAL_API std::string              GetTerminalEmulatorCommand           ();
+    ECAL_API const std::string&       GetTerminalEmulatorCommand           ();
 
     /////////////////////////////////////
     // sys
     /////////////////////////////////////
 
-    ECAL_API std::string              GetEcalSysFilterExcludeList          ();
+    ECAL_API const std::string&       GetEcalSysFilterExcludeList          ();
     
     /////////////////////////////////////
     // subscriber
@@ -107,7 +107,7 @@ namespace eCAL
     /////////////////////////////////////
     
     ECAL_API size_t                   GetShmMonitoringQueueSize            ();
-    ECAL_API std::string              GetShmMonitoringDomain               ();
+    ECAL_API const std::string&       GetShmMonitoringDomain               ();
   }
 }
 //@}
