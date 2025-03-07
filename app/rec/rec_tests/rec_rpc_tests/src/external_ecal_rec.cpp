@@ -122,7 +122,7 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::
   eCAL::pb::rec_server::GenericRequest request;
   eCAL::ServiceResponseVecT            service_response_vec;
 
-  constexpr int timeout_ms = 1000;
+  constexpr int timeout_ms = 2000;
 
   if (remote_rec_server_service->Call("GetConfig", request.SerializeAsString(), timeout_ms, &service_response_vec))
   {
@@ -145,7 +145,7 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_se
 {
   eCAL::ServiceResponseVecT service_response_vec;
 
-  constexpr int timeout_ms = 1000;
+  constexpr int timeout_ms = 2000;
 
   if (remote_rec_server_service->Call("SetConfig", config_pb.SerializeAsString(), timeout_ms, &service_response_vec))
   {
