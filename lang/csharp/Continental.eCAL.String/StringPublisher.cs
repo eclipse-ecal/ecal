@@ -51,6 +51,7 @@ namespace Continental.eCAL.Core
      * @brief Sends a string message using the default eCAL send time.
      *
      * @param message Message to send.
+     *
      * @return True if the message was sent successfully; otherwise, false.
      */
     public bool Send(string message)
@@ -64,6 +65,7 @@ namespace Continental.eCAL.Core
      *
      * @param message Message to send.
      * @param time Send time in microseconds.
+     *
      * @return True if the message was sent successfully; otherwise, false.
      */
     public bool Send(string message, long time)

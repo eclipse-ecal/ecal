@@ -40,6 +40,7 @@ namespace
    * @brief Helper function to create a native publisher event callback from a managed PublisherEventCallbackDelegate.
    *
    * @param callback The managed publisher event callback delegate.
+   * 
    * @return A std::function wrapping the managed callback.
    */
   std::function<void(const ::eCAL::STopicId&, const ::eCAL::SPubEventCallbackData&)>
@@ -69,53 +70,41 @@ namespace
   }
 }
 
-// Constructor using only a topic name.
-Publisher::Publisher(String^ topicName)
+// Constructor
+Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback)
 {
-  m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName));
-}
+  std::string nativeTopic = StringToStlString(topicName);
 
-// Constructor with topic name and data type information.
-Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo)
-{
+  // Use a default DataTypeInformation if none is provided.
+  if (dataTypeInfo == nullptr)
+  {
+    dataTypeInfo = gcnew DataTypeInformation("", "", gcnew array<Byte>(0));
+  }
+
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
-  m_native_publisher = new ::eCAL::CPublisher(StringToStlString(topicName), nativeDataTypeInfo);
-}
-
-// Constructor with topic name, data type information, and an optional event callback.
-Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback)
-{
-  ::eCAL::SDataTypeInformation nativeDataTypeInfo;
-  nativeDataTypeInfo.name = StringToStlString(dataTypeInfo->Name);
-  nativeDataTypeInfo.encoding = StringToStlString(dataTypeInfo->Encoding);
-  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
-
-  std::string nativeTopic = StringToStlString(topicName);
 
   if (eventCallback != nullptr)
   {
-    // Create a gcroot to safely capture the managed event callback.
     gcroot<PublisherEventCallbackDelegate^> managedCallback(eventCallback);
-    // Use the helper to create a native callback.
     auto nativeCallback = CreatePublisherEventCallback(managedCallback);
-    // Use the native callback constructor.
     m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nativeCallback);
   }
   else
   {
-    // If no event callback is provided, use the basic constructor.
     m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo);
   }
 }
 
+// Destructor
 Publisher::~Publisher()
 {
   this->!Publisher();
 }
 
+// Finalizer
 Publisher::!Publisher()
 {
   if (m_native_publisher != nullptr)
@@ -125,11 +114,13 @@ Publisher::!Publisher()
   }
 }
 
+// Send a message to all subscribers using a byte array payload (using eCAL time).
 bool Publisher::Send(array<Byte>^ data)
 {
   return Send(data, DEFAULT_TIME_ARGUMENT);
 }
 
+// Send a message to all subscribers using a byte array payload and a specific time.
 bool Publisher::Send(array<Byte>^ data, long long time)
 {
   if (data == nullptr || data->Length == 0)
@@ -138,17 +129,20 @@ bool Publisher::Send(array<Byte>^ data, long long time)
   return m_native_publisher->Send(static_cast<const void*>(pinnedData), data->Length, time);
 }
 
+// Get the number of subscribers.
 int Publisher::GetSubscriberCount()
 {
   return static_cast<int>(m_native_publisher->GetSubscriberCount());
 }
 
+// Get the topic name.
 String^ Publisher::GetTopicName()
 {
   std::string nativeTopic = m_native_publisher->GetTopicName();
   return StlStringToString(nativeTopic);
 }
 
+// Get the topic ID.
 TopicId^ Publisher::GetTopicId()
 {
   ::eCAL::STopicId nativeTopicId = m_native_publisher->GetTopicId();
@@ -162,6 +156,7 @@ TopicId^ Publisher::GetTopicId()
   );
 }
 
+// Get the data type information.
 DataTypeInformation^ Publisher::GetDataTypeInformation()
 {
   ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_native_publisher->GetDataTypeInformation();

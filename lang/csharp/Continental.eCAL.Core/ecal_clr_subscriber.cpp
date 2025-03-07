@@ -37,6 +37,7 @@ namespace
    * @brief Helper function to convert native SReceiveCallbackData to managed ReceiveCallbackData.
    *
    * @param nativeData The native SReceiveCallbackData.
+   * 
    * @return A managed ReceiveCallbackData^ instance.
    */
   ReceiveCallbackData^ ConvertReceiveCallbackData(const eCAL::SReceiveCallbackData& nativeData)
@@ -60,6 +61,7 @@ namespace
    * @brief Helper function to convert native STopicId to managed TopicId.
    *
    * @param nativeTopicId The native STopicId.
+   * 
    * @return A managed TopicId^ instance.
    */
   TopicId^ ConvertTopicId(const eCAL::STopicId& nativeTopicId)
@@ -78,6 +80,7 @@ namespace
    * @brief Helper function to create a native callback from a managed ReceiveCallbackDelegate.
    *
    * @param callback The managed callback delegate.
+   * 
    * @return A std::function wrapping the managed callback.
    */
   static std::function<void(const ::eCAL::STopicId&, const ::eCAL::SDataTypeInformation&, const ::eCAL::SReceiveCallbackData&)>
@@ -103,6 +106,7 @@ namespace
    * @brief Helper function to create a native subscriber event callback from a managed SubscriberEventCallbackDelegate.
    *
    * @param callback The managed subscriber event callback delegate.
+   * 
    * @return A std::function wrapping the managed callback.
    */
   static std::function<void(const ::eCAL::STopicId&, const ::eCAL::SSubEventCallbackData&)>
@@ -124,43 +128,30 @@ namespace
   }
 }
 
-// Constructors
-Subscriber::Subscriber(String^ topicName)
-{
-  std::string nativeTopic = StringToStlString(topicName);
-  m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic);
-}
-
-Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo)
-{
-  ::eCAL::SDataTypeInformation nativeDataTypeInfo;
-  nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
-  nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
-  nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
-  m_native_subscriber = new ::eCAL::CSubscriber(StringToStlString(topicName), nativeDataTypeInfo);
-}
-
+// Constructor
 Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback)
 {
+  std::string nativeTopic = StringToStlString(topicName);
+
+  // Use a default DataTypeInformation if none is provided.
+  if (dataTypeInfo == nullptr)
+  {
+    dataTypeInfo = gcnew DataTypeInformation("", "", gcnew array<Byte>(0));
+  }
+
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
-
-  std::string nativeTopic = StringToStlString(topicName);
 
   if (eventCallback != nullptr)
   {
-    // Create a gcroot for the managed event callback.
     gcroot<SubscriberEventCallbackDelegate^> managedCallback(eventCallback);
-    // Create a native callback using the helper function.
     auto nativeCallback = CreateNativeSubscriberEventCallback(managedCallback);
-    // Use the native constructor with event callback.
     m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nativeCallback);
   }
   else
   {
-    // No event callback provided.
     m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo);
   }
 }
@@ -181,7 +172,7 @@ Subscriber::!Subscriber()
   }
 }
 
-// SetReceiveCallback
+// Set a receive callback.
 bool Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
 {
   m_receiveCallback = callback;
@@ -189,30 +180,34 @@ bool Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
   return m_native_subscriber->SetReceiveCallback(nativeCallback);
 }
 
-// RemoveReceiveCallback
+// Remove the receive callback.
 bool Subscriber::RemoveReceiveCallback()
 {
   m_receiveCallback = nullptr;
   return m_native_subscriber->RemoveReceiveCallback();
 }
 
+// Get the number of publishers.
 int Subscriber::GetPublisherCount()
 {
   return static_cast<int>(m_native_subscriber->GetPublisherCount());
 }
 
+// Get the topic name.
 String^ Subscriber::GetTopicName()
 {
   std::string nativeTopic = m_native_subscriber->GetTopicName();
   return StlStringToString(nativeTopic);
 }
 
+// Get the topic ID.
 TopicId^ Subscriber::GetTopicId()
 {
   ::eCAL::STopicId nativeId = m_native_subscriber->GetTopicId();
   return ConvertTopicId(nativeId);
 }
 
+// Get the data type information.
 DataTypeInformation^ Subscriber::GetDataTypeInformation()
 {
   ::eCAL::SDataTypeInformation nativeDataTypeInfo = m_native_subscriber->GetDataTypeInformation();

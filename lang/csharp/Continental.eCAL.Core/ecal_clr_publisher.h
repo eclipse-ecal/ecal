@@ -52,7 +52,7 @@ namespace Continental {
          *
          * @param topicName Unique topic name.
          */
-        Publisher(String^ topicName);
+        Publisher(String^ topicName) : Publisher(topicName, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name and data type information.
@@ -60,7 +60,7 @@ namespace Continental {
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo);
+        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name, data type information, and an event callback.

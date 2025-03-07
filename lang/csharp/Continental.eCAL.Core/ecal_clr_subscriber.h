@@ -46,7 +46,7 @@ namespace Continental {
          *
          * @param topicName Unique topic name.
          */
-        Subscriber(String^ topicName);
+        Subscriber(String^ topicName) : Subscriber(topicName, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Subscriber with the given topic name and data type information.
@@ -54,7 +54,7 @@ namespace Continental {
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo);
+        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo) : Subscriber(topicName, dataTypeInfo, nullptr) {}
 
         /**
          * @brief Constructs a Subscriber with the given topic name, data type information, and an event callback.
