@@ -52,16 +52,17 @@ namespace Continental.eCAL.Core
      * @brief Registers a receive callback.
      *
      * The provided callback is invoked whenever a message is received. The payload is
-     * converted from a byte array to a UTF8 string.
+     * converted from a byte array to a UTF8 string, and the publisher identifier along with
+     * the data type information are forwarded to the user callback.
      *
-     * @param callback The callback to be invoked with the received string.
+     * @param callback The callback to be invoked with the received string, publisher identifier, and data type info.
      */
-    public void SetReceiveCallback(Action<string> callback)
+    public void SetReceiveCallback(Action<TopicId, DataTypeInformation, string> callback)
     {
       binarySubscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
       {
         string message = Encoding.UTF8.GetString(data.Buffer);
-        callback(message);
+        callback(publisherId, dataTypeInfo, message);
       });
     }
 

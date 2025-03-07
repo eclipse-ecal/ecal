@@ -36,9 +36,9 @@ public class PersonReceive
     var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
 
     // Register a receive callback.
-    subscriber.SetReceiveCallback((topic, data) =>
+    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
     {
-      Console.WriteLine(String.Format("Receiving: {0}", data.Data.ToString()));
+      Console.WriteLine(String.Format("Receiving: {0}", data.Message.ToString()));
     });
 
     // Idle main thread.

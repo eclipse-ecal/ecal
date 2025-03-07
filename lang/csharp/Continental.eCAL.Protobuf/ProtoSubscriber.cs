@@ -52,39 +52,35 @@ namespace Continental.eCAL.Core
       /**
        * @brief The received protobuf message.
        */
-      public T Data { get; set; }
-
-      /**
-       * @brief The message identifier.
-       */
-      public long Id { get; set; }
+      public T Message { get; set; }
 
       /**
        * @brief The message timestamp.
        */
-      public long Time { get; set; }
+      public long SendTimestamp { get; set; }
 
       /**
        * @brief The message write clock.
        */
-      public long Clock { get; set; }
+      public long SendClock { get; set; }
 
       /**
        * @brief Constructor for ProtobufData.
        */
       public ProtobufData()
       {
-        Data = new T();
+        Message = new T();
       }
     };
 
     /**
      * @brief Signature for a data callback.
      *
-     * @param topic The topic name from which the data was received.
+     * @param publisherId Identifier of the publisher.
+     * @param dataTypeInfo Data type information.
      * @param data The received protobuf data.
      */
-    public delegate void ReceiverCallback(string topic, ProtobufData data);
+    public delegate void ReceiverCallback(TopicId publisherId, DataTypeInformation dataTypeInfo, ProtobufData data);
 
     /**
      * @brief Initializes a new instance of the ProtobufSubscriber class.
@@ -125,31 +121,27 @@ namespace Continental.eCAL.Core
     /**
      * @brief Internal callback that converts binary data into a protobuf message.
      *
-     * @param publisherId Identifier of the publisher (contains the topic name).
+     * @param publisherId Identifier of the publisher.
      * @param dataTypeInfo Data type information.
      * @param binaryData The received binary data.
      */
     private void InternalCallBack(TopicId publisherId, DataTypeInformation dataTypeInfo, ReceiveCallbackData binaryData)
     {
-      // Use the topic name from the publisher identifier.
-      string topic = publisherId.TopicName;
-
       // Create a new instance of our Protobuf data.
       var receivedData = new ProtobufData();
 
       // Deserialize the protobuf message.
       using (MemoryStream msgStream = new MemoryStream(binaryData.Buffer))
       {
-        receivedData.Data.MergeFrom(msgStream);
+        receivedData.Message.MergeFrom(msgStream);
       }
 
-      // Copy metadata
-      receivedData.Id = 0;
-      receivedData.Time = binaryData.SendTimestamp;
-      receivedData.Clock = binaryData.SendClock;
+      // Copy metadata.
+      receivedData.SendTimestamp = binaryData.SendTimestamp;
+      receivedData.SendClock = binaryData.SendClock;
 
       // Execute the user-supplied callback.
-      callback?.Invoke(topic, receivedData);
+      callback?.Invoke(publisherId, dataTypeInfo, receivedData);
     }
 
     /**

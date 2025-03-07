@@ -71,9 +71,9 @@ public class ProtobufTest
     // Test: publish person0, then wait for callback.
     {
       var tcs = new TaskCompletionSource<Pb.People.Person>();
-      subscriber.SetReceiveCallback((topic, data) =>
+      subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
       {
-        tcs.TrySetResult(data.data);
+        tcs.TrySetResult(data.Message);
       });
       publisher.Send(person0);
       var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
@@ -85,9 +85,9 @@ public class ProtobufTest
     // Test: publish person1, then wait for callback.
     {
       var tcs = new TaskCompletionSource<Pb.People.Person>();
-      subscriber.SetReceiveCallback((topic, data) =>
+      subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
       {
-        tcs.TrySetResult(data.data);
+        tcs.TrySetResult(data.Message);
       });
       publisher.Send(person1);
       var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
@@ -99,9 +99,9 @@ public class ProtobufTest
     // Test: publish person0 again, then wait for callback.
     {
       var tcs = new TaskCompletionSource<Pb.People.Person>();
-      subscriber.SetReceiveCallback((topic, data) =>
+      subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
       {
-        tcs.TrySetResult(data.data);
+        tcs.TrySetResult(data.Message);
       });
       publisher.Send(person0);
       var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(100));
