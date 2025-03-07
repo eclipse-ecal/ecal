@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
 
 include(CSharpUtilities)
-project(person_rec_cs LANGUAGES CSharp)
+project(Continental.eCAL.Protobuf.Samples LANGUAGES CSharp)
 
 find_package(eCAL REQUIRED)
 
