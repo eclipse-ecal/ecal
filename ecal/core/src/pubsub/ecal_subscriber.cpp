@@ -29,6 +29,8 @@
 #include "config/builder/reader_attribute_builder.h"
 #include "ecal_config_internal.h"
 
+#include <iostream>
+
 namespace eCAL
 {
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
@@ -75,31 +77,40 @@ namespace eCAL
 
   bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
+    if (m_subscriber_impl == nullptr) return false;
     return m_subscriber_impl->SetReceiveCallback(std::move(callback_));
   }
 
   bool CSubscriber::RemoveReceiveCallback()
   {
+    if (m_subscriber_impl == nullptr) return false;
     return m_subscriber_impl->RemoveReceiveCallback();
   }
 
   size_t CSubscriber::GetPublisherCount() const
   {
+    if (m_subscriber_impl == nullptr) return 0;
     return m_subscriber_impl->GetPublisherCount();
   }
 
   const std::string& CSubscriber::GetTopicName() const
   {
+    static const std::string empty_topic_name{};
+    if (m_subscriber_impl == nullptr) return empty_topic_name;
     return m_subscriber_impl->GetTopicName();
   }
 
   const STopicId& CSubscriber::GetTopicId() const
   {
+    static const STopicId empty_topic_id{};
+    if (m_subscriber_impl == nullptr) return empty_topic_id;
     return m_subscriber_impl->GetTopicId();
   }
 
   const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_subscriber_impl == nullptr) return empty_data_type_information;
     return m_subscriber_impl->GetDataTypeInformation();
   }
 }

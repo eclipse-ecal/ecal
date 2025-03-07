@@ -121,7 +121,7 @@ namespace eCAL
       // If they are received in between removing the old callback and putting in the new one.
       // However that's better than risking data races???
 
-      rhs.RemoveInternalReceiveCallback();
+      RemoveInternalReceiveCallback();
 
       std::lock_guard<std::mutex> callback_lock(rhs.m_callback_mutex);
       m_data_callback = std::move(rhs.m_data_callback);
