@@ -18,7 +18,7 @@
 */
 
 /**
- * @file ProtobufSubscriber.cs
+ * @file ProtoSubscriber.cs
  *
  * @brief eCAL class to subscribe to protobuf messages.
  *

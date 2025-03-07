@@ -18,7 +18,7 @@
 */
 
 /**
- * @file ProtobufPublisher.cs
+ * @file ProtoPublisher.cs
  *
  * @brief eCAL class to publish protobuf messages.
  *
