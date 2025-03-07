@@ -27,7 +27,7 @@ macro(ecal_add_csharp_protobuf_sample sample_name)
     Continental.eCAL.Protobuf
     Continental.eCAL.Protobuf.Samples.Datatypes
   )
-  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/pubsub/protobuf)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/protobuf/pubsub)
   
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}

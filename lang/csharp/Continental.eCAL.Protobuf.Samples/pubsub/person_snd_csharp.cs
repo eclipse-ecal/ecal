@@ -17,8 +17,20 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file person_snd_csharp.cs
+ *
+ * @brief A minimal example of using the eCAL API to send protobuf messages.
+ *
+ * This example demonstrates how to initialize the eCAL API, print version information,
+ * create a protobuf publisher for the topic "person" (using "Person" as the data type), construct
+ * and send messages, and keep the application running until eCAL is terminated. It serves as
+ * a basic reference for implementing a publisher in C#.
+ */
+
 using System;
 using Continental.eCAL.Core;
+using Pb.People;
 
 public class PersonSend
 {

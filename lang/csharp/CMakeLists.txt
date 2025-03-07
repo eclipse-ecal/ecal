@@ -51,6 +51,7 @@ endif()
 if (ECAL_CSHARP_BUILD_SAMPLES)
 add_subdirectory(Continental.eCAL.Core.Samples)
 add_subdirectory(Continental.eCAL.Protobuf.Samples)
+add_subdirectory(Continental.eCAL.String.Samples)
 endif ()
 
 if (ECAL_CSHARP_BUILD_SAMPLES OR ECAL_CSHARP_BUILD_TESTS)

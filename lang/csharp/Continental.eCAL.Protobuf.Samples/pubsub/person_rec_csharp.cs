@@ -17,10 +17,20 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file person_rec_csharp.cs
+ *
+ * @brief A minimal example of using the eCAL API to receive protobuf messages.
+ *
+ * This example demonstrates how to initialize the eCAL API, print version information,
+ * create a subscriber for the topic "person" (using "Pb.People.Person" as the data type), register
+ * a receive callback to process incoming messages, and keep the application running until eCAL
+ * is terminated. It serves as a basic reference for implementing a subscriber in C#.
+ */
+
 using System;
 using Continental.eCAL.Core;
 using Pb.People;
-
 
 public class PersonReceive
 {
@@ -30,7 +40,7 @@ public class PersonReceive
     Core.Initialize("person subscriber csharp");
 
     // Print version info.
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // Create a protobuf subscriber (topic name "person").
     var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");

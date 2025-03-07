@@ -20,11 +20,12 @@
 /**
  * @file minimal_snd_csharp.cs
  *
- * @brief Sample demonstrating the use of the publisher API.
+ * @brief A minimal example of using the eCAL API to send messages.
  *
- * This sample initializes the eCAL API, creates a Publisher for the topic "Hello" with a 
- * DataTypeInformation for a std::string message. 
- * Then, the publisher sends messages in a loop.
+ * This example demonstrates how to initialize the eCAL API, print version information,
+ * create a publisher for the topic "Hello" (using "std::string" as the data type), construct
+ * and send messages, and keep the application running until eCAL is terminated. It serves as
+ * a basic reference for implementing a publisher in C#.
  */
 
 using System;
