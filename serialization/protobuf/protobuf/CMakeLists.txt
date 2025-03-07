@@ -93,6 +93,8 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
       include/ecal/msg/protobuf/subscriber.h
+      include/ecal/msg/protobuf/serializer.h
+
 )
 
 target_compile_features(protobuf_core INTERFACE cxx_std_14)
