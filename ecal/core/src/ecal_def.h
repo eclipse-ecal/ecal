@@ -40,7 +40,7 @@ constexpr const char* ECAL_FOLDER_NAME_TMP_WINDOWS  = "Temp";
 #ifdef ECAL_OS_WINDOWS
 constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc";
 #elif defined(ECAL_OS_LINUX)
-constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc/ecal"
+constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc/ecal";
 #else
 constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "..";
 #endif
