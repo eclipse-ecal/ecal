@@ -53,7 +53,7 @@ namespace eCAL
     return m_service_client_impl->IsConnected(m_entity_id);
   }
 
-  SEntityId CClientInstance::GetClientID() const
+  const SEntityId& CClientInstance::GetClientID() const
   {
     return m_entity_id;
   }

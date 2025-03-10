@@ -69,10 +69,10 @@ namespace eCAL
     Registration::Sample GetRegistration();
 
     // Retrieves the service id
-    SServiceId GetServiceId() const;
+    const SServiceId& GetServiceId() const;
 
     // Retrieves the service name
-    std::string GetServiceName() const;
+    const std::string& GetServiceName() const;
 
     // Prevent copy and move operations
     CServiceServerImpl(const CServiceServerImpl&) = delete;
@@ -98,7 +98,8 @@ namespace eCAL
 
     // Server attributes
     std::string                            m_service_name;
-    EntityIdT                m_service_id;
+    EntityIdT                              m_server_id;
+    SServiceId                             m_service_id;
 
     // Server connection state and synchronization
     mutable std::mutex                     m_connected_mutex; // mutex protecting m_connected (modified by the event callbacks in another thread)

@@ -91,21 +91,24 @@ namespace eCAL
     return m_subscriber_impl->GetPublisherCount();
   }
 
-  std::string CSubscriber::GetTopicName() const
+  const std::string& CSubscriber::GetTopicName() const
   {
-    if (m_subscriber_impl == nullptr) return "";
+    static const std::string empty_topic_name{};
+    if (m_subscriber_impl == nullptr) return empty_topic_name;
     return m_subscriber_impl->GetTopicName();
   }
 
-  STopicId CSubscriber::GetTopicId() const
+  const STopicId& CSubscriber::GetTopicId() const
   {
-    if (m_subscriber_impl == nullptr) return{};
-    return m_subscriber_impl->GetId();
+    static const STopicId empty_topic_id{};
+    if (m_subscriber_impl == nullptr) return empty_topic_id;
+    return m_subscriber_impl->GetTopicId();
   }
 
-  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
+  const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
-    if (m_subscriber_impl == nullptr) return SDataTypeInformation{};
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_subscriber_impl == nullptr) return empty_data_type_information;
     return m_subscriber_impl->GetDataTypeInformation();
   }
 }

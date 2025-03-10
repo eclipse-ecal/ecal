@@ -132,9 +132,10 @@ namespace eCAL
     m_created = false;
   }
 
-  std::string CTimeGate::GetName()
+  const std::string& CTimeGate::GetName() const
   {
-    if (!m_created) return("");
+    static const std::string empty_string {};
+    if (!m_created) return empty_string;
     return(m_time_sync_modname);
   }
 

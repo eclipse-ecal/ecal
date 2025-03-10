@@ -41,14 +41,14 @@ namespace eCAL
    *
    * @return  Full eCAL version string. 
   **/
-  ECAL_API std::string GetVersionString();
+  ECAL_API const std::string& GetVersionString();
 
   /**
    * @brief  Get eCAL version date. 
    *
    * @return  Full eCAL version date string. 
   **/
-  ECAL_API std::string GetVersionDateString();
+  ECAL_API const std::string& GetVersionDateString();
 
   /**
    * @brief  Get eCAL version as separated integer values.

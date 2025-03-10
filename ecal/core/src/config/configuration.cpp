@@ -76,7 +76,7 @@ namespace eCAL
 
     Configuration::Configuration() = default;
 
-    std::string Configuration::GetConfigurationFilePath() const
+    const std::string& Configuration::GetConfigurationFilePath() const
     {
       return ecal_yaml_file_path;
     }
