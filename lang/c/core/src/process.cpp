@@ -54,16 +54,6 @@ extern "C"
     return(0);
   }
 
-  ECALC_API int eCAL_Process_GetTaskParameter(void* par_, int par_len_, const char* sep_)
-  {
-    const std::string par = eCAL::Process::GetTaskParameter(sep_);
-    if (!par.empty())
-    {
-      return(CopyBuffer(par_, par_len_, par));
-    }
-    return(0);
-  }
-
   ECALC_API void eCAL_Process_SleepMS(long time_ms_)
   {
     eCAL::Process::SleepMS(time_ms_);
