@@ -82,11 +82,9 @@ Functions
 
 - :ref:`exhale_function_process_8h_1af26bf6d1d62325be90f36338346bd0e7`
 
-- :ref:`exhale_function_process_8h_1aafcbbada35b8c548ab7a0b58d46b6f4b`
-
 - :ref:`exhale_function_process_8h_1a9316c16239592058aa92936910c0fff1`
 
-- :ref:`exhale_function_process_8h_1a49286e24c0e73289030ac25fc9cc0d18`
+- :ref:`exhale_function_process_8h_1ab71cb241a071ecd87bb2a3c56fa98972`
 
 - :ref:`exhale_function_process_8h_1ab768762f3d5bc844ce0b025ad19c4c4a`
 

@@ -53,8 +53,6 @@ Program Listing for File process.h
    
        ECAL_API std::string GetUnitName();
    
-       ECAL_API std::string GetTaskParameter(const char* sep_);
-   
        ECAL_API void SleepMS(long time_ms_);
    
        ECAL_API void SleepNS(long long time_ns_);
@@ -74,7 +72,7 @@ Program Listing for File process.h
    
        ECAL_API std::string GetProcessParameter();
    
-       ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
+       ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_);
    
        ECAL_DEPRECATE_SINCE_6_0("This function is deprecated and will be removed in future eCAL versions.")
        ECAL_API int StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, bool create_console_, eCAL::Process::eStartMode process_mode_, bool block_);
