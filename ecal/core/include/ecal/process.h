@@ -70,15 +70,6 @@ namespace eCAL
     ECAL_API std::string GetUnitName();
 
     /**
-     * @brief  Get current process parameter (defined via eCAL::Initialize(argc, argv). 
-     *
-     * @param sep_  Separator. 
-     *
-     * @return  Task parameter separated by 'sep_' or zero string if failed. 
-    **/
-    ECAL_API std::string GetTaskParameter(const char* sep_);
-
-    /**
      * @brief  Sleep current thread.
      *
      * Because of the fact that std::this_thread::sleep_for is vulnerable to system clock changes
@@ -108,7 +99,6 @@ namespace eCAL
      *
      * @param  time  Time to sleep expressed in std::chrono::duration.
     **/
-
     template <typename Rep, typename Period>
     void SleepFor( std::chrono::duration<Rep, Period> time )
     {
@@ -152,7 +142,7 @@ namespace eCAL
      * @param info_      Info message.
      *
     **/
-    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
+    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_ = "");
 
     /**
      * @deprecated This function is deprecated and will be removed in future eCAL versions.

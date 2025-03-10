@@ -96,18 +96,6 @@ extern "C"
   ECALC_API int eCAL_Process_GetUnitName(void* name_, int name_len_);
 
   /**
-   * @brief  Get current process parameter (defined via eCAL_Initialize(argc_, arg_v). 
-   *
-   * @param [out] par_      Pointer to store the process parameter. 
-   * @param       par_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem). 
-   * @param       sep_      Separator. 
-   *
-   * @return  Buffer length or zero if failed. 
-  **/
-  ECALC_API int eCAL_Process_GetTaskParameter(void* par_, int par_len_, const char* sep_);
-
-  /**
    * @brief  Sleep current thread. 
    *
    * @param  time_ms_  Time to sleep in ms. 

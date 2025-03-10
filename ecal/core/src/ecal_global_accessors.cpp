@@ -40,8 +40,7 @@ namespace eCAL
 
   std::string                   g_host_name;
   std::string                   g_unit_name;
-  std::vector<std::string>      g_task_parameter;
-
+  
   std::string                   g_process_name;
   std::string                   g_process_par;
   int                           g_process_id(0);

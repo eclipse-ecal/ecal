@@ -108,7 +108,6 @@ namespace eCAL
 
   extern std::string                   g_host_name;
   extern std::string                   g_unit_name;
-  extern std::vector<std::string>      g_task_parameter;
 
   extern std::string                   g_process_name;
   extern std::string                   g_process_par;

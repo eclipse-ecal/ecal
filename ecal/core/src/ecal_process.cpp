@@ -255,17 +255,6 @@ namespace eCAL
       return(g_unit_name);
     }
 
-    std::string GetTaskParameter(const char* sep_)
-    {
-      std::string par_line;
-      for (const auto& par : g_task_parameter)
-      {
-        if (!par_line.empty()) par_line += sep_;
-        par_line += par;
-      }
-      return(par_line);
-    }
-
     void SleepMS(const long time_ms_)
     {
       #ifdef ECAL_OS_WINDOWS
@@ -289,11 +278,11 @@ namespace eCAL
       #endif
     }
 
-    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_)
+    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_ /*= "" */)
     {
       g_process_severity = severity_;
       g_process_severity_level = level_;
-      if (info_ != nullptr)
+      if (!info_.empty())
       {
         g_process_info = info_;
       }
