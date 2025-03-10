@@ -134,7 +134,7 @@ namespace eCAL
 
   const std::string& CTimeGate::GetName() const
   {
-    static const std::string empty_string{ "" };
+    static const std::string empty_string {};
     if (!m_created) return empty_string;
     return(m_time_sync_modname);
   }

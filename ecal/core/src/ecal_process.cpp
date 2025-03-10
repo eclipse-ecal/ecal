@@ -709,7 +709,7 @@ namespace eCAL
     */
     const std::string& GetProcessName()
     {
-      static const std::string empty_string{ "" };
+      static const std::string empty_string {};
       if (g_process_name.empty()) {
         // Read the link to our own executable
         char buf[PATH_MAX] = { 0 };
@@ -751,7 +751,7 @@ namespace eCAL
 
     const std::string& GetProcessParameter()
     {
-      static const std::string empty_string{ "" };
+      static const std::string empty_string{};
       if (g_process_par.empty())
       {
 #if defined(ECAL_OS_MACOS)
