@@ -39,7 +39,7 @@ Program Listing for File time.h
    {
      namespace Time
      {
-       ECAL_API std::string GetName();
+       ECAL_API const std::string& GetName();
    
        ECAL_API long long GetMicroSeconds();
    

@@ -62,7 +62,7 @@ Functions
 
 - :ref:`exhale_function_time_8h_1ab6d9d1b4bef72c120b3dc9935047ffda`
 
-- :ref:`exhale_function_time_8h_1a7fd36c3df5f4fe573f250eea2eafebde`
+- :ref:`exhale_function_time_8h_1a4b28a0713a0d421c95328a1bc0d56498`
 
 - :ref:`exhale_function_time_8h_1a58d1b5790d3a79c5cc664449af9569c8`
 

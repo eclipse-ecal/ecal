@@ -43,9 +43,9 @@ Program Listing for File core.h
    
    namespace eCAL
    {
-     ECAL_API std::string GetVersionString();
+     ECAL_API const std::string& GetVersionString();
    
-     ECAL_API std::string GetVersionDateString();
+     ECAL_API const std::string& GetVersionDateString();
    
      ECAL_API SVersion GetVersion();
    
