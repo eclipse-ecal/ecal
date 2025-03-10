@@ -10,7 +10,7 @@ int main(int argc, char** argv)
   eCAL::Initialize("Hello World Publisher");
 
   // Create a String Publisher that publishes on the topic "hello_world_topic"
-  eCAL::string::CPublisher<std::string> publisher("hello_world_topic");
+  eCAL::string::CPublisher publisher("hello_world_topic");
 
   // Create a counter, so something changes in our message
   int counter = 0;
