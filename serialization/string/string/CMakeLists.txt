@@ -32,7 +32,8 @@ target_sources(string_base
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/string/message.h   
+      include/ecal/msg/string/message.h
+      include/ecal/msg/string/serializer.h  
 )
 
 target_compile_features(string_base INTERFACE cxx_std_14)

@@ -38,6 +38,7 @@ target_sources(flatbuffers_core
     FILES
       include/ecal/msg/flatbuffers/publisher.h
       include/ecal/msg/flatbuffers/subscriber.h  
+      include/ecal/msg/flatbuffers/serializer.h
 )
 
 target_compile_features(flatbuffers_core INTERFACE cxx_std_17)
