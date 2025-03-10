@@ -142,7 +142,7 @@ namespace eCAL
      * @param info_      Info message.
      *
     **/
-    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_ = "");
+    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_);
 
     /**
      * @deprecated This function is deprecated and will be removed in future eCAL versions.

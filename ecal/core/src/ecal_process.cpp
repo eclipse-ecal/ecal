@@ -278,14 +278,11 @@ namespace eCAL
       #endif
     }
 
-    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_ /*= "" */)
+    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_)
     {
       g_process_severity = severity_;
       g_process_severity_level = level_;
-      if (!info_.empty())
-      {
-        g_process_info = info_;
-      }
+      g_process_info = info_;
     }
   }
 }
