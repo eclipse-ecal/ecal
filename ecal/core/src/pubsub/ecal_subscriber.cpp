@@ -29,8 +29,6 @@
 #include "config/builder/reader_attribute_builder.h"
 #include "ecal_config_internal.h"
 
-#include <iostream>
-
 namespace eCAL
 {
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
