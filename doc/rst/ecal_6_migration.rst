@@ -29,11 +29,13 @@ Removed functions
 Configuration API
 ~~~~~~~~~~~~~~~~~~~~~
 
-Previously, eCAL was configured mainly by it's configuration file (``eCAL.ini``).
-The file format was changed to ``eCAL.yaml`` to allow for hierarchical configurations.
+Previously, eCAL was configured mainly by it's configuration file (``ecal.ini``).
+The file format was changed to ``ecal.yaml`` to allow for hierarchical configurations.
 At the same time, it's now possible, to manually set all configuration through code, too.
 This is especially useful for hard configuration of communication system, like for executing unit tests.
 For more information / usage, please read the section about configuration.
+
+In previous versions, there was the option to override the configuration by using command line arguments. This is no longer supported.
 
 
 C Core API
@@ -96,3 +98,9 @@ If you need to use the functionality, please link the following:
 - String: ``eCAL::string_core`
  
 These targets will automatically publicly link the serialization libraries, so no need to additionally link e.g. `protobuf::libprotobuf``.
+
+CMake Presets
+~~~~~~~~~~~~~~
+
+It is now possible to use the new CMake presets feature to configure and build eCAL. 
+Common use cases like core and gui builds are already covered. 
