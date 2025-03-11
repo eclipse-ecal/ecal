@@ -1,0 +1,6 @@
+add_subdirectory(cpp/string/hello_world_snd)
+add_subdirectory(cpp/string/hello_world_rec)
+add_subdirectory(cpp/protobuf/protobuf_snd)
+add_subdirectory(cpp/protobuf/protobuf_rec)
+add_subdirectory(cpp/configuration/hello_config)
+add_subdirectory(cpp/configuration/publisher_config)

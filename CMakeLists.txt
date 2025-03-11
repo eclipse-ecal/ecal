@@ -187,6 +187,7 @@ option(ECAL_USE_FLATBUFFERS                         "Platform supports flatbuffe
 option(ECAL_USE_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
 
 option(ECAL_BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
+option(ECAL_BUILD_DOCS_SAMPLES                      "Build the eCAL documentation samples"              ${ECAL_BUILD_DOCS})
 option(ECAL_BUILD_APPS                              "Build the eCAL applications"                                       ON)
 option(ECAL_BUILD_APP_SDK                           "Build SDK components of eCAL applications"         ${ECAL_BUILD_APPS})
 option(ECAL_BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
@@ -619,6 +620,7 @@ message(STATUS "ECAL_USE_FLATBUFFERS                                : ${ECAL_USE
 message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE_FTXUI}")
 message(STATUS "BUILD_SHARED_LIBS                                   : ${BUILD_SHARED_LIBS}")
 message(STATUS "ECAL_BUILD_DOCS                                     : ${ECAL_BUILD_DOCS}")
+message(STATUS "ECAL_BUILD_DOCS_SAMPLES"                            : ${ECAL_BUILD_DOCS_SAMPLES})
 message(STATUS "ECAL_BUILD_APPS                                     : ${ECAL_BUILD_APPS}")
 message(STATUS "ECAL_BUILD_APP_SDK                                  : ${ECAL_BUILD_APP_SDK}")
 message(STATUS "ECAL_BUILD_SAMPLES                                  : ${ECAL_BUILD_SAMPLES}")

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ find_package(Doxygen REQUIRED)
 set(DOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_sources)
 set(PYTHON_SOURCE_DIRECTORY ${CMAKE_BINARY_DIR}/python)
 
+set(ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/samples)
+
 #######################################
 # Copy RST files to build directory
 # Also display them all in the IDE
@@ -72,6 +74,7 @@ set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY} ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
@@ -171,3 +174,7 @@ install(DIRECTORY ${SPHINX_HTML_DIR}/
   DESTINATION ${eCAL_install_doc_dir}
   COMPONENT doc 
 )
+
+if (ECAL_BUILD_DOCS_SAMPLES)
+  add_subdirectory(samples)
+endif()
