@@ -45,7 +45,7 @@ namespace Continental.eCAL.Core
     public StringSubscriber(string topicName)
     {
       // Create a subscriber for the given topic using a std::string type.
-      binarySubscriber = new Subscriber(topicName, new DataTypeInformation("std::string", "base", new byte[0]));
+      binarySubscriber = new Subscriber(topicName, new DataTypeInformation("string", "utf-8", new byte[0]));
     }
 
     /**

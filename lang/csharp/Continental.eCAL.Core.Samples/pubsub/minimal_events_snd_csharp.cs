@@ -46,7 +46,7 @@ public class MinimalSendWithEvents
     // Create a publisher with a publisher event callback passed in the constructor.
     Publisher publisher = new Publisher(
         "Hello",
-        new DataTypeInformation("std::string", "base", new byte[0]),
+        new DataTypeInformation("string", "utf-8", new byte[0]),
         new PublisherEventCallbackDelegate((topicId, eventData) =>
         {
           Console.WriteLine("Publisher Event: {0} on topic {1} at {2} µs",

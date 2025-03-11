@@ -44,7 +44,7 @@ namespace Continental.eCAL.Core
     public StringPublisher(string topicName)
     {
       // Create a publisher for the given topic using a std::string type.
-      binaryPublisher = new Publisher(topicName, new DataTypeInformation("std::string", "base", new byte[0]));
+      binaryPublisher = new Publisher(topicName, new DataTypeInformation("string", "utf-8", new byte[0]));
     }
 
     /**

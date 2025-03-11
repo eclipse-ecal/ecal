@@ -42,8 +42,8 @@ public class MinimalReceive
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a subscriber (topic name "Hello", type "std::string", encoding "base", description "")
-    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("std::string", "base", new byte[0]));
+    // Create a subscriber (topic name "Hello", type "string", encoding "utf-8", description "")
+    Subscriber subscriber = new Subscriber("Hello", new DataTypeInformation("string", "utf-8", new byte[0]));
 
     // Register a receive callback.
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
