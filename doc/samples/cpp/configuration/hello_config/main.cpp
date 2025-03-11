@@ -6,7 +6,7 @@
 int main(int argc, char** argv)
 {
   // Create a configuration object with the command line arguments
-  eCAL::Configuration custom_config(argc, argv);
+  eCAL::Configuration custom_config;
 
   // Use the .yaml file of the system or current folder if available
   custom_config.InitFromConfig();
@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     custom_config.InitFromFile("C:\\eCAL_local.yaml");
 
     // Set the communication layer to network
-    custom_config.registration.network_enabled = true;
+    custom_config.communication_mode = eCAL::eCommunicationMode::network;
 
     // Set a custom udp multicast group, correct IP address necessary
     custom_config.transport_layer.udp.network.group = std::string("239.0.1.1");
