@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,26 +17,18 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_c/monitoring.h
- * @brief  eCAL monitoring c interface
-**/
+#ifndef ecal_c_pubsub_payload_writer_h_included
+#define ecal_c_pubsub_payload_writer_h_included
 
-#ifndef ecal_c_monitoring_h_included
-#define ecal_c_monitoring_h_included
+#include <stdint.h>
 
-#include <ecal_c/export.h>
-#include <ecal_c/monitoring.h>
+typedef struct eCAL_PayloadWriter eCAL_PayloadWriter;
 
-#define ECALC_MONITORING_ENTITIES_DEFAULT eCAL_Monitoring_Entity_All
-
-#ifdef __cplusplus
-extern "C"
+struct eCAL_PayloadWriter
 {
-#endif /*__cplusplus*/
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int entities_);
-#ifdef __cplusplus
-}
-#endif /*__cplusplus*/
+  int (*WriteFull)(void*, size_t);
+  int (*WriteModified)(void*, size_t);
+  size_t(*GetSize)();
+};
 
-#endif /*ecal_c_monitoring_h_included*/
+#endif /* ecal_c_pubsub_payload_writer_h_included */

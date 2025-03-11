@@ -31,19 +31,23 @@
 extern "C"
 {
 #endif /*__cplusplus*/
+  ECALC_API char* eCAL_Util_GeteCALDataDir();
+
+  ECALC_API char* eCAL_Util_GeteCALLogDir();
+
   /**
    * @brief Send shutdown event to specified local user process using it's unit name.
    *
    * @param unit_name_  Process unit name. 
   **/
-  ECALC_API void eCAL_Util_ShutdownUnitName(const char* unit_name_);
+  ECALC_API void eCAL_Util_ShutdownProcess(const char* unit_name_);
 
   /**
    * @brief Send shutdown event to specified local user process using it's process id.
    *
    * @param process_id_  Process id. 
   **/
-  ECALC_API void eCAL_Util_ShutdownProcessID(int process_id_);
+  ECALC_API void eCAL_Util_ShutdownProcess2(int process_id_);
 
   /**
    * @brief Send shutdown event to all local user processes.

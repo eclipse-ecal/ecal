@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * ========================= eCAL LICENSE =================================
-*/
+ */
 
 /**
  * @file   publisher.cpp
@@ -28,144 +28,262 @@
 
 #include "common.h"
 
-#include <mutex>
+#include <algorithm>
 
 #if ECAL_CORE_PUBLISHER
 namespace
 {
-  eCAL_Publisher_Event enum_class_to_enum(eCAL::ePublisherEvent event_) {
-    switch (event_) {
-    case eCAL::ePublisherEvent::none:                   return pub_event_none;
-    case eCAL::ePublisherEvent::connected:              return pub_event_connected;
-    case eCAL::ePublisherEvent::disconnected:           return pub_event_disconnected;
-    case eCAL::ePublisherEvent::dropped:                return pub_event_dropped;
-    default:                                            return pub_event_none;
-    }
-  }
-
-  eCAL::ePublisherEvent enum_to_enum_class(eCAL_Publisher_Event event_) {
-    switch (event_) {
-    case pub_event_none:                   return eCAL::ePublisherEvent::none;
-    case pub_event_connected:              return eCAL::ePublisherEvent::connected;
-    case pub_event_disconnected:           return eCAL::ePublisherEvent::disconnected;
-    case pub_event_dropped:                return eCAL::ePublisherEvent::dropped;
-    default:                               return eCAL::ePublisherEvent::none;
-    }
-  }
-
-
-  std::recursive_mutex g_pub_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5::SPubEventCallbackData* data_, const PubEventCallbackCT callback_, void* par_)
+  void Convert_Publisher_Configuration(eCAL::Publisher::Configuration& publisher_configuration_, const struct eCAL_Publisher_Configuration* publisher_configuration_c_)
   {
-    const std::lock_guard<std::recursive_mutex> lock(g_pub_event_callback_mtx);
-    SPubEventCallbackDataC data{};
-    data.type       = enum_class_to_enum(data_->type);
-    data.time       = data_->time;
-    data.clock      = data_->clock;
-    data.topic_id   = data_->tid.c_str();
-    data.topic_name = data_->tdatatype.name.c_str();
-    data.tencoding  = data_->tdatatype.encoding.c_str();
-    data.tdesc      = data_->tdatatype.descriptor.c_str();
-    callback_(topic_name_, &data, par_);
+    publisher_configuration_.layer.shm.enable = static_cast<bool>(publisher_configuration_c_->layer.shm.enable);
+    publisher_configuration_.layer.shm.zero_copy_mode = static_cast<bool>(publisher_configuration_c_->layer.shm.zero_copy_mode);
+    publisher_configuration_.layer.shm.acknowledge_timeout_ms = publisher_configuration_c_->layer.shm.acknowledge_timeout_ms;
+    publisher_configuration_.layer.shm.memfile_buffer_count = publisher_configuration_c_->layer.shm.memfile_buffer_count;
+    publisher_configuration_.layer.shm.memfile_min_size_bytes = publisher_configuration_c_->layer.shm.memfile_min_size_bytes;
+    publisher_configuration_.layer.shm.memfile_reserve_percent = publisher_configuration_c_->layer.shm.memfile_reserve_percent;
+    publisher_configuration_.layer.udp.enable = static_cast<bool>(publisher_configuration_c_->layer.udp.enable);
+    publisher_configuration_.layer.tcp.enable = static_cast<bool>(publisher_configuration_c_->layer.tcp.enable);
+
+    static const std::map<eCAL_TransportLayer_eType, eCAL::TransportLayer::eType> transport_layer_type_map
+    {
+      {eCAL_TransportLayer_eType_none, eCAL::TransportLayer::eType::none},
+      {eCAL_TransportLayer_eType_shm, eCAL::TransportLayer::eType::shm},
+      {eCAL_TransportLayer_eType_udp_mc, eCAL::TransportLayer::eType::udp_mc},
+      {eCAL_TransportLayer_eType_tcp, eCAL::TransportLayer::eType::tcp}
+    };
+
+    publisher_configuration_.layer_priority_local.resize(publisher_configuration_c_->layer_priority_local_length);
+    std::transform(publisher_configuration_c_->layer_priority_local,
+      publisher_configuration_c_->layer_priority_local + publisher_configuration_c_->layer_priority_local_length,
+      publisher_configuration_.layer_priority_local.begin(),
+      [](const auto& key) { return transport_layer_type_map.at(key); });
+
+    publisher_configuration_.layer_priority_remote.resize(publisher_configuration_c_->layer_priority_remote_length);
+    std::transform(publisher_configuration_c_->layer_priority_remote,
+      publisher_configuration_c_->layer_priority_remote + publisher_configuration_c_->layer_priority_remote_length,
+      publisher_configuration_.layer_priority_remote.begin(),
+      [](const auto& key) { return transport_layer_type_map.at(key); });
+    
   }
+
+  void Convert_Publisher_Configuration(struct eCAL_Publisher_Configuration* publisher_configuration_c_, const eCAL::Publisher::Configuration& publisher_configuration_)
+  {
+    publisher_configuration_c_->layer.shm.enable = static_cast<int>(publisher_configuration_.layer.shm.enable);
+    publisher_configuration_c_->layer.shm.zero_copy_mode = static_cast<int>(publisher_configuration_.layer.shm.zero_copy_mode);
+    publisher_configuration_c_->layer.shm.acknowledge_timeout_ms = publisher_configuration_.layer.shm.acknowledge_timeout_ms;
+    publisher_configuration_c_->layer.shm.memfile_buffer_count = publisher_configuration_.layer.shm.memfile_buffer_count;
+    publisher_configuration_c_->layer.shm.memfile_min_size_bytes = publisher_configuration_.layer.shm.memfile_min_size_bytes;
+    publisher_configuration_c_->layer.shm.memfile_reserve_percent = publisher_configuration_.layer.shm.memfile_reserve_percent;
+    publisher_configuration_c_->layer.udp.enable = static_cast<int>(publisher_configuration_.layer.udp.enable);
+    publisher_configuration_c_->layer.tcp.enable = static_cast<int>(publisher_configuration_.layer.tcp.enable);
+
+    static const std::map<eCAL::TransportLayer::eType, eCAL_TransportLayer_eType> transport_layer_type_map
+    {
+      {eCAL::TransportLayer::eType::none, eCAL_TransportLayer_eType_none},
+      {eCAL::TransportLayer::eType::shm, eCAL_TransportLayer_eType_shm},
+      {eCAL::TransportLayer::eType::udp_mc, eCAL_TransportLayer_eType_udp_mc},
+      {eCAL::TransportLayer::eType::tcp, eCAL_TransportLayer_eType_tcp}
+    };
+
+    publisher_configuration_c_->layer_priority_local = reinterpret_cast<eCAL_TransportLayer_eType*>(std::malloc(sizeof(eCAL_TransportLayer_eType) * publisher_configuration_.layer_priority_local.size()));
+    if (publisher_configuration_c_->layer_priority_local != NULL)
+    {
+      std::transform(publisher_configuration_.layer_priority_local.begin(),
+        publisher_configuration_.layer_priority_local.end(),
+        publisher_configuration_c_->layer_priority_local,
+        [](const auto& key) { return transport_layer_type_map.at(key); });
+    }
+
+    publisher_configuration_c_->layer_priority_remote = reinterpret_cast<eCAL_TransportLayer_eType*>(std::malloc(sizeof(eCAL_TransportLayer_eType) * publisher_configuration_.layer_priority_remote.size()));
+    if (publisher_configuration_c_->layer_priority_remote != NULL)
+    {
+      std::transform(publisher_configuration_.layer_priority_remote.begin(),
+        publisher_configuration_.layer_priority_remote.end(),
+        publisher_configuration_c_->layer_priority_remote,
+        [](const auto& key) { return transport_layer_type_map.at(key); });
+    }
+  }
+
+  void Convert_SPubEventCallbackData(struct eCAL_SPubEventCallbackData* pub_event_callback_data_c_, const eCAL::SPubEventCallbackData& pub_event_callback_data_)
+  {
+    static const std::map<eCAL::ePublisherEvent, eCAL_ePublisherEvent> publisher_event_map
+    {
+        {eCAL::ePublisherEvent::none, eCAL_ePublisherEvent_none},
+        {eCAL::ePublisherEvent::connected, eCAL_ePublisherEvent_connected},
+        {eCAL::ePublisherEvent::disconnected, eCAL_ePublisherEvent_disconnected},
+        {eCAL::ePublisherEvent::dropped, eCAL_ePublisherEvent_dropped}
+    };
+
+    pub_event_callback_data_c_->event_type = publisher_event_map.at(pub_event_callback_data_.event_type);
+    pub_event_callback_data_c_->event_time = pub_event_callback_data_.event_time;
+    Convert_SDataTypeInformation(&pub_event_callback_data_c_->subscriber_datatype, pub_event_callback_data_.subscriber_datatype);
+  }
+
+  void Assign_SPubEventCallbackData(struct eCAL_SPubEventCallbackData* pub_event_callback_data_c_, const eCAL::SPubEventCallbackData& pub_event_callback_data_)
+  {
+    static const std::map<eCAL::ePublisherEvent, eCAL_ePublisherEvent> publisher_event_map
+    {
+        {eCAL::ePublisherEvent::none, eCAL_ePublisherEvent_none},
+        {eCAL::ePublisherEvent::connected, eCAL_ePublisherEvent_connected},
+        {eCAL::ePublisherEvent::disconnected, eCAL_ePublisherEvent_disconnected},
+        {eCAL::ePublisherEvent::dropped, eCAL_ePublisherEvent_dropped}
+    };
+
+    pub_event_callback_data_c_->event_type = publisher_event_map.at(pub_event_callback_data_.event_type);
+    pub_event_callback_data_c_->event_time = pub_event_callback_data_.event_time;
+    Assign_SDataTypeInformation(&pub_event_callback_data_c_->subscriber_datatype, pub_event_callback_data_.subscriber_datatype);
+  }
+
+  void eCAL_SPubEventCallbackData_Free(eCAL_SPubEventCallbackData* pub_event_callback_data_)
+  {
+    std::free(reinterpret_cast<void*>(pub_event_callback_data_));
+  }
+
+  class PayloadWriter : public eCAL::CPayloadWriter
+  {
+  public:
+    PayloadWriter(const struct eCAL_PayloadWriter* payload_writer_) : m_payload_writer(payload_writer_)
+    {
+    }
+
+    bool WriteFull(void* buffer_, size_t size_) final
+    {
+      return !m_payload_writer->WriteFull(buffer_, size_);
+    }
+
+    bool WriteModified(void* buffer_, size_t size_) final
+    {
+      if (m_payload_writer->WriteModified != NULL)
+        return !m_payload_writer->WriteModified(buffer_, size_);
+      else
+        return WriteFull(buffer_, size_);
+    }
+
+    size_t GetSize() final
+    {
+      return m_payload_writer->GetSize();
+    }
+
+  private:
+    const struct eCAL_PayloadWriter* m_payload_writer;
+  };
 }
+
+struct eCAL_Publisher
+{
+  eCAL::CPublisher* handle;
+};
 
 extern "C"
 {
-  ECALC_API ECAL_HANDLE eCAL_Pub_New()
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
   {
-    auto* pub = new eCAL::v5::CPublisher; // NOLINT(*-owning-memory)
-    return(pub);
+    eCAL::SDataTypeInformation data_type_information;
+    eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
+
+    if (data_type_information_ != NULL)
+      Convert_SDataTypeInformation(data_type_information, data_type_information_);
+    if (publisher_configuration_ != NULL)
+      Convert_Publisher_Configuration(publisher_configuration, publisher_configuration_);
+
+    return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, publisher_configuration) };
   }
 
-  ECALC_API int eCAL_Pub_Create(ECAL_HANDLE handle_, const char* topic_name_, const char* topic_type_name_, const char* topic_type_encoding_, const char* topic_desc_, int topic_desc_len_)
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    const eCAL::SDataTypeInformation topic_info = { topic_type_name_, topic_type_encoding_, std::string(topic_desc_, static_cast<size_t>(topic_desc_len_)) };
-    if (!pub->Create(topic_name_, topic_info)) return(0);
-    return(1);
-  }
+    eCAL::SDataTypeInformation data_type_information;
+    eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
 
-  ECALC_API int eCAL_Pub_Destroy(ECAL_HANDLE handle_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    delete pub; // NOLINT(*-owning-memory)
-    return(1);
-  }
+    Convert_SDataTypeInformation(data_type_information, data_type_information_);
 
-  ECALC_API int eCAL_Pub_SetAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_, const char* attr_value_, int attr_value_len_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->SetAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)), std::string(attr_value_, static_cast<size_t>(attr_value_len_)))) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Pub_ClearAttribute(ECAL_HANDLE handle_, const char* attr_name_, int attr_name_len_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->ClearAttribute(std::string(attr_name_, static_cast<size_t>(attr_name_len_)))) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Pub_SetID(ECAL_HANDLE handle_, long long id_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->SetID(id_)) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Pub_IsSubscribed(ECAL_HANDLE handle_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->IsSubscribed()) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Pub_Send(ECAL_HANDLE handle_, const void* const buf_, int buf_len_, long long time_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    const size_t ret = pub->Send(buf_, static_cast<size_t>(buf_len_), time_);
-    if (static_cast<int>(ret) == buf_len_)
+    const auto pub_event_callback = [pub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& pub_event_callback_data_)
     {
-      return(buf_len_);
-    }
-    return(0);
+      struct eCAL_STopicId topic_id_c;
+      struct eCAL_SPubEventCallbackData pub_event_callback_data_c;
+
+      Assign_STopicId(&topic_id_c, topic_id_);
+      Assign_SPubEventCallbackData(&pub_event_callback_data_c, pub_event_callback_data_);
+      pub_event_callback_(&topic_id_c, &pub_event_callback_data_c);
+    };
+
+    if (publisher_configuration_ != NULL)
+      Convert_Publisher_Configuration(publisher_configuration, publisher_configuration_);
+
+    return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, pub_event_callback, publisher_configuration) };
   }
 
-  ECALC_API int eCAL_Pub_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_, PubEventCallbackCT callback_, void* par_)
+  ECALC_API void eCAL_Publisher_Delete(eCAL_Publisher* publisher_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    auto callback = std::bind(g_pub_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-    if (pub->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
-    return(0);
+    delete publisher_->handle;
+    delete publisher_;
   }
 
-  ECALC_API int eCAL_Pub_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Publisher_Event type_)
+  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, long long timestamp_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    if (pub->RemEventCallback(enum_to_enum_class(type_))) return(1);
-    return(0);
+    return static_cast<int>(!publisher_->handle->Send(buffer_, buffer_len_, timestamp_));
   }
 
-  ECALC_API int eCAL_Pub_Dump(ECAL_HANDLE handle_, void* buf_, int buf_len_)
+  ECALC_API int eCAL_Publisher_Send2(eCAL_Publisher* publisher_, struct eCAL_PayloadWriter* payload_writer_, long long timestamp_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* pub = static_cast<eCAL::v5::CPublisher*>(handle_);
-    const std::string dump = pub->Dump();
-    if (!dump.empty())
+    PayloadWriter payload_writer(payload_writer_);
+    return static_cast<int>(!publisher_->handle->Send(payload_writer, timestamp_));
+  }
+
+  ECALC_API size_t eCAL_Publisher_GetSubscriberCount(eCAL_Publisher* publisher_)
+  {
+    return publisher_->handle->GetSubscriberCount();
+  }
+
+  ECALC_API const char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_)
+  {
+    return publisher_->handle->GetTopicName().c_str();
+  }
+
+  ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_)
+  {
+    auto* topic_id = reinterpret_cast<eCAL_STopicId*>(std::malloc(sizeof(eCAL_STopicId)));
+    if (topic_id != NULL)
+      Convert_STopicId(topic_id, publisher_->handle->GetTopicId());
+    return topic_id;
+  }
+
+  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_)
+  {
+    const auto topic_id = publisher_->handle->GetTopicId();
+    const auto allocation_size = aligned_size(sizeof(eCAL_STopicId)) + ExtSize_STopicId(topic_id);
+    
+    struct eCAL_STopicId* topic_id_c = NULL;
+    
+    if (buffer_length_ == NULL)
     {
-      return(CopyBuffer(buf_, buf_len_, dump));
+      topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(std::malloc(allocation_size));
+      if (topic_id_c != NULL)
+      {
+        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+        Convert_STopicId(topic_id_c, topic_id, &ptr);
+      }
     }
-    return(0);
+    else
+    {
+      if (*buffer_length_ >= allocation_size)
+      {
+        topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(buffer);
+        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+        Convert_STopicId(topic_id_c, topic_id, &ptr);
+      }
+      else
+        *buffer_length_ = allocation_size;
+    }
+
+    return topic_id_c;
+  }
+
+  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_)
+  {
+    auto* data_type_information = reinterpret_cast<eCAL_SDataTypeInformation*>(std::malloc(sizeof(eCAL_SDataTypeInformation)));
+    if (data_type_information != NULL)
+      Convert_SDataTypeInformation(data_type_information, publisher_->handle->GetDataTypeInformation());
+    return data_type_information;
   }
 }
 #endif // ECAL_CORE_PUBLISHER

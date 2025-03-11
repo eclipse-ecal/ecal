@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,26 +17,32 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   ecal_c/monitoring.h
- * @brief  eCAL monitoring c interface
-**/
-
-#ifndef ecal_c_monitoring_h_included
-#define ecal_c_monitoring_h_included
+#ifndef ecal_c_auxiliaries_h_included
+#define ecal_c_auxiliaries_h_included
 
 #include <ecal_c/export.h>
-#include <ecal_c/monitoring.h>
-
-#define ECALC_MONITORING_ENTITIES_DEFAULT eCAL_Monitoring_Entity_All
+#include <ecal_c/types.h>
+#include <ecal_c/pubsub/types.h>
+#include <ecal_c/service/types.h>
+#include <ecal_c/config/publisher.h>
+#include <ecal_c/config/subscriber.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int entities_);
+  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
+
+  ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
+
+  ECALC_API void eCAL_SServiceId_Free(struct eCAL_SServiceId* service_id_);
+
+  ECALC_API void eCAL_SEntityId_Free(struct eCAL_SEntityId* entity_id_);
+
+  ECALC_API void eCAL_Publisher_Configuration_Free(struct eCAL_Publisher_Configuration* publisher_configuration_);
+  ECALC_API void eCAL_Subscriber_Configuration_Free(struct eCAL_Subscriber_Configuration* subscriber_configuration_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
 
-#endif /*ecal_c_monitoring_h_included*/
+#endif /*ecal_c_auxiliaries_h_included*/
