@@ -86,6 +86,32 @@ namespace
     service_response_result_c_->result = service_response_result_.first;
     Convert_SServiceResponse(&service_response_result_c_->service_response, service_response_result_.second);
   }
+
+  size_t ExtSize_SServiceResponse(const eCAL::SServiceResponse& service_response_)
+  {
+    return ExtSize_String(service_response_.error_msg) +
+      ExtSize_Array(service_response_.response) +
+      ExtSize_SServiceId(service_response_.server_id) +
+      ExtSize_SServiceMethodInformation(service_response_.service_method_information);
+  }
+
+  void Convert_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, const eCAL::SServiceResponse& service_response_, char** offset_)
+  {
+    static const std::map<eCAL::eCallState, eCAL_eCallState> call_state_map
+    {
+      {eCAL::eCallState::none, eCAL_eCallState_none},
+      {eCAL::eCallState::executed, eCAL_eCallState_executed},
+      {eCAL::eCallState::timeouted, eCAL_eCallState_timeouted},
+      {eCAL::eCallState::failed, eCAL_eCallState_failed}
+    };
+
+    service_response_c_->call_state = call_state_map.at(service_response_.call_state);
+    Convert_SServiceId(&service_response_c_->server_id, service_response_.server_id, offset_);
+    Convert_SServiceMethodInformation(&service_response_c_->service_method_information, service_response_.service_method_information, offset_);
+    service_response_c_->ret_state = service_response_.ret_state;
+    service_response_c_->response = Convert_Array(service_response_.response, offset_);
+    service_response_c_->error_msg = Convert_String(service_response_.error_msg, offset_);
+  }
 }
 
 extern "C"
@@ -93,6 +119,8 @@ extern "C"
   struct eCAL_ServiceClient
   {
     eCAL::CServiceClient* handle;
+    eCAL_SServiceId service_id;
+    eCAL_SEntityId entity_id;
   };
 
   struct eCAL_ClientInstance
@@ -122,7 +150,7 @@ extern "C"
       event_callback_(&service_id_c, &client_event_callback_data_c);
     };
 
-    return new eCAL_ServiceClient{ new eCAL::CServiceClient(service_name_, method_information_set, event_callback) };
+    return new eCAL_ServiceClient{ new eCAL::CServiceClient(service_name_, method_information_set, event_callback_ != NULL ? event_callback : eCAL::ClientEventCallbackT()) };
   }
 
   ECALC_API void eCAL_ServiceClient_Delete(eCAL_ServiceClient* service_client_)
@@ -150,20 +178,31 @@ extern "C"
 
   ECALC_API int eCAL_ServiceClient_CallWithResponse(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, struct eCAL_SServiceResponse** service_response_vec_, size_t* service_response_vec_length_, int timeout_ms_)
   {
+    if (service_response_vec_ == NULL || service_response_vec_length_ == NULL) return 1;
+    if (*service_response_vec_ != NULL || *service_response_vec_length_ != 0) return 1;
+    
     std::string request(reinterpret_cast<const char*>(request_), request_length_);
     eCAL::ServiceResponseVecT service_response_vec;
-    bool result = service_client_->handle->CallWithResponse(method_name_, request, service_response_vec, timeout_ms_);
+    const bool result = service_client_->handle->CallWithResponse(method_name_, request, service_response_vec, timeout_ms_);
 
-    *service_response_vec_length_ = service_response_vec.size();
-    *service_response_vec_ = reinterpret_cast<eCAL_SServiceResponse*>(std::malloc(sizeof(eCAL_SServiceResponse) * (*service_response_vec_length_)));
-    if (*service_response_vec_ != NULL)
+    const auto base_size = aligned_size(sizeof(struct eCAL_SServiceResponse) * service_response_vec.size());
+    std::size_t extended_size{ 0 };
+    for (const auto& service_response : service_response_vec)
     {
-      for (size_t i = 0; i < *service_response_vec_length_; ++i)
-      {
-        Convert_SServiceResponse(&((*service_response_vec_)[i]), service_response_vec[i]);
-      }
+      extended_size += ExtSize_SServiceResponse(service_response);
     }
 
+    *service_response_vec_ = reinterpret_cast<struct eCAL_SServiceResponse*>(std::malloc(base_size + extended_size));
+
+    if (*service_response_vec_ != NULL)
+    {
+      auto* offset = reinterpret_cast<char*>(*service_response_vec_) + base_size;
+      *service_response_vec_length_ = service_response_vec.size();
+      for (std::size_t i = 0; i < service_response_vec.size(); ++i)
+      {
+        Convert_SServiceResponse(&(*service_response_vec_)[i], service_response_vec.at(i), &offset);
+      }
+    }
     return !static_cast<int>(result);
   }
 
@@ -198,14 +237,10 @@ extern "C"
     return service_client_->handle->GetServiceName().c_str();
   }
 
-  ECALC_API struct eCAL_SServiceId* eCAL_ServiceClient_GetServiceId(eCAL_ServiceClient* service_client_)
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceClient_GetServiceId(eCAL_ServiceClient* service_client_)
   {
-    auto* service_id = reinterpret_cast<eCAL_SServiceId*>(std::malloc(sizeof(eCAL_SServiceId)));
-    if (service_id != NULL)
-    {
-      Convert_SServiceId(service_id, service_client_->handle->GetServiceId());
-    }
-    return service_id;
+    Assign_SServiceId(&service_client_->service_id, service_client_->handle->GetServiceId());
+    return &service_client_->service_id;
   }
 
   ECALC_API int eCAL_ServiceClient_IsConnected(eCAL_ServiceClient* service_client_)

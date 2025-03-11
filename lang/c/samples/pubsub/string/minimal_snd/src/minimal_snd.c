@@ -31,7 +31,7 @@ int main()
   int         sent    = 0;
 
   // initialize eCAL API
-  eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_snd", NULL);
 
   // create publisher "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
@@ -40,26 +40,16 @@ int main()
 
   publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL);
 
-  char stack_buffer[256];
-  size_t stack_buffer_size = sizeof(stack_buffer);
-  const struct eCAL_STopicId* stack_tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, stack_buffer, &stack_buffer_size);
-
-  size_t heap_buffer_size = 0;
-  eCAL_Publisher_GetTopicId_NoMalloc(publisher, NULL, heap_buffer_size);
-  char* heap_buffer = (char*)malloc(heap_buffer_size);
-  const struct eCAL_STopicId* heap_tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, heap_buffer, &heap_buffer_size);
-  free(heap_tid);
-
-  const struct eCAL_STopicId* tid = eCAL_Publisher_GetTopicId_NoMalloc(publisher, NULL, NULL);
-  free(tid);
+  printf("Publisher id: %ul\n\n", (unsigned long)eCAL_Publisher_GetTopicId(publisher)->topic_id.entity_id);
   
   // send updates
   while(eCAL_Ok())
   {
     // send content
-    sent = eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), -1);
-    if(sent <= 0) printf("Sending topic \"Hello\" failed !\n");
-    else          printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+    if(!eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), -1))
+      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+    else
+      printf("Sending topic \"Hello\" failed !\n");
 
     // sleep 100 ms
     eCAL_Process_SleepMS(100);

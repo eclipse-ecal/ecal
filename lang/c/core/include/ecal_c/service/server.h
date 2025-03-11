@@ -42,7 +42,7 @@ extern "C"
   ECALC_API int eCAL_ServiceServer_RemoveMethodCallback(eCAL_ServiceServer* service_server_, const char* method_name_);
 
   ECALC_API const char* eCAL_ServiceServer_GetServiceName(eCAL_ServiceServer* service_server_);
-  ECALC_API struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_);
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_);
   ECALC_API int eCAL_ServiceServer_IsConnected(eCAL_ServiceServer* service_server_);
 #ifdef __cplusplus
 }

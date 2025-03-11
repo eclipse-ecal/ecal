@@ -59,14 +59,14 @@ namespace
 
 extern "C"
 {
-  ECALC_API char* eCAL_GetVersionString()
+  ECALC_API const char* eCAL_GetVersionString()
   {
-    return Clone_CString(eCAL::GetVersionString().c_str());
+    return eCAL::GetVersionString().c_str();
   }
 
-  ECALC_API char* eCAL_GetVersionDateString()
+  ECALC_API const char* eCAL_GetVersionDateString()
   {
-    return Clone_CString(eCAL::GetVersionDateString().c_str());
+    return eCAL::GetVersionDateString().c_str();
   }
 
   ECALC_API eCAL_SVersion eCAL_GetVersion()

@@ -75,9 +75,12 @@ namespace
 
   void Convert_SDataTypeInformation(eCAL::SDataTypeInformation& data_type_information_, const struct eCAL_SDataTypeInformation* data_type_information_c_)
   {
-    data_type_information_.name = data_type_information_c_->name;
-    data_type_information_.encoding = data_type_information_c_->encoding;
-    data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_len);
+    if (data_type_information_c_->name != NULL) data_type_information_.name = data_type_information_c_->name; else data_type_information_.name.clear();
+    if (data_type_information_c_->encoding != NULL) data_type_information_.encoding = data_type_information_c_->encoding; else data_type_information_.encoding.clear();
+    if (data_type_information_c_->descriptor != NULL)
+      data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_len);
+    else
+      data_type_information_.descriptor.clear();
   }
 
   void Convert_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_)
@@ -109,6 +112,13 @@ namespace
     entity_id_c_->entity_id = entity_id_.entity_id;
     entity_id_c_->process_id = entity_id_.process_id;
     entity_id_c_->host_name = Clone_CString(entity_id_.host_name.c_str());
+  }
+
+  void Assign_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_)
+  {
+    entity_id_c_->entity_id = entity_id_.entity_id;
+    entity_id_c_->process_id = entity_id_.process_id;
+    entity_id_c_->host_name = entity_id_.host_name.c_str();
   }
 
   void Free_SEntityId(struct eCAL_SEntityId* entity_id_)
@@ -307,7 +317,7 @@ namespace
 
   void Convert_SServiceMethodInformation(eCAL::SServiceMethodInformation& method_info_, const struct eCAL_SServiceMethodInformation* method_info_c_)
   {
-    method_info_.method_name = method_info_c_->method_name;
+    if (method_info_c_->method_name != NULL) method_info_.method_name = method_info_c_->method_name; else method_info_.method_name.clear();
     Convert_SDataTypeInformation(method_info_.request_type, &method_info_c_->request_type);
     Convert_SDataTypeInformation(method_info_.response_type, &method_info_c_->response_type);
   }

@@ -41,11 +41,15 @@ extern "C"
   ECALC_API void eCAL_Process_DumpConfig2(char** configuration_);
 
 
-  ECALC_API char* eCAL_Process_GetHostName();
+  ECALC_API const char* eCAL_Process_GetHostName();
 
-  ECALC_API char* eCAL_Process_GetShmTransportDomain();
+  ECALC_API const char* eCAL_Process_GetShmTransportDomain();
 
-  ECALC_API char* eCAL_Process_GetUnitName();
+  ECALC_API const char* eCAL_Process_GetUnitName();
+
+  ECALC_API void eCAL_Process_SleepMS(long time_ms_);
+
+  ECALC_API void eCAL_Process_SleepNS(long long time_ns_);
 
   /**
    * @brief  Get current process id. 
@@ -53,6 +57,12 @@ extern "C"
    * @return  The process id. 
   **/
   ECALC_API int eCAL_Process_GetProcessID();
+
+  ECALC_API const char* eCAL_Process_GetProcessIDAsString();
+
+  ECALC_API const char* eCAL_Process_GetProcessName();
+
+  ECALC_API const char* eCAL_Process_GetProcessParameter();
 
   /**
    * @brief  Set process state info. 

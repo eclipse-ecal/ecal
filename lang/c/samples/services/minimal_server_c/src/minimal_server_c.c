@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,46 +19,44 @@
 
 #include <ecal_c/ecal.h>
 
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h> //printf()
+#include <string.h> //memcpy(), memset()
+#include <stdlib.h> //malloc
 
-int OnMethodCallback(const char* method_, const char* req_type_, const char* resp_type_, const char* request_, int request_len_, void** response_, int* response_len_, void* par_)
+int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_)
 {
-  // unused param
-  (void)req_type_;
-  (void)resp_type_;
-  (void)par_;
-
-  static char response_buf[1024];
-  if ((unsigned int)request_len_ > sizeof(response_buf)) return 0;
+  *response_ = malloc(request_length_);
+  if (*response_ == NULL) return 1; // memory allocation failed
 
   // echo request to response
-  memcpy(response_buf, request_, request_len_);
+  memcpy(*response_, request_, request_length_);
+  *response_length_ = request_length_;
 
-  *response_     = response_buf;
-  *response_len_ = request_len_;
-
-  printf("Method   : %s called\n", method_);
-  printf("Request  : %s\n",        request_);
-  printf("Response : %s\n",       (char*)(*response_));
+  printf("Method   : %s called\n", method_info_->method_name);
+  printf("Request  : %s\n",        (char*)request_);
+  printf("Response : %s\n",        (char*)(*response_));
   printf("\n");
 
   // return success
-  return 42;
+  return 0;
 }
 
 int main()
 {
-  ECAL_HANDLE hserver = 0;
+  eCAL_ServiceServer *server;
+  struct eCAL_SServiceMethodInformation method_information;
 
   // initialize eCAL API
-  eCAL_Initialize("minimal server c", eCAL_Init_Default);
+  eCAL_Initialize("minimal server c", NULL);
 
   // create server "service1"
-  hserver = eCAL_Server_Create("service1");
+  server = eCAL_ServiceServer_New("service1", NULL);
 
   // add method callback for method "echo"
-  eCAL_Server_AddMethodCallback(hserver, "echo", "", "", OnMethodCallback, 0);
+
+  memset(&method_information, 0, sizeof(struct eCAL_SServiceMethodInformation));
+  method_information.method_name = "echo";
+  eCAL_ServiceServer_SetMethodCallback(server, &method_information, OnMethodCallback);
 
   // idle
   while (eCAL_Ok())
@@ -68,7 +66,7 @@ int main()
   }
 
   // destroy server "service1"
-  eCAL_Server_Destroy(hserver);
+  eCAL_ServiceClient_Delete(server);
 
   // finalize eCAL API
   eCAL_Finalize();

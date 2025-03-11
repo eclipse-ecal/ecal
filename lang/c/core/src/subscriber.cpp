@@ -89,6 +89,8 @@ extern "C"
   struct eCAL_Subscriber
   {
     eCAL::CSubscriber* handle;
+    eCAL_STopicId topic_id;
+    eCAL_SDataTypeInformation data_type_info;
   };
 
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
@@ -167,24 +169,16 @@ extern "C"
     return subscriber_->handle->GetTopicName().c_str();
   }
 
-  ECALC_API struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_)
+  ECALC_API const struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_)
   {
-    auto* topic_id = reinterpret_cast<eCAL_STopicId*>(std::malloc(sizeof(eCAL_STopicId)));
-    if (topic_id != NULL)
-    {
-      Convert_STopicId(topic_id, subscriber_->handle->GetTopicId());
-    }
-    return topic_id;
+    Assign_STopicId(&subscriber_->topic_id, subscriber_->handle->GetTopicId());
+    return &subscriber_->topic_id;
   }
 
-  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_)
+  ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_)
   {
-    auto* data_type_information = reinterpret_cast<eCAL_SDataTypeInformation*>(std::malloc(sizeof(eCAL_SDataTypeInformation)));
-    if (data_type_information != NULL)
-    {
-      Convert_SDataTypeInformation(data_type_information, subscriber_->handle->GetDataTypeInformation());
-    }
-    return data_type_information;
+    Assign_SDataTypeInformation(&subscriber_->data_type_info, subscriber_->handle->GetDataTypeInformation());
+    return &subscriber_->data_type_info;
   }
 }
 #endif // ECAL_CORE_SUBSCRIBER

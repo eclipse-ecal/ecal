@@ -20,20 +20,28 @@
 #ifndef ecal_c_types_monitoring_h_included
 #define ecal_c_types_monitoring_h_included
 
-static const unsigned int eCAL_Monitoring_Entity_Publisher = 0x001;
-static const unsigned int eCAL_Monitoring_Entity_Subscriber = 0x002;
-static const unsigned int eCAL_Monitoring_Entity_Server = 0x004;
-static const unsigned int eCAL_Monitoring_Entity_Client = 0x008;
-static const unsigned int eCAL_Monitoring_Entity_Process = 0x010;
-static const unsigned int eCAL_Monitoring_Entity_Host = 0x020;
+#define ECAL_MONITORING_ENTITY_PUBLISHER 0x001
+#define ECAL_MONITORING_ENTITY_SUBSCRIBER 0x002
+#define ECAL_MONITORING_ENTITY_SERVER 0x004
+#define ECAL_MONITORING_ENTITY_CLIENT 0x008
+#define ECAL_MONITORING_ENTITY_PROCESS 0x010
+#define ECAL_MONITORING_ENTITY_HOST 0x020
+#define ECAL_MONITORING_ENTITY_NONE 0x000
 
-static const unsigned int eCAL_Monitoring_Entity_All = eCAL_Monitoring_Entity_Publisher
-| eCAL_Monitoring_Entity_Subscriber
-| eCAL_Monitoring_Entity_Server
-| eCAL_Monitoring_Entity_Client
-| eCAL_Monitoring_Entity_Process
-| eCAL_Monitoring_Entity_Host;
+static const unsigned int eCAL_Monitoring_Entity_Publisher = ECAL_MONITORING_ENTITY_PUBLISHER;
+static const unsigned int eCAL_Monitoring_Entity_Subscriber = ECAL_MONITORING_ENTITY_SUBSCRIBER;
+static const unsigned int eCAL_Monitoring_Entity_Server = ECAL_MONITORING_ENTITY_SERVER;
+static const unsigned int eCAL_Monitoring_Entity_Client = ECAL_MONITORING_ENTITY_CLIENT;
+static const unsigned int eCAL_Monitoring_Entity_Process = ECAL_MONITORING_ENTITY_PROCESS;
+static const unsigned int eCAL_Monitoring_Entity_Host = ECAL_MONITORING_ENTITY_HOST;
 
-static const unsigned int eCAL_Monitoring_Entity_None = 0x000;
+static const unsigned int eCAL_Monitoring_Entity_All = ECAL_MONITORING_ENTITY_PUBLISHER
+| ECAL_MONITORING_ENTITY_SUBSCRIBER
+| ECAL_MONITORING_ENTITY_SERVER
+| ECAL_MONITORING_ENTITY_CLIENT
+| ECAL_MONITORING_ENTITY_PROCESS
+| ECAL_MONITORING_ENTITY_HOST;
+
+static const unsigned int eCAL_Monitoring_Entity_None = ECAL_MONITORING_ENTITY_NONE;
 
 #endif /*ecal_c_types_monitoring_h_included*/

@@ -79,6 +79,8 @@ extern "C"
   struct eCAL_ClientInstance
   {
     eCAL::CClientInstance* handle;
+    eCAL_SServiceId service_id;
+    eCAL_SEntityId entity_id;
   };
 
   ECALC_API void eCAL_ClientInstance_Delete(eCAL_ClientInstance* client_instance_)
@@ -144,14 +146,10 @@ extern "C"
     return static_cast<int>(client_instance_->handle->IsConnected());
   }
 
-  ECALC_API struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_)
+  ECALC_API const struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_)
   {
-    auto* client_id = reinterpret_cast<eCAL_SEntityId*>(std::malloc(sizeof(eCAL_SEntityId)));
-    if (client_id != NULL)
-    {
-      Convert_SEntityId(client_id, client_instance_->handle->GetClientID());
-    }
-    return client_id;
+    Assign_SEntityId(&client_instance_->entity_id, client_instance_->handle->GetClientID());
+    return &client_instance_->entity_id;
   }
 }
 #endif // ECAL_CORE_SERVICE

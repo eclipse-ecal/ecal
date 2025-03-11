@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,40 +19,46 @@
 
 #include <ecal_c/ecal.h>
 
-#include <stdio.h>
+#include <string.h> //memset()
+#include <stdio.h> //printf()
+
+void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_)
+{
+  // unused arguments
+  (void)data_type_information_;
+
+  printf("Received topic \"%s\" with ", topic_id_->topic_name);
+  printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
+}
 
 int main()
 {
-  ECAL_HANDLE sub         = 0;
-  int         success     = 0;
-  void*       rcv_buf     = NULL;
-  int         rcv_buf_len = 0;
-  long long   time        = 0;
+  eCAL_Subscriber *subscriber;
+  struct eCAL_SDataTypeInformation data_type_information;
 
   // initialize eCAL API
-  eCAL_Initialize("minimalc_rec", eCAL_Init_Default);
+  eCAL_Initialize("minimalc_rec_cb", NULL);
 
   // create subscriber "Hello"
-  sub = eCAL_Sub_New();
-  eCAL_Sub_Create(sub, "Hello", "std::string", "base", "", 0);
+  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
+  data_type_information.name = "std::string";
+  data_type_information.encoding = "base";
+  subscriber = eCAL_Subscriber_New("Hello", &data_type_information, NULL);
 
-  // read updates
+  // add callback
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive);
+
+  printf("Subscriber id: %ul\n\n", (unsigned long)eCAL_Subscriber_GetTopicId(subscriber)->topic_id.entity_id);
+
+  // idle main thread
   while(eCAL_Ok())
   {
-    // receive content with 100 ms timeout
-    success = eCAL_Sub_Receive_Buffer_Alloc(sub, &rcv_buf, &rcv_buf_len, &time, 100);
-    if(success != 0)
-    {
-      // print content
-      printf("Received topic \"Hello\" with \"%.*s\"\n", rcv_buf_len, (char*)rcv_buf);
-
-      // free buffer allocated by eCAL
-      eCAL_FreeMem(rcv_buf);
-    }
+    // sleep 100 ms
+    eCAL_Process_SleepMS(100);
   }
 
   // destroy subscriber
-  eCAL_Sub_Destroy(sub);
+  eCAL_Subscriber_Delete(subscriber);
 
   // finalize eCAL API
   eCAL_Finalize();

@@ -51,24 +51,49 @@ extern "C"
     }
   }
 
-  ECALC_API char* eCAL_Process_GetHostName()
+  ECALC_API const char* eCAL_Process_GetHostName()
   {
-    return Clone_CString(eCAL::Process::GetHostName().c_str());
+    return eCAL::Process::GetHostName().c_str();
   }
 
-  ECALC_API char* eCAL_Process_GetShmTransportDomain()
+  ECALC_API const char* eCAL_Process_GetShmTransportDomain()
   {
-    return Clone_CString(eCAL::Process::GetShmTransportDomain().c_str());
+    return eCAL::Process::GetShmTransportDomain().c_str();
   }
 
-  ECALC_API char* eCAL_Process_GetUnitName()
+  ECALC_API const char* eCAL_Process_GetUnitName()
   {
-    return Clone_CString(eCAL::Process::GetUnitName().c_str());
+    return eCAL::Process::GetUnitName().c_str();
+  }
+
+  ECALC_API void eCAL_Process_SleepMS(long time_ms_)
+  {
+    eCAL::Process::SleepMS(time_ms_);
+  }
+
+  ECALC_API void eCAL_Process_SleepNS(long long time_ns_)
+  {
+    eCAL::Process::SleepNS(time_ns_);
   }
 
   ECALC_API int eCAL_Process_GetProcessID()
   {
     return eCAL::Process::GetProcessID();
+  }
+
+  ECALC_API const char* eCAL_Process_GetProcessIDAsString()
+  {
+    return eCAL::Process::GetProcessIDAsString().c_str();
+  }
+
+  ECALC_API const char* eCAL_Process_GetProcessName()
+  {
+    return eCAL::Process::GetProcessName().c_str();
+  }
+
+  ECALC_API const char* eCAL_Process_GetProcessParameter()
+  {
+    return eCAL::Process::GetProcessParameter().c_str();
   }
 
   ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverityLevel level_, const char* info_)

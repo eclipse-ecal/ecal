@@ -25,26 +25,34 @@
 #ifndef ecal_c_init_h_included
 #define ecal_c_init_h_included
 
-static const unsigned int eCAL_Init_Publisher = 0x001;
-static const unsigned int eCAL_Init_Subscriber = 0x002;
-static const unsigned int eCAL_Init_Service = 0x004;
-static const unsigned int eCAL_Init_Monitoring = 0x008;
-static const unsigned int eCAL_Init_Logging = 0x010;
-static const unsigned int eCAL_Init_TimeSync = 0x020;
+#define ECAL_INIT_PUBLISHER 0x001
+#define ECAL_INIT_SUBSCRIBER 0x002
+#define ECAL_INIT_SERVICE 0x004
+#define ECAL_INIT_MONITORING 0x008
+#define ECAL_INIT_LOGGING 0x010
+#define ECAL_INIT_TIMESYNC 0x020
+#define ECAL_INIT_NONE 0x000
 
-static const unsigned int eCAL_Init_All = eCAL_Init_Publisher
-| eCAL_Init_Subscriber
-| eCAL_Init_Service
-| eCAL_Init_Monitoring
-| eCAL_Init_Logging
-| eCAL_Init_TimeSync;
+static const unsigned int eCAL_Init_Publisher = ECAL_INIT_PUBLISHER;
+static const unsigned int eCAL_Init_Subscriber = ECAL_INIT_SUBSCRIBER;
+static const unsigned int eCAL_Init_Service = ECAL_INIT_SERVICE;
+static const unsigned int eCAL_Init_Monitoring = ECAL_INIT_MONITORING;
+static const unsigned int eCAL_Init_Logging = ECAL_INIT_LOGGING;
+static const unsigned int eCAL_Init_TimeSync = ECAL_INIT_TIMESYNC;
 
-static const unsigned int eCAL_Init_Default = eCAL_Init_Publisher
-| eCAL_Init_Subscriber
-| eCAL_Init_Service
-| eCAL_Init_Logging
-| eCAL_Init_TimeSync;
+static const unsigned int eCAL_Init_All = ECAL_INIT_PUBLISHER
+| ECAL_INIT_SUBSCRIBER
+| ECAL_INIT_SERVICE
+| ECAL_INIT_MONITORING
+| ECAL_INIT_LOGGING
+| ECAL_INIT_TIMESYNC;
 
-static const unsigned int eCAL_Init_None = 0x000;
+static const unsigned int eCAL_Init_Default = ECAL_INIT_PUBLISHER
+| ECAL_INIT_SUBSCRIBER
+| ECAL_INIT_SERVICE
+| ECAL_INIT_LOGGING
+| ECAL_INIT_TIMESYNC;
+
+static const unsigned int eCAL_Init_None = ECAL_INIT_NONE;
 
 #endif /*ecal_c_init_h_included*/

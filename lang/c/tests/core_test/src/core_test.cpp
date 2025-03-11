@@ -48,13 +48,13 @@ TEST(core_c_core, InitializeFinalize)
   EXPECT_EQ(0, eCAL_IsInitialized());
 
   // initialize eCAL API
-  EXPECT_EQ(0, eCAL_Initialize("initialize_test", 0));
+  EXPECT_EQ(0, eCAL_Initialize("initialize_test", NULL));
 
   // Is eCAL API initialized ?
   EXPECT_EQ(1, eCAL_IsInitialized());
 
   // initialize eCAL API again we expect return value 1 as it's already initialized
-  EXPECT_EQ(1, eCAL_Initialize("initialize_test", 0));
+  EXPECT_EQ(1, eCAL_Initialize("initialize_test", NULL));
 
   // finalize eCAL API we expect return value 0
   EXPECT_EQ(0, eCAL_Finalize());
@@ -72,7 +72,7 @@ TEST(core_c_core, MultipleInitializeFinalize)
   for (auto i = 0; i < 4; ++i)
   {
     // initialize eCAL API
-    EXPECT_EQ(0, eCAL_Initialize("multiple_initialize_finalize_test", 0));
+    EXPECT_EQ(0, eCAL_Initialize("multiple_initialize_finalize_test", NULL));
 
     // finalize eCAL API
     EXPECT_EQ(0, eCAL_Finalize());
@@ -88,12 +88,8 @@ TEST(core_c_core, GetUnitName)
   EXPECT_EQ(1, eCAL_IsInitialized());
 
   // if we call eCAL_Initialize with empty unit name, eCAL will use the process name as unit name
-  char process_name[1024] = { 0 };
-  eCAL_Process_GetProcessName(process_name, sizeof(process_name));
-  std::string process_name_s = EcalUtils::Filesystem::BaseName(process_name);
-  char unit_name[1024] = { 0 };
-  eCAL_Process_GetUnitName(unit_name, sizeof(unit_name));
-  EXPECT_STREQ(process_name_s.c_str(), unit_name);
+  std::string process_name_s = EcalUtils::Filesystem::BaseName(eCAL_Process_GetProcessName());
+  EXPECT_STREQ(process_name_s.c_str(), eCAL_Process_GetUnitName());
 
   // finalize eCAL API we expect return value 0 because it will be finalized
   EXPECT_EQ(0, eCAL_Finalize());

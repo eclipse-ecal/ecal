@@ -85,9 +85,9 @@ extern "C"
     return publisher_configuration;
   }
 
-  ECALC_API char* eCAL_Config_GetLoadedEcalYamlPath()
+  ECALC_API const char* eCAL_Config_GetLoadedEcalYamlPath()
   {
-    return Clone_CString(eCAL::Config::GetLoadedEcalIniPath().c_str());
+    return eCAL::Config::GetLoadedEcalIniPath().c_str();
   }
 
   ECALC_API int eCAL_Config_GetRegistrationTimeoutMs()
@@ -121,14 +121,14 @@ extern "C"
   }
 
   // Network
-  ECALC_API char* eCAL_Config_GetUdpMulticastGroup()
+  ECALC_API const char* eCAL_Config_GetUdpMulticastGroup()
   {
-    return Clone_CString(eCAL::Config::GetUdpMulticastGroup().c_str());
+    return eCAL::Config::GetUdpMulticastGroup().c_str();
   }
 
-  ECALC_API char* eCAL_Config_GetUdpMulticastMask()
+  ECALC_API const char* eCAL_Config_GetUdpMulticastMask()
   {
-    return Clone_CString(eCAL::Config::GetUdpMulticastMask().c_str());
+    return eCAL::Config::GetUdpMulticastMask().c_str();
   }
 
   ECALC_API int eCAL_Config_GetUdpMulticastPort()
@@ -191,32 +191,32 @@ extern "C"
     return eCAL::Config::GetTcpPubsubMaxReconnectionAttemps();
   }
 
-  ECALC_API char* eCAL_Config_GetShmTransportDomain()
+  ECALC_API const char* eCAL_Config_GetShmTransportDomain()
   {
-    return Clone_CString(eCAL::Config::GetShmTransportDomain().c_str());
+    return eCAL::Config::GetShmTransportDomain().c_str();
   }
 
   // Time
-  ECALC_API char* eCAL_Config_GetTimesyncModuleName()
+  ECALC_API const char* eCAL_Config_GetTimesyncModuleName()
   {
-    return Clone_CString(eCAL::Config::GetTimesyncModuleName().c_str());
+    return eCAL::Config::GetTimesyncModuleName().c_str();
   }
 
-  ECALC_API char* eCAL_Config_GetTimesyncModuleReplay()
+  ECALC_API const char* eCAL_Config_GetTimesyncModuleReplay()
   {
-    return Clone_CString(eCAL::Config::GetTimesyncModuleReplay().c_str());
+    return eCAL::Config::GetTimesyncModuleReplay().c_str();
   }
 
   // Process
-  ECALC_API char* eCAL_Config_GetTerminalEmulatorCommand()
+  ECALC_API const char* eCAL_Config_GetTerminalEmulatorCommand()
   {
-    return Clone_CString(eCAL::Config::GetTerminalEmulatorCommand().c_str());
+    return eCAL::Config::GetTerminalEmulatorCommand().c_str();
   }
 
   // Sys
-  ECALC_API char* eCAL_Config_GetEcalSysFilterExcludeList()
+  ECALC_API const char* eCAL_Config_GetEcalSysFilterExcludeList()
   {
-    return  Clone_CString(eCAL::Config::GetEcalSysFilterExcludeList().c_str());
+    return eCAL::Config::GetEcalSysFilterExcludeList().c_str();
   }
 
   // Subscriber
@@ -231,8 +231,8 @@ extern "C"
     return eCAL::Config::GetShmMonitoringQueueSize();
   }
 
-  ECALC_API char* eCAL_Config_GetShmMonitoringDomain()
+  ECALC_API const char* eCAL_Config_GetShmMonitoringDomain()
   {
-    return Clone_CString(eCAL::Config::GetShmMonitoringDomain().c_str());
+    return eCAL::Config::GetShmMonitoringDomain().c_str();
   }
 }

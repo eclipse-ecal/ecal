@@ -39,14 +39,14 @@ extern "C"
    *
    * @return  Full eCAL version string. 
   **/
-  ECALC_API char* eCAL_GetVersionString();
+  ECALC_API const char* eCAL_GetVersionString();
 
   /**
    * @brief  Get eCAL version date. 
    *
    * @return  Full eCAL version date string. 
   **/
-  ECALC_API char* eCAL_GetVersionDateString();
+  ECALC_API const char* eCAL_GetVersionDateString();
 
   /**
    * @brief  Get eCAL version as separated integer values. 

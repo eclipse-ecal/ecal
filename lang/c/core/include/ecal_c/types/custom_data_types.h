@@ -26,7 +26,7 @@ enum eCAL_Types_UdpConfigVersion
   eCAL_Types_UdpConfigVersion_V2
 };
 
-enum class eCAL_Types_UDPMode
+enum eCAL_Types_UDPMode
 {
   eCAL_Types_UDPMode_NETWORK,
   eCAL_Types_UDPMode_LOCAL

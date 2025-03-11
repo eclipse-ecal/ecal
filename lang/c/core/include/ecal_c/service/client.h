@@ -47,7 +47,7 @@ extern "C"
 
   ECALC_API const char* eCAL_ServiceClient_GetServiceName(eCAL_ServiceClient* service_client_);
 
-  ECALC_API struct eCAL_SServiceId* eCAL_ServiceClient_GetServiceId(eCAL_ServiceClient* service_client_);
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceClient_GetServiceId(eCAL_ServiceClient* service_client_);
 
   ECALC_API int eCAL_ServiceClient_IsConnected(eCAL_ServiceClient* service_client_);
 #ifdef __cplusplus

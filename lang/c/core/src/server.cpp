@@ -49,6 +49,7 @@ extern "C"
   struct eCAL_ServiceServer
   {
     eCAL::CServiceServer* handle;
+    eCAL_SServiceId service_id;
   };
 
   ECALC_API eCAL_ServiceServer* eCAL_ServiceServer_New(const char* service_name_, eCAL_ServerEventCallbackT event_callback_)
@@ -63,7 +64,7 @@ extern "C"
       event_callback_(&service_id_c, &server_event_callback_data_c);
     };
 
-    return new eCAL_ServiceServer{ new eCAL::CServiceServer(service_name_, event_callback) };
+    return new eCAL_ServiceServer{ new eCAL::CServiceServer(service_name_, event_callback_ != NULL ? event_callback : eCAL::ServerEventCallbackT()) };
   }
 
   ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_)
@@ -82,11 +83,12 @@ extern "C"
       struct eCAL_SServiceMethodInformation method_info_c;
       Assign_SServiceMethodInformation(&method_info_c, method_info_);
 
-      void* response_c = nullptr;
+      void* response_c = NULL;
       size_t response_length_c = 0;
       int ret_state = callback_(&method_info_c, request_.data(), request_.size(), &response_c, &response_length_c);
 
-      response_.assign(static_cast<const char*>(response_c), response_length_c);
+      if (response_c != NULL && response_length_c != 0)
+        response_.assign(static_cast<const char*>(response_c), response_length_c);
       std::free(response_c);
 
       return ret_state;
@@ -105,7 +107,7 @@ extern "C"
     return service_server_->handle->GetServiceName().c_str();
   }
 
-  ECALC_API struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_)
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_)
   {
     auto* service_id = reinterpret_cast<eCAL_SServiceId*>(std::malloc(sizeof(eCAL_SServiceId)));
     if (service_id != NULL)

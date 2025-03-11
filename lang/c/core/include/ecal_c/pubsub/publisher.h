@@ -49,10 +49,9 @@ extern "C"
 
   ECALC_API const char* eCAL_Publisher_GetTopicName(eCAL_Publisher* publisher_);
 
-  ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
-  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_);
+  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_);
 
-  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_);
+  ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

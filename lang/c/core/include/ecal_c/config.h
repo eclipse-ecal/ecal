@@ -38,7 +38,7 @@ extern "C" {
   ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
 
   // Common
-  ECALC_API char* eCAL_Config_GetLoadedEcalYamlPath();
+  ECALC_API const char* eCAL_Config_GetLoadedEcalYamlPath();
   ECALC_API int eCAL_Config_GetRegistrationTimeoutMs();
   ECALC_API int eCAL_Config_GetRegistrationRefreshMs();
 
@@ -46,8 +46,8 @@ extern "C" {
   ECALC_API int eCAL_Config_IsNetworkEnabled();
   ECALC_API int eCAL_Config_IsShmRegistrationEnabled();
   ECALC_API enum eCAL_Types_UdpConfigVersion eCAL_Config_GetUdpMulticastConfigVersion();
-  ECALC_API char* eCAL_Config_GetUdpMulticastGroup();
-  ECALC_API char* eCAL_Config_GetUdpMulticastMask();
+  ECALC_API const char* eCAL_Config_GetUdpMulticastGroup();
+  ECALC_API const char* eCAL_Config_GetUdpMulticastMask();
   ECALC_API int eCAL_Config_GetUdpMulticastPort();
   ECALC_API int eCAL_Config_GetUdpMulticastTtl();
   ECALC_API int eCAL_Config_GetUdpMulticastSndBufSizeBytes();
@@ -60,24 +60,24 @@ extern "C" {
   ECALC_API size_t eCAL_Config_GetTcpPubsubReaderThreadpoolSize();
   ECALC_API size_t eCAL_Config_GetTcpPubsubWriterThreadpoolSize();
   ECALC_API int eCAL_Config_GetTcpPubsubMaxReconnectionAttemps();
-  ECALC_API char* eCAL_Config_GetShmTransportDomain();
+  ECALC_API const char* eCAL_Config_GetShmTransportDomain();
 
   // Time
-  ECALC_API char* eCAL_Config_GetTimesyncModuleName();
-  ECALC_API char* eCAL_Config_GetTimesyncModuleReplay();
+  ECALC_API const char* eCAL_Config_GetTimesyncModuleName();
+  ECALC_API const char* eCAL_Config_GetTimesyncModuleReplay();
 
   // Process
-  ECALC_API char* eCAL_Config_GetTerminalEmulatorCommand();
+  ECALC_API const char* eCAL_Config_GetTerminalEmulatorCommand();
 
   // Sys
-  ECALC_API char* eCAL_Config_GetEcalSysFilterExcludeList();
+  ECALC_API const char* eCAL_Config_GetEcalSysFilterExcludeList();
 
   // Subscriber
   ECALC_API int eCAL_Config_GetDropOutOfOrderMessages();
 
   // Registration
   ECALC_API size_t eCAL_Config_GetShmMonitoringQueueSize();
-  ECALC_API char* eCAL_Config_GetShmMonitoringDomain();
+  ECALC_API const char* eCAL_Config_GetShmMonitoringDomain();
 
 #ifdef __cplusplus
 }

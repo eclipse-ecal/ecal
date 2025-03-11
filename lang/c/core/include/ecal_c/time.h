@@ -32,7 +32,7 @@ extern "C"
 {
 #endif /*__cplusplus*/
 
-  ECALC_API char* eCAL_Time_GetName();
+  ECALC_API const char* eCAL_Time_GetName();
 
   /**
    * @brief  Get current time

@@ -50,7 +50,7 @@ extern "C"
 
   ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_);
 
-  ECALC_API struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_);
+  ECALC_API const struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

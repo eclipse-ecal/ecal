@@ -47,9 +47,9 @@ extern "C"
 
   ECALC_API const char* eCAL_Subscriber_GetTopicName(eCAL_Subscriber* subscriber_);
 
-  ECALC_API struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_);
+  ECALC_API const struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_);
 
-  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_);
+  ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

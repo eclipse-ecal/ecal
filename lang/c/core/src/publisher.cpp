@@ -172,6 +172,8 @@ namespace
 struct eCAL_Publisher
 {
   eCAL::CPublisher* handle;
+  eCAL_STopicId topic_id;
+  eCAL_SDataTypeInformation data_type_info;
 };
 
 extern "C"
@@ -239,51 +241,47 @@ extern "C"
     return publisher_->handle->GetTopicName().c_str();
   }
 
-  ECALC_API struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_)
+  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId(eCAL_Publisher* publisher_)
   {
-    auto* topic_id = reinterpret_cast<eCAL_STopicId*>(std::malloc(sizeof(eCAL_STopicId)));
-    if (topic_id != NULL)
-      Convert_STopicId(topic_id, publisher_->handle->GetTopicId());
-    return topic_id;
+    Assign_STopicId(&publisher_->topic_id, publisher_->handle->GetTopicId());
+    return &publisher_->topic_id;
   }
 
-  ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_)
-  {
-    const auto topic_id = publisher_->handle->GetTopicId();
-    const auto allocation_size = aligned_size(sizeof(eCAL_STopicId)) + ExtSize_STopicId(topic_id);
-    
-    struct eCAL_STopicId* topic_id_c = NULL;
-    
-    if (buffer_length_ == NULL)
-    {
-      topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(std::malloc(allocation_size));
-      if (topic_id_c != NULL)
-      {
-        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
-        Convert_STopicId(topic_id_c, topic_id, &ptr);
-      }
-    }
-    else
-    {
-      if (*buffer_length_ >= allocation_size)
-      {
-        topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(buffer);
-        auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
-        Convert_STopicId(topic_id_c, topic_id, &ptr);
-      }
-      else
-        *buffer_length_ = allocation_size;
-    }
+  //ECALC_API const struct eCAL_STopicId* eCAL_Publisher_GetTopicId_NoMalloc(eCAL_Publisher* publisher_, void* buffer, size_t* buffer_length_)
+  //{
+  //  const auto topic_id = publisher_->handle->GetTopicId();
+  //  const auto allocation_size = aligned_size(sizeof(eCAL_STopicId)) + ExtSize_STopicId(topic_id);
+  //  
+  //  struct eCAL_STopicId* topic_id_c = NULL;
+  //  
+  //  if (buffer_length_ == NULL)
+  //  {
+  //    topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(std::malloc(allocation_size));
+  //    if (topic_id_c != NULL)
+  //    {
+  //      auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+  //      Convert_STopicId(topic_id_c, topic_id, &ptr);
+  //    }
+  //  }
+  //  else
+  //  {
+  //    if (*buffer_length_ >= allocation_size)
+  //    {
+  //      topic_id_c = reinterpret_cast<struct eCAL_STopicId*>(buffer);
+  //      auto* ptr = reinterpret_cast<char*>(topic_id_c) + aligned_size(sizeof(eCAL_STopicId));
+  //      Convert_STopicId(topic_id_c, topic_id, &ptr);
+  //    }
+  //    else
+  //      *buffer_length_ = allocation_size;
+  //  }
+  //
+  //  return topic_id_c;
+  //}
 
-    return topic_id_c;
-  }
-
-  ECALC_API struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_)
+  ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Publisher_GetDataTypeInformation(eCAL_Publisher* publisher_)
   {
-    auto* data_type_information = reinterpret_cast<eCAL_SDataTypeInformation*>(std::malloc(sizeof(eCAL_SDataTypeInformation)));
-    if (data_type_information != NULL)
-      Convert_SDataTypeInformation(data_type_information, publisher_->handle->GetDataTypeInformation());
-    return data_type_information;
+    Assign_SDataTypeInformation(&publisher_->data_type_info, publisher_->handle->GetDataTypeInformation());
+    return &publisher_->data_type_info;
   }
 }
 #endif // ECAL_CORE_PUBLISHER

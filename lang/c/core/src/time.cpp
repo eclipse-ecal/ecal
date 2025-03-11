@@ -30,9 +30,9 @@
 
 extern "C"
 {
-  ECALC_API char* eCAL_Time_GetName()
+  ECALC_API const char* eCAL_Time_GetName()
   {
-    return Clone_CString(eCAL::Time::GetName().c_str());
+    return eCAL::Time::GetName().c_str();
   }
 
   ECALC_API long long eCAL_Time_GetMicroSeconds()
