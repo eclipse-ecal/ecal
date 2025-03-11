@@ -31,7 +31,7 @@
 #include <monster/monster_generated.h>
 
 
-int main(int argc, char **argv)
+int main(int /*argc*/, char **/*argv*/)
 {
   // initialize eCAL API
   eCAL::Initialize("monster publisher");
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a publisher (topic name "monster")
-  eCAL::flatbuffers::CPublisher<flatbuffers::FlatBufferBuilder> pub("monster");
+  eCAL::flatbuffers::CObjectPublisher<Game::Sample::MonsterT> pub("monster");
   
   Game::Sample::MonsterT my_monster;
   my_monster.name = "Monster";
@@ -57,13 +57,8 @@ int main(int argc, char **argv)
     my_monster.inventory.push_back(cnt);
     ++cnt;
 
-    // Serialize into new flatbuffer.
-    // the generic builder instance
-    flatbuffers::FlatBufferBuilder builder;
-    builder.Finish(Game::Sample::Monster::Pack(builder, &my_monster));
-
     // send the monster object
-    pub.Send(builder, -1);
+    pub.Send(my_monster);
 
     // print content
     std::cout << "monster pos x     : " << my_monster.pos->x()         << std::endl;

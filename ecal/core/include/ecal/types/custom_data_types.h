@@ -1,6 +1,6 @@
 /* =========================== LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,11 @@ namespace eCAL
       ECAL_API IpAddressV4(const std::string& ip_address_);
       ECAL_API IpAddressV4(const char* ip_address_);
 
-      ECAL_API std::string Get() const;
+      ECAL_API const std::string& Get() const;
 
       ECAL_API IpAddressV4& operator=(const std::string& ip_string_);
       ECAL_API IpAddressV4& operator=(const char* ip_string_);
-      ECAL_API operator std::string() const;
+      ECAL_API operator const std::string&() const;
       ECAL_API bool operator==(const eCAL::Types::IpAddressV4& rhs) const;  
       ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_);
       ECAL_API friend bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs);
@@ -71,12 +71,5 @@ namespace eCAL
       V1 = 1,
       V2 = 2
     };
-
-    enum class UDPMode
-    {
-      NETWORK,
-      LOCAL
-    };
-
   }
 } 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,13 @@
 
 #include "logging/config/attributes/ecal_log_provider_attributes.h"
 #include "logging/config/attributes/ecal_log_receiver_attributes.h"
-#include "ecal/config/logging.h"
-#include "ecal/config/registration.h"
-#include "ecal/config/transport_layer.h"
+#include "ecal/config/configuration.h"
 
 namespace eCAL
 {
   namespace Logging
   {
-    SProviderAttributes BuildLoggingProviderAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
-    SReceiverAttributes BuildLoggingReceiverAttributes(const Logging::Configuration& log_config_, const Registration::Configuration& reg_config_, const TransportLayer::Configuration& tl_config_);
+    SProviderAttributes BuildLoggingProviderAttributes(const eCAL::Configuration& config_);
+    SReceiverAttributes BuildLoggingReceiverAttributes(const eCAL::Configuration& config_);
   }
 }

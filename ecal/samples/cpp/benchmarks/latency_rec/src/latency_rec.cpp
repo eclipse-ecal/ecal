@@ -55,41 +55,43 @@ void on_receive(const struct eCAL::SReceiveCallbackData& data_, SCallbackPar* pa
   if(delay_ > 0) std::this_thread::sleep_for(std::chrono::milliseconds(delay_));
 }
 
-// single test run
+// test run
 void do_run(int delay_, std::string& log_file_)
 {
   // initialize eCAL API
   eCAL::Initialize("latency_rec");
 
-  // subscriber
-  eCAL::CSubscriber sub("ping");
-
-  // apply subscriber callback function
-  SCallbackPar cb_par;
-  auto callback = std::bind(on_receive, std::placeholders::_3, &cb_par, delay_);
-  sub.SetReceiveCallback(callback);
-
-  size_t msg_last(0);
   while (eCAL::Ok())
   {
-    // check once a second if we still receive new messages
-    // if not, we stop and evaluate this run
+    // subscriber
+    eCAL::CSubscriber sub("ping");
+
+    // apply subscriber callback function
+    SCallbackPar cb_par;
+    auto callback = std::bind(on_receive, std::placeholders::_3, &cb_par, delay_);
+    sub.SetReceiveCallback(callback);
+
+    size_t msg_last(0);
+    while ((cb_par.msg_num == 0) || (msg_last != cb_par.msg_num))
     {
-      const std::lock_guard<std::mutex> lock(cb_par.mtx);
-      if ((cb_par.msg_num > 0) && (msg_last == cb_par.msg_num)) break;
-      else msg_last = cb_par.msg_num;
+      // check once a second if we still receive new messages
+      // if not, we stop and evaluate this run
+      {
+        const std::lock_guard<std::mutex> lock(cb_par.mtx);
+        msg_last = cb_par.msg_num;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    // detach callback
+    sub.RemoveReceiveCallback();
+
+    // evaluate all
+    evaluate(cb_par.latency_array, cb_par.rec_size, warmups, log_file_);
+
+    // log all latencies into file
+    log2file(cb_par.latency_array, cb_par.rec_size, log_file_);
   }
-
-  // detach callback
-  sub.RemoveReceiveCallback();
-
-  // evaluate all
-  evaluate(cb_par.latency_array, cb_par.rec_size, warmups, log_file_);
-
-  // log all latencies into file
-  log2file(cb_par.latency_array, cb_par.rec_size, log_file_);
 
   // finalize eCAL API
   eCAL::Finalize();
@@ -108,10 +110,7 @@ int main(int argc, char** argv)
     cmd.parse(argc, argv);
 
     // run tests
-    while(eCAL::Ok())
-    {
-      do_run(delay.getValue(), log_file.getValue());
-    }
+    do_run(delay.getValue(), log_file.getValue());
   }
   catch (TCLAP::ArgException& e)  // catch any exceptions
   {

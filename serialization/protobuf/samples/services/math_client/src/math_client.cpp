@@ -84,7 +84,7 @@ int main()
   eCAL::Initialize("math client");
 
   // Create 2 math services client using the protobuf service type MathService.
-  const eCAL::protobuf::CServiceClientTyped<MathService> math_client(OnClientState);
+  const eCAL::protobuf::CServiceClient<MathService> math_client(OnClientState);
 
   // Wait until the client is connected to at least one service.
   while (eCAL::Ok() && !math_client.IsConnected())

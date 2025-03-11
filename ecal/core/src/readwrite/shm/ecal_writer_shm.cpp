@@ -104,13 +104,17 @@ namespace eCAL
     }
   }
 
+  /*
+  * Potentially, a publisher has multiple subscribers within the same process
+  * 
+  */
   void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
 
     // remove topic id from the id set for the given process id
-    // bool memfile_has_subscriptions(true);
+    bool memfile_has_subscriptions(true);
     {
       const std::lock_guard<std::mutex> lock(m_process_id_topic_id_set_map_sync);
       auto process_it = m_process_id_topic_id_set_map.find(process_id_);
@@ -127,26 +131,22 @@ namespace eCAL
           // we can remove the empty topic id set
           m_process_id_topic_id_set_map.erase(process_it);
           // and set the subscription state to false for later processing
-          //memfile_has_subscriptions = false;
+          memfile_has_subscriptions = false;
         }
       }
     }
-// TODO: Disconnect events immediately if there is no longer an existing subscription.
-//       Unfortunately the below Disconnect()-method leads to incongruous event handles on
-//       unix operating systems in case of a subscriber tries to reconnected to same publisher
-//       again.
-//
-//    // memory file is still connected to at least one topic id of this process id
-//    // no need to Disconnect process id
-//    if (memfile_has_subscriptions) return;
-//
-//    for (auto& memory_file : m_memory_file_vec)
-//    {
-//      memory_file->Disconnect(std::to_string(process_id_));
-//#ifndef NDEBUG
-//      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
-//#endif
-//    }
+    // memory file is still connected to at least one topic id of this process id
+    // no need to Disconnect process id
+    if (memfile_has_subscriptions) return;
+
+    // If the removed subscription was the last one, we need to temporarily disconnect the process
+    for (auto& memory_file : m_memory_file_vec)
+    {
+      memory_file->Disconnect(std::to_string(process_id_));
+#ifndef NDEBUG
+      Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
+#endif
+    }
   }
 
   Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()

@@ -146,7 +146,7 @@ namespace eCAL
      * @return  The topic name.
     **/
     ECAL_API_EXPORTED_MEMBER
-      std::string GetTopicName() const;
+      const std::string& GetTopicName() const;
 
     /**
      * @brief Retrieve the topic id.
@@ -154,7 +154,7 @@ namespace eCAL
      * @return  The topic id.
     **/
     ECAL_API_EXPORTED_MEMBER
-      STopicId GetTopicId() const;
+      const STopicId& GetTopicId() const;
 
     /**
      * @brief Gets description of the connected topic.
@@ -162,7 +162,7 @@ namespace eCAL
      * @return  The topic information.
     **/
     ECAL_API_EXPORTED_MEMBER
-      SDataTypeInformation GetDataTypeInformation() const;
+      const SDataTypeInformation& GetDataTypeInformation() const;
 
   private:
     std::shared_ptr<CPublisherImpl> m_publisher_impl;

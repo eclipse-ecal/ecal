@@ -32,7 +32,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings 
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/rec/server_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -49,7 +49,7 @@ namespace eCAL
     // Constructor & Destructor
     /////////////////////////////////
     public:
-      CommandExecutor(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service);
+      CommandExecutor(const std::shared_ptr<eCAL::rec_server::RecServer>& rec_server_instance, const std::string& remote_hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service);
       ~CommandExecutor();
 
     /////////////////////////////////
@@ -70,7 +70,7 @@ namespace eCAL
     private:
       std::shared_ptr<eCAL::rec_server::RecServer>                                                rec_server_instance_;
       std::string                                                                                 remote_hostname_;
-      std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service_;
+      std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service_;
 
       std::vector<std::pair<std::string, std::unique_ptr<eCAL::rec_cli::command::Command>>>       command_map_;
 

@@ -141,6 +141,7 @@ namespace eCAL
         virtual std::string eCALLocalUserDir() const = 0;
         virtual std::string eCALDataSystemDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
         virtual std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
+        virtual std::string eCALLibraryDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
     };
 
     class DirProvider : public IDirProvider
@@ -183,6 +184,14 @@ namespace eCAL
          * @returns The unique temporary folder directory.
          */
         std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const override;
+
+        /**
+         * @brief Returns the path to the eCAL library directory.
+         * 
+         * @returns The path to the eCAL library directory.
+         *          Returns empty string if the path does not exist.
+         */
+        std::string eCALLibraryDir(const eCAL::Util::IDirManager& dir_manager_) const override;
     };
   } // namespace Util
 

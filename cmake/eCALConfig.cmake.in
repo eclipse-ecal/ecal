@@ -30,7 +30,13 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
 set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
 set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
 
-find_package(Protobuf REQUIRED)
+# Try and find protobuf in Config mode first
+# (Primarily for Windows where we provide protobuf as part of eCAL)
+find_package(Protobuf CONFIG)
+if(NOT Protobuf_FOUND)
+  # Search for Protobuf using Module mode (with no Config mode fallback)
+  find_package(Protobuf MODULE REQUIRED)
+endif()
 
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
 include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_helper_functions.cmake")

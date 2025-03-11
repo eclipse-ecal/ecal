@@ -101,6 +101,12 @@ namespace eCAL
     // create unique client ID
     m_client_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
+    // create service id
+    m_service_id.service_id.entity_id = m_client_id;
+    m_service_id.service_id.process_id = Process::GetProcessID();
+    m_service_id.service_id.host_name = Process::GetHostName();
+    m_service_id.service_name = m_service_name;
+
     // add event callback
     {
       const std::lock_guard<std::mutex> lock(m_event_callback_mutex);
@@ -333,19 +339,12 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
-  SServiceId CServiceClientImpl::GetServiceId() const
+  const SServiceId& CServiceClientImpl::GetServiceId() const
   {
-    SServiceId service_id;
-
-    service_id.service_id.entity_id = m_client_id;
-    service_id.service_id.process_id = Process::GetProcessID();
-    service_id.service_id.host_name = Process::GetHostName();
-    service_id.service_name = m_service_name;
-
-    return service_id;
+    return m_service_id;
   }
 
-  std::string CServiceClientImpl::GetServiceName() const
+  const std::string& CServiceClientImpl::GetServiceName() const
   {
     return m_service_name;
   }

@@ -83,8 +83,14 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
 
+    // build subscriber id
+    m_subscriber_id = std::chrono::steady_clock::now().time_since_epoch().count();
+
     // build topic id
-    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_topic_id.topic_name = m_attributes.topic_name;
+    m_topic_id.topic_id.entity_id = m_subscriber_id;
+    m_topic_id.topic_id.host_name = m_attributes.host_name;
+    m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // start transport layers
     InitializeLayers();
@@ -627,7 +633,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.entity_id  = m_subscriber_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
@@ -695,7 +701,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.entity_id  = m_subscriber_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
@@ -714,7 +720,7 @@ namespace eCAL
       m_layers.udp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -725,7 +731,7 @@ namespace eCAL
       m_layers.shm.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -736,7 +742,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
@@ -750,7 +756,7 @@ namespace eCAL
       m_layers.udp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -761,7 +767,7 @@ namespace eCAL
       m_layers.shm.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -772,7 +778,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }

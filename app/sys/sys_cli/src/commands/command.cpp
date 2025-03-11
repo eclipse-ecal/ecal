@@ -25,12 +25,12 @@ namespace eCAL
   {
     namespace command
     {
-      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output)
+      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output)
       {
         return CallRemoteEcalsysService(remote_ecalsys_service, hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), state_output);
       }
 
-      eCAL::sys::Error Command::CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service
+      eCAL::sys::Error Command::CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service
                                                         , const std::string&                hostname
                                                         , const std::string&                method_name
                                                         , const google::protobuf::Message&  request

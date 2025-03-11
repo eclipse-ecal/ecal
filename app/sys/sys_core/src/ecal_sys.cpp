@@ -84,8 +84,6 @@ EcalSys::EcalSys(const std::string& config_path)
 
 EcalSys::~EcalSys() 
 {
-  eCAL::Finalize();
-
   m_monitor_thread->Interrupt();
   m_monitor_thread->Join();
 

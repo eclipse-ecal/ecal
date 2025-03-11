@@ -90,25 +90,32 @@ namespace eCAL
     }
   }
 
+  /*
+  * This function is called when a subscriber is being unregistered
+  * It only temporarily deactivates the events, such that they can be reactivated by 
+  * a call to Connect with the same process ID.
+  *
+  * This has the disadvantage, that even when a complete process is unregistered
+  * (as opposed to a subscriber which is being unregistered), the events are present until this
+  * object is destroyed (which happens during eCAL::Finalize()
+  * It would be better to provide two functions (e.g. Disconnect (upon subscription removal) and Remove (upon process removal).
+  *
+  * Also, the disconnect does not prevent the `event_snd` not to be set when the publisher writes data. 
+  * We should theoretically distinguish between not acknowledging, and not signaling send data.
+  */
   bool CSyncMemoryFile::Disconnect(const std::string& process_id_)
   {
     if (!m_created) return false;
 
-    // a local subscriber connection timed out
-    // we close the associated sync events and
-    // remove them from the event handle map
-
     const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
-    const EventHandleMapT::const_iterator iter = m_event_handle_map.find(process_id_);
+    const EventHandleMapT::iterator iter = m_event_handle_map.find(process_id_);
     if (iter != m_event_handle_map.end())
     {
-      const SEventHandlePair event_pair = iter->second;
+      SEventHandlePair& event_pair = iter->second;
       // fire acknowledge events, to unlock blocking send function
       gSetEvent(event_pair.event_ack);
-      // close the snd and ack event
-      gCloseEvent(event_pair.event_snd);
-      gCloseEvent(event_pair.event_ack);
-      m_event_handle_map.erase(iter);
+      // mark the event to be ignored by the send function.
+      event_pair.event_ack_is_invalid = true;
       return true;
     }
 
@@ -403,6 +410,10 @@ namespace eCAL
 #endif
   }
 
+  /*
+  * This function is called upon destruction of the CSyncMemoryFile.
+  * It closes and invalidates all events that have been created by this class.
+  */
   void CSyncMemoryFile::DisconnectAll()
   {
     const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);

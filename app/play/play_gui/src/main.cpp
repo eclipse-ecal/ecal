@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
   //////////////////////////////////////////////////////////////////////////////
 
   // Just make sure that eCAL is initialized
-  eCAL::Initialize("eCALPlayGUI", eCAL::Init::Default | eCAL::Init::Publisher | eCAL::Init::Service | eCAL::Init::Monitoring);
+  eCAL::Initialize("eCALPlayGUI", eCAL::Init::All);
 
 // For linux big measurements require more file descriptors than the default value
 #ifdef ECAL_OS_LINUX

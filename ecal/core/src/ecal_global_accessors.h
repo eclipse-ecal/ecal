@@ -25,6 +25,7 @@
 #include <atomic>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <ecal/process_severity.h>
 
@@ -67,7 +68,6 @@ namespace eCAL
 #endif
 
   void SetGlobalUnitName(const char *unit_name_);
-  void InitGlobals();
 
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
@@ -101,15 +101,13 @@ namespace eCAL
 #endif
 
   // declaration of globally accessible variables
-  extern CGlobals*                     g_globals_ctx;
-  extern std::atomic<int>              g_globals_ctx_ref_cnt;
+  extern std::unique_ptr<CGlobals>     g_globals_ctx;
 
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;
 
   extern std::string                   g_host_name;
   extern std::string                   g_unit_name;
-  extern std::vector<std::string>      g_task_parameter;
 
   extern std::string                   g_process_name;
   extern std::string                   g_process_par;

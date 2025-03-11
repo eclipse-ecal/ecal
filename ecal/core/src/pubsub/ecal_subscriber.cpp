@@ -33,8 +33,11 @@ namespace eCAL
 {
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.subscriber = config_;
+
     // create subscriber implementation
-    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
 
     // register subscriber
     if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
@@ -88,21 +91,24 @@ namespace eCAL
     return m_subscriber_impl->GetPublisherCount();
   }
 
-  std::string CSubscriber::GetTopicName() const
+  const std::string& CSubscriber::GetTopicName() const
   {
-    if (m_subscriber_impl == nullptr) return "";
+    static const std::string empty_topic_name{};
+    if (m_subscriber_impl == nullptr) return empty_topic_name;
     return m_subscriber_impl->GetTopicName();
   }
 
-  STopicId CSubscriber::GetTopicId() const
+  const STopicId& CSubscriber::GetTopicId() const
   {
-    if (m_subscriber_impl == nullptr) return{};
-    return m_subscriber_impl->GetId();
+    static const STopicId empty_topic_id{};
+    if (m_subscriber_impl == nullptr) return empty_topic_id;
+    return m_subscriber_impl->GetTopicId();
   }
 
-  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
+  const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
-    if (m_subscriber_impl == nullptr) return SDataTypeInformation{};
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_subscriber_impl == nullptr) return empty_data_type_information;
     return m_subscriber_impl->GetDataTypeInformation();
   }
 }

@@ -54,7 +54,10 @@ namespace eCAL
     public:
       // Constructor
       FtpUploadThread(const std::string&                local_root_dir
-                    , const std::string&                ftp_server
+                    , const std::string&                ftp_host
+                    , uint16_t                          ftp_port
+                    , const std::string&                ftp_username
+                    , const std::string&                ftp_password
                     , const std::string&                ftp_root_dir
                     , const std::vector<std::string>&   skip_files
                     , const std::function<Error(void)>& post_upload_function = [](){ return Error::OK; });
@@ -81,6 +84,13 @@ namespace eCAL
       // Helper methods
       /////////////////////////////////////////////
     private:
+      struct AddressInfo
+      {
+        std::string address_;   //!< IP address
+        int         family_ {}; //!< Address type (AF_INET, AF_INET6)
+      };
+
+      static std::vector<AddressInfo> ResolveHostnameBlocking(const std::string& hostname);
       static std::list<std::pair<std::string, unsigned long long>> CreateFileList(const std::string& root_dir);
       static std::string CreateTempSuffix();
 
@@ -105,7 +115,10 @@ namespace eCAL
       CURL* curl_handle;
 
       std::string              local_root_dir_;
-      std::string              ftp_server_;
+      std::string              ftp_host_;
+      uint16_t                 ftp_port_;
+      std::string              ftp_username_;
+      std::string              ftp_password_;
       std::string              ftp_root_dir_;
       std::vector<std::string> skip_files_;
 

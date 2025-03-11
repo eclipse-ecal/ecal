@@ -103,15 +103,7 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    STopicId GetTopicId() const
-    {
-      STopicId id;
-      id.topic_name          = m_attributes.topic_name;
-      id.topic_id.entity_id  = m_topic_id;
-      id.topic_id.host_name  = m_attributes.host_name;
-      id.topic_id.process_id = m_attributes.process_id;
-      return id;
-    }
+    const STopicId& GetTopicId() const { return m_topic_id; }
 
     const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
@@ -142,10 +134,11 @@ namespace eCAL
     
     int32_t GetFrequency();
 
-    EntityIdT                m_topic_id;
+    EntityIdT                              m_publisher_id;
     SDataTypeInformation                   m_topic_info;
     size_t                                 m_topic_size = 0;
     eCAL::eCALWriter::SAttributes          m_attributes;
+    STopicId                               m_topic_id;
 
     std::vector<char>                      m_payload_buffer;
 

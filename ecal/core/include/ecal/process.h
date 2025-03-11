@@ -53,30 +53,21 @@ namespace eCAL
      *
      * @return  Host name or empty string if failed. 
     **/
-    ECAL_API std::string GetHostName();
+    ECAL_API const std::string& GetHostName();
 
     /**
      * @brief  Get current SHM transport domain.
      *
      * @return  SHM transport domain or empty string if failed.
     **/
-    ECAL_API std::string GetShmTransportDomain();
+    ECAL_API const std::string& GetShmTransportDomain();
 
     /**
      * @brief  Get current unit name (defined via eCAL::Initialize). 
      *
      * @return  Unit name or empty string if failed. 
     **/
-    ECAL_API std::string GetUnitName();
-
-    /**
-     * @brief  Get current process parameter (defined via eCAL::Initialize(argc, argv). 
-     *
-     * @param sep_  Separator. 
-     *
-     * @return  Task parameter separated by 'sep_' or zero string if failed. 
-    **/
-    ECAL_API std::string GetTaskParameter(const char* sep_);
+    ECAL_API const std::string& GetUnitName();
 
     /**
      * @brief  Sleep current thread.
@@ -108,7 +99,6 @@ namespace eCAL
      *
      * @param  time  Time to sleep expressed in std::chrono::duration.
     **/
-
     template <typename Rep, typename Period>
     void SleepFor( std::chrono::duration<Rep, Period> time )
     {
@@ -128,21 +118,21 @@ namespace eCAL
      *
      * @return  The process id.
     **/
-    ECAL_API std::string GetProcessIDAsString();
+    ECAL_API const std::string& GetProcessIDAsString();
 
     /**
      * @brief  Get current process name. 
      *
      * @return  Process name length or zero if failed. 
     **/
-    ECAL_API std::string GetProcessName();
+    ECAL_API const std::string& GetProcessName();
 
     /**
      * @brief  Get current process parameter. 
      *
      * @return  Process parameter or empty string if failed. 
     **/
-    ECAL_API std::string GetProcessParameter();
+    ECAL_API const std::string& GetProcessParameter();
 
     /**
      * @brief  Set process state info. 
@@ -152,7 +142,7 @@ namespace eCAL
      * @param info_      Info message.
      *
     **/
-    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_);
+    ECAL_API void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_);
 
     /**
      * @deprecated This function is deprecated and will be removed in future eCAL versions.

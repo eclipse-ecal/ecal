@@ -33,7 +33,7 @@ if (ECAL_CORE_COMMAND_LINE)
 endif()
 
 if (ECAL_CORE_TRANSPORT_TCP)
-  find_package(tcp_pubsub     REQUIRED)
+  find_package(tcp_pubsub 2   REQUIRED)
 endif()
 
 # If we're currently doing a build within a git repository, we will configure the header files.
@@ -711,6 +711,8 @@ target_link_libraries(${TARGET_NAME}
     Threads::Threads
     eCAL::ecal-utils
 )
+
+target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
 
 set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
 

@@ -381,7 +381,6 @@ namespace eCAL
         }
 
         std::string local_root_dir = job_config_.GetCompleteMeasurementPath();
-        std::string ftp_server     = "ftp://" + upload_config.username_ + ":" + upload_config.password_ + "@" + upload_config.host_ + ":" + std::to_string(upload_config.port_);
         std::string upload_path    = EcalUtils::Filesystem::CleanPath("/" + upload_config.upload_path_ + "/", EcalUtils::Filesystem::Unix);
 
         if (upload_config.upload_metadata_files_)
@@ -389,7 +388,10 @@ namespace eCAL
           if (upload_config.delete_after_upload_)
           {
             ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
-                                                                 , std::move(ftp_server)
+                                                                 , upload_config.host_
+                                                                 , upload_config.port_
+                                                                 , upload_config.username_
+                                                                 , upload_config.password_
                                                                  , std::move(upload_path)
                                                                  , std::vector<std::string>()
                                                                  , [this]() -> Error { return this->DeleteMeasurement(true); });
@@ -397,7 +399,10 @@ namespace eCAL
           else
           {
             ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
-                                                                 , std::move(ftp_server)
+                                                                 , upload_config.host_
+                                                                 , upload_config.port_
+                                                                 , upload_config.username_
+                                                                 , upload_config.password_
                                                                  , std::move(upload_path)
                                                                  , std::vector<std::string>());
           }
@@ -407,7 +412,10 @@ namespace eCAL
           if (upload_config.delete_after_upload_)
           {
             ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
-                                                                 , std::move(ftp_server)
+                                                                 , upload_config.host_
+                                                                 , upload_config.port_
+                                                                 , upload_config.username_
+                                                                 , upload_config.password_
                                                                  , std::move(upload_path)
                                                                  , files_with_metadata_
                                                                  , [this]() -> Error { return this->DeleteMeasurement(true); });
@@ -415,7 +423,10 @@ namespace eCAL
           else
           {
             ftp_upload_thread_ = std::make_unique<FtpUploadThread>(std::move(local_root_dir)
-                                                                 , std::move(ftp_server)
+                                                                 , upload_config.host_
+                                                                 , upload_config.port_
+                                                                 , upload_config.username_
+                                                                 , upload_config.password_
                                                                  , std::move(upload_path)
                                                                  , files_with_metadata_);
           }

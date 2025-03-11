@@ -22,7 +22,7 @@
 #include <rec_server_core/proto_helpers.h>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/server.h>
 
 #include <string>
@@ -40,7 +40,7 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 
   eCAL::Initialize("Ecal Rec Tester");
   
-  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
+  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>();
 
   if (gui)
   {
@@ -119,7 +119,7 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::rec_server::RecS
 eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::RecServerConfig& config_pb_output)
 {
   const auto&   hostname(eCAL::Process::GetHostName());
-  constexpr int timeout_ms(1000);
+  constexpr int timeout_ms(2000);
 
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)
@@ -149,7 +149,7 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::rec_server
 eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_server::RecServerConfig& config_pb)
 {
   const auto&   hostname   (eCAL::Process::GetHostName());
-  constexpr int timeout_ms (1000);
+  constexpr int timeout_ms (2000);
 
   auto client_instances = remote_rec_server_service->GetClientInstances();
   for (auto& client_instance : client_instances)

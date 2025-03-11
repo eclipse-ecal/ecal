@@ -31,6 +31,7 @@ endif()
 set(config_test_src
   src/config_test.cpp
   src/path_processing_test.cpp
+  src/yaml_processing_test.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
@@ -52,6 +53,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     eCAL::core
     eCAL::ecal-utils
     Threads::Threads

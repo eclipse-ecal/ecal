@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ namespace eCAL
      */
     std::string GetLocalBroadcastAddress()
     {
-      return "127.255.255.255";
+      return eCAL::GetConfiguration().transport_layer.udp.local.group;
     }
 
     std::string GetRegistrationAddress()
@@ -168,8 +168,7 @@ namespace eCAL
       const bool local_only = !Config::IsNetworkEnabled();
       if (local_only)
       {
-        // if network is disabled, return a TTL of 0 to restrict multicast packets to the local machine
-        return 1;
+        return eCAL::GetConfiguration().transport_layer.udp.local.ttl;
       }
 
       // if network is enabled, return the configured UDP multicast TTL value

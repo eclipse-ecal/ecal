@@ -54,9 +54,10 @@ namespace eCAL
    *
    * @return  Full eCAL version string. 
   **/
-  std::string GetVersionString()
+  const std::string& GetVersionString()
   {
-    return ECAL_VERSION;
+    static const std::string version_string{ ECAL_VERSION };
+    return version_string;
   }
 
   /**
@@ -64,9 +65,10 @@ namespace eCAL
    *
    * @return  Full eCAL version date string. 
   **/
-  std::string GetVersionDateString()
+  const std::string& GetVersionDateString()
   {
-    return ECAL_DATE;
+    static const std::string version_date_string{ ECAL_DATE };
+    return version_date_string;
   }
 
   /**
@@ -106,18 +108,20 @@ namespace eCAL
   **/
   bool Initialize(eCAL::Configuration& config_, const std::string& unit_name_ /*= nullptr*/, unsigned int components_ /*= Init::Default*/)
   {
-    InitGlobals();
+    bool initialized{ false };
+
+    if (g_globals_ctx == nullptr)
+    {
+      g_ecal_configuration = config_;
+      SetGlobalUnitName(unit_name_.c_str());
+
+      g_globals_ctx = std::make_unique<CGlobals>();
+      initialized = g_globals()->Initialize(components_);
+      if (!initialized)
+        g_globals_ctx.reset();
+    }
     
-    g_ecal_configuration = config_;
-
-    SetGlobalUnitName(unit_name_.c_str());
-
-    g_globals_ctx_ref_cnt++;
-
-     // (post)initialize single components
-    const auto success = g_globals()->Initialize(components_);
-    
-    return success;
+    return initialized;
   }
 
   /**
@@ -157,15 +161,13 @@ namespace eCAL
   **/
   bool Finalize()
   {
-    if (g_globals_ctx == nullptr)
-      return false;
-    g_globals_ctx_ref_cnt--;
-    if (g_globals_ctx_ref_cnt > 0)
-      return true;
-    const auto ret = g_globals()->Finalize();
-    delete g_globals_ctx;
-    g_globals_ctx = nullptr;
-    return ret;
+    bool finalized{ false };
+    if (g_globals_ctx != nullptr)
+    {
+      finalized = g_globals()->Finalize();
+      g_globals_ctx.reset();
+    }
+    return finalized;
   }
 
   /**

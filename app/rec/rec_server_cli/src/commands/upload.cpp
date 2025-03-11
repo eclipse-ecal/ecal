@@ -76,7 +76,7 @@ namespace eCAL
         }
       }
 
-      eCAL::rec::Error Upload::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
+      eCAL::rec::Error Upload::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
       {
         // Arg check
         if (argv.size() > 1)

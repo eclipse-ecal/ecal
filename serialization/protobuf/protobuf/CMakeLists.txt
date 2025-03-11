@@ -80,8 +80,9 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/client_instance.h
       include/ecal/msg/protobuf/client_protobuf_types.h
       include/ecal/msg/protobuf/client_protobuf_utils.h
+      include/ecal/msg/protobuf/client_untyped.h
+      include/ecal/msg/protobuf/client_untyped_instance.h
       include/ecal/msg/protobuf/dynamic_json_subscriber.h
-      include/ecal/msg/protobuf/dynamic_publisher.h
       include/ecal/msg/protobuf/dynamic_subscriber.h
       include/ecal/msg/protobuf/ecal_proto_decoder.h
       include/ecal/msg/protobuf/ecal_proto_dyn.h
@@ -92,6 +93,8 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
       include/ecal/msg/protobuf/subscriber.h
+      include/ecal/msg/protobuf/serializer.h
+
 )
 
 target_compile_features(protobuf_core INTERFACE cxx_std_14)

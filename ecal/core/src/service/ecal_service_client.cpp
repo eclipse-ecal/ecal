@@ -179,15 +179,17 @@ namespace eCAL
     return return_state;
   }
 
-  std::string CServiceClient::GetServiceName() const
+  const std::string& CServiceClient::GetServiceName() const
   {
-    if (m_service_client_impl == nullptr) return "";
+    static const std::string empty_service_name{};
+    if (m_service_client_impl == nullptr) return empty_service_name;
     return m_service_client_impl->GetServiceName();
   }
 
-  SServiceId CServiceClient::GetServiceId() const
+  const SServiceId& CServiceClient::GetServiceId() const
   {
-    if (m_service_client_impl == nullptr) return SServiceId();
+    static const SServiceId empty_service_id{};
+    if (m_service_client_impl == nullptr) return empty_service_id;
     return m_service_client_impl->GetServiceId();
   }
 
