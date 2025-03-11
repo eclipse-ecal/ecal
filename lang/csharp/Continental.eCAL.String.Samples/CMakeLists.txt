@@ -17,4 +17,3 @@
 # ========================= eCAL LICENSE =================================
 
 add_subdirectory(pubsub)
-#add_subdirectory(service)

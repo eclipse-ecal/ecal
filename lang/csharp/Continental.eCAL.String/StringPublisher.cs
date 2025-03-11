@@ -18,70 +18,64 @@
 */
 
 /**
- * @file ProtoPublisher.cs
+ * @file StringPublisher.cs
  *
- * @brief eCAL class to publish protobuf messages.
+ * @brief eCAL class to publish string data.
  *
  * This class wraps a binary Publisher and provides a strongly-typed
- * interface for sending protobuf messages.
+ * interface for sending string messages.
  */
 
 using System;
-using Google.Protobuf;
-using System.Linq;
+using System.Text;
 
 namespace Continental.eCAL.Core
 {
-  public class ProtobufPublisher<T> : IDisposable where T : IMessage<T>, new()
+  public class StringPublisher : IDisposable
   {
     private Publisher binaryPublisher;
     private bool disposed = false;
 
     /**
-     * @brief Initializes a new instance of the ProtobufPublisher class.
+     * @brief Initializes a new instance of the StringPublisher class.
      *
-     * @param topicName Topic name on which the publisher publishes messages.
+     * @param topicName Topic name on which the publisher publishes data.
      */
-    public ProtobufPublisher(string topicName)
+    public StringPublisher(string topicName)
     {
-      T msg = new T();
-      DataTypeInformation dataTypeInfo = new DataTypeInformation(
-              Common.ProtobufHelper.GetProtoMessageTypeName(msg),
-              "proto",
-              Common.ProtobufHelper.GetProtoMessageDescription(msg).ToArray()
-            );
-      binaryPublisher = new Publisher(topicName, dataTypeInfo);
+      // Create a publisher for the given topic using a std::string type.
+      binaryPublisher = new Publisher(topicName, new DataTypeInformation("std::string", "base", new byte[0]));
     }
 
     /**
-     * @brief Sends a protobuf message using the default eCAL send time.
+     * @brief Sends a string message using the default eCAL send time.
      *
-     * @param message Protobuf message to send.
+     * @param message Message to send.
      *
      * @return True if the message was sent successfully; otherwise, false.
      */
-    public bool Send(T message)
+    public bool Send(string message)
     {
-      byte[] serialized = message.ToByteArray();
-      return binaryPublisher.Send(serialized);
+      byte[] array = Encoding.UTF8.GetBytes(message);
+      return binaryPublisher.Send(array);
     }
 
     /**
-     * @brief Sends a protobuf message with a specified send time.
+     * @brief Sends a string message with a specified send time.
      *
-     * @param message Protobuf message to send.
+     * @param message Message to send.
      * @param time Send time in microseconds.
      *
      * @return True if the message was sent successfully; otherwise, false.
      */
-    public bool Send(T message, long time)
+    public bool Send(string message, long time)
     {
-      byte[] serialized = message.ToByteArray();
-      return binaryPublisher.Send(serialized, time);
+      byte[] array = Encoding.UTF8.GetBytes(message);
+      return binaryPublisher.Send(array, time);
     }
 
     /**
-     * @brief Disposes the ProtobufPublisher and releases all associated resources.
+     * @brief Disposes the StringPublisher and releases all associated resources.
      */
     public void Dispose()
     {
@@ -92,7 +86,7 @@ namespace Continental.eCAL.Core
     /**
      * @brief Protected Dispose method to free managed resources.
      *
-     * @param disposing True if called from Dispose; false if called from the finalizer.
+     * @param disposing True if called from Dispose; false if called from finalizer.
      */
     protected virtual void Dispose(bool disposing)
     {
@@ -113,7 +107,7 @@ namespace Continental.eCAL.Core
     /**
      * @brief Finalizer.
      */
-    ~ProtobufPublisher()
+    ~StringPublisher()
     {
       Dispose(false);
     }

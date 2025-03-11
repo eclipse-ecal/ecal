@@ -17,23 +17,34 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file person_snd_csharp.cs
+ *
+ * @brief A minimal example of using the eCAL API to send protobuf messages.
+ *
+ * This example demonstrates how to initialize the eCAL API, print version information,
+ * create a protobuf publisher for the topic "person" (using "Person" as the data type), construct
+ * and send messages, and keep the application running until eCAL is terminated. It serves as
+ * a basic reference for implementing a protobuf publisher in C#.
+ */
+
 using System;
 using Continental.eCAL.Core;
+using Pb.People;
 
-public class PersonSnd
+public class PersonSend
 {
   static void Main()
   {
-    // initialize eCAL API
-    Util.Initialize("Person Send C#");
+    // Initialize eCAL API.
+    Core.Initialize("person publisher csharp");
 
-    // print version info
-    System.Console.WriteLine(String.Format("eCAL {0} ({1})\n", Util.GetVersion(), Util.GetDate()));
+    // Print version info.
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // create a publisher (topic name "Hello", type "base:std::string", description "")
+    // Create a protobuf publisher (topic name "person").
     var publisher = new ProtobufPublisher<Pb.People.Person>("person");
 
-    // idle main thread
     int loop = 0;
     var person = new Pb.People.Person
     {
@@ -45,14 +56,15 @@ public class PersonSnd
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    while (Util.Ok())
+    // Idle main thread.
+    while (Core.Ok())
     {
       // message to send
       person.Id = loop;
       loop++;
 
       // print message
-      System.Console.WriteLine(String.Format("Sending:  {0}", person.ToString()));
+      Console.WriteLine(String.Format("Sending: {0}", person.ToString()));
 
       // send the content
       publisher.Send(person);
@@ -61,7 +73,10 @@ public class PersonSnd
       System.Threading.Thread.Sleep(500);
     }
 
-    // finalize eCAL API
-    Util.Terminate();
+    // Dispose publisher.
+    publisher.Dispose();
+
+    // Finalize eCAL API.
+    Core.Terminate();
   }
 }

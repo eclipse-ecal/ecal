@@ -16,5 +16,23 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(pubsub)
-#add_subdirectory(service)
+include(CSharpUtilities)
+project(Continental.eCAL.String.Samples LANGUAGES CSharp)
+
+find_package(eCAL REQUIRED)
+
+macro(ecal_add_csharp_string_sample sample_name)
+  ecal_add_sample(${sample_name} ${sample_name}.cs)
+  target_link_libraries(${sample_name} PRIVATE 
+    Continental.eCAL.String
+  )
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/string/pubsub)
+
+  set_target_properties(${sample_name} PROPERTIES
+    VS_GLOBAL_ROOTNAMESPACE ${sample_name}
+    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
+  )
+endmacro()
+
+ecal_add_csharp_string_sample(string_rec_csharp)
+ecal_add_csharp_string_sample(string_snd_csharp)

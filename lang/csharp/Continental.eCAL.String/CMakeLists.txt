@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2019 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,5 +16,29 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(pubsub)
-#add_subdirectory(service)
+include(CSharpUtilities)
+
+project(Continental.eCAL.String LANGUAGES CSharp)
+
+set(core_cs_src
+  StringPublisher.cs
+  StringSubscriber.cs
+)
+
+add_library(${PROJECT_NAME} SHARED ${core_cs_src})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC Continental.eCAL.Core)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
+  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
+)
+
+install(TARGETS ${PROJECT_NAME}
+    # IMPORTANT: Add the library to the "export-set"
+    EXPORT eCALTargets
+    RUNTIME COMPONENT runtime
+    LIBRARY COMPONENT sdk
+)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/csharp)

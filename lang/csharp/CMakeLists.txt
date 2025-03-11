@@ -41,6 +41,8 @@ message(STATUS "Using ECAL_CSHARP_PROTOBUF_VERSION: ${ECAL_CSHARP_PROTOBUF_VERSI
 
 add_subdirectory(Continental.eCAL.Core)
 add_subdirectory(Continental.eCAL.Protobuf)
+add_subdirectory(Continental.eCAL.String)
+
 if (ECAL_CSHARP_BUILD_TESTS)
 add_subdirectory(Continental.eCAL.Core.Test)
 add_subdirectory(Continental.eCAL.Protobuf.Test)
@@ -49,6 +51,7 @@ endif()
 if (ECAL_CSHARP_BUILD_SAMPLES)
 add_subdirectory(Continental.eCAL.Core.Samples)
 add_subdirectory(Continental.eCAL.Protobuf.Samples)
+add_subdirectory(Continental.eCAL.String.Samples)
 endif ()
 
 if (ECAL_CSHARP_BUILD_SAMPLES OR ECAL_CSHARP_BUILD_TESTS)

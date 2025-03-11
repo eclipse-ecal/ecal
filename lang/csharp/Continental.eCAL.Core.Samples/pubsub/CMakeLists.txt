@@ -16,5 +16,18 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(pubsub)
-#add_subdirectory(service)
+include(CSharpUtilities)
+project(Continental.eCAL.Core.Samples LANGUAGES CSharp)
+
+find_package(eCAL REQUIRED)
+
+macro(ecal_add_csharp_core_sample sample_name)
+  ecal_add_sample(${sample_name} ${sample_name}.cs)
+  target_link_libraries(${sample_name} PRIVATE Continental.eCAL.Core)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/core/pubsub)
+endmacro()
+
+ecal_add_csharp_core_sample(minimal_events_rec_csharp)
+ecal_add_csharp_core_sample(minimal_events_snd_csharp)
+ecal_add_csharp_core_sample(minimal_rec_csharp)
+ecal_add_csharp_core_sample(minimal_snd_csharp)
