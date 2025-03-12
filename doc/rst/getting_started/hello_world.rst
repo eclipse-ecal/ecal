@@ -53,7 +53,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: ../source_code_samples/cpp/string/hello_world_snd/CMakeLists.txt
+  .. literalinclude:: /source_code_samples/cpp/string/hello_world_snd/CMakeLists.txt
      :language: cmake
      :linenos:
 
@@ -77,7 +77,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: ../source_code_samples/cpp/string/hello_world_snd/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/string/hello_world_snd/main.cpp
      :language: cpp
      :linenos:
   
@@ -141,7 +141,7 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: ../source_code_samples/cpp/string/hello_world_rec/CMakeLists.txt
+  .. literalinclude:: /source_code_samples/cpp/string/hello_world_rec/CMakeLists.txt
      :language: cmake
      :linenos:
   
@@ -153,7 +153,7 @@ Again, create a new directory somewhere and add create the :file:`CMakeLists.txt
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: ../source_code_samples/cpp/string/hello_world_rec/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/string/hello_world_rec/main.cpp
      :language: cpp
      :linenos:
   
@@ -206,9 +206,9 @@ Files
 
    |fa-folder-open|
    ├─ |fa-folder-open| hello_world_snd
-   │  ├─ |fa-file-alt| :download:`CMakeLists.txt <../source_code_samples/cpp/string/hello_world_snd/CMakeLists.txt>`
-   │  └─ |fa-file-alt| :download:`main.cpp <../source_code_samples/cpp/string/hello_world_snd/main.cpp>`
+   │  ├─ |fa-file-alt| :download:`CMakeLists.txt </source_code_samples/cpp/string/hello_world_snd/CMakeLists.txt>`
+   │  └─ |fa-file-alt| :download:`main.cpp </source_code_samples/cpp/string/hello_world_snd/main.cpp>`
    │
    └─ |fa-folder-open| hello_world_rec
-      ├─ |fa-file-alt| :download:`CMakeLists.txt <../source_code_samples/cpp/string/hello_world_rec/CMakeLists.txt>`
-      └─ |fa-file-alt| :download:`main.cpp <../source_code_samples/cpp/string/hello_world_rec/main.cpp>`
+      ├─ |fa-file-alt| :download:`CMakeLists.txt </source_code_samples/cpp/string/hello_world_rec/CMakeLists.txt>`
+      └─ |fa-file-alt| :download:`main.cpp </source_code_samples/cpp/string/hello_world_rec/main.cpp>`

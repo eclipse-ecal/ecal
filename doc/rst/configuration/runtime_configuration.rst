@@ -37,9 +37,9 @@ The object will throw an error, in case the specified .yaml file cannot be found
 
 It is also possible to specify the .yaml by calling the function ``InitFromFile(const std::string yaml_path_)`` of the config object.
 
-* |fa-file-alt| :file:`../source_code_samples/cpp/configuration/hello_config/main.cpp`:
+* |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: ../source_code_samples/cpp/configuration/hello_config/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/configuration/hello_config/main.cpp
      :language: cpp
      :linenos:
 
@@ -49,9 +49,9 @@ Individual publisher/subscriber configuration
 Like a global configuration to pass at initialization, it is also possible to create indiviual configurations for publisher and subscriber.
 That means it is possible to, e.g., create two publisher which send on different transport layers:
 
-* |fa-file-alt| :file:`../source_code_samples/cpp/configuration/publisher/main.cpp`:
+* |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: ../source_code_samples/cpp/configuration/publisher_config/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/configuration/publisher_config/main.cpp
      :language: cpp
      :linenos:
 
