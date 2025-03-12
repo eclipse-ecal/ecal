@@ -187,10 +187,10 @@ option(ECAL_USE_FLATBUFFERS                         "Platform supports flatbuffe
 option(ECAL_USE_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
 
 option(ECAL_BUILD_DOCS                              "Build the eCAL documentation"                                     OFF)
-option(ECAL_BUILD_DOCS_SAMPLES                      "Build the eCAL documentation samples"              ${ECAL_BUILD_DOCS})
 option(ECAL_BUILD_APPS                              "Build the eCAL applications"                                       ON)
 option(ECAL_BUILD_APP_SDK                           "Build SDK components of eCAL applications"         ${ECAL_BUILD_APPS})
 option(ECAL_BUILD_SAMPLES                           "Build the eCAL samples"                                            ON)
+option(ECAL_BUILD_DOCS_SAMPLES                      "Build the eCAL documentation samples"              ${ECAL_BUILD_DOCS})
 option(ECAL_BUILD_TIMEPLUGINS                       "Build the eCAL time interfaces"                                    ON)
 option(ECAL_BUILD_C_BINDING                         "Build eCAL C binding"                                              ON)
 mark_as_advanced(FORCE ECAL_BUILD_C_BINDING)
