@@ -67,6 +67,14 @@ namespace eCAL
     CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
     ~CSubscriberImpl();
 
+    // Delete copy constructor and copy assignment operator
+    CSubscriberImpl(const CSubscriberImpl&) = delete;
+    CSubscriberImpl& operator=(const CSubscriberImpl&) = delete;
+
+    // Delete move constructor and move assignment operator
+    CSubscriberImpl(CSubscriberImpl&&) = delete;
+    CSubscriberImpl& operator=(CSubscriberImpl&&) = delete;
+
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
     bool SetReceiveCallback(ReceiveCallbackT callback_);

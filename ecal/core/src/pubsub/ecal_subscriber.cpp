@@ -59,19 +59,9 @@ namespace eCAL
     if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
   }
 
-  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-    m_subscriber_impl(std::move(rhs.m_subscriber_impl))
-  {
-  }
+  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept = default;
 
-  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
-  {
-    if (this != &rhs)
-    {
-      m_subscriber_impl = std::move(rhs.m_subscriber_impl);
-    }
-    return *this;
-  }
+  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept = default;
 
   bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
