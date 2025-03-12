@@ -79,26 +79,31 @@ namespace eCAL
     * @param config_      Optional configuration parameters.
     **/
     explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) 
-      : m_deserializer()
-      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), config_)
+      : m_subscriber(
+        topic_name_,
+        []() 
+        {
+          Deserializer deserializer;
+          return deserializer.GetDataTypeInformation();
+        }(),
+        config_)
     {
-      SetInternalReceiveCallback();
     }
 
     CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
-      : m_deserializer()
-      , m_subscriber(topic_name_, m_deserializer.GetDataTypeInformation(), event_callback_, config_)
+      : m_subscriber(
+        topic_name_,
+        []()
+        {
+          Deserializer deserializer;
+          return deserializer.GetDataTypeInformation();
+        }(),
+          event_callback_,
+          config_)
     {
-      SetInternalReceiveCallback();
     }
 
-    ~CMessageSubscriber()
-    {
-      RemoveReceiveCallback();
-      RemoveErrorCallback();
-
-      RemoveInternalReceiveCallback();
-    }
+    ~CMessageSubscriber() = default;
 
     /**
     * @brief  Copy Constructor is not available.
@@ -113,39 +118,56 @@ namespace eCAL
     /**
     * @brief  Move Constructor 
     **/
-    CMessageSubscriber(CMessageSubscriber&& rhs)
-      : m_deserializer(std::move(rhs.m_deserializer))
-      , m_subscriber(std::move(rhs.m_subscriber))
-    {
-      // By first removing the old receive callbackand adding it back later, we might potentially loose a few messages during that time
-      // If they are received in between removing the old callback and putting in the new one.
-      // However that's better than risking data races???
-
-      rhs.RemoveInternalReceiveCallback();
-
-      std::lock_guard<std::mutex> callback_lock(rhs.m_callback_mutex);
-      m_data_callback = std::move(rhs.m_data_callback);
-      m_error_callback = std::move(rhs.m_error_callback);
-      
-      SetInternalReceiveCallback();
-    }
+    CMessageSubscriber(CMessageSubscriber&& rhs) = default;
 
     /**
     * @brief  Move assignment
     **/
-    CMessageSubscriber& operator=(CMessageSubscriber&& rhs) = delete;
+    CMessageSubscriber& operator=(CMessageSubscriber&& rhs) = default;
 
     /**
      * @brief Add a data callback callback for incoming messages.
      *
-     * @param callback_  The callback function.
+     * @param data_callback_   The callback function.
+     * @param error_callback_  Error callback function, which is called in case the deserialization fails
      *
      * @return  True if it succeeds, false if it fails.
     **/
-    void SetReceiveCallback(DataCallbackT callback_)
+    void SetReceiveCallback(DataCallbackT data_callback_, DeserializationErrorCallbackT error_callback_ = nullptr)
     {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_data_callback = callback_;
+      std::shared_ptr<Deserializer> deserializer = std::make_shared<Deserializer>();
+      /*
+      * This is the internal Message Callback.
+      * In case that any callbacks are registered, it tries to deserialize the data.
+      * Serializers need to throw a DeserializationException in case that the deserialization of the data fails for any reason.
+      * If the serialization does not throw, the data callback is invoked.
+      * In case that it does fail, the error callback is invoked with the original information, so that the user may anaylze why the deserialization failed, if they are interested.
+      */
+      auto internal_receive_callback = [deserializer, data_callback_, error_callback_](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
+      {
+        if (!data_callback_ && !error_callback_)
+        {
+          return;
+        }
+
+        try
+        {
+          auto msg = deserializer->Deserialize(data_.buffer, data_.buffer_size, data_type_info_);
+          if (data_callback_)
+          {
+            data_callback_(publisher_id_, msg, data_.send_timestamp, data_.send_clock);
+          }
+        }
+        catch (const DeserializationException& error)
+        {
+          if (error_callback_)
+          {
+            error_callback_(error.what(), publisher_id_, data_type_info_, data_);
+          }
+        }
+      };
+
+      m_subscriber.SetReceiveCallback(std::move(internal_receive_callback));
     }
 
     /**
@@ -155,32 +177,7 @@ namespace eCAL
     **/
     void RemoveReceiveCallback()
     {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_data_callback = nullptr;
-    }
-
-    /**
-     * @brief Set Error callback which is called if the deserialization of the incoming data fails.
-     *
-     * @param callback_  The callback function.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void SetErrorCallback(DeserializationErrorCallbackT callback_)
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_error_callback = callback_;
-    }
-
-    /**
-     * @brief  Remove receive callback for incoming messages.
-     *
-     * @return  True if it succeeds, false if it fails.
-    **/
-    void RemoveErrorCallback()
-    {
-      std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-      m_error_callback = nullptr;
+      m_subscriber.RemoveReceiveCallback();
     }
 
     /**
@@ -223,62 +220,6 @@ namespace eCAL
       return m_subscriber.GetDataTypeInformation();
     }
 
-
-  private:
-    /*
-    * This is the internal Message Callback. 
-    * In case that any callbacks are registered, it tries to deserialize the data.
-    * Serializers need to throw a DeserializationException in case that the deserialization of the data fails for any reason.
-    * If the serialization does not throw, the data callback is invoked.
-    * In case that it does fail, the error callback is invoked with the original information, so that the user may anaylze why the deserialization failed, if they are interested.
-    */
-    void InternalReceiveCallback(const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
-    {
-      {
-        std::lock_guard<std::mutex> callback_lock(m_callback_mutex);
-        
-        if (!m_data_callback && !m_error_callback)
-        {
-          return;
-        }
-
-        try
-        {
-          auto msg = m_deserializer.Deserialize(data_.buffer, data_.buffer_size, data_type_info_);
-          if (m_data_callback)
-          {
-            m_data_callback(publisher_id_, msg, data_.send_timestamp, data_.send_clock);
-          }
-        }
-        catch (const DeserializationException& error)
-        {
-          if (m_error_callback)
-          {
-            m_error_callback(error.what(), publisher_id_, data_type_info_, data_);
-          }
-        }
-      }
-    }
-
-    void SetInternalReceiveCallback()
-    {
-      auto internal_callback = [this](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
-      {
-        this->InternalReceiveCallback(publisher_id_, data_type_info_, data_);
-      };
-      m_subscriber.SetReceiveCallback(internal_callback);
-    }
-
-    void RemoveInternalReceiveCallback()
-    {
-      m_subscriber.RemoveReceiveCallback();
-    }
-
-    Deserializer                   m_deserializer;
-    CSubscriber                    m_subscriber;
-
-    std::mutex                     m_callback_mutex; // we need only one mutex to protect both callbacks
-    DataCallbackT                  m_data_callback;
-    DeserializationErrorCallbackT  m_error_callback;
+    CSubscriber m_subscriber;
   };
 }
