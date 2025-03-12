@@ -30,7 +30,6 @@
 
 using System;
 using Continental.eCAL.Core;
-using Pb.People;
 
 public class PersonReceive
 {
