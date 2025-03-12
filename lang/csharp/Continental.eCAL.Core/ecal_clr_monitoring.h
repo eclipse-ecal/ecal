@@ -50,16 +50,6 @@ namespace Continental {
       {
       public:
         /**
-         * @brief Initialize eCAL Monitoring API.
-         **/
-        static void Initialize();
-
-        /**
-         * @brief Finalize eCAL Monitoring API.
-         **/
-        static void Terminate();
-
-        /**
          * @brief Get host, process and topic monitoring as raw message bytes.
          *
          * @param entities Specifies which entities to include (default is All).
@@ -67,13 +57,6 @@ namespace Continental {
          * @return The monitoring message as a byte array.
          **/
         static array<Byte>^ GetMonitoring(MonitoringEntity entities);
-
-        /**
-         * @brief Get global log message as raw message bytes.
-         *
-         * @return The logging message as a byte array.
-         **/
-        static array<Byte>^ GetLogging();
       };
 
     } // namespace Core

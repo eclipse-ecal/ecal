@@ -17,17 +17,17 @@
 # ========================= eCAL LICENSE =================================
 
 include(CSharpUtilities)
-project(Continental.eCAL.Protobuf.PubSub.Samples LANGUAGES CSharp)
+project(Continental.eCAL.Protobuf.Monitoring.Samples LANGUAGES CSharp)
 
 find_package(eCAL REQUIRED)
 
-macro(ecal_add_csharp_protobuf_pubsub_sample sample_name)
+macro(ecal_add_csharp_protobuf_monitoring_sample sample_name)
   ecal_add_sample(${sample_name} ${sample_name}.cs)
   target_link_libraries(${sample_name} PRIVATE
     Continental.eCAL.Protobuf
-    Continental.eCAL.Protobuf.Samples.Datatypes
+    Continental.eCAL.Protobuf.Datatypes
   )
-  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/protobuf/pubsub)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/protobuf/monitoring)
   
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}
@@ -39,5 +39,5 @@ macro(ecal_add_csharp_protobuf_pubsub_sample sample_name)
   )
 endmacro()
 
-ecal_add_csharp_protobuf_pubsub_sample(person_rec_csharp)
-ecal_add_csharp_protobuf_pubsub_sample(person_snd_csharp)
+ecal_add_csharp_protobuf_monitoring_sample(logging_rec_csharp)
+ecal_add_csharp_protobuf_monitoring_sample(monitoring_rec_csharp)

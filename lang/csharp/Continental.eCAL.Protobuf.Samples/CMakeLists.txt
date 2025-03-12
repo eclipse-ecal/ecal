@@ -16,5 +16,5 @@
 #
 # ========================= eCAL LICENSE =================================
 
+add_subdirectory(monitoring)
 add_subdirectory(pubsub)
-#add_subdirectory(service)
