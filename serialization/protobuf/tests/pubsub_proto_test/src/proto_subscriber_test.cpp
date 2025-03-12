@@ -111,7 +111,7 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
   pub_config.layer.shm.acknowledge_timeout_ms = 500;
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest", pub_config);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // Start publishing (With acknowledge?)
   std::thread person_pub_thread([this, &person_pub, &stop_publishing, &numbers_of_sends]() {
@@ -119,7 +119,6 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
     {
       SendPerson(person_pub);
       ++numbers_of_sends;
-      //std::this_thread::sleep_for(std::chrono::milliseconds(0));
     }
     });
 
