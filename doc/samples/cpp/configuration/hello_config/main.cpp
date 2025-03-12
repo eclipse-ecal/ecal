@@ -5,17 +5,9 @@
 
 int main(int argc, char** argv)
 {
-  // Create a configuration object with the command line arguments
-  eCAL::Configuration custom_config;
-
-  // Use the ecal.yaml file of the system, local data or current folder if available
-  custom_config.InitFromConfig();
-
-  // In case you decide to specify an own .yaml file to use.
-  // Configuration based on previous ini file will be overwritten.
-  // The new Configuration will use default values if the file is not found
-  // in the default directories (ECAL_DATA, cwd, %LOCALAPPDATA%/eCAL, $HOME/.ecal)
-  custom_config.InitFromFile("./ecal_custom.yaml");
+  // Create a initial configuration object.
+  // By default, this object is initialized with a configuration based on an ecal.yaml file.
+  auto custom_config = eCAL::Init::Configuration();
 
   // Furthermore you can adapt the configuration by overwriting values from the file, e.g.
   // set the communication mode to network
