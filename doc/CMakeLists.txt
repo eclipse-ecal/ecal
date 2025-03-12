@@ -78,6 +78,13 @@ add_custom_target(documentation_copy_sample_files ALL
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
+if (DEFINED ECAL_GENERATED_YAML_PATH)
+  add_custom_target(documentation_copy_config_file POST_BUILD
+    COMMAND cmake -E copy ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
+  )
+  set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
+endif()
+
 #######################################
 # Doxygen documentation with xml output
 #######################################

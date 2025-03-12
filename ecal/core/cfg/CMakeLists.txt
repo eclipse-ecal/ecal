@@ -25,6 +25,8 @@ set(TIME_YAML "ecaltime.yaml")
 set(ECAL_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML})
 set(TIME_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${TIME_YAML})
 
+set(ECAL_GENERATED_YAML_PATH ${ECAL_YAML_PATH} CACHE INTERNAL "Path to the generated eCAL YAML file")
+
 add_executable(${PROJECT_NAME} 
   ${ECAL_CORE_PROJECT_ROOT}/core/cfg/generate_configuration_yaml.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_writer.cpp

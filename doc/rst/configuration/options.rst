@@ -28,15 +28,15 @@ It will generate the files only in the first found base path.
 
   1. ``%ECAL_DATA%/ecal.yaml``
   2. ``%cd%/ecal.yaml``
-  3. ``%UserProfile%/AppData/Local/eCAL/ecal.yaml``*
-  4. ``%ProgramData%/eCAL/ecal.yaml``*
+  3. ``%UserProfile%/AppData/Local/eCAL/ecal.yaml* ``
+  4. ``%ProgramData%/eCAL/ecal.yaml* ``
   5. ``<ecal installation directory>/etc/ecal.yaml``
 
 - |fa-ubuntu| Ubuntu:
 
   1. ``$ECAL_DATA/ecal.yaml``
   2. ``$PWD/ecal.yaml``
-  3. ``$HOME/.ecal/ecal.yaml``*
+  3. ``$HOME/.ecal/ecal.yaml* ``
   3. ``/etc/ecal/ecal.yaml`` (fallback)
       
       
@@ -52,6 +52,13 @@ It will generate the files only in the first found base path.
 
 ecal.yaml options
 =================
+
+* |fa-file-alt| :file:`ecal.yaml`:
+
+  .. literalinclude:: ../configuration_files/ecal.yaml
+     :language: cpp
+     :linenos:
+
 
 Registration settings are listed in the section ``registration``
 ----------------------------------------------------------------
