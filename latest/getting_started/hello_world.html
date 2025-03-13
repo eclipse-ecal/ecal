@@ -755,8 +755,9 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 <span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">18</span><span class="p">)</span>
+<span class="linenos">17</span><span class="w">  </span><span class="s">PRIVATE</span>
+<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::string_core</span>
+<span class="linenos">19</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -873,8 +874,9 @@ You will see the “Hello World Publisher” process and the “hello_world_topi
 <span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">18</span><span class="p">)</span>
+<span class="linenos">17</span><span class="w">  </span><span class="s">PRIVATE</span>
+<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::string_core</span>
+<span class="linenos">19</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -962,12 +964,12 @@ make
 <h2><span class="section-number">7.1.4. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> hello_world_snd
-│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/de030105a2759ef0432ac8316a6e7deb/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/e62ace93fccc50817f03e27c4f7a3163/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/9bfb0538b9fe8665c94fa82e5be2e206/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/00549bfd70e8195533a17ed0dad8ee46/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
 │
 └─ <i class="far fa-folder-open"></i> hello_world_rec
-   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/7d3bda427fdf1fd3a0b98854060bba5f/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/d0d86cc7199f2c4b757fe5543e8b6cfa/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/ec892da5d184149bb490137a7726fcce/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/c9d35ba1894089044e78f1b1ae7e8d4e/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
 </section>
 </section>
 

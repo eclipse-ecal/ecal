@@ -724,8 +724,8 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> <code class="file docutils literal notranslate"><span class="pre">proto_messages</span></code>
 │  └─ <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world.proto</span></code>
-├─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">protobuf_snd</span></code>
-└─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">protobuf_rec</span></code></pre>
+├─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span></code>
+└─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world_rec</span></code></pre>
 <p>Let’s start with the <code class="file docutils literal notranslate"><span class="pre">proto_messages/hello_world.proto</span></code> file!</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto3&quot;</span><span class="p">;</span>
 <span class="linenos"> 2</span>
@@ -745,7 +745,7 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <p><strong>Line 3</strong> assigns a package name (this will appear as C++ namespace later).</p>
 <p><strong>Line 5-10</strong> Creates a message “HelloWorld”, that holds the fields “name”, “id” and “msg”.</p>
 </div>
-<p>Now start implementing the actual sender application. Just as in the <a class="reference internal" href="hello_world.html#getting-started-hello-world"><span class="std std-ref">last section</span></a> create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> in the <code class="file docutils literal notranslate"><span class="pre">protobuf_snd</span></code> directory and paste the following content:</p>
+<p>Now start implementing the actual sender application. Just as in the <a class="reference internal" href="hello_world.html#getting-started-hello-world"><span class="std std-ref">last section</span></a> create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> in the <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span></code> directory and paste the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
@@ -771,8 +771,8 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <span class="linenos">21</span><span class="nb">PROTOBUF_TARGET_CPP</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/</span><span class="w"> </span><span class="o">${</span><span class="nv">protobuf_files</span><span class="o">}</span><span class="p">)</span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">24</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">25</span><span class="w">  </span><span class="s">protobuf::libprotobuf</span>
+<span class="linenos">24</span><span class="w">  </span><span class="s">PRIVATE</span>
+<span class="linenos">25</span><span class="w">  </span><span class="s">eCAL::protobuf_core</span>
 <span class="linenos">26</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -888,8 +888,8 @@ So, you will only see messages that were sent <em>after</em> you have opened the
 <span class="linenos">21</span><span class="nb">PROTOBUF_TARGET_CPP</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/</span><span class="w"> </span><span class="o">${</span><span class="nv">protobuf_files</span><span class="o">}</span><span class="p">)</span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">24</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">25</span><span class="w">  </span><span class="s">protobuf::libprotobuf</span>
+<span class="linenos">24</span><span class="w">  </span><span class="s">PRIVATE</span>
+<span class="linenos">25</span><span class="w">  </span><span class="s">eCAL::protobuf_core</span>
 <span class="linenos">26</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -952,15 +952,15 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 <h2><span class="section-number">7.2.3. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> proto_messages
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/619f6a479d6b7240073d7bb813787903/hello_world.proto"><code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/8f652403ea4a592fe055c9925df27475/hello_world.proto"><code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></a>
 │
 ├─ <i class="far fa-folder-open"></i> protobuf_snd
-│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/aa8ba31e4db976e4df7584a3cd01e441/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/2faff8eda7285d8408ca31e0cc312b0b/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/8e4faf47d6da87add9de91480b691e18/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/1b44a68eeec4bf9cd91ce12e48d4fa22/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
 │
 └─ <i class="far fa-folder-open"></i> protobuf_rec
-   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/599e0541a3c4051667f6c5e413bec2a7/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/745ee1bb61a6469c7703ba1c5f49db57/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/fdded0d86e2678920f4f582efec39502/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/641ba126af5f65bf3f23a53175511a0d/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
 </section>
 </section>
 

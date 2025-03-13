@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(protobuf_snd)
+project(protobuf_rec)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,6 +21,6 @@ add_executable(${PROJECT_NAME} ${source_files})
 PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/../proto_messages/ ${protobuf_files})
 
 target_link_libraries(${PROJECT_NAME}
-  eCAL::core
-  protobuf::libprotobuf
+  PRIVATE
+  eCAL::protobuf_core
 )

@@ -748,13 +748,13 @@ Set up you <a class="reference internal" href="../getting_started/cloud.html#get
 |
 ├─ <i class="far fa-folder-open"></i> pub_container
 |  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/fa5b06b870ebaeeac7d9094ce6f77e00/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
-|  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/de030105a2759ef0432ac8316a6e7deb/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-|  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/e62ace93fccc50817f03e27c4f7a3163/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+|  ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+|  └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code>
 |
 └─ <i class="far fa-folder-open"></i> sub_container
    ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/4b443fc3edc84fe91ad82b8473385dfc/Dockerfile"><code class="xref download docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
-   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/7d3bda427fdf1fd3a0b98854060bba5f/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/d0d86cc7199f2c4b757fe5543e8b6cfa/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+   ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+   └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></pre>
 <section id="ecal-runtime-container">
 <h3>eCAL runtime container<a class="headerlink" href="#ecal-runtime-container" title="Link to this heading">#</a></h3>
 <ol class="arabic">
@@ -830,65 +830,8 @@ It will contain the Hello World Sample from the <a class="reference internal" hr
 </pre></div>
 </div>
 </li>
-<li><p>Create publisher source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/main.cpp</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/string/publisher.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos"> 8</span><span class="p">{</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="c1">// Initialize eCAL. The name of our Process will be &quot;Hello World Publisher&quot;</span>
-<span class="linenos">10</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Publisher&quot;</span><span class="p">);</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="w">  </span><span class="c1">// Create a String Publisher that publishes on the topic &quot;hello_world_topic&quot;</span>
-<span class="linenos">13</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CPublisher</span><span class="w"> </span><span class="n">publisher</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="w">  </span><span class="c1">// Create a counter, so something changes in our message</span>
-<span class="linenos">16</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="w">  </span><span class="c1">// Infinite loop (using eCAL::Ok() will enable us to gracefully shutdown the</span>
-<span class="linenos">19</span><span class="w">  </span><span class="c1">// Process from another application)</span>
-<span class="linenos">20</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">21</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">22</span><span class="w">    </span><span class="c1">// Create a message with a counter an publish it to the topic</span>
-<span class="linenos">23</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="o">++</span><span class="n">counter</span><span class="p">);</span>
-<span class="linenos">24</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sending message: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">25</span><span class="w">    </span><span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
-<span class="linenos">26</span>
-<span class="linenos">27</span><span class="w">    </span><span class="c1">// Sleep 500 ms</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-<span class="linenos">29</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">30</span>
-<span class="linenos">31</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">32</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">33</span><span class="p">}</span>
-</pre></div>
-</div>
-</li>
-<li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/CMakeLists.txt</span></code></p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">12</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">18</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
+<li><p>Create publisher source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/main.cpp</span></code></p></li>
+<li><p>Create file  <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">pub_container/CMakeLists.txt</span></code></p></li>
 <li><p>Build the image:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>pub_container
 sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--rm<span class="w"> </span>-t<span class="w"> </span>ecal-publisher:1.0.0
@@ -913,64 +856,8 @@ sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> 
 </pre></div>
 </div>
 </li>
-<li><p>Create subscriber source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/main.cpp</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/string/subscriber.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="c1">// Callback for receiving messages</span>
-<span class="linenos"> 8</span><span class="kt">void</span><span class="w"> </span><span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">message</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="p">{</span>
-<span class="linenos">10</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Received Message: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">11</span><span class="p">}</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos">14</span><span class="p">{</span>
-<span class="linenos">15</span><span class="w">  </span><span class="c1">// Initialize eCAL</span>
-<span class="linenos">16</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Subscriber&quot;</span><span class="p">);</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="w">  </span><span class="c1">// Create a subscriber that listenes on the &quot;hello_world_topic&quot;</span>
-<span class="linenos">19</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CSubscriber</span><span class="w"> </span><span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="w">  </span><span class="c1">// Set the Callback</span>
-<span class="linenos">22</span><span class="w">  </span><span class="n">subscriber</span><span class="p">.</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HelloWorldCallback</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="w">  </span><span class="c1">// Just don&#39;t exit</span>
-<span class="linenos">25</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">26</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">27</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-<span class="linenos">28</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">29</span>
-<span class="linenos">30</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">31</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">32</span><span class="p">}</span>
-</pre></div>
-</div>
-</li>
-<li><p>Create file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/CMakeLists.txt</span></code></p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">12</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">eCAL::core</span>
-<span class="linenos">18</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
+<li><p>Create subscriber source code: <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/main.cpp</span></code></p></li>
+<li><p>Create file <i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">sub_container/CMakeLists.txt</span></code></p></li>
 <li><p>Build the image:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>sub_container
 sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--rm<span class="w"> </span>-t<span class="w"> </span>ecal-subscriber:1.0.0

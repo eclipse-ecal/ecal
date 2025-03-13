@@ -723,7 +723,7 @@ If you want to use the systems eCAL .yaml file, call the <code class="docutils l
 The object will throw an error, in case the specified .yaml file cannot be found.</p>
 <p>It is also possible to specify the .yaml by calling the function <code class="docutils literal notranslate"><span class="pre">InitFromFile(const</span> <span class="pre">std::string</span> <span class="pre">yaml_path_)</span></code> of the config object.</p>
 <ul>
-<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">hello_config/main.cpp</span></code>:</p>
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/config.h&gt;</span>
 <span class="linenos"> 3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
@@ -731,45 +731,48 @@ The object will throw an error, in case the specified .yaml file cannot be found
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
 <span class="linenos"> 7</span><span class="p">{</span>
-<span class="linenos"> 8</span><span class="w">  </span><span class="c1">// Create a configuration object with the command line arguments</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Configuration</span><span class="w"> </span><span class="n">custom_config</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="w">  </span><span class="c1">// Use the .yaml file of the system or current folder if available</span>
-<span class="linenos">12</span><span class="w">  </span><span class="n">custom_config</span><span class="p">.</span><span class="n">InitFromConfig</span><span class="p">();</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="w">  </span><span class="c1">// Set the values in a try/catch block, as wrong configuration leads to exceptions</span>
-<span class="linenos">15</span><span class="w">  </span><span class="k">try</span>
-<span class="linenos">16</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">17</span><span class="w">      </span><span class="c1">// In case you decided to specify an own .yaml file to use</span>
-<span class="linenos">18</span><span class="w">      </span><span class="c1">// Configuration based on previous ini file will be overwritten</span>
-<span class="linenos">19</span><span class="w">    </span><span class="n">custom_config</span><span class="p">.</span><span class="n">InitFromFile</span><span class="p">(</span><span class="s">&quot;C:</span><span class="se">\\</span><span class="s">eCAL_local.yaml&quot;</span><span class="p">);</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="w">    </span><span class="c1">// Set the communication layer to network</span>
-<span class="linenos">22</span><span class="w">    </span><span class="n">custom_config</span><span class="p">.</span><span class="n">registration</span><span class="p">.</span><span class="n">network_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="w">    </span><span class="c1">// Set a custom udp multicast group, correct IP address necessary</span>
-<span class="linenos">25</span><span class="w">    </span><span class="n">custom_config</span><span class="p">.</span><span class="n">transport_layer</span><span class="p">.</span><span class="n">udp</span><span class="p">.</span><span class="n">network</span><span class="p">.</span><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;239.0.1.1&quot;</span><span class="p">);</span>
-<span class="linenos">26</span>
-<span class="linenos">27</span><span class="w">    </span><span class="c1">// Increase the send buffer, size increase in 1024 bytes steps</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">custom_config</span><span class="p">.</span><span class="n">transport_layer</span><span class="p">.</span><span class="n">udp</span><span class="p">.</span><span class="n">send_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">5242880</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span>
-<span class="linenos">29</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">30</span><span class="w">  </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
-<span class="linenos">31</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">32</span><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Error while configuring eCALConfig: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()));</span>
-<span class="linenos">33</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">34</span>
-<span class="linenos">35</span><span class="w">  </span><span class="c1">// Initialize eCAL with the prepared configuration object</span>
-<span class="linenos">36</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">custom_config</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UserConfigExample&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Init</span><span class="o">::</span><span class="n">Default</span><span class="p">);</span>
-<span class="linenos">37</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="c1">// Create a initial configuration object.</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="c1">// By default, this object is initialized with a configuration based on an ecal.yaml file.</span>
+<span class="linenos">10</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">custom_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Init</span><span class="o">::</span><span class="n">Configuration</span><span class="p">();</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="w">  </span><span class="c1">// Furthermore you can adapt the configuration by overwriting values from the file, e.g.</span>
+<span class="linenos">13</span><span class="w">  </span><span class="c1">// set the communication mode to network</span>
+<span class="linenos">14</span><span class="w">  </span><span class="n">custom_config</span><span class="p">.</span><span class="n">communication_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">eCommunicationMode</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">  </span><span class="c1">// Increase the send buffer, size increase in 1024 bytes steps</span>
+<span class="linenos">17</span><span class="w">  </span><span class="n">custom_config</span><span class="p">.</span><span class="n">transport_layer</span><span class="p">.</span><span class="n">udp</span><span class="p">.</span><span class="n">send_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">5242880</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span>
+<span class="linenos">18</span><span class="w">  </span>
+<span class="linenos">19</span><span class="w">  </span><span class="c1">// Set the network addresses in a try/catch block, as wrong configuration </span>
+<span class="linenos">20</span><span class="w">  </span><span class="c1">// leads to exceptions</span>
+<span class="linenos">21</span><span class="w">  </span><span class="k">try</span>
+<span class="linenos">22</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">23</span><span class="w">    </span><span class="c1">// Set a custom udp multicast group, correct IP address necessary</span>
+<span class="linenos">24</span><span class="w">    </span><span class="n">custom_config</span><span class="p">.</span><span class="n">transport_layer</span><span class="p">.</span><span class="n">udp</span><span class="p">.</span><span class="n">network</span><span class="p">.</span><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;239.0.1.1&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="linenos">25</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">26</span><span class="w">  </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">invalid_argument</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="linenos">27</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">28</span><span class="w">    </span><span class="c1">// Continue with the program, but let the user of the exception and the used network group</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error while configuring network group: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Using default network group: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">custom_config</span><span class="p">.</span><span class="n">transport_layer</span><span class="p">.</span><span class="n">udp</span><span class="p">.</span><span class="n">network</span><span class="p">.</span><span class="n">group</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="w">  </span><span class="c1">// Initialize eCAL with the prepared configuration object</span>
+<span class="linenos">34</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="n">custom_config</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UserConfigExample&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Init</span><span class="o">::</span><span class="n">Default</span><span class="p">);</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="w">  </span><span class="c1">// ...</span>
+<span class="linenos">37</span><span class="w">  </span><span class="c1">// Use eCAL for your needs</span>
 <span class="linenos">38</span><span class="w">  </span><span class="c1">// ...</span>
-<span class="linenos">39</span><span class="w">  </span><span class="c1">// Use eCAL for your needs</span>
-<span class="linenos">40</span><span class="w">  </span><span class="c1">// ...</span>
-<span class="linenos">41</span>
-<span class="linenos">42</span><span class="w">  </span><span class="c1">// Finalize eCAL API</span>
-<span class="linenos">43</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+<span class="linenos">41</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">42</span><span class="w">    </span><span class="c1">// ...</span>
+<span class="linenos">43</span><span class="w">  </span><span class="p">}</span>
 <span class="linenos">44</span>
-<span class="linenos">45</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="linenos">46</span><span class="p">}</span>
+<span class="linenos">45</span><span class="w">  </span><span class="c1">// Finalize eCAL API</span>
+<span class="linenos">46</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">49</span><span class="p">}</span>
 </pre></div>
 </div>
 </li>
@@ -780,7 +783,7 @@ The object will throw an error, in case the specified .yaml file cannot be found
 <p>Like a global configuration to pass at initialization, it is also possible to create indiviual configurations for publisher and subscriber.
 That means it is possible to, e.g., create two publisher which send on different transport layers:</p>
 <ul>
-<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">publisher/main.cpp</span></code>:</p>
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/string/publisher.h&gt;</span>
 <span class="linenos"> 3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
