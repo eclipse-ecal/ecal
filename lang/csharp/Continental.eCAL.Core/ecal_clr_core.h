@@ -23,6 +23,8 @@
  * @file  ecal_clr_core.h
 **/
 
+#include "ecal_clr_types.h"
+
 using namespace System;
 
 namespace Continental {
@@ -52,9 +54,17 @@ namespace Continental {
         /**
         * @brief Initialize eCAL API.
         *
-        * @param unit_name_ The instance unit (node) name.
+        * @param unitName The instance unit (node) name.
         **/
-        static void Initialize(System::String^ unit_name_);
+        static void Initialize(System::String^ unitName);
+
+        /**
+        * @brief Initialize eCAL API.
+        *
+        * @param unitName The instance unit (node) name.
+        * @param componentFlags The components to initialize.
+        **/
+        static void Initialize(System::String^ unitName, Init componentFlags);
 
         /**
         * @brief Finalize eCAL API.
