@@ -33,15 +33,23 @@ namespace eCAL
   namespace measurement
   {
     template <typename T, typename Serializer>
+    IChannel<T, Serializer> GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_)
+    {
+      return IChannel<T, Serializer>(meas.)
+    }
+
+    template <typename T, typename Serializer>
     class IChannel
     {
-    public:
+      friend IChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
+
       IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, const experimental::measurement::base::Channel& channel_)
         : m_serializer{}
         , binary_channel(meas_, channel_)
       {
       }
 
+    public:
       bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
       bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
 
