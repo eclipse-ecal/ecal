@@ -28,16 +28,16 @@
 
 enum eCAL_Logging_eLogLevel
 {
-  eCAL_Logging_eLogLevel_none = 0,
-  eCAL_Logging_eLogLevel_all = 255,
-  eCAL_Logging_eLogLevel_info = 1,
-  eCAL_Logging_eLogLevel_warning = 2,
-  eCAL_Logging_eLogLevel_error = 4,
-  eCAL_Logging_eLogLevel_fatal = 8,
-  eCAL_Logging_eLogLevel_debug1 = 16,
-  eCAL_Logging_eLogLevel_debug2 = 32,
-  eCAL_Logging_eLogLevel_debug3 = 64,
-  eCAL_Logging_eLogLevel_debug4 = 128,
+  eCAL_Logging_log_level_none = 0,
+  eCAL_Logging_log_level_all = 255,
+  eCAL_Logging_log_level_info = 1,
+  eCAL_Logging_log_level_warning = 2,
+  eCAL_Logging_log_level_error = 4,
+  eCAL_Logging_log_level_fatal = 8,
+  eCAL_Logging_log_level_debug1 = 16,
+  eCAL_Logging_log_level_debug2 = 32,
+  eCAL_Logging_log_level_debug3 = 64,
+  eCAL_Logging_log_level_debug4 = 128,
 };
 
 typedef unsigned char eCAL_Logging_Filter;

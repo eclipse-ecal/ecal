@@ -26,10 +26,4 @@ enum eCAL_Types_UdpConfigVersion
   eCAL_Types_UdpConfigVersion_V2
 };
 
-enum eCAL_Types_UDPMode
-{
-  eCAL_Types_UDPMode_NETWORK,
-  eCAL_Types_UDPMode_LOCAL
-};
-
 #endif /*ecal_c_types_custom_data_types_h_included*/

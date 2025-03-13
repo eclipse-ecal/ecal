@@ -25,6 +25,8 @@
 #include <ecal/ecal.h>
 #include <ecal_c/timer.h>
 
+#include <cassert>
+
 extern "C"
 {
   struct eCAL_Timer
@@ -48,12 +50,14 @@ extern "C"
 
   ECALC_API void eCAL_Timer_Delete(eCAL_Timer* timer_)
   {
+    assert(timer_ != NULL);
     delete timer_->handle;
     delete timer_;
   }
 
   ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, const int* delay_)
   {
+    assert(timer_ != NULL);
     auto callback = [callback_]()
     {
       callback_();
@@ -63,6 +67,7 @@ extern "C"
 
   ECALC_API int eCAL_Timer_Stop(eCAL_Timer* timer_)
   {
+    assert(timer_ != NULL);
     return !static_cast<int>(timer_->handle->Stop());
   }
 }

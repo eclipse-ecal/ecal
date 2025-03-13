@@ -33,9 +33,9 @@ extern "C" {
 #endif /*__cplusplus*/
 
   // Configuration
-  ECALC_API struct eCAL_Configuration* eCAL_GetConfiguration();
-  ECALC_API struct eCAL_Subscriber_Configuration* eCAL_GetSubscriberConfiguration();
-  ECALC_API struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
+  ECALC_API const eCAL_Configuration* eCAL_GetConfiguration();
+  ECALC_API const struct eCAL_Subscriber_Configuration* eCAL_GetSubscriberConfiguration();
+  ECALC_API const struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
 
   // Common
   ECALC_API const char* eCAL_Config_GetLoadedEcalYamlPath();

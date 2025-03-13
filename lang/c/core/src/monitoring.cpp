@@ -29,6 +29,7 @@
 #include "common.h"
 
 #include <map>
+#include <cassert>
 
 namespace
 {
@@ -60,13 +61,13 @@ namespace
 #if ECAL_CORE_MONITORING
 extern "C"
 {
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int entities_)
+  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int* entities_)
   {
-    if (monitoring_ == NULL || monitoring_length_ == NULL) return 1;
-    if (*monitoring_ != NULL || *monitoring_length_ != 0) return 1;
+    assert(monitoring_ != NULL && monitoring_length_ != NULL);
+    assert(*monitoring_ == NULL && *monitoring_length_ == 0);
 
     std::string buffer;
-    if (eCAL::Monitoring::GetMonitoring(buffer, Convert_Entities(entities_)))
+    if (eCAL::Monitoring::GetMonitoring(buffer, entities_ != NULL ? Convert_Entities(*entities_) : eCAL::Monitoring::Entity::All))
     {
       *monitoring_ = std::malloc(buffer.size());
       if (*monitoring_ != NULL)

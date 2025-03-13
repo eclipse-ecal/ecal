@@ -28,6 +28,8 @@
 
 #include "common.h"
 
+#include <cassert>
+
 extern "C"
 {
   ECALC_API const char* eCAL_Time_GetName()
@@ -47,7 +49,7 @@ extern "C"
 
   ECALC_API int eCAL_Time_SetNanoSeconds(long long time_)
   {
-    return static_cast<int>(eCAL::Time::SetNanoSeconds(time_));
+    return static_cast<int>(!eCAL::Time::SetNanoSeconds(time_));
   }
 
   ECALC_API int eCAL_Time_IsTimeSynchronized()
@@ -67,8 +69,7 @@ extern "C"
 
   ECALC_API void eCAL_Time_GetStatus(int* error_, char** status_message_)
   {
-    if (error_ == NULL) return;
-    if (*error_ != 0) return;
+    assert(error_ != NULL);
 
     std::unique_ptr<std::string> status_message;
     if (status_message_ != NULL)

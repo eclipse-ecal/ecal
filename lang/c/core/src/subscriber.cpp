@@ -23,36 +23,16 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/v5/ecal_subscriber.h>
 #include <ecal_c/pubsub/subscriber.h>
 
 #include "common.h"
+#include "configuration.h"
 
-
+#include <cassert>
 
 #if ECAL_CORE_SUBSCRIBER
 namespace
 {
-  void Convert_Subscriber_Configuration(eCAL::Subscriber::Configuration& subscriber_configuration_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_c_)
-  {
-
-  }
-
-  void Convert_SSubEventCallbackData(struct eCAL_SSubEventCallbackData* sub_event_callback_data_c_, const eCAL::SSubEventCallbackData& sub_event_callback_data_)
-  {
-    static const std::map<eCAL::eSubscriberEvent, eCAL_eSubscriberEvent> subscriber_event_map
-    {
-        {eCAL::eSubscriberEvent::none, eCAL_eSubscriberEvent_none},
-        {eCAL::eSubscriberEvent::connected, eCAL_eSubscriberEvent_connected},
-        {eCAL::eSubscriberEvent::disconnected, eCAL_eSubscriberEvent_disconnected},
-        {eCAL::eSubscriberEvent::dropped, eCAL_eSubscriberEvent_dropped}
-    };
-
-    sub_event_callback_data_c_->event_type = subscriber_event_map.at(sub_event_callback_data_.event_type);
-    sub_event_callback_data_c_->event_time = sub_event_callback_data_.event_time;
-    Convert_SDataTypeInformation(&sub_event_callback_data_c_->publisher_datatype, sub_event_callback_data_.publisher_datatype);
-  }
-
   void Assign_SSubEventCallbackData(struct eCAL_SSubEventCallbackData* sub_event_callback_data_c_, const eCAL::SSubEventCallbackData& sub_event_callback_data_)
   {
     static const std::map<eCAL::eSubscriberEvent, eCAL_eSubscriberEvent> subscriber_event_map
@@ -66,13 +46,6 @@ namespace
     sub_event_callback_data_c_->event_type = subscriber_event_map.at(sub_event_callback_data_.event_type);
     sub_event_callback_data_c_->event_time = sub_event_callback_data_.event_time;
     Assign_SDataTypeInformation(&sub_event_callback_data_c_->publisher_datatype, sub_event_callback_data_.publisher_datatype);
-  }
-
-  void eCAL_SSubEventCallbackData_Free(struct eCAL_SSubEventCallbackData* sub_event_callback_data_)
-  {
-    std::free(const_cast<void*>(reinterpret_cast<const void*>(sub_event_callback_data_->publisher_datatype.name)));
-    std::free(const_cast<void*>(reinterpret_cast<const void*>(sub_event_callback_data_->publisher_datatype.encoding)));
-    std::free(const_cast<void*>(reinterpret_cast<const void*>(sub_event_callback_data_->publisher_datatype.descriptor)));
   }
 
   void Assign_SReceiveCallbackData(struct eCAL_SReceiveCallbackData* receive_callback_data_c_, const eCAL::SReceiveCallbackData receive_callback_data_)
@@ -95,24 +68,26 @@ extern "C"
 
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
   {
+    assert(topic_name_ != NULL);
     eCAL::SDataTypeInformation data_type_information;
     eCAL::Subscriber::Configuration subscriber_configuration = eCAL::GetSubscriberConfiguration();
 
     if (data_type_information_ != NULL)
-      Convert_SDataTypeInformation(data_type_information, data_type_information_);
+      Assign_SDataTypeInformation(data_type_information, data_type_information_);
     if (subscriber_configuration_ != NULL)
-      Convert_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
+      Assign_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
 
     return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, subscriber_configuration) };
   }
 
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
   {
+    assert(topic_name_ != NULL);
     eCAL::SDataTypeInformation data_type_information;
     eCAL::Subscriber::Configuration subscriber_configuration = eCAL::GetSubscriberConfiguration();
 
     if (data_type_information_ != NULL)
-      Convert_SDataTypeInformation(data_type_information, data_type_information_);
+      Assign_SDataTypeInformation(data_type_information, data_type_information_);
 
     const auto sub_event_callback = [sub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& sub_event_callback_data_)
     {
@@ -125,19 +100,21 @@ extern "C"
     };
 
     if (subscriber_configuration_ != NULL)
-      Convert_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
+      Assign_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
 
-    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback, subscriber_configuration) };
+    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback_ != NULL ? sub_event_callback : eCAL::SubEventCallbackT(), subscriber_configuration) };
   }
 
   ECALC_API void eCAL_Subscriber_Delete(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     delete subscriber_->handle;
     delete subscriber_;
   }
 
   ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_)
   {
+    assert(subscriber_ != NULL && callback_ != NULL);
     const auto callback = [callback_](const eCAL::STopicId& publisher_id_, const eCAL::SDataTypeInformation& data_type_information_, const eCAL::SReceiveCallbackData& receive_callback_data_)
     {
       eCAL_STopicId publisher_id_c;
@@ -156,27 +133,32 @@ extern "C"
 
   ECALC_API int eCAL_Subscriber_RemoveReceiveCallback(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     return static_cast<int>(!subscriber_->handle->RemoveReceiveCallback());
   }
 
   ECALC_API size_t eCAL_Subscriber_GetPublisherCount(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     return subscriber_->handle->GetPublisherCount();
   }
 
   ECALC_API const char* eCAL_Subscriber_GetTopicName(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     return subscriber_->handle->GetTopicName().c_str();
   }
 
   ECALC_API const struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     Assign_STopicId(&subscriber_->topic_id, subscriber_->handle->GetTopicId());
     return &subscriber_->topic_id;
   }
 
   ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_)
   {
+    assert(subscriber_ != NULL);
     Assign_SDataTypeInformation(&subscriber_->data_type_info, subscriber_->handle->GetDataTypeInformation());
     return &subscriber_->data_type_info;
   }

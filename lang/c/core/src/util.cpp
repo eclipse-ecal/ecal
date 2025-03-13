@@ -27,6 +27,9 @@
 
 #include "common.h"
 
+#include <cstring>
+#include <cassert>
+
 extern "C"
 {
 #if ECAL_CORE_MONITORING
@@ -42,6 +45,7 @@ extern "C"
 
   ECALC_API void eCAL_Util_ShutdownProcess(const char* unit_name_)
   {
+    assert(unit_name_ != NULL);
     const std::string unit_name = unit_name_;
     eCAL::Util::ShutdownProcess(unit_name);
   }

@@ -76,8 +76,8 @@ extern "C"
 
   ECALC_API int eCAL_Initialize(const char* unit_name_, const unsigned int* components_)
   {
-    const std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
-    const unsigned int components = (components_ != nullptr) ? Convert_Components(*components_) : Convert_Components(eCAL_Init_Default);
+    const std::string unit_name = (unit_name_ != NULL) ? std::string(unit_name_) : std::string("");
+    const unsigned int components = (components_ != NULL) ? Convert_Components(*components_) : Convert_Components(eCAL_Init_Default);
     return static_cast<int>(!eCAL::Initialize(unit_name, components));
   }
 

@@ -28,6 +28,8 @@ set(ecal_c_src
     src/client_instance.cpp
     src/common.cpp
     src/common.h
+    src/configuration.cpp
+    src/configuration.h
     src/config.cpp
     src/core.cpp
     src/log.cpp
@@ -60,6 +62,7 @@ set(ecal_header_cimpl
     include/ecal_c/config/configuration.h
     include/ecal_c/config/logging.h
     include/ecal_c/config/publisher.h
+    include/ecal_c/config/registration.h
     include/ecal_c/config/subscriber.h
     include/ecal_c/config/time.h
     include/ecal_c/config/transport_layer.h

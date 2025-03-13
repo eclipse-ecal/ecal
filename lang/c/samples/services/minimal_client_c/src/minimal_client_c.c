@@ -20,7 +20,6 @@
 #include <ecal_c/ecal.h>
 
 #include <stdio.h> // printf()
-#include <stdlib.h> // free()
 
 int main()
 {
@@ -42,7 +41,7 @@ int main()
 
     // call method "echo"
     printf("Calling service1:echo ..\n");
-    if (!eCAL_ServiceClient_CallWithResponse(client, "echo", request, sizeof(request), &response, &response_length, -1))
+    if (!eCAL_ServiceClient_CallWithResponse(client, "echo", request, sizeof(request), &response, &response_length, NULL))
     {
       for (size_t i = 0; i < response_length; ++i)
       {
@@ -70,7 +69,7 @@ int main()
     }
 
     // memory of response needs to be deallocated!
-    free(response);
+    eCAL_Free(response);
 
     // sleep a second
     eCAL_Process_SleepMS(1000);

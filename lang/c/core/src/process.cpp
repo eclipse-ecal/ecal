@@ -28,6 +28,7 @@
 #include <map>
 
 #include "common.h"
+#include <cassert>
 
 extern "C"
 {
@@ -38,10 +39,9 @@ extern "C"
 
   ECALC_API void eCAL_Process_DumpConfig2(char** configuration_string_)
   {
-    if (configuration_string_ == NULL) return;
-    if (*configuration_string_ != NULL) return;
+    assert(configuration_string_ != NULL);
+    assert(*configuration_string_ == NULL);
     std::string buffer;
-    
     eCAL::Process::DumpConfig(buffer);
     const auto size = buffer.size() + 1;
     *configuration_string_ = reinterpret_cast<char*>(std::malloc(size));
@@ -98,6 +98,8 @@ extern "C"
 
   ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverityLevel level_, const char* info_)
   {
+    assert(info_ != NULL);
+
     static const std::map<enum eCAL_Process_eSeverity, eCAL::Process::eSeverity> severity_map
     {
       {eCAL_Process_eSeverity_unknown, eCAL::Process::eSeverity::unknown},

@@ -26,6 +26,7 @@
 #include <ecal_c/service/server.h>
 
 #include "common.h"
+#include <cassert>
 
 #if ECAL_CORE_SERVICE
 namespace
@@ -54,6 +55,7 @@ extern "C"
 
   ECALC_API eCAL_ServiceServer* eCAL_ServiceServer_New(const char* service_name_, eCAL_ServerEventCallbackT event_callback_)
   {
+    assert(service_name_ != NULL);
     const auto event_callback = [event_callback_](const eCAL::SServiceId& service_id_, const struct eCAL::SServerEventCallbackData& server_event_callback_data_)
     {
       struct eCAL_SServiceId service_id_c;
@@ -69,12 +71,14 @@ extern "C"
 
   ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_)
   {
+    assert(service_server_ != NULL);
     delete service_server_->handle;
     delete service_server_;
   }
 
   ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_)
   {
+    assert(service_server_ != NULL && method_info_ != NULL && callback_ != NULL);
     eCAL::SServiceMethodInformation method_info;
     Convert_SServiceMethodInformation(method_info, method_info_);
 
@@ -99,26 +103,26 @@ extern "C"
 
   ECALC_API int eCAL_ServiceServer_RemoveMethodCallback(eCAL_ServiceServer* service_server_, const char* method_name_)
   {
+    assert(service_server_ != NULL && method_name_ != NULL);
     return !static_cast<int>(service_server_->handle->RemoveMethodCallback(method_name_));
   }
 
   ECALC_API const char* eCAL_ServiceServer_GetServiceName(eCAL_ServiceServer* service_server_)
   {
+    assert(service_server_ != NULL);
     return service_server_->handle->GetServiceName().c_str();
   }
 
   ECALC_API const struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_)
   {
-    auto* service_id = reinterpret_cast<eCAL_SServiceId*>(std::malloc(sizeof(eCAL_SServiceId)));
-    if (service_id != NULL)
-    {
-      Convert_SServiceId(service_id, service_server_->handle->GetServiceId());
-    }
-    return service_id;
+    assert(service_server_ != NULL);
+    Assign_SServiceId(&service_server_->service_id, service_server_->handle->GetServiceId());
+    return &service_server_->service_id;
   }
 
   ECALC_API int eCAL_ServiceServer_IsConnected(eCAL_ServiceServer* service_server_)
   {
+    assert(service_server_ != NULL);
     return static_cast<int>(service_server_->handle->IsConnected());
   }
 }

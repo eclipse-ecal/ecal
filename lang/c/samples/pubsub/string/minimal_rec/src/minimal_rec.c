@@ -41,8 +41,8 @@ int main()
 
   // create subscriber "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
-  data_type_information.name = "std::string";
-  data_type_information.encoding = "base";
+  data_type_information.name = "string";
+  data_type_information.encoding = "utf-8";
   subscriber = eCAL_Subscriber_New("Hello", &data_type_information, NULL);
 
   // add callback

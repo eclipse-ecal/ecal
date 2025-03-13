@@ -34,7 +34,7 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int entities_);
+  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int* entities_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

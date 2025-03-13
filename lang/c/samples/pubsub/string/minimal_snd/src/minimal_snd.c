@@ -35,8 +35,8 @@ int main()
 
   // create publisher "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
-  data_type_information.name = "std::string";
-  data_type_information.encoding = "base";
+  data_type_information.name = "string";
+  data_type_information.encoding = "utf-8";
 
   publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL);
 

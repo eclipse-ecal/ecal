@@ -31,16 +31,8 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  ECALC_API void eCAL_STopicId_Free(struct eCAL_STopicId* topic_id_);
-
-  ECALC_API void eCAL_SDataTypeInformation_Free(struct eCAL_SDataTypeInformation* data_type_information_);
-
-  ECALC_API void eCAL_SServiceId_Free(struct eCAL_SServiceId* service_id_);
-
-  ECALC_API void eCAL_SEntityId_Free(struct eCAL_SEntityId* entity_id_);
-
-  ECALC_API void eCAL_Publisher_Configuration_Free(struct eCAL_Publisher_Configuration* publisher_configuration_);
-  ECALC_API void eCAL_Subscriber_Configuration_Free(struct eCAL_Subscriber_Configuration* subscriber_configuration_);
+  ECALC_API void* eCAL_Malloc(size_t size_);
+  ECALC_API void eCAL_Free(void* ptr_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

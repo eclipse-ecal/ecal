@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright (C) 2016 - 2024 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,33 @@
 #ifndef ecal_c_config_subscriber_h_included
 #define ecal_c_config_subscriber_h_included
 
-struct eCAL_Subscriber_Configuration
+struct eCAL_Subscriber_Layer_SHM_Configuration
 {
-  int reserved;
+  int enable;  //!< enable layer (Default: true)
 };
 
-#endif /*ecal_c_config_subscriber_h_included*/
+struct eCAL_Subscriber_Layer_UDP_Configuration
+{
+  int enable;  //!< enable layer (Default: true)
+};
+
+struct eCAL_Subscriber_Layer_TCP_Configuration
+{
+  int enable;  //!< enable layer (Default: false)
+};
+
+struct eCAL_Subscriber_Layer_Configuration
+{
+  struct eCAL_Subscriber_Layer_SHM_Configuration shm;
+  struct eCAL_Subscriber_Layer_UDP_Configuration udp;
+  struct eCAL_Subscriber_Layer_TCP_Configuration tcp;
+};
+
+struct eCAL_Subscriber_Configuration
+{
+  struct eCAL_Subscriber_Layer_Configuration layer;
+
+  int drop_out_of_order_messages;  //!< Enable dropping of payload messages that arrive out of order (Default: true)
+};
+
+#endif /* ecal_c_config_subscriber_h_included */

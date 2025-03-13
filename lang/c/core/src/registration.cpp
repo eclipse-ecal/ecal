@@ -76,10 +76,8 @@ Usage:
     if (eCAL::Registration::GetPublisherIDs(topic_ids))
     {
       size_t extended_size{ 0 };
-
       for (const auto& topic_id : topic_ids)
         extended_size += ExtSize_STopicId(topic_id);
-
       const auto base_size = aligned_size(topic_ids.size() * sizeof(struct eCAL_STopicId));
 
       *topic_ids_ = reinterpret_cast<struct eCAL_STopicId*>(std::malloc(extended_size + base_size));

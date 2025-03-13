@@ -35,17 +35,10 @@ extern "C"
 #endif /*__cplusplus*/
   typedef struct eCAL_ClientInstance eCAL_ClientInstance;
 
-  struct eCAL_SServiceResponseResult
-  {
-    int result;
-    struct eCAL_SServiceResponse service_response;
-  };
-
-  ECALC_API void eCAL_ClientInstance_Delete(eCAL_ClientInstance* client_instance_);
   ECALC_API void eCAL_ClientInstances_Delete(eCAL_ClientInstance** client_instances_);
 
-  ECALC_API struct eCAL_SServiceResponseResult* eCAL_ClientInstance_CallWithResponse(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, int timeout_ms_);
-  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, int timeout_ms_);
+  ECALC_API struct eCAL_SServiceResponse* eCAL_ClientInstance_CallWithResponse(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, const int* timeout_ms_);
+  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, const int* timeout_ms_);
   ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_);
 
   ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_);

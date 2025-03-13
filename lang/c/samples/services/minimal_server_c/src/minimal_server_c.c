@@ -21,11 +21,11 @@
 
 #include <stdio.h> //printf()
 #include <string.h> //memcpy(), memset()
-#include <stdlib.h> //malloc
+
 
 int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_)
 {
-  *response_ = malloc(request_length_);
+  *response_ = eCAL_Malloc(request_length_);
   if (*response_ == NULL) return 1; // memory allocation failed
 
   // echo request to response

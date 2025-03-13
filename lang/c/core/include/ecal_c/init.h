@@ -25,6 +25,8 @@
 #ifndef ecal_c_init_h_included
 #define ecal_c_init_h_included
 
+#include <ecal_c/config/configuration.h>
+
 #define ECAL_INIT_PUBLISHER 0x001
 #define ECAL_INIT_SUBSCRIBER 0x002
 #define ECAL_INIT_SERVICE 0x004
@@ -54,5 +56,13 @@ static const unsigned int eCAL_Init_Default = ECAL_INIT_PUBLISHER
 | ECAL_INIT_TIMESYNC;
 
 static const unsigned int eCAL_Init_None = ECAL_INIT_NONE;
+
+inline eCAL_Configuration* eCAL_Init_Configuration()
+{
+  eCAL_Configuration* config;
+  config = eCAL_Configuration_New();
+  eCAL_Configuration_InitFromConfig(config);
+  return config;
+}
 
 #endif /*ecal_c_init_h_included*/
