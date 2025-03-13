@@ -37,7 +37,7 @@ void print_person(const pb::People::Person& person)
 int main(int /*argc*/, char** /*argv*/)
 {
   // create a new measurement
-  eCAL::measurement::IMeasurement meas(MEASUREMENT_PATH);
+  eCAL::measurement::IMeasurement meas(".");
 
   // create a channel (topic name "person")
   auto person_channels = meas.Channels("person");

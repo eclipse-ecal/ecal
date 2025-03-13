@@ -17,9 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/proto/message.h>
-#include <ecal/msg/string/message.h>
-#include <ecal/measurement/omeasurement.h>
+#include <ecal/msg/protobuf/omeasurement.h>
 
 #include <iostream>
 

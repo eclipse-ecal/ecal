@@ -68,15 +68,15 @@ install(
   FILE_SET message_core_headers COMPONENT sdk
 )
 
-################################
+#######################################
 # eCAL measurement message extensions #
-################################
+#######################################
 add_library(message_measurement INTERFACE)
 add_library(eCAL::message_measurement ALIAS message_measurement)
 
 target_link_libraries(message_measurement 
   INTERFACE 
-    eCAL::measurement_base
+    eCAL::measurement
 )
 
 target_sources(message_measurement
