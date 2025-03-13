@@ -65,7 +65,7 @@ Somewhere on your hard drive create an empty directory and create a file :file:`
 
 * |fa-file-alt| :file:`hello_world.py`:
 
-  .. literalinclude:: src/hello_world_python/hello_world_snd.py
+  .. literalinclude:: /source_code_samples/python/string/hello_world_snd.py
      :language: python
      :linenos:
          
@@ -108,7 +108,7 @@ For the subscriber, create another file :file:`hello_world_rec.py` with the foll
 
 * |fa-file-alt| :file:`hello_world_rec.py`:
 
-  .. literalinclude:: src/hello_world_python/hello_world_rec.py
+  .. literalinclude:: /source_code_samples/python/string/hello_world_rec.py
      :language: python
      :linenos:
   
@@ -144,5 +144,5 @@ Files
 .. parsed-literal::
 
    |fa-folder-open|
-   ├─ |fa-file-alt| :download:`hello_world_snd.py <src/hello_world_python/hello_world_snd.py>`
-   └─ |fa-file-alt| :download:`hello_world_rec.py <src/hello_world_python/hello_world_rec.py>`
+   ├─ |fa-file-alt| :download:`hello_world_snd.py </source_code_samples/python/string/hello_world_snd.py>`
+   └─ |fa-file-alt| :download:`hello_world_rec.py </source_code_samples/python/string/hello_world_rec.py>`

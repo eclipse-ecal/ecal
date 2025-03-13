@@ -33,12 +33,12 @@ As the sender and receiver need the same .proto files, we place them in a separa
    |fa-folder-open|
    ├─ |fa-folder-open| :file:`proto_messages`
    │  └─ |fa-file-alt| :file:`hello_world.proto`
-   ├─ |fa-folder| :file:`protobuf_snd`
-   └─ |fa-folder| :file:`protobuf_rec`
+   ├─ |fa-folder| :file:`hello_world_snd`
+   └─ |fa-folder| :file:`hello_world_rec`
 
 Let's start with the :file:`proto_messages/hello_world.proto` file!
 
-.. literalinclude:: src/hello_world_protobuf/proto_messages/hello_world.proto
+.. literalinclude:: /source_code_samples/cpp/protobuf/proto_messages/hello_world.proto
    :language: protobuf
    :linenos:
 
@@ -49,11 +49,11 @@ Let's start with the :file:`proto_messages/hello_world.proto` file!
 
    **Line 5-10** Creates a message "HelloWorld", that holds the fields "name", "id" and "msg".
 
-Now start implementing the actual sender application. Just as in the :ref:`last section <getting_started_hello_world>` create the :file:`CMakeLists.txt` and :file:`main.cpp` in the :file:`protobuf_snd` directory and paste the following content:
+Now start implementing the actual sender application. Just as in the :ref:`last section <getting_started_hello_world>` create the :file:`CMakeLists.txt` and :file:`main.cpp` in the :file:`hello_world_snd` directory and paste the following content:
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: src/hello_world_protobuf/protobuf_snd/CMakeLists.txt
+  .. literalinclude:: /source_code_samples/cpp/protobuf/hello_world_snd/CMakeLists.txt
      :language: cmake
      :linenos:
 
@@ -78,7 +78,7 @@ Now start implementing the actual sender application. Just as in the :ref:`last 
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: src/hello_world_protobuf/protobuf_snd/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/protobuf/hello_world_snd/main.cpp
      :language: cpp
      :linenos:
   
@@ -112,13 +112,13 @@ Protobuf receiver
 
 * |fa-file-alt| :file:`CMakeLists.txt`:
 
-  .. literalinclude:: src/hello_world_protobuf/protobuf_rec/CMakeLists.txt
+  .. literalinclude:: /source_code_samples/cpp/protobuf/hello_world_rec/CMakeLists.txt
      :language: cmake
      :linenos:
 
 * |fa-file-alt| :file:`main.cpp`:
 
-  .. literalinclude:: src/hello_world_protobuf/protobuf_rec/main.cpp
+  .. literalinclude:: /source_code_samples/cpp/protobuf/hello_world_rec/main.cpp
      :language: cpp
      :linenos:
   
@@ -151,12 +151,12 @@ Files
 
    |fa-folder-open|
    ├─ |fa-folder-open| proto_messages
-   │  └─ |fa-file-alt| :download:`hello_world.proto <src/hello_world_protobuf/proto_messages/hello_world.proto>`
+   │  └─ |fa-file-alt| :download:`hello_world.proto </source_code_samples/cpp/protobuf/proto_messages/hello_world.proto>`
    │
    ├─ |fa-folder-open| protobuf_snd
-   │  ├─ |fa-file-alt| :download:`CMakeLists.txt <src/hello_world_protobuf/protobuf_snd/CMakeLists.txt>`
-   │  └─ |fa-file-alt| :download:`main.cpp <src/hello_world_protobuf/protobuf_snd/main.cpp>`
+   │  ├─ |fa-file-alt| :download:`CMakeLists.txt </source_code_samples/cpp/protobuf/hello_world_snd/CMakeLists.txt>`
+   │  └─ |fa-file-alt| :download:`main.cpp </source_code_samples/cpp/protobuf/hello_world_snd/main.cpp>`
    │
    └─ |fa-folder-open| protobuf_rec
-      ├─ |fa-file-alt| :download:`CMakeLists.txt <src/hello_world_protobuf/protobuf_rec/CMakeLists.txt>`
-      └─ |fa-file-alt| :download:`main.cpp <src/hello_world_protobuf/protobuf_rec/main.cpp>`
+      ├─ |fa-file-alt| :download:`CMakeLists.txt </source_code_samples/cpp/protobuf/hello_world_rec/CMakeLists.txt>`
+      └─ |fa-file-alt| :download:`main.cpp </source_code_samples/cpp/protobuf/hello_world_rec/main.cpp>`
