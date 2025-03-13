@@ -27,8 +27,8 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
-
 #include <ecal_c/init.h>
+#include <ecal_c/config/configuration.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -57,7 +57,7 @@ extern "C"
    *
    * @return  Zero if succeeded.
   **/
-  ECALC_API eCAL_SVersion eCAL_GetVersion();
+  ECALC_API struct eCAL_SVersion eCAL_GetVersion();
 
   /**
    * @brief Initialize eCAL API.
@@ -69,7 +69,8 @@ extern "C"
    *
    * @return Zero if succeeded.
   **/
-  ECALC_API int eCAL_Initialize(const char *unit_name_, const unsigned int* components_);
+  ECALC_API int eCAL_Initialize(const char *unit_name_, const unsigned int* components_, const eCAL_Configuration* config_);
+
 
   /**
    * @brief Finalize eCAL API.
@@ -85,7 +86,7 @@ extern "C"
   **/
   ECALC_API int eCAL_IsInitialized();
 
-  ECALC_API int eCAL_IsInitialized2(unsigned int components_);
+  ECALC_API int eCAL_IsComponentInitialized(unsigned int components_);
 
   /**
    * @brief Return the eCAL process state.

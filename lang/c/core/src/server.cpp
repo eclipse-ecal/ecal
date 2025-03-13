@@ -80,7 +80,7 @@ extern "C"
   {
     assert(service_server_ != NULL && method_info_ != NULL && callback_ != NULL);
     eCAL::SServiceMethodInformation method_info;
-    Convert_SServiceMethodInformation(method_info, method_info_);
+    Assign_SServiceMethodInformation(method_info, method_info_);
 
     const auto callback = [callback_](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {

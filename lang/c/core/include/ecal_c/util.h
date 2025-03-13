@@ -47,7 +47,7 @@ extern "C"
    *
    * @param process_id_  Process id. 
   **/
-  ECALC_API void eCAL_Util_ShutdownProcess2(int process_id_);
+  ECALC_API void eCAL_Util_ShutdownProcessId(int process_id_);
 
   /**
    * @brief Send shutdown event to all local user processes.

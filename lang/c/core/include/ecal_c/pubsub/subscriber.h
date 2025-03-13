@@ -36,8 +36,8 @@ extern "C"
 #endif /*__cplusplus*/
   typedef struct eCAL_Subscriber eCAL_Subscriber;
 
-  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
-  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
+  //ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
+  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
   ECALC_API void eCAL_Subscriber_Delete(eCAL_Subscriber* subscriber_);
 
   ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_);

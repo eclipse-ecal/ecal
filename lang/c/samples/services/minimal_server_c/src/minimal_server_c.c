@@ -47,7 +47,7 @@ int main()
   struct eCAL_SServiceMethodInformation method_information;
 
   // initialize eCAL API
-  eCAL_Initialize("minimal server c", NULL);
+  eCAL_Initialize("minimal server c", NULL, NULL);
 
   // create server "service1"
   server = eCAL_ServiceServer_New("service1", NULL);
@@ -66,7 +66,7 @@ int main()
   }
 
   // destroy server "service1"
-  eCAL_ServiceClient_Delete(server);
+  eCAL_ServiceServer_Delete(server);
 
   // finalize eCAL API
   eCAL_Finalize();

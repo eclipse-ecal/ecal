@@ -140,7 +140,7 @@ extern "C"
       *service_response_vec_length_ = service_response_vec.size();
       for (std::size_t i = 0; i < service_response_vec.size(); ++i)
       {
-        Convert_SServiceResponse(&(*service_response_vec_)[i], service_response_vec.at(i), &offset);
+        Assign_SServiceResponse(&(*service_response_vec_)[i], service_response_vec.at(i), &offset);
       }
     }
     return !static_cast<int>(result);

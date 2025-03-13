@@ -27,7 +27,7 @@ int main()
   eCAL_ServiceClient *client;
 
   // initialize eCAL API
-  eCAL_Initialize("minimal client c", NULL);
+  eCAL_Initialize("minimal client c", NULL, NULL);
 
   // create client for "service1"
   client = eCAL_ServiceClient_New("service1", NULL, 0, NULL);

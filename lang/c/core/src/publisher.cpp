@@ -59,13 +59,13 @@ namespace
 
     bool WriteFull(void* buffer_, size_t size_) final
     {
-      return !m_payload_writer->WriteFull(buffer_, size_);
+      return !static_cast<bool>(m_payload_writer->WriteFull(buffer_, size_));
     }
 
     bool WriteModified(void* buffer_, size_t size_) final
     {
       if (m_payload_writer->WriteModified != NULL)
-        return !m_payload_writer->WriteModified(buffer_, size_);
+        return !static_cast<bool>(m_payload_writer->WriteModified(buffer_, size_));
       else
         return WriteFull(buffer_, size_);
     }
@@ -89,41 +89,46 @@ struct eCAL_Publisher
 
 extern "C"
 {
-  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
+  //ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
+  //{
+  //  assert(topic_name_ != NULL);
+  //
+  //  eCAL::SDataTypeInformation data_type_information;
+  //  eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
+  //
+  //  if (data_type_information_ != NULL)
+  //    Assign_SDataTypeInformation(data_type_information, data_type_information_);
+  //  if (publisher_configuration_ != NULL)
+  //    Assign_Publisher_Configuration(publisher_configuration, publisher_configuration_);
+  //
+  //  return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, publisher_configuration) };
+  //}
+
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
   {
     assert(topic_name_ != NULL);
-
     eCAL::SDataTypeInformation data_type_information;
+    eCAL::PubEventCallbackT pub_event_callback;
     eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
 
     if (data_type_information_ != NULL)
       Assign_SDataTypeInformation(data_type_information, data_type_information_);
+
     if (publisher_configuration_ != NULL)
       Assign_Publisher_Configuration(publisher_configuration, publisher_configuration_);
 
-    return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, publisher_configuration) };
-  }
-
-  ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
-  {
-    assert(topic_name_ != NULL);
-    eCAL::SDataTypeInformation data_type_information;
-    eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
-
-    Assign_SDataTypeInformation(data_type_information, data_type_information_);
-
-    const auto pub_event_callback = [pub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& pub_event_callback_data_)
+    if (pub_event_callback_ != NULL)
     {
-      struct eCAL_STopicId topic_id_c;
-      struct eCAL_SPubEventCallbackData pub_event_callback_data_c;
+      pub_event_callback = [pub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& pub_event_callback_data_)
+      {
+        struct eCAL_STopicId topic_id_c;
+        struct eCAL_SPubEventCallbackData pub_event_callback_data_c;
 
-      Assign_STopicId(&topic_id_c, topic_id_);
-      Assign_SPubEventCallbackData(&pub_event_callback_data_c, pub_event_callback_data_);
-      pub_event_callback_(&topic_id_c, &pub_event_callback_data_c);
-    };
-
-    if (publisher_configuration_ != NULL)
-      Assign_Publisher_Configuration(publisher_configuration, publisher_configuration_);
+        Assign_STopicId(&topic_id_c, topic_id_);
+        Assign_SPubEventCallbackData(&pub_event_callback_data_c, pub_event_callback_data_);
+        pub_event_callback_(&topic_id_c, &pub_event_callback_data_c);
+      };
+    }
 
     return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, pub_event_callback, publisher_configuration) };
   }
@@ -135,17 +140,17 @@ extern "C"
     delete publisher_;
   }
 
-  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, long long timestamp_)
+  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, const long long* timestamp_)
   {
     assert(publisher_ != NULL);
-    return static_cast<int>(!publisher_->handle->Send(buffer_, buffer_len_, timestamp_));
+    return static_cast<int>(!publisher_->handle->Send(buffer_, buffer_len_, timestamp_ != NULL ? *timestamp_ : eCAL::CPublisher::DEFAULT_TIME_ARGUMENT));
   }
 
-  ECALC_API int eCAL_Publisher_Send2(eCAL_Publisher* publisher_, struct eCAL_PayloadWriter* payload_writer_, long long timestamp_)
+  ECALC_API int eCAL_Publisher_SendPayloadWriter(eCAL_Publisher* publisher_, const struct eCAL_PayloadWriter* payload_writer_, const long long* timestamp_)
   {
     assert(publisher_ != NULL && payload_writer_ != NULL);
     PayloadWriter payload_writer(payload_writer_);
-    return static_cast<int>(!publisher_->handle->Send(payload_writer, timestamp_));
+    return static_cast<int>(!publisher_->handle->Send(payload_writer, timestamp_ != NULL ? *timestamp_ : eCAL::CPublisher::DEFAULT_TIME_ARGUMENT));
   }
 
   ECALC_API size_t eCAL_Publisher_GetSubscriberCount(eCAL_Publisher* publisher_)

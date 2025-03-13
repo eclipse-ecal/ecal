@@ -84,7 +84,7 @@ extern "C"
       if (service_response_c != NULL)
       {
         auto* offset = reinterpret_cast<char*>(service_response_c) + base_size;
-        Convert_SServiceResponse(service_response_c, service_response, &offset);
+        Assign_SServiceResponse(service_response_c, service_response, &offset);
       }
     }
     return service_response_c;

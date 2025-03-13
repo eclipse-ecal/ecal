@@ -45,23 +45,13 @@ struct eCAL_SEntityId
 };
 
 /**
- * @brief Flag to indicate eCAL to allocate/deallocate memory.
-**/
-#define ECAL_ALLOCATE_4ME 0
-
-/**
- * @brief Common handle for eCAL C API function calls.
-**/
-typedef void* ECAL_HANDLE;
-
-/**
  * @brief eCAL version struct (C variant)
  **/
-typedef struct
+struct eCAL_SVersion
 {
   int major; //!< major version number
   int minor; //!< minor version number
   int patch; //!< patch version number
-} eCAL_SVersion;
+};
 
 #endif /* ecal_c_types_h_included */

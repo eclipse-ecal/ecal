@@ -23,6 +23,7 @@
 #include "common.h"
 
 #include <map>
+#include <cassert>
 
 namespace
 {
@@ -32,7 +33,7 @@ namespace
       ExtSize_String(service_method_.method_name);
   }
 
-  void Convert_SServiceMethod(struct eCAL_Registration_SServiceMethod* service_method_c_, const eCAL::Registration::SServiceMethod& service_method_, char** offset_)
+  void Assign_SServiceMethod(struct eCAL_Registration_SServiceMethod* service_method_c_, const eCAL::Registration::SServiceMethod& service_method_, char** offset_)
   {
     service_method_c_->service_name = Convert_String(service_method_.service_name, offset_);
     service_method_c_->method_name = Convert_String(service_method_.method_name, offset_);
@@ -64,13 +65,13 @@ Usage:
       topic_ids[i]....
     }
   }
-  free(topic_ids);
+  eCAL_Free(topic_ids);
 
 */
   ECALC_API int eCAL_Registration_GetPublisherIDs(struct eCAL_STopicId** topic_ids_, size_t* topic_ids_length_)
   {
-    if (topic_ids_ == NULL || topic_ids_length_ == NULL) return 1;
-    if (*topic_ids_ != NULL || *topic_ids_length_ != 0) return 1;
+    assert(topic_ids_ != NULL && topic_ids_length_ != NULL);
+    assert(*topic_ids_ == NULL && *topic_ids_length_ == 0);
 
     std::set<eCAL::STopicId> topic_ids;
     if (eCAL::Registration::GetPublisherIDs(topic_ids))
@@ -87,7 +88,7 @@ Usage:
         *topic_ids_length_ = topic_ids.size();
         auto* offset = reinterpret_cast<char*>(*topic_ids_) + base_size;
         for (const auto& topic_id : topic_ids)
-          Convert_STopicId(&((*topic_ids_)[i++]), topic_id, &offset);
+          Assign_STopicId(&((*topic_ids_)[i++]), topic_id, &offset);
       }
       
     }
@@ -96,12 +97,12 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetPublisherInfo(const struct eCAL_STopicId* topic_id_, struct eCAL_SDataTypeInformation** topic_info_)
   {
-    if (topic_id_ == NULL || topic_info_ == NULL) return 1;
-    if (*topic_info_ != NULL) return 1;
+    assert(topic_id_ != NULL && topic_info_ != NULL);
+    assert(*topic_info_ == NULL);
 
     eCAL::SDataTypeInformation topic_info;
     eCAL::STopicId topic_id;
-    Convert_STopicId(topic_id, topic_id_);
+    Assign_STopicId(topic_id, topic_id_);
 
     if (eCAL::Registration::GetPublisherInfo(topic_id, topic_info))
     {
@@ -111,7 +112,7 @@ Usage:
       if (*topic_info_ != NULL)
       {
         auto* offset = reinterpret_cast<char*>(*topic_info_) + base_size;
-        Convert_SDataTypeInformation(*topic_info_, topic_info, &offset);
+        Assign_SDataTypeInformation(*topic_info_, topic_info, &offset);
       }
     }
 
@@ -120,8 +121,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetSubscriberIDs(struct eCAL_STopicId** topic_ids_, size_t* topic_ids_length_)
   {
-    if (topic_ids_ == NULL || topic_ids_length_ == NULL) return 1;
-    if (*topic_ids_ != NULL || *topic_ids_length_ != 0) return 1;
+    assert(topic_ids_ != NULL && topic_ids_length_ != NULL);
+    assert(*topic_ids_ == NULL && *topic_ids_length_ == 0);
 
     std::set<eCAL::STopicId> topic_ids;
     if (eCAL::Registration::GetSubscriberIDs(topic_ids))
@@ -140,7 +141,7 @@ Usage:
         *topic_ids_length_ = topic_ids.size();
         auto* offset = reinterpret_cast<char*>(*topic_ids_) + base_size;
         for (const auto& topic_id : topic_ids)
-          Convert_STopicId(&((*topic_ids_)[i++]), topic_id, &offset);
+          Assign_STopicId(&((*topic_ids_)[i++]), topic_id, &offset);
       }
     }
     return !static_cast<int>((*topic_ids_ != NULL));
@@ -148,12 +149,12 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetSubscriberInfo(const struct eCAL_STopicId* topic_id_, struct eCAL_SDataTypeInformation** topic_info_)
   {
-    if (topic_id_ == NULL || topic_info_ == NULL) return 1;
-    if (*topic_info_ != NULL) return 1;
+    assert(topic_id_ != NULL && topic_info_ != NULL);
+    assert(*topic_info_ == NULL);
 
     eCAL::SDataTypeInformation topic_info;
     eCAL::STopicId topic_id;
-    Convert_STopicId(topic_id, topic_id_);
+    Assign_STopicId(topic_id, topic_id_);
 
     if (eCAL::Registration::GetSubscriberInfo(topic_id, topic_info))
     {
@@ -163,7 +164,7 @@ Usage:
       if (*topic_info_ != NULL)
       {
         auto* offset = reinterpret_cast<char*>(*topic_info_) + base_size;
-        Convert_SDataTypeInformation(*topic_info_, topic_info, &offset);
+        Assign_SDataTypeInformation(*topic_info_, topic_info, &offset);
       }
     }
     return !static_cast<int>(*topic_info_ != NULL);
@@ -171,8 +172,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetServerIDs(struct eCAL_SServiceId** service_ids_, size_t* service_ids_length_)
   {
-    if (service_ids_ == NULL || service_ids_length_ == NULL) return 1;
-    if (*service_ids_ != NULL || *service_ids_length_ != 0) return 1;
+    assert(service_ids_ != NULL && service_ids_length_ != NULL);
+    assert(*service_ids_ == NULL && *service_ids_length_ == 0);
 
     std::set<eCAL::SServiceId> service_ids;
     if (eCAL::Registration::GetServerIDs(service_ids))
@@ -191,7 +192,7 @@ Usage:
         *service_ids_length_ = service_ids.size();
         auto* offset = reinterpret_cast<char*>(*service_ids_) + base_size;
         for (const auto& service_id : service_ids)
-          Convert_SServiceId(&((*service_ids_)[i++]), service_id, &offset);
+          Assign_SServiceId(&((*service_ids_)[i++]), service_id, &offset);
       }
     }
     return !static_cast<int>((*service_ids_ != NULL));
@@ -199,11 +200,11 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetServerInfo(const struct eCAL_SServiceId* service_id_, struct eCAL_SServiceMethodInformation** service_method_info_, size_t* service_method_info_length_)
   {
-    if (service_id_ == NULL || service_method_info_ == NULL || service_method_info_length_ == NULL) return 1;
-    if (*service_method_info_ != NULL || *service_method_info_length_ != 0) return 1;
+    assert(service_id_ != NULL && service_method_info_ != NULL && service_method_info_length_ != NULL);
+    assert(*service_method_info_ == NULL && *service_method_info_length_ == 0);
 
     eCAL::SServiceId service_id;
-    Convert_SServiceId(service_id, service_id_);
+    Assign_SServiceId(service_id, service_id_);
 
     eCAL::ServiceMethodInformationSetT service_method_info;
     if (eCAL::Registration::GetServerInfo(service_id, service_method_info))
@@ -222,7 +223,7 @@ Usage:
         *service_method_info_length_ = service_method_info.size();
         auto* offset = reinterpret_cast<char*>(*service_method_info_) + base_size;
         for (const auto& method_info : service_method_info)
-          Convert_SServiceMethodInformation(&((*service_method_info_)[i++]), method_info, &offset);
+          Assign_SServiceMethodInformation(&((*service_method_info_)[i++]), method_info, &offset);
       }
     }
     return !static_cast<int>((*service_method_info_ != NULL));
@@ -230,8 +231,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetClientIDs(struct eCAL_SServiceId** service_ids_, size_t* service_ids_length_)
   {
-    if (service_ids_ == NULL || service_ids_length_ == NULL) return 1;
-    if (*service_ids_ != NULL || *service_ids_length_ != 0) return 1;
+    assert(service_ids_ != NULL && service_ids_length_ != NULL);
+    assert(*service_ids_ == NULL && *service_ids_length_ == 0);
 
     std::set<eCAL::SServiceId> service_ids;
     if (eCAL::Registration::GetClientIDs(service_ids))
@@ -250,7 +251,7 @@ Usage:
         *service_ids_length_ = service_ids.size();
         auto* offset = reinterpret_cast<char*>(*service_ids_) + base_size;
         for (const auto& service_id : service_ids)
-          Convert_SServiceId(&((*service_ids_)[i++]), service_id, &offset);
+          Assign_SServiceId(&((*service_ids_)[i++]), service_id, &offset);
       }
     }
     return !static_cast<int>((*service_ids_ != NULL));
@@ -258,11 +259,11 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetClientInfo(const struct eCAL_SServiceId* service_id_, struct eCAL_SServiceMethodInformation** service_method_info_, size_t* service_method_info_length_)
   {
-    if (service_id_ == NULL || service_method_info_ == NULL || service_method_info_length_ == NULL) return 1;
-    if (*service_method_info_ != NULL || *service_method_info_length_ != 0) return 1;
+    assert(service_id_ != NULL && service_method_info_ != NULL && service_method_info_length_ != NULL);
+    assert(*service_method_info_ == NULL && *service_method_info_length_ == 0);
 
     eCAL::SServiceId service_id;
-    Convert_SServiceId(service_id, service_id_);
+    Assign_SServiceId(service_id, service_id_);
 
     eCAL::ServiceMethodInformationSetT service_method_info;
     if (eCAL::Registration::GetClientInfo(service_id, service_method_info))
@@ -281,7 +282,7 @@ Usage:
         *service_method_info_length_ = service_method_info.size();
         auto* offset = reinterpret_cast<char*>(*service_method_info_) + base_size;
         for (const auto& method_info : service_method_info)
-          Convert_SServiceMethodInformation(&((*service_method_info_)[i++]), method_info, &offset);
+          Assign_SServiceMethodInformation(&((*service_method_info_)[i++]), method_info, &offset);
       }
     }
     return !static_cast<int>((*service_method_info_ != NULL));
@@ -289,8 +290,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetPublishedTopicNames(char*** topic_names_, size_t* topic_names_length_)
   {
-    if (topic_names_ == NULL || topic_names_length_ == NULL) return 1;
-    if (*topic_names_ != NULL || *topic_names_length_ != 0) return 1;
+    assert(topic_names_ != NULL && topic_names_length_ != NULL);
+    assert(*topic_names_ == NULL && *topic_names_length_ == 0);
 
     std::set<std::string> topic_names;
     if (eCAL::Registration::GetPublishedTopicNames(topic_names))
@@ -302,8 +303,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetSubscribedTopicNames(char*** topic_names_, size_t* topic_names_length_)
   {
-    if (topic_names_ == NULL || topic_names_length_ == NULL) return 1;
-    if (*topic_names_ != NULL || *topic_names_length_ != 0) return 1;
+    assert(topic_names_ != NULL && topic_names_length_ != NULL);
+    assert(*topic_names_ == NULL && *topic_names_length_ == 0);
 
     std::set<std::string> topic_names;
     if (eCAL::Registration::GetSubscribedTopicNames(topic_names))
@@ -315,8 +316,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetServerMethodNames(struct eCAL_Registration_SServiceMethod** server_method_names_, size_t* server_method_names_length_)
   {
-    if (server_method_names_ == NULL || server_method_names_length_ == NULL) return 1;
-    if (*server_method_names_ != NULL || *server_method_names_length_ != 0) return 1;
+    assert(server_method_names_ != NULL && server_method_names_length_ != NULL);
+    assert(*server_method_names_ == NULL && *server_method_names_length_ == 0);
 
     std::set<eCAL::Registration::SServiceMethod> server_method_names;
     if (eCAL::Registration::GetServerMethodNames(server_method_names))
@@ -335,7 +336,7 @@ Usage:
         *server_method_names_length_ = server_method_names.size();
         auto* offset = reinterpret_cast<char*>(*server_method_names_) + base_size;
         for (const auto& method : server_method_names)
-          Convert_SServiceMethod(&((*server_method_names_)[i++]), method, &offset);
+          Assign_SServiceMethod(&((*server_method_names_)[i++]), method, &offset);
       }
     }
     return !static_cast<int>((*server_method_names_ != NULL));
@@ -343,8 +344,8 @@ Usage:
 
   ECALC_API int eCAL_Registration_GetClientMethodNames(struct eCAL_Registration_SServiceMethod** client_method_names_, size_t* client_method_names_length_)
   {
-    if (client_method_names_ == NULL || client_method_names_length_ == NULL) return 1;
-    if (*client_method_names_ != NULL || *client_method_names_length_ != 0) return 1;
+    assert(client_method_names_ != NULL && client_method_names_length_ != NULL);
+    assert(*client_method_names_ == NULL && *client_method_names_length_ == 0);
 
     std::set<eCAL::Registration::SServiceMethod> client_method_names;
     if (eCAL::Registration::GetClientMethodNames(client_method_names))
@@ -363,7 +364,7 @@ Usage:
         *client_method_names_length_ = client_method_names.size();
         auto* offset = reinterpret_cast<char*>(*client_method_names_) + base_size;
         for (const auto& method : client_method_names)
-          Convert_SServiceMethod(&((*client_method_names_)[i++]), method, &offset);
+          Assign_SServiceMethod(&((*client_method_names_)[i++]), method, &offset);
       }
     }
     return !static_cast<int>((*client_method_names_ != NULL));
@@ -371,7 +372,7 @@ Usage:
 
   ECALC_API eCAL_Registration_CallbackToken eCAL_Registration_AddPublisherEventCallback(eCAL_Registration_TopicEventCallbackT callback_)
   {
-    if (callback_ == nullptr) return 0;
+    assert(callback_ != NULL);
 
     auto callback = [callback_](const eCAL::STopicId & topic_id_, eCAL::Registration::RegistrationEventType registration_event_type_)
     {
@@ -390,7 +391,7 @@ Usage:
 
   ECALC_API eCAL_Registration_CallbackToken eCAL_Registration_AddSubscriberEventCallback(eCAL_Registration_TopicEventCallbackT callback_)
   {
-    if (callback_ == nullptr) return 0;
+    assert(callback_ != NULL);
 
     auto callback = [callback_](const eCAL::STopicId& topic_id_, eCAL::Registration::RegistrationEventType registration_event_type_)
     {

@@ -31,6 +31,6 @@ extern "C"
 
   ECALC_API void eCAL_Free(void* ptr_)
   {
-    free(ptr_);
+    std::free(ptr_);
   }
 }

@@ -66,43 +66,45 @@ extern "C"
     eCAL_SDataTypeInformation data_type_info;
   };
 
-  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
+  //ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
+  //{
+  //  assert(topic_name_ != NULL);
+  //  eCAL::SDataTypeInformation data_type_information;
+  //  eCAL::Subscriber::Configuration subscriber_configuration = eCAL::GetSubscriberConfiguration();
+  //
+  //  if (data_type_information_ != NULL)
+  //    Assign_SDataTypeInformation(data_type_information, data_type_information_);
+  //  if (subscriber_configuration_ != NULL)
+  //    Assign_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
+  //
+  //  return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, subscriber_configuration) };
+  //}
+
+  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
   {
     assert(topic_name_ != NULL);
     eCAL::SDataTypeInformation data_type_information;
+    eCAL::SubEventCallbackT sub_event_callback;
     eCAL::Subscriber::Configuration subscriber_configuration = eCAL::GetSubscriberConfiguration();
 
     if (data_type_information_ != NULL)
       Assign_SDataTypeInformation(data_type_information, data_type_information_);
     if (subscriber_configuration_ != NULL)
       Assign_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
-
-    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, subscriber_configuration) };
-  }
-
-  ECALC_API eCAL_Subscriber* eCAL_Subscriber_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_)
-  {
-    assert(topic_name_ != NULL);
-    eCAL::SDataTypeInformation data_type_information;
-    eCAL::Subscriber::Configuration subscriber_configuration = eCAL::GetSubscriberConfiguration();
-
-    if (data_type_information_ != NULL)
-      Assign_SDataTypeInformation(data_type_information, data_type_information_);
-
-    const auto sub_event_callback = [sub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& sub_event_callback_data_)
+    if (sub_event_callback_ != NULL)
     {
+      sub_event_callback = [sub_event_callback_](const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& sub_event_callback_data_)
+      {
         struct eCAL_STopicId topic_id_c;
         struct eCAL_SSubEventCallbackData sub_event_callback_data_c;
 
         Assign_STopicId(&topic_id_c, topic_id_);
         Assign_SSubEventCallbackData(&sub_event_callback_data_c, sub_event_callback_data_);
         sub_event_callback_(&topic_id_c, &sub_event_callback_data_c);
-    };
+      };
+    }
 
-    if (subscriber_configuration_ != NULL)
-      Assign_Subscriber_Configuration(subscriber_configuration, subscriber_configuration_);
-
-    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback_ != NULL ? sub_event_callback : eCAL::SubEventCallbackT(), subscriber_configuration) };
+    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback, subscriber_configuration) };
   }
 
   ECALC_API void eCAL_Subscriber_Delete(eCAL_Subscriber* subscriber_)

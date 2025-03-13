@@ -37,13 +37,13 @@ extern "C"
 #endif /*__cplusplus*/
   typedef struct eCAL_Publisher eCAL_Publisher;
 
-  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_);
-  ECALC_API eCAL_Publisher* eCAL_Publisher_New2(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback, const struct eCAL_Publisher_Configuration* publisher_configuration_);
+  //ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_);
+  ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback, const struct eCAL_Publisher_Configuration* publisher_configuration_);
 
   ECALC_API void eCAL_Publisher_Delete(eCAL_Publisher* publisher_);
 
-  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, long long timestamp_);
-  ECALC_API int eCAL_Publisher_Send2(eCAL_Publisher* publisher_, struct eCAL_PayloadWriter* payload_writer_, long long timestamp_);
+  ECALC_API int eCAL_Publisher_Send(eCAL_Publisher* publisher_, const void* buffer_, size_t buffer_len_, const long long* timestamp_);
+  ECALC_API int eCAL_Publisher_SendPayloadWriter(eCAL_Publisher* publisher_, const struct eCAL_PayloadWriter* payload_writer_, const long long* timestamp_);
 
   ECALC_API size_t eCAL_Publisher_GetSubscriberCount(eCAL_Publisher* publisher_);
 

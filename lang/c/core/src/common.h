@@ -35,6 +35,11 @@
 
 namespace
 {
+  /*
+   *
+   * Helper functions
+   * 
+   */
   inline std::size_t aligned_size(std::size_t size)
   {
     return (size + (sizeof(void*) - 1)) & ~(sizeof(void*) - 1);
@@ -126,56 +131,7 @@ namespace
     return destination_ptr;
   }
 
-  /*
-   * Assignment functions
-   *
-   */
-
-  void Assign_SDataTypeInformation(eCAL::SDataTypeInformation& data_type_information_, const struct eCAL_SDataTypeInformation* data_type_information_c_)
-  {
-    data_type_information_.name = data_type_information_c_->name != NULL ? data_type_information_c_->name : "";
-    data_type_information_.encoding = data_type_information_c_->encoding != NULL ? data_type_information_c_->encoding : "";
-    if (data_type_information_c_->descriptor != NULL)
-      data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_len);
-    else
-      data_type_information_.descriptor.clear();
-  }
-
-  void Assign_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_)
-  {
-    data_type_information_c_->name = data_type_information_.name.c_str();
-    data_type_information_c_->encoding = data_type_information_.encoding.c_str();
-    data_type_information_c_->descriptor = data_type_information_.descriptor.data();
-    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
-  }
-
-  void Convert_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_, char** offset_)
-  {
-    data_type_information_c_->name = Convert_String(data_type_information_.name, offset_);
-    data_type_information_c_->encoding = Convert_String(data_type_information_.encoding, offset_);
-    data_type_information_c_->descriptor = Convert_Array(data_type_information_.descriptor, offset_);
-    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
-  }
-
-  void Assign_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_)
-  {
-    entity_id_c_->entity_id = entity_id_.entity_id;
-    entity_id_c_->process_id = entity_id_.process_id;
-    entity_id_c_->host_name = entity_id_.host_name.c_str();
-  }
-
-  void Convert_SEntityId(eCAL::SEntityId& entity_id_, const struct eCAL_SEntityId* entity_id_c_)
-  {
-    entity_id_.entity_id = entity_id_c_->entity_id;
-    entity_id_.process_id = entity_id_c_->process_id;
-    entity_id_.host_name = entity_id_c_->host_name;
-  }
-
-  void Convert_STopicId(eCAL::STopicId& topic_id_, const struct eCAL_STopicId* topic_id_c_)
-  {
-    Convert_SEntityId(topic_id_.topic_id, &topic_id_c_->topic_id);
-    topic_id_.topic_name = topic_id_c_->topic_name;
-  }
+  /////////////
 
   void Convert_StringSet(char*** string_set_c_, std::size_t* string_set_c_length_, const std::set<std::string>& string_set_)
   {
@@ -200,46 +156,107 @@ namespace
     }
   }
 
-  void Convert_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_, char** ptr_)
+  /*
+   * Assignment functions
+   *
+   */
+
+  void Assign_SDataTypeInformation(eCAL::SDataTypeInformation& data_type_information_, const struct eCAL_SDataTypeInformation* data_type_information_c_)
+  {
+    data_type_information_.name = data_type_information_c_->name != NULL ? data_type_information_c_->name : "";
+    data_type_information_.encoding = data_type_information_c_->encoding != NULL ? data_type_information_c_->encoding : "";
+    if (data_type_information_c_->descriptor != NULL)
+      data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_len);
+    else
+      data_type_information_.descriptor.clear();
+  }
+
+  void Assign_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_)
+  {
+    data_type_information_c_->name = data_type_information_.name.c_str();
+    data_type_information_c_->encoding = data_type_information_.encoding.c_str();
+    data_type_information_c_->descriptor = data_type_information_.descriptor.data();
+    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
+  }
+
+  void Assign_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_, char** offset_)
+  {
+    data_type_information_c_->name = Convert_String(data_type_information_.name, offset_);
+    data_type_information_c_->encoding = Convert_String(data_type_information_.encoding, offset_);
+    data_type_information_c_->descriptor = Convert_Array(data_type_information_.descriptor, offset_);
+    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
+  }
+
+  /////////////////////
+
+  void Assign_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_)
+  {
+    entity_id_c_->entity_id = entity_id_.entity_id;
+    entity_id_c_->process_id = entity_id_.process_id;
+    entity_id_c_->host_name = entity_id_.host_name.c_str();
+  }
+
+  void Assign_SEntityId(eCAL::SEntityId& entity_id_, const struct eCAL_SEntityId* entity_id_c_)
+  {
+    entity_id_.entity_id = entity_id_c_->entity_id;
+    entity_id_.process_id = entity_id_c_->process_id;
+    entity_id_.host_name = entity_id_c_->host_name != NULL ? entity_id_c_->host_name : "";
+  }
+
+  void Assign_SEntityId(struct eCAL_SEntityId* entity_id_c_, const eCAL::SEntityId& entity_id_, char** ptr_)
   {
     entity_id_c_->entity_id = entity_id_.entity_id;
     entity_id_c_->process_id = entity_id_.process_id;
     entity_id_c_->host_name = Convert_String(entity_id_.host_name.c_str(), ptr_);
   }
 
-  void Convert_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_, char** ptr_)
+  ////////////////////////////////////////
+
+  void Assign_STopicId(eCAL::STopicId& topic_id_, const struct eCAL_STopicId* topic_id_c_)
+  {
+    Assign_SEntityId(topic_id_.topic_id, &topic_id_c_->topic_id);
+    topic_id_.topic_name = topic_id_c_->topic_name != NULL ? topic_id_c_->topic_name : "";
+  }
+
+  void Assign_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_, char** ptr_)
   {
     topic_id_c_->topic_name = Convert_String(topic_id_.topic_name, ptr_);
-    Convert_SEntityId(&topic_id_c_->topic_id, topic_id_.topic_id, ptr_);
-  }
-
-  void Convert_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_, char** offset_)
-  {
-    Convert_SEntityId(&service_id_c_->service_id, service_id_.service_id, offset_);
-    service_id_c_->service_name = Convert_String(service_id_.service_name, offset_);
-  }
-
-  void Convert_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_, char** offset_)
-  {
-    method_info_c_->method_name = Convert_String(method_info_.method_name, offset_);
-    Convert_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type, offset_);
-    Convert_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type, offset_);
+    Assign_SEntityId(&topic_id_c_->topic_id, topic_id_.topic_id, ptr_);
   }
 
   void Assign_STopicId(struct eCAL_STopicId* topic_id_c_, const eCAL::STopicId& topic_id_)
   {
-    topic_id_c_->topic_id.entity_id = topic_id_.topic_id.entity_id;
-    topic_id_c_->topic_id.process_id = topic_id_.topic_id.process_id;
-    topic_id_c_->topic_id.host_name = topic_id_.topic_id.host_name.c_str();
+    Assign_SEntityId(&topic_id_c_->topic_id, topic_id_.topic_id);
     topic_id_c_->topic_name = topic_id_.topic_name.c_str();
   }
 
+  /////////////
+
   void Assign_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_)
   {
-    service_id_c_->service_id.entity_id = service_id_.service_id.entity_id;
-    service_id_c_->service_id.process_id = service_id_.service_id.process_id;
-    service_id_c_->service_id.host_name = service_id_.service_id.host_name.c_str();
+    Assign_SEntityId(&service_id_c_->service_id, service_id_.service_id);
     service_id_c_->service_name = service_id_.service_name.c_str();
+  }
+
+  void Assign_SServiceId(struct eCAL_SServiceId* service_id_c_, const eCAL::SServiceId& service_id_, char** offset_)
+  {
+    Assign_SEntityId(&service_id_c_->service_id, service_id_.service_id, offset_);
+    service_id_c_->service_name = Convert_String(service_id_.service_name, offset_);
+  }
+
+  void Assign_SServiceId(eCAL::SServiceId& service_id_, const struct eCAL_SServiceId* service_id_c_)
+  {
+    Assign_SEntityId(service_id_.service_id, &service_id_c_->service_id);
+    service_id_.service_name = service_id_c_->service_name;
+  }
+
+  /////////////
+
+  void Assign_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_, char** offset_)
+  {
+    method_info_c_->method_name = Convert_String(method_info_.method_name, offset_);
+    Assign_SDataTypeInformation(&method_info_c_->request_type, method_info_.request_type, offset_);
+    Assign_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type, offset_);
   }
 
   void Assign_SServiceMethodInformation(struct eCAL_SServiceMethodInformation* method_info_c_, const eCAL::SServiceMethodInformation& method_info_)
@@ -249,18 +266,14 @@ namespace
     Assign_SDataTypeInformation(&method_info_c_->response_type, method_info_.response_type);
   }
 
-  void Convert_SServiceMethodInformation(eCAL::SServiceMethodInformation& method_info_, const struct eCAL_SServiceMethodInformation* method_info_c_)
+  void Assign_SServiceMethodInformation(eCAL::SServiceMethodInformation& method_info_, const struct eCAL_SServiceMethodInformation* method_info_c_)
   {
-    if (method_info_c_->method_name != NULL) method_info_.method_name = method_info_c_->method_name; else method_info_.method_name.clear();
+    method_info_.method_name = method_info_c_->method_name != NULL ? method_info_c_->method_name : "";
     Assign_SDataTypeInformation(method_info_.request_type, &method_info_c_->request_type);
     Assign_SDataTypeInformation(method_info_.response_type, &method_info_c_->response_type);
   }
 
-  void Convert_SServiceId(eCAL::SServiceId& service_id_, const struct eCAL_SServiceId* service_id_c_)
-  {
-    Convert_SEntityId(service_id_.service_id, &service_id_c_->service_id);
-    service_id_.service_name = service_id_c_->service_name;
-  }
+  ////////////////////
 
   void Assign_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, const eCAL::SServiceResponse& service_response_)
   {
@@ -281,7 +294,7 @@ namespace
     service_response_c_->error_msg = service_response_.error_msg.c_str();
   }
 
-  void Convert_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, const eCAL::SServiceResponse& service_response_, char** offset_)
+  void Assign_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, const eCAL::SServiceResponse& service_response_, char** offset_)
   {
     static const std::map<eCAL::eCallState, eCAL_eCallState> call_state_map
     {
@@ -292,8 +305,8 @@ namespace
     };
 
     service_response_c_->call_state = call_state_map.at(service_response_.call_state);
-    Convert_SServiceId(&service_response_c_->server_id, service_response_.server_id, offset_);
-    Convert_SServiceMethodInformation(&service_response_c_->service_method_information, service_response_.service_method_information, offset_);
+    Assign_SServiceId(&service_response_c_->server_id, service_response_.server_id, offset_);
+    Assign_SServiceMethodInformation(&service_response_c_->service_method_information, service_response_.service_method_information, offset_);
     service_response_c_->ret_state = service_response_.ret_state;
     service_response_c_->response = Convert_Array(service_response_.response, offset_);
     service_response_c_->error_msg = Convert_String(service_response_.error_msg, offset_);

@@ -32,7 +32,6 @@
 
 extern "C"
 {
-#if ECAL_CORE_MONITORING
   ECALC_API char* eCAL_Util_GeteCALDataDir()
   {
     return Clone_CString(eCAL::Util::GeteCALDataDir().c_str());
@@ -50,7 +49,7 @@ extern "C"
     eCAL::Util::ShutdownProcess(unit_name);
   }
 
-  ECALC_API void eCAL_Util_ShutdownProcess2(int process_id_)
+  ECALC_API void eCAL_Util_ShutdownProcessId(int process_id_)
   {
     eCAL::Util::ShutdownProcess(process_id_);
   }
@@ -59,5 +58,4 @@ extern "C"
   {
     eCAL::Util::ShutdownProcesses();
   }
-#endif // ECAL_CORE_MONITORING
 }
