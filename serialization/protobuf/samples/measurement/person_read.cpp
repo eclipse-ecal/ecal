@@ -43,7 +43,7 @@ int main(int /*argc*/, char** /*argv*/)
   auto person_channels = meas.Channels("person");
   if (person_channels.size() > 0)
   {
-    eCAL::protobuf::IChannel<pb::People::Person> person_channel = eCAL::measurement::Get<eCAL::protobuf::IChannel<pb::People::Person>>(meas, *person_channels.begin());
+    eCAL::protobuf::IChannel<pb::People::Person> person_channel{ eCAL::measurement::GetChannel<eCAL::protobuf::IChannel<pb::People::Person>>(meas, *person_channels.begin()) };
 
     // iterate over the messages
     for (const auto& person_entry : person_channel)

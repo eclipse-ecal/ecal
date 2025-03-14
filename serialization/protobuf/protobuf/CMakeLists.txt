@@ -35,6 +35,7 @@ target_sources(protobuf_base
       include/ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h
       include/ecal/msg/protobuf/ecal_proto_message_filter.h
       include/ecal/msg/protobuf/ecal_proto_visitor.h
+      include/ecal/msg/protobuf/serializer.h
   PRIVATE
     src/ecal_proto_decoder.cpp
     src/ecal_proto_dyn.cpp
@@ -93,8 +94,6 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
       include/ecal/msg/protobuf/subscriber.h
-      include/ecal/msg/protobuf/serializer.h
-
 )
 
 target_compile_features(protobuf_core INTERFACE cxx_std_14)
