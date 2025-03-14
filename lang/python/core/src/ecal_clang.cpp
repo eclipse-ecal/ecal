@@ -30,6 +30,8 @@
 #include "ecal_clang.h"
 
 #include <mutex>
+#include <cstring>
+#include <cstdlib
 #include <string>
 #include <vector>
 #include <functional>
