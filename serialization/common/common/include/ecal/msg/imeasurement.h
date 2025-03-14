@@ -33,37 +33,26 @@ namespace eCAL
   namespace measurement
   {
     template <typename T, typename Serializer>
-    IChannel<T, Serializer> GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_)
-    {
-      return IChannel<T, Serializer>(meas.)
-    }
-
-    template <typename T, typename Serializer>
     class IChannel
     {
       friend IChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
 
-      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, const experimental::measurement::base::Channel& channel_)
+    public:
+      IChannel(const IBinaryChannel& binary_channel_)
         : m_serializer{}
-        , binary_channel(meas_, channel_)
+        , binary_channel(binary_channel_)
       {
       }
 
-    public:
       bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
       bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
 
-      //virtual Entry<T> operator[](unsigned long long timestamp);
-      virtual Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
+      Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
       {
         auto binary_entry = binary_channel[entry];
         
-        try
-        {
-          message = m_deserializer.Deserialize(binary_entry.message.c_str(), binary_entry.message.size(), GetDataypeInformation());
-          return make_frame(message, binary_entry.send_timestamp, binary_entry.receive_timestamp);
-        }
-
+        message = m_deserializer.Deserialize(binary_entry.message.c_str(), binary_entry.message.size(), GetDataypeInformation());
+        return make_frame(message, binary_entry.send_timestamp, binary_entry.receive_timestamp);
       }
 
       const std::string& GetName() const
@@ -76,15 +65,17 @@ namespace eCAL
         return binary_channel.GetDatatypeInformation();
       }
 
-      class iterator /*: public std::iterator<std::forward_iterator_tag, Entry<T>>*/
+      class iterator
       {
       public:
         iterator(const iterator& i)
           : it(i.it)
+          , owner(i.owner)
         {};
 
-        iterator(const IBinaryChannel::iterator& i)
+        iterator(const IBinaryChannel::iterator& i, IChannel& owner_)
           : it(i)
+          , owner(owner_)
         {};
 
         ~iterator()
@@ -93,6 +84,7 @@ namespace eCAL
         iterator& operator=(const iterator& i)
         {
           it = i.it;
+          owner = i.owner;
           return *this;
         };
         iterator& operator++()
@@ -109,34 +101,43 @@ namespace eCAL
 
         virtual Frame<T> operator*() const
         {
-          //  return m_owner[*m_entry_iterator];
           BinaryFrame binary_frame = *it;
-          message = m_deserializer.Deserialize(binary_frame.message.c_str(), binary_frame.message.size(), GetDataypeInformation());
+          message = owner.m_serializer.Deserialize(binary_frame.message.c_str(), binary_frame.message.size(), owner.GetDataypeInformation());
           return make_frame(message, binary_frame.send_timestamp, binary_frame.receive_timestamp);
         };
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
         bool operator==(const iterator& rhs) const { return it == rhs.it; };
         bool operator!=(const iterator& rhs) const { return it != rhs.it; };
 
-      protected:
+      private:
         IBinaryChannel::iterator it;
         mutable T message;
+
+        IChannel& owner;
       };
 
       iterator begin()
       {
-        return iterator(binary_channel.begin());
+        return iterator(binary_channel.begin(), *this);
       }
 
       iterator end()
       {
-        return iterator(binary_channel.end());
+        return iterator(binary_channel.end(), *this);
       }
 
     private:
-      Serializer m_serializer;
       IBinaryChannel binary_channel;
       mutable T message;
+
+      Serializer m_serializer;
     };
+
+    template <typename Channel>
+    Channel GetChannel(IMeasurement& meas_, const experimental::measurement::base::Channel& channel_)
+    {
+      auto binary_channel = meas_.Get(channel_);
+      return Channel(binary_channel);
+    }
   }
 }

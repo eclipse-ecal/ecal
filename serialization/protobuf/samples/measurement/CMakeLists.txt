@@ -31,7 +31,7 @@ macro(create_measurement_sample target_name sample_sources)
   )
   
   ecal_add_sample(${target_name} ${sample_sources})
-  PROTOBUF_TARGET_CPP(person_read ${CMAKE_CURRENT_SOURCE_DIR}/protobuf ${person_proto})
+  PROTOBUF_TARGET_CPP(${target_name} ${CMAKE_CURRENT_SOURCE_DIR}/protobuf ${person_proto})
   
   target_link_libraries(${target_name}
     PRIVATE
