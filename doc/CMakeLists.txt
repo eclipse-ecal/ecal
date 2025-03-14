@@ -79,7 +79,7 @@ add_custom_target(documentation_copy_sample_files ALL
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
 if (DEFINED ECAL_GENERATED_YAML_PATH)
-  add_custom_target(documentation_copy_config_file POST_BUILD
+  add_custom_target(documentation_copy_config_file
     COMMAND cmake -E copy ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
   )
   set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
@@ -173,6 +173,10 @@ add_custom_target(documentation_sphinx ALL
     COMMENT "Building HTML documentation with Sphinx"
     DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
 )
+
+if (DEFINED ECAL_GENERATED_YAML_PATH)
+  add_dependencies(documentation_sphinx documentation_copy_config_file)
+endif()
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
     
