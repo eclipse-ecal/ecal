@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal_c/ecal.h>
+#include "ecal_clang_types.h"
 
 /*************************************************************************/
 /*  common                                                               */

@@ -27,8 +27,8 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
-
 #include <ecal_c/init.h>
+#include <ecal_c/config/configuration.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -51,73 +51,52 @@ extern "C"
   /**
    * @brief  Get eCAL version as separated integer values. 
    *
-   * @param [out] major_  The eCAL major version number.
-   * @param [out] minor_  The eCAL minor version number.
-   * @param [out] patch_  The eCAL patch version number.
+   * @return eCAL version struct with seperate version values
    *
-   * @return  Zero if succeeded.
   **/
-  ECALC_API eCAL_SVersion eCAL_GetVersion();
+  ECALC_API struct eCAL_SVersion eCAL_GetVersion();
 
   /**
    * @brief Initialize eCAL API.
    *
-   * @param argc_        Number of command line arguments. 
-   * @param argv_        Array of command line arguments. 
-   * @param unit_name_   Defines the name of the eCAL unit. 
-   * @param components_  Defines which component to initialize.
+   * @param unit_name_   Defines the name of the eCAL unit. Optional, can be NULL.
+   * @param components_  Defines which component to initialize. Optional, can be NULL.
+   * @param config_      Configuration with which eCal is to be initialized. Optional, can be NULL.
    *
-   * @return Zero if succeeded.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Initialize(const char *unit_name_, unsigned int components_);
+  ECALC_API int eCAL_Initialize(const char *unit_name_, const unsigned int* components_, const eCAL_Configuration* config_);
+
 
   /**
    * @brief Finalize eCAL API.
    *
-   * @return Zero if succeeded.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API int eCAL_Finalize();
 
   /**
    * @brief Check eCAL initialize state.
    *
-   * @return Non-zero if eCAL is initialized.
+   * @return Non-zero if eCAL is initialized, zero otherwise.
   **/
   ECALC_API int eCAL_IsInitialized();
 
   /**
-   * @brief Return the eCAL process state.
-   *
-   * @return Non-zero if eCAL is in proper state. 
-  **/
-  ECALC_API int eCAL_Ok();
+ * @brief Check initialize state of components.
+ *
+ * @param components_ Components to be checked.
+ * 
+ * @return Non-zero if eCAL is initialized, zero otherwise.
+**/
+  ECALC_API int eCAL_IsComponentInitialized(unsigned int components_);
 
   /**
-   * @brief  Free an eCAL memory block allocated by functions like
-   *         eCAL_Monitoring_GetMonitoring, eCAL_Logging_GetLogging, 
-   *         eCAL_Sub_Receive ... that use 'ECAL_ALLOCATE_4ME' as 
-   *         buffer length parameter and let eCAL allocate 
-   *         the memory internally.
+   * @brief Return the eCAL process state.
    *
-   **/
-  /**
-   * @code
-   *            // let eCAL allocate memory for the subscriber buffer and return the pointer to 'buf'
-   *            long long time     = 0;
-   *            int       time_out = 100;   // ms
-   *            void*     buf      = NULL;
-   *            int       buf_len  = eCAL_Sub_Receive_Alloc(subscriber_handle, &buf, &time, timeout);
-   *            if(buf_len > 0)
-   *            {
-   *              ...
-   *              // PROCESS THE BUFFER CONTENT HERE
-   *              ...
-   *              // finally free the allocated memory
-   *              eCAL_FreeMem(buf);
-   *            }
-   * @endcode
+   * @return Non-zero if eCAL is in proper state, zero otherwise. 
   **/
-  ECALC_API void eCAL_FreeMem(void* mem_);
+  ECALC_API int eCAL_Ok();
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

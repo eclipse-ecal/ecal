@@ -25,24 +25,41 @@
 #ifndef ecal_c_types_h_included
 #define ecal_c_types_h_included
 
-/**
- * @brief Flag to indicate eCAL to allocate/deallocate memory.
-**/
-#define ECAL_ALLOCATE_4ME 0
+#include <stddef.h>
+#include <stdint.h>
 
 /**
- * @brief Common handle for eCAL C API function calls.
+ * @brief Optional compile time information associated with a given topic
+ *        (necessary for reflection / runtime type checking)
 **/
-typedef void* ECAL_HANDLE;
+struct eCAL_SDataTypeInformation
+{
+  const char* name;         //!< name of the datatype
+  const char* encoding;     //!< encoding of the datatype (e.g. protobuf, flatbuffers, capnproto)
+  const void* descriptor;   //!< descriptor information of the datatype (necessary for reflection)
+  size_t descriptor_length; //!< length of descriptor information
+};
+
+typedef uint64_t eCAL_EntityIdT;
+
+/**
+ * @brief Combined meta infomration for an eCAL entity such as publisher, subscriber, etc.
+**/
+struct eCAL_SEntityId
+{
+  eCAL_EntityIdT entity_id; //!< unique id within that process (it should already be unique within the whole system)
+  int32_t process_id;       //!< process id which produced the sample
+  const char* host_name;    //!< host which produced the sample
+};
 
 /**
  * @brief eCAL version struct (C variant)
  **/
-typedef struct
+struct eCAL_SVersion
 {
   int major; //!< major version number
   int minor; //!< minor version number
   int patch; //!< patch version number
-} eCAL_SVersion;
+};
 
 #endif /* ecal_c_types_h_included */

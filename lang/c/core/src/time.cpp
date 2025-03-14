@@ -28,16 +28,13 @@
 
 #include "common.h"
 
+#include <cassert>
+
 extern "C"
 {
-  ECALC_API int eCAL_Time_GetName(void* name_, int name_len_)
+  ECALC_API const char* eCAL_Time_GetName()
   {
-    const std::string name = eCAL::Time::GetName();
-    if (!name.empty())
-    {
-      return(CopyBuffer(name_, name_len_, name));
-    }
-    return(0);
+    return eCAL::Time::GetName().c_str();
   }
 
   ECALC_API long long eCAL_Time_GetMicroSeconds()
@@ -52,7 +49,7 @@ extern "C"
 
   ECALC_API int eCAL_Time_SetNanoSeconds(long long time_)
   {
-    return static_cast<int>(eCAL::Time::SetNanoSeconds(time_));
+    return static_cast<int>(!eCAL::Time::SetNanoSeconds(time_));
   }
 
   ECALC_API int eCAL_Time_IsTimeSynchronized()
@@ -70,23 +67,25 @@ extern "C"
     eCAL::Time::SleepForNanoseconds(duration_nsecs_);
   }
 
-  ECALC_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int max_len_)
+  ECALC_API void eCAL_Time_GetStatus(int* error_, char** status_message_)
   {
-    if (max_len_ == ECAL_ALLOCATE_4ME || max_len_ > 0)
-    {
-      std::string status_message;
-      eCAL::Time::GetStatus(*error_, &status_message);
+    assert(error_ != NULL);
 
-      if (!status_message.empty())
-      {
-        return CopyBuffer(status_message_, max_len_, status_message); // NOLINT(*-multi-level-implicit-pointer-conversion)
-      }
-      return 0;
-    }
-    else
+    std::unique_ptr<std::string> status_message;
+    if (status_message_ != NULL)
     {
-      eCAL::Time::GetStatus(*error_, nullptr);
-      return 0;
+      if (*status_message_ != NULL) return;
+      status_message = std::make_unique<std::string>();
+    }
+
+    eCAL::Time::GetStatus(*error_, status_message.get());
+    if (status_message_ != NULL)
+    {
+      *status_message_ = reinterpret_cast<char*>(std::malloc(status_message->size() + 1));
+      if (*status_message_ != NULL)
+      {
+        std::strncpy(*status_message_, status_message->c_str(), status_message->size() + 1);
+      }
     }
   }
 }

@@ -30,18 +30,31 @@
 #endif
 
 // all ecal c includes
+#include <ecal_c/config/publisher.h>
+#include <ecal_c/config/subscriber.h>
+#include <ecal_c/pubsub/payload_writer.h>
 #include <ecal_c/pubsub/publisher.h>
 #include <ecal_c/pubsub/subscriber.h>
+#include <ecal_c/pubsub/types.h>
 #include <ecal_c/service/client.h>
+#include <ecal_c/service/client_instance.h>
 #include <ecal_c/service/server.h>
+#include <ecal_c/service/types.h>
+#include <ecal_c/types/custom_data_types.h>
+#include <ecal_c/types/monitoring.h>
+#include <ecal_c/auxiliaries.h>
+#include <ecal_c/config.h>
 #include <ecal_c/core.h>
 #include <ecal_c/export.h>
+#include <ecal_c/init.h>
 #include <ecal_c/log.h>
+#include <ecal_c/log_level.h>
 #include <ecal_c/monitoring.h>
 #include <ecal_c/process.h>
+#include <ecal_c/process_severity.h>
+#include <ecal_c/registration.h>
 #include <ecal_c/time.h>
 #include <ecal_c/timer.h>
-#include <ecal_c/tlayer.h>
 #include <ecal_c/types.h>
 #include <ecal_c/util.h>
 
