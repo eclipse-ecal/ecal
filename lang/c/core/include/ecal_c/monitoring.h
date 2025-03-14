@@ -26,9 +26,9 @@
 #define ecal_c_monitoring_h_included
 
 #include <ecal_c/export.h>
-#include <ecal_c/monitoring.h>
+#include <ecal_c/types/monitoring.h>
 
-#define ECALC_MONITORING_ENTITIES_DEFAULT eCAL_Monitoring_Entity_All
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C"

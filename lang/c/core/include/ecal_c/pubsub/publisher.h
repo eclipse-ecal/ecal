@@ -31,6 +31,8 @@
 #include <ecal_c/pubsub/types.h>
 #include <ecal_c/pubsub/payload_writer.h>
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

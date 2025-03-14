@@ -25,7 +25,7 @@
 #ifndef ecal_c_config_transport_layer_h_included
 #define ecal_c_config_transport_layer_h_included
 
-#include <stdint.h>
+#include <stddef.h>
 
 #include <ecal_c/types/custom_data_types.h>
 

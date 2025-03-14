@@ -25,7 +25,7 @@
 #ifndef ecal_c_config_registration_h_included
 #define ecal_c_config_registration_h_included
 
-#include <stdint.h>
+#include <stddef.h>
 
 enum eCAL_Registration_Local_eTransportType
 {

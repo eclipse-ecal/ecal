@@ -22,6 +22,8 @@
 
 #include <ecal_c/types.h>
 
+#include <stddef.h>
+
 /**
  * @brief Unique ID with which to identify a service (client or server)
  *        It can be queried from the client or the server, and it can be obtained from the registration layer.

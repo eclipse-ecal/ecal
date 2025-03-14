@@ -28,6 +28,8 @@
 #include <ecal_c/export.h>
 #include <ecal_c/log_level.h>
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

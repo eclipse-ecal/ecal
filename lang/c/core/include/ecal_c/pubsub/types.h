@@ -27,6 +27,9 @@
 
 #include <ecal_c/types.h>
 
+#include <stddef.h>
+#include <stdint.h>
+
 /**
  * @brief A struct which uniquely identifies anybody producing or consuming topics, e.g. a CPublisher or a CSubscriber.
 **/

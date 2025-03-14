@@ -25,7 +25,7 @@
 #ifndef ecal_c_pubsub_payload_writer_h_included
 #define ecal_c_pubsub_payload_writer_h_included
 
-#include <stdint.h>
+#include <stddef.h>
 
 typedef struct eCAL_PayloadWriter eCAL_PayloadWriter;
 

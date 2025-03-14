@@ -29,6 +29,8 @@
 #include <ecal_c/types.h>
 #include <ecal_c/service/types.h>
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

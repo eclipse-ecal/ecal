@@ -30,6 +30,8 @@
 #include <ecal_c/service/types.h>
 #include <ecal_c/service/client_instance.h>
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

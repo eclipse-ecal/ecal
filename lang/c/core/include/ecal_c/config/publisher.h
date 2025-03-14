@@ -89,7 +89,7 @@
 #ifndef ecal_c_config_publisher_h_included
 #define ecal_c_config_publisher_h_included
 
-#include <stdint.h>
+#include <stddef.h>
 
 #include <ecal_c/config/transport_layer.h>
 

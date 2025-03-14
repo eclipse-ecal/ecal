@@ -25,6 +25,7 @@
 #ifndef ecal_c_types_h_included
 #define ecal_c_types_h_included
 
+#include <stddef.h>
 #include <stdint.h>
 
 /**
