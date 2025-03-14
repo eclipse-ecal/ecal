@@ -36,12 +36,38 @@ extern "C"
 
   typedef struct eCAL_Timer eCAL_Timer;
 
+  /**
+   * @brief Creates a new timer instance.
+   *
+   * @return Timer handle if succeeded, otherwise NULL. The handle needs to be deleted by eCAL_Timer_Delete().
+  **/
   ECALC_API eCAL_Timer* eCAL_Timer_New();
-  ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
+
+  //ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
+
+  /**
+   * @brief Deletes a timer instance.
+   *
+   * @param timer_  Timer handle.
+  **/
   ECALC_API void eCAL_Timer_Delete(eCAL_Timer* timer_);
 
+  /**
+   * @brief Start the timer.
+   *
+   * @param timeout_    Timer callback loop time in ms.
+   * @param callback_   The callback function.
+   * @param delay_      Timer callback delay for first call in ms. Optional, can be NULL.
+   *
+   * @return Zero if succeed, non-zero otherwise.
+  **/
   ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
 
+  /**
+   * @brief Stop the timer.
+   *
+   * @return Zero if succeed, non-zero otherwise.
+  **/
   ECALC_API int eCAL_Timer_Stop(eCAL_Timer* timer_);
 #ifdef __cplusplus
 }

@@ -35,14 +35,69 @@ extern "C"
 #endif /*__cplusplus*/
   typedef struct eCAL_ClientInstance eCAL_ClientInstance;
 
+  /**
+   * @brief Deletes an array of client instances
+   *
+   * @param client_instances_  Client instance handles.
+  **/
   ECALC_API void eCAL_ClientInstances_Delete(eCAL_ClientInstance** client_instances_);
 
+  /**
+   * @brief Blocking call of a service method for one service instances. Response will be returned as struct eCAL_SServiceResponse.
+   *
+   * @param       client_instance_  Client instance handle.
+   * @param       method_name_      Method name.
+   * @param       request_          Request data.
+   * @param       request_length_   Length of requested data.
+   * @param       timeout_ms_       Maximum time before operation returns. Optional, can be NULL.
+   *
+   * @return Pointer to service response if succeeded, NULL otherwise. Needs to be released by eCAL_Free().
+  **/
   ECALC_API struct eCAL_SServiceResponse* eCAL_ClientInstance_CallWithResponse(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, const int* timeout_ms_);
+  
+  /**
+   * @brief Blocking call (with timeout) of a service method for on service instances, using callback
+   *
+   * @param client_instance_    Client instance handle.
+   * @param method_name_        Method name.
+   * @param request_            Request data.
+   * @param request_length_     Length of requested data.
+   * @param response_callback_  Callback function for the service method response.
+   * @param timeout_ms_         Maximum time before operation returns. Optional, can be NULL.
+   *
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
   ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, const int* timeout_ms_);
+  
+  /**
+   * @brief Asynchronous call of a service method for one service instances, using callback
+   *
+   * @param client_instance_    Client instance handle.
+   * @param method_name_        Method name.
+   * @param request_            Request data.
+   * @param request_length_     Length of requested data.
+   * @param response_callback_  Callback function for the service method response.
+   *
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
   ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_);
 
+  /**
+   * @brief Check connection state.
+   *
+   * @param client_instance_  Client instance handle.
+   *
+   * @return Non-zero if connected, zero otherwise.
+  **/
   ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_);
 
+  /**
+   * @brief Get unique client entity id.
+   *
+   * @param client_instance_  Client instance handle.
+   * 
+   * @return  The client entity id.
+  **/
   ECALC_API const struct eCAL_SEntityId* eCAL_ClientInstance_GetClientID(eCAL_ClientInstance* client_instance_);
 #ifdef __cplusplus
 }

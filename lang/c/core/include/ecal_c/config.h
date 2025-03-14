@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
  */
 
+ /**
+  * @file   config.h
+  * @brief  eCAL configuration access
+ **/
+
 #ifndef ecal_c_config_h_included
 #define ecal_c_config_h_included
 
@@ -32,17 +37,23 @@
 extern "C" {
 #endif /*__cplusplus*/
 
-  // Configuration
+  /////////////////////////////////////
+  // configuration
+  /////////////////////////////////////
   ECALC_API const eCAL_Configuration* eCAL_GetConfiguration();
   ECALC_API const struct eCAL_Subscriber_Configuration* eCAL_GetSubscriberConfiguration();
   ECALC_API const struct eCAL_Publisher_Configuration* eCAL_GetPublisherConfiguration();
 
-  // Common
+  /////////////////////////////////////
+  // common
+  /////////////////////////////////////
   ECALC_API const char* eCAL_Config_GetLoadedEcalYamlPath();
   ECALC_API int eCAL_Config_GetRegistrationTimeoutMs();
   ECALC_API int eCAL_Config_GetRegistrationRefreshMs();
 
-  // Network
+  /////////////////////////////////////
+  // network
+  /////////////////////////////////////
   ECALC_API int eCAL_Config_IsNetworkEnabled();
   ECALC_API int eCAL_Config_IsShmRegistrationEnabled();
   ECALC_API enum eCAL_Types_UdpConfigVersion eCAL_Config_GetUdpMulticastConfigVersion();
@@ -62,20 +73,30 @@ extern "C" {
   ECALC_API int eCAL_Config_GetTcpPubsubMaxReconnectionAttemps();
   ECALC_API const char* eCAL_Config_GetShmTransportDomain();
 
-  // Time
+  /////////////////////////////////////
+  // time
+  /////////////////////////////////////
   ECALC_API const char* eCAL_Config_GetTimesyncModuleName();
   ECALC_API const char* eCAL_Config_GetTimesyncModuleReplay();
 
-  // Process
+  /////////////////////////////////////
+  // process
+  /////////////////////////////////////
   ECALC_API const char* eCAL_Config_GetTerminalEmulatorCommand();
 
-  // Sys
+  /////////////////////////////////////
+  // sys
+  /////////////////////////////////////
   ECALC_API const char* eCAL_Config_GetEcalSysFilterExcludeList();
 
-  // Subscriber
+  /////////////////////////////////////
+  // subscriber
+  /////////////////////////////////////
   ECALC_API int eCAL_Config_GetDropOutOfOrderMessages();
 
-  // Registration
+  /////////////////////////////////////
+  // registration
+  /////////////////////////////////////
   ECALC_API size_t eCAL_Config_GetShmMonitoringQueueSize();
   ECALC_API const char* eCAL_Config_GetShmMonitoringDomain();
 

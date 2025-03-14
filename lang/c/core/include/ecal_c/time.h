@@ -53,21 +53,21 @@ extern "C"
    *
    * @param time_  Current time in ns.
    *
-   * @return  Zero if succeeded non zero otherwise.
+   * @return  Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API int eCAL_Time_SetNanoSeconds(long long time_);
 
   /**
    * @brief  Returns time synchronization state.
    *
-   * @return  Non zero if process is time synchronized.
+   * @return  Non-zero if process is time synchronized, zero otherwise.
   **/
   ECALC_API int eCAL_Time_IsTimeSynchronized();
 
   /**
    * @brief  Checks whether this host is time master.
    *
-   * @return  Non zero if host is time master.
+   * @return  Non-zero if host is time master, zero otherwise.
   **/
   ECALC_API int eCAL_Time_IsTimeMaster();
   
@@ -83,7 +83,17 @@ extern "C"
   **/
   ECALC_API void eCAL_Time_SleepForNanoseconds(long long duration_nsecs_);
 
-
+  /**
+   * @brief Get the current error code and status message
+   *
+   * An error code of 0 is considered to be OK. Any other error code is
+   * considered to indicate a problem. Time Adapters may use a set of error
+   * codes to indicate specific problems.
+   * The Status message may be a nullpointer.
+   *
+   * @param[out] error_           Returned error code
+   * @param[out] status_message_  Returned null-terminated string of status message which may be NULL. Must point to NULL and needs to be released by eCAL_Free().
+  **/
   ECALC_API void eCAL_Time_GetStatus(int* error_, char** status_message_);
   
 #ifdef __cplusplus

@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
  */
 
+ /**
+  * @file   config/subscriber.h
+  * @brief  eCAL subscriber configuration
+ **/
+
 #ifndef ecal_c_config_subscriber_h_included
 #define ecal_c_config_subscriber_h_included
 

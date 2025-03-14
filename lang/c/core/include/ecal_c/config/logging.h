@@ -17,6 +17,11 @@
  * =========================== LICENSE =================================
  */
 
+ /**
+  * @file   config/logging.h
+  * @brief  eCAL configuration for logging
+ **/
+
 #ifndef ecal_c_config_logging_h_included
 #define ecal_c_config_logging_h_included
 

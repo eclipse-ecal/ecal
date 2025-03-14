@@ -37,7 +37,7 @@ extern "C"
     eCAL::Process::DumpConfig();
   }
 
-  ECALC_API void eCAL_Process_DumpConfig2(char** configuration_string_)
+  ECALC_API void eCAL_Process_DumpConfigString(char** configuration_string_)
   {
     assert(configuration_string_ != NULL);
     assert(*configuration_string_ == NULL);

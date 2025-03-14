@@ -39,14 +39,14 @@ extern "C"
     return new eCAL_Timer{ new eCAL::CTimer() };
   }
 
-  ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_)
-  {
-    auto callback = [callback_]()
-    {
-      callback_();
-    };
-    return new eCAL_Timer{ new eCAL::CTimer(timeout_, callback, (delay_ != NULL ) ? *delay_ : 0) };
-  }
+  //ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_)
+  //{
+  //  auto callback = [callback_]()
+  //  {
+  //    callback_();
+  //  };
+  //  return new eCAL_Timer{ new eCAL::CTimer(timeout_, callback, (delay_ != NULL ) ? *delay_ : 0) };
+  //}
 
   ECALC_API void eCAL_Timer_Delete(eCAL_Timer* timer_)
   {

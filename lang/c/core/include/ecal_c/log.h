@@ -32,9 +32,22 @@
 extern "C"
 {
 #endif /*__cplusplus*/
+  /**
+   * @brief Log a message.
+   *
+   * @param level_   The level.
+   * @param message_ The log message string.
+  **/
   ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* message_);
 
-  
+  /**
+   * @brief Get logging as serialized protobuf buffer.
+   *
+   * @param [out] log_         Pointer to a protobuf serialized log buffer. Must point to NULL and needs to be released by eCAL_Free().
+   * @param [out] log_length_  Length of the log buffer.
+   * 
+   * @return Zeor if succeeded, non-zero otherwise.
+  **/
   ECALC_API int eCAL_Logging_GetLogging(void** log_, size_t* log_length_);
 #ifdef __cplusplus
 }

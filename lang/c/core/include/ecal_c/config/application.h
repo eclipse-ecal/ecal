@@ -17,6 +17,11 @@
  * =========================== LICENSE =================================
  */
 
+ /**
+  * @file   config/application.h
+  * @brief  eCAL configuration for applications
+ **/
+
 #ifndef ecal_c_config_application_h_included
 #define ecal_c_config_application_h_included
 

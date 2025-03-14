@@ -166,7 +166,7 @@ namespace
     data_type_information_.name = data_type_information_c_->name != NULL ? data_type_information_c_->name : "";
     data_type_information_.encoding = data_type_information_c_->encoding != NULL ? data_type_information_c_->encoding : "";
     if (data_type_information_c_->descriptor != NULL)
-      data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_len);
+      data_type_information_.descriptor.assign(reinterpret_cast<const char*>(data_type_information_c_->descriptor), data_type_information_c_->descriptor_length);
     else
       data_type_information_.descriptor.clear();
   }
@@ -176,7 +176,7 @@ namespace
     data_type_information_c_->name = data_type_information_.name.c_str();
     data_type_information_c_->encoding = data_type_information_.encoding.c_str();
     data_type_information_c_->descriptor = data_type_information_.descriptor.data();
-    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
+    data_type_information_c_->descriptor_length = data_type_information_.descriptor.length();
   }
 
   void Assign_SDataTypeInformation(struct eCAL_SDataTypeInformation* data_type_information_c_, const eCAL::SDataTypeInformation& data_type_information_, char** offset_)
@@ -184,7 +184,7 @@ namespace
     data_type_information_c_->name = Convert_String(data_type_information_.name, offset_);
     data_type_information_c_->encoding = Convert_String(data_type_information_.encoding, offset_);
     data_type_information_c_->descriptor = Convert_Array(data_type_information_.descriptor, offset_);
-    data_type_information_c_->descriptor_len = data_type_information_.descriptor.length();
+    data_type_information_c_->descriptor_length = data_type_information_.descriptor.length();
   }
 
   /////////////////////

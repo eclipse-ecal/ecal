@@ -57,12 +57,25 @@ static const unsigned int eCAL_Init_Default = ECAL_INIT_PUBLISHER
 
 static const unsigned int eCAL_Init_None = ECAL_INIT_NONE;
 
-inline eCAL_Configuration* eCAL_Init_Configuration()
+#ifdef __cplusplus
+extern "C"
 {
-  eCAL_Configuration* config;
-  config = eCAL_Configuration_New();
-  eCAL_Configuration_InitFromConfig(config);
-  return config;
+#endif /*__cplusplus*/
+  /**
+   * @brief Convenience function for initializing a new configuration
+   *
+   * @return Handle to configuration instance if succeeded, NULL otherwise. The handle needs to be released by eCAL_Coniguration_Delete().
+  **/
+  inline eCAL_Configuration* eCAL_Init_Configuration()
+  {
+    eCAL_Configuration* config;
+    config = eCAL_Configuration_New();
+    eCAL_Configuration_InitFromConfig(config);
+    return config;
+  }
+#ifdef __cplusplus
 }
+#endif /*__cplusplus*/
+
 
 #endif /*ecal_c_init_h_included*/

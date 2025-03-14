@@ -36,19 +36,78 @@ extern "C"
 #endif /*__cplusplus*/
   typedef struct eCAL_Subscriber eCAL_Subscriber;
 
-  //ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
+  /**
+   * @brief Creates a new subscriber instance.
+   *
+   * @param topic_name_      Unique topic name.
+   * @param data_type_info_  Topic data type information (encoding, type, descriptor). Optional, can be NULL.
+   * @param event_callback_  Callback for subscriber events. Optional, can be NULL.
+   * @param config_          Configuration parameter. Optional, can be NULL.
+   * 
+   * @return Subscriber handle if succeeded, otherwise NULL. The handle needs to be deleted by eCAL_Subscriber_Delete().
+  **/
   ECALC_API eCAL_Subscriber* eCAL_Subscriber_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_SubEventCallbackT sub_event_callback, const struct eCAL_Subscriber_Configuration* subscriber_configuration_);
+  
+  /**
+   * @brief Deletes a subscriber instance
+   *
+   * @param subscriber_  Subscriber handle.
+  **/
   ECALC_API void eCAL_Subscriber_Delete(eCAL_Subscriber* subscriber_);
 
+  /**
+   * @brief Set/overwrite callback function for incoming receives.
+   *
+   * @param subscriber_  Subscriber handle.
+   * @param callback_    The callback function to set.
+   *
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
   ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_);
+
+  /**
+   * @brief Remove callback function for incoming receives.
+   *
+   * @param subscriber_  Subscriber handle.
+   * 
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
   ECALC_API int eCAL_Subscriber_RemoveReceiveCallback(eCAL_Subscriber* subscriber_);
 
+  /**
+   * @brief Query the number of connected publishers.
+   *
+   * @param subscriber_  Subscriber handle.
+   * 
+   * @return Number of publishers.
+  **/
   ECALC_API size_t eCAL_Subscriber_GetPublisherCount(eCAL_Subscriber* subscriber_);
 
+  /**
+   * @brief Retrieve the topic name.
+   *
+   * @param subscriber_  Subscriber handle.
+   * 
+   * @return  The topic name.
+  **/
   ECALC_API const char* eCAL_Subscriber_GetTopicName(eCAL_Subscriber* subscriber_);
 
+  /**
+   * @brief Retrieve the topic id.
+   *
+   * @param subscriber_  Subscriber handle.
+   * 
+   * @return  The topic id.
+  **/
   ECALC_API const struct eCAL_STopicId* eCAL_Subscriber_GetTopicId(eCAL_Subscriber* subscriber_);
 
+  /**
+   * @brief Retrieve the topic information.
+   * 
+   * @param subscriber_  Subscriber handle.
+   *
+   * @return  The topic information.
+  **/
   ECALC_API const struct eCAL_SDataTypeInformation* eCAL_Subscriber_GetDataTypeInformation(eCAL_Subscriber* subscriber_);
 #ifdef __cplusplus
 }

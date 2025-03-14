@@ -17,13 +17,22 @@
  * ========================= eCAL LICENSE =================================
  */
 
+ /**
+  * @file   types/custom_types.h
+  * @brief  eCAL custom types for configuration declarations
+ **/
+
 #ifndef ecal_c_types_custom_data_types_h_included
 #define ecal_c_types_custom_data_types_h_included
 
+
+ /**
+  * @brief eCAL udp protocol version
+ **/
 enum eCAL_Types_UdpConfigVersion
 {
-  eCAL_Types_UdpConfigVersion_V1,
-  eCAL_Types_UdpConfigVersion_V2
+  eCAL_Types_UdpConfigVersion_V1, //!< protocol version v1 (deprecated)
+  eCAL_Types_UdpConfigVersion_V2  //!< protocol version v2
 };
 
 #endif /*ecal_c_types_custom_data_types_h_included*/

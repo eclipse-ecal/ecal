@@ -25,7 +25,9 @@
 #ifndef ecal_c_log_level_h_included
 #define ecal_c_log_level_h_included
 
-
+/**
+ * @brief Values that represent different log level to filter on monitoring.
+**/
 enum eCAL_Logging_eLogLevel
 {
   eCAL_Logging_log_level_none = 0,
@@ -40,6 +42,6 @@ enum eCAL_Logging_eLogLevel
   eCAL_Logging_log_level_debug4 = 128,
 };
 
-typedef unsigned char eCAL_Logging_Filter;
+typedef unsigned char eCAL_Logging_Filter; //!< This type is to be used as a bitmask for the activated logging levels
 
 #endif /*ecal_c_log_level_h_included*/

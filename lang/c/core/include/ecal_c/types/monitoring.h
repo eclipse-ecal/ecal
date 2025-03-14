@@ -17,6 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+
+/**
+ * @file   types/monitoring.h
+ * @brief  eCAL monitoring types
+**/
+
 #ifndef ecal_c_types_monitoring_h_included
 #define ecal_c_types_monitoring_h_included
 

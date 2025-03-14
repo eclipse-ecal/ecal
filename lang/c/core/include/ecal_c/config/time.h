@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
  */
 
+ /**
+  * @file   config/time.h
+  * @brief  eCAL time configuration
+ **/
+
 #ifndef ecal_c_config_time_h_included
 #define ecal_c_config_time_h_included
 

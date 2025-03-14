@@ -17,6 +17,11 @@
  * =========================== LICENSE =================================
  */
 
+ /**
+  * @file   config/registration.h
+  * @brief  eCAL configuration for the registration layer
+ **/
+
 #ifndef ecal_c_config_registration_h_included
 #define ecal_c_config_registration_h_included
 

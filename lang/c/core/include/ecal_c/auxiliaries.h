@@ -17,21 +17,40 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file   auxiliaries.h
+ * @brief  eCAL auxiliary functions
+**/
+
 #ifndef ecal_c_auxiliaries_h_included
 #define ecal_c_auxiliaries_h_included
 
 #include <ecal_c/export.h>
-#include <ecal_c/types.h>
-#include <ecal_c/pubsub/types.h>
-#include <ecal_c/service/types.h>
-#include <ecal_c/config/publisher.h>
-#include <ecal_c/config/subscriber.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
+  /**
+   * @brief Allocate a memory block for passing it to eCAL
+   * 
+   * This function is suppose to be used when the user needs to pass memory within the eCAL context, e.g. within a callback.
+   *
+   * @param size_ Size of the allocated memory block.
+   * 
+   * @return Pointer to the allocated memory block if succeeded, NULL otherwise.
+  **/
   ECALC_API void* eCAL_Malloc(size_t size_);
+
+  /**
+   * @brief Free a memory block which has been passed from eCAL
+   *
+   * This function basically needs to be called when eCAL returns a non-constant pointer by value or by reference to the user.
+   *
+   * @param ptr_ Non constant pointer to be freed.
+   *
+   * @return Pointer to the allocated memory block if succeeded, NULL otherwise.
+  **/
   ECALC_API void eCAL_Free(void* ptr_);
 #ifdef __cplusplus
 }

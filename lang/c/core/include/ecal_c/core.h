@@ -51,23 +51,19 @@ extern "C"
   /**
    * @brief  Get eCAL version as separated integer values. 
    *
-   * @param [out] major_  The eCAL major version number.
-   * @param [out] minor_  The eCAL minor version number.
-   * @param [out] patch_  The eCAL patch version number.
+   * @return eCAL version struct with seperate version values
    *
-   * @return  Zero if succeeded.
   **/
   ECALC_API struct eCAL_SVersion eCAL_GetVersion();
 
   /**
    * @brief Initialize eCAL API.
    *
-   * @param argc_        Number of command line arguments. 
-   * @param argv_        Array of command line arguments. 
-   * @param unit_name_   Defines the name of the eCAL unit. 
-   * @param components_  Defines which component to initialize.
+   * @param unit_name_   Defines the name of the eCAL unit. Optional, can be NULL.
+   * @param components_  Defines which component to initialize. Optional, can be NULL.
+   * @param config_      Configuration with which eCal is to be initialized. Optional, can be NULL.
    *
-   * @return Zero if succeeded.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API int eCAL_Initialize(const char *unit_name_, const unsigned int* components_, const eCAL_Configuration* config_);
 
@@ -75,23 +71,30 @@ extern "C"
   /**
    * @brief Finalize eCAL API.
    *
-   * @return Zero if succeeded.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API int eCAL_Finalize();
 
   /**
    * @brief Check eCAL initialize state.
    *
-   * @return Non-zero if eCAL is initialized.
+   * @return Non-zero if eCAL is initialized, zero otherwise.
   **/
   ECALC_API int eCAL_IsInitialized();
 
+  /**
+ * @brief Check initialize state of components.
+ *
+ * @param components_ Components to be checked.
+ * 
+ * @return Non-zero if eCAL is initialized, zero otherwise.
+**/
   ECALC_API int eCAL_IsComponentInitialized(unsigned int components_);
 
   /**
    * @brief Return the eCAL process state.
    *
-   * @return Non-zero if eCAL is in proper state. 
+   * @return Non-zero if eCAL is in proper state, zero otherwise. 
   **/
   ECALC_API int eCAL_Ok();
 #ifdef __cplusplus

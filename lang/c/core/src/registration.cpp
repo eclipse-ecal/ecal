@@ -17,6 +17,11 @@
  * ========================= eCAL LICENSE =================================
  */
 
+ /**
+  * @file   registration.cpp
+  * @brief  eCAL registration c interface
+ **/
+
 #include <ecal/ecal.h>
 #include <ecal_c/registration.h>
 
@@ -53,21 +58,6 @@ namespace
 
 extern "C"
 {
-
-  /*
-Usage:
-  eCAL_STopicId* topic_ids = NULL;
-  size_t length = 0;
-  if(eCAL_Registration_GetPublisherIDs(&topic_ids, &length)
-  {
-    for(int i = 0; i < length; ++i)
-    {
-      topic_ids[i]....
-    }
-  }
-  eCAL_Free(topic_ids);
-
-*/
   ECALC_API int eCAL_Registration_GetPublisherIDs(struct eCAL_STopicId** topic_ids_, size_t* topic_ids_length_)
   {
     assert(topic_ids_ != NULL && topic_ids_length_ != NULL);

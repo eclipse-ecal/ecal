@@ -17,6 +17,11 @@
  * =========================== LICENSE =================================
  */
 
+ /**
+  * @file   config/transport_layer.h
+  * @brief  eCAL configuration for the transport layer
+ **/
+
 #ifndef ecal_c_config_transport_layer_h_included
 #define ecal_c_config_transport_layer_h_included
 
