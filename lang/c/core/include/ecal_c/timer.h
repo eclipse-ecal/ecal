@@ -32,7 +32,7 @@
 extern "C"
 {
 #endif /*__cplusplus*/
-  typedef void (*eCAL_TimerCallbackT)();
+  typedef void (*eCAL_TimerCallbackT)(void*);
 
   typedef struct eCAL_Timer eCAL_Timer;
 
@@ -55,13 +55,14 @@ extern "C"
   /**
    * @brief Start the timer.
    *
-   * @param timeout_    Timer callback loop time in ms.
-   * @param callback_   The callback function.
-   * @param delay_      Timer callback delay for first call in ms. Optional, can be NULL.
+   * @param timeout_       Timer callback loop time in ms.
+   * @param callback_      The callback function.
+   * @param user_argument_ User argument that is forwarded to the callback. Optional, can be NULL.
+   * @param delay_         Timer callback delay for first call in ms. Optional, can be NULL.
    *
    * @return Zero if succeed, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
+  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, void* user_argument_, const int* delay_);
 
   /**
    * @brief Stop the timer.

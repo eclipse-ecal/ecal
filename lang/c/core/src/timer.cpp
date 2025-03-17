@@ -55,12 +55,12 @@ extern "C"
     delete timer_;
   }
 
-  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, const int* delay_)
+  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, void* user_argument_, const int* delay_)
   {
     assert(timer_ != NULL);
-    auto callback = [callback_]()
+    auto callback = [callback_, user_argument_]()
     {
-      callback_();
+      callback_(user_argument_);
     };
     return !static_cast<int>(timer_->handle->Start(timeout_, callback, (delay_ != NULL) ? *delay_ : 0));
   }

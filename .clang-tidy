@@ -66,5 +66,5 @@ Checks: "-*,
   -readability-avoid-const-params-in-decls,
 "
 WarningsAsErrors: ''
-HeaderFilterRegex: '^((?!/thirdparty/|/_deps/).)*$'
+HeaderFilterRegex: '^((?!/thirdparty/|/_deps/|/lang/).)*$'
 FormatStyle:     none

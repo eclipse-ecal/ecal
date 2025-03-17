@@ -114,10 +114,10 @@ extern "C"
     delete subscriber_;
   }
 
-  ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_)
+  ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_, void* user_argument_)
   {
     assert(subscriber_ != NULL && callback_ != NULL);
-    const auto callback = [callback_](const eCAL::STopicId& publisher_id_, const eCAL::SDataTypeInformation& data_type_information_, const eCAL::SReceiveCallbackData& receive_callback_data_)
+    const auto callback = [callback_, user_argument_](const eCAL::STopicId& publisher_id_, const eCAL::SDataTypeInformation& data_type_information_, const eCAL::SReceiveCallbackData& receive_callback_data_)
     {
       eCAL_STopicId publisher_id_c;
       eCAL_SDataTypeInformation data_type_information_c;
@@ -127,7 +127,7 @@ extern "C"
       Assign_SDataTypeInformation(&data_type_information_c, data_type_information_);
       Assign_SReceiveCallbackData(&receive_callback_data_c, receive_callback_data_);
       
-      callback_(&publisher_id_c, &data_type_information_c, &receive_callback_data_c);
+      callback_(&publisher_id_c, &data_type_information_c, &receive_callback_data_c, user_argument_);
     };
 
     return static_cast<int>(!subscriber_->handle->SetReceiveCallback(callback));

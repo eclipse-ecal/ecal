@@ -23,29 +23,29 @@
 
 int main()
 {
-  // the client handle
+  // The client handle
   eCAL_ServiceClient *client;
 
-  // initialize eCAL API
+  // Initialize eCAL API
   eCAL_Initialize("minimal client c", NULL, NULL);
 
-  // create client for "service1"
+  // Create client for "service1"
   client = eCAL_ServiceClient_New("service1", NULL, 0, NULL);
 
-  // call service method
+  // Call service method
   while (eCAL_Ok())
   {
     char                          request[] = "HELLO";
     struct eCAL_SServiceResponse* response = NULL;
     size_t                        response_length = 0;
 
-    // call method "echo"
+    // Call method "echo"
     printf("Calling service1:echo ..\n");
     if (!eCAL_ServiceClient_CallWithResponse(client, "echo", request, sizeof(request), &response, &response_length, NULL))
     {
       for (size_t i = 0; i < response_length; ++i)
       {
-        // query response
+        // Query responses from all servers that response to method "echo"
         switch (response[i].call_state)
         {
         case eCAL_eCallState_executed:
@@ -68,18 +68,18 @@ int main()
       printf("Service / method not found :-(\n\n");
     }
 
-    // memory of response needs to be deallocated!
+    // Memory of response array needs to be deallocated explicitly.
     eCAL_Free(response);
 
-    // sleep a second
+    // Sleep a second
     eCAL_Process_SleepMS(1000);
   }
 
-  // destroy client for "service1"
+  // Destroy client for "service1"
   eCAL_ServiceClient_Delete(client);
 
-  // finalize eCAL API
+  // Finalize eCAL API
   eCAL_Finalize();
 
-  return(0);
+  return 0;
 }

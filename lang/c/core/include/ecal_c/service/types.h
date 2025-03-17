@@ -123,8 +123,9 @@ struct eCAL_SServiceResponse
  * @brief Service response callback function type (low level client interface).
  *
  * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
-**/
-typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*);
+ * @param user_argument_     User argument that was forwarded by a SetCallback() function.
+ **/
+typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*, void*);
 
 /**
  * @brief Service method callback function type (low level server interface).
@@ -136,6 +137,7 @@ typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*);
  * @param      request_length    Length of request
  * @param[out] response_         Response data which needs to be set and allocated by eCAL_Malloc() from user space.
  * @param[out] response_length_  Length of response data set from the user space.
+ * @param      user_argument_    User argument that was forwarded by a SetCallback() function.
 **/
-typedef int (*eCAL_ServiceMethodCallbackT)(const struct eCAL_SServiceMethodInformation*, const void*, size_t, void**, size_t*);
+typedef int (*eCAL_ServiceMethodCallbackT)(const struct eCAL_SServiceMethodInformation*, const void*, size_t, void**, size_t*, void*);
 #endif /*ecal_c_service_types_h_included*/

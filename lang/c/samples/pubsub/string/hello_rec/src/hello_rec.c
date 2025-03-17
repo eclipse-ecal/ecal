@@ -22,10 +22,11 @@
 #include <string.h> //memset()
 #include <stdio.h> //printf()
 
-void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_)
+void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_)
 {
   // unused arguments
   (void)data_type_information_;
+  (void)user_argument_;
 
   printf("Received topic \"%s\" with ", topic_id_->topic_name);
   printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
@@ -47,7 +48,7 @@ int main()
   subscriber = eCAL_Subscriber_New("hello", &data_type_information, NULL, NULL);
 
   // add callback
-  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive);
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL);
 
   printf("Subscriber id: %ul\n\n", (unsigned long)eCAL_Subscriber_GetTopicId(subscriber)->topic_id.entity_id);
 

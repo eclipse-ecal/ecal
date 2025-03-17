@@ -113,7 +113,8 @@ struct eCAL_SReceiveCallbackData
  * @param data_type_info_  Topic metadata, as set by the publisher (encoding, type, descriptor).
  *                         This can be used to validate that the received data can be properly interpreted by the subscriber.
  * @param data_            Data struct containing payload, timestamp and publication clock.
+ * @param user_argument_   User argument that was forwarded by a SetCallback() function.
 **/
-typedef void (*eCAL_ReceiveCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SDataTypeInformation*, const struct eCAL_SReceiveCallbackData*);
+typedef void (*eCAL_ReceiveCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SDataTypeInformation*, const struct eCAL_SReceiveCallbackData*, void*);
 
 #endif /* ecal_c_pubsub_publisher_h_included */

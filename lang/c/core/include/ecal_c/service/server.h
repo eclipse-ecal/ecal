@@ -60,10 +60,11 @@ extern "C"
    * @param service_server_  Server handle.
    * @param method_info_     Service method information (method name, request & response types).
    * @param callback_        Callback function for client request.
+   * @param user_argument_   User argument that is forwarded to the callback. Optional, can be NULL.
    *
    * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_);
+  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_, void* user_argument_);
   
   /**
    * @brief Remove method callback.

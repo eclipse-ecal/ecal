@@ -46,7 +46,7 @@ extern "C"
    * @brief Get logging as serialized protobuf buffer.
    *
    * @param [out] log_         Pointer to a protobuf serialized log buffer. Must point to NULL and needs to be released by eCAL_Free().
-   * @param [out] log_length_  Length of the log buffer.
+   * @param [out] log_length_  Length of the log buffer. Must point to zero.
    * 
    * @return Zeor if succeeded, non-zero otherwise.
   **/
