@@ -37,13 +37,14 @@ int main()
   struct eCAL_SDataTypeInformation data_type_information;
 
   // initialize eCAL API
-  eCAL_Initialize("minimalc_rec_cb", NULL, NULL);
+  eCAL_Initialize("hello_snd_c", NULL, NULL);
 
   // create subscriber "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
   data_type_information.name = "string";
   data_type_information.encoding = "utf-8";
-  subscriber = eCAL_Subscriber_New("Hello", &data_type_information, NULL, NULL);
+  
+  subscriber = eCAL_Subscriber_New("hello", &data_type_information, NULL, NULL);
 
   // add callback
   eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive);

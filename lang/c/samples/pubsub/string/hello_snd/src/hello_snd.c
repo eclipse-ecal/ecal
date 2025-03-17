@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,16 @@ int main()
   eCAL_Publisher* publisher;
   struct eCAL_SDataTypeInformation data_type_information;
   char        snd_s[] = "HELLO WORLD FROM C";
-  int         sent    = 0;
 
   // initialize eCAL API
-  eCAL_Initialize("minimalc_snd", NULL, NULL);
+  eCAL_Initialize("hello_snd_c", NULL, NULL);
 
   // create publisher "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
   data_type_information.name = "string";
   data_type_information.encoding = "utf-8";
 
-  publisher = eCAL_Publisher_New("Hello", &data_type_information, NULL, NULL);
+  publisher = eCAL_Publisher_New("hello", &data_type_information, NULL, NULL);
 
   printf("Publisher id: %ul\n\n", (unsigned long)eCAL_Publisher_GetTopicId(publisher)->topic_id.entity_id);
   
@@ -54,6 +53,9 @@ int main()
     // sleep 100 ms
     eCAL_Process_SleepMS(100);
   }
+
+  // delete publisher handle
+  eCAL_Publisher_Delete(publisher);
 
   // finalize eCAL API
   eCAL_Finalize();
