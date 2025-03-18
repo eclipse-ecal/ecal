@@ -79,27 +79,14 @@ namespace eCAL
     * @param config_      Optional configuration parameters.
     **/
     explicit CMessageSubscriber(const std::string& topic_name_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration()) 
-      : m_subscriber(
-        topic_name_,
-        []() 
-        {
-          Deserializer deserializer;
-          return deserializer.GetDataTypeInformation();
-        }(),
-        config_)
+      : m_deserializer(std::make_shared<Deserializer>())
+      , m_subscriber(topic_name_, m_deserializer->GetDataTypeInformation(), config_)
     {
     }
 
     CMessageSubscriber(const std::string& topic_name_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_ = GetSubscriberConfiguration())
-      : m_subscriber(
-        topic_name_,
-        []()
-        {
-          Deserializer deserializer;
-          return deserializer.GetDataTypeInformation();
-        }(),
-          event_callback_,
-          config_)
+      : m_deserializer(std::make_shared<Deserializer>())
+      , m_subscriber(topic_name_, m_deserializer->GetDataTypeInformation(), event_callback_, config_)
     {
     }
 
@@ -135,7 +122,6 @@ namespace eCAL
     **/
     void SetReceiveCallback(DataCallbackT data_callback_, DeserializationErrorCallbackT error_callback_ = nullptr)
     {
-      std::shared_ptr<Deserializer> deserializer = std::make_shared<Deserializer>();
       /*
       * This is the internal Message Callback.
       * In case that any callbacks are registered, it tries to deserialize the data.
@@ -143,7 +129,7 @@ namespace eCAL
       * If the serialization does not throw, the data callback is invoked.
       * In case that it does fail, the error callback is invoked with the original information, so that the user may anaylze why the deserialization failed, if they are interested.
       */
-      auto internal_receive_callback = [deserializer, data_callback_, error_callback_](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
+      auto internal_receive_callback = [serializer = m_deserializer, data_callback_, error_callback_](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
       {
         if (!data_callback_ && !error_callback_)
         {
@@ -152,7 +138,7 @@ namespace eCAL
 
         try
         {
-          auto msg = deserializer->Deserialize(data_.buffer, data_.buffer_size, data_type_info_);
+          auto msg = serializer->Deserialize(data_.buffer, data_.buffer_size, data_type_info_);
           if (data_callback_)
           {
             data_callback_(publisher_id_, msg, data_.send_timestamp, data_.send_clock);
@@ -220,6 +206,7 @@ namespace eCAL
       return m_subscriber.GetDataTypeInformation();
     }
 
+    std::shared_ptr<Deserializer> m_deserializer;
     CSubscriber m_subscriber;
   };
 }
