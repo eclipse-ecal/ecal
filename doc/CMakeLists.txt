@@ -78,11 +78,22 @@ add_custom_target(documentation_copy_sample_files ALL
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
+add_custom_target(documentation_copy_config_file
+  COMMENT "Copying generated configuration file to documentation directory"
+  DEPENDS run_ecal_generate_config
+)
+set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
+
 if (DEFINED ECAL_GENERATED_YAML_PATH)
-  add_custom_target(documentation_copy_config_file
-    COMMAND cmake -E copy ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
+  message(STATUS "ECAL_GENERATED_YAML_PATH is defined: ${ECAL_GENERATED_YAML_PATH}")
+  add_custom_command(TARGET documentation_copy_config_file
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_SOURCE_DIRECTORY}/configuration_files
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuration file copied successfully."
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuration file not found, skipping copy." IF NOT EXISTS ${ECAL_GENERATED_YAML_PATH}
   )
-  set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
+else()
+  message(STATUS "ECAL_GENERATED_YAML_PATH is not defined")
 endif()
 
 #######################################
@@ -121,7 +132,7 @@ doxygen_add_docs(
   documentation_run_doxygen
   ./doc.hpp
   ../ecal/core/include/ecal
-  ../ecal/core/include/ecal/msg
+  #../ecal/core/include/ecal/msg
   #../ecal/core/include/ecal/cimpl
   #../lang/csharp/include
   ../contrib/ecalhdf5/include/ecalhdf5
@@ -171,12 +182,8 @@ add_custom_target(documentation_sphinx ALL
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_config_file
 )
-
-if (DEFINED ECAL_GENERATED_YAML_PATH)
-  add_dependencies(documentation_sphinx documentation_copy_config_file)
-endif()
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
     
