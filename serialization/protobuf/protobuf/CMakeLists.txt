@@ -19,6 +19,7 @@
 ##########################
 # Protobuf base functionality
 ##########################
+
 find_package(Protobuf REQUIRED)
 ecal_add_library(protobuf_base)
 add_library(eCAL::protobuf_base ALIAS protobuf_base)
@@ -121,7 +122,7 @@ target_link_libraries(protobuf_measurement
 
 target_sources(protobuf_measurement
   INTERFACE
-    FILE_SET proto_headers_measurement
+    FILE_SET proto_measurement_headers
     TYPE HEADERS
     BASE_DIRS include
     FILES
@@ -136,5 +137,5 @@ install(
   EXPORT eCALCoreTargets  
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET proto_headers_measurement COMPONENT sdk
+  FILE_SET proto_measurement_headers COMPONENT sdk
 )
