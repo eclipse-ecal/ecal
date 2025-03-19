@@ -36,7 +36,7 @@ namespace eCAL
       using MessageT = T;
 
       OMessageChannel(OChannel&& binary_channel)
-        : m_serializer()
+        : m_serializer(std::make_shared<Serializer>())
         , binary_channel(std::move(binary_channel))
       {
       }
@@ -55,15 +55,15 @@ namespace eCAL
       OMessageChannel& operator<<(const Frame<T>& entry_)
       {
         // The way we handle Publishers requires us to do a two pass serialization;
-        size_t message_size = m_serializer.MessageSize(entry_.message);
+        size_t message_size = m_serializer->MessageSize(entry_.message);
         buffer.resize(message_size);
         if (message_size == 0)
         {
-          m_serializer.Serialize(entry_.message, nullptr, 0);
+          m_serializer->Serialize(entry_.message, nullptr, 0);
         }
         else
         {
-          m_serializer.Serialize(entry_.message, static_cast<void*>(&buffer[0]), buffer.size());
+          m_serializer->Serialize(entry_.message, static_cast<void*>(&buffer[0]), buffer.size());
         }
         BinaryFrame binary_frame{ buffer, entry_.send_timestamp, entry_.receive_timestamp };
         binary_channel << binary_frame;
@@ -71,7 +71,7 @@ namespace eCAL
       }
       
     private:
-      Serializer m_serializer;
+      std::shared_ptr<Serializer> m_serializer;
       OChannel binary_channel;
       mutable std::string buffer;
     };

@@ -37,7 +37,7 @@ namespace eCAL
        * Dynamic subscriber class for protobuf messages. For details see documentation of CDynamicMessageSubscriber class.
        *
       **/
-      using CDynamicJSONSubscriber = CMessageSubscriber<std::string, internal::ProtobufDynamicJSONDeserializer>;
+      using CDynamicJSONSubscriber = CMessageSubscriber<std::string, internal::ProtobufDynamicJSONDeserializer<eCAL::SDataTypeInformation>>;
 
       /** @example proto_dyn_rec.cpp
       * This is an example how to use eCAL::protobuf::CDynamicSubscriber to receive dynamic protobuf data with eCAL. To receive the data, see @ref proto_dyn_rec.cpp .

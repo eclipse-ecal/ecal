@@ -26,17 +26,27 @@
 
 #include <ecal/msg/imeasurement.h>
 #include <ecal/msg/protobuf/serializer.h>
+#include <ecal/msg/protobuf/dynamic_serializer.h>
 
 namespace eCAL
 {
   namespace protobuf
   {
-
     /**
      * @brief  eCAL google::protobuf channel class.
     **/
     template <typename T>
     using IChannel = ::eCAL::measurement::IMessageChannel<T, internal::Serializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
+
+    namespace dynamic
+    {
+      using IChannel = ::eCAL::measurement::IMessageChannel<std::shared_ptr<google::protobuf::Message>, internal::ProtobufDynamicDeserializer<eCAL::experimental::measurement::base::DataTypeInformation>>;
+    }
+        
+    namespace json
+    {
+      using IChannel = ::eCAL::measurement::IMessageChannel<std::string, internal::ProtobufDynamicJSONDeserializer<eCAL::experimental::measurement::base::DataTypeInformation>>;
+    }
 
     /** @example person_read.cpp
     * This is an example how to use eCAL::protobuf::IChannel to read protobuf data from a measurement.

@@ -57,7 +57,7 @@ install(
   FILE_SET protobuf_base_headers COMPONENT sdk
 )
 
-set_property(TARGET protobuf_base PROPERTY FOLDER core)
+set_property(TARGET protobuf_base PROPERTY FOLDER serialization/protobuf)
 
 ##########################
 # Protobuf core communication extension

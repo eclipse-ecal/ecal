@@ -75,21 +75,25 @@ namespace
 
 namespace eCAL
 {
+  namespace protobuf
+  {
+
     namespace internal
     {
+      template <typename DatatypeInformation>
       class ProtobufDynamicJSONDeserializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info;
           topic_info.encoding = "proto";
           topic_info.name = "*";
           topic_info.descriptor = "*";
           return topic_info;
         }
 
-        std::string Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& datatype_info_)
+        std::string Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& datatype_info_)
         {
           google::protobuf::util::JsonPrintOptions options;
 #if GOOGLE_PROTOBUF_VERSION >= 5026000
@@ -113,7 +117,7 @@ namespace eCAL
         }
 
       private:
-        std::shared_ptr<google::protobuf::util::TypeResolver> GetTypeResolver(const SDataTypeInformation& datatype_info_)
+        std::shared_ptr<google::protobuf::util::TypeResolver> GetTypeResolver(const DatatypeInformation& datatype_info_)
         {
           auto schema = m_type_resolver_map.find(datatype_info_);
           if (schema == m_type_resolver_map.end())
@@ -123,7 +127,7 @@ namespace eCAL
           return m_type_resolver_map[datatype_info_];
         }
 
-        std::shared_ptr<google::protobuf::util::TypeResolver> CreateTypeResolver(const SDataTypeInformation& datatype_info_)
+        std::shared_ptr<google::protobuf::util::TypeResolver> CreateTypeResolver(const DatatypeInformation& datatype_info_)
         {
           std::string unqualified_topic_type = GetUnqualifiedTopicType(datatype_info_);
 
@@ -155,12 +159,12 @@ namespace eCAL
           return resolver;
         }
 
-        std::string GetQualifiedTopicType(const SDataTypeInformation& data_type_info_)
+        std::string GetQualifiedTopicType(const DatatypeInformation& data_type_info_)
         {
-            return  "/" + data_type_info_.name;
+          return  "/" + data_type_info_.name;
         }
 
-        std::string GetUnqualifiedTopicType(const SDataTypeInformation& data_type_info_)
+        std::string GetUnqualifiedTopicType(const DatatypeInformation& data_type_info_)
         {
           const auto& type_name = data_type_info_.name;
           return  type_name.substr(type_name.find_last_of('.') + 1, type_name.size());
@@ -168,15 +172,16 @@ namespace eCAL
 
 
         eCAL::protobuf::CProtoDynDecoder                                                      m_dynamic_decoder;
-        std::map<SDataTypeInformation, std::shared_ptr<google::protobuf::util::TypeResolver>> m_type_resolver_map;
+        std::map<DatatypeInformation, std::shared_ptr<google::protobuf::util::TypeResolver>>  m_type_resolver_map;
       };
 
+      template <typename DatatypeInformation>
       class ProtobufDynamicDeserializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info;
           topic_info.encoding = "proto";
           topic_info.name = "*";
           topic_info.descriptor = "*";
@@ -184,7 +189,7 @@ namespace eCAL
         }
 
 
-        std::shared_ptr<google::protobuf::Message> Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& datatype_info_)
+        std::shared_ptr<google::protobuf::Message> Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& datatype_info_)
         {
           auto message_prototype = GetMessagePointer(datatype_info_);
           // for some reason cannot use std::make_shared, however should be ok in this context.
@@ -203,7 +208,7 @@ namespace eCAL
         }
 
       private:
-        std::shared_ptr<google::protobuf::Message> GetMessagePointer(const SDataTypeInformation& datatype_info_)
+        std::shared_ptr<google::protobuf::Message> GetMessagePointer(const DatatypeInformation& datatype_info_)
         {
           auto schema = m_message_map.find(datatype_info_);
           if (schema == m_message_map.end())
@@ -213,7 +218,7 @@ namespace eCAL
           return m_message_map[datatype_info_];
         }
 
-        std::shared_ptr<google::protobuf::Message> CreateMessagePointer(const SDataTypeInformation& topic_info_)
+        std::shared_ptr<google::protobuf::Message> CreateMessagePointer(const DatatypeInformation& topic_info_)
         {
           // get topic type
           std::string topic_type{ topic_info_.name };
@@ -245,10 +250,11 @@ namespace eCAL
         }
 
         eCAL::protobuf::CProtoDynDecoder                                           m_dynamic_decoder;
-        std::map<SDataTypeInformation, std::shared_ptr<google::protobuf::Message>> m_message_map;
+        std::map<DatatypeInformation, std::shared_ptr<google::protobuf::Message>> m_message_map;
       };
 
 
 
     }
+  }
 }
