@@ -32,12 +32,12 @@ namespace eCAL
 {
   namespace measurement
   {
-    class OBinaryChannel
+    class OChannel
     {
       friend class OMeasurement;
       // The constructor is private
       // Only measurements can create Channel objects, not the user.
-      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const experimental::measurement::base::Channel& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
+      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const experimental::measurement::base::Channel& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
         : channel(channel_)
         , meas(meas_)
         , clock(0)
@@ -46,7 +46,7 @@ namespace eCAL
       }
 
     public:
-      OBinaryChannel& operator<<(const BinaryFrame& entry_)
+      OChannel& operator<<(const BinaryFrame& entry_)
       {
         eCAL::experimental::measurement::base::WriteEntry entry;
         entry.channel = channel;
@@ -62,16 +62,16 @@ namespace eCAL
         return *this;
       }
 
-      ~OBinaryChannel() = default;
+      ~OChannel() = default;
 
-      OBinaryChannel(const OBinaryChannel&) = delete;
-      OBinaryChannel& operator=(const OBinaryChannel&) = delete;
+      OChannel(const OChannel&) = delete;
+      OChannel& operator=(const OChannel&) = delete;
 
-      OBinaryChannel(OBinaryChannel&& rhs) = default;
-      OBinaryChannel& operator=(OBinaryChannel&& rhs) = default;
+      OChannel(OChannel&& rhs) = default;
+      OChannel& operator=(OChannel&& rhs) = default;
 
-      bool operator==(const OBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
-      bool operator!=(const OBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
+      bool operator==(const OChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
+      bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
 
 
     private:
@@ -86,7 +86,7 @@ namespace eCAL
     public:
       OMeasurement(const std::string& base_path_, const std::string& measurement_name_= "measurement");
 
-      OBinaryChannel Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const;
+      OChannel Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const;
 
     private:
       std::shared_ptr<experimental::measurement::base::Writer> meas;
@@ -100,11 +100,11 @@ namespace eCAL
       meas->SetFileBaseName(measurement_name_);
     }
 
-    inline OBinaryChannel OMeasurement::Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const
+    inline OChannel OMeasurement::Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const
     {
       // Construct a channel based
       static std::atomic<eCAL::experimental::measurement::base::Channel::id_t> i = 0;
-      return OBinaryChannel{ meas, {channel_, ++i}, datatype_info_ };
+      return OChannel{ meas, {channel_, ++i}, datatype_info_ };
     }
 
     

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::OMeasurement meas(".");
 
   // create a channel (topic name "blob")
-  eCAL::measurement::OBinaryChannel blob_channel = meas.Create("blob", eCAL::experimental::measurement::base::DataTypeInformation{});
+  eCAL::measurement::OChannel blob_channel = meas.Create("blob", eCAL::experimental::measurement::base::DataTypeInformation{});
 
   // std::string serves as a binary container for data
   // std::vector<std::byte> would be more appropriate if eCAL supported C++17

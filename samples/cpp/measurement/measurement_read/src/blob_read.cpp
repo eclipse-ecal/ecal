@@ -30,7 +30,7 @@ int main(int /*argc*/, char** /*argv*/)
   auto blob_channels = meas.Channels("blob");
   if (blob_channels.size() > 0)
   {
-    eCAL::measurement::IBinaryChannel blob_channel = meas.Get(*blob_channels.begin());
+    eCAL::measurement::IChannel blob_channel = meas.Get(*blob_channels.begin());
 
     // iterate over the messages
     for (const auto& blob_entry : blob_channel)

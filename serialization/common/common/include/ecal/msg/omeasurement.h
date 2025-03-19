@@ -26,33 +26,33 @@ namespace eCAL
   namespace measurement
   {
     template <typename T, typename Serializer>
-    class OChannel
+    class OMessageChannel
     {
-      friend OChannel CreateChannel(OMeasurement& meas_, const std::string& channel_name_);
+      friend OMessageChannel CreateChannel(OMeasurement& meas_, const std::string& channel_name_);
 
     public:
       // Should those be private?
       using SerializerT = Serializer;
       using MessageT = T;
 
-      OChannel(OBinaryChannel&& binary_channel)
+      OMessageChannel(OChannel&& binary_channel)
         : m_serializer()
         , binary_channel(std::move(binary_channel))
       {
       }
 
-      ~OChannel() = default;
+      ~OMessageChannel() = default;
 
-      OChannel(const OChannel&) = delete;
-      OChannel& operator=(const OChannel&) = delete;
+      OMessageChannel(const OMessageChannel&) = delete;
+      OMessageChannel& operator=(const OMessageChannel&) = delete;
 
-      OChannel(OChannel&& rhs) = default;
-      OChannel& operator=(OChannel&& rhs) = default;
+      OMessageChannel(OMessageChannel&& rhs) = default;
+      OMessageChannel& operator=(OMessageChannel&& rhs) = default;
 
-      bool operator==(const OChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
-      bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); }
+      bool operator==(const OMessageChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
+      bool operator!=(const OMessageChannel& rhs) const { return !(operator==(rhs)); }
 
-      OChannel& operator<<(const Frame<T>& entry_)
+      OMessageChannel& operator<<(const Frame<T>& entry_)
       {
         // The way we handle Publishers requires us to do a two pass serialization;
         size_t message_size = m_serializer.MessageSize(entry_.message);
@@ -72,7 +72,7 @@ namespace eCAL
       
     private:
       Serializer m_serializer;
-      OBinaryChannel binary_channel;
+      OChannel binary_channel;
       mutable std::string buffer;
     };
     

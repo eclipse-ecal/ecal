@@ -33,10 +33,10 @@ namespace eCAL
 {
   namespace measurement
   {
-    class IBinaryChannel
+    class IChannel
     {
     public:
-      IBinaryChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, experimental::measurement::base::Channel channel_)
+      IChannel(std::shared_ptr<experimental::measurement::base::Reader> meas_, experimental::measurement::base::Channel channel_)
         : meas(meas_)
         , channel(channel_)
         , datatype_info(meas->GetChannelDataTypeInformation(channel))
@@ -44,13 +44,13 @@ namespace eCAL
         meas->GetEntriesInfo(channel, entry_infos);
       }
 
-      ~IBinaryChannel() = default;
+      ~IChannel() = default;
 
-      IBinaryChannel(const IBinaryChannel&) = delete;
-      IBinaryChannel& operator=(const IBinaryChannel&) = delete;
+      IChannel(const IChannel&) = delete;
+      IChannel& operator=(const IChannel&) = delete;
 
-      IBinaryChannel(IBinaryChannel&& rhs) = default;
-      IBinaryChannel& operator=(IBinaryChannel&& rhs) = default;
+      IChannel(IChannel&& rhs) = default;
+      IChannel& operator=(IChannel&& rhs) = default;
 
       virtual BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
       {
@@ -75,12 +75,12 @@ namespace eCAL
       class iterator /*: public std::iterator<std::forward_iterator_tag, Entry<T>>*/
       {
       public:
-        iterator(IBinaryChannel& owner_)
+        iterator(IChannel& owner_)
           : m_owner(owner_)
           , m_entry_iterator(owner_.entry_infos.begin())
         {};
 
-        iterator(IBinaryChannel& owner_, const experimental::measurement::base::EntryInfoSet::iterator& it)
+        iterator(IChannel& owner_, const experimental::measurement::base::EntryInfoSet::iterator& it)
           : m_owner(owner_)
           , m_entry_iterator(it)
         {};
@@ -111,13 +111,13 @@ namespace eCAL
         bool operator==(const iterator& rhs) const { return m_owner == rhs.m_owner && m_entry_iterator == rhs.m_entry_iterator; /*return it == rhs.it; */ };
         bool operator!=(const iterator& rhs) const { return !(operator==(rhs)); };
       private:
-        IBinaryChannel& m_owner;
+        IChannel& m_owner;
         experimental::measurement::base::EntryInfoSet::iterator m_entry_iterator;
         mutable std::string m_msg;
       };
 
-      bool operator==(const IBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
-      bool operator!=(const IBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
+      bool operator==(const IChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
+      bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
 
       iterator begin()
       {
@@ -147,7 +147,7 @@ namespace eCAL
       ChannelSet Channels() const;
       ChannelSet Channels(const std::string& channel_name) const;
 
-      IBinaryChannel Get(const experimental::measurement::base::Channel& channel) const;
+      IChannel Get(const experimental::measurement::base::Channel& channel) const;
 
     private:
       std::shared_ptr<experimental::measurement::base::Reader> meas;
@@ -177,7 +177,7 @@ namespace eCAL
       return channels_filtered_by_name;
     }
 
-    inline IBinaryChannel IMeasurement::Get(const experimental::measurement::base::Channel& channel) const
+    inline IChannel IMeasurement::Get(const experimental::measurement::base::Channel& channel) const
     {
       // Assert that the channel is in the IMeasurement
       auto channels = Channels();
@@ -188,7 +188,7 @@ namespace eCAL
       }
 
       // Construct a binary Channel
-      return IBinaryChannel{meas, channel};
+      return IChannel{meas, channel};
     }
   }
 }

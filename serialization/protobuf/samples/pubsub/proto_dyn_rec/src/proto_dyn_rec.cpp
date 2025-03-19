@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <ecal/ecal.h>
 #include <ecal/msg/protobuf/dynamic_subscriber.h>
 
 #include <iostream>

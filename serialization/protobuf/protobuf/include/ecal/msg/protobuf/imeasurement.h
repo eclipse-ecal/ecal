@@ -36,7 +36,7 @@ namespace eCAL
      * @brief  eCAL google::protobuf channel class.
     **/
     template <typename T>
-    using IChannel = ::eCAL::measurement::IChannel<T, internal::Serializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
+    using IChannel = ::eCAL::measurement::IMessageChannel<T, internal::Serializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
 
     /** @example person_read.cpp
     * This is an example how to use eCAL::protobuf::IChannel to read protobuf data from a measurement.
