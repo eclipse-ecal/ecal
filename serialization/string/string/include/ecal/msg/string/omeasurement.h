@@ -35,7 +35,7 @@ namespace eCAL
     /**
      * @brief  eCAL string channel class.
     **/
-    using OChannel = ::eCAL::measurement::OChannel<std::string, internal::Serializer<std::string, eCAL::experimental::measurement::base::DataTypeInformation>>;
+    using OChannel = ::eCAL::measurement::OMessageChannel<std::string, internal::Serializer<std::string, eCAL::experimental::measurement::base::DataTypeInformation>>;
 
     /** @example hello_read.cpp
     * This is an example how to use eCAL::string::IChannel to read protobuf data from a measurement.

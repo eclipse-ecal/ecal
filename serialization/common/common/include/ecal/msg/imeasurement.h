@@ -33,30 +33,30 @@ namespace eCAL
   namespace measurement
   {
     template <typename T, typename Serializer>
-    class IChannel
+    class IMessageChannel
     {
-      friend IChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
+      friend IMessageChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
 
     public:
       using SerializerT = Serializer;
       using MessageT = T;
 
-      IChannel(IBinaryChannel&& binary_channel_)
+      IMessageChannel(IChannel&& binary_channel_)
         : m_serializer{}
         , binary_channel(std::move(binary_channel_))
       {
       }
 
-      ~IChannel() = default;
+      ~IMessageChannel() = default;
 
-      IChannel(const IChannel&) = delete;
-      IChannel& operator=(const IChannel&) = delete;
+      IMessageChannel(const IMessageChannel&) = delete;
+      IMessageChannel& operator=(const IMessageChannel&) = delete;
 
-      IChannel(IChannel&& rhs) = default;
-      IChannel& operator=(IChannel&& rhs) = default;
+      IMessageChannel(IMessageChannel&& rhs) = default;
+      IMessageChannel& operator=(IMessageChannel&& rhs) = default;
 
-      bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
-      bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
+      bool operator==(const IMessageChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
+      bool operator!=(const IMessageChannel& rhs) const { return !(operator==(rhs)); }
 
       Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
       {
@@ -84,7 +84,7 @@ namespace eCAL
           , owner(i.owner)
         {};
 
-        iterator(const IBinaryChannel::iterator& i, IChannel& owner_)
+        iterator(const IChannel::iterator& i, IMessageChannel& owner_)
           : it(i)
           , owner(owner_)
         {};
@@ -121,10 +121,10 @@ namespace eCAL
         bool operator!=(const iterator& rhs) const { return it != rhs.it; };
 
       private:
-        IBinaryChannel::iterator it;
+        IChannel::iterator it;
         mutable T message;
 
-        IChannel& owner;
+        IMessageChannel& owner;
       };
 
       iterator begin()
@@ -138,7 +138,7 @@ namespace eCAL
       }
 
     private:
-      IBinaryChannel binary_channel;
+      IChannel binary_channel;
       mutable T message;
 
       Serializer m_serializer;
