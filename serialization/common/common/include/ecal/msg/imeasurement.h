@@ -38,11 +38,22 @@ namespace eCAL
       friend IChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
 
     public:
-      IChannel(const IBinaryChannel& binary_channel_)
+      using SerializerT = Serializer;
+      using MessageT = T;
+
+      IChannel(IBinaryChannel&& binary_channel_)
         : m_serializer{}
-        , binary_channel(binary_channel_)
+        , binary_channel(std::move(binary_channel_))
       {
       }
+
+      ~IChannel() = default;
+
+      IChannel(const IChannel&) = delete;
+      IChannel& operator=(const IChannel&) = delete;
+
+      IChannel(IChannel&& rhs) = default;
+      IChannel& operator=(IChannel&& rhs) = default;
 
       bool operator==(const IChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
       bool operator!=(const IChannel& rhs) const { return !(operator==(rhs)); }
@@ -137,7 +148,7 @@ namespace eCAL
     Channel GetChannel(IMeasurement& meas_, const experimental::measurement::base::Channel& channel_)
     {
       auto binary_channel = meas_.Get(channel_);
-      return Channel(binary_channel);
+      return Channel(std::move(binary_channel));
     }
   }
 }

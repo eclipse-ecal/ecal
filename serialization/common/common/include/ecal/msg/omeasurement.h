@@ -19,138 +19,70 @@
 
 #pragma once
 
-#include <memory>
-#include <set>
-#include <string>
-#include <utility>
-
-#include <ecal/measurement/hdf5/writer.h>
-#include <ecal/measurement/measurement.h>
+#include <ecal/measurement/omeasurement.h>
 
 namespace eCAL
 {
   namespace measurement
   {
-    class OBinaryChannel
-    {
-    public:
-      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const std::string& name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
-        : channel(name_, 0)
-        , meas(meas_)
-        , id(0)
-        , clock(0)
-      {
-        meas->SetChannelDataTypeInformation(channel, datatype_info);
-      }
-
-      OBinaryChannel& operator<<(const BinaryFrame& entry_)
-      {
-        eCAL::experimental::measurement::base::WriteEntry entry;
-        entry.channel = channel;
-        entry.data = entry_.message.data();
-        entry.size = entry_.message.size();
-        entry.snd_timestamp = entry_.send_timestamp;
-        entry.rcv_timestamp = entry_.receive_timestamp;
-        entry.sender_id = id;
-        entry.clock = clock;
-
-        meas->AddEntryToFile(entry);
-        ++clock;
-        return *this;
-      }
-
-      OBinaryChannel& operator<<(const SenderID& id_)
-      {
-        id = id_.ID;
-        return *this;
-      }
-
-      bool operator==(const OBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
-      bool operator!=(const OBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
-
-
-    private:
-      const experimental::measurement::base::Channel channel;
-      std::shared_ptr<experimental::measurement::base::Writer> meas;
-
-      long long id;
-      long long clock;
-    };
-
-
-    template <typename T>
+    template <typename T, typename Serializer>
     class OChannel
     {
+      friend OChannel CreateChannel(OMeasurement& meas_, const std::string& channel_name_);
+
     public:
-      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, std::string name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
-        : binary_channel(meas_, name_, datatype_info)
+      // Should those be private?
+      using SerializerT = Serializer;
+      using MessageT = T;
+
+      OChannel(OBinaryChannel&& binary_channel)
+        : m_serializer()
+        , binary_channel(std::move(binary_channel))
       {
       }
+
+      ~OChannel() = default;
+
+      OChannel(const OChannel&) = delete;
+      OChannel& operator=(const OChannel&) = delete;
+
+      OChannel(OChannel&& rhs) = default;
+      OChannel& operator=(OChannel&& rhs) = default;
 
       bool operator==(const OChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
       bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); }
 
-      OChannel<T>& operator<<(const Frame<T>& entry_)
+      OChannel& operator<<(const Frame<T>& entry_)
       {
-        eCAL::message::Serialize(entry_.message, buffer);
+        // The way we handle Publishers requires us to do a two pass serialization;
+        size_t message_size = m_serializer.MessageSize(entry_.message);
+        buffer.resize(message_size);
+        if (message_size == 0)
+        {
+          m_serializer.Serialize(entry_.message, nullptr, 0);
+        }
+        else
+        {
+          m_serializer.Serialize(entry_.message, static_cast<void*>(&buffer[0]), buffer.size());
+        }
         BinaryFrame binary_frame{ buffer, entry_.send_timestamp, entry_.receive_timestamp };
         binary_channel << binary_frame;
         return *this;
       }
       
-
-      // Streaming operator to change the sender ID
-      OChannel<T>& operator<<(const SenderID& id_)
-      {
-        binary_channel << id_;
-        return *this;
-      }
-
-
-    protected:
+    private:
+      Serializer m_serializer;
       OBinaryChannel binary_channel;
       mutable std::string buffer;
     };
-
-    using OStringChannel = OChannel<std::string>;
-
-    class OMeasurement
-    {
-    public:
-      OMeasurement(const std::string& base_path_, const std::string& measurement_name_= "measurement");
-
-      template<typename T>
-      OChannel<T> Create(const std::string& channel) const;
-
-    private:
-      std::shared_ptr<experimental::measurement::base::Writer> meas;
-    };
-
-
-
-    inline OMeasurement::OMeasurement(const std::string& base_path_, const std::string& measurement_name_)
-      : meas{ std::make_shared<eCAL::experimental::measurement::hdf5::Writer>(base_path_) }
-    {
-      meas->SetFileBaseName(measurement_name_);
-    }
-
-    // This will return a nullptr if channel name and 
-    // This will throw an exception if 
-    // a) channel does not exist in the OMeasurement
-    // b) the registered type does not match with the descriptor in the chanenel
-    template<typename T>
-    inline OChannel<T> OMeasurement::Create(const std::string& channel) const
-    {
-      static T msg;
-      const eCAL::experimental::measurement::base::DataTypeInformation datatype_info{
-        eCAL::message::GetTypeName(msg),
-        eCAL::message::GetEncoding(msg),
-        eCAL::message::GetDescription(msg)
-      };
-      // Construct a channel based 
-      return OChannel<T>{meas, channel, datatype_info};
-    }
-
     
+    template <typename Channel>
+    Channel CreateChannel(OMeasurement& meas_, const std::string& channel_name_)
+    {
+      typename Channel::SerializerT serializer;
+
+      auto binary_channel = meas_.Create(channel_name_, serializer.GetDataTypeInformation());
+      return Channel(std::move(binary_channel));
+    }
   }
 }

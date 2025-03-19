@@ -31,7 +31,7 @@ int main(int /*argc*/, char** /*argv*/)
   eCAL::measurement::OMeasurement meas(".");
 
   // create a channel (topic name "person")
-  eCAL::measurement::OChannel<pb::People::Person> person_channel = meas.Create<pb::People::Person>("person");
+  eCAL::protobuf::OChannel<pb::People::Person> person_channel = eCAL::measurement::CreateChannel<eCAL::protobuf::OChannel<pb::People::Person>>(meas, "person");
 
   pb::People::Person person;
   person.set_name("Max");
@@ -41,7 +41,6 @@ int main(int /*argc*/, char** /*argv*/)
   for (int i = 0; i< 100; i++)
   {
     person.set_id(i);
-    std::string my_string{ "String no " + std::to_string(i) };
 
     person_channel << eCAL::measurement::make_frame(person, timestamp);
     timestamp += ONE_SECOND;

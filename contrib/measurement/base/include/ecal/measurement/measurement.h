@@ -33,11 +33,8 @@ namespace eCAL
   {
     using ChannelSet = std::set<eCAL::experimental::measurement::base::Channel>;
   
-    struct SenderID
-    {
-      long long ID;
-    };
-
+    // A frame is only a leightweight wrapper around a datatype, which also contains send / receive timestamp
+    // It is non-owning and should be treated as a view.
     template<class T>
     struct Frame
     {

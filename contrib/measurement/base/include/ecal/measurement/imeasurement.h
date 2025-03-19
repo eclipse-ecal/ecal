@@ -44,6 +44,14 @@ namespace eCAL
         meas->GetEntriesInfo(channel, entry_infos);
       }
 
+      ~IBinaryChannel() = default;
+
+      IBinaryChannel(const IBinaryChannel&) = delete;
+      IBinaryChannel& operator=(const IBinaryChannel&) = delete;
+
+      IBinaryChannel(IBinaryChannel&& rhs) = default;
+      IBinaryChannel& operator=(IBinaryChannel&& rhs) = default;
+
       virtual BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
       {
         size_t message_size;

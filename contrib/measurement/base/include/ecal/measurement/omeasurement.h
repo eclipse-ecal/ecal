@@ -40,7 +40,6 @@ namespace eCAL
       OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const experimental::measurement::base::Channel& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
         : channel(channel_)
         , meas(meas_)
-        , id(0)
         , clock(0)
       {
         meas->SetChannelDataTypeInformation(channel, datatype_info);
@@ -55,7 +54,7 @@ namespace eCAL
         entry.size = entry_.message.size();
         entry.snd_timestamp = entry_.send_timestamp;
         entry.rcv_timestamp = entry_.receive_timestamp;
-        entry.sender_id = id;
+        // We no longer set an entry_id, deprecated with hdf5 v5.
         entry.clock = clock;
 
         meas->AddEntryToFile(entry);
@@ -63,11 +62,13 @@ namespace eCAL
         return *this;
       }
 
-      OBinaryChannel& operator<<(const SenderID& id_)
-      {
-        id = id_.ID;
-        return *this;
-      }
+      ~OBinaryChannel() = default;
+
+      OBinaryChannel(const OBinaryChannel&) = delete;
+      OBinaryChannel& operator=(const OBinaryChannel&) = delete;
+
+      OBinaryChannel(OBinaryChannel&& rhs) = default;
+      OBinaryChannel& operator=(OBinaryChannel&& rhs) = default;
 
       bool operator==(const OBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
       bool operator!=(const OBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
@@ -77,7 +78,6 @@ namespace eCAL
       const experimental::measurement::base::Channel channel;
       std::shared_ptr<experimental::measurement::base::Writer> meas;
 
-      long long id;
       long long clock;
     };
 
