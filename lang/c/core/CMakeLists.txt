@@ -23,14 +23,20 @@ project(core_c VERSION ${eCAL_VERSION_STRING})
 # c interface
 ######################################
 set(ecal_c_src
+    src/auxiliaries.cpp
     src/client.cpp
+    src/client_instance.cpp
     src/common.cpp
     src/common.h
+    src/configuration.cpp
+    src/configuration.h
+    src/config.cpp
     src/core.cpp
     src/log.cpp
     src/monitoring.cpp
     src/process.cpp
     src/publisher.cpp
+    src/registration.cpp
     src/server.cpp
     src/subscriber.cpp
     src/time.cpp
@@ -52,22 +58,39 @@ endif()
 # public header
 ######################################
 set(ecal_header_cimpl
+    include/ecal_c/config/application.h
+    include/ecal_c/config/configuration.h
+    include/ecal_c/config/logging.h
+    include/ecal_c/config/publisher.h
+    include/ecal_c/config/registration.h
+    include/ecal_c/config/subscriber.h
+    include/ecal_c/config/time.h
+    include/ecal_c/config/transport_layer.h
+    include/ecal_c/pubsub/payload_writer.h
     include/ecal_c/pubsub/publisher.h
     include/ecal_c/pubsub/subscriber.h
+    include/ecal_c/pubsub/types.h
     include/ecal_c/service/client.h
+    include/ecal_c/service/client_instance.h
     include/ecal_c/service/server.h
-    include/ecal_c/service/service_info.h
-    include/ecal_c/callback.h
+    include/ecal_c/service/types.h
+    include/ecal_c/types/custom_data_types.h
+    include/ecal_c/types/logging.h
+    include/ecal_c/types/monitoring.h
+    include/ecal_c/auxiliaries.h
+    include/ecal_c/config.h
     include/ecal_c/core.h
     include/ecal_c/ecal.h
     include/ecal_c/export.h
     include/ecal_c/init.h
     include/ecal_c/log.h
+    include/ecal_c/log_level.h
     include/ecal_c/monitoring.h
     include/ecal_c/process.h
+    include/ecal_c/process_severity.h
+    include/ecal_c/registration.h
     include/ecal_c/time.h
     include/ecal_c/timer.h
-    include/ecal_c/tlayer.h
     include/ecal_c/types.h
     include/ecal_c/util.h
 )

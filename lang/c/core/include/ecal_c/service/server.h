@@ -27,92 +27,81 @@
 
 #include <ecal_c/export.h>
 #include <ecal_c/types.h>
+#include <ecal_c/service/types.h>
 
-#include <ecal_c/service/service_info.h>
-#include <ecal_c/callback.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
-  /**
-   * @brief Create a server. 
-   *
-   * @param service_name_  Service name.
-   *
-   * @return  Handle to created server or NULL if failed.
-  **/
-  ECALC_API ECAL_HANDLE eCAL_Server_Create(const char* service_name_);
+  typedef struct eCAL_ServiceServer eCAL_ServiceServer;
 
   /**
-   * @brief Destroy a server. 
+   * @brief Creates a new server instance
    *
-   * @param handle_  Server handle. 
-   *
-   * @return  None zero if succeeded.
+   * @param service_name_   Unique service name.
+   * @param event_callback_ Callback function for server events. Optional, can be NULL.
+   * 
+   * @return Server handle if succeeded, NULL otherwise. The handle needs to be released by eCAL_ServiceServer_Delete().
   **/
-  ECALC_API int eCAL_Server_Destroy(ECAL_HANDLE handle_);
+  ECALC_API eCAL_ServiceServer* eCAL_ServiceServer_New(const char* service_name_, eCAL_ServerEventCallbackT event_callback_);
 
   /**
-   * @brief Add a server method callback.
-   * @since eCAL 5.10.0   
+   * @brief Deletes a server instance
    *
-   * @param handle_     Server handle.
-   * @param method_     Service method name.
-   * @param req_type_   Method request type (default = "").
-   * @param resp_type_  Method response type (default = "").
-   * @param callback_   Callback function for server request.
-   * @param par_        User defined context that will be forwarded to the request function.
-   *
-   * @return  None zero if succeeded.
+   * @param service_server_  Server handle.
   **/
-  ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void * par_);
+  ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_);
 
   /**
-   * @brief Remove a server method callback.
-   * @since eCAL 5.10.0   
+   * @brief Set/overwrite a method callback, that will be invoked, when a connected client is making a service call.
    *
-   * @param handle_  Server handle.
-   * @param method_  Service method name.
+   * @param service_server_  Server handle.
+   * @param method_info_     Service method information (method name, request & response types).
+   * @param callback_        Callback function for client request.
+   * @param user_argument_   User argument that is forwarded to the callback. Optional, can be NULL.
    *
-   * @return  None zero if succeeded.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_);
+  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_, void* user_argument_);
+  
+  /**
+   * @brief Remove method callback.
+   *
+   * @param service_server_  Server handle.
+   * @param method_          Service method name.
+   *
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
+  ECALC_API int eCAL_ServiceServer_RemoveMethodCallback(eCAL_ServiceServer* service_server_, const char* method_name_);
 
   /**
-   * @brief Add server event callback function.
+   * @brief Retrieve service name.
    *
-   * @param handle_    Server handle.
-   * @param type_      The event type to react on.
-   * @param callback_  The callback function to add.
-   * @param par_       User defined context that will be forwarded to the callback function.
+   * @param service_server_  Server handle.
    *
-   * @return  True if succeeded, false if not.
+   * @return The service name.
   **/
-  ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_);
+  ECALC_API const char* eCAL_ServiceServer_GetServiceName(eCAL_ServiceServer* service_server_);
 
   /**
-   * @brief Remove server event callback function.
+   * @brief Retrieve the service id.
    *
-   * @param handle_  Server handle.
-   * @param type_    The event type to remove.
+   * @param service_server_  Server handle.
    *
-   * @return  True if succeeded, false if not.
+   * @return The service id.
   **/
-  ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_);
-    
-  /**
-   * @brief Retrieve the service name.
-   *
-   * @param       handle_   Server handle.
-   * @param [out] buf_      Pointer to store the server service string.
-   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
-   *
-   * @return  Description buffer length or zero if failed.
-  **/
-  ECALC_API int eCAL_Server_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_);
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_);
 
+  /**
+   * @brief Check connection state.
+   *
+   * @param service_server_  Server handle.
+   *
+   * @return Non-zero if connected, zero otherwise.
+  **/
+  ECALC_API int eCAL_ServiceServer_IsConnected(eCAL_ServiceServer* service_server_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

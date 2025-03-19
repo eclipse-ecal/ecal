@@ -25,24 +25,57 @@
 #ifndef ecal_c_init_h_included
 #define ecal_c_init_h_included
 
-#define eCAL_Init_Publisher   0x01                          /*!< Initialize Publisher API            */
-#define eCAL_Init_Subscriber  0x02                          /*!< Initialize Subscriber API           */
-#define eCAL_Init_Service     0x04                          /*!< Initialize Service API              */
-#define eCAL_Init_Monitoring  0x08                          /*!< Initialize Monitoring API           */
-#define eCAL_Init_Logging     0x10                          /*!< Initialize Logging API              */
-#define eCAL_Init_TimeSync    0x20                          /*!< Initialize Time API                 */
+#include <ecal_c/config/configuration.h>
 
-#define eCAL_Init_All        (eCAL_Init_Publisher  \
-                            | eCAL_Init_Subscriber \
-                            | eCAL_Init_Service    \
-                            | eCAL_Init_Monitoring \
-                            | eCAL_Init_Logging    \
-                            | eCAL_Init_TimeSync)           /*!< Initialize complete eCAL API        */
+#define ECAL_INIT_PUBLISHER 0x001
+#define ECAL_INIT_SUBSCRIBER 0x002
+#define ECAL_INIT_SERVICE 0x004
+#define ECAL_INIT_MONITORING 0x008
+#define ECAL_INIT_LOGGING 0x010
+#define ECAL_INIT_TIMESYNC 0x020
+#define ECAL_INIT_NONE 0x000
 
-#define eCAL_Init_Default    (eCAL_Init_Publisher  \
-                            | eCAL_Init_Subscriber \
-                            | eCAL_Init_Service    \
-                            | eCAL_Init_Logging    \
-                            | eCAL_Init_TimeSync)           /*!< Initialize default eCAL API          */
+static const unsigned int eCAL_Init_Publisher = ECAL_INIT_PUBLISHER;
+static const unsigned int eCAL_Init_Subscriber = ECAL_INIT_SUBSCRIBER;
+static const unsigned int eCAL_Init_Service = ECAL_INIT_SERVICE;
+static const unsigned int eCAL_Init_Monitoring = ECAL_INIT_MONITORING;
+static const unsigned int eCAL_Init_Logging = ECAL_INIT_LOGGING;
+static const unsigned int eCAL_Init_TimeSync = ECAL_INIT_TIMESYNC;
+
+static const unsigned int eCAL_Init_All = ECAL_INIT_PUBLISHER
+| ECAL_INIT_SUBSCRIBER
+| ECAL_INIT_SERVICE
+| ECAL_INIT_MONITORING
+| ECAL_INIT_LOGGING
+| ECAL_INIT_TIMESYNC;
+
+static const unsigned int eCAL_Init_Default = ECAL_INIT_PUBLISHER
+| ECAL_INIT_SUBSCRIBER
+| ECAL_INIT_SERVICE
+| ECAL_INIT_LOGGING
+| ECAL_INIT_TIMESYNC;
+
+static const unsigned int eCAL_Init_None = ECAL_INIT_NONE;
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /*__cplusplus*/
+  /**
+   * @brief Convenience function for initializing a new configuration
+   *
+   * @return Handle to configuration instance if succeeded, NULL otherwise. The handle needs to be released by eCAL_Coniguration_Delete().
+  **/
+  inline eCAL_Configuration* eCAL_Init_Configuration()
+  {
+    eCAL_Configuration* config;
+    config = eCAL_Configuration_New();
+    eCAL_Configuration_InitFromConfig(config);
+    return config;
+  }
+#ifdef __cplusplus
+}
+#endif /*__cplusplus*/
+
 
 #endif /*ecal_c_init_h_included*/

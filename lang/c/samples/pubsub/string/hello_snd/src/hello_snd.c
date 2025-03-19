@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,31 +21,41 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main()
 {
-  ECAL_HANDLE pub     = 0;
+  eCAL_Publisher* publisher;
+  struct eCAL_SDataTypeInformation data_type_information;
   char        snd_s[] = "HELLO WORLD FROM C";
-  int         sent    = 0;
 
   // initialize eCAL API
-  eCAL_Initialize("minimalc_snd", eCAL_Init_Default);
+  eCAL_Initialize("hello_snd_c", NULL, NULL);
 
   // create publisher "Hello"
-  pub = eCAL_Pub_New();
-  eCAL_Pub_Create(pub, "Hello", "std::string", "base", "", 0);
+  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
+  data_type_information.name = "string";
+  data_type_information.encoding = "utf-8";
 
+  publisher = eCAL_Publisher_New("hello", &data_type_information, NULL, NULL);
+
+  printf("Publisher id: %ul\n\n", (unsigned long)eCAL_Publisher_GetTopicId(publisher)->topic_id.entity_id);
+  
   // send updates
   while(eCAL_Ok())
   {
     // send content
-    sent = eCAL_Pub_Send(pub, snd_s, (int)strlen(snd_s), -1);
-    if(sent <= 0) printf("Sending topic \"Hello\" failed !\n");
-    else          printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+    if(!eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), NULL))
+      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+    else
+      printf("Sending topic \"Hello\" failed !\n");
 
     // sleep 100 ms
     eCAL_Process_SleepMS(100);
   }
+
+  // delete publisher handle
+  eCAL_Publisher_Delete(publisher);
 
   // finalize eCAL API
   eCAL_Finalize();

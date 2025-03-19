@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,44 +19,48 @@
 
 #include <ecal_c/ecal.h>
 
-#include <stdio.h>
+#include <stdio.h> // printf()
 
 int main()
 {
-  // the client handle
-  ECAL_HANDLE hclient = 0;
+  // The client handle
+  eCAL_ServiceClient *client;
 
-  // initialize eCAL API
-  eCAL_Initialize("minimal client c", eCAL_Init_Default);
+  // Initialize eCAL API
+  eCAL_Initialize("minimal client c", NULL, NULL);
 
-  // create client for "service1"
-  hclient = eCAL_Client_Create("service1");
+  // Create client for "service1"
+  client = eCAL_ServiceClient_New("service1", NULL, 0, NULL);
 
-  // call service method
+  // Call service method
   while (eCAL_Ok())
   {
-    struct SServiceResponseC service_response;
-    char                     request[]                 = "HELLO";
-    char                     response[sizeof(request)] = { 0 };
-    // call method "echo"
+    char                          request[] = "HELLO";
+    struct eCAL_SServiceResponse* response = NULL;
+    size_t                        response_length = 0;
+
+    // Call method "echo"
     printf("Calling service1:echo ..\n");
-    if (eCAL_Client_Call_Wait(hclient, "echo", request, sizeof(request), -1, &service_response, &response, sizeof(response)))
+    if (!eCAL_ServiceClient_CallWithResponse(client, "echo", request, sizeof(request), &response, &response_length, NULL))
     {
-      // process response
-      switch (service_response.call_state)
+      for (size_t i = 0; i < response_length; ++i)
       {
-      case call_state_executed:
-        printf("Method 'echo' executed. Response : ");
-        printf("%s", response);
-        printf("\n\n");
-        break;
-      case call_state_failed:
-        printf("Method 'echo' failed. Error : ");
-        printf("%s", service_response.error_msg);
-        printf("\n\n");
-        break;
-      default:
-        break;
+        // Query responses from all servers that response to method "echo"
+        switch (response[i].call_state)
+        {
+        case eCAL_eCallState_executed:
+          printf("Method 'echo' executed. Response : ");
+          printf("%s", (char*)response[i].response);
+          printf("\n\n");
+          break;
+        case eCAL_eCallState_failed:
+          printf("Method 'echo' failed. Error : ");
+          printf("%s", response[i].error_msg);
+          printf("\n\n");
+          break;
+        default:
+          break;
+        }
       }
     }
     else
@@ -64,15 +68,18 @@ int main()
       printf("Service / method not found :-(\n\n");
     }
 
-    // sleep a second
+    // Memory of response array needs to be deallocated explicitly.
+    eCAL_Free(response);
+
+    // Sleep a second
     eCAL_Process_SleepMS(1000);
   }
 
-  // destroy client for "service1"
-  eCAL_Client_Destroy(hclient);
+  // Destroy client for "service1"
+  eCAL_ServiceClient_Delete(client);
 
-  // finalize eCAL API
+  // Finalize eCAL API
   eCAL_Finalize();
 
-  return(0);
+  return 0;
 }
