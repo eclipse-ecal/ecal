@@ -25,7 +25,7 @@
 using namespace Continental::eCAL::Core;
 using namespace Internal;
 
-void Logger::Log(LogLevel level, System::String^ message)
+void Logging::Log(LogLevel level, System::String^ message)
 {
   // Convert the managed string to a native std::string
   std::string nativeMsg = StringToStlString(message);
@@ -33,4 +33,11 @@ void Logger::Log(LogLevel level, System::String^ message)
   // Cast the managed LogLevel to the native eCAL::Logging::eLogLevel.
   // The values match, so a static_cast is sufficient.
   ::eCAL::Logging::Log(static_cast<::eCAL::Logging::eLogLevel>(level), nativeMsg);
+}
+
+array<Byte>^ Logging::GetLogging()
+{
+  std::string logging;
+  ::eCAL::Logging::GetLogging(logging);
+  return StlStringToByteArray(logging);
 }

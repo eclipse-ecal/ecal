@@ -18,46 +18,41 @@
 */
 
 /**
- * @file person_rec_csharp.cs
+ * @file monitoring_rec_csharp.cs
  *
- * @brief A minimal example of using the eCAL API to receive protobuf messages.
+ * @brief A minimal example of using the eCAL Monitoring API.
  *
- * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "person" (using "Pb.People.Person" as the data type), register
- * a receive callback to process incoming messages, and keep the application running until eCAL
- * is terminated. It serves as a basic reference for implementing a protobuf subscriber in C#.
+ * This example demonstrates how to initialize the eCAL API, print version information, get monitoring data.
  */
 
 using System;
 using Continental.eCAL.Core;
 
-public class PersonReceive
+public class MonitoringReceive
 {
   public static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("person subscriber csharp");
+    Core.Initialize("monitoring receive csharp", Init.Monitoring);
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a protobuf subscriber (topic name "person").
-    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
-
-    // Register a receive callback.
-    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
-    {
-      Console.WriteLine(String.Format("Receiving: {0}", data.Message.ToString()));
-    });
-
     // Idle main thread.
     while (Core.Ok())
     {
-      System.Threading.Thread.Sleep(100);
-    }
+      // Get monitoring data.
+      var monitoring_bytes = Monitoring.GetMonitoring(MonitoringEntity.All);
 
-    // Dispose subscriber.
-    subscriber.Dispose();
+      // Parse monitoring data.
+      var monitoring = ECAL.Pb.Monitoring.Parser.ParseFrom(monitoring_bytes);
+
+      // Print monitoring data.      
+      Console.WriteLine(String.Format("Receiving: {0}", monitoring.ToString()));
+
+      // Sleep for a second.
+      System.Threading.Thread.Sleep(1000);
+    }
 
     // Finalize eCAL API.
     Core.Terminate();

@@ -44,7 +44,7 @@ namespace Continental {
       /**
        * @brief eCAL logging class.
       **/
-      public ref class Logger
+      public ref class Logging
       {
       public:
         /**
@@ -54,6 +54,13 @@ namespace Continental {
          * @param message  The message string to log.
         **/
         static void Log(LogLevel level, System::String^ message);
+
+        /**
+         * @brief Get global log message as raw message bytes.
+         *
+         * @return The logging message as a byte array.
+         **/
+        static array<Byte>^ GetLogging();
       };
 
     } // namespace Core

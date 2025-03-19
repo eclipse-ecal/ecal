@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,46 +17,22 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_core.h"
-#include "ecal_clr_common.h"
+syntax = "proto3";
 
-#include <ecal/core.h>
-#include <ecal/defs.h>
+package eCAL.pb;
 
-using namespace Continental::eCAL::Core;
-using namespace Internal;
-
-System::String^ Core::GetVersion()
+message LogMessage                                // eCAL log message
 {
-  return ECAL_VERSION;
+  int64                 time           =  1;      // time
+  string                host_name      =  2;      // host name
+  int32                 process_id     =  3;      // process id
+  string                process_name   =  4;      // process name
+  string                unit_name      =  5;      // unit name
+  int32                 level          =  6;      // message level
+  string                content        =  7;      // message content
 }
 
-System::String^ Core::GetDate()
+message LogMessageList                            // eCAL log message list
 {
-  return ECAL_DATE;
-}
-
-void Core::Initialize(System::String^ unitName)
-{
-  ::eCAL::Initialize(StringToStlString(unitName));
-}
-
-void Core::Initialize(System::String^ unitName, Init componentFlags)
-{
-  ::eCAL::Initialize(StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
-}
-
-void Core::Terminate()
-{
-  ::eCAL::Finalize();
-}
-
-bool Core::IsInitialized()
-{
-  return ::eCAL::IsInitialized();
-}
-
-bool Core::Ok()
-{
-  return ::eCAL::Ok();
+  repeated LogMessage   log_messages   =  1;      // log messages
 }
