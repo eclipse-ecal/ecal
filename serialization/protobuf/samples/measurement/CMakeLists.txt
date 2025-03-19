@@ -24,14 +24,7 @@ find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
 macro(create_measurement_sample target_name sample_sources)
-  set(person_proto
-      ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/animal.proto
-      ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/house.proto
-      ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/person.proto
-  )
-  
   ecal_add_sample(${target_name} ${sample_sources})
-  PROTOBUF_TARGET_CPP(${target_name} ${CMAKE_CURRENT_SOURCE_DIR}/protobuf ${person_proto})
   
   target_link_libraries(${target_name}
     PRIVATE
@@ -45,7 +38,22 @@ macro(create_measurement_sample target_name sample_sources)
   set_property(TARGET ${target_name} PROPERTY FOLDER samples/cpp/measurement/protobuf)
 endmacro()
 
-create_measurement_sample(person_read   person_read.cpp)
-create_measurement_sample(person_write  person_write.cpp)
+macro(create_measurement_sample_with_protos target_name sample_sources)
+  create_measurement_sample(${target_name} ${sample_sources})
+  
+  set(person_proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/animal.proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/house.proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/person.proto
+  )
 
+  PROTOBUF_TARGET_CPP(${target_name} ${CMAKE_CURRENT_SOURCE_DIR}/protobuf ${person_proto})
+endmacro()
 
+# Samples to statically read from / write to the measurement
+create_measurement_sample_with_protos(person_read   person_read.cpp)
+create_measurement_sample_with_protos(person_write  person_write.cpp)
+
+# Samples to dynamically read information from the measurement
+create_measurement_sample(person_dyn_json_read      person_dyn_json_read.cpp)
+create_measurement_sample(person_dyn_read           person_dyn_read.cpp)

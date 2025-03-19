@@ -42,7 +42,7 @@ namespace eCAL
       using MessageT = T;
 
       IMessageChannel(IChannel&& binary_channel_)
-        : m_serializer{}
+        : m_serializer{std::make_shared<Serializer>()}
         , binary_channel(std::move(binary_channel_))
       {
       }
@@ -113,7 +113,7 @@ namespace eCAL
         virtual Frame<T> operator*() const
         {
           BinaryFrame binary_frame = *it;
-          message = owner.m_serializer.Deserialize(binary_frame.message.c_str(), binary_frame.message.size(), owner.GetDataypeInformation());
+          message = owner.m_serializer->Deserialize(binary_frame.message.c_str(), binary_frame.message.size(), owner.GetDataypeInformation());
           return make_frame(message, binary_frame.send_timestamp, binary_frame.receive_timestamp);
         };
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
@@ -141,7 +141,7 @@ namespace eCAL
       IChannel binary_channel;
       mutable T message;
 
-      Serializer m_serializer;
+      std::shared_ptr<Serializer> m_serializer;
     };
 
     template <typename Channel>
