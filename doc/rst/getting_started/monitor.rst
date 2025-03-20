@@ -61,7 +61,7 @@ Let us walk through the main panels of the eCAL Monitor!
 3. **System information**
    
    Here you can see some useful information about your system and your eCAL configuration.
-   You can also find the "cloud-configuration" setting we talked about in the :ref:`getting_started_cloud` section!
+   You can also find the "network-configuration" setting we talked about in the :ref:`getting_started_network` section!
 
 
 .. hint::

@@ -6,7 +6,7 @@ from ecal.core.publisher import StringPublisher
 
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be "Python Hello World Publisher"
-  ecal_core.initialize(sys.argv, "Python Hello World Publisher")
+  ecal_core.initialize("Python Hello World Publisher")
 
   # Create a String Publisher that publishes on the topic "hello_world_python_topic"
   pub = StringPublisher("hello_world_python_topic")

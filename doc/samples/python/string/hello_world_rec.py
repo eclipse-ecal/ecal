@@ -10,7 +10,7 @@ def callback(topic_name, msg, time):
 
 if __name__ == "__main__":
   # Initialize eCAL
-  ecal_core.initialize(sys.argv, "Python Hello World Publisher")
+  ecal_core.initialize("Python Hello World Publisher")
 
   # Create a subscriber that listenes on the "hello_world_python_topic"
   sub = StringSubscriber("hello_world_python_topic")
