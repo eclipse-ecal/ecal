@@ -29,7 +29,6 @@ target_sources(string_base
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/string/message.h
       include/ecal/msg/string/serializer.h  
 )
 

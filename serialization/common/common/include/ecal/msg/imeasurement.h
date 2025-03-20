@@ -62,7 +62,7 @@ namespace eCAL
       {
         auto binary_entry = binary_channel[entry];
         
-        message = m_deserializer.Deserialize(binary_entry.message.c_str(), binary_entry.message.size(), GetDataypeInformation());
+        message = m_serializer->Deserialize(binary_entry.message.c_str(), binary_entry.message.size(), GetDataypeInformation());
         return make_frame(message, binary_entry.send_timestamp, binary_entry.receive_timestamp);
       }
 
