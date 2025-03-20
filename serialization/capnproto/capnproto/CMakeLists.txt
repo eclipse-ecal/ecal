@@ -57,8 +57,8 @@ add_library(eCAL::capnproto_core ALIAS capnproto_core)
 
 target_link_libraries(capnproto_core 
   INTERFACE 
-    eCAL::message_core
     eCAL::capnproto_base
+    eCAL::message_core
 )
 
 target_sources(capnproto_core
@@ -80,4 +80,36 @@ install(
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   FILE_SET capnproto_core_headers COMPONENT sdk
+)
+
+##########################
+# Protobuf measurement extension
+##########################
+add_library(capnproto_measurement INTERFACE)
+add_library(eCAL::capnproto_measurement ALIAS capnproto_measurement)
+
+target_link_libraries(capnproto_measurement 
+  INTERFACE 
+    eCAL::capnproto_base
+    eCAL::message_measurement
+)
+
+target_sources(capnproto_measurement
+  INTERFACE
+    FILE_SET capnproto_measurement_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/capnproto/imeasurement.h
+      include/ecal/msg/capnproto/omeasurement.h
+)
+
+target_compile_features(capnproto_measurement INTERFACE cxx_std_14)
+
+install(
+  TARGETS capnproto_measurement
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET capnproto_measurement_headers COMPONENT sdk
 )

@@ -35,6 +35,7 @@ if(ECAL_CAPNPROTO_BUILD_SAMPLES)
   add_subdirectory(samples/pubsub/addressbook_receive)
   add_subdirectory(samples/pubsub/addressbook_receive_dynamic)
   add_subdirectory(samples/pubsub/addressbook_send)
+  add_subdirectory(samples/measurement)
 endif()
 
 # --------------------------------------------------------
