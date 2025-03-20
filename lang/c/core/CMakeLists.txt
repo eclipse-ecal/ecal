@@ -26,7 +26,7 @@ set(ecal_c_src
     src/auxiliaries.cpp
     src/client.cpp
     src/client_instance.cpp
-    src/common.cpp
+    src/client_instance.h
     src/common.h
     src/configuration.cpp
     src/configuration.h
