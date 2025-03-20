@@ -30,6 +30,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <sstream>
 
 #ifdef _MSC_VER
 #pragma warning(push, 0) // disable proto warnings
