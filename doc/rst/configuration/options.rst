@@ -28,16 +28,16 @@ It will generate the files in the first of the marked directories that is writab
 
   1. ``%ECAL_DATA%\ecal.yaml``
   2. ``%cd%\ecal.yaml``
-  3. ``%localappdata%\eCAL\ecal.yaml`` *
-  4. ``%ProgramData%\eCAL\ecal.yaml`` *
-  5. ``<ecal installation directory>\etc\ecal.yaml``
+  3. |ecalconfig-path-windows| *
+  4. ``%ProgramData%\eCAL\ecal.yaml`` * (fallback)
+  5. ``<ecal installation directory>\etc\ecal.yaml`` (fallback)
 
 - |fa-ubuntu| Ubuntu:
 
   1. ``$ECAL_DATA/ecal.yaml``
   2. ``$PWD/ecal.yaml``
   3. ``$HOME/.ecal/ecal.yaml`` *
-  4. ``/etc/ecal/ecal.yaml`` (fallback)
+  4. |ecalconfig-path-ubuntu| (fallback)
       
       
 .. note::
@@ -45,8 +45,10 @@ It will generate the files in the first of the marked directories that is writab
   When compiling eCAL from source:
   
   In previous versions (before eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it on Linux.
+  
   This is not the case anymore. 
-  Instead, when installing your build to a custom path, a directory next to ``lib``/ ``bin`` named ``etc`` will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
+  
+  Instead, when installing your build to a custom path, a directory next to ``lib`` named ``etc`` will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
   That file in etc relativ to the ecal_core library will be used if no other is found.
   
 

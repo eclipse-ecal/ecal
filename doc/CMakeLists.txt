@@ -85,15 +85,12 @@ add_custom_target(documentation_copy_config_file
 set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
 
 if (DEFINED ECAL_GENERATED_YAML_PATH)
-  message(STATUS "ECAL_GENERATED_YAML_PATH is defined: ${ECAL_GENERATED_YAML_PATH}")
   add_custom_command(TARGET documentation_copy_config_file
     COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_SOURCE_DIRECTORY}/configuration_files
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
     COMMAND ${CMAKE_COMMAND} -E echo "Configuration file copied successfully."
     COMMAND ${CMAKE_COMMAND} -E echo "Configuration file not found, skipping copy." IF NOT EXISTS ${ECAL_GENERATED_YAML_PATH}
   )
-else()
-  message(STATUS "ECAL_GENERATED_YAML_PATH is not defined")
 endif()
 
 #######################################
