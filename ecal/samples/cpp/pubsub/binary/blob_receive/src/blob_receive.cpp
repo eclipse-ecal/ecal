@@ -44,7 +44,7 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("blob_receive");
 
-  // subscriber for topic "blob"S
+  // subscriber for topic "blob"
   eCAL::CSubscriber sub("blob");
 
   // assign callback
