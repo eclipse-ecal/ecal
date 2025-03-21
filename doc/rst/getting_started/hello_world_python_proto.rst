@@ -97,7 +97,7 @@ For that, create a file :file:`hello_world_snd.py` next to your :file:`proto_mes
    │  └─ |fa-file-alt| hello_world.proto
    └─ |fa-python| :download:`hello_world_snd.py </source_code_samples/python/protobuf/hello_world_snd.py>`
 
-.. literalinclude:: /source_code_samples/python/protobuf/protobuf_snd.py
+.. literalinclude:: /source_code_samples/python/protobuf/hello_world_snd.py
    :language: python
    :linenos:
 

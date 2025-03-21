@@ -93,7 +93,7 @@ If you don't have a second PC or virtual machine at hand, you can just as well s
 eCAL Sys consists of a host- and a client-application.
 The GUI (`ecal_sys_gui /.exe`) acts as host, that sends commands to the client.
 The client application is `ecal_sys_client /.exe`.
-The applications use eCAL Services to communicate, so make sure that you have completed the :ref:`Hostname Resolution Tutorial<getting_started_services_cloud>` from the eCAL Services chapter.
+The applications use eCAL Services to communicate, so make sure that you have completed the :ref:`Hostname Resolution Tutorial<getting_started_services_network>` from the eCAL Services chapter.
 
 .. sidebar:: Single PC
 

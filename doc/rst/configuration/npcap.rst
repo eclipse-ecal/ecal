@@ -37,16 +37,14 @@ How to use Npcap
       - Download an old version of NPCAP: `NPCAP 0.9996 <https://nmap.org/npcap/dist/npcap-0.9996.exe>`_
       - Select the "Legacy loopback support" when installing NPCAP
 
-#. Edit |ecalini-path-windows|:
+#. Edit |ecalconfig-path-windows|:
 
-   .. code-block:: yaml
-      
-      # Transport layer configuration
-      transport_layer:
-        udp:
-         [..]
-          # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
-          npcap_enabled: true
+.. literalinclude:: /configuration_files/ecal.yaml
+   :language: yaml
+   :linenos:
+   :lines: 56-78
+   :emphasize-lines: 77,78
+
     
 #. Check eCAL Mon
 

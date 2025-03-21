@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(minimal_rec_c)
+project(hello_rec_c)
 
 find_package(eCAL REQUIRED)
 
 remove_definitions(-std=c++14)
 
-set(minimal_rec_c_src
-    src/minimal_rec.c
+set(hello_rec_c_src
+    src/hello_rec.c
 )
 
-ecal_add_sample(${PROJECT_NAME} ${minimal_rec_c_src})
+ecal_add_sample(${PROJECT_NAME} ${hello_rec_c_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 

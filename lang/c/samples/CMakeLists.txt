@@ -21,9 +21,8 @@ cmake_minimum_required(VERSION 3.10)
 # c samples
 # --------------------------------------------------------
 # pubsub
-add_subdirectory(pubsub/string/minimal_snd)
-add_subdirectory(pubsub/string/minimal_rec)
-add_subdirectory(pubsub/string/minimal_rec_cb)
+add_subdirectory(pubsub/string/hello_snd)
+add_subdirectory(pubsub/string/hello_rec)
 
 #service
 add_subdirectory(services/minimal_client_c)
