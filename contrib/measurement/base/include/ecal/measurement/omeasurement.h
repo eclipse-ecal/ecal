@@ -103,7 +103,7 @@ namespace eCAL
     inline OChannel OMeasurement::Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const
     {
       // Construct a channel based
-      static std::atomic<eCAL::experimental::measurement::base::Channel::id_t> i = 0;
+      static eCAL::experimental::measurement::base::Channel::id_t i = 0;
       return OChannel{ meas, {channel_, ++i}, datatype_info_ };
     }
 
