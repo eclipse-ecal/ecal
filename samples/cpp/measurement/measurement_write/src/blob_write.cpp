@@ -17,33 +17,31 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   subscriber.h
- * @brief  eCAL subscriber interface for google::protobuf message definitions
-**/
+#include <ecal/measurement/omeasurement.h>
 
-#pragma once
+#include <iostream>
 
-#include <ecal/msg/subscriber.h>
-#include <ecal/msg/protobuf/serializer.h>
+constexpr auto ONE_SECOND = 1000000;
 
-namespace eCAL
+int main(int /*argc*/, char** /*argv*/)
 {
-  namespace protobuf
+  // create a new measurement
+  eCAL::measurement::OMeasurement meas(".");
+
+  // create a channel (topic name "blob")
+  eCAL::measurement::OChannel blob_channel = meas.Create("blob", eCAL::experimental::measurement::base::DataTypeInformation{});
+
+  // std::string serves as a binary container for data
+  // std::vector<std::byte> would be more appropriate if eCAL supported C++17
+  std::string binary_data("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", 8);
+
+  long long timestamp = 0;
+
+  for (int i = 0; i< 100; i++)
   {
-
-    /**
-     * @brief  eCAL google::protobuf subscriber class.
-     *
-     * Subscriber template  class for google::protobuf messages. For details see documentation of CSubscriber class.
-     *
-    **/
-    template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T, ::eCAL::SDataTypeInformation>>;
-
-    /** @example person_rec.cpp
-    * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .
-    */
+    blob_channel << eCAL::measurement::make_frame(binary_data, timestamp);
+    timestamp += ONE_SECOND;
   }
-}
 
+  return 0;
+}

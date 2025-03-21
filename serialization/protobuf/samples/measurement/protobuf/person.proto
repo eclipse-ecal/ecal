@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto2";
+syntax = "proto3";
 
 import "animal.proto";
 import "house.proto";
@@ -32,11 +32,11 @@ message Person
     FEMALE = 1;
   }
 
-  required int32  id               = 1;
-  required string name             = 2;
-  optional SType  stype            = 3;
-  optional string email            = 4;
+  int32  id               = 1;
+  string name             = 2;
+  SType  stype            = 3;
+  string email            = 4;
 
-  optional Animal.Dog        dog   = 5;
-  optional Environment.House house = 6;
+  Animal.Dog        dog   = 5;
+  Environment.House house = 6;
 }

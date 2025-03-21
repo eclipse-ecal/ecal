@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/proto/message.h>
-#include <ecal/msg/string/message.h>
-#include <ecal/measurement/omeasurement.h>
+#include <ecal/msg/flatbuffers/omeasurement.h>
 
 #include <iostream>
 
-#include "person.pb.h"
+#include "monster/monster_generated.h"
 
 constexpr auto ONE_SECOND = 1000000;
 
@@ -32,22 +30,21 @@ int main(int /*argc*/, char** /*argv*/)
   // create a new measurement
   eCAL::measurement::OMeasurement meas(".");
 
-  // create a channel (topic name "person")
-  eCAL::measurement::OChannel<pb::People::Person> person_channel = meas.Create<pb::People::Person>("person");
-  eCAL::measurement::OStringChannel string_channel = meas.Create<std::string>("string");
-
-  pb::People::Person person;
-  person.set_name("Max");
+  // create a channel (topic name "addressbook")
+  eCAL::flatbuffers::OChannel<Game::Sample::MonsterT> monster_channel = eCAL::measurement::CreateChannel<eCAL::flatbuffers::OChannel<Game::Sample::MonsterT>>(meas, "monster");
 
   long long timestamp = 0;
 
-  for (int i = 0; i< 100; i++)
-  {
-    person.set_id(i);
-    std::string my_string{ "String no " + std::to_string(i) };
+  Game::Sample::MonsterT message;
+  message.name = "Monster";
+  message.pos = std::make_unique<Game::Sample::Vec3>(1.0f, 2.0f, 3.0f);
 
-    person_channel << eCAL::measurement::make_frame(person, timestamp);
-    string_channel << eCAL::measurement::make_frame(my_string, timestamp);
+  for (uint8_t i = 0; i < 100; i++)
+  {
+    message.inventory.push_back(i);
+
+    // the message can now be piped into the measurement
+    monster_channel << eCAL::measurement::make_frame(message, timestamp);
     timestamp += ONE_SECOND;
   }
 

@@ -24,25 +24,32 @@
 
 #pragma once
 
-#include <ecal/msg/subscriber.h>
+#include <ecal/msg/imeasurement.h>
 #include <ecal/msg/protobuf/serializer.h>
+#include <ecal/msg/protobuf/dynamic_serializer.h>
 
 namespace eCAL
 {
   namespace protobuf
   {
-
     /**
-     * @brief  eCAL google::protobuf subscriber class.
-     *
-     * Subscriber template  class for google::protobuf messages. For details see documentation of CSubscriber class.
-     *
+     * @brief  eCAL google::protobuf channel class.
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T, ::eCAL::SDataTypeInformation>>;
+    using IChannel = ::eCAL::measurement::IMessageChannel<T, internal::Serializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
 
-    /** @example person_rec.cpp
-    * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .
+    namespace dynamic
+    {
+      using IChannel = ::eCAL::measurement::IMessageChannel<std::shared_ptr<google::protobuf::Message>, internal::ProtobufDynamicDeserializer<eCAL::experimental::measurement::base::DataTypeInformation>>;
+    }
+        
+    namespace json
+    {
+      using IChannel = ::eCAL::measurement::IMessageChannel<std::string, internal::ProtobufDynamicJSONDeserializer<eCAL::experimental::measurement::base::DataTypeInformation>>;
+    }
+
+    /** @example person_read.cpp
+    * This is an example how to use eCAL::protobuf::IChannel to read protobuf data from a measurement.
     */
   }
 }

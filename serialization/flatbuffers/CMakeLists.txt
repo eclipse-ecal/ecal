@@ -34,6 +34,7 @@ add_subdirectory(flatbuffers)
 if(ECAL_FLATBUFFERS_BUILD_SAMPLES)
   add_subdirectory(samples/pubsub/monster_rec)
   add_subdirectory(samples/pubsub/monster_snd)
+  add_subdirectory(samples/measurement)
 endif()
 
 # --------------------------------------------------------

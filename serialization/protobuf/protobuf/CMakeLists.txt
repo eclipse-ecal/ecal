@@ -19,6 +19,7 @@
 ##########################
 # Protobuf base functionality
 ##########################
+
 find_package(Protobuf REQUIRED)
 ecal_add_library(protobuf_base)
 add_library(eCAL::protobuf_base ALIAS protobuf_base)
@@ -35,6 +36,7 @@ target_sources(protobuf_base
       include/ecal/msg/protobuf/ecal_proto_maximum_array_dimensions.h
       include/ecal/msg/protobuf/ecal_proto_message_filter.h
       include/ecal/msg/protobuf/ecal_proto_visitor.h
+      include/ecal/msg/protobuf/serializer.h
   PRIVATE
     src/ecal_proto_decoder.cpp
     src/ecal_proto_dyn.cpp
@@ -55,7 +57,7 @@ install(
   FILE_SET protobuf_base_headers COMPONENT sdk
 )
 
-set_property(TARGET protobuf_base PROPERTY FOLDER core)
+set_property(TARGET protobuf_base PROPERTY FOLDER serialization/protobuf)
 
 ##########################
 # Protobuf core communication extension
@@ -93,8 +95,6 @@ target_sources(protobuf_core
       include/ecal/msg/protobuf/publisher.h
       include/ecal/msg/protobuf/server.h
       include/ecal/msg/protobuf/subscriber.h
-      include/ecal/msg/protobuf/serializer.h
-
 )
 
 target_compile_features(protobuf_core INTERFACE cxx_std_14)
@@ -105,4 +105,37 @@ install(
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   FILE_SET proto_headers COMPONENT sdk
+)
+
+
+##########################
+# Protobuf measurement extension
+##########################
+add_library(protobuf_measurement INTERFACE)
+add_library(eCAL::protobuf_measurement ALIAS protobuf_measurement)
+
+target_link_libraries(protobuf_measurement 
+  INTERFACE 
+    eCAL::protobuf_base
+    eCAL::message_measurement
+)
+
+target_sources(protobuf_measurement
+  INTERFACE
+    FILE_SET proto_measurement_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/protobuf/imeasurement.h
+      include/ecal/msg/protobuf/omeasurement.h
+)
+
+target_compile_features(protobuf_measurement INTERFACE cxx_std_14)
+
+install(
+  TARGETS protobuf_measurement
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET proto_measurement_headers COMPONENT sdk
 )

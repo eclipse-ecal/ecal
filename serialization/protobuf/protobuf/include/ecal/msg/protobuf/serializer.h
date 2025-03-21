@@ -34,13 +34,13 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename T>
+      template <typename T, typename DatatypeInformation>
       class Serializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
+          DatatypeInformation topic_info{};
           static T msg{};
           topic_info.encoding = "proto";
           topic_info.name = msg.GetTypeName();
@@ -63,7 +63,7 @@ namespace eCAL
           return msg_.SerializeToArray(buffer_, static_cast<int>(size_));
         }
 
-        static T Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& /*data_type_info_*/)
+        static T Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& /*data_type_info_*/)
         {
           T msg;
           // we try to parse the message from the received buffer

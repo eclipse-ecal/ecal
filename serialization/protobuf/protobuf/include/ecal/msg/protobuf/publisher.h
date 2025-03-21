@@ -38,7 +38,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CPublisher = CMessagePublisher<T, internal::Serializer<T>>;
+    using CPublisher = CMessagePublisher<T, internal::Serializer<T, ::eCAL::SDataTypeInformation>>;
   }
   /** @example person_snd.cpp
    * This is an example how to use eCAL::CPublisher to send google::protobuf data with eCAL. To receive the data, see @ref person_rec.cpp .

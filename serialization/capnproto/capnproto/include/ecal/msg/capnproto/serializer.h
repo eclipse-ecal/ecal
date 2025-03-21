@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <map>
 #include <cstddef>
 #include <ecal/msg/capnproto/helper.h>
 #include <ecal/msg/exception.h>

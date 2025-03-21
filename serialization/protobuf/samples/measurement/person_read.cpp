@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/msg/proto/message.h>
-#include <ecal/measurement/imeasurement.h>
+#include <ecal/msg/protobuf/imeasurement.h>
 
 #include <iostream>
 
@@ -38,13 +37,13 @@ void print_person(const pb::People::Person& person)
 int main(int /*argc*/, char** /*argv*/)
 {
   // create a new measurement
-  eCAL::measurement::IMeasurement meas(MEASUREMENT_PATH);
+  eCAL::measurement::IMeasurement meas(".");
 
   // create a channel (topic name "person")
   auto person_channels = meas.Channels("person");
   if (person_channels.size() > 0)
   {
-    eCAL::measurement::IChannel<pb::People::Person> person_channel = meas.Get<pb::People::Person>(*person_channels.begin());
+    eCAL::protobuf::IChannel<pb::People::Person> person_channel{ eCAL::measurement::GetChannel<eCAL::protobuf::IChannel<pb::People::Person>>(meas, *person_channels.begin()) };
 
     // iterate over the messages
     for (const auto& person_entry : person_channel)
