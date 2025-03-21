@@ -191,7 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cloud.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">4. Network configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="services.html">5. eCAL Services</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="monitor.html">6.1.  Monitor</a></li>
@@ -386,7 +386,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../configuration/cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/network.html">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -779,9 +779,9 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
-<p><strong>Line 10</strong> adds Protobuf as dependency</p>
-<p><strong>Line 16-18</strong> Creates a list of .proto files. We only have one.</p>
-<p><strong>Line 22</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).
+<p><strong>Line 9</strong> adds Protobuf as dependency</p>
+<p><strong>Line 15-17</strong> Creates a list of .proto files. We only have one.</p>
+<p><strong>Line 21</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).
 The <code class="docutils literal notranslate"><span class="pre">PROTOBUF_TARGET_CPP</span></code> function is a convenience function from eCAL.
 If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="o">}</span><span class="p">)</span>
@@ -789,7 +789,7 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">PROTO_SRCS</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">PROTO_HDRS</span><span class="o">}</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Line 26</strong> links the executable against protobuf</p>
+<p><strong>Line 23-26</strong> links the executable against protobuf</p>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
@@ -934,8 +934,8 @@ So, you will only see messages that were sent <em>after</em> you have opened the
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
 <p><strong>Line 9</strong> is our subscriber callback (you have already seen a callback in the last Hello World Tutorial).
-This time however it receives a protobuf object.
-<strong>Line 11-13</strong> use the handy protobuf accessor methods to print the data to the terminal.</p>
+This time however it receives a protobuf object.</p>
+<p><strong>Line 11-13</strong> use the handy protobuf accessor methods to print the data to the terminal.</p>
 <p><strong>Line 20</strong> Creates an eCAL protobuf subscriber.
 Just like the publisher, it is templated to the <code class="docutils literal notranslate"><span class="pre">proto_messages::HelloWorld</span></code> message.</p>
 <p><strong>Line 23</strong> Sets the callback, so eCAL can call it whenever a new message is received.</p>

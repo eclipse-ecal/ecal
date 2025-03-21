@@ -191,7 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/cloud.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/network.html">4. Network configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/services.html">5. eCAL Services</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/monitor.html">6.1.  Monitor</a></li>
@@ -386,7 +386,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -686,18 +686,7 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-strategy-priority">Loading strategy (Priority)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-yaml-options">ecal.yaml options</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registration-settings-are-listed-in-the-section-registration">Registration settings are listed in the section <code class="docutils literal notranslate"><span class="pre">registration</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-settings-are-listed-in-the-section-monitoring">Monitoring settings are listed in the section <code class="docutils literal notranslate"><span class="pre">monitoring</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transportlayer-settings-are-listed-in-the-section-transport-layer">Transportlayer settings are listed in the section <code class="docutils literal notranslate"><span class="pre">transport_layer</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#publisher-settings-are-listed-in-the-section-publisher">Publisher settings are listed in the section <code class="docutils literal notranslate"><span class="pre">publisher</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscriber-settings-are-listed-in-the-section-subscriber">Subscriber settings are listed in the section <code class="docutils literal notranslate"><span class="pre">subscriber</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-settings-are-listed-in-the-section-time">Time settings are listed in the section <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-settings-are-listed-in-the-section-service">Service settings are listed in the section <code class="docutils literal notranslate"><span class="pre">service</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-settings-are-listed-in-the-section-application">Application settings are listed in the section <code class="docutils literal notranslate"><span class="pre">application</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-settings-are-listed-in-the-section-logging">Logging settings are listed in the section <code class="docutils literal notranslate"><span class="pre">logging</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-yaml-options">ecal.yaml options</a></li>
 </ul>
             </nav>
         </div>
@@ -711,9 +700,9 @@
                   
   <section id="ecal-yaml">
 <span id="configuration-options"></span><h1>ecal.yaml<a class="headerlink" href="#ecal-yaml" title="Link to this heading">#</a></h1>
-<p>eCAL has many options that can be configured via an .ini file which is located at:</p>
+<p>eCAL has many options that can be configured via an .yaml file which is located at:</p>
 <ul class="simple">
-<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.yaml</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">%localappdata%\eCAL\ecal.yaml</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code></p></li>
 </ul>
 <section id="loading-strategy-priority">
@@ -722,602 +711,276 @@
 If you want a specific eCAL Node to run with another <code class="docutils literal notranslate"><span class="pre">ecal.yaml</span></code> than the others, you can set the <code class="docutils literal notranslate"><span class="pre">ECAL_DATA</span></code> variable before starting the process, e.g. from a batch or shell skript.
 Also, if you place a <code class="docutils literal notranslate"><span class="pre">ecal.yaml</span></code> in the working directory of the process, it will be loaded if <code class="docutils literal notranslate"><span class="pre">ECAL_DATA</span></code> is not specified first.</p>
 <p>In order to create the eCAL configuration files in the marked (*) directories, you can use the <code class="docutils literal notranslate"><span class="pre">ecal_generate_config</span></code> tool, which is part of the eCAL installation.
-It will generate the files only in the first found base path.</p>
+It will generate the files in the first of the marked directories that is writable.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>This loading strategy is valid for eCAL 6.0 and up.</p>
 </div>
-<ul>
+<ul class="simple">
 <li><p><i class="fab fa-windows"></i> Windows:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">%ECAL_DATA%/ecal.yaml</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%cd%/ecal.yaml</span></code></p></li>
-<li><p><a href="#id1"><span class="problematic" id="id2">``</span></a>%UserProfile%/AppData/Local/eCAL/ecal.yaml``*</p></li>
-<li><p><a href="#id3"><span class="problematic" id="id4">``</span></a>%ProgramData%/eCAL/ecal.yaml``*</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecal</span> <span class="pre">installation</span> <span class="pre">directory&gt;/etc/ecal.yaml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%ECAL_DATA%\ecal.yaml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%cd%\ecal.yaml</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">%localappdata%\eCAL\ecal.yaml</span></code> *</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%ProgramData%\eCAL\ecal.yaml</span></code> * (fallback)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecal</span> <span class="pre">installation</span> <span class="pre">directory&gt;\etc\ecal.yaml</span></code> (fallback)</p></li>
 </ol>
 </li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$ECAL_DATA/ecal.yaml</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">$PWD/ecal.yaml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$HOME/.ecal/ecal.yaml</span></code> *</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code> (fallback)</p></li>
 </ol>
-<p>3. <code class="docutils literal notranslate"><span class="pre">$HOME/.ecal/ecal.yaml``*</span>
-<span class="pre">3.</span> <span class="pre">``/etc/ecal/ecal.yaml</span></code> (fallback)</p>
 </li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>When compiling eCAL from source:</p>
-<p>In previous versions (previous eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it on Linux.
-This is not the case anymore.
-Instead, when installing your build to a custom path, a directory next to <code class="docutils literal notranslate"><span class="pre">lib</span></code>/ <code class="docutils literal notranslate"><span class="pre">bin</span></code> named <code class="docutils literal notranslate"><span class="pre">etc</span></code> will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
+<p>In previous versions (before eCAL 6.0.0), you could set CMAKE_INSTALL_SYSCONFDIR to change the default configuration path and the applications could still find it on Linux.</p>
+<p>This is not the case anymore.</p>
+<p>Instead, when installing your build to a custom path, a directory next to <code class="docutils literal notranslate"><span class="pre">lib</span></code> named <code class="docutils literal notranslate"><span class="pre">etc</span></code> will be created containing the ecal.yaml file if no CMAKE_INSTALL_SYSCONFDIR is set.
 That file in etc relativ to the ecal_core library will be used if no other is found.</p>
 </div>
 </section>
 <section id="ecal-yaml-options">
 <h2>ecal.yaml options<a class="headerlink" href="#ecal-yaml-options" title="Link to this heading">#</a></h2>
-<section id="registration-settings-are-listed-in-the-section-registration">
-<h3>Registration settings are listed in the section <code class="docutils literal notranslate"><span class="pre">registration</span></code><a class="headerlink" href="#registration-settings-are-listed-in-the-section-registration" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-registration">
-<span class="sig-name descname"><span class="pre">registration</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-registration" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-registration_refresh">
-<span class="sig-name descname"><span class="pre">registration_refresh</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-registration_refresh" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">registration_timeout/2</span></code>, default <code class="docutils literal notranslate"><span class="pre">1000</span></code></p>
-<p>topic registration refresh cycle (has to be smaller than registration timeout!)</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-registration_timeout">
-<span class="sig-name descname"><span class="pre">registration_timeout</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-registration_timeout" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1000</span> <span class="pre">+</span> <span class="pre">(x</span> <span class="pre">*</span> <span class="pre">1000)</span></code>, default <code class="docutils literal notranslate"><span class="pre">60000</span></code></p>
-<p>timeout for topic registration in ms</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-loopback">
-<span class="sig-name descname"><span class="pre">loopback</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-loopback" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code>, default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>enable to receive registration information on the same local machine</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-shm_transport_domain">
-<span class="sig-name descname"><span class="pre">shm_transport_domain</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-shm_transport_domain" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">&lt;hostname&gt;</span></code>, default <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
-<p>shm transport domain that enables interprocess mechanisms across (virtual) host borders (e.g. Docker);
-by default equivalent to local host name</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-network_enabled">
-<span class="sig-name descname"><span class="pre">network_enabled</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-network_enabled" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code>, default: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">true</span></code>  = all eCAL components communicate over network boundaries</p>
-<p><code class="docutils literal notranslate"><span class="pre">false</span></code> = local host only communication</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-layer">
-<span class="sig-name descname"><span class="pre">layer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-layer" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-shm">
-<span class="sig-name descname"><span class="pre">shm</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-shm" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-enabled">
-<span class="sig-name descname"><span class="pre">enabled</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-enabled" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code>, default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>enable shared memory layer</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-domain">
-<span class="sig-name descname"><span class="pre">domain</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-domain" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">ecal_mon</span></code></p>
-<p>Domain name for shared momory based registration</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-queue_size">
-<span class="sig-name descname"><span class="pre">queue_size</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-queue_size" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1024</span></code></p>
-<p>Queue size of registration events</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-udp">
-<span class="sig-name descname"><span class="pre">udp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-udp" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-0">
-<span class="sig-name descname"><span class="pre">enabled</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-0" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code>, default: <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>enable UDP multicast layer</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-port">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-port" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">14000</span> <span class="pre">+</span> <span class="pre">x</span></code></p>
-<p>UDP port for registration information if UDP is enabled</p>
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="monitoring-settings-are-listed-in-the-section-monitoring">
-<h3>Monitoring settings are listed in the section <code class="docutils literal notranslate"><span class="pre">monitoring</span></code><a class="headerlink" href="#monitoring-settings-are-listed-in-the-section-monitoring" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-monitoring">
-<span class="sig-name descname"><span class="pre">monitoring</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-monitoring" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-timeout">
-<span class="sig-name descname"><span class="pre">timeout</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-timeout" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1000</span> <span class="pre">+</span> <span class="pre">(x</span> <span class="pre">*</span> <span class="pre">1000)</span></code> default <code class="docutils literal notranslate"><span class="pre">1000</span></code>
-Timeout for topic monitoring in ms
-If no additional registration information for the topic has be received in that time period, topics will no longer be shown in eCAL Monitor.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-filter_excl">
-<span class="sig-name descname"><span class="pre">filter_excl</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-filter_excl" title="Link to this definition">#</a></dt>
-<dd><p>topics blacklist as regular expression (will not be monitored)
-Per default includes all eCAL internal topics.</p>
-<p>default = <code class="docutils literal notranslate"><span class="pre">^__.*$</span></code></p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-filter_incl">
-<span class="sig-name descname"><span class="pre">filter_incl</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-filter_incl" title="Link to this definition">#</a></dt>
-<dd><p>topics whitelist as regular expression (will be monitored only)</p>
-<p>default = `` ``</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="transportlayer-settings-are-listed-in-the-section-transport-layer">
-<h3>Transportlayer settings are listed in the section <code class="docutils literal notranslate"><span class="pre">transport_layer</span></code><a class="headerlink" href="#transportlayer-settings-are-listed-in-the-section-transport-layer" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-transport_layer">
-<span class="sig-name descname"><span class="pre">transport_layer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-transport_layer" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-1">
-<span class="sig-name descname"><span class="pre">udp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-1" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-config_version">
-<span class="sig-name descname"><span class="pre">config_version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-config_version" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<p><code class="docutils literal notranslate"><span class="pre">v1</span></code> / <code class="docutils literal notranslate"><span class="pre">v2</span></code>, default: <code class="docutils literal notranslate"><span class="pre">v2</span></code></p>
-<p>UDP configuration version (Since eCAL 5.12.)</p>
-<p><code class="docutils literal notranslate"><span class="pre">v1</span></code> = default behavior</p>
-<p><code class="docutils literal notranslate"><span class="pre">v2</span></code> = new behavior, comes with a bit more intuitive handling regarding masking of the groups</p>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-mode">
-<span class="sig-name descname"><span class="pre">mode</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-mode" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">local</span></code> / <code class="docutils literal notranslate"><span class="pre">network</span></code>, default: <code class="docutils literal notranslate"><span class="pre">local</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">local</span></code>  = use local network settings - not configurable by the user</p>
-<p><code class="docutils literal notranslate"><span class="pre">network</span></code> = use network settings - configurable by the user</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-2">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-2" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">14000</span> <span class="pre">+</span> <span class="pre">x</span></code></p>
-<p>UDP multicast port number</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-mask">
-<span class="sig-name descname"><span class="pre">mask</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-mask" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">v1</span></code> <strong>behavior:</strong></p>
-<p><code class="docutils literal notranslate"><span class="pre">0.0.0.1</span></code>-<code class="docutils literal notranslate"><span class="pre">0.0.0.255</span></code></p>
-<p>Mask maximum number of dynamic multicast group</p>
-<p><code class="docutils literal notranslate"><span class="pre">v2</span></code> <strong>behavior:</strong></p>
-<p><code class="docutils literal notranslate"><span class="pre">255.0.0.0</span></code>-<code class="docutils literal notranslate"><span class="pre">255.255.255.255</span></code></p>
-<p>Mask for the multicast group. Topic traffic may be set on any of the unmasked addresses.</p>
-<p>With <code class="docutils literal notranslate"><span class="pre">group</span></code>: <code class="docutils literal notranslate"><span class="pre">239.0.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">mask</span></code>: <code class="docutils literal notranslate"><span class="pre">255.255.255.0</span></code>, topic traffic will be sent on addresses <code class="docutils literal notranslate"><span class="pre">239.0.0.0</span></code>-<code class="docutils literal notranslate"><span class="pre">239.0.0.255</span></code>.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-send_buffer">
-<span class="sig-name descname"><span class="pre">send_buffer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-send_buffer" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1024</span> <span class="pre">*</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">5242880</span></code></p>
-<p>UDP send buffer in bytes</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-receive_buffer">
-<span class="sig-name descname"><span class="pre">receive_buffer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-receive_buffer" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1024</span> <span class="pre">*</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">5242880</span></code></p>
-<p>UDP receive buffer in bytes</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-join_all_interfaces">
-<span class="sig-name descname"><span class="pre">join_all_interfaces</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-join_all_interfaces" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Linux specific setting to join all network interfaces independend of their link state.
-Enabling ensures that eCAL processes receive data when they are started before the
-network devices are up and running.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-npcap_enabled">
-<span class="sig-name descname"><span class="pre">npcap_enabled</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-npcap_enabled" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable to receive UDP traffic with the Npcap based receiver</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-local">
-<span class="sig-name descname"><span class="pre">local</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-local" title="Link to this definition">#</a></dt>
-<dd><p>In local mode the UDP multicast group is set to the local host address (“127.0.0.1”) and the multicast TTL is set to 0 by default.
-This is not configurable.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-network">
-<span class="sig-name descname"><span class="pre">network</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-network" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-group">
-<span class="sig-name descname"><span class="pre">group</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-group" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">xxx.xxx.xxx.xxx</span></code> IP address as text, default <code class="docutils literal notranslate"><span class="pre">239.0.0.1</span></code></p>
-<p>Multicast group base: all registration and logging is sent on this address</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-ttl">
-<span class="sig-name descname"><span class="pre">ttl</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-ttl" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
-<p>TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-tcp">
-<span class="sig-name descname"><span class="pre">tcp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-tcp" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-number_executor_reader">
-<span class="sig-name descname"><span class="pre">number_executor_reader</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-number_executor_reader" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
-<p>Number of reader threads that shall execute workload</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-number_executor_writer">
-<span class="sig-name descname"><span class="pre">number_executor_writer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-number_executor_writer" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
-<p>Number of writer threads that shall execute workload</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-max_reconnections">
-<span class="sig-name descname"><span class="pre">max_reconnections</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-max_reconnections" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
-<p>Reconnection attemps the session will try to reconnect in case of an issue</p>
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="publisher-settings-are-listed-in-the-section-publisher">
-<h3>Publisher settings are listed in the section <code class="docutils literal notranslate"><span class="pre">publisher</span></code><a class="headerlink" href="#publisher-settings-are-listed-in-the-section-publisher" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-publisher">
-<span class="sig-name descname"><span class="pre">publisher</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-publisher" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-3">
-<span class="sig-name descname"><span class="pre">layer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-3" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-4">
-<span class="sig-name descname"><span class="pre">shm</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-4" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-enable">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-enable" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Enable shared memory layer</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-zero_copy_mode">
-<span class="sig-name descname"><span class="pre">zero_copy_mode</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-zero_copy_mode" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable zero copy mode for shared memory transport mode</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-acknowledge_timeout_ms">
-<span class="sig-name descname"><span class="pre">acknowledge_timeout_ms</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-acknowledge_timeout_ms" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
-<p>Force connected subscribers to send acknowledge event after processing the message.
-The publisher send call is blocked on this event with this timeout (0 == no handshake).</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-memfile_buffer_count">
-<span class="sig-name descname"><span class="pre">memfile_buffer_count</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-memfile_buffer_count" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
-<p>Maximum number of used buffers (needs to be greater than 0, default = 1)</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-memfile_min_size_bytes">
-<span class="sig-name descname"><span class="pre">memfile_min_size_bytes</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-memfile_min_size_bytes" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">4096</span> <span class="pre">kB</span></code> default <code class="docutils literal notranslate"><span class="pre">4096</span></code></p>
-<p>Default memory file size for new publisher</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-memfile_reserve_percent">
-<span class="sig-name descname"><span class="pre">memfile_reserve_percent</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-memfile_reserve_percent" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">20</span> <span class="pre">..</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">50</span></code></p>
-<p>Dynamic file size reserve before recreating memory file if topic size changes</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-5">
-<span class="sig-name descname"><span class="pre">udp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-5" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-6">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-6" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Enable UDP multicast layer</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-7">
-<span class="sig-name descname"><span class="pre">tcp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-7" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-8">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-8" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable TCP layer</p>
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-share_topic_type">
-<span class="sig-name descname"><span class="pre">share_topic_type</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-share_topic_type" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Share topic type via registration layer</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-share_topic_description">
-<span class="sig-name descname"><span class="pre">share_topic_description</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-share_topic_description" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Share topic description via registration layer.
-If set to false, reflection is completely disabled. It is not possible then to monitor the content of messages in the eCAL Monitor.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-priority_local">
-<span class="sig-name descname"><span class="pre">priority_local</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-priority_local" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">[&quot;shm&quot;,</span> <span class="pre">&quot;udp&quot;,</span> <span class="pre">&quot;tcp&quot;]</span></code> default <code class="docutils literal notranslate"><span class="pre">[&quot;shm&quot;,</span> <span class="pre">&quot;udp&quot;,</span> <span class="pre">&quot;tcp&quot;]</span></code></p>
-<p>A list of transport layers as text that specifies the prioritized layer for local communication.</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-priority_remote">
-<span class="sig-name descname"><span class="pre">priority_remote</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-priority_remote" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">[&quot;udp&quot;,</span> <span class="pre">&quot;tcp&quot;]</span></code> default <code class="docutils literal notranslate"><span class="pre">[&quot;udp&quot;,</span> <span class="pre">&quot;tcp&quot;]</span></code></p>
-<p>A list of transport layers as text that specifies the prioritized layer for remote communication.</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="subscriber-settings-are-listed-in-the-section-subscriber">
-<h3>Subscriber settings are listed in the section <code class="docutils literal notranslate"><span class="pre">subscriber</span></code><a class="headerlink" href="#subscriber-settings-are-listed-in-the-section-subscriber" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-subscriber">
-<span class="sig-name descname"><span class="pre">subscriber</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-subscriber" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-9">
-<span class="sig-name descname"><span class="pre">layer</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-9" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-10">
-<span class="sig-name descname"><span class="pre">shm</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-10" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-11">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-11" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Enable shared memory layer</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-12">
-<span class="sig-name descname"><span class="pre">udp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-12" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-13">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-13" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Enable UDP multicast layer</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-14">
-<span class="sig-name descname"><span class="pre">tcp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-14" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-15">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-15" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable TCP layer</p>
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-drop_out_of_order_messages">
-<span class="sig-name descname"><span class="pre">drop_out_of_order_messages</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-drop_out_of_order_messages" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable dropping of payload messages that arrive out of order</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="time-settings-are-listed-in-the-section-time">
-<h3>Time settings are listed in the section <code class="docutils literal notranslate"><span class="pre">time</span></code><a class="headerlink" href="#time-settings-are-listed-in-the-section-time" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-time">
-<span class="sig-name descname"><span class="pre">time</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-time" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-rt">
-<span class="sig-name descname"><span class="pre">rt</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-rt" title="Link to this definition">#</a></dt>
-<dd><p>default: <code class="docutils literal notranslate"><span class="pre">&quot;ecaltime-localtime&quot;</span></code></p>
-<p>Module (dll / so) name time sync interface. The name will be extended with debug suffix (d) and platform extension (.dll|.so)</p>
-<p>Available modules are:</p>
-<ul class="simple">
-<li><p>ecaltime-localtime    local system time without synchronization</p></li>
-<li><p>ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux (device configuration in ecaltime.ini)</p></li>
-<li><p>ecaltime-simtime      Simulation time as published by the eCAL Player.</p></li>
+<p>Here you can find the current ecal.yaml options with description and default values. You can download the file here or generate it with the ecal_generate_config tool.</p>
+<ul>
+<li><p><i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/27431ec11a275c12bb2abe51ea0a24e6/ecal.yaml"><code class="xref download docutils literal notranslate"><span class="pre">ecal.yaml</span></code></a></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#  _____     _ _                                ____    _    _                             </span>
+<span class="linenos">  2</span><span class="c1"># | ____|___| (_)_ __  ___  ___            ___ / ___|  / \  | |                            </span>
+<span class="linenos">  3</span><span class="c1"># |  _| / __| | | &#39;_ \/ __|/ _ \  _____   / _ \ |     / _ \ | |                            </span>
+<span class="linenos">  4</span><span class="c1"># | |__| (__| | | |_) \__ \  __/ |_____| |  __/ |___ / ___ \| |___                         </span>
+<span class="linenos">  5</span><span class="c1"># |_____\___|_|_| .__/|___/\___|          \___|\____/_/   \_\_____|                        </span>
+<span class="linenos">  6</span><span class="c1">#               |_|                                                                            </span>
+<span class="linenos">  7</span><span class="c1">#        _       _           _                    __ _                       _   _             </span>
+<span class="linenos">  8</span><span class="c1">#   __ _| | ___ | |__   __ _| |   ___ ___  _ __  / _(_) __ _ _   _ _ __ __ _| |_(_) ___  _ __  </span>
+<span class="linenos">  9</span><span class="c1">#  / _` | |/ _ \| &#39;_ \ / _` | |  / __/ _ \| &#39;_ \| |_| |/ _` | | | | &#39;__/ _` | __| |/ _ \| &#39;_ \ </span>
+<span class="linenos"> 10</span><span class="c1"># | (_| | | (_) | |_) | (_| | | | (_| (_) | | | |  _| | (_| | |_| | | | (_| | |_| | (_) | | | |</span>
+<span class="linenos"> 11</span><span class="c1">#  \__, |_|\___/|_.__/ \__,_|_|  \___\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|</span>
+<span class="linenos"> 12</span><span class="c1">#  |___/                                               |___/                                   </span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span><span class="c1"># Operation configuration</span>
+<span class="linenos"> 16</span><span class="c1"># eCAL components communication mode (&quot;local&quot; or &quot;network&quot;):</span>
+<span class="linenos"> 17</span><span class="c1">#   &quot;local&quot;: local host only communication (default)</span>
+<span class="linenos"> 18</span><span class="c1">#   &quot;network&quot;: communication across network boundaries</span>
+<span class="linenos"> 19</span><span class="nt">communication_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;local&quot;</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span>
+<span class="linenos"> 22</span><span class="c1"># Registration layer configuration</span>
+<span class="linenos"> 23</span><span class="nt">registration</span><span class="p">:</span>
+<span class="linenos"> 24</span><span class="w">  </span><span class="c1"># Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)</span>
+<span class="linenos"> 25</span><span class="w">  </span><span class="nt">registration_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="linenos"> 26</span><span class="w">  </span><span class="c1"># Timeout for topic registration in ms (internal, Default: 60000)</span>
+<span class="linenos"> 27</span><span class="w">  </span><span class="nt">registration_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="linenos"> 28</span><span class="w">  </span><span class="c1"># Enable to receive registration information on the same local machine</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="nt">loopback</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos"> 30</span><span class="w">  </span><span class="c1"># SHM transport domain that enables interprocess mechanisms across (virtual)</span>
+<span class="linenos"> 31</span><span class="w">  </span><span class="c1"># host borders (e.g, Docker); by default equivalent to local host name</span>
+<span class="linenos"> 32</span><span class="w">  </span><span class="nt">shm_transport_domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="w">  </span><span class="nt">local</span><span class="p">:</span>
+<span class="linenos"> 35</span><span class="w">    </span><span class="c1"># Specify the transport type for local registration</span>
+<span class="linenos"> 36</span><span class="w">    </span><span class="c1">#   &quot;shm&quot;: shared memory based registration</span>
+<span class="linenos"> 37</span><span class="w">    </span><span class="c1">#   &quot;udp&quot;: udp based registration (default)</span>
+<span class="linenos"> 38</span><span class="w">    </span><span class="nt">transport_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;udp&quot;</span>
+<span class="linenos"> 39</span><span class="w">    </span><span class="nt">shm</span><span class="p">:</span>
+<span class="linenos"> 40</span><span class="w">      </span><span class="c1"># Domain name for shared memory based registration</span>
+<span class="linenos"> 41</span><span class="w">      </span><span class="nt">domain</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;ecal_mon&quot;</span>
+<span class="linenos"> 42</span><span class="w">      </span><span class="c1"># Queue size of registration events</span>
+<span class="linenos"> 43</span><span class="w">      </span><span class="nt">queue_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
+<span class="linenos"> 44</span><span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos"> 45</span><span class="w">      </span><span class="c1"># Specify port for local registration traffic</span>
+<span class="linenos"> 46</span><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14000</span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span><span class="w">  </span><span class="nt">network</span><span class="p">:</span>
+<span class="linenos"> 49</span><span class="w">    </span><span class="c1"># Specify the transport type for network registration</span>
+<span class="linenos"> 50</span><span class="w">    </span><span class="c1">#   &quot;udp&quot;: udp based registration (default)</span>
+<span class="linenos"> 51</span><span class="w">    </span><span class="nt">transport_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;udp&quot;</span>
+<span class="linenos"> 52</span><span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos"> 53</span><span class="w">    </span><span class="c1"># Specify port for network registration traffic</span>
+<span class="linenos"> 54</span><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14000</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span>
+<span class="linenos"> 57</span><span class="c1"># Transport layer configuration</span>
+<span class="linenos"> 58</span><span class="nt">transport_layer</span><span class="p">:</span>
+<span class="linenos"> 59</span><span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos"> 60</span><span class="w">    </span><span class="c1"># UDP configuration version (Since eCAL 5.12.)</span>
+<span class="linenos"> 61</span><span class="w">    </span><span class="c1"># v1: default behavior</span>
+<span class="linenos"> 62</span><span class="w">    </span><span class="c1"># v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups</span>
+<span class="linenos"> 63</span><span class="w">    </span><span class="nt">config_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2&quot;</span>
+<span class="linenos"> 64</span><span class="w">    </span><span class="c1"># Multicast port number</span>
+<span class="linenos"> 65</span><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14002</span>
+<span class="linenos"> 66</span><span class="w">    </span><span class="c1"># v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)</span>
+<span class="linenos"> 67</span><span class="w">    </span><span class="c1"># v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)</span>
+<span class="linenos"> 68</span><span class="w">    </span><span class="nt">mask</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;255.255.255.240&quot;</span>
+<span class="linenos"> 69</span><span class="w">    </span><span class="c1"># Send buffer in bytes</span>
+<span class="linenos"> 70</span><span class="w">    </span><span class="nt">send_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos"> 71</span><span class="w">    </span><span class="c1"># Receive buffer in bytes</span>
+<span class="linenos"> 72</span><span class="w">    </span><span class="nt">receive_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos"> 73</span><span class="w">    </span><span class="c1"># Linux specific setting to join all network interfaces independend of their link state.</span>
+<span class="linenos"> 74</span><span class="w">    </span><span class="c1"># Enabling ensures that eCAL processes receive data when they are started before the</span>
+<span class="linenos"> 75</span><span class="w">    </span><span class="c1"># network devices are up and running.</span>
+<span class="linenos"> 76</span><span class="w">    </span><span class="nt">join_all_interfaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos"> 77</span><span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
+<span class="linenos"> 78</span><span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos"> 79</span>
+<span class="linenos"> 80</span><span class="w">    </span><span class="c1"># Local mode multicast group and ttl</span>
+<span class="linenos"> 81</span><span class="w">    </span><span class="nt">local</span><span class="p">:</span>
+<span class="linenos"> 82</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
+<span class="linenos"> 83</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;127.255.255.255&quot;</span>
+<span class="linenos"> 84</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
+<span class="linenos"> 85</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="w">    </span><span class="nt">network</span><span class="p">:</span>
+<span class="linenos"> 88</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
+<span class="linenos"> 89</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;239.0.0.1&quot;</span>
+<span class="linenos"> 90</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
+<span class="linenos"> 91</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span><span class="w">  </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span>
+<span class="linenos"> 94</span><span class="w">    </span><span class="c1"># Reader amount of threads that shall execute workload</span>
+<span class="linenos"> 95</span><span class="w">    </span><span class="nt">number_executor_reader</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="linenos"> 96</span><span class="w">    </span><span class="c1"># Writer amount of threads that shall execute workload</span>
+<span class="linenos"> 97</span><span class="w">    </span><span class="nt">number_executor_writer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="linenos"> 98</span><span class="w">    </span><span class="c1"># Reconnection attemps the session will try to reconnect in case of an issue</span>
+<span class="linenos"> 99</span><span class="w">    </span><span class="nt">max_reconnections</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span><span class="c1"># Publisher specific base settings</span>
+<span class="linenos">103</span><span class="nt">publisher</span><span class="p">:</span>
+<span class="linenos">104</span><span class="w">  </span><span class="nt">layer</span><span class="p">:</span>
+<span class="linenos">105</span><span class="w">    </span><span class="c1"># Base configuration for shared memory publisher</span>
+<span class="linenos">106</span><span class="w">    </span><span class="nt">shm</span><span class="p">:</span>
+<span class="linenos">107</span><span class="w">      </span><span class="c1"># Enable layer</span>
+<span class="linenos">108</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">109</span><span class="w">      </span><span class="c1"># Enable zero copy shared memory transport mode</span>
+<span class="linenos">110</span><span class="w">      </span><span class="nt">zero_copy_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">111</span><span class="w">      </span><span class="c1"># Force connected subscribers to send acknowledge event after processing the message.</span>
+<span class="linenos">112</span><span class="w">      </span><span class="c1"># The publisher send call is blocked on this event with this timeout (0 == no handshake).</span>
+<span class="linenos">113</span><span class="w">      </span><span class="nt">acknowledge_timeout_ms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="linenos">114</span><span class="w">      </span><span class="c1"># Maximum number of used buffers (needs to be greater than 1, default = 1)</span>
+<span class="linenos">115</span><span class="w">      </span><span class="nt">memfile_buffer_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="linenos">116</span><span class="w">      </span><span class="c1"># Default memory file size for new publisher</span>
+<span class="linenos">117</span><span class="w">      </span><span class="nt">memfile_min_size_bytes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4096</span>
+<span class="linenos">118</span><span class="w">      </span><span class="c1"># Dynamic file size reserve before recreating memory file if topic size changes</span>
+<span class="linenos">119</span><span class="w">      </span><span class="nt">memfile_reserve_percent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span><span class="w">    </span><span class="c1"># Base configuration for UDP publisher</span>
+<span class="linenos">122</span><span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos">123</span><span class="w">      </span><span class="c1"># Enable layer</span>
+<span class="linenos">124</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">125</span>
+<span class="linenos">126</span><span class="w">    </span><span class="c1"># Base configuration for TCP publisher</span>
+<span class="linenos">127</span><span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
+<span class="linenos">128</span><span class="w">      </span><span class="c1"># Enable layer</span>
+<span class="linenos">129</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">130</span>
+<span class="linenos">131</span><span class="w">  </span><span class="c1"># Priority list for layer usage in local mode (Default: SHM &gt; UDP &gt; TCP)</span>
+<span class="linenos">132</span><span class="w">  </span><span class="nt">priority_local</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;shm&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;udp&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;tcp&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos">133</span><span class="w">  </span><span class="c1"># Priority list for layer usage in cloud mode (Default: UDP &gt; TCP)</span>
+<span class="linenos">134</span><span class="w">  </span><span class="nt">priority_network</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;udp&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;tcp&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span>
+<span class="linenos">137</span><span class="c1"># Subscriber specific base configuration</span>
+<span class="linenos">138</span><span class="nt">subscriber</span><span class="p">:</span>
+<span class="linenos">139</span><span class="w">  </span><span class="nt">layer</span><span class="p">:</span>
+<span class="linenos">140</span><span class="w">    </span><span class="c1"># Base configuration for shared memory subscriber</span>
+<span class="linenos">141</span><span class="w">    </span><span class="nt">shm</span><span class="p">:</span>
+<span class="linenos">142</span><span class="w">      </span><span class="c1"># Enable layer</span>
+<span class="linenos">143</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">144</span>
+<span class="linenos">145</span><span class="w">    </span><span class="c1"># Base configuration for UDP subscriber</span>
+<span class="linenos">146</span><span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos">147</span><span class="w">      </span><span class="c1"># Enabler layer</span>
+<span class="linenos">148</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span><span class="w">    </span><span class="c1"># Base configuration for TCP subscriber</span>
+<span class="linenos">151</span><span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
+<span class="linenos">152</span><span class="w">      </span><span class="c1"># Enable layer</span>
+<span class="linenos">153</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">154</span>
+<span class="linenos">155</span><span class="w">  </span><span class="c1"># Enable dropping of payload messages that arrive out of order</span>
+<span class="linenos">156</span><span class="w">  </span><span class="nt">drop_out_of_order_messages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span>
+<span class="linenos">159</span><span class="c1"># Time configuration</span>
+<span class="linenos">160</span><span class="nt">time</span><span class="p">:</span>
+<span class="linenos">161</span><span class="w">  </span><span class="c1"># Time synchronisation interface name (dynamic library)</span>
+<span class="linenos">162</span><span class="w">  </span><span class="c1"># The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)</span>
+<span class="linenos">163</span><span class="w">  </span><span class="c1"># Available modules are:</span>
+<span class="linenos">164</span><span class="w">  </span><span class="c1">#   - ecaltime-localtime    local system time without synchronization</span>
+<span class="linenos">165</span><span class="w">  </span><span class="c1">#   - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux</span>
+<span class="linenos">166</span><span class="w">  </span><span class="c1">#                           (device configuration in ecaltime.ini)</span>
+<span class="linenos">167</span><span class="w">  </span><span class="nt">rt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ecaltime-localtime&quot;</span>
+<span class="linenos">168</span><span class="w">  </span><span class="c1"># Specify the module name for replaying</span>
+<span class="linenos">169</span><span class="w">  </span><span class="nt">replay</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="linenos">170</span>
+<span class="linenos">171</span>
+<span class="linenos">172</span><span class="c1"># eCAL Application Configuration</span>
+<span class="linenos">173</span><span class="nt">application</span><span class="p">:</span>
+<span class="linenos">174</span><span class="w">  </span><span class="c1"># Configuration for eCAL Sys</span>
+<span class="linenos">175</span><span class="w">  </span><span class="nt">sys</span><span class="p">:</span>
+<span class="linenos">176</span><span class="w">    </span><span class="c1"># Apps blacklist to be excluded when importing tasks from cloud</span>
+<span class="linenos">177</span><span class="w">    </span><span class="nt">filter_excl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^eCALSysClient$|^eCALSysGUI$|^eCALSys$&quot;</span>
+<span class="linenos">178</span><span class="w">  </span><span class="c1"># Process specific configuration</span>
+<span class="linenos">179</span><span class="w">  </span><span class="nt">terminal</span><span class="p">:</span>
+<span class="linenos">180</span><span class="w">    </span><span class="c1"># Linux only command for starting applications with an external terminal emulator. </span>
+<span class="linenos">181</span><span class="w">    </span><span class="c1"># e.g. /usr/bin/x-terminal-emulator -e</span>
+<span class="linenos">182</span><span class="w">    </span><span class="c1">#      /usr/bin/gnome-terminal -x</span>
+<span class="linenos">183</span><span class="w">    </span><span class="c1">#      /usr/bin/xterm -e</span>
+<span class="linenos">184</span><span class="w">    </span><span class="c1"># If empty, the command will be ignored.</span>
+<span class="linenos">185</span><span class="w">    </span><span class="nt">emulator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span><span class="c1"># Logging configuration</span>
+<span class="linenos">189</span><span class="nt">logging</span><span class="p">:</span>
+<span class="linenos">190</span><span class="w">  </span><span class="c1"># Configuration for file, udp and console log provider</span>
+<span class="linenos">191</span><span class="w">  </span><span class="c1"># Possible levels are: &quot;info&quot;, &quot;warning&quot;, &quot;error&quot;, &quot;fatal&quot;, &quot;debug1&quot;, &quot;debug2&quot;, &quot;debug3&quot;, &quot;debug4&quot;</span>
+<span class="linenos">192</span><span class="w">  </span><span class="c1"># Can be combined like</span>
+<span class="linenos">193</span><span class="w">  </span><span class="c1"># log_level: [&quot;warning&quot;, &quot;fatal&quot;, &quot;debug1&quot;, ...]</span>
+<span class="linenos">194</span><span class="w">  </span><span class="nt">provider</span><span class="p">:</span>
+<span class="linenos">195</span><span class="w">    </span><span class="c1"># Console logging configuration</span>
+<span class="linenos">196</span><span class="w">    </span><span class="nt">console</span><span class="p">:</span>
+<span class="linenos">197</span><span class="w">      </span><span class="c1"># Enable console logging</span>
+<span class="linenos">198</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">199</span><span class="w">      </span><span class="c1"># Log level for console output</span>
+<span class="linenos">200</span><span class="w">      </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;warning&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;fatal&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos">201</span><span class="w">    </span><span class="c1"># File logging configuration</span>
+<span class="linenos">202</span><span class="w">    </span><span class="nt">file</span><span class="p">:</span>
+<span class="linenos">203</span><span class="w">      </span><span class="c1"># Enable file logging</span>
+<span class="linenos">204</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">205</span><span class="w">      </span><span class="c1"># Log level for file output</span>
+<span class="linenos">206</span><span class="w">      </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="linenos">207</span><span class="w">    </span><span class="c1"># UDP logging configuration</span>
+<span class="linenos">208</span><span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos">209</span><span class="w">      </span><span class="c1"># Enable UDP logging</span>
+<span class="linenos">210</span><span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">211</span><span class="w">      </span><span class="c1"># Log level for UDP output</span>
+<span class="linenos">212</span><span class="w">      </span><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;info&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;warning&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;fatal&quot;</span><span class="p p-Indicator">]</span>
+<span class="linenos">213</span><span class="w">    </span><span class="c1"># File specific configuration</span>
+<span class="linenos">214</span><span class="w">    </span><span class="nt">file_config</span><span class="p">:</span><span class="w"> </span>
+<span class="linenos">215</span><span class="w">      </span><span class="c1"># Log file path</span>
+<span class="linenos">216</span><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="linenos">217</span><span class="w">    </span><span class="c1"># UDP specific configuration</span>
+<span class="linenos">218</span><span class="w">    </span><span class="nt">udp_config</span><span class="p">:</span>
+<span class="linenos">219</span><span class="w">      </span><span class="c1"># UDP Port for sending logging data</span>
+<span class="linenos">220</span><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14001</span>
+<span class="linenos">221</span><span class="w">  </span><span class="c1"># Configuration for udp log receiver</span>
+<span class="linenos">222</span><span class="w">  </span><span class="nt">receiver</span><span class="p">:</span>
+<span class="linenos">223</span><span class="w">    </span><span class="c1"># Enable log receiving (UDP only)</span>
+<span class="linenos">224</span><span class="w">    </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">225</span><span class="w">    </span><span class="c1"># UDP specific configuration</span>
+<span class="linenos">226</span><span class="w">    </span><span class="nt">udp_config</span><span class="p">:</span>
+<span class="linenos">227</span><span class="w">      </span><span class="c1"># UDP Port for sending logging data</span>
+<span class="linenos">228</span><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14001</span>
+</pre></div>
+</div>
+</li>
 </ul>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-replay">
-<span class="sig-name descname"><span class="pre">replay</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-replay" title="Link to this definition">#</a></dt>
-<dd><p>default <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
-<p>Module name of time plugin for replaying</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="service-settings-are-listed-in-the-section-service">
-<h3>Service settings are listed in the section <code class="docutils literal notranslate"><span class="pre">service</span></code><a class="headerlink" href="#service-settings-are-listed-in-the-section-service" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-service">
-<span class="sig-name descname"><span class="pre">service</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-service" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-protocol_v0">
-<span class="sig-name descname"><span class="pre">protocol_v0</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-protocol_v0" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">true</span></code></p>
-<p>Support service protocol v0, eCAL 5.11 and older</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-protocol_v1">
-<span class="sig-name descname"><span class="pre">protocol_v1</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-protocol_v1" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Support service protocol v1, eCAL 5.12 and newer</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="application-settings-are-listed-in-the-section-application">
-<h3>Application settings are listed in the section <code class="docutils literal notranslate"><span class="pre">application</span></code><a class="headerlink" href="#application-settings-are-listed-in-the-section-application" title="Link to this heading">#</a></h3>
-</section>
-<section id="logging-settings-are-listed-in-the-section-logging">
-<h3>Logging settings are listed in the section <code class="docutils literal notranslate"><span class="pre">logging</span></code><a class="headerlink" href="#logging-settings-are-listed-in-the-section-logging" title="Link to this heading">#</a></h3>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-logging">
-<span class="sig-name descname"><span class="pre">logging</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-logging" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-sinks">
-<span class="sig-name descname"><span class="pre">sinks</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-sinks" title="Link to this definition">#</a></dt>
-<dd><p>Log levels are: “info”, “warning”, “error”, “fatal”, “debug1”, “debug2”, “debug3”, “debug4”</p>
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-console">
-<span class="sig-name descname"><span class="pre">console</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-console" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-16">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-16" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable console logging</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-level">
-<span class="sig-name descname"><span class="pre">level</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-level" title="Link to this definition">#</a></dt>
-<dd><p>List of log levels as text, default <code class="docutils literal notranslate"><span class="pre">[&quot;info&quot;,</span> <span class="pre">&quot;warning&quot;,</span> <span class="pre">&quot;error&quot;,</span> <span class="pre">&quot;fatal&quot;]</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-file">
-<span class="sig-name descname"><span class="pre">file</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-file" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-17">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-17" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable file logging</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-18">
-<span class="sig-name descname"><span class="pre">level</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-18" title="Link to this definition">#</a></dt>
-<dd><p>List of log levels as text, default <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-path">
-<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-path" title="Link to this definition">#</a></dt>
-<dd><p>Path as text, default <code class="docutils literal notranslate"><span class="pre">ecal.log</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-19">
-<span class="sig-name descname"><span class="pre">udp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-19" title="Link to this definition">#</a></dt>
-<dd><dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-20">
-<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-20" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code> default <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
-<p>Enable udp logging</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-21">
-<span class="sig-name descname"><span class="pre">level</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-21" title="Link to this definition">#</a></dt>
-<dd><p>List of log levels as text, default <code class="docutils literal notranslate"><span class="pre">[&quot;info&quot;,</span> <span class="pre">&quot;warning&quot;,</span> <span class="pre">&quot;error&quot;,</span> <span class="pre">&quot;fatal&quot;]</span></code></p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-arg-22">
-<span class="sig-name descname"><span class="pre">port</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-arg-22" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">14000</span> <span class="pre">+</span> <span class="pre">x</span></code> default <code class="docutils literal notranslate"><span class="pre">14001</span></code></p>
-<p>UDP port for logging information</p>
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</dd></dl>
-
-</section>
 </section>
 </section>
 
@@ -1368,18 +1031,7 @@ If set to false, reflection is completely disabled. It is not possible then to m
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-strategy-priority">Loading strategy (Priority)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-yaml-options">ecal.yaml options</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registration-settings-are-listed-in-the-section-registration">Registration settings are listed in the section <code class="docutils literal notranslate"><span class="pre">registration</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-settings-are-listed-in-the-section-monitoring">Monitoring settings are listed in the section <code class="docutils literal notranslate"><span class="pre">monitoring</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transportlayer-settings-are-listed-in-the-section-transport-layer">Transportlayer settings are listed in the section <code class="docutils literal notranslate"><span class="pre">transport_layer</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#publisher-settings-are-listed-in-the-section-publisher">Publisher settings are listed in the section <code class="docutils literal notranslate"><span class="pre">publisher</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subscriber-settings-are-listed-in-the-section-subscriber">Subscriber settings are listed in the section <code class="docutils literal notranslate"><span class="pre">subscriber</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-settings-are-listed-in-the-section-time">Time settings are listed in the section <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-settings-are-listed-in-the-section-service">Service settings are listed in the section <code class="docutils literal notranslate"><span class="pre">service</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-settings-are-listed-in-the-section-application">Application settings are listed in the section <code class="docutils literal notranslate"><span class="pre">application</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-settings-are-listed-in-the-section-logging">Logging settings are listed in the section <code class="docutils literal notranslate"><span class="pre">logging</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-yaml-options">ecal.yaml options</a></li>
 </ul>
   </nav></div>
 

@@ -191,7 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/cloud.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/network.html">4. Network configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/services.html">5. eCAL Services</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/monitor.html">6.1.  Monitor</a></li>
@@ -386,7 +386,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="local.html">Local configuration</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -726,16 +726,33 @@ Windows 7 did not have that issue.</p>
 </ul>
 </div>
 </li>
-<li><p>Edit <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.yaml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Transport layer configuration</span>
-<span class="nt">transport_layer</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
-<span class="w">   </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
-<span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<li><p>Edit <code class="file docutils literal notranslate"><span class="pre">%localappdata%\eCAL\ecal.yaml</span></code>:</p></li>
+</ol>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Transport layer configuration</span>
+<span class="linenos"> 2</span><span class="nt">transport_layer</span><span class="p">:</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="c1"># UDP configuration version (Since eCAL 5.12.)</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="c1"># v1: default behavior</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="c1"># v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nt">config_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2&quot;</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="c1"># Multicast port number</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14002</span>
+<span class="linenos">10</span><span class="w">    </span><span class="c1"># v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)</span>
+<span class="linenos">11</span><span class="w">    </span><span class="c1"># v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)</span>
+<span class="linenos">12</span><span class="w">    </span><span class="nt">mask</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;255.255.255.240&quot;</span>
+<span class="linenos">13</span><span class="w">    </span><span class="c1"># Send buffer in bytes</span>
+<span class="linenos">14</span><span class="w">    </span><span class="nt">send_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos">15</span><span class="w">    </span><span class="c1"># Receive buffer in bytes</span>
+<span class="linenos">16</span><span class="w">    </span><span class="nt">receive_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos">17</span><span class="w">    </span><span class="c1"># Linux specific setting to join all network interfaces independend of their link state.</span>
+<span class="linenos">18</span><span class="w">    </span><span class="c1"># Enabling ensures that eCAL processes receive data when they are started before the</span>
+<span class="linenos">19</span><span class="w">    </span><span class="c1"># network devices are up and running.</span>
+<span class="linenos">20</span><span class="w">    </span><span class="nt">join_all_interfaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">21</span><span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
+<span class="linenos">22</span><span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </pre></div>
 </div>
-</li>
+<ol class="arabic">
 <li><p>Check eCAL Mon</p>
 <img alt="Npcap in eCAL Monitor System Information" src="../_images/npcap_ecal_mon.svg" /></li>
 </ol>

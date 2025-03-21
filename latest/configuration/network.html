@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Cloud Configuration &#8212; Eclipse eCAL™</title>
+    <title>Network Configuration &#8212; Eclipse eCAL™</title>
   
   
   
@@ -50,7 +50,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'configuration/cloud';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'configuration/network';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
@@ -191,7 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/cloud.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/network.html">4. Network configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/services.html">5. eCAL Services</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/monitor.html">6.1.  Monitor</a></li>
@@ -386,7 +386,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Cloud Configuration</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -552,7 +552,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/configuration/cloud.rst" target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/configuration/network.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -569,7 +569,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fconfiguration/cloud.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fconfiguration/network.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -599,7 +599,7 @@
       
       
       
-      <li><a href="../_sources/configuration/cloud.rst" target="_blank"
+      <li><a href="../_sources/configuration/network.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -673,7 +673,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Cloud Configuration</h1>
+    <h1>Network Configuration</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -687,39 +687,27 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="cloud-configuration">
-<span id="configuration-cloud"></span><h1>Cloud Configuration<a class="headerlink" href="#cloud-configuration" title="Link to this heading">#</a></h1>
-<p>To switch eCAL to cloud mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> and change the following settings:</p>
+  <section id="network-configuration">
+<span id="configuration-network"></span><h1>Network Configuration<a class="headerlink" href="#network-configuration" title="Link to this heading">#</a></h1>
+<p>To switch eCAL to network mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> and change the following setting to <code class="docutils literal notranslate"><span class="pre">network</span></code>:</p>
 <ul class="simple">
-<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.yaml</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">%localappdata%\eCAL\ecal.yaml</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code></p></li>
+<li><p><i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/27431ec11a275c12bb2abe51ea0a24e6/ecal.yaml"><code class="xref download docutils literal notranslate"><span class="pre">ecal.yaml</span></code></a></p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Registration layer configuration</span>
-<span class="nt">registration</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="c1"># true  = all eCAL components communicate over network boundaries</span>
-<span class="w">  </span><span class="c1"># false = local host only communication (Default: false)</span>
-<span class="w">  </span><span class="nt">network_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-
-<span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-
-<span class="c1"># Transport layer configuration</span>
-<span class="nt">transport_layer</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">network</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
-<span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Operation configuration</span>
+<span class="linenos">2</span><span class="c1"># eCAL components communication mode (&quot;local&quot; or &quot;network&quot;):</span>
+<span class="linenos">3</span><span class="c1">#   &quot;local&quot;: local host only communication (default)</span>
+<span class="linenos">4</span><span class="c1">#   &quot;network&quot;: communication across network boundaries</span>
+<span class="linenos">5</span><span class="nt">communication_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;local&quot;</span>
 </pre></div>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Don’t forget to set your multicast routes and make sure your hostname resolution works on all machines!</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud"><span class="std std-ref">UDP Multicast routes</span></a></p></li>
-<li><p><a class="reference internal" href="../getting_started/services.html#getting-started-services-cloud"><span class="std std-ref">Hostname resolution for Services</span></a></p></li>
+<li><p><a class="reference internal" href="../getting_started/network.html#getting-started-network"><span class="std std-ref">UDP Multicast routes</span></a></p></li>
+<li><p><a class="reference internal" href="../getting_started/services.html#getting-started-services-network"><span class="std std-ref">Hostname resolution for Services</span></a></p></li>
 </ul>
 </div>
 </section>

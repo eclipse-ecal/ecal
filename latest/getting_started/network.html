@@ -51,7 +51,7 @@
     <script src="../_static/tabs.js?v=3030b3cb"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started/cloud';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started/network';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
@@ -387,7 +387,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../configuration/cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/network.html">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -553,7 +553,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/getting_started/cloud.rst" target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/getting_started/network.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -570,7 +570,7 @@
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fgetting_started/cloud.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fgetting_started/network.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -600,7 +600,7 @@
       
       
       
-      <li><a href="../_sources/getting_started/cloud.rst" target="_blank"
+      <li><a href="../_sources/getting_started/network.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -708,25 +708,25 @@
                 <article class="bd-article">
                   
   <section id="network-configuration">
-<span id="getting-started-cloud"></span><h1><span class="section-number">4. </span>Network configuration<a class="headerlink" href="#network-configuration" title="Link to this heading">#</a></h1>
+<span id="getting-started-network"></span><h1><span class="section-number">4. </span>Network configuration<a class="headerlink" href="#network-configuration" title="Link to this heading">#</a></h1>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>If you don’t have two PCs at your hand or if you are just not interested in inter-machine-communication, just skip this topic.
-It is not essential for the next tutorials to use cloud communication.</p>
+It is not essential for the next tutorials to use network communication.</p>
 <p>Of course, you can use a virtual machine (e.g. with VMWare or VirtualBox) as second PC.
 Just add a host-only adapter to your VM.</p>
 </div>
 <p>Quite often you want data to flow between eCAL nodes on different machines.
-eCAL can run in two modes, that differ from each other: <strong>local mode</strong> and <strong>cloud mode</strong>.</p>
-<div class="pst-scrollable-table-container"><span id="getting-started-cloud-local-mode-vs-cloud-mode"></span><table class="table" id="id1">
-<caption><span class="caption-text">Local mode vs. cloud mode</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+eCAL can run in two modes, that differ from each other: <strong>local mode</strong> and <strong>network mode</strong>.</p>
+<div class="pst-scrollable-table-container"><span id="getting-started-network-local-mode-vs-network-mode"></span><table class="table" id="id1">
+<caption><span class="caption-text">Local mode vs. network mode</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Local mode</p></th>
-<th class="head"><p>Cloud mode</p></th>
+<th class="head"><p>Network mode</p></th>
 </tr>
 </thead>
 <tbody>
@@ -756,50 +756,74 @@ eCAL can run in two modes, that differ from each other: <strong>local mode</stro
 <h2><span class="section-number">4.1. </span>Enable network-mode in <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code><a class="headerlink" href="#enable-network-mode-in-ecal-yaml" title="Link to this heading">#</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Up to eCAL 5.9, eCAL shipped with a cloud-mode-configuration by default.
+<p>Up to eCAL 5.9, eCAL shipped with a network-mode-configuration by default.
 This changed with eCAL 5.10.</p>
 <p>So since eCAL 5.10 you will have to enable network-mode first.</p>
 </div>
 <p>By default, eCAL is configured in local mode.
-To switch eCAL to cloud mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> and change the following settings:</p>
+To switch eCAL to network mode, edit your <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> and change the following settings:</p>
 <ul class="simple">
-<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">C:\ProgramData\eCAL\ecal.yaml</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> Windows: <code class="file docutils literal notranslate"><span class="pre">%localappdata%\eCAL\ecal.yaml</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> Ubuntu: <code class="file docutils literal notranslate"><span class="pre">/etc/ecal/ecal.yaml</span></code></p></li>
 </ul>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="c1"># Registration layer configuration</span>
-<span class="nt">registration</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="c1"># true  = all eCAL components communicate over network boundaries</span>
-<span class="w">  </span><span class="c1"># false = local host only communication (Default: false)</span>
-<span class="w">  </span><span class="nt">network_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-
-<span class="c1"># Transport layer configuration</span>
-<span class="nt">transport_layer</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">network</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
-<span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Operation configuration</span>
+<span class="linenos"> 2</span><span class="c1"># eCAL components communication mode (&quot;local&quot; or &quot;network&quot;):</span>
+<span class="linenos"> 3</span><span class="c1">#   &quot;local&quot;: local host only communication (default)</span>
+<span class="linenos"> 4</span><span class="c1">#   &quot;network&quot;: communication across network boundaries</span>
+<span class="linenos"> 5</span><span class="nt">communication_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;local&quot;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="c1"># Transport layer configuration</span>
+<span class="linenos"> 8</span><span class="nt">transport_layer</span><span class="p">:</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="nt">udp</span><span class="p">:</span>
+<span class="linenos">10</span><span class="w">    </span><span class="c1"># UDP configuration version (Since eCAL 5.12.)</span>
+<span class="linenos">11</span><span class="w">    </span><span class="c1"># v1: default behavior</span>
+<span class="linenos">12</span><span class="w">    </span><span class="c1"># v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups</span>
+<span class="linenos">13</span><span class="w">    </span><span class="nt">config_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v2&quot;</span>
+<span class="linenos">14</span><span class="w">    </span><span class="c1"># Multicast port number</span>
+<span class="linenos">15</span><span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14002</span>
+<span class="linenos">16</span><span class="w">    </span><span class="c1"># v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)</span>
+<span class="linenos">17</span><span class="w">    </span><span class="c1"># v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)</span>
+<span class="linenos">18</span><span class="w">    </span><span class="nt">mask</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;255.255.255.240&quot;</span>
+<span class="linenos">19</span><span class="w">    </span><span class="c1"># Send buffer in bytes</span>
+<span class="linenos">20</span><span class="w">    </span><span class="nt">send_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos">21</span><span class="w">    </span><span class="c1"># Receive buffer in bytes</span>
+<span class="linenos">22</span><span class="w">    </span><span class="nt">receive_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
+<span class="linenos">23</span><span class="w">    </span><span class="c1"># Linux specific setting to join all network interfaces independend of their link state.</span>
+<span class="linenos">24</span><span class="w">    </span><span class="c1"># Enabling ensures that eCAL processes receive data when they are started before the</span>
+<span class="linenos">25</span><span class="w">    </span><span class="c1"># network devices are up and running.</span>
+<span class="linenos">26</span><span class="w">    </span><span class="nt">join_all_interfaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">27</span><span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
+<span class="linenos">28</span><span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="w">    </span><span class="c1"># Local mode multicast group and ttl</span>
+<span class="linenos">31</span><span class="w">    </span><span class="nt">local</span><span class="p">:</span>
+<span class="linenos">32</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
+<span class="linenos">33</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;127.255.255.255&quot;</span>
+<span class="linenos">34</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
+<span class="linenos">35</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="w">    </span><span class="nt">network</span><span class="p">:</span>
+<span class="linenos">38</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
+<span class="linenos">39</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;239.0.0.1&quot;</span>
+<span class="linenos">40</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
+<span class="linenos">41</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">transport_layer-&gt;udp-&gt;network-&gt;ttl</span></code> setting configures the <em>time to live</em> of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
 Usually, <code class="docutils literal notranslate"><span class="pre">2</span></code> is sufficient, but if you have a network with many routers, you may have to increase that number.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p>Also see the advanced section to learn about changing between <a class="reference internal" href="../configuration/local.html#configuration-local"><span class="std std-ref">local mode</span></a> and <a class="reference internal" href="../configuration/cloud.html#configuration-cloud"><span class="std std-ref">cloud mode</span></a>!</p>
+<p>Also see the advanced section to learn about changing between <a class="reference internal" href="../configuration/local.html#configuration-local"><span class="std std-ref">local mode</span></a> and <a class="reference internal" href="../configuration/network.html#configuration-network"><span class="std std-ref">network mode</span></a>!</p>
 </div>
 </section>
 <section id="multicast-route-configuration">
 <h2><span class="section-number">4.2. </span>Multicast route configuration<a class="headerlink" href="#multicast-route-configuration" title="Link to this heading">#</a></h2>
-<p>Now that you have set eCAL to cloud mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
+<p>Now that you have set eCAL to network mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
 Your Operating System however has to send those Multicast packages to a proper network interface controller (NIC).
 This is not trivial, as the destination IP <code class="docutils literal notranslate"><span class="pre">239.0.0.1</span></code> does not “really” exist.</p>
 <p>Therefore you have to create a <strong>route</strong>, i.e. a <code class="docutils literal notranslate"><span class="pre">239.0.0.x</span> <span class="pre">-&gt;</span> <span class="pre">outgoing</span> <span class="pre">NIC</span></code> mapping.</p>
 <section id="fa-windows-multicast-configuration-on-windows">
-<span id="getting-started-cloud-configuration-on-windows"></span><h3><span class="section-number">4.2.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Link to this heading">#</a></h3>
+<span id="getting-started-network-configuration-on-windows"></span><h3><span class="section-number">4.2.1. </span><i class="fab fa-windows"></i> Multicast configuration on Windows<a class="headerlink" href="#fa-windows-multicast-configuration-on-windows" title="Link to this heading">#</a></h3>
 <ol class="arabic">
 <li><p>Check the IPv4 address of the ethernet adapter you are using to connect your two PCs.
 You can do that by typing <code class="docutils literal notranslate"><span class="pre">ipconfig</span></code> in a command prompt.
@@ -830,7 +854,7 @@ It should show your route under <cite>IPv4 Route Table / Persistent Routes</cite
 </div>
 </section>
 <section id="fa-ubuntu-multicast-configuration-on-ubuntu">
-<span id="getting-started-cloud-ubuntu-routes"></span><h3><span class="section-number">4.2.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Link to this heading">#</a></h3>
+<span id="getting-started-network-ubuntu-routes"></span><h3><span class="section-number">4.2.2. </span><i class="fab fa-ubuntu"></i> Multicast configuration on Ubuntu<a class="headerlink" href="#fa-ubuntu-multicast-configuration-on-ubuntu" title="Link to this heading">#</a></h3>
 <p>You can configure the multicast route in various ways, depending on your Ubuntu version.</p>
 <p>Jump to your section of choice below:</p>
 <ol class="arabic simple">

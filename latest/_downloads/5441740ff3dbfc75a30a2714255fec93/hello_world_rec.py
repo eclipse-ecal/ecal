@@ -17,7 +17,7 @@ def callback(topic_name, hello_world_proto_msg, time):
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be
   # "Python Protobuf Subscriber"
-  ecal_core.initialize(sys.argv, "Python Protobuf Subscriber")
+  ecal_core.initialize("Python Protobuf Subscriber")
 
   # Create a Protobuf Publisher that publishes on the topic
   # "hello_world_python_protobuf_topic". The second parameter tells eCAL which

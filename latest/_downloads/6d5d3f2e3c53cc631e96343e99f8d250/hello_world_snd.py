@@ -11,7 +11,7 @@ import proto_messages.hello_world_pb2 as hello_world_pb2
 if __name__ == "__main__":
   # initialize eCAL API. The name of our Process will be
   # "Python Protobuf Publisher"
-  ecal_core.initialize(sys.argv, "Python Protobuf Publisher")
+  ecal_core.initialize("Python Protobuf Publisher")
 
   # Create a Protobuf Publisher that publishes on the topic
   # "hello_world_python_protobuf_topic". We also pass it the datatype we are

@@ -191,7 +191,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/cloud.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/network.html">4. Network configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/services.html">5. eCAL Services</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/monitor.html">6.1.  Monitor</a></li>
@@ -386,7 +386,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../configuration.html">Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../configuration/cloud.html">Cloud Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/network.html">Network Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/local.html">Local configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
@@ -727,7 +727,7 @@ Older eCAL versions will lack Shared Memory communication when being run in a do
 </div>
 </li>
 <li><p>Optional: If you want your docker container to talk to eCAL Nodes on other machines:
-Set up you <a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud-ubuntu-routes"><span class="std std-ref">multicast routes</span></a> on the host.</p></li>
+Set up you <a class="reference internal" href="../getting_started/network.html#getting-started-network-ubuntu-routes"><span class="std std-ref">multicast routes</span></a> on the host.</p></li>
 <li><p>Optional: If you want to use eCAL on your host to subscribe to data from your docker containers: <a class="reference internal" href="../getting_started/setup.html#getting-started-setup-ubuntu"><span class="std std-ref">Install eCAL</span></a> on the host.</p></li>
 </ul>
 </section>
@@ -951,7 +951,7 @@ Check if your <code class="file docutils literal notranslate"><span class="pre">
 </li>
 <li><p>Configure the Host network</p>
 <ul class="simple">
-<li><p>eCAL is sending UDP messages to a multicast IP group <code class="docutils literal notranslate"><span class="pre">239.0.0.0/24</span></code>, further information in <a class="reference internal" href="../getting_started/cloud.html#getting-started-cloud-ubuntu-routes"><span class="std std-ref">Getting Started Section</span></a>.
+<li><p>eCAL is sending UDP messages to a multicast IP group <code class="docutils literal notranslate"><span class="pre">239.0.0.0/24</span></code>, further information in <a class="reference internal" href="../getting_started/network.html#getting-started-network-ubuntu-routes"><span class="std std-ref">Getting Started Section</span></a>.
 The idea is now, to successfully receive those messages from your previously started container on your host.
 For that, you need to add a route to your routing table.
 By typing <code class="docutils literal notranslate"><span class="pre">ifconfig</span></code> in your shell, you can identify the right docker network.
