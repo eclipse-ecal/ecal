@@ -83,7 +83,7 @@ install(
 )
 
 ##########################
-# Protobuf measurement extension
+# Capnproto measurement extension
 ##########################
 add_library(capnproto_measurement INTERFACE)
 add_library(eCAL::capnproto_measurement ALIAS capnproto_measurement)

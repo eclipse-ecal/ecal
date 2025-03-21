@@ -35,7 +35,8 @@ namespace eCAL
     template <typename T, typename Serializer>
     class IMessageChannel
     {
-      friend IMessageChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
+      //This was a try to make the constructor of IMessageChannel private, which, however did not work.
+      //friend IMessageChannel GetChannel(IMeasurement& meas, const experimental::measurement::base::Channel& channel_);
 
     public:
       using SerializerT = Serializer;

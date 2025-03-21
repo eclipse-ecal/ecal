@@ -87,7 +87,7 @@ namespace eCAL
         : public BaseSerializer<ObjectType, DatatypeInformation>
       {
       public:
-        static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
+        static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const DatatypeInformation& /*data_type_info_*/)
         {
           using CleanObjectType = std::remove_const_t<std::remove_pointer_t<ObjectType>>;
 
@@ -110,7 +110,7 @@ namespace eCAL
         : public BaseSerializer<FlatType, DatatypeInformation>
       {
       public:
-        static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
+        static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const DatatypeInformation& /*data_type_info_*/)
         {
           using CleanFlatType = std::remove_const_t<std::remove_pointer_t<FlatType>>;
           const uint8_t* buffer = static_cast<const uint8_t*>(buffer_);
