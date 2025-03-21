@@ -1,6 +1,6 @@
 .. include:: /include.txt
 
-.. _getting_started_cloud:
+.. _getting_started_network:
 
 =====================
 Network configuration
@@ -8,22 +8,22 @@ Network configuration
 
 .. hint::
    If you don't have two PCs at your hand or if you are just not interested in inter-machine-communication, just skip this topic.
-   It is not essential for the next tutorials to use cloud communication.
+   It is not essential for the next tutorials to use network communication.
 
    Of course, you can use a virtual machine (e.g. with VMWare or VirtualBox) as second PC.
    Just add a host-only adapter to your VM.
 
 Quite often you want data to flow between eCAL nodes on different machines.
-eCAL can run in two modes, that differ from each other: **local mode** and **cloud mode**.
+eCAL can run in two modes, that differ from each other: **local mode** and **network mode**.
 
-.. _getting_started_cloud_local_mode_vs_cloud_mode:
+.. _getting_started_network_local_mode_vs_network_mode:
 
-.. list-table:: Local mode vs. cloud mode
+.. list-table:: Local mode vs. network mode
    :widths: 50 50
    :header-rows: 1
 
    * - Local mode
-     - Cloud mode
+     - Network mode
    * - * Uses localhost (127.0.0.1) for registration (-> e.g. telling others about new topics and subscribing to topics)
      - * Uses Multicast (239.0.0.1) for registration
    * - * Uses shared memory to send actual data to other processes
@@ -32,59 +32,45 @@ eCAL can run in two modes, that differ from each other: **local mode** and **clo
 
 
 Enable network-mode in :file:`ecal.yaml`
-=======================================
+========================================
 
 .. note:: 
 
-   Up to eCAL 5.9, eCAL shipped with a cloud-mode-configuration by default.
+   Up to eCAL 5.9, eCAL shipped with a network-mode-configuration by default.
    This changed with eCAL 5.10.
 
    So since eCAL 5.10 you will have to enable network-mode first.
 
 By default, eCAL is configured in local mode.
-To switch eCAL to cloud mode, edit your :file:`ecal.yaml` and change the following settings:
+To switch eCAL to network mode, edit your :file:`ecal.yaml` and change the following settings:
 
-* |fa-windows| Windows: |ecalini-path-windows|
-* |fa-ubuntu| Ubuntu: |ecalini-path-ubuntu|
+* |fa-windows| Windows: |ecalconfig-path-windows|
+* |fa-ubuntu| Ubuntu: |ecalconfig-path-ubuntu|
 
-.. code-block:: yaml
-
-   # Registration layer configuration
-  registration:
-    [..]
-    # true  = all eCAL components communicate over network boundaries
-    # false = local host only communication (Default: false)
-    network_enabled: true
-    [..]
-
-  # Transport layer configuration
-  transport_layer:
-    udp:
-      [..]
-
-      network:
-        [..] 
-        # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
-        ttl: 2   
+.. literalinclude:: /configuration_files/ecal.yaml
+   :language: yaml
+   :linenos:
+   :lines: 15-19, 56-91
+ 
 
 The ``transport_layer->udp->network->ttl`` setting configures the *time to live* of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.
 Usually, ``2`` is sufficient, but if you have a network with many routers, you may have to increase that number.
 
 .. seealso::
 
-   Also see the advanced section to learn about changing between :ref:`local mode <configuration_local>` and :ref:`cloud mode <configuration_cloud>`!
+   Also see the advanced section to learn about changing between :ref:`local mode <configuration_local>` and :ref:`network mode <configuration_network>`!
 
 
 Multicast route configuration
 =============================
 
-Now that you have set eCAL to cloud mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
+Now that you have set eCAL to network mode, it will already start sending out UDP Multicast packages for detecting other eCAL Nodes.
 Your Operating System however has to send those Multicast packages to a proper network interface controller (NIC).
 This is not trivial, as the destination IP ``239.0.0.1`` does not "really" exist.
 
 Therefore you have to create a **route**, i.e. a ``239.0.0.x -> outgoing NIC`` mapping.
 
-.. _getting_started_cloud_configuration_on_windows:
+.. _getting_started_network_configuration_on_windows:
 
 |fa-windows| Multicast configuration on Windows
 -----------------------------------------------
@@ -121,7 +107,7 @@ Therefore you have to create a **route**, i.e. a ``239.0.0.x -> outgoing NIC`` m
    It is recommended to assign a static IP, so your multicast route will not become outdated at some point.
 
 
-.. _getting_started_cloud_ubuntu_routes:
+.. _getting_started_network_ubuntu_routes:
 
 |fa-ubuntu| Multicast configuration on Ubuntu
 ---------------------------------------------

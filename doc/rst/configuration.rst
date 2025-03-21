@@ -9,7 +9,7 @@ Configuration
 .. toctree::
    :maxdepth: 1
 
-   configuration/cloud
+   configuration/network
    configuration/local
    configuration/npcap
    configuration/player

@@ -60,11 +60,11 @@
    <i class="fas fa-code"></i>
 
 
-.. |ecalini-path-windows| replace:: :file:`C:\\ProgramData\\eCAL\\ecal.yaml`
-.. |ecalini-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.yaml`
+.. |ecalconfig-path-windows| replace:: :file:`%localappdata%\\eCAL\\ecal.yaml`
+.. |ecalconfig-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.yaml`
 
-.. |ecalini-path-windows-old| replace:: :file:`C:\\eCAL\\cfg\\ecal.yaml`
-.. |ecalini-path-ubuntu-old|  replace:: :file:`/usr/etc/ecal/ecal.yaml`
+.. |ecalconfig-path-windows-old| replace:: :file:`C:\\eCAL\\cfg\\ecal.yaml`
+.. |ecalconfig-path-ubuntu-old|  replace:: :file:`/usr/etc/ecal/ecal.yaml`
 
 
 .. |person_snd-path-windows|       replace:: :file:`C:\\eCAL\\samples\\bin\\ecal_sample_person_snd.exe`

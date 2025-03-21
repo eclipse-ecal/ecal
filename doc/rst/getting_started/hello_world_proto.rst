@@ -60,11 +60,11 @@ Now start implementing the actual sender application. Just as in the :ref:`last 
   .. note::
      **What is happening here?**
 
-     **Line 10** adds Protobuf as dependency
+     **Line 9** adds Protobuf as dependency
      
-     **Line 16-18** Creates a list of .proto files. We only have one.
+     **Line 15-17** Creates a list of .proto files. We only have one.
 
-     **Line 22** Compiles the .proto file to a C++ header file (:file:`hello_world.pb.h`).
+     **Line 21** Compiles the .proto file to a C++ header file (:file:`hello_world.pb.h`).
      The ``PROTOBUF_TARGET_CPP`` function is a convenience function from eCAL.
      If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:
 
@@ -74,7 +74,7 @@ Now start implementing the actual sender application. Just as in the :ref:`last 
        protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${protobuf_files})
        add_executable(${PROJECT_NAME} ${source_files} ${PROTO_SRCS} ${PROTO_HDRS}) 
 
-     **Line 26** links the executable against protobuf
+     **Line 23-26** links the executable against protobuf
 
 * |fa-file-alt| :file:`main.cpp`:
 
@@ -127,6 +127,7 @@ Protobuf receiver
 
      **Line 9** is our subscriber callback (you have already seen a callback in the last Hello World Tutorial).
      This time however it receives a protobuf object.
+     
      **Line 11-13** use the handy protobuf accessor methods to print the data to the terminal.
 
      **Line 20** Creates an eCAL protobuf subscriber.
