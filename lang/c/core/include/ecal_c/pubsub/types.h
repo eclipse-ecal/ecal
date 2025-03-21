@@ -66,14 +66,17 @@ struct eCAL_SPubEventCallbackData
  * @param topic_id_  The topic id struct of the received message.
  * @param data_      Event callback data structure with the event specific information.
 **/
-typedef void (*eCAL_PubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SPubEventCallbackData*);
+typedef void (*eCAL_PubEventCallbackT)(const struct eCAL_STopicId* /*topic_id_*/, const struct eCAL_SPubEventCallbackData* /*data_*/);
 
+/**
+ * @brief eCAL subscriber event callback type.
+**/
 enum eCAL_eSubscriberEvent
 {
   eCAL_eSubscriberEvent_none,
-  eCAL_eSubscriberEvent_connected,
-  eCAL_eSubscriberEvent_disconnected,
-  eCAL_eSubscriberEvent_dropped
+  eCAL_eSubscriberEvent_connected,     //!< a new publisher has been connected to the subscriber
+  eCAL_eSubscriberEvent_disconnected,  //!< a previously connected publisher has been disconnected from this subscriber
+  eCAL_eSubscriberEvent_dropped        //!< a message coming from a publisher has been dropped, e.g. the subscriber has missed it
 };
 
 /**
@@ -92,7 +95,7 @@ struct eCAL_SSubEventCallbackData
  * @param topic_id_  The topic id struct of the received message.
  * @param data_      Event callback data structure with the event specific information.
 **/
-typedef void (*eCAL_SubEventCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SSubEventCallbackData*);
+typedef void (*eCAL_SubEventCallbackT)(const struct eCAL_STopicId* /*topic_id_*/, const struct eCAL_SSubEventCallbackData* /*data_*/);
 
 /**
   * @brief eCAL subscriber receive callback struct.
@@ -109,12 +112,12 @@ struct eCAL_SReceiveCallbackData
 /**
  * @brief Receive callback function type. A user can register this callback type with a subscriber, and this callback will be triggered when the user receives any data.
  *
- * @param publisher_id_    The topic id of the publisher that has sent the data which is now being received.
- * @param data_type_info_  Topic metadata, as set by the publisher (encoding, type, descriptor).
- *                         This can be used to validate that the received data can be properly interpreted by the subscriber.
- * @param data_            Data struct containing payload, timestamp and publication clock.
- * @param user_argument_   User argument that was forwarded by a SetCallback() function.
+ * @param publisher_id_            The topic id of the publisher that has sent the data which is now being received.
+ * @param data_type_info_          Topic metadata, as set by the publisher (encoding, type, descriptor).
+ *                                 This can be used to validate that the received data can be properly interpreted by the subscriber.
+ * @param data_                    Data struct containing payload, timestamp and publication clock.
+ * @param user_argument_  User argument that was forwarded by a SetCallback() function.
 **/
-typedef void (*eCAL_ReceiveCallbackT)(const struct eCAL_STopicId*, const struct eCAL_SDataTypeInformation*, const struct eCAL_SReceiveCallbackData*, void*);
+typedef void (*eCAL_ReceiveCallbackT)(const struct eCAL_STopicId* /*publisher_id_*/, const struct eCAL_SDataTypeInformation* /*data_type_info_*/, const struct eCAL_SReceiveCallbackData* /*data_*/, void* /*user_argument_*/);
 
 #endif /* ecal_c_pubsub_publisher_h_included */

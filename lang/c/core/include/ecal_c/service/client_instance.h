@@ -60,31 +60,31 @@ extern "C"
   /**
    * @brief Blocking call (with timeout) of a service method for on service instances, using callback
    *
-   * @param client_instance_    Client instance handle.
-   * @param method_name_        Method name.
-   * @param request_            Request data.
-   * @param request_length_     Length of requested data.
-   * @param response_callback_  Callback function for the service method response.
-   * @param user_argument_      User argument that is forwarded to the callback. Optional, can be NULL.
-   * @param timeout_ms_         Maximum time before operation returns. Optional, can be NULL.
+   * @param client_instance_         Client instance handle.
+   * @param method_name_             Method name.
+   * @param request_                 Request data.
+   * @param request_length_          Length of requested data.
+   * @param callback_                Callback function for the service method response.
+   * @param callback_user_argument_  User argument that is forwarded to the callback. Optional, can be NULL.
+   * @param timeout_ms_              Maximum time before operation returns. Optional, can be NULL.
    *
    * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument_, const int* timeout_ms_);
+  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_, const int* timeout_ms_);
   
   /**
    * @brief Asynchronous call of a service method for one service instances, using callback
    *
-   * @param client_instance_    Client instance handle.
-   * @param method_name_        Method name.
-   * @param request_            Request data.
-   * @param request_length_     Length of requested data.
-   * @param response_callback_  Callback function for the service method response.
-   * @param user_argument_      User argument that is forwarded to the callback. Optional, can be NULL.
+   * @param client_instance_         Client instance handle.
+   * @param method_name_             Method name.
+   * @param request_                 Request data.
+   * @param request_length_          Length of requested data.
+   * @param callback_                Callback function for the service method response.
+   * @param callback_user_argument_  User argument that is forwarded to the callback. Optional, can be NULL.
    *
    * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument);
+  ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_);
 
   /**
    * @brief Check connection state.

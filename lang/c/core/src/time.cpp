@@ -74,7 +74,7 @@ extern "C"
     std::unique_ptr<std::string> status_message;
     if (status_message_ != NULL)
     {
-      if (*status_message_ != NULL) return;
+      assert(*status_message_ == NULL);
       status_message = std::make_unique<std::string>();
     }
 

@@ -27,20 +27,20 @@
 
 #include <ecal_c/config/configuration.h>
 
-#define ECAL_INIT_PUBLISHER 0x001
+#define ECAL_INIT_PUBLISHER  0x001
 #define ECAL_INIT_SUBSCRIBER 0x002
-#define ECAL_INIT_SERVICE 0x004
+#define ECAL_INIT_SERVICE    0x004
 #define ECAL_INIT_MONITORING 0x008
-#define ECAL_INIT_LOGGING 0x010
-#define ECAL_INIT_TIMESYNC 0x020
-#define ECAL_INIT_NONE 0x000
+#define ECAL_INIT_LOGGING    0x010
+#define ECAL_INIT_TIMESYNC   0x020
+#define ECAL_INIT_NONE       0x000
 
-static const unsigned int eCAL_Init_Publisher = ECAL_INIT_PUBLISHER;
+static const unsigned int eCAL_Init_Publisher =  ECAL_INIT_PUBLISHER;
 static const unsigned int eCAL_Init_Subscriber = ECAL_INIT_SUBSCRIBER;
-static const unsigned int eCAL_Init_Service = ECAL_INIT_SERVICE;
+static const unsigned int eCAL_Init_Service =    ECAL_INIT_SERVICE;
 static const unsigned int eCAL_Init_Monitoring = ECAL_INIT_MONITORING;
-static const unsigned int eCAL_Init_Logging = ECAL_INIT_LOGGING;
-static const unsigned int eCAL_Init_TimeSync = ECAL_INIT_TIMESYNC;
+static const unsigned int eCAL_Init_Logging =    ECAL_INIT_LOGGING;
+static const unsigned int eCAL_Init_TimeSync =   ECAL_INIT_TIMESYNC;
 
 static const unsigned int eCAL_Init_All = ECAL_INIT_PUBLISHER
 | ECAL_INIT_SUBSCRIBER

@@ -43,8 +43,6 @@ extern "C"
   **/
   ECALC_API eCAL_Timer* eCAL_Timer_New();
 
-  //ECALC_API eCAL_Timer* eCAL_Timer_New2(int timeout_, eCAL_TimerCallbackT callback_, const int* delay_);
-
   /**
    * @brief Deletes a timer instance.
    *

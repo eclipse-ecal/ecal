@@ -55,7 +55,7 @@ struct eCAL_PayloadWriter
      *
      * @return zero if the write operation is successful, non-zero otherwise.
     **/
-  int (*WriteFull)(void*, size_t);
+  int (*WriteFull)(void* /*buffer_*/, size_t /*size_*/);
 
   /**
      * @brief Perform a partial write operation to modify existing data.
@@ -73,7 +73,7 @@ struct eCAL_PayloadWriter
      *
      * @return Zero if the write/update operation is successful, non-zero otherwise.
     **/
-  int (*WriteModified)(void*, size_t);
+  int (*WriteModified)(void* /*buffer_*/, size_t /*size_*/);
 
   /**
      * @brief Get the size of the required memory.

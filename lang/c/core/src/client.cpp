@@ -26,6 +26,7 @@
 #include <ecal_c/service/client.h>
 
 #include "common.h"
+#include "client_instance.h"
 
 #include <cassert>
 
@@ -54,11 +55,6 @@ extern "C"
     eCAL::CServiceClient* handle;
     eCAL_SServiceId service_id;
     eCAL_SEntityId entity_id;
-  };
-
-  struct eCAL_ClientInstance
-  {
-    eCAL::CClientInstance* handle;
   };
 
   ECALC_API eCAL_ServiceClient* eCAL_ServiceClient_New(const char* service_name_, const struct eCAL_SServiceMethodInformation* method_information_set_, size_t method_information_set_length_, eCAL_ClientEventCallbackT event_callback_)
@@ -146,36 +142,36 @@ extern "C"
     return !static_cast<int>(result);
   }
 
-  ECALC_API int eCAL_ServiceClient_CallWithCallback(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument_, const int* timeout_ms_)
+  ECALC_API int eCAL_ServiceClient_CallWithCallback(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_, const int* timeout_ms_)
   {
-    assert(service_client_ != NULL && method_name_ != NULL && response_callback_ != NULL);
+    assert(service_client_ != NULL && method_name_ != NULL && callback_ != NULL);
     std::string request;
     if (request_ != NULL && request_length_ != 0)
       request.assign(reinterpret_cast<const char*>(request_), request_length_);
-    const auto response_callback = [response_callback_, user_argument_](const eCAL::SServiceResponse& service_response_)
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceResponse& service_response_)
     {
       struct eCAL_SServiceResponse service_response_c;
       Assign_SServiceResponse(&service_response_c, service_response_);
-      response_callback_(&service_response_c, user_argument_);
+      callback_(&service_response_c, callback_user_argument_);
     };
 
-    return !static_cast<int>(service_client_->handle->CallWithCallback(method_name_, request, response_callback, timeout_ms_ != NULL ? *timeout_ms_ : eCAL::CServiceClient::DEFAULT_TIME_ARGUMENT));
+    return !static_cast<int>(service_client_->handle->CallWithCallback(method_name_, request, callback, timeout_ms_ != NULL ? *timeout_ms_ : eCAL::CServiceClient::DEFAULT_TIME_ARGUMENT));
   }
 
-  ECALC_API int eCAL_ServiceClient_CallWithCallbackAsync(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument_)
+  ECALC_API int eCAL_ServiceClient_CallWithCallbackAsync(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_)
   {
-    assert(service_client_ != NULL && method_name_ != NULL && response_callback_ != NULL);
+    assert(service_client_ != NULL && method_name_ != NULL && callback_ != NULL);
     std::string request;
     if (request_ != NULL && request_length_ != 0)
       request.assign(reinterpret_cast<const char*>(request_), request_length_);
-    const auto response_callback = [response_callback_, user_argument_](const eCAL::SServiceResponse& service_response_)
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceResponse& service_response_)
     {
       struct eCAL_SServiceResponse service_response_c;
       Assign_SServiceResponse(&service_response_c, service_response_);
-      response_callback_(&service_response_c, user_argument_);
+      callback_(&service_response_c, callback_user_argument_);
     };
 
-    return !static_cast<int>(service_client_->handle->CallWithCallbackAsync(method_name_, request, response_callback));
+    return !static_cast<int>(service_client_->handle->CallWithCallbackAsync(method_name_, request, callback));
   }
 
   ECALC_API const char* eCAL_ServiceClient_GetServiceName(eCAL_ServiceClient* service_client_)
