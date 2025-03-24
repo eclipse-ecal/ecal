@@ -59,14 +59,6 @@ namespace eCAL
       bool operator==(const IMessageChannel& rhs) const { return  binary_channel == rhs.binary_channel; }
       bool operator!=(const IMessageChannel& rhs) const { return !(operator==(rhs)); }
 
-      Frame<T> operator[](const experimental::measurement::base::EntryInfo& entry)
-      {
-        auto binary_entry = binary_channel[entry];
-        
-        message = m_serializer->Deserialize(binary_entry.message.c_str(), binary_entry.message.size(), GetDataypeInformation());
-        return make_frame(message, binary_entry.send_timestamp, binary_entry.receive_timestamp);
-      }
-
       const std::string& GetName() const
       {
         return binary_channel.GetName();

@@ -52,21 +52,11 @@ namespace eCAL
       IChannel(IChannel&& rhs) = default;
       IChannel& operator=(IChannel&& rhs) = default;
 
-      virtual BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
-      {
-        size_t message_size;
-        meas->GetEntryDataSize(entry.ID, message_size);
-        data.resize(message_size);
-        meas->GetEntryData(entry.ID, (void*)data.data());
-        return make_frame( data, entry.SndTimestamp, entry.RcvTimestamp );
-      }
-
       const std::string& GetName() const
       {
         return channel.name;
       }
 
-      // We read the data upon request! (directly from the measurement)
       const eCAL::experimental::measurement::base::DataTypeInformation& GetDatatypeInformation() const
       {
         return datatype_info;
@@ -130,6 +120,15 @@ namespace eCAL
       }
 
     private:
+      BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
+      {
+        size_t message_size;
+        meas->GetEntryDataSize(entry.ID, message_size);
+        data.resize(message_size);
+        meas->GetEntryData(entry.ID, (void*)data.data());
+        return make_frame(data, entry.SndTimestamp, entry.RcvTimestamp);
+      }
+
       std::shared_ptr<experimental::measurement::base::Reader> meas;
       
       const experimental::measurement::base::Channel channel;
