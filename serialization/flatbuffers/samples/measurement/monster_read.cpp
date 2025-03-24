@@ -100,9 +100,10 @@ int main(int /*argc*/, char** /*argv*/)
   auto monster_channels = meas.Channels("monster");
   if (monster_channels.size() > 0)
   {
+    // There are two ways that we can extract data from the measurement
+
     {
-      // There are two ways that we can extract data from the measurement
-      // The second one is via the object API, which directly maps the fields to C++ Objects
+      // The first way is via the flat API, which directly maps the fields to C++ Objects
       eCAL::flatbuffers::IChannel<Game::Sample::Monster> monster_channel{ eCAL::measurement::GetChannel<eCAL::flatbuffers::IChannel<Game::Sample::Monster>>(meas, *monster_channels.begin()) };
       // iterate over the messages
       for (const auto& monster_entry : monster_channel)
@@ -114,6 +115,7 @@ int main(int /*argc*/, char** /*argv*/)
 
     {
       // The second one is via the object API, which directly maps the fields to C++ Objects
+      // Generated object types are postfixed with "T"
       eCAL::flatbuffers::IChannel<Game::Sample::MonsterT> monster_channel{ eCAL::measurement::GetChannel<eCAL::flatbuffers::IChannel<Game::Sample::MonsterT>>(meas, *monster_channels.begin()) };
       // iterate over the messages
       for (const auto& monster_entry : monster_channel)
