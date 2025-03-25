@@ -16,3 +16,33 @@
  *
  * ========================= eCAL LICENSE =================================
  */
+
+ /**
+  * @file   types/logging.h
+  * @brief  eCAL logging types
+ **/
+
+#ifndef ecal_c_types_logging_h_included
+#define ecal_c_types_logging_h_included
+
+#include <stdint.h>
+#include <ecal_c/log_level.h>
+
+struct eCAL_Logging_SLogMessage
+{
+  int64_t     time;              // time
+  const char* host_name;         // host name
+  int32_t     process_id;        // process id
+  const char* process_name;      // process name
+  const char* unit_name;         // unit name
+  enum eCAL_Logging_eLogLevel level; // message level
+  const char* content;               // message content
+};
+
+struct  eCAL_Logging_SLogging
+{
+  struct eCAL_Logging_SLogMessage*  log_messages;            // log messages
+  size_t log_messages_length;                         // array of log messages
+};
+
+#endif /*ecal_c_types_logging_h_included*/

@@ -37,13 +37,23 @@ extern "C"
   /**
    * @brief Get monitoring as serialized protobuf buffer.
    *
-   * @param [out] log_         Pointer to a protobuf serialized monitoring buffer. Must point to NULL and needs to be released by eCAL_Free().
-   * @param [out] log_length_  Length of the log buffer.
+   * @param [out] monitoring_buffer          Pointer to a protobuf serialized monitoring buffer. Must point to NULL and needs to be released by eCAL_Free().
+   * @param [out] monitoring_buffer_length_  Length of the log buffer.
+   * @param       entities_                  Entities to be included. Optional, can be NULL.
+   *
+   * @return Zero if succeeded, non-zero otherwise.
+  **/
+  ECALC_API int eCAL_Monitoring_GetMonitoringBuffer(void** monitoring_buffer_, size_t* monitoring_buffer_length_, const unsigned int* entities_);
+
+  /**
+   * @brief Get monitoring as deserialized structure.
+   *
+   * @param [out] monitoring_  Pointer to a deserialized monitoring structure. Must point to NULL and needs to be released by eCAL_Free().
    * @param       entities_    Entities to be included. Optional, can be NULL.
    *
-   * @return Zeor if succeeded, non-zero otherwise.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Monitoring_GetMonitoring(void** monitoring_, size_t* monitoring_length_, const unsigned int* entities_);
+  ECALC_API int eCAL_Monitoring_GetMonitoring(struct eCAL_Monitoring_SMonitoring** monitoring_, const unsigned int* entities_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/
