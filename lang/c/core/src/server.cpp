@@ -76,20 +76,20 @@ extern "C"
     delete service_server_;
   }
 
-  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_, void* user_argument_)
+  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_, void* callback_user_argument_)
   {
     assert(service_server_ != NULL && method_info_ != NULL && callback_ != NULL);
     eCAL::SServiceMethodInformation method_info;
     Assign_SServiceMethodInformation(method_info, method_info_);
 
-    const auto callback = [callback_, user_argument_](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       struct eCAL_SServiceMethodInformation method_info_c;
       Assign_SServiceMethodInformation(&method_info_c, method_info_);
 
       void* response_c = NULL;
       size_t response_length_c = 0;
-      int ret_state = callback_(&method_info_c, request_.data(), request_.size(), &response_c, &response_length_c, user_argument_);
+      int ret_state = callback_(&method_info_c, request_.data(), request_.size(), &response_c, &response_length_c, callback_user_argument_);
 
       if (response_c != NULL && response_length_c != 0)
         response_.assign(static_cast<const char*>(response_c), response_length_c);

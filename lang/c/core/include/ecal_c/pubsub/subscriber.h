@@ -64,7 +64,7 @@ extern "C"
    *
    * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_, void* user_argument_);
+  ECALC_API int eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_, void* callback_user_argument_);
 
   /**
    * @brief Remove callback function for incoming receives.

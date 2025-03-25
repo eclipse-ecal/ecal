@@ -18,14 +18,15 @@
 */
 
 /**
- * @file   client.cpp
- * @brief  eCAL client c interface
+ * @file   client_instance.cpp
+ * @brief  eCAL client instance c interface
 **/
 
 #include <ecal/ecal.h>
 #include <ecal_c/service/client_instance.h>
 
 #include "common.h"
+#include "client_instance.h"
 
 #include <cassert>
 
@@ -36,13 +37,6 @@ namespace
 
 extern "C"
 {
-  struct eCAL_ClientInstance
-  {
-    eCAL::CClientInstance* handle;
-    eCAL_SServiceId service_id;
-    eCAL_SEntityId entity_id;
-  };
-
   ECALC_API void eCAL_ClientInstance_Delete(eCAL_ClientInstance* client_instance_)
   {
     assert(client_instance_ != NULL);
@@ -90,37 +84,37 @@ extern "C"
     return service_response_c;
   }
 
-  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument_, const int* timeout_ms_)
+  ECALC_API int eCAL_ClientInstance_CallWithCallback(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_, const int* timeout_ms_)
   {
-    assert(client_instance_ != NULL && method_name_ != NULL && response_callback_ != NULL);
+    assert(client_instance_ != NULL && method_name_ != NULL && callback_ != NULL);
     std::string request;
     if (request_ != NULL && request_length_ != 0)
       request.assign(reinterpret_cast<const char*>(request_), request_length_);
 
-    const auto response_callback = [response_callback_, user_argument_](const eCAL::SServiceResponse& service_response_)
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceResponse& service_response_)
     {
       struct eCAL_SServiceResponse service_response_c;
       Assign_SServiceResponse(&service_response_c, service_response_);
-      response_callback_(&service_response_c, user_argument_);
+      callback_(&service_response_c, callback_user_argument_);
     };
 
-    return !static_cast<int>(client_instance_->handle->CallWithCallback(method_name_, request, response_callback, timeout_ms_ != NULL ? *timeout_ms_ : eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT));
+    return !static_cast<int>(client_instance_->handle->CallWithCallback(method_name_, request, callback, timeout_ms_ != NULL ? *timeout_ms_ : eCAL::CClientInstance::DEFAULT_TIME_ARGUMENT));
   }
 
-  ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT response_callback_, void* user_argument_)
+  ECALC_API int eCAL_ClientInstance_CallWithCallbackAsync(eCAL_ClientInstance* client_instance_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_)
   {
-    assert(client_instance_ != NULL && method_name_ != NULL && response_callback_ != NULL);
+    assert(client_instance_ != NULL && method_name_ != NULL && callback_ != NULL);
     std::string request;
     if (request_ != NULL && request_length_ != 0)
       request.assign(reinterpret_cast<const char*>(request_), request_length_);
-    const auto response_callback = [response_callback_, user_argument_](const eCAL::SServiceResponse& service_response_)
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceResponse& service_response_)
     {
       struct eCAL_SServiceResponse service_response_c;
       Assign_SServiceResponse(&service_response_c, service_response_);
-      response_callback_(&service_response_c, user_argument_);
+      callback_(&service_response_c, callback_user_argument_);
     };
 
-    return !static_cast<int>(client_instance_->handle->CallWithCallbackAsync(method_name_, request, response_callback));
+    return !static_cast<int>(client_instance_->handle->CallWithCallbackAsync(method_name_, request, callback));
   }
 
   ECALC_API int eCAL_ClientInstance_IsConnected(eCAL_ClientInstance* client_instance_)

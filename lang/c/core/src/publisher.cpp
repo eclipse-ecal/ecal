@@ -89,21 +89,6 @@ struct eCAL_Publisher
 
 extern "C"
 {
-  //ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
-  //{
-  //  assert(topic_name_ != NULL);
-  //
-  //  eCAL::SDataTypeInformation data_type_information;
-  //  eCAL::Publisher::Configuration publisher_configuration = eCAL::GetPublisherConfiguration();
-  //
-  //  if (data_type_information_ != NULL)
-  //    Assign_SDataTypeInformation(data_type_information, data_type_information_);
-  //  if (publisher_configuration_ != NULL)
-  //    Assign_Publisher_Configuration(publisher_configuration, publisher_configuration_);
-  //
-  //  return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, publisher_configuration) };
-  //}
-
   ECALC_API eCAL_Publisher* eCAL_Publisher_New(const char* topic_name_, const struct eCAL_SDataTypeInformation* data_type_information_, const eCAL_PubEventCallbackT pub_event_callback_, const struct eCAL_Publisher_Configuration* publisher_configuration_)
   {
     assert(topic_name_ != NULL);

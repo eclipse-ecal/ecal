@@ -29,13 +29,19 @@ The IP address can be used like a normal string object. For example:
 Global configuration initialization
 ===================================
 
-The configuration will be first initialized with the default values specified by eCAL.
-If you want to use the systems eCAL .yaml file, call the ``InitFromConfig()`` function of the config object.
+To get the configuration, create the object by using the function in the init namespace:
 
-In case the .yaml to use is specified via command line parameter, this one is chosen instead. 
-The object will throw an error, in case the specified .yaml file cannot be found.
+.. code-block:: c++
 
-It is also possible to specify the .yaml by calling the function ``InitFromFile(const std::string yaml_path_)`` of the config object.
+  auto custom_config = eCAL::Init::Configuration();
+
+The configuration will be first initialized with the values specified by your ecal.yaml.
+
+It is also possible to specify the .yaml by calling the function
+
+.. code-block:: c++
+
+  custom_config.InitFromFile("path/to/your/ecal.yaml");
 
 * |fa-file-alt| :file:`main.cpp`:
 

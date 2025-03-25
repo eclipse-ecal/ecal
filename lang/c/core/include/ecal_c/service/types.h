@@ -71,7 +71,7 @@ struct eCAL_SClientEventCallbackData
  * @param service_id_  The service id struct of the connection that triggered the event.
  * @param data_        Event callback data structure with the event specific information.
 **/
-typedef void (*eCAL_ClientEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SClientEventCallbackData*);
+typedef void (*eCAL_ClientEventCallbackT)(const struct eCAL_SServiceId* /*service_id_*/, const struct eCAL_SClientEventCallbackData* /*data_*/);
 
 /**
  * @brief eCAL service server event callback type.
@@ -92,7 +92,13 @@ struct eCAL_SServerEventCallbackData
   long long time;              //!< event time in µs
 };
 
-typedef void (*eCAL_ServerEventCallbackT)(const struct eCAL_SServiceId*, const struct eCAL_SServerEventCallbackData*);
+/**
+ * @brief Server event callback function type.
+ *
+ * @param service_id_  The service id struct of the connection that triggered the event.
+ * @param data_        Event callback data structure with the event specific information.
+**/
+typedef void (*eCAL_ServerEventCallbackT)(const struct eCAL_SServiceId* /*service_id_*/, const struct eCAL_SServerEventCallbackData* /*data_*/);
 
 /**
  * @brief Service method information struct containing the method name, the request and response type information.
@@ -125,7 +131,7 @@ struct eCAL_SServiceResponse
  * @param service_response_  Service response struct containing the (responding) server informations and the response itself.
  * @param user_argument_     User argument that was forwarded by a SetCallback() function.
  **/
-typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*, void*);
+typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse* /*service_response_*/, void* /*user_argument_*/);
 
 /**
  * @brief Service method callback function type (low level server interface).
@@ -139,5 +145,5 @@ typedef void (*eCAL_ResponseCallbackT)(const struct eCAL_SServiceResponse*, void
  * @param[out] response_length_  Length of response data set from the user space.
  * @param      user_argument_    User argument that was forwarded by a SetCallback() function.
 **/
-typedef int (*eCAL_ServiceMethodCallbackT)(const struct eCAL_SServiceMethodInformation*, const void*, size_t, void**, size_t*, void*);
+typedef int (*eCAL_ServiceMethodCallbackT)(const struct eCAL_SServiceMethodInformation* /*method_info*/, const void* /*request_*/, size_t /*request_length*/, void** /*response_*/, size_t* /*response_length_*/, void* /*user_argument_*/);
 #endif /*ecal_c_service_types_h_included*/

@@ -30,11 +30,11 @@
 **/
 enum eCAL_Process_eSeverity
 {
-  eCAL_Process_eSeverity_unknown = 0,  /*!<  0 == condition unknown     */
-  eCAL_Process_eSeverity_healthy = 1,  /*!<  1 == process healthy       */
-  eCAL_Process_eSeverity_warning = 2,  /*!<  2 == process warning level */
+  eCAL_Process_eSeverity_unknown =  0,  /*!<  0 == condition unknown     */
+  eCAL_Process_eSeverity_healthy =  1,  /*!<  1 == process healthy       */
+  eCAL_Process_eSeverity_warning =  2,  /*!<  2 == process warning level */
   eCAL_Process_eSeverity_critical = 3,  /*!<  3 == process critical      */
-  eCAL_Process_eSeverity_failed = 4,  /*!<  4 == process failed        */
+  eCAL_Process_eSeverity_failed =   4,  /*!<  4 == process failed        */
 };
 
 
