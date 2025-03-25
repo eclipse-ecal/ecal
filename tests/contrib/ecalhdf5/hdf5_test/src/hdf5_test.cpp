@@ -296,6 +296,25 @@ void CreateMeasurement(Meas& hdf5_writer, std::string root_dir, std::string base
   }
 }
 
+TEST(contrib, DataTypeInformation_Equality)
+{
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_1 = { "string", "utf-8", "" };
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_2 = { "string", "utf-8", "" };
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_3 = data_type_info_1;
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_4{ data_type_info_1 };
+
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_5 = { "ring",   "utf-8", "" };
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_6 = { "string", "utf", "" };
+  eCAL::experimental::measurement::base::DataTypeInformation data_type_info_7 = { "string", "utf-8", "x" };
+
+  EXPECT_EQ(data_type_info_1, data_type_info_2) << "infos should be equal";
+  EXPECT_EQ(data_type_info_1, data_type_info_3) << "infos should be equal";
+  EXPECT_EQ(data_type_info_1, data_type_info_4) << "infos should be equal";
+  EXPECT_NE(data_type_info_1, data_type_info_5) << "infos should not be equal";
+  EXPECT_NE(data_type_info_1, data_type_info_6) << "infos should not be equal";
+  EXPECT_NE(data_type_info_1, data_type_info_7) << "infos should not be equal";
+}
+
 TEST(contrib, HDF5_EscapeUnescape)
 {
   std::string test_string             = "This string contains commata,slashes/ spaces, a percent sign (%), a bell\a, nasty line endings\r\n and a german letter oe from the Latin-1 codepage: \xF8";
@@ -562,6 +581,65 @@ TEST(contrib, HDF5_WriteReadTopicTypeInformation)
     EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(channel), info);
   }
 }
+
+TEST(contrib, HDF5_WriteReadTopicTypeInformationEmpty)
+{
+  // Define data that will be written to the file
+  TestingMeasEntry entry;
+  const auto& channel = entry.channel;
+  DataTypeInformation info{ "", "", "" };
+
+  std::string base_name = "datatypeinformation_meas_empty";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    MeasAPI hdf5_writer;
+    CreateMeasurement<MeasAPI, MeasAPIAccess>(hdf5_writer, meas_root_dir, base_name);
+
+    hdf5_writer.SetChannelDataTypeInformation(channel, info);
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    MeasAPI hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(channel), info);
+  }
+}
+
+TEST(contrib, HDF5_WriteReadTopicTypeInformationEmptyLegacy)
+{
+  // Define data that will be written to the file
+  TestingMeasEntry entry;
+  const auto& channel = entry.channel;
+  DataTypeInformation info{ "", "", "" };
+
+  std::string base_name = "datatypeinformation_meas_empty_legacy";
+  std::string meas_root_dir = output_dir + "/" + base_name;
+
+  // Write HDF5 file
+  {
+    MeasAPI hdf5_writer;
+    CreateMeasurement<MeasAPI, MeasAPIAccess>(hdf5_writer, meas_root_dir, base_name, MeasAPIAccess::CREATE_V5);
+
+    hdf5_writer.SetChannelDataTypeInformation(channel, info);
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  // Read entries with HDF5 dir API
+  {
+    MeasAPI hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(channel), info);
+  }
+}
+
 
 /*
 * This test verifies that you save different descriptors for the same channel
