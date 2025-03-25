@@ -87,11 +87,20 @@ namespace eCAL
       public:
         static DatatypeInformation GetDataTypeInformation()
         {
-          DatatypeInformation topic_info;
-          topic_info.encoding = "proto";
-          topic_info.name = "*";
-          topic_info.descriptor = "*";
-          return topic_info;
+          static const DatatypeInformation datatype_info = []() {
+            DatatypeInformation topic_info;
+            topic_info.encoding = "proto";
+            topic_info.name = "*";
+            topic_info.descriptor = "*";
+            return topic_info;
+          }();
+          return datatype_info;
+        }
+        
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info_)
+        {
+          const auto& own_data_type_info = GetDataTypeInformation();
+          return datatype_info_.encoding == own_data_type_info.encoding;
         }
 
         std::string Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& datatype_info_)
@@ -171,7 +180,6 @@ namespace eCAL
           return  type_name.substr(type_name.find_last_of('.') + 1, type_name.size());
         }
 
-
         eCAL::protobuf::CProtoDynDecoder                                                      m_dynamic_decoder;
         std::map<DatatypeInformation, std::shared_ptr<google::protobuf::util::TypeResolver>>  m_type_resolver_map;
       };
@@ -182,13 +190,21 @@ namespace eCAL
       public:
         static DatatypeInformation GetDataTypeInformation()
         {
-          DatatypeInformation topic_info;
-          topic_info.encoding = "proto";
-          topic_info.name = "*";
-          topic_info.descriptor = "*";
-          return topic_info;
+          static const DatatypeInformation datatype_info = []() {
+            DatatypeInformation topic_info;
+            topic_info.encoding = "proto";
+            topic_info.name = "*";
+            topic_info.descriptor = "*";
+            return topic_info;
+          }();
+          return datatype_info;
         }
-
+        
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info_)
+        {
+          const auto& own_data_type_info = GetDataTypeInformation();
+          return datatype_info_.encoding == own_data_type_info.encoding;
+        }
 
         std::shared_ptr<google::protobuf::Message> Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& datatype_info_)
         {

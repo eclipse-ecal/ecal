@@ -33,6 +33,11 @@ namespace eCAL
   {
     namespace internal
     {
+      /*
+      * Some restrictions:
+      * - The generated flatbuffers code does not contain information like descriptors or typenames
+      *   Those have to be generated additionally, thus they are not available for the DatatypeInformation.
+      */
       template <typename ObjectType, typename DatatypeInformation>
       class BaseSerializer
       {
@@ -40,10 +45,17 @@ namespace eCAL
         static DatatypeInformation GetDataTypeInformation()
         {
           DatatypeInformation topic_info{};
-          topic_info.encoding = "flatb";
+          topic_info.encoding = m_encoding;
           // empty type, empty descriptor
           return topic_info;
         }
+
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info)
+        {
+          return datatype_info.encoding == m_encoding;
+        }
+      private:
+        static constexpr const char* m_encoding = "flatb";
       };
 
       /*

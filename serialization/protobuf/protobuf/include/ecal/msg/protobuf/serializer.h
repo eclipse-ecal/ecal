@@ -40,12 +40,23 @@ namespace eCAL
       public:
         static DatatypeInformation GetDataTypeInformation()
         {
-          DatatypeInformation topic_info{};
-          static T msg{};
-          topic_info.encoding = "proto";
-          topic_info.name = msg.GetTypeName();
-          topic_info.descriptor = protobuf::GetProtoMessageDescription(msg);
-          return topic_info;
+          static const DatatypeInformation datatype_info = []() {
+            DatatypeInformation info{};
+            T msg{};
+            info.encoding = "proto";
+            info.name = msg.GetTypeName();
+            info.descriptor = protobuf::GetProtoMessageDescription(msg);
+            return info;
+          }();
+          return datatype_info;
+        }
+        
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info_)
+        {
+          const auto& own_datatype_information = GetDataTypeInformation();
+          return
+               datatype_info_.encoding == own_datatype_information.encoding
+            && datatype_info_.name == own_datatype_information.name;
         }
 
         static size_t MessageSize(const T& msg_)

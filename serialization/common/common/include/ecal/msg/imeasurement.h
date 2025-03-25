@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <set>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <stdexcept>
@@ -46,6 +47,13 @@ namespace eCAL
         : m_serializer{std::make_shared<Serializer>()}
         , binary_channel(std::move(binary_channel_))
       {
+        // We are trying to create a "strong" type, based on only a channel name
+        // There is a good chance, that the created channel does not match the data
+        // In this case, we will throw an exception, to make the user aware.
+        if (!m_serializer->AcceptsDataWithType(GetDataypeInformation()))
+        {
+          throw TypeMismatchException<eCAL::experimental::measurement::base::DataTypeInformation>(m_serializer->GetDataTypeInformation(), GetDataypeInformation());
+        }
       }
 
       ~IMessageChannel() = default;

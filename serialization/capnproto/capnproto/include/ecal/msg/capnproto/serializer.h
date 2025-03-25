@@ -51,11 +51,22 @@ namespace eCAL
       public:
         static DatatypeInformation GetDataTypeInformation()
         {
-          DatatypeInformation topic_info;
-          topic_info.encoding = eCAL::capnproto::EncodingAsString();
-          topic_info.name = eCAL::capnproto::TypeAsString<T>();
-          topic_info.descriptor = eCAL::capnproto::SchemaAsString<T>();
-          return topic_info;
+          static const DatatypeInformation datatype_info = []() {
+            DatatypeInformation topic_info;
+            topic_info.encoding = eCAL::capnproto::EncodingAsString();
+            topic_info.name = eCAL::capnproto::TypeAsString<T>();
+            topic_info.descriptor = eCAL::capnproto::SchemaAsString<T>();
+            return topic_info;
+          }();
+          return datatype_info;
+        }
+
+        static bool AcceptsDataWithType(const DatatypeInformation& data_type_info)
+        {
+          const auto& own_data_type_info = GetDataTypeInformation();
+          return 
+            data_type_info.encoding == own_data_type_info.encoding
+            && data_type_info.name == own_data_type_info.name ;
         }
 
         size_t MessageSize(const capnp::MallocMessageBuilder& message_builder_) const
@@ -104,11 +115,20 @@ namespace eCAL
     public:
       static DatatypeInformation GetDataTypeInformation()
       {
-        DatatypeInformation topic_info;
-        topic_info.encoding = eCAL::capnproto::EncodingAsString();
-        topic_info.name = "*";
-        topic_info.descriptor = "*";
-        return topic_info;
+        static const DatatypeInformation datatype_info = []() {
+          DatatypeInformation topic_info;
+          topic_info.encoding = eCAL::capnproto::EncodingAsString();
+          topic_info.name = "*";
+          topic_info.descriptor = "*";
+          return topic_info;
+        }();
+        return datatype_info;
+      }
+
+      static bool AcceptsDataWithType(const DatatypeInformation& datatype_info)
+      {
+        const auto& own_data_type_info = GetDataTypeInformation();
+        return datatype_info.encoding == own_data_type_info.encoding;
       }
 
       // This function is NOT threadsafe!!!
@@ -142,7 +162,7 @@ namespace eCAL
         }
         return m_schema_map[datatype_info_];
       }
-
+      
       capnp::MallocMessageBuilder                   m_msg_builder;
       std::map<DatatypeInformation, capnp::Schema>  m_schema_map;
       capnp::SchemaLoader                           m_loader;
