@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright (C) 2016 - 2019 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,31 +18,20 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(person_send_tcp)
+project(table_send)
 
+# set project properties
+set(table_send_src src/table_send.cpp)
+
+# find packages
+message("-- Checking for modules 'eCAL'")
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
 
-set(person_send_tcp_src
-    src/person_send_tcp.cpp
-)
-
-set(person_send_tcp_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto    
-)
-
-ecal_add_sample(${PROJECT_NAME} ${person_send_tcp_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${person_send_tcp_proto})
-
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::protobuf_core
-)
-
+# add and configure sample project
+ecal_add_sample(${PROJECT_NAME} ${table_send_src})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 
+# install and set properties
 ecal_install_sample(${PROJECT_NAME})
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/protobuf)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/binary)

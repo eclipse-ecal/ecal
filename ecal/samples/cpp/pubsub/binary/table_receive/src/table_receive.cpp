@@ -26,7 +26,7 @@
 
 // a simple struct to demonstrate
 // zero copy modifications
-struct alignas(4) SSimpleStruct
+struct alignas(1) STable
 {
   uint32_t version      = 1;
   uint16_t rows         = 5;
@@ -36,7 +36,7 @@ struct alignas(4) SSimpleStruct
 };
 
 // SSimpleStruct logging
-std::ostream& operator<<(std::ostream& os, const SSimpleStruct& s)
+std::ostream& operator<<(std::ostream& os, const STable& s)
 {
   os << "Version : " << s.version << std::endl;
   os << "Rows    : " << s.rows    << std::endl;
@@ -68,13 +68,13 @@ void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInforma
   std::cout << "------------------------------------"   << std::endl;
   std::cout << "SSimpleStruct :"                        << std::endl;
   std::cout << "------------------------------------"   << std::endl;
-  std::cout << *static_cast<const SSimpleStruct*>(data_.buffer) << std::endl;
+  std::cout << *static_cast<const STable*>(data_.buffer) << std::endl;
 }
 
 int main()
 {
-  const char* nodeName  = "blob_zero_copy_receive";
-  const char* topicName = "blob";
+  const char* nodeName  = "table_receive";
+  const char* topicName = "table";
 
   // initialize eCAL API
   eCAL::Initialize(nodeName);

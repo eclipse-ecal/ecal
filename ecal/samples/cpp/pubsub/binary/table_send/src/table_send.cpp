@@ -26,7 +26,7 @@
 
 // a simple struct to demonstrate
 // zero copy modifications
-struct alignas(4) SSimpleStruct
+struct alignas(1) STable
 {
   uint32_t version      = 1;
   uint16_t rows         = 5;
@@ -36,7 +36,7 @@ struct alignas(4) SSimpleStruct
 };
 
 // SSimpleStruct logging
-void log_struct(const char* action_name, const SSimpleStruct& s)
+void log_struct(const char* action_name, const STable& s)
 {
   std::cout << "------------------------------------" << std::endl;
   std::cout << action_name << std::endl;
@@ -68,14 +68,14 @@ public:
     if (len_ < GetSize() || buf_ == nullptr) return false;
 
     // create a new struct and update its content
-    SSimpleStruct simple_struct;
+    STable simple_struct;
     UpdateStruct(&simple_struct);
 
     // copy complete struct into the memory
-    *static_cast<SSimpleStruct*>(buf_) = simple_struct;
+    *static_cast<STable*>(buf_) = simple_struct;
 
     // log action
-    log_struct("WriteFull SSimpleStruct :", simple_struct);
+    log_struct("WriteFull STable :", simple_struct);
 
     return true;
   };
@@ -87,18 +87,18 @@ public:
     if (len_ < GetSize() || buf_ == nullptr) return false;
 
     // update the struct in memory
-    UpdateStruct(static_cast<SSimpleStruct*>(buf_));
+    UpdateStruct(static_cast<STable*>(buf_));
 
     // log action
-    log_struct("WriteModified SSimpleStruct :", *static_cast<SSimpleStruct*>(buf_));
+    log_struct("WriteModified STable :", *static_cast<STable*>(buf_));
 
     return true;
   };
 
-  size_t GetSize() override { return sizeof(SSimpleStruct); };
+  size_t GetSize() override { return sizeof(STable); };
 
 private:
-  void UpdateStruct(SSimpleStruct* simple_struct)
+  void UpdateStruct(STable* simple_struct)
   {
     // modify the simple_struct
     simple_struct->clock = clock;
@@ -116,9 +116,9 @@ private:
 
 int main()
 {
-  const char* nodeName       = "blob_zero_copy_send";
-  const char* topicName      = "blob";
-  const char* structTypeName = "SSimpleStruct";
+  const char* nodeName       = "table_send";
+  const char* topicName      = "table";
+  const char* structTypeName = "STable";
 
   // initialize eCAL API
   eCAL::Initialize(nodeName);

@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,20 +18,20 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(blob_zero_copy_receive)
+project(addressbook_receive_dynamic)
 
-# set project properties
-set(blob_zero_copy_receive_src src/blob_zero_copy_receive.cpp)
-
-# find packages
-message("-- Checking for modules 'eCAL'")
+find_package(CapnProto REQUIRED)
 find_package(eCAL REQUIRED)
 
-# add and configure sample project
-ecal_add_sample(${PROJECT_NAME} ${blob_zero_copy_receive_src})
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
+ecal_add_sample(${PROJECT_NAME} src/addressbook_receive_dynamic.cpp)
 
-# install and set properties
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/capnp)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::capnproto_core)
+target_link_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/ignore:4099>)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+
 ecal_install_sample(${PROJECT_NAME})
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/binary)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/capnproto)
