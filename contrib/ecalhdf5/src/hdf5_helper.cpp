@@ -26,22 +26,22 @@ bool CreateStringEntryInRoot(hid_t root, const std::string& url, const std::stri
     return CreateNullEntryInRoot(root, url);
 
   //  create scalar dataset
-  hid_t scalar_dataspace = H5Screate(H5S_SCALAR);
+  const auto scalar_dataspace = H5Screate(H5S_SCALAR);
   //  create new string data type
-  hid_t string_data_type = H5Tcopy(H5T_C_S1);
+  const auto string_data_type = H5Tcopy(H5T_C_S1);
   
   //  if attribute's value length exists, allocate space for it
   H5Tset_size(string_data_type, dataset_content.length());
   //  Create creation property for data_space
-  auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
+  const auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
   H5Pset_obj_track_times(ds_property, false);
   //H5Pset_create_intermediate_group(ds_property, 1);
 
   //  create attribute
-  hid_t data_set = H5Dcreate(root, url.c_str(), string_data_type, scalar_dataspace, H5P_DEFAULT, ds_property, H5P_DEFAULT);
+  const auto data_set = H5Dcreate(root, url.c_str(), string_data_type, scalar_dataspace, H5P_DEFAULT, ds_property, H5P_DEFAULT);
   if (data_set < 0) return false;
 
-  auto write_status = H5Dwrite(data_set, string_data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_content.c_str());
+  const auto write_status = H5Dwrite(data_set, string_data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_content.c_str());
   if (write_status < 0) return false;
 
   //  close all created stuff
@@ -66,16 +66,16 @@ bool ReadStringEntryAsString(hid_t root, const std::string& url, std::string& da
     return true;
   }
 
-  auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
+  const auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
   if (dataset_id < 0) return false;
 
-  auto size = H5Dget_storage_size(dataset_id);
+  const auto size = H5Dget_storage_size(dataset_id);
 
   herr_t read_status = -1;
   if (size >= 0)
   {
     data.resize(size);
-    hid_t string_data_type = H5Tcopy(H5T_C_S1);
+    const auto string_data_type = H5Tcopy(H5T_C_S1);
     H5Tset_size(string_data_type, size);
     read_status = H5Dread(dataset_id, string_data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, static_cast<void*>(const_cast<char*>(data.data())));
   }
@@ -92,18 +92,18 @@ bool CreateBinaryEntryInRoot(hid_t root, const std::string& url, const std::stri
   if (dataset_content.empty())
     return CreateNullEntryInRoot(root, url);
 
-  hsize_t hs_size = static_cast<hsize_t>(dataset_content.size());
+  const hsize_t hs_size = static_cast<hsize_t>(dataset_content.size());
   //  Create DataSpace with rank 1 and size dimension
-  auto data_space = H5Screate_simple(1, &hs_size, nullptr);
+  const auto data_space = H5Screate_simple(1, &hs_size, nullptr);
   //  Create creation property for data_space
-  auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
+  const auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
   H5Pset_obj_track_times(ds_property, false);
   
   // Create the dataset with the given name (url) in the root.
-  auto data_set = H5Dcreate(root, url.c_str(), H5T_NATIVE_UCHAR, data_space, H5P_DEFAULT, ds_property, H5P_DEFAULT);
+  const auto data_set = H5Dcreate(root, url.c_str(), H5T_NATIVE_UCHAR, data_space, H5P_DEFAULT, ds_property, H5P_DEFAULT);
 
   //  Write buffer to dataset
-  herr_t write_status = H5Dwrite(data_set, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_content.c_str());
+  const auto write_status = H5Dwrite(data_set, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_content.c_str());
 
   //  Close dataset, data space, and data set property
   H5Dclose(data_set);
@@ -122,10 +122,10 @@ bool ReadBinaryEntryAsString(hid_t root, const std::string& url, std::string& da
     return true;
   }
 
-  auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
+  const auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
   if (dataset_id < 0) return false;
 
-  auto size = H5Dget_storage_size(dataset_id);
+  const auto size = H5Dget_storage_size(dataset_id);
   data.resize(size);
 
   herr_t read_status = -1;
@@ -141,14 +141,14 @@ bool ReadBinaryEntryAsString(hid_t root, const std::string& url, std::string& da
 bool CreateNullEntryInRoot(hid_t root, const std::string& url)
 {
   // Choose dataspace based on whether dataset_content is empty.
-  auto data_space = H5Screate(H5S_NULL);
+  const auto data_space = H5Screate(H5S_NULL);
 
   //  Create creation property for data_space
-  auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
+  const auto ds_property = H5Pcreate(H5P_DATASET_CREATE);
   H5Pset_obj_track_times(ds_property, false);
 
   // Create the dataset with the given name (url) in the root.
-  auto data_set = H5Dcreate(root, url.c_str(), H5T_NATIVE_UCHAR, data_space, H5P_DEFAULT, ds_property, H5P_DEFAULT);
+  const auto data_set = H5Dcreate(root, url.c_str(), H5T_NATIVE_UCHAR, data_space, H5P_DEFAULT, ds_property, H5P_DEFAULT);
 
   H5Dclose(data_set);
   H5Pclose(ds_property);
@@ -159,14 +159,14 @@ bool CreateNullEntryInRoot(hid_t root, const std::string& url)
 
 bool IsNullEntryInRoot(hid_t root, const std::string& url)
 {
-  auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
+  const auto dataset_id = H5Dopen(root, url.c_str(), H5P_DEFAULT);
   if (dataset_id < 0) return false;
 
   bool is_null_dataset = false;
   // Check the dataset's dataspace.
-  hid_t space = H5Dget_space(dataset_id);
+  const auto space = H5Dget_space(dataset_id);
   if (space >= 0) {
-    H5S_class_t space_type = H5Sget_simple_extent_type(space);
+    const H5S_class_t space_type = H5Sget_simple_extent_type(space);
     is_null_dataset = (space_type == H5S_NULL);
     H5Sclose(space);
   }
