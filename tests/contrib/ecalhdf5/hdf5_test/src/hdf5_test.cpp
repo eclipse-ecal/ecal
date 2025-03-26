@@ -615,6 +615,8 @@ TEST(contrib, HDF5_WriteReadTopicTypeInformationEmptyLegacy)
 {
   // Define data that will be written to the file
   TestingMeasEntry entry;
+  entry.channel.id = 0;
+
   const auto& channel = entry.channel;
   DataTypeInformation info{ "", "", "" };
 
@@ -811,7 +813,7 @@ TEST(HDF5, MinMaxTimestamps)
     TestingMeasEntry{ {topic_name, id_1}, "topic2: test data", 3001, 3002,  0,  2 },
     TestingMeasEntry{ {topic_name, id_2}, "topic2: test data", 3051, 3052,  0,  1 },
     TestingMeasEntry{ {topic_name, id_1}, "topic2: test data", 4001, 4002,  0,  3 },
-    TestingMeasEntry{ {topic_name, id_1}, "topic2: test data", 5001, 5002,  0,  4 },
+    TestingMeasEntry{ {topic_name, id_1}, "",                  5001, 5002,  0,  4 },  // Test also writing / reading empty data (ecal can transport empty data!)
   };
 
   std::string base_name = "min_max_timestamps";
@@ -1043,7 +1045,7 @@ TEST(HDF5, TestReaderWriterV5)
     TestingMeasEntry{ {topic_name, 0}, "topic: test data", 3001, 3002, 0, 2 },
     TestingMeasEntry{ {topic_name, 0}, "topic: test data", 3051, 3052, 0, 1 },
     TestingMeasEntry{ {topic_name, 0}, "topic: test data", 4001, 4002, 0, 3 },
-    TestingMeasEntry{ {topic_name, 0}, "topic: test data", 5001, 5002, 0, 4 },
+    TestingMeasEntry{ {topic_name, 0}, "",                 5001, 5002, 0, 4 }, // Test also writing / reading empty data (ecal can transport empty data!)
   };
 
   std::string base_name = "read_write_v5";

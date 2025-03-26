@@ -33,6 +33,9 @@ bool ReadStringEntryAsString(hid_t root, const std::string& url, std::string& da
 bool CreateBinaryEntryInRoot(hid_t root, const std::string& url, const std::string& dataset_content);
 bool ReadBinaryEntryAsString(hid_t root, const std::string& url, std::string& data);
 
+bool CreateNullEntryInRoot(hid_t root, const std::string& url);
+bool IsNullEntryInRoot(hid_t root, const std::string& url);
+
 bool CreateInformationEntryInRoot(hid_t root, const std::string& url, const eCAL::eh5::EntryInfoVect& entries);
 bool GetEntryInfoVector(hid_t root, const std::string& url, eCAL::eh5::EntryInfoSet& entries);
 
