@@ -753,7 +753,7 @@ add_ecal_core_library(${PROJECT_NAME})
 ## 
 install(DIRECTORY
    "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h" EXCLUDE "include/v5/")
+    FILES_MATCHING PATTERN "*.h" PATTERN "v5/*" EXCLUDE)
 
 # install generated defs.h file    
 install(DIRECTORY
