@@ -79,13 +79,11 @@ endif()
 if(ECAL_CORE_PUBLISHER)
   add_subdirectory(cpp/pubsub/binary/binary_snd)
   add_subdirectory(cpp/pubsub/binary/binary_zero_copy_snd)
-  add_subdirectory(cpp/pubsub/binary/ping)
 endif()
 
 if(ECAL_CORE_SUBSCRIBER)
   add_subdirectory(cpp/pubsub/binary/binary_rec)
   add_subdirectory(cpp/pubsub/binary/binary_zero_copy_rec)
-  add_subdirectory(cpp/pubsub/binary/pong)
 endif()
 
 # services
