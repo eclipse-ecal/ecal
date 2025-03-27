@@ -26,7 +26,7 @@
 
 // a simple struct to demonstrate
 // zero copy modifications
-struct alignas(1) STable
+struct alignas(4) STable
 {
   uint32_t version      = 1;
   uint16_t rows         = 5;
