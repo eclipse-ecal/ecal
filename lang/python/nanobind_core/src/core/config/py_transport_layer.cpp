@@ -44,7 +44,6 @@ void AddConfigTransportLayer(nanobind::module_& module)
     .def(nb::init<>()) // Default constructor
     .def_rw("config_version", &UDP::Configuration::config_version, "UDP configuration version (Default: v2)")
     .def_rw("port", &UDP::Configuration::port, "UDP multicast port number (Default: 14002)")
-    .def_rw("mode", &UDP::Configuration::mode, "UDP mode (local/network)")
     .def_rw("mask", &UDP::Configuration::mask, "Multicast mask for group routing")
     .def_rw("send_buffer", &UDP::Configuration::send_buffer, "UDP send buffer size in bytes")
     .def_rw("receive_buffer", &UDP::Configuration::receive_buffer, "UDP receive buffer size in bytes")
