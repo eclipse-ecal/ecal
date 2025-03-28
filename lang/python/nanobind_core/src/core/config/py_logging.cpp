@@ -28,7 +28,7 @@ void AddConfigLogging(nanobind::module_& module)
   nb::class_<eCAL::Logging::Provider::Sink>(module, "LoggingProviderSink")
     .def(nb::init<>()) // Default constructor
     .def_rw("enable", &eCAL::Logging::Provider::Sink::enable, "Enable sink")
-    .def_rw("filter_log", &eCAL::Logging::Provider::Sink::filter_log, "Log message filter level");
+    .def_rw("log_level", &eCAL::Logging::Provider::Sink::log_level, "Log message filter level");
 
   // Bind eCAL::Logging::Provider::File::Configuration struct
   nb::class_<eCAL::Logging::Provider::File::Configuration>(module, "LoggingProviderFileConfiguration")
