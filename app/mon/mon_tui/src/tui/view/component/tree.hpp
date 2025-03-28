@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,7 +170,11 @@ public:
     Add(tree);
   }
 
+#if FTXUI_VERSION_MAJOR >= 6
+  Element OnRender() override
+#else
   Element Render() override
+#endif
   {
     return tree->Render();
   }

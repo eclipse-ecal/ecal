@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,11 @@ class ScrollerBase : public ComponentBase
   ScrollerBase(Component child) : selected_{selected_dummy} { Add(child); }
 
  private:
+#if FTXUI_VERSION_MAJOR >= 6
+  Element OnRender() final
+#else
   Element Render() final
+#endif
   {
     auto focused = Focused() ? focus : ftxui::select;
     auto style = Focused() ? inverted : nothing;
