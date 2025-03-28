@@ -19,17 +19,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(hello_snd_c)
+project(hello_send_c)
 
 find_package(eCAL REQUIRED)
 
 remove_definitions(-std=c++14)
 
-set(hello_snd_c_src
-    src/hello_snd.c
+set(hello_send_c_src
+    src/hello_send.c
 )
 
-ecal_add_sample(${PROJECT_NAME} ${hello_snd_c_src})
+ecal_add_sample(${PROJECT_NAME} ${hello_send_c_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 

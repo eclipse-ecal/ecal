@@ -19,17 +19,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(hello_rec_c)
+project(hello_receive_c)
 
 find_package(eCAL REQUIRED)
 
 remove_definitions(-std=c++14)
 
-set(hello_rec_c_src
-    src/hello_rec.c
+set(hello_receive_c_src
+    src/hello_receive.c
 )
 
-ecal_add_sample(${PROJECT_NAME} ${hello_rec_c_src})
+ecal_add_sample(${PROJECT_NAME} ${hello_receive_c_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 

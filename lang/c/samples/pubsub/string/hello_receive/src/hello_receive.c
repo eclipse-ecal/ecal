@@ -19,43 +19,48 @@
 
 #include <ecal_c/ecal.h>
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <string.h> //memset()
+#include <stdio.h> //printf()
+
+void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_)
+{
+  // unused arguments
+  (void)data_type_information_;
+  (void)user_argument_;
+
+  printf("Received topic \"%s\" with ", topic_id_->topic_name);
+  printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
+}
 
 int main()
 {
-  eCAL_Publisher* publisher;
+  eCAL_Subscriber *subscriber;
   struct eCAL_SDataTypeInformation data_type_information;
-  char        snd_s[] = "HELLO WORLD FROM C";
 
   // initialize eCAL API
-  eCAL_Initialize("hello_snd_c", NULL, NULL);
+  eCAL_Initialize("hello_receive_c", NULL, NULL);
 
-  // create publisher "Hello"
+  // create subscriber "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
   data_type_information.name = "string";
   data_type_information.encoding = "utf-8";
-
-  publisher = eCAL_Publisher_New("hello", &data_type_information, NULL, NULL);
-
-  printf("Publisher id: %ul\n\n", (unsigned long)eCAL_Publisher_GetTopicId(publisher)->topic_id.entity_id);
   
-  // send updates
+  subscriber = eCAL_Subscriber_New("hello", &data_type_information, NULL, NULL);
+
+  // add callback
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL);
+
+  printf("Subscriber id: %ul\n\n", (unsigned long)eCAL_Subscriber_GetTopicId(subscriber)->topic_id.entity_id);
+
+  // idle main thread
   while(eCAL_Ok())
   {
-    // send content
-    if(!eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
-    else
-      printf("Sending topic \"Hello\" failed !\n");
-
     // sleep 100 ms
     eCAL_Process_SleepMS(100);
   }
 
-  // delete publisher handle
-  eCAL_Publisher_Delete(publisher);
+  // destroy subscriber
+  eCAL_Subscriber_Delete(subscriber);
 
   // finalize eCAL API
   eCAL_Finalize();
