@@ -17,33 +17,34 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @file   subscriber.h
- * @brief  eCAL subscriber interface for google::protobuf message definitions
-**/
+#include <ecal/msg/protobuf/omeasurement.h>
 
-#pragma once
+#include <iostream>
 
-#include <ecal/msg/subscriber.h>
-#include <ecal/msg/protobuf/serializer.h>
+#include "person.pb.h"
 
-namespace eCAL
+constexpr auto ONE_SECOND = 1000000;
+
+int main(int /*argc*/, char** /*argv*/)
 {
-  namespace protobuf
+  // create a new measurement
+  eCAL::measurement::OMeasurement meas(".");
+
+  // create a channel (topic name "person")
+  eCAL::protobuf::OChannel<pb::People::Person> person_channel = eCAL::measurement::CreateChannel<eCAL::protobuf::OChannel<pb::People::Person>>(meas, "person");
+
+  pb::People::Person person;
+  person.set_name("Max");
+
+  long long timestamp = 0;
+
+  for (int i = 0; i< 100; i++)
   {
+    person.set_id(i);
 
-    /**
-     * @brief  eCAL google::protobuf subscriber class.
-     *
-     * Subscriber template  class for google::protobuf messages. For details see documentation of CSubscriber class.
-     *
-    **/
-    template <typename T>
-    using CSubscriber = CMessageSubscriber<T, internal::Serializer<T, ::eCAL::SDataTypeInformation>>;
-
-    /** @example person_rec.cpp
-    * This is an example how to use eCAL::CSubscriber to receive google::protobuf data with eCAL. To send the data, see @ref person_snd.cpp .
-    */
+    person_channel << eCAL::measurement::make_frame(person, timestamp);
+    timestamp += ONE_SECOND;
   }
-}
 
+  return 0;
+}

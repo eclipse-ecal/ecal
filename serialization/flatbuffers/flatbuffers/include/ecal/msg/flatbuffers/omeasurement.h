@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,29 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto2";
+/**
+ * @file   subscriber.h
+ * @brief  eCAL subscriber interface for google::protobuf message definitions
+**/
 
-package pb.Animal;
+#pragma once
 
-message Dog
+#include <ecal/msg/omeasurement.h>
+#include <ecal/msg/flatbuffers/serializer.h>
+
+namespace eCAL
 {
-  optional string name   = 1;
-  optional string colour = 2;
+  namespace flatbuffers
+  {
+    /**
+     * @brief  eCAL flatbuffers channel class.
+    **/
+    template <typename T>
+    using OChannel = ::eCAL::measurement::OMessageChannel<T, internal::ObjectSerializer<T, eCAL::experimental::measurement::base::DataTypeInformation>>;
+
+    /** @example monster_write.cpp
+    * This is an example how to use eCAL::flatbuffers::OObjectChannel to write flatbuffers data from a measurement.
+    */
+  }
 }
+

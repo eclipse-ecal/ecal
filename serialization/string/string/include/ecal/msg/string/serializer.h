@@ -25,6 +25,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstring>
 
 namespace eCAL
 {
@@ -32,17 +33,26 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename T>
+      template <typename T, typename DatatypeInformation>
       class Serializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation data_type_info;
-          data_type_info.encoding = "utf-8";
-          data_type_info.name = "string";
-          // empty descriptor
-          return data_type_info;
+          static const DatatypeInformation datatype_info = []() {
+            DatatypeInformation datatype_info{};
+            datatype_info.encoding = "utf-8";
+            datatype_info.name = "string";
+            // empty descriptor
+            return datatype_info;
+          }();
+          return datatype_info;
+        }
+
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info_)
+        {
+          auto own_datatype_information = GetDataTypeInformation();
+          return datatype_info_ == own_datatype_information;
         }
 
         static size_t MessageSize(const T& msg_)
@@ -60,7 +70,7 @@ namespace eCAL
           return(false);
         }
 
-        static T Deserialize(const void* buffer_, size_t size_, const SDataTypeInformation& /*data_type_info_*/)
+        static T Deserialize(const void* buffer_, size_t size_, const DatatypeInformation& /*data_type_info_*/)
         {
           return std::string(static_cast<const char*>(buffer_), size_);
         }

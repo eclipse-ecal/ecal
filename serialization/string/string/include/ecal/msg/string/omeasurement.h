@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,29 @@
  * ========================= eCAL LICENSE =================================
 */
 
-syntax = "proto2";
+/**
+ * @file   subscriber.h
+ * @brief  eCAL subscriber interface for google::protobuf message definitions
+**/
 
-import "animal.proto";
-import "house.proto";
+#pragma once
 
-package pb.People;
+#include <ecal/msg/omeasurement.h>
+#include <ecal/msg/string/serializer.h>
 
-message Person
+namespace eCAL
 {
-  enum SType
+  namespace string
   {
-    MALE   = 0;
-    FEMALE = 1;
+
+    /**
+     * @brief  eCAL string channel class.
+    **/
+    using OChannel = ::eCAL::measurement::OMessageChannel<std::string, internal::Serializer<std::string, eCAL::experimental::measurement::base::DataTypeInformation>>;
+
+    /** @example hello_read.cpp
+    * This is an example how to use eCAL::string::IChannel to read protobuf data from a measurement.
+    */
   }
-
-  required int32  id               = 1;
-  required string name             = 2;
-  optional SType  stype            = 3;
-  optional string email            = 4;
-
-  optional Animal.Dog        dog   = 5;
-  optional Environment.House house = 6;
 }
+

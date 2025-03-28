@@ -18,28 +18,27 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(blob_read)
+project(hello_measurement)
 
 find_package(eCAL REQUIRED)
+find_package(Protobuf REQUIRED)
 
-set(blob_read_src
-    src/blob_read.cpp
-)
+macro(create_measurement_sample target_name sample_sources)
+  ecal_add_sample(${target_name} ${sample_sources})
 
-ecal_add_sample(${PROJECT_NAME} ${blob_read_src})
-target_compile_definitions(${PROJECT_NAME} PRIVATE MEASUREMENT_PATH="${SAMPLE_PERSON_MEASUREMENT_PATH}")
+  target_link_libraries(${target_name}
+    PRIVATE
+      eCAL::string_measurement
+  )
+  
+  target_compile_features(${target_name} PRIVATE cxx_std_14)
+  
+  ecal_install_sample(${target_name})
+  
+  set_property(TARGET ${target_name} PROPERTY FOLDER samples/cpp/measurement/string)
+endmacro()
 
-target_link_libraries(${PROJECT_NAME} 
-  PRIVATE 
-    eCAL::measurement
-)
+create_measurement_sample(hello_read   hello_read.cpp)
+create_measurement_sample(hello_write  hello_write.cpp)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
-ecal_install_sample(${PROJECT_NAME})
-
-if(MSVC)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
-endif(MSVC)
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/measurement/binary)

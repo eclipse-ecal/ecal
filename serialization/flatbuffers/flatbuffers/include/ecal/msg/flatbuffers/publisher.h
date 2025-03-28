@@ -38,7 +38,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CObjectPublisher = CMessagePublisher<T, internal::ObjectSerializer<T>>;
+    using CObjectPublisher = CMessagePublisher<T, internal::ObjectSerializer<T, ::eCAL::SDataTypeInformation>>;
 
     /** @example monster_snd.cpp
     * This is an example how to use eCAL::CPublisher to send goggle::flatbuffers data with eCAL. To receive the data, see @ref monster_rec.cpp .

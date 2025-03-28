@@ -34,6 +34,7 @@ add_subdirectory(string)
 if(ECAL_STRING_BUILD_SAMPLES)
   add_subdirectory(samples/pubsub/hello_receive)
   add_subdirectory(samples/pubsub/hello_send)
+  add_subdirectory(samples/measurement)
 endif()
 
 # --------------------------------------------------------
