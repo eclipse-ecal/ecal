@@ -35,14 +35,6 @@ void AddTypesCustomDataTypes(nanobind::module_& module)
     return version == Types::UdpConfigVersion::V1 ? "UdpConfigVersion.V1" : "UdpConfigVersion.V2";
       });
 
-  // Bind UDPMode enum
-  nb::enum_<Types::UDPMode>(module, "UDPMode")
-    .value("NETWORK", Types::UDPMode::NETWORK)
-    .value("LOCAL",   Types::UDPMode::LOCAL)
-    .def("__repr__", [](Types::UDPMode mode) {
-        return mode == Types::UDPMode::NETWORK ? "UDPMode.NETWORK" : "UDPMode.LOCAL";
-      });
-
   // Bind IpAddressV4 class
   nb::class_<Types::IpAddressV4>(module, "IpAddressV4")
     .def(nb::init<const std::string&>(), nb::arg("ip_address"), "Initialize from a string IP address")

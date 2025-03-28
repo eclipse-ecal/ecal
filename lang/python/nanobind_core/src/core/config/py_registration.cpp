@@ -23,41 +23,55 @@
 #include <ecal/config/registration.h>
 
 namespace nb = nanobind;
-using namespace eCAL::Registration;
 
 void AddConfigRegistration(nanobind::module_& module)
 {
-  // Bind Registration::Layer::SHM::Configuration struct
-  nb::class_<Layer::SHM::Configuration>(module, "RegistrationLayerSHMConfiguration")
-    .def(nb::init<>()) // Default constructor
-    .def_rw("enable", &Layer::SHM::Configuration::enable, "Enable shared memory-based registration")
-    .def_rw("domain", &Layer::SHM::Configuration::domain, "Shared memory registration domain name")
-    .def_rw("queue_size", &Layer::SHM::Configuration::queue_size, "Queue size of registration events");
+  // Enums
+  nb::enum_<eCAL::Registration::Local::eTransportType>(module, "LocalTransportType")
+    .value("shm", eCAL::Registration::Local::eTransportType::shm)
+    .value("udp", eCAL::Registration::Local::eTransportType::udp)
+    .export_values();
 
-  // Bind Registration::Layer::UDP::Configuration struct
-  nb::class_<Layer::UDP::Configuration>(module, "RegistrationLayerUDPConfiguration")
-    .def(nb::init<>()) // Default constructor
-    .def_rw("enable", &Layer::UDP::Configuration::enable, "Enable UDP-based registration")
-    .def_rw("port", &Layer::UDP::Configuration::port, "UDP multicast port number");
+  nb::enum_<eCAL::Registration::Network::eTransportType>(module, "NetworkTransportType")
+    .value("udp", eCAL::Registration::Network::eTransportType::udp)
+    .export_values();
 
-  // Bind Registration::Layer::Configuration struct
-  nb::class_<Layer::Configuration>(module, "RegistrationLayerConfiguration")
-    .def(nb::init<>()) // Default constructor
-    .def_rw("shm", &Layer::Configuration::shm, "Shared memory registration configuration")
-    .def_rw("udp", &Layer::Configuration::udp, "UDP-based registration configuration");
+  // Local::SHM::Configuration
+  nb::class_<eCAL::Registration::Local::SHM::Configuration>(module, "LocalSHMConfig")
+    .def(nb::init<>())
+    .def_rw("domain", &eCAL::Registration::Local::SHM::Configuration::domain)
+    .def_rw("queue_size", &eCAL::Registration::Local::SHM::Configuration::queue_size);
 
-  // Bind Registration::Configuration struct
-  nb::class_<Configuration>(module, "RegistrationConfiguration")
-    .def(nb::init<>()) // Default constructor
-    .def_rw("registration_timeout_ms", &Configuration::registration_timeout,
-      "Timeout for topic registration in milliseconds")
-    .def_rw("registration_refresh_ms", &Configuration::registration_refresh,
-      "Topic registration refresh cycle (must be smaller than timeout)")
-    .def_rw("network_enabled", &Configuration::network_enabled,
-      "Enable/disable network communication (false = local communication only)")
-    .def_rw("loopback", &Configuration::loopback,
-      "Enable receiving UDP messages on the same local machine")
-    .def_rw("shm_transport_domain", &Configuration::shm_transport_domain,
-      "Shared memory transport domain (enables interprocess mechanisms across virtual host borders)")
-    .def_rw("layer", &Configuration::layer, "Layer configuration for registration mechanisms");
+  // Local::UDP::Configuration
+  nb::class_<eCAL::Registration::Local::UDP::Configuration>(module, "LocalUDPConfig")
+    .def(nb::init<>())
+    .def_rw("port", &eCAL::Registration::Local::UDP::Configuration::port);
+
+  // Local::Configuration
+  nb::class_<eCAL::Registration::Local::Configuration>(module, "LocalConfig")
+    .def(nb::init<>())
+    .def_rw("transport_type", &eCAL::Registration::Local::Configuration::transport_type)
+    .def_rw("shm", &eCAL::Registration::Local::Configuration::shm)
+    .def_rw("udp", &eCAL::Registration::Local::Configuration::udp);
+
+  // Network::UDP::Configuration
+  nb::class_<eCAL::Registration::Network::UDP::Configuration>(module, "NetworkUDPConfig")
+    .def(nb::init<>())
+    .def_rw("port", &eCAL::Registration::Network::UDP::Configuration::port);
+
+  // Network::Configuration
+  nb::class_<eCAL::Registration::Network::Configuration>(module, "NetworkConfig")
+    .def(nb::init<>())
+    .def_rw("transport_type", &eCAL::Registration::Network::Configuration::transport_type)
+    .def_rw("udp", &eCAL::Registration::Network::Configuration::udp);
+
+  // Root Configuration
+  nb::class_<eCAL::Registration::Configuration>(module, "RegistrationConfig")
+    .def(nb::init<>())
+    .def_rw("registration_timeout", &eCAL::Registration::Configuration::registration_timeout)
+    .def_rw("registration_refresh", &eCAL::Registration::Configuration::registration_refresh)
+    .def_rw("loopback", &eCAL::Registration::Configuration::loopback)
+    .def_rw("shm_transport_domain", &eCAL::Registration::Configuration::shm_transport_domain)
+    .def_rw("local", &eCAL::Registration::Configuration::local)
+    .def_rw("network", &eCAL::Registration::Configuration::network);
 }
