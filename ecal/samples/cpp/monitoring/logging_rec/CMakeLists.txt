@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2019 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,5 +16,27 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(monitoring)
-add_subdirectory(pubsub)
+cmake_minimum_required(VERSION 3.10)
+
+project(logging_rec)
+
+find_package(eCAL REQUIRED)
+find_package(Protobuf REQUIRED)
+
+set(logging_rec_src
+    src/logging_rec.cpp
+)
+
+ecal_add_sample(${PROJECT_NAME} ${logging_rec_src})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    eCAL::core
+    eCAL::core_pb
+    protobuf::libprotobuf
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_sample(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/monitoring)
