@@ -95,7 +95,11 @@ public:
     return *view_model;
   }
 
+#if FTXUI_VERSION_MAJOR >= 6
+  ftxui::Element OnRender() override
+#else
   ftxui::Element Render() override
+#endif
   {
     using namespace ftxui;
 
