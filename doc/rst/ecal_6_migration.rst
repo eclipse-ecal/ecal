@@ -508,8 +508,8 @@ eCAL 6 Code:
 Configuration API
 ~~~~~~~~~~~~~~~~~
 
-Previously, eCAL was configured mainly by its configuration file (``eCAL.ini``).
-The file format was changed to ``eCAL.yaml`` to allow for hierarchical configurations.
+Previously, eCAL was configured mainly by its configuration file (``ecal.ini``).
+The file format was changed to ``ecal.yaml`` to allow for hierarchical configurations.
 At the same time, it's now possible to manually set all configurations through code, too.
 This is especially useful for hard configuration of the communication system, like for executing unit tests.
 For more information/usage, please read the section about :ref:`configuration <configuration_options>` .
