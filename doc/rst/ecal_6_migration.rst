@@ -72,8 +72,8 @@ There is another parameter, the ``eCAL::PubEventCallbackT``, you can pass to the
 
   eCAL::CPublisher publisher("topic_name", eCAL::SDataTypeInformation{}, pub_event_callback);
 
-2. Deprecated Methods:
-----------------------
+2. Removed Methods:
+-------------------
 
 As you can see from the previous section, you can configure the publisher with a configuration object.
 This makes the convenience methods for setting up the publisher after initialization obsolete. 
@@ -196,7 +196,7 @@ eCAL Subscriber
 
 For the subscriber, similiar changes apply as for the publisher. See `publisher_constructor_changes`_ for more information.
 
-2. Deprecated Methods:
+2. Removed Methods:
 ----------------------
 
 .. list-table:: Removed functions for CSubscriber
@@ -513,6 +513,74 @@ The file format was changed to ``ecal.yaml`` to allow for hierarchical configura
 At the same time, it's now possible to manually set all configurations through code, too.
 This is especially useful for hard configuration of the communication system, like for executing unit tests.
 For more information/usage, please read the section about :ref:`configuration <configuration_options>` .
+
+
+Removed functions
+~~~~~~~~~~~~~~~~~
+
+Next to the removed functions in the publisher/subscriber/service classes, there are several functions that have been removed.
+Mostly because you can directly access the content via the the configuration Object, so that the convenient functions are not needed anymore.
+
+The following functions were from the config.h (previous ecal_config.h):
+
+.. list-table:: Removed functions for (ecal\_)config.h
+  :header-rows: 1
+  :widths: 10 90
+
+  * - Removed Function
+    - Replacement
+  * - ``GetMaxUdpBandwidthBytesPerSecond()``
+    - none
+  * - ``IsInprocRecEnable()``
+    - none
+  * - ``GetHostGroupName()``
+    - ``GetShmTransportDomain()``
+  * - ``GetMonitoringTimeoutMs()``
+    - none
+  * - ``GetMonitoringFilterExcludeList()``
+    - none
+  * - ``GetMonitoringFilterIncludeList()``
+    - none
+  * - ``GetConsoleLogFilter()``
+    - ``eCAL::GetConfiguration().logging.provider.console.filter_log``
+  * - ``GetFileLogFilter()``
+    - ``eCAL::GetConfiguration().logging.provider.file.filter_log``
+  * - ``GetUdpLogFilter()``
+    - ``eCAL::GetConfiguration().logging.provider.udp.filter_log``
+  * - ``GetEcalSysFilterExcludeList()``
+    - ``eCAL::GetConfiguration().application.sys.filter_excl``
+  * - ``GetPublisherInprocMode()``
+    - none
+  * - ``GetPublisherShmMode()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.enable``
+  * - ``GetPublisherTcpMode()``
+    - ``eCAL::GetConfiguration().publisher.layer.tcp.enable``
+  * - ``GetPublisherUdpMulticastMode()``
+    - none
+  * - ``GetMemfileMinsizeBytes()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.memfile_min_size_bytes``
+  * - ``GetMemfileOverprovisioningPercentage()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.memfile_reserve_percent``
+  * - ``GetMemfileAckTimeoutMs()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.acknowledge_timeout_ms``
+  * - ``IsMemfileZerocopyEnabled()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.zero_copy_mode``
+  * - ``GetMemfileBufferCount()``
+    - ``eCAL::GetConfiguration().publisher.layer.shm.memfile_buffer_count``
+  * - ``IsTopicTypeSharingEnabled()``
+    - none
+  * - ``IsTopicDescriptionSharingEnabled()``
+    - none
+  * - ``IsServiceProtocolV0Enabled()``
+    - none
+  * - ``IsServiceProtocolV1Enabled()``
+    - is now default
+  * - ``IsShmMonitoringEnabled()``
+    - none
+  * - ``IsNetworkMonitoringDisabled()``
+    - none
+  * - ``GetDropOutOfOrderMessages()``
+    - ``eCAL::GetConfiguration().subscriber.drop_out_of_order_messages``
 
 
 C Core API
