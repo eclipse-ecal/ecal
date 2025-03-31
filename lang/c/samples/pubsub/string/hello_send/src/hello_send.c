@@ -18,7 +18,6 @@
 */
 
 #include <ecal_c/ecal.h>
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,7 +26,8 @@ int main()
 {
   eCAL_Publisher* publisher;
   struct eCAL_SDataTypeInformation data_type_information;
-  char        snd_s[] = "HELLO WORLD FROM C";
+  char snd_s[256];
+  int cnt = 0;
 
   // initialize eCAL API
   eCAL_Initialize("hello_send_c", NULL, NULL);
@@ -44,13 +44,16 @@ int main()
   // send updates
   while(eCAL_Ok())
   {
+    // create message
+    snprintf(snd_s, sizeof(snd_s), "HELLO WORLD FROM C (%d)", ++cnt);
+
     // send content
-    if(!eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), NULL))
+    if(!eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s) + 1, NULL))
       printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
     else
       printf("Sending topic \"Hello\" failed !\n");
 
-    // sleep 100 ms
+    // sleep 500 ms
     eCAL_Process_SleepMS(500);
   }
 
