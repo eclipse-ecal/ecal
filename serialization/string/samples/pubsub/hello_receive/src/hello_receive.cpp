@@ -37,7 +37,7 @@ int main()
   std::cout << "-------------------------------" << std::endl;
 
   /* 
-    Initialize eCAL. You always have to initialize eCAL beforee using its API.
+    Initialize eCAL. You always have to initialize eCAL before using its API.
     The name of our eCAL Process will be "hello_receive". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
@@ -63,7 +63,14 @@ int main()
     Creating an infinite loop.
     eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   */
-  while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  while (eCAL::Ok())
+  {
+    /*
+      Sleep for 500ms to avoid busy waiting.
+      You can use eCAL::Process::SleepMS() to sleep in milliseconds.
+    */
+    eCAL::Process::SleepMS(500);
+  }
 
   /*
     Deinitialize eCAL.

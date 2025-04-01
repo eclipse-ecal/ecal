@@ -35,7 +35,7 @@ int main()
   std::cout << "-------------------------------" << std::endl;
 
   /* 
-    Initialize eCAL. You always have to initialize eCAL beforee using its API.
+    Initialize eCAL. You always have to initialize eCAL before using its API.
     The name of our eCAL Process will be "hello_send". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
