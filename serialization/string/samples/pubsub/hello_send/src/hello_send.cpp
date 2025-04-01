@@ -41,14 +41,14 @@ int main()
   {
     // build string
     std::stringstream snd_content;
-    snd_content << "Hello World" << " (" << ++cnt << ")";
+    snd_content << "HELLO WORLD FROM C++" << " (" << ++cnt << ")";
 
     // send content
     pub.Send(snd_content.str(), cnt);
     std::cout << "Sent \"" << snd_content.str() << "\"" << std::endl;
 
     // sleep 10 ms
-    eCAL::Process::SleepMS(10);
+    eCAL::Process::SleepMS(500);
   }
 
   // finalize eCAL API
