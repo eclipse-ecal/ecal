@@ -134,7 +134,8 @@ jobs:
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LOCALSTATEDIR=/var \
         -DCMAKE_INSTALL_LIBDIR=lib/$(arch)-linux-gnu \
-        -DPython_FIND_VIRTUALENV=ONLY
+        -DPython_FIND_VIRTUALENV=ONLY \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
       shell: bash
 
     - name: Build Release
