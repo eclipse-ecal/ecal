@@ -71,8 +71,11 @@ add_custom_target(documentation_copy_rst_files ALL
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/hello_world
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples                                            ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/hello_world
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                       ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/hello_world
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Continental.eCAL.String.Samples/pubsub ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/hello_world
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                    ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/hello_world
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 

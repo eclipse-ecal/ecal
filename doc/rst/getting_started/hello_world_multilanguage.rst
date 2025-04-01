@@ -25,3 +25,24 @@ Let's begin with the publisher side of our Hello World application.
             :language: cpp
             :linenos:
             :lines: 20-
+
+    .. tab:: C
+        
+        .. literalinclude:: /source_code_samples/c/hello_world/hello_send/src/hello_send.c
+            :language: cpp
+            :linenos:
+            :lines: 20-
+
+    .. tab:: C#
+
+        .. literalinclude:: /source_code_samples/csharp/hello_world/hello_send/src/hello_send.cs
+            :language: cpp
+            :linenos:
+            :lines: 20-
+
+    .. tab:: Python
+
+        .. literalinclude:: /source_code_samples/python/hello_world/hello_send/src/hello_send.py
+            :language: cpp
+            :linenos:
+            :lines: 20-
