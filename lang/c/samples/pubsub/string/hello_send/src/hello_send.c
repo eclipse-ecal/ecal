@@ -49,7 +49,7 @@ int main()
     snprintf(snd_s, sizeof(snd_s), "HELLO WORLD FROM C (%d)", ++cnt);
 
     // send content
-    if(!eCAL_Publisher_Send(publisher, snd_s, sizeof(snd_s), NULL))
+    if(!eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s), NULL))
       printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
     else
       printf("Sending topic \"Hello\" failed !\n");
