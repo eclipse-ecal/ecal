@@ -193,7 +193,6 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 html_theme = 'sphinx_book_theme'
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -234,6 +233,7 @@ html_theme_options = {
 
     # Enable a banner telling the user that they look at an outdated version of the documentation
     "show_version_warning_banner": True,
+    "pygment_light_style" : "vs",
 }
 
 html_sidebars = {
