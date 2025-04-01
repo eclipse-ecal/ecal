@@ -147,13 +147,13 @@ jobs:
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    - name: Pack SDK
-      run: cpack -C Debug
-      working-directory: ${{ runner.workspace }}/_build/sdk
-
     - name: Pack complete setup
       run: cpack -C Release
       working-directory: ${{ runner.workspace }}/_build/complete
+    
+    - name: Pack SDK
+      run: cpack -C Debug
+      working-directory: ${{ runner.workspace }}/_build/sdk
 
     - name: Get Project version from git tag
       shell: powershell
