@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,37 +29,55 @@
  */
 
 using System;
+// Include the eCAL API namespace
 using Continental.eCAL.Core;
 
 public class StringReceive
 {
   public static void Main()
   {
-    // Initialize eCAL API.
-    Core.Initialize("minimal string subscriber csharp");
+    /*
+      Initialize eCAL. You always have to initialize eCAL before using its API.
+      The name of our eCAL Process will be "hello_receive_csharp". 
+      This name will be visible in the eCAL Monitor, once the process is running.
+    */
+    Core.Initialize("hello_receive_csharp");
 
-    // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    /*
+      Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+      The topic we are going to receive is called "hello".
+    */
+    StringSubscriber subscriber = new StringSubscriber("hello");
 
-    // Create a string subscriber (topic name "Hello")
-    StringSubscriber subscriber = new StringSubscriber("Hello");
-
-    // Register a receive callback.
+    /*
+      Creating an register a receive callback. The callback will be called whenever a new message is received.
+    */
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>
     {
       Console.WriteLine(String.Format("Receiving: {0}", message));
     });
 
-    // Idle main thread.
+    /*
+      Creating an infinite loop.
+      eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+    */
     while (Core.Ok())
     {
-      System.Threading.Thread.Sleep(100);
+      /*
+        Sleep for 500ms to avoid busy waiting.
+      */
+      System.Threading.Thread.Sleep(500);
     }
 
-    // Dispose subscriber.
+    /*
+      Cleanup. Dispose the subscriber to free resources.
+    */
     subscriber.Dispose();
 
-    // Finalize eCAL API.
+    /*
+      Terminate eCAL. This will stop all eCAL processes and free all resources.
+      You should always terminate eCAL before exiting your application.
+    */
     Core.Terminate();
   }
 }

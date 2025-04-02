@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,42 +30,58 @@
 
 using System;
 using System.Threading;
+// Include the eCAL API namespace
 using Continental.eCAL.Core;
 
 public class StringSend
 {
   public static void Main()
   {
-    // Initialize eCAL API.
-    Core.Initialize("minimal string publisher csharp");
+    /*
+      Initialize eCAL. You always have to initialize eCAL before using its API.
+      The name of our eCAL Process will be "hello_send_csharp". 
+      This name will be visible in the eCAL Monitor, once the process is running.
+    */
+    Core.Initialize("hello_send_csharp");
 
-    // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    /*
+      Now we create a new publisher that will publish the topic "hello".      
+    */
+    StringPublisher publisher = new StringPublisher("hello");
 
-    // Create a string publisher (topic name "Hello").
-    StringPublisher publisher = new StringPublisher("Hello");
-
-    // Idle main thread.
-    int loop = 0;
+    /*
+      Creating an infinite publish-loop.
+      eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
+    */
+    int loop_count = 0;
     while (Core.Ok())
     {
-      // Construct the message.
-      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop);
+      /*
+        Construct a message. The message is a string that will be sent to the subscribers.
+      */
+      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop_count);
 
-      // Print the message.
-      Console.WriteLine(String.Format("Sending: {0}", message));
-
-      // Send the message.
+      /*
+        Send the message. The message is sent to all subscribers that are currently connected to the topic "hello".
+      */
       publisher.Send(message);
+      Console.WriteLine(String.Format("Sent: {0}", message));
 
-      // Cool down.
-      Thread.Sleep(100);
+      /*
+        Sleep for 500ms to avoid busy waiting.
+      */
+      Thread.Sleep(500);
     }
 
-    // Dispose publisher.
+    /*
+      Cleanup. Dispose the publisher to free resources.
+    */
     publisher.Dispose();
 
-    // Finalize eCAL API.
+    /*
+      Terminate eCAL. This will stop all eCAL processes and free all resources.
+      You should always terminate eCAL when you are done using it.
+    */
     Core.Terminate();
   }
 }
