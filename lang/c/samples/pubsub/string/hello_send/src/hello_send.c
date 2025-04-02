@@ -37,8 +37,8 @@ int main()
   */
   eCAL_Publisher* publisher;
   struct eCAL_SDataTypeInformation data_type_information;
-  char snd_s[256];
-  int cnt = 0;
+  char message[256];
+  int loop_count = 0;
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -79,14 +79,14 @@ int main()
       Build the string you want to send, using snprintf in this example.
       The string will be "HELLO WORLD FROM C (1)", "HELLO WORLD FROM C (2)", ...
     */
-    snprintf(snd_s, sizeof(snd_s), "HELLO WORLD FROM C (%d)", ++cnt);
+    snprintf(message, sizeof(message), "HELLO WORLD FROM C (%d)", ++loop_count);
 
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
       The message is sent as a raw string, so we use the length of the string as the size of the message.
     */
-    if(!eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+    if(!eCAL_Publisher_Send(publisher, message, strlen(message), NULL))
+      printf("Published topic \"Hello\" with \"%s\"\n", message);
     else
       printf("Sending topic \"Hello\" failed !\n");
 
