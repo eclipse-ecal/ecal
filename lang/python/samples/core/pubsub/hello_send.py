@@ -23,7 +23,11 @@ import ecal.core.core as ecal_core
 # import the eCAL publisher AP
 from ecal.core.publisher import StringPublisher
 
-def main(): 
+def main():
+  print("-------------------------------")
+  print(" Python: HELLO WORLD SENDER")
+  print("-------------------------------")
+  
   # Initialize eCAL. You always have to initialize eCAL before using it.
   # The name of our eCAL Process will be "hello_send_python".
   # This name will be visible in the eCAL Monitor, once the process is running.

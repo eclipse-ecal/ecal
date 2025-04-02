@@ -36,6 +36,9 @@ public class StringReceive
 {
   public static void Main()
   {
+    Console.WriteLine("-------------------------------");
+    Console.WriteLine(" C#: HELLO WORLD RECEIVER");
+    Console.WriteLine("-------------------------------");
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
       The name of our eCAL Process will be "hello_receive_csharp". 

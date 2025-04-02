@@ -29,6 +29,10 @@ def callback(topic_name, msg, time):
 
 
 def main():
+  print("-------------------------------")
+  print(" Python: HELLO WORLD RECEIVER")
+  print("-------------------------------")
+  
   # Initialize eCAL. You always have to initialize eCAL before using it.
   # The name of our eCAL Process will be "hello_receive_python".
   # This name will be visible in the eCAL Monitor, once the process is running.

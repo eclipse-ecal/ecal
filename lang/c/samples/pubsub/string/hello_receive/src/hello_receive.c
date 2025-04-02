@@ -44,6 +44,9 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
 
 int main()
 {
+  printf("-------------------------------\n");
+  printf(" C: HELLO WORLD RECEIVER\n");
+  printf("-------------------------------\n");
 
   /*
     We create the objects we want to work with.

@@ -37,6 +37,10 @@ public class StringSend
 {
   public static void Main()
   {
+    Console.WriteLine("-------------------------------");
+    Console.WriteLine(" C#: HELLO WORLD SENDER");
+    Console.WriteLine("-------------------------------");
+
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
       The name of our eCAL Process will be "hello_send_csharp". 
