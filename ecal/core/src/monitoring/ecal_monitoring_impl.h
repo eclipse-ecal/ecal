@@ -73,64 +73,64 @@ namespace eCAL
     bool RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
     bool UnregisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_);
 
-    using TopicMonMapT = std::map<EntityIdT, Monitoring::STopicMon>;
-    struct STopicMonMap
+    using TopicMapT = std::map<EntityIdT, Monitoring::STopic>;
+    struct STopicMap
     {
-      explicit STopicMonMap() :
-        map(std::make_unique<TopicMonMapT>())
+      explicit STopicMap() :
+        map(std::make_unique<TopicMapT>())
       {
       };
-      std::mutex                     sync;
-      std::unique_ptr<TopicMonMapT>  map;
+      std::mutex                  sync;
+      std::unique_ptr<TopicMapT>  map;
     };
 
-    using ProcessMonMapT = std::map<EntityIdT, Monitoring::SProcessMon>;
-    struct SProcessMonMap
+    using ProcessMapT = std::map<EntityIdT, Monitoring::SProcess>;
+    struct SProcessMap
     {
-      explicit SProcessMonMap() :
-        map(std::make_unique<ProcessMonMapT>())
+      explicit SProcessMap() :
+        map(std::make_unique<ProcessMapT>())
       {
       };
-      std::mutex                       sync;
-      std::unique_ptr<ProcessMonMapT>  map;
+      std::mutex                    sync;
+      std::unique_ptr<ProcessMapT>  map;
     };
 
-    using ServerMonMapT = std::map<EntityIdT, Monitoring::SServerMon>;
-    struct SServerMonMap
+    using ServerMapT = std::map<EntityIdT, Monitoring::SServer>;
+    struct SServerMap
     {
-      explicit SServerMonMap() :
-        map(std::make_unique<ServerMonMapT>())
-      {
-      };
-      std::mutex                      sync;
-      std::unique_ptr<ServerMonMapT>  map;
-    };
-
-    using ClientMonMapT = std::map<EntityIdT, Monitoring::SClientMon>;
-    struct SClientMonMap
-    {
-      explicit SClientMonMap() :
-        map(std::make_unique<ClientMonMapT>())
+      explicit SServerMap() :
+        map(std::make_unique<ServerMapT>())
       {
       };
       std::mutex                      sync;
-      std::unique_ptr<ClientMonMapT>  map;
+      std::unique_ptr<ServerMapT>     map;
     };
 
-    STopicMonMap* GetMap(enum ePubSub pubsub_type_);
+    using ClientMapT = std::map<EntityIdT, Monitoring::SClient>;
+    struct SClientMap
+    {
+      explicit SClientMap() :
+        map(std::make_unique<ClientMapT>())
+      {
+      };
+      std::mutex                      sync;
+      std::unique_ptr<ClientMapT>     map;
+    };
+
+    STopicMap* GetMap(enum ePubSub pubsub_type_);
 
     void MonitorProcs(Monitoring::SMonitoring& monitoring_);
     void MonitorServer(Monitoring::SMonitoring& monitoring_);
     void MonitorClients(Monitoring::SMonitoring& monitoring_);
-    void MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
+    void MonitorTopics(STopicMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_);
 
     bool                                         m_init;
 
     // database
-    SProcessMonMap                               m_process_map;
-    STopicMonMap                                 m_publisher_map;
-    STopicMonMap                                 m_subscriber_map;
-    SServerMonMap                                m_server_map;
-    SClientMonMap                                m_clients_map;
+    SProcessMap                               m_process_map;
+    STopicMap                                 m_publisher_map;
+    STopicMap                                 m_subscriber_map;
+    SServerMap                                m_server_map;
+    SClientMap                                m_client_map;
   };
 }

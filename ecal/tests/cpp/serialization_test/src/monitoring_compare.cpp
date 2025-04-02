@@ -60,96 +60,96 @@ namespace eCAL
       }
 
       // compare publisher info
-      if (monitoring1.publisher.size() != monitoring2.publisher.size())
+      if (monitoring1.publishers.size() != monitoring2.publishers.size())
       {
         return false;
       }
 
-      for (size_t i = 0; i < monitoring1.publisher.size(); ++i)
+      for (size_t i = 0; i < monitoring1.publishers.size(); ++i)
       {
-        if (monitoring1.publisher[i].registration_clock != monitoring2.publisher[i].registration_clock ||
-          monitoring1.publisher[i].host_name != monitoring2.publisher[i].host_name ||
-          monitoring1.publisher[i].shm_transport_domain != monitoring2.publisher[i].shm_transport_domain ||
-          monitoring1.publisher[i].process_id != monitoring2.publisher[i].process_id ||
-          monitoring1.publisher[i].process_name != monitoring2.publisher[i].process_name ||
-          monitoring1.publisher[i].unit_name != monitoring2.publisher[i].unit_name ||
-          monitoring1.publisher[i].topic_id != monitoring2.publisher[i].topic_id ||
-          monitoring1.publisher[i].topic_name != monitoring2.publisher[i].topic_name ||
-          monitoring1.publisher[i].direction != monitoring2.publisher[i].direction ||
-          monitoring1.publisher[i].datatype_information != monitoring2.publisher[i].datatype_information ||
-          monitoring1.publisher[i].transport_layer.size() != monitoring2.publisher[i].transport_layer.size() ||
-          monitoring1.publisher[i].topic_size != monitoring2.publisher[i].topic_size ||
-          monitoring1.publisher[i].connections_local != monitoring2.publisher[i].connections_local ||
-          monitoring1.publisher[i].connections_external != monitoring2.publisher[i].connections_external ||
-          monitoring1.publisher[i].message_drops != monitoring2.publisher[i].message_drops ||
-          monitoring1.publisher[i].data_id != monitoring2.publisher[i].data_id ||
-          monitoring1.publisher[i].data_clock != monitoring2.publisher[i].data_clock ||
-          monitoring1.publisher[i].data_frequency != monitoring2.publisher[i].data_frequency)
+        if (monitoring1.publishers[i].registration_clock != monitoring2.publishers[i].registration_clock ||
+          monitoring1.publishers[i].host_name != monitoring2.publishers[i].host_name ||
+          monitoring1.publishers[i].shm_transport_domain != monitoring2.publishers[i].shm_transport_domain ||
+          monitoring1.publishers[i].process_id != monitoring2.publishers[i].process_id ||
+          monitoring1.publishers[i].process_name != monitoring2.publishers[i].process_name ||
+          monitoring1.publishers[i].unit_name != monitoring2.publishers[i].unit_name ||
+          monitoring1.publishers[i].topic_id != monitoring2.publishers[i].topic_id ||
+          monitoring1.publishers[i].topic_name != monitoring2.publishers[i].topic_name ||
+          monitoring1.publishers[i].direction != monitoring2.publishers[i].direction ||
+          monitoring1.publishers[i].datatype_information != monitoring2.publishers[i].datatype_information ||
+          monitoring1.publishers[i].transport_layer.size() != monitoring2.publishers[i].transport_layer.size() ||
+          monitoring1.publishers[i].topic_size != monitoring2.publishers[i].topic_size ||
+          monitoring1.publishers[i].connections_local != monitoring2.publishers[i].connections_local ||
+          monitoring1.publishers[i].connections_external != monitoring2.publishers[i].connections_external ||
+          monitoring1.publishers[i].message_drops != monitoring2.publishers[i].message_drops ||
+          monitoring1.publishers[i].data_id != monitoring2.publishers[i].data_id ||
+          monitoring1.publishers[i].data_clock != monitoring2.publishers[i].data_clock ||
+          monitoring1.publishers[i].data_frequency != monitoring2.publishers[i].data_frequency)
         {
           return false;
         }
       }
 
       // compare subscriber info
-      if (monitoring1.subscriber.size() != monitoring2.subscriber.size())
+      if (monitoring1.subscribers.size() != monitoring2.subscribers.size())
       {
         return false;
       }
 
-      for (size_t i = 0; i < monitoring1.subscriber.size(); ++i)
+      for (size_t i = 0; i < monitoring1.subscribers.size(); ++i)
       {
-        if (monitoring1.subscriber[i].registration_clock != monitoring2.subscriber[i].registration_clock ||
-          monitoring1.subscriber[i].host_name != monitoring2.subscriber[i].host_name ||
-          monitoring1.subscriber[i].shm_transport_domain != monitoring2.subscriber[i].shm_transport_domain ||
-          monitoring1.subscriber[i].process_id != monitoring2.subscriber[i].process_id ||
-          monitoring1.subscriber[i].process_name != monitoring2.subscriber[i].process_name ||
-          monitoring1.subscriber[i].unit_name != monitoring2.subscriber[i].unit_name ||
-          monitoring1.subscriber[i].topic_id != monitoring2.subscriber[i].topic_id ||
-          monitoring1.subscriber[i].topic_name != monitoring2.subscriber[i].topic_name ||
-          monitoring1.subscriber[i].direction != monitoring2.subscriber[i].direction ||
-          monitoring1.subscriber[i].datatype_information != monitoring2.subscriber[i].datatype_information ||
-          monitoring1.subscriber[i].transport_layer.size() != monitoring2.subscriber[i].transport_layer.size() ||
-          monitoring1.subscriber[i].topic_size != monitoring2.subscriber[i].topic_size ||
-          monitoring1.subscriber[i].connections_local != monitoring2.subscriber[i].connections_local ||
-          monitoring1.subscriber[i].connections_external != monitoring2.subscriber[i].connections_external ||
-          monitoring1.subscriber[i].message_drops != monitoring2.subscriber[i].message_drops ||
-          monitoring1.subscriber[i].data_id != monitoring2.subscriber[i].data_id ||
-          monitoring1.subscriber[i].data_clock != monitoring2.subscriber[i].data_clock ||
-          monitoring1.subscriber[i].data_frequency != monitoring2.subscriber[i].data_frequency)
+        if (monitoring1.subscribers[i].registration_clock != monitoring2.subscribers[i].registration_clock ||
+          monitoring1.subscribers[i].host_name != monitoring2.subscribers[i].host_name ||
+          monitoring1.subscribers[i].shm_transport_domain != monitoring2.subscribers[i].shm_transport_domain ||
+          monitoring1.subscribers[i].process_id != monitoring2.subscribers[i].process_id ||
+          monitoring1.subscribers[i].process_name != monitoring2.subscribers[i].process_name ||
+          monitoring1.subscribers[i].unit_name != monitoring2.subscribers[i].unit_name ||
+          monitoring1.subscribers[i].topic_id != monitoring2.subscribers[i].topic_id ||
+          monitoring1.subscribers[i].topic_name != monitoring2.subscribers[i].topic_name ||
+          monitoring1.subscribers[i].direction != monitoring2.subscribers[i].direction ||
+          monitoring1.subscribers[i].datatype_information != monitoring2.subscribers[i].datatype_information ||
+          monitoring1.subscribers[i].transport_layer.size() != monitoring2.subscribers[i].transport_layer.size() ||
+          monitoring1.subscribers[i].topic_size != monitoring2.subscribers[i].topic_size ||
+          monitoring1.subscribers[i].connections_local != monitoring2.subscribers[i].connections_local ||
+          monitoring1.subscribers[i].connections_external != monitoring2.subscribers[i].connections_external ||
+          monitoring1.subscribers[i].message_drops != monitoring2.subscribers[i].message_drops ||
+          monitoring1.subscribers[i].data_id != monitoring2.subscribers[i].data_id ||
+          monitoring1.subscribers[i].data_clock != monitoring2.subscribers[i].data_clock ||
+          monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency)
         {
           return false;
         }
       }
 
       // compare server info
-      if (monitoring1.server.size() != monitoring2.server.size())
+      if (monitoring1.servers.size() != monitoring2.servers.size())
       {
         return false;
       }
 
-      for (size_t i = 0; i < monitoring1.server.size(); ++i)
+      for (size_t i = 0; i < monitoring1.servers.size(); ++i)
       {
-        if (monitoring1.server[i].registration_clock != monitoring2.server[i].registration_clock ||
-          monitoring1.server[i].host_name != monitoring2.server[i].host_name ||
-          monitoring1.server[i].process_name != monitoring2.server[i].process_name ||
-          monitoring1.server[i].unit_name != monitoring2.server[i].unit_name ||
-          monitoring1.server[i].process_id != monitoring2.server[i].process_id ||
-          monitoring1.server[i].service_name != monitoring2.server[i].service_name ||
-          monitoring1.server[i].service_id != monitoring2.server[i].service_id ||
-          monitoring1.server[i].version != monitoring2.server[i].version ||
-          monitoring1.server[i].tcp_port_v0 != monitoring2.server[i].tcp_port_v0 ||
-          monitoring1.server[i].tcp_port_v1 != monitoring2.server[i].tcp_port_v1 ||
-          monitoring1.server[i].methods.size() != monitoring2.server[i].methods.size())
+        if (monitoring1.servers[i].registration_clock != monitoring2.servers[i].registration_clock ||
+          monitoring1.servers[i].host_name != monitoring2.servers[i].host_name ||
+          monitoring1.servers[i].process_name != monitoring2.servers[i].process_name ||
+          monitoring1.servers[i].unit_name != monitoring2.servers[i].unit_name ||
+          monitoring1.servers[i].process_id != monitoring2.servers[i].process_id ||
+          monitoring1.servers[i].service_name != monitoring2.servers[i].service_name ||
+          monitoring1.servers[i].service_id != monitoring2.servers[i].service_id ||
+          monitoring1.servers[i].version != monitoring2.servers[i].version ||
+          monitoring1.servers[i].tcp_port_v0 != monitoring2.servers[i].tcp_port_v0 ||
+          monitoring1.servers[i].tcp_port_v1 != monitoring2.servers[i].tcp_port_v1 ||
+          monitoring1.servers[i].methods.size() != monitoring2.servers[i].methods.size())
         {
           return false;
         }
 
-        for (size_t j = 0; j < monitoring1.server[i].methods.size(); ++j)
+        for (size_t j = 0; j < monitoring1.servers[i].methods.size(); ++j)
         {
-          if (monitoring1.server[i].methods[j].method_name != monitoring2.server[i].methods[j].method_name ||
-            monitoring1.server[i].methods[j].request_datatype_information != monitoring2.server[i].methods[j].request_datatype_information ||
-            monitoring1.server[i].methods[j].response_datatype_information != monitoring2.server[i].methods[j].response_datatype_information ||
-            monitoring1.server[i].methods[j].call_count != monitoring2.server[i].methods[j].call_count)
+          if (monitoring1.servers[i].methods[j].method_name != monitoring2.servers[i].methods[j].method_name ||
+            monitoring1.servers[i].methods[j].request_datatype_information != monitoring2.servers[i].methods[j].request_datatype_information ||
+            monitoring1.servers[i].methods[j].response_datatype_information != monitoring2.servers[i].methods[j].response_datatype_information ||
+            monitoring1.servers[i].methods[j].call_count != monitoring2.servers[i].methods[j].call_count)
           {
             return false;
           }
