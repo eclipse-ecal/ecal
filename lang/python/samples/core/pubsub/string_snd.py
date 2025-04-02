@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,34 +18,39 @@
 
 import sys
 import time
-
+# import the eCAL core API
 import ecal.core.core as ecal_core
+# import the eCAL publisher AP
 from ecal.core.publisher import StringPublisher
 
-def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
-  
-  # initialize eCAL API
-  ecal_core.initialize("py_minimal_snd")
-  
-  # set process state
-  ecal_core.set_process_state(1, 1, "I feel good")
+def main(): 
+  # Initialize eCAL. You always have to initialize eCAL before using it.
+  # The name of our eCAL Process will be "hello_send_python".
+  # This name will be visible in the eCAL Monitor, once the process is running.
+  ecal_core.initialize("hello_send_python")
 
-  # create publisher
-  pub = StringPublisher("Hello")
+  # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
+  # The topic we are going to publish is called "hello".
+  pub = StringPublisher("hello")
   msg = "HELLO WORLD FROM PYTHON"
   
-  # send messages
-  i = 0
+  # Creating an inifite publish-loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  loop_count = 0
   while ecal_core.ok():
-    i = i + 1
-    current_message = "{} {:6d}".format(msg, i)
-    print("Sending: {}".format(current_message))
+    # Prepare the string to send
+    loop_count = loop_count + 1
+    current_message = "{} {:6d}".format(msg, loop_count)
+    
+    # Send the content to other eCAL Processes that have subscribed to the topic "hello".
     pub.send(current_message)
-    time.sleep(0.01)
+    print("Sending: {}".format(current_message))
+    
+    # Sleep for 500 ms so we send with a frequency of 2 Hz.
+    time.sleep(0.5)
   
-  # finalize eCAL API
+  # Deinitialize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
 
 if __name__ == "__main__":

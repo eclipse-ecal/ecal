@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,32 +17,39 @@
 # ========================= eCAL LICENSE =================================
 
 import sys
-
+import time
+# import the eCAL core API
 import ecal.core.core as ecal_core
+# import the eCAL publisher AP
 from ecal.core.subscriber import StringSubscriber
 
-def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
-  
-  # initialize eCAL API
-  ecal_core.initialize("py_minimal_rec")
-  
-  # set process state
-  ecal_core.set_process_state(1, 1, "I feel good")
+# Create here the eCAL receive callback. This will be called whenever a new message is received.
+def callback(topic_name, msg, time):
+  print("Received:  {} ms   {}".format(time, msg))
 
-  # create subscriber
-  sub = StringSubscriber("Hello")
+
+def main():
+  # Initialize eCAL. You always have to initialize eCAL before using it.
+  # The name of our eCAL Process will be "hello_receive_python".
+  # This name will be visible in the eCAL Monitor, once the process is running.
+  ecal_core.initialize("hello_receive_python")
   
-  # receive messages
+  # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+  # The topic we are going to receive is called "hello".
+  sub = StringSubscriber("hello")
+  
+  # Register the callback with the subscriber so it can be called.
+  sub.set_callback(callback)
+  
+  # Creating an infinite loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   while ecal_core.ok():
-    ret, msg, time = sub.receive(500)
-    if ret > 0:
-      print("Received:  {} ms   {}".format(time, msg))
-    else:
-      print("Subscriber timeout ..")
+    # Sleep for 500ms to avoid busy waiting.
+    # You can use eCAL::Process::SleepMS() to sleep in milliseconds.
+    time.sleep(0.5)
   
-  # finalize eCAL API
+  # Deinitialize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
 
 if __name__ == "__main__":
