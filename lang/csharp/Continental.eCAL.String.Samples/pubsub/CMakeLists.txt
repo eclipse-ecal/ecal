@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,5 +34,5 @@ macro(ecal_add_csharp_string_sample sample_name)
   )
 endmacro()
 
-ecal_add_csharp_string_sample(string_rec_csharp)
-ecal_add_csharp_string_sample(string_snd_csharp)
+ecal_add_csharp_string_sample(hello_receive)
+ecal_add_csharp_string_sample(hello_send)

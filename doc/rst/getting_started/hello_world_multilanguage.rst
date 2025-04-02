@@ -35,14 +35,14 @@ Let's begin with the publisher side of our Hello World application.
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/hello_world/string_snd_csharp.cs
+        .. literalinclude:: /source_code_samples/csharp/hello_world/hello_send.cs
             :language: cpp
             :linenos:
             :lines: 31-
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/hello_world/string_snd.py
+        .. literalinclude:: /source_code_samples/python/hello_world/hello_send.py
             :language: cpp
             :linenos:
             :lines: 19-
@@ -71,14 +71,14 @@ Now let's have a look at the subscriber side:
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/hello_world/string_rec_csharp.cs
+        .. literalinclude:: /source_code_samples/csharp/hello_world/hello_receive.cs
             :language: cpp
             :linenos:
             :lines: 31-
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/hello_world/string_rec.py
+        .. literalinclude:: /source_code_samples/python/hello_world/hello_receive.py
             :language: cpp
             :linenos:
             :lines: 19-

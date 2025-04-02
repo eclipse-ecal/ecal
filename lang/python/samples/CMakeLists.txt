@@ -16,9 +16,9 @@ set(python_samples_core
   core/pubsub/protobuf_rec.py
   core/pubsub/protobuf_rec_cb.py
   core/pubsub/protobuf_snd.py
-  core/pubsub/string_rec.py
+  core/pubsub/hello_receive.py
+  core/pubsub/hello_send.py
   core/pubsub/string_rec_cb.py
-  core/pubsub/string_snd.py
   core/service/minimal_service_client.py
   core/service/minimal_service_server.py
 )
