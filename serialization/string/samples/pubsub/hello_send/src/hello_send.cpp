@@ -51,20 +51,20 @@ int main()
     Creating an inifite publish-loop.
     eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   */
-  int cnt = 0;
+  int loop_count = 0;
   while (eCAL::Ok())
   {
     /*
       Build the string you want to send, using a stringstream in this example.
     */
-    std::stringstream snd_content;
-    snd_content << "HELLO WORLD FROM C++" << " (" << ++cnt << ")";
+    std::stringstream message;
+    message << "HELLO WORLD FROM C++" << " (" << ++loop_count << ")";
 
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
     */
-    pub.Send(snd_content.str(), cnt);
-    std::cout << "Sent \"" << snd_content.str() << "\"" << std::endl;
+    pub.Send(message.str(), loop_count);
+    std::cout << "Sent \"" << message.str() << "\"" << std::endl;
 
     /*
       Sleep for 500 ms so we send with a frequency of 2 Hz.
