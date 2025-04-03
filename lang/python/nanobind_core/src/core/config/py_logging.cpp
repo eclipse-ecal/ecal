@@ -28,7 +28,35 @@ void AddConfigLogging(nanobind::module_& module)
   nb::class_<eCAL::Logging::Provider::Sink>(module, "LoggingProviderSink")
     .def(nb::init<>()) // Default constructor
     .def_rw("enable", &eCAL::Logging::Provider::Sink::enable, "Enable sink")
-    .def_rw("log_level", &eCAL::Logging::Provider::Sink::log_level, "Log message filter level");
+    .def_prop_rw("log_levels",
+      // Getter: convert std::string to nb::bytes
+      [](const eCAL::Logging::Provider::Sink& self) -> nb::list {
+        using namespace eCAL::Logging;
+
+        nb::list log_levels;
+        // implement mapping here
+        if (self.log_level & log_level_fatal)   log_levels.append(log_level_fatal);
+        if (self.log_level & log_level_error)   log_levels.append(log_level_error);
+        if (self.log_level & log_level_warning) log_levels.append(log_level_warning);
+        if (self.log_level & log_level_info)    log_levels.append(log_level_info);
+        if (self.log_level & log_level_debug1)  log_levels.append(log_level_debug1);
+        if (self.log_level & log_level_debug2)  log_levels.append(log_level_debug2);
+        if (self.log_level & log_level_debug3)  log_levels.append(log_level_debug3);
+        if (self.log_level & log_level_debug4)  log_levels.append(log_level_debug4);
+
+        return log_levels;
+      },
+      // Setter: convert nb::bytes back to std::string
+        [](eCAL::Logging::Provider::Sink& self, nb::list py_log_levels) {
+        using namespace eCAL::Logging;
+
+        Filter cpp_log_level = log_level_none;
+        for (nb::handle log_level : py_log_levels) {
+          cpp_log_level = static_cast<Filter>(cpp_log_level | nb::cast<eLogLevel>(log_level));
+        }
+
+        self.log_level = cpp_log_level;        // implement mapping here
+      });
 
   // Bind eCAL::Logging::Provider::File::Configuration struct
   nb::class_<eCAL::Logging::Provider::File::Configuration>(module, "LoggingProviderFileConfiguration")

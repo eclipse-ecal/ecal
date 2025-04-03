@@ -24,6 +24,7 @@
 // Include the header file that contains the eCAL types.
 // Adjust this include to match your actual header file.
 #include <ecal/types.h>
+#include <helper/bytestring_property.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;  // Bring in the _a literal for named arguments
@@ -48,15 +49,8 @@ void AddTypes(nb::module_& m) {
     .def(nb::init<>())
     .def_rw("name", &eCAL::SDataTypeInformation::name)
     .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
-    .def_prop_rw("descriptor",
-        // Getter: convert std::string to nb::bytes
-        [](const eCAL::SDataTypeInformation &self) -> nb::bytes {
-            return nb::bytes(self.descriptor.c_str(), self.descriptor.size());
-        },
-        // Setter: convert nb::bytes back to std::string
-        [](eCAL::SDataTypeInformation &self, nb::bytes b) {
-            self.descriptor = std::string(b.c_str(), b.size());
-        })
+    // descriptors are bytes, e.g. the std::string needs to be mapped to python bytes
+    .def(bytestring_property("descriptor", &eCAL::SDataTypeInformation::descriptor))
     //.def("clear", &eCAL::SDataTypeInformation::clear,
     //  "Clears the name, encoding, and descriptor strings.")
     .def("__eq__", [](const eCAL::SDataTypeInformation& a, const eCAL::SDataTypeInformation& b) {
