@@ -418,6 +418,7 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../versions/ecal_versions.html">eCAL Versions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../versions/compatibility.html">eCAL Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../versions/6.0/whats_new.html">eCAL 6.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../versions/5.13/whats_new.html">eCAL 5.13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../versions/5.12/whats_new.html">eCAL 5.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../versions/5.11/whats_new.html">eCAL 5.11</a></li>
@@ -427,7 +428,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">Downloads</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ecal_6_migration.html">eCAL 6 Migration Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../versions/6.0/migration_guide.html">eCAL 6 Migration Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../advanced/tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/documentation.html">Edit the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/ecal_in_docker.html">eCAL in Docker</a></li>
@@ -740,7 +741,7 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 <p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
 <span class="linenos"> 4</span>
@@ -857,7 +858,7 @@ You will see the “Hello World Publisher” process and the “hello_world_topi
 <p>Again, create a new directory somewhere and add create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.0</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
 <span class="linenos"> 4</span>
