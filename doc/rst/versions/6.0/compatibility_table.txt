@@ -17,13 +17,13 @@
    * - API / ABI
 
      - * **API**: 
-         An upgrade guide can be found :ref:`in this document <compatibility_details_6_0_upgrade_guide>`
+         An upgrade guide can be found :ref:`in this document <ecal_5_to_6_migration_guide>`
          
        * **ABI**: not compatible
 
    * - Tools
        
-       * **Rec**: 
+     - * **Rec**: 
 
        * **Sys**: 
 

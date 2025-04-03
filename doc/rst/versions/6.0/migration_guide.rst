@@ -1,4 +1,4 @@
-.. _migration:
+.. _ecal_5_to_6_migration_guide:
 
 ======================
 eCAL 6 Migration Guide
