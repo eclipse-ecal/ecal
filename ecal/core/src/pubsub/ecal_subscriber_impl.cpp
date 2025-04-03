@@ -21,9 +21,11 @@
  * @brief  common eCAL data reader
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include "ecal_subscriber_impl.h"
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
+#include <ecal/time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
@@ -54,6 +56,7 @@
 #include <chrono>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <list>
 #include <memory>
 #include <mutex>
@@ -69,19 +72,25 @@ namespace eCAL
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_topic_info(topic_info_),
                  m_topic_size(0),
-                 m_attributes(attr_),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
-                 m_created(false)
+                 m_created(false),
+                 m_attributes(attr_)
   {
 #ifndef NDEBUG
     // log it
     Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
 
+    // build subscriber id
+    m_subscriber_id = std::chrono::steady_clock::now().time_since_epoch().count();
+
     // build topic id
-    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_topic_id.topic_name = m_attributes.topic_name;
+    m_topic_id.topic_id.entity_id = m_subscriber_id;
+    m_topic_id.topic_id.host_name = m_attributes.host_name;
+    m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // start transport layers
     InitializeLayers();
@@ -263,26 +272,26 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  bool CSubscriberImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
 #endif
 
-    m_attr[attr_name_] = attr_value_;
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute - Setting subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
-  bool CSubscriberImpl::ClearAttribute(const std::string& attr_name_)
+  bool CSubscriberImpl::ClearAttribute(const std::string& /* attr_name_ */)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
 #endif
 
-    m_attr.erase(attr_name_);
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute - Clear subscriber attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
@@ -308,8 +317,7 @@ namespace eCAL
 #endif
 
     // add key to connection map, including connection state
-    bool is_new_connection     = false;
-    bool is_updated_connection = false;
+    bool is_new_connection = false;
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
       auto publication_info_iter = m_connection_map.find(publication_info_);
@@ -330,11 +338,6 @@ namespace eCAL
         {
           is_new_connection = true;
         }
-        // the connection was active, so we just update it
-        else
-        {
-          is_updated_connection = true;
-        }
 
         // update the data type and layer states, even if the connection is not new
         connection = SConnection{ data_type_info_, pub_layer_states_, true };
@@ -349,11 +352,6 @@ namespace eCAL
     {
       // fire connect event
       FireConnectEvent(publication_info_, data_type_info_);
-    }
-    else if (is_updated_connection)
-    {
-      // fire update event
-      FireUpdateEvent(publication_info_, data_type_info_);
     }
 
 #ifndef NDEBUG
@@ -487,6 +485,7 @@ namespace eCAL
     while (m_sample_hash_queue.size() > hash_queue_size) m_sample_hash_queue.pop_front();
 
     // check id
+    // TODO: not sure if this is needed / necessary.
     if (!m_id_set.empty())
     {
       if (m_id_set.find(id_) == m_id_set.end()) return(0);
@@ -497,7 +496,11 @@ namespace eCAL
     //  - a dropped message
     //  - an out-of-order message
     //  - a multiple sent message
-    if (!CheckMessageClock(topic_info_.tid, clock_))
+    SPublicationInfo publication_info;
+    publication_info.entity_id  = topic_info_.topic_id;
+    publication_info.host_name  = topic_info_.host_name;
+    publication_info.process_id = topic_info_.process_id;
+    if (!CheckMessageClock(publication_info, clock_))
     {
       // we will not process that message
       return(0);
@@ -536,22 +539,21 @@ namespace eCAL
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
-        cb_data.buf   = const_cast<char*>(payload_);
-        cb_data.size  = long(size_);
-        cb_data.id    = id_;
-        cb_data.time  = time_;
-        cb_data.clock = clock_;
+        cb_data.buffer   = static_cast<const void*>(payload_);
+        cb_data.buffer_size  = size_;
+        cb_data.send_timestamp  = time_;
+        cb_data.send_clock = clock_;
 
-        Registration::STopicId topic_id;
-        topic_id.topic_name          = topic_info_.tname;
-        topic_id.topic_id.host_name  = topic_info_.hname;
-        topic_id.topic_id.entity_id  = topic_info_.tid;
-        topic_id.topic_id.process_id = topic_info_.pid;
+        STopicId topic_id;
+        topic_id.topic_name          = topic_info_.topic_name;
+        topic_id.topic_id.host_name  = topic_info_.host_name;
+        topic_id.topic_id.entity_id  = topic_info_.topic_id;
+        topic_id.topic_id.process_id = topic_info_.process_id;
 
         SPublicationInfo pub_info;
-        pub_info.entity_id  = topic_info_.tid;
-        pub_info.host_name  = topic_info_.hname;
-        pub_info.process_id = topic_info_.pid;
+        pub_info.entity_id  = topic_info_.topic_id;
+        pub_info.host_name  = topic_info_.host_name;
+        pub_info.process_id = topic_info_.process_id;
 
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
@@ -631,21 +633,20 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id  = m_topic_id;
+    ecal_reg_sample_identifier.entity_id  = m_subscriber_id;
     ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
-      ecal_reg_sample_tdatatype.encoding = m_topic_info.encoding;
-      ecal_reg_sample_tdatatype.name     = m_topic_info.name;
+      auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.datatype_information;
+      ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
+      ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr  = m_attr;
-    ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
@@ -655,7 +656,7 @@ namespace eCAL
       udp_tlayer.version   = ecal_transport_layer_version;
       udp_tlayer.enabled   = m_layers.udp.read_enabled;
       udp_tlayer.active    = m_layers.udp.active;
-      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
@@ -667,7 +668,7 @@ namespace eCAL
       shm_tlayer.version   = ecal_transport_layer_version;
       shm_tlayer.enabled   = m_layers.shm.read_enabled;
       shm_tlayer.active    = m_layers.shm.active;
-      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
@@ -679,19 +680,19 @@ namespace eCAL
       tcp_tlayer.version   = ecal_transport_layer_version;
       tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
       tcp_tlayer.active    = m_layers.tcp.active;
-      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pname         = m_attributes.process_name;
-    ecal_reg_sample_topic.uname         = m_attributes.unit_name;
-    ecal_reg_sample_topic.dclock        = m_clock;
-    ecal_reg_sample_topic.dfreq         = GetFrequency();
-    ecal_reg_sample_topic.message_drops = static_cast<int32_t>(m_message_drops);
+    ecal_reg_sample_topic.process_name   = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_clock     = m_clock;
+    ecal_reg_sample_topic.data_frequency = GetFrequency();
+    ecal_reg_sample_topic.message_drops  = static_cast<int32_t>(m_message_drops);
 
     // we do not know the number of connections ..
-    ecal_reg_sample_topic.connections_loc = 0;
-    ecal_reg_sample_topic.connections_ext = 0;
+    ecal_reg_sample_topic.connections_local = 0;
+    ecal_reg_sample_topic.connections_external = 0;
   }
 
   void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -700,14 +701,14 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id = m_topic_id;
-    ecal_reg_sample_identifier.host_name = m_attributes.host_name;
+    ecal_reg_sample_identifier.entity_id  = m_subscriber_id;
+    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    auto& ecal_reg_sample_topic                = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
+    ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
   }
   
   void CSubscriberImpl::StartTransportLayer()
@@ -719,7 +720,7 @@ namespace eCAL
       m_layers.udp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -730,7 +731,7 @@ namespace eCAL
       m_layers.shm.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -741,7 +742,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
@@ -755,7 +756,7 @@ namespace eCAL
       m_layers.udp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -766,7 +767,7 @@ namespace eCAL
       m_layers.shm.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -777,7 +778,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_topic_id);
+      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
@@ -788,12 +789,11 @@ namespace eCAL
     if (m_event_id_callback)
     {
       SSubEventCallbackData data;
-      data.type  = type_;
-      data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock = 0;
-      data.tdatatype = data_type_info_;
+      data.event_type         = type_;
+      data.event_time         = eCAL::Time::GetMicroSeconds();
+      data.publisher_datatype = data_type_info_;
 
-      Registration::STopicId topic_id;
+      STopicId topic_id;
       topic_id.topic_id.entity_id  = publication_info_.entity_id;
       topic_id.topic_id.process_id = publication_info_.process_id;
       topic_id.topic_id.host_name  = publication_info_.host_name;
@@ -812,7 +812,7 @@ namespace eCAL
       {
         v5::SSubEventCallbackData data;
         data.type      = type_;
-        data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        data.time      = eCAL::Time::GetMicroSeconds();
         data.clock     = 0;
         data.tid       = std::to_string(publication_info_.entity_id);
         data.tdatatype = data_type_info_;
@@ -828,14 +828,14 @@ namespace eCAL
     FireEvent(eSubscriberEvent::connected, publication_info_, data_type_info_);
   }
 
-  void CSubscriberImpl::FireUpdateEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
-  {
-    FireEvent(eSubscriberEvent::update_connection, publication_info_, data_type_info_);
-  }
-
   void CSubscriberImpl::FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(eSubscriberEvent::disconnected, publication_info_, data_type_info_);
+  }
+
+  void CSubscriberImpl::FireDroppedEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  {
+    FireEvent(eSubscriberEvent::dropped, publication_info_, data_type_info_);
   }
 
   size_t CSubscriberImpl::GetConnectionCount()
@@ -852,14 +852,14 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::CheckMessageClock(const Registration::EntityIdT& tid_, long long current_clock_)
+  bool CSubscriberImpl::CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_)
   {
-    auto iter = m_writer_counter_map.find(tid_);
+    auto iter = m_writer_counter_map.find(publication_info_.entity_id);
     
     // initial entry
     if (iter == m_writer_counter_map.end())
     {
-      m_writer_counter_map[tid_] = current_clock_;
+      m_writer_counter_map[publication_info_.entity_id] = current_clock_;
       return true;
     }
     // clock entry exists
@@ -906,37 +906,11 @@ namespace eCAL
         msg += "\')";
         Logging::Log(log_level_warning, msg);
 #endif
-        // new event handling with topic id
-        if (m_event_id_callback)
-        {
-          SSubEventCallbackData data;
-          data.type  = eSubscriberEvent::dropped;
-          data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-          data.clock = current_clock_;
 
-          Registration::STopicId topic_id;
-          topic_id.topic_name = m_attributes.topic_name;
-          const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-
-          // call event callback
-          m_event_id_callback(topic_id, data);
-        }
-
-        // deprecated event handling with topic name
-        {
-          const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-          auto citer = m_event_callback_map.find(eSubscriberEvent::dropped);
-          if (citer != m_event_callback_map.end() && citer->second)
-          {
-            v5::SSubEventCallbackData data;
-            data.type  = eSubscriberEvent::dropped;
-            data.time  = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-            data.clock = current_clock_;
-
-            // call event callback
-            (citer->second)(m_attributes.topic_name.c_str(), &data);
-          }
-        }
+        // fire dropped event
+        // we do not know the data type of the dropped message here
+        // so we use an empty data type information
+        FireDroppedEvent(publication_info_, SDataTypeInformation());
 
         // increase the drop counter
         m_message_drops += clock_difference;
@@ -993,6 +967,15 @@ namespace eCAL
   {
     const auto frequency_time = std::chrono::steady_clock::now();
     const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
+
+    const double frequency_in_mhz = m_frequency_calculator.getFrequency(frequency_time) * 1000;
+
+    if (frequency_in_mhz > static_cast<double>(std::numeric_limits<int32_t>::max())) {
+      return std::numeric_limits<int32_t>::max();
+    }
+    else if (frequency_in_mhz < static_cast<double>(std::numeric_limits<int32_t>::min())) {
+      return std::numeric_limits<int32_t>::min();
+    }
+    return static_cast<int32_t>(frequency_in_mhz);
   }
 }

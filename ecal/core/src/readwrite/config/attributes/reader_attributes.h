@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,19 @@
 
 #include <string>
 #include <cstddef>
-#include "ecal/types/ecal_custom_data_types.h"
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {
   namespace eCALReader
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      Types::UDPMode mode;
-      int            port;
-      int            receivebuffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         receivebuffer;
+      std::string group;
     };
 
     struct STCPAttributes
@@ -67,7 +61,7 @@ namespace eCAL
 
       std::string topic_name;
       std::string host_name;
-      std::string host_group_name;
+      std::string shm_transport_domain;
       int         process_id;
       std::string process_name;
       std::string unit_name;

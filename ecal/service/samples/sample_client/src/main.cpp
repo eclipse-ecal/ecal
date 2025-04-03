@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2023 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@
 
 #include <asio.hpp>
 
-#include <ecal/service/client_manager.h>
-#include <ecal/service/client_session_types.h>
-#include <ecal/service/error.h>
-#include <ecal/service/logger.h>
+#include <ecal_service/client_manager.h>
+#include <ecal_service/client_session_types.h>
+#include <ecal_service/error.h>
+#include <ecal_service/logger.h>
 
 void print_usage(const std::string& arg0)
 {
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
   auto io_context = std::make_shared<asio::io_context>();
 
   // Create a client manager
-  auto client_manager = eCAL::service::ClientManager::create(io_context, eCAL::service::default_logger("Client", eCAL::service::LogLevel::DebugVerbose));
+  auto client_manager = ecal_service::ClientManager::create(io_context, ecal_service::default_logger("Client", ecal_service::LogLevel::DebugVerbose));
 
   // Create and start an io_context thread.
   // The io_context will be stopped, when the server_manager and client_manager are stopped.
@@ -123,7 +123,7 @@ int main(int argc, char** argv)
   //
   // This callback will be called, when the service call is finished.
   auto client_response_callback
-          = [](const eCAL::service::Error& error, const std::shared_ptr<std::string>& response) -> void
+          = [](const ecal_service::Error& error, const std::shared_ptr<std::string>& response) -> void
             {
               if (error)
                 std::cerr << "Error calling service: " << error.ToString() << std::endl;
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
             };
 
   // Event callbacks (empty)
-  auto client_event_callback = [](eCAL::service::ClientEventType /*event*/, const std::string& /*message*/) {};
+  auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
   // Create client
   // The client will connect to the server on the given port.

@@ -30,10 +30,7 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   // initialize eCAL API
   eCAL::Initialize("RecClientServiceGui");
 
-  // create player service client
-  recorder_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
-
-  connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {recorder_service_.SetHostName(ui_.hostname_lineedit->text().toStdString()); });
+  connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {hostname_ = ui_.hostname_lineedit->text().toStdString(); });
 
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalrecGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalrecGuiClient::setConfigRequest);
@@ -46,14 +43,10 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
 EcalrecGuiClient::~EcalrecGuiClient()
 {}
 
-////////////////////////////////////////////////////////////////////////////////
-//// Request                                                                ////
-////////////////////////////////////////////////////////////////////////////////
-
 void EcalrecGuiClient::getConfigRequest()
 {
   eCAL::pb::rec_client::GetConfigRequest get_config_request;
-  recorder_service_.Call("GetConfig", get_config_request);
+  callService("GetConfig", get_config_request);
 }
 
 void EcalrecGuiClient::setConfigRequest()
@@ -91,7 +84,7 @@ void EcalrecGuiClient::setConfigRequest()
     (*config)["enabled_addons"] = ui_.set_config_enabled_addons_textedit->toPlainText().toStdString();
   }
 
-  recorder_service_.Call("SetConfig", set_config_request);
+  callService("SetConfig", set_config_request);
 }
 
 void EcalrecGuiClient::commandRequest()
@@ -204,45 +197,65 @@ void EcalrecGuiClient::commandRequest()
     (*command_params)["delete_after_upload"] = ui_.command_request_delete_after_upload_lineedit->text().toStdString();
   }
 
-  recorder_service_.Call("SetCommand", command_request);
+  callService("SetCommand", command_request);
 }
 
 void EcalrecGuiClient::getStateRequest()
 {
   eCAL::pb::rec_client::GetStateRequest get_state_request;
-  recorder_service_.Call("GetState", get_state_request);
+  callService("GetState", get_state_request);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//// Request                                                                ////
+////////////////////////////////////////////////////////////////////////////////
+template <typename RequestT>
+void EcalrecGuiClient::callService(const std::string& method, const RequestT& request)
+{
+  auto client_instances = recorder_service_.GetClientInstances();
+  for (auto& client_instance : client_instances)
+  {
+    // TODO: We need to filter for pid as well in the future?
+    // Currently empty hostname means "all hosts"
+    if ((client_instance.GetClientID().host_name == hostname_) || hostname_.empty())
+    {
+      client_instance.CallWithCallback(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
+    }
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Response                                                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
+void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_response_)
 {
   QString response_string;
   QTextStream response_stream(&response_string);
 
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+
   switch (service_response_.call_state)
   {
-    // service successful executed
+  // service successful executed
   case eCAL::eCallState::executed:
   {
-    if (service_response_.method_name == "GetConfig")
+    if (method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
-    else if (service_response_.method_name == "GetState")
+    else if (method_name == "GetState")
     {
       eCAL::pb::rec_client::State response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -250,7 +263,7 @@ void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceResponse& s
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
-      response_stream << "RecorderService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -261,7 +274,7 @@ void EcalrecGuiClient::onRecorderResponse(const struct eCAL::SServiceResponse& s
   {
     eCAL::pb::rec_client::Response response;
     response.ParseFromString(service_response_.response);
-    response_stream << "RecorderService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
+    response_stream << "RecorderService " << method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
     break;

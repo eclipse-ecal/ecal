@@ -17,7 +17,6 @@
 # ========================= eCAL LICENSE =================================
 
 cmake_minimum_required(VERSION 3.13)
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
 project(perftool)
 
@@ -37,7 +36,7 @@ set(source_files
 #add_executable(${PROJECT_NAME} ${source_files})
 ecal_add_sample(${PROJECT_NAME} ${source_files})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::core
   Threads::Threads
 )

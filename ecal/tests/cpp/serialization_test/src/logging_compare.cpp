@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@ namespace eCAL
     // compare two LogMessages for equality
     bool CompareLogMessages(const SLogMessage& message1, const SLogMessage& message2)
     {
-      return (message1.time    == message2.time &&
-              message1.hname   == message2.hname &&
-              message1.pid     == message2.pid &&
-              message1.pname   == message2.pname &&
-              message1.uname   == message2.uname &&
-              message1.level   == message2.level &&
-              message1.content == message2.content);
+      return (message1.time         == message2.time &&
+              message1.host_name    == message2.host_name &&
+              message1.process_id   == message2.process_id &&
+              message1.process_name == message2.process_name &&
+              message1.unit_name    == message2.unit_name &&
+              message1.level        == message2.level &&
+              message1.content      == message2.content);
     }
   }
 }

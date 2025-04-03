@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,17 +97,17 @@ namespace eCAL
     if(!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
 
     // TODO: Substitute ProducerInfo type
     const auto& subscription_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     CPublisherImpl::SLayerStates layer_states;
-    for (const auto& layer : ecal_topic.tlayer)
+    for (const auto& layer : ecal_topic.transport_layer)
     {
       // transport layer versions 0 and 1 did not support dynamic layer enable feature
       // so we set assume layer is enabled if we receive a registration in this case
@@ -115,13 +115,13 @@ namespace eCAL
       {
         switch (layer.type)
         {
-        case TLayer::tlayer_udp_mc:
+        case tl_ecal_udp:
           layer_states.udp.read_enabled = true;
           break;
-        case TLayer::tlayer_shm:
+        case tl_ecal_shm:
           layer_states.shm.read_enabled = true;
           break;
-        case TLayer::tlayer_tcp:
+        case tl_ecal_tcp:
           layer_states.tcp.read_enabled = true;
           break;
         default:
@@ -132,7 +132,7 @@ namespace eCAL
 
     std::string reader_par;
 #if 0
-    for (const auto& layer : ecal_sample.tlayer())
+    for (const auto& layer : ecal_sample.transport_layer())
     {
       // layer parameter as protobuf message
       // this parameter is not used at all currently
@@ -155,13 +155,13 @@ namespace eCAL
     if (!m_created) return;
 
     const auto& ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
 
     const auto& subscription_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     // unregister subscriber
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);

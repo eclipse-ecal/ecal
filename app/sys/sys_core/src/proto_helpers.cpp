@@ -87,10 +87,10 @@ namespace eCAL
         task->SetTarget(task_pb.target_host());
         task->SetMonitoringTaskState(FromProtobuf(task_pb.state()));
 
-        std::vector<int32_t> pids;
-        for(int32_t pid : task_pb.pids())
-          pids.push_back(pid);
-        task->SetPids(pids);
+        std::vector<int32_t> process_ids;
+        for(int32_t process_id : task_pb.process_ids())
+          process_ids.push_back(process_id);
+        task->SetPids(process_ids);
 
         task->SetLaunchOrder(task_pb.launch_order());
         task->SetAlgoPath(task_pb.path());
@@ -237,9 +237,9 @@ namespace eCAL
         task_pb.set_name               (task->GetName());
         task_pb.set_target_host        (task->GetTarget());
         ToProtobuf                     (*(task_pb.mutable_state()), task->GetMonitoringTaskState());
-        for (int pid : task->GetPids())
+        for (int process_id : task->GetPids())
         {
-          task_pb.add_pids(pid);
+          task_pb.add_process_ids(process_id);
         }
         task_pb.set_launch_order       (task->GetLaunchOrder());
         task_pb.set_path               (task->GetAlgoPath());

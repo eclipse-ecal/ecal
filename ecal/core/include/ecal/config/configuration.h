@@ -18,7 +18,7 @@
  */
 
 /**
- * @file   configuration.h
+ * @file   config/configuration.h
  * @brief  eCAL configuration interface
 **/
 
@@ -30,11 +30,11 @@
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 
 
-#include "ecal/ecal_os.h"
-#include "ecal/ecal_log_level.h"
+#include "ecal/os.h"
+#include "ecal/log_level.h"
 
 #include <string>
 #include <vector>
@@ -43,6 +43,12 @@
 
 namespace eCAL
 {
+  enum class eCommunicationMode
+  {
+    local,
+    network
+  };
+
   struct Configuration
   {
     TransportLayer::Configuration transport_layer;
@@ -53,12 +59,16 @@ namespace eCAL
     Application::Configuration    application;
     Logging::Configuration        logging;
 
+    eCommunicationMode            communication_mode { eCommunicationMode::local }; /*!< eCAL components communication mode:
+                                                                                           local: local host only communication (default)
+                                                                                           cloud: communication across network boundaries */
+
     ECAL_API Configuration();
 
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
-    ECAL_API std::string GetYamlFilePath() const;
+    ECAL_API const std::string& GetConfigurationFilePath() const;
 
     protected:
       std::string ecal_yaml_file_path;

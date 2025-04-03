@@ -18,6 +18,36 @@
 
 find_package(FlatBuffers REQUIRED)
 
+
+##########################
+# flatbuffers base functionality (serialization ...)
+##########################
+add_library(flatbuffers_base INTERFACE)
+add_library(eCAL::flatbuffers_base ALIAS flatbuffers_base)
+
+target_link_libraries(flatbuffers_base 
+  INTERFACE 
+    flatbuffers::flatbuffers
+    eCAL::message_base
+)
+
+target_sources(flatbuffers_base
+  INTERFACE
+    FILE_SET flatbuffers_base_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/flatbuffers/serializer.h
+)
+
+target_compile_features(flatbuffers_base INTERFACE cxx_std_17)
+
+install(
+  TARGETS flatbuffers_base
+  EXPORT eCALCoreTargets  
+  FILE_SET flatbuffers_base_headers COMPONENT sdk
+)
+
 ##########################
 # FlatBuffers core communication extension
 ##########################
@@ -26,8 +56,8 @@ add_library(eCAL::flatbuffers_core ALIAS flatbuffers_core)
 
 target_link_libraries(flatbuffers_core 
   INTERFACE 
-    flatbuffers::flatbuffers
-    eCAL::core
+    eCAL::flatbuffers_base
+    eCAL::message_core
 )
 
 target_sources(flatbuffers_core
@@ -48,4 +78,36 @@ install(
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   FILE_SET flatbuffers_core_header COMPONENT sdk
+)
+
+##########################
+# flatbuffers measurement extension
+##########################
+add_library(flatbuffers_measurement INTERFACE)
+add_library(eCAL::flatbuffers_measurement ALIAS flatbuffers_measurement)
+
+target_link_libraries(flatbuffers_measurement 
+  INTERFACE 
+    eCAL::flatbuffers_base
+    eCAL::message_measurement
+)
+
+target_sources(flatbuffers_measurement
+  INTERFACE
+    FILE_SET flatbuffers_measurement_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/flatbuffers/imeasurement.h
+      include/ecal/msg/flatbuffers/omeasurement.h
+)
+
+target_compile_features(flatbuffers_measurement INTERFACE cxx_std_14)
+
+install(
+  TARGETS flatbuffers_measurement
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET flatbuffers_measurement_headers COMPONENT sdk
 )

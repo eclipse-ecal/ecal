@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ PluginWidget::PluginWidget(const QString& topic_name, const QString&, QWidget* p
   ui_.content_layout->addWidget(frame);
 
   // Connect the eCAL Subscriber
-  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {
@@ -75,9 +75,9 @@ PluginWidget::~PluginWidget()
 void PluginWidget::ecalMessageReceivedCallback(const eCAL::SReceiveCallbackData& callback_data)
 {
   std::lock_guard<std::mutex> message_lock(message_mutex_);
-  last_message_ = QByteArray(static_cast<char*>(callback_data.buf), callback_data.size);
+  last_message_ = QByteArray(static_cast<const char*>(callback_data.buffer), callback_data.buffer_size);
 
-  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data.time));
+  last_message_publish_timestamp_ = eCAL::Time::ecal_clock::time_point(std::chrono::microseconds(callback_data.send_timestamp));
 
   received_message_counter_++;
   new_msg_available_ = true;
@@ -134,7 +134,7 @@ void PluginWidget::onUpdate()
 void PluginWidget::onResume()
 {
   // (Re)Connect the eCAL Subscriber
-  subscriber_.SetReceiveCallback([this](const eCAL::Registration::STopicId& /*topic_id*/,
+  subscriber_.SetReceiveCallback([this](const eCAL::STopicId& /*topic_id*/,
     const eCAL::SDataTypeInformation& /*data_type_info*/,
     const eCAL::SReceiveCallbackData& callback_data)
     {

@@ -19,7 +19,7 @@
 #pragma once
 
 #include <atomic>
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 #include <string>
 #include <vector>
 #include <functional>

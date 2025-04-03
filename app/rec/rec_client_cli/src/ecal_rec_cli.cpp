@@ -68,7 +68,6 @@ std::condition_variable               ecal_rec_exit_cv_;
 std::chrono::steady_clock::time_point ctrl_exit_until(std::chrono::steady_clock::duration::max());
 bool                                  ctrl_exit_event(false);
 
-
 #ifdef WIN32
 int main()
 #else
@@ -140,6 +139,13 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error parsing command line: " << e.what() << std::endl;
   }
+  
+  struct EcalContext
+  {
+    EcalContext() { eCAL::Initialize("eCALRecClient", eCAL::Init::All); }
+    ~EcalContext() { eCAL::Finalize(); }
+  };
+  EcalContext global_ecal_context;
 
   // TODO: Check the validity of all arguments
   ecal_rec = std::make_shared<eCAL::rec::EcalRec>();
@@ -157,6 +163,7 @@ int main(int argc, char** argv)
       std::cout << addon_status.addon_id_ << " (" << addon_status.name_ << ") " << addon_status.addon_executable_path_ << std::endl;
     }
     ecal_rec = nullptr;
+
     return 0;
   }
 
@@ -354,7 +361,7 @@ int main(int argc, char** argv)
   std::cout << header_ss.str();
 
   std::shared_ptr<eCAL::pb::rec_client::EcalRecClientService> rec_service_(std::make_shared<EcalRecService>(ecal_rec));
-  eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService> rec_service_server_(rec_service_);
+  std::unique_ptr<eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService>> rec_service_server_(std::make_unique<eCAL::protobuf::CServiceServer<eCAL::pb::rec_client::EcalRecClientService>>(rec_service_));
 
   while (eCAL::Ok())
   {
@@ -370,8 +377,8 @@ int main(int argc, char** argv)
   }
 
   // Shutdown service
-  rec_service_server_.Destroy();
-  rec_service_ = nullptr;
+  rec_service_server_ = nullptr;
+  rec_service_        = nullptr;
 
   // Stop recording
   ecal_rec->StopRecording();

@@ -22,12 +22,9 @@ registration:
   registration_timeout: 60000
   # Enable to receive registration information on the same local machine
   loopback: true
-  # Host group name that enables interprocess mechanisms across (virtual)
+  # Shm transport domain that enables interprocess mechanisms across (virtual)
   # host borders (e.g, Docker); by default equivalent to local host name
-  host_group_name: ""
-  # true  = all eCAL components communicate over network boundaries
-  # false = local host only communication (Default: false)
-  network_enabled: false
+  shm_transport_domain: ""
 
   layer:
     shm:

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #include <cstddef>
 #include <cstring>
 #include <ecal/ecal.h>
-#include <ecal/ecal_payload_writer.h>
+#include <ecal/pubsub/payload_writer.h>
 
 #include <atomic>
 #include <iomanip>
@@ -98,12 +98,12 @@ std::vector<char> multibuffer_pub_sub_test(int buffer_count, bool zero_copy, int
   std::vector<char>   received_content;
 
   // add callback
-  auto lambda = [&](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
-    received_bytes += data_.size;
+  auto lambda = [&](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+    received_bytes += data_.buffer_size;
     ++received_count;
     for (auto i = 0; i < bytes_to_read; ++i)
     {
-      const char rec_char(static_cast<const char*>(data_.buf)[i]);
+      const char rec_char(static_cast<const char*>(data_.buffer)[i]);
       received_content.push_back(rec_char);
       std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(rec_char) << " ";
     }

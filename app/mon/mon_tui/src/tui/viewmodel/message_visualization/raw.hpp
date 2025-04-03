@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ class RawMessageVisualizationViewModel : public MessageVisualizationViewModel
   {
     {
       std::lock_guard<std::mutex> lock{message_mtx};
-      latest_message = std::string(static_cast<char *>(callback_data.buf), callback_data.size);
-      message_timestamp = callback_data.time;
+      latest_message = std::string(static_cast<const char *>(callback_data.buffer), callback_data.buffer_size);
+      message_timestamp = callback_data.send_timestamp;
     }
 
     NotifyDataUpdated();

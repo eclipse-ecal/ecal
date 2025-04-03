@@ -6,7 +6,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4100 4505 4800)
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/sys/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -42,7 +42,7 @@ namespace eCAL
     //////////////////////////////////////////
     private:
       std::mutex connection_mutex_;
-      eCAL::protobuf::CServiceClient<eCAL::pb::sys_client::EcalSysClientService> sys_client_service_;
+      eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys_client::EcalSysClientService> sys_client_service_;
     };
   }
 }

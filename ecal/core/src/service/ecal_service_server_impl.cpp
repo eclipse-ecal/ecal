@@ -21,9 +21,9 @@
  * @brief  eCAL service server implementation
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/process.h>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
@@ -33,28 +33,37 @@
 
 namespace eCAL
 {
-  // Factory method to create a new instance of CServiceServerImpl
-  std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
-    const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-  {
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
-#endif
-    auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
-    if (instance != nullptr)
+    // Factory method to create a new instance of CServiceServerImpl
+    std::shared_ptr<CServiceServerImpl> CServiceServerImpl::CreateInstance(
+      const std::string & service_name_, const ServerEventCallbackT & event_callback_)
     {
-      instance->Start();
+  #ifndef NDEBUG
+      Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CreateInstance: Creating instance of CServiceServerImpl for service: " + service_name_);
+  #endif
+      auto instance = std::shared_ptr<CServiceServerImpl>(new CServiceServerImpl(service_name_, event_callback_));
+      if (instance != nullptr)
+      {
+        instance->Start();
+      }
+      return instance;
     }
-    return instance;
-  }
 
   // Constructor
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-    : m_created(false), m_service_name(service_name_), m_event_callback(event_callback_)
+    : m_service_name(service_name_), m_created(false), m_event_callback(event_callback_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CServiceServerImpl: Initializing service server for: " + m_service_name);
 #endif
+
+    // Create service ID
+    m_server_id = std::chrono::steady_clock::now().time_since_epoch().count();
+
+    // build service id
+    m_service_id.service_id.entity_id = m_server_id;
+    m_service_id.service_id.process_id = Process::GetProcessID();
+    m_service_id.service_id.host_name = Process::GetHostName();
+    m_service_id.service_name = m_service_name;
   }
 
   // Destructor
@@ -66,8 +75,10 @@ namespace eCAL
     Stop();
   }
 
-  bool CServiceServerImpl::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
+  bool CServiceServerImpl::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT & callback_)
   {
+    const auto& method_ = method_info_.method_name;
+
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::SetMethodCallback: Adding method callback for method: " + method_);
 #endif
@@ -80,14 +91,14 @@ namespace eCAL
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // update data type and callback
-      iter->second.method.req_datatype  = method_info_.request_type;
-      iter->second.method.resp_datatype = method_info_.response_type;
-      iter->second.callback             = callback_;
+      iter->second.method.request_datatype_information = method_info_.request_type;
+      iter->second.method.response_datatype_information = method_info_.response_type;
+      iter->second.callback = callback_;
 #else
       /////////////////////////////////////////////
       // old types and descriptors
       /////////////////////////////////////////////
-      iter->second.method.req_type  = method_info_.request_type.name;
+      iter->second.method.req_type = method_info_.request_type.name;
       iter->second.method.resp_type = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -97,14 +108,14 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      iter->second.method.req_datatype.name  = method_info_.request_type.name;
-      iter->second.method.resp_datatype.name = method_info_.response_type.name;
+      iter->second.method.request_datatype_information.name = method_info_.request_type.name;
+      iter->second.method.response_datatype_information.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
-      if (!method_info_.request_type.encoding.empty())    iter->second.method.req_datatype.encoding = method_info_.request_type.encoding;
-      if (!method_info_.response_type.encoding.empty())   iter->second.method.resp_datatype.encoding = method_info_.response_type.encoding;
-      if (!method_info_.request_type.descriptor.empty())  iter->second.method.req_datatype.descriptor = method_info_.request_type.descriptor;
-      if (!method_info_.response_type.descriptor.empty()) iter->second.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+      if (!method_info_.request_type.encoding.empty())    iter->second.method.request_datatype_information.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   iter->second.method.response_datatype_information.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  iter->second.method.request_datatype_information.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) iter->second.method.response_datatype_information.descriptor = method_info_.response_type.descriptor;
 
       // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
       if (callback_ != nullptr)
@@ -120,19 +131,19 @@ namespace eCAL
 #endif
       SMethod method;
       // method name
-      method.method.mname = method_;
+      method.method.method_name = method_;
 
 #if 0 // this is how it should look like if we do not use the old type and descriptor fields
       // set data type and callback
-      method.method.req_datatype  = method_info_.request_type;
-      method.method.resp_datatype = method_info_.response_type;
-      method.callback             = callback_;
+      method.method.request_datatype_information = method_info_.request_type;
+      method.method.response_datatype_information = method_info_.response_type;
+      method.callback = callback_;
 #else
 #endif
       /////////////////////////////////////////////
       // old types and descriptors
       /////////////////////////////////////////////
-      method.method.req_type  = method_info_.request_type.name;
+      method.method.req_type = method_info_.request_type.name;
       method.method.resp_type = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
@@ -142,14 +153,14 @@ namespace eCAL
       /////////////////////////////////////////////
       // new types, encodings and descriptors
       /////////////////////////////////////////////
-      method.method.req_datatype.name  = method_info_.request_type.name;
-      method.method.resp_datatype.name = method_info_.response_type.name;
+      method.method.request_datatype_information.name = method_info_.request_type.name;
+      method.method.response_datatype_information.name = method_info_.response_type.name;
 
       // we need to check these fields, because the v5 implementation is using SetMethodCallback with partially filled fields
-      if (!method_info_.request_type.encoding.empty())    method.method.req_datatype.encoding = method_info_.request_type.encoding;
-      if (!method_info_.response_type.encoding.empty())   method.method.resp_datatype.encoding = method_info_.response_type.encoding;
-      if (!method_info_.request_type.descriptor.empty())  method.method.req_datatype.descriptor = method_info_.request_type.descriptor;
-      if (!method_info_.response_type.descriptor.empty()) method.method.resp_datatype.descriptor = method_info_.response_type.descriptor;
+      if (!method_info_.request_type.encoding.empty())    method.method.request_datatype_information.encoding = method_info_.request_type.encoding;
+      if (!method_info_.response_type.encoding.empty())   method.method.response_datatype_information.encoding = method_info_.response_type.encoding;
+      if (!method_info_.request_type.descriptor.empty())  method.method.request_datatype_information.descriptor = method_info_.request_type.descriptor;
+      if (!method_info_.response_type.descriptor.empty()) method.method.response_datatype_information.descriptor = method_info_.response_type.descriptor;
 
       // we need to do this ugly hack here, because the v5 implementation is using SetMethodCallback with nullptr to update descriptions (AddDescription)
       if (callback_ != nullptr)
@@ -164,7 +175,7 @@ namespace eCAL
     return true;
   }
 
-  bool CServiceServerImpl::RemoveMethodCallback(const std::string& method_)
+  bool CServiceServerImpl::RemoveMethodCallback(const std::string & method_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::RemoveMethodCallback: Removing method callback for method: " + method_);
@@ -215,19 +226,12 @@ namespace eCAL
     return GetRegistrationSample();
   }
 
-  Registration::SServiceId CServiceServerImpl::GetServiceId() const
+  const SServiceId& CServiceServerImpl::GetServiceId() const
   {
-    Registration::SServiceId service_id;
-
-    service_id.service_id.entity_id  = m_service_id;
-    service_id.service_id.process_id = Process::GetProcessID();
-    service_id.service_id.host_name  = Process::GetHostName();
-    service_id.service_name          = m_service_name;
-
-    return service_id;
+    return m_service_id;
   }
 
-  std::string CServiceServerImpl::GetServiceName() const
+  const std::string& CServiceServerImpl::GetServiceName() const
   {
     return m_service_name;
   }
@@ -244,9 +248,6 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl: Starting service server for: " + m_service_name);
 #endif
 
-    // Create service ID
-    m_service_id = std::chrono::steady_clock::now().time_since_epoch().count();
-
     // Get global server manager
     auto server_manager = eCAL::service::ServiceManager::instance()->get_server_manager();
     if (!server_manager || server_manager->is_stopped())
@@ -256,21 +257,22 @@ namespace eCAL
     }
 
     // Create callback functions
-    const eCAL::service::Server::EventCallbackT event_callback =
-      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](eCAL::service::ServerEventType event, const std::string& message)
+    const ecal_service::Server::EventCallbackT event_callback =
+      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](ecal_service::ServerEventType event, const std::string& message)
       {
         if (auto me = weak_me.lock())
         {
-          Registration::SServiceMethodId service_id;
-          service_id.service_name         = me->m_service_name;
-          service_id.service_id.entity_id = me->m_service_id;
-          me->NotifyEventCallback(service_id, event == eCAL::service::ServerEventType::Connected
+          SServiceId service_id;
+          service_id.service_name = me->m_service_name;
+          service_id.service_id.entity_id = me->m_server_id;
+          // TODO: Also fill process ID and hostname?
+          me->NotifyEventCallback(service_id, event == ecal_service::ServerEventType::Connected
             ? eServerEvent::connected
             : eServerEvent::disconnected, message);
         }
       };
 
-    const eCAL::service::Server::ServiceCallbackT service_callback =
+    const ecal_service::Server::ServiceCallbackT service_callback =
       [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
       {
         if (auto me = weak_me.lock())
@@ -351,15 +353,15 @@ namespace eCAL
     if (server_tcp_port == 0) return ecal_reg_sample;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id  = m_service_id;
+    identifier.entity_id = m_server_id;
     identifier.process_id = Process::GetProcessID();
-    identifier.host_name  = Process::GetHostName();
+    identifier.host_name = Process::GetHostName();
 
     auto& service = ecal_reg_sample.service;
-    service.version     = m_server_version;
-    service.pname       = Process::GetProcessName();
-    service.uname       = Process::GetUnitName();
-    service.sname       = m_service_name;
+    service.version = m_server_version;
+    service.process_name = Process::GetProcessName();
+    service.unit_name = Process::GetUnitName();
+    service.service_name = m_service_name;
     service.tcp_port_v0 = 0;
     service.tcp_port_v1 = server_tcp_port;
 
@@ -368,17 +370,17 @@ namespace eCAL
       for (const auto& iter : m_method_map)
       {
         Service::Method method;
-        method.mname = iter.first;
+        method.method_name = iter.first;
 
         // old type and descriptor fields
-        method.req_type   = iter.second.method.req_type;
-        method.req_desc   = iter.second.method.req_desc;
-        method.resp_type  = iter.second.method.resp_type;
-        method.resp_desc  = iter.second.method.resp_desc;
+        method.req_type = iter.second.method.req_type;
+        method.req_desc = iter.second.method.req_desc;
+        method.resp_type = iter.second.method.resp_type;
+        method.resp_desc = iter.second.method.resp_desc;
 
         // new type and descriptor fields
-        method.req_datatype  = iter.second.method.req_datatype;
-        method.resp_datatype = iter.second.method.resp_datatype;
+        method.request_datatype_information = iter.second.method.request_datatype_information;
+        method.response_datatype_information = iter.second.method.response_datatype_information;
 
         method.call_count = iter.second.method.call_count;
         service.methods.push_back(method);
@@ -394,20 +396,20 @@ namespace eCAL
     ecal_reg_sample.cmd_type = bct_unreg_service;
 
     auto& identifier = ecal_reg_sample.identifier;
-    identifier.entity_id  = m_service_id;
+    identifier.entity_id = m_server_id;
     identifier.process_id = Process::GetProcessID();
-    identifier.host_name  = Process::GetHostName();
+    identifier.host_name = Process::GetHostName();
 
     auto& service = ecal_reg_sample.service;
     service.version = m_server_version;
-    service.pname   = Process::GetProcessName();
-    service.uname   = Process::GetUnitName();
-    service.sname   = m_service_name;
+    service.process_name = Process::GetProcessName();
+    service.unit_name = Process::GetUnitName();
+    service.service_name = m_service_name;
 
     return ecal_reg_sample;
   }
 
-  int CServiceServerImpl::RequestCallback(const std::string& request_pb_, std::string& response_pb_)
+  int CServiceServerImpl::RequestCallback(const std::string & request_pb_, std::string & response_pb_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::RequestCallback: Processing request callback for: " + m_service_name);
@@ -416,9 +418,9 @@ namespace eCAL
     // prepare response
     Service::Response response;
     auto& response_header = response.header;
-    response_header.hname = Process::GetHostName();
-    response_header.sname = m_service_name;
-    response_header.sid   = std::to_string(m_service_id); // TODO: Service ID currently defined as string, should be integer as well
+    response_header.host_name = Process::GetHostName();
+    response_header.service_name = m_service_name;
+    response_header.service_id = std::to_string(m_server_id); // TODO: Service ID currently defined as string, should be integer as well
 
     // try to parse request
     Service::Request request;
@@ -442,16 +444,16 @@ namespace eCAL
     // get method
     SMethod method;
     const auto& request_header = request.header;
-    response_header.mname = request_header.mname;
+    response_header.method_name = request_header.method_name;
     {
       const std::lock_guard<std::mutex> lock(m_method_map_mutex);
-      auto requested_method_iterator = m_method_map.find(request_header.mname);
+      auto requested_method_iterator = m_method_map.find(request_header.method_name);
       if (requested_method_iterator == m_method_map.end())
       {
         // set method call state 'failed'
         response_header.state = Service::eMethodCallState::failed;
         // set error message
-        const std::string emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.mname + "'";
+        const std::string emsg = "CServiceServerImpl: Service '" + m_service_name + "' has no method named '" + request_header.method_name + "'";
         response_header.error = emsg;
 
         // TODO: The next version of the service protocol should omit the double-serialization (i.e. copying the binary data in a protocol buffer and then serializing that again)
@@ -472,10 +474,10 @@ namespace eCAL
     // execute method (outside lock guard)
     const std::string& request_s = request.request;
     std::string response_s;
-    const SMethodInfo method_info{
-      method.method.mname,
-      method.method.req_datatype,
-      method.method.resp_datatype
+    const SServiceMethodInformation method_info{
+      method.method.method_name,
+      method.method.request_datatype_information,
+      method.method.response_datatype_information
     };
     const int service_return_state = method.callback(method_info, request_s, response_s);
 
@@ -493,7 +495,7 @@ namespace eCAL
     return 0;
   }
 
-  void CServiceServerImpl::NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eServerEvent event_type_, const std::string& /*message_*/)
+  void CServiceServerImpl::NotifyEventCallback(const SServiceId & service_id_, eServerEvent event_type_, const std::string& /*message_*/)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug1, "CServiceServerImpl::NotifyEventCallback: Notifying event callback for: " + m_service_name + " Event Type: " + to_string(event_type_));

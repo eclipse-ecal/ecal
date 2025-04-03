@@ -18,8 +18,6 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(config_sample)
 
 find_package(eCAL REQUIRED)
@@ -32,7 +30,7 @@ ecal_add_sample(${PROJECT_NAME} ${config_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
-target_link_libraries (${PROJECT_NAME}
+target_link_libraries (${PROJECT_NAME} PRIVATE
     eCAL::core
 )
 

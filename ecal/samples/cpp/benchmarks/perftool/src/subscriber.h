@@ -22,7 +22,7 @@
 
 #include <chrono>
 #include <cstddef>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <memory>
 #include <string>

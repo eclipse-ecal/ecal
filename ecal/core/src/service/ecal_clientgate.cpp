@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,9 +97,9 @@ namespace eCAL
     const auto& ecal_sample_service = ecal_sample_.service;
     const auto& ecal_sample_identifier = ecal_sample_.identifier;
     service.hname = ecal_sample_identifier.host_name;
-    service.pname = ecal_sample_service.pname;
-    service.uname = ecal_sample_service.uname;
-    service.sname = ecal_sample_service.sname;
+    service.pname = ecal_sample_service.process_name;
+    service.uname = ecal_sample_service.unit_name;
+    service.sname = ecal_sample_service.service_name;
     service.sid   = ecal_sample_identifier.entity_id;
     service.pid   = static_cast<int>(ecal_sample_identifier.process_id);
 
@@ -114,7 +114,7 @@ namespace eCAL
       auto res = m_service_client_map.equal_range(service.sname);
       for (ServiceNameClientIDImplMapT::const_iterator iter = res.first; iter != res.second; ++iter)
       {
-        Registration::SEntityId service_entity;
+        SEntityId service_entity;
         service_entity.entity_id  = service.sid;
         service_entity.process_id = service.pid;
         service_entity.host_name  = service.hname;

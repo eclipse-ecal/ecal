@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 namespace eCAL
 {
@@ -47,6 +47,8 @@ namespace eCAL
         virtual bool createDir(const std::string& path_) const = 0;
         virtual bool dirExistsOrCreate(const std::string& path_) const = 0;
         virtual bool createEcalDirStructure(const std::string& path_) const = 0;
+        virtual bool canWriteToDirectory(const std::string& path_) const = 0;
+        virtual std::string getDirectoryPath(const std::string& file_path_) const = 0;
 
         virtual std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const = 0;
     };
@@ -104,6 +106,24 @@ namespace eCAL
          *         Returns empty string if no valid path could be found.
          */
         std::string findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const override;
+
+        /**
+         * @brief Check if the specified directory is writable.
+         * 
+         * @param path_ The path to the directory.
+         * 
+         * @return true if the directory is writable, false otherwise.
+         */
+        bool canWriteToDirectory(const std::string& path_) const override;
+
+        /**
+         * @brief Get the directory path of the specified file.
+         * 
+         * @param filePath The path to the file.
+         * 
+         * @return std::string The directory path of the file.
+         */
+        std::string getDirectoryPath(const std::string& file_path_) const override;
     };
 
     class IDirProvider 
@@ -121,6 +141,7 @@ namespace eCAL
         virtual std::string eCALLocalUserDir() const = 0;
         virtual std::string eCALDataSystemDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
         virtual std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
+        virtual std::string eCALLibraryDir(const eCAL::Util::IDirManager& dir_manager_) const = 0;
     };
 
     class DirProvider : public IDirProvider
@@ -163,6 +184,14 @@ namespace eCAL
          * @returns The unique temporary folder directory.
          */
         std::string uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const override;
+
+        /**
+         * @brief Returns the path to the eCAL library directory.
+         * 
+         * @returns The path to the eCAL library directory.
+         *          Returns empty string if the path does not exist.
+         */
+        std::string eCALLibraryDir(const eCAL::Util::IDirManager& dir_manager_) const override;
     };
   } // namespace Util
 
@@ -188,14 +217,13 @@ namespace eCAL
      * @brief Returns the path to the eCAL log directory. Searches in following order:
      *
      *        1. Environment variable ECAL_LOG_DIR
-     *        2. Environment variable ECAL_DATA
+     *        2. Environment variable ECAL_DATA (also checking for logs subdirectory)
      *        3. The path provided from the configuration
-     *        4. The path to the local eCAL data directory
-     *        5. For windows: the system data path if available (ProgramData/eCAL)
-     *        6. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
-     *        7. Fallback path /ecal_tmp
+     *        4. The path where ecal.yaml was loaded from (also checking for logs subdirectory)
+     *        5. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        6. Fallback path /ecal_tmp
      * 
-     *        In case of 6/7, a unique temporary folder will be created.
+     *        In case of 5/6, a unique temporary folder will be created.
      *        
      * @returns The path to the eCAL log directory. The subdirectory logs might not exist yet.
      *          Returns empty string if no root path could be found.

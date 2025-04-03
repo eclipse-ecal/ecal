@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,28 +25,32 @@ namespace eCAL
   {
     namespace command
     {
-      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output)
+      eCAL::sys::Error Command::GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output)
       {
         return CallRemoteEcalsysService(remote_ecalsys_service, hostname, "GetStatus", eCAL::pb::sys::GenericRequest(), state_output);
       }
 
-      eCAL::sys::Error Command::CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service
+      eCAL::sys::Error Command::CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service
                                                         , const std::string&                hostname
                                                         , const std::string&                method_name
                                                         , const google::protobuf::Message&  request
                                                         , google::protobuf::Message&        response)
       {
-        remote_ecalsys_service->SetHostName(hostname);
-
-        eCAL::ServiceResponseVecT service_response_vec;
         constexpr int timeout_ms = 1000;
 
-        if (remote_ecalsys_service->Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+        auto client_instances = remote_ecalsys_service->GetClientInstances();
+        for (auto& client_instance : client_instances)
         {
-          if (service_response_vec.size() > 0)
+          // TODO: We need to filter for pid as well in the future?
+          // Currently empty hostname means "all hosts"
+          if (client_instance.GetClientID().host_name == hostname || hostname.empty())
           {
-            response.ParseFromString(service_response_vec[0].response);
-            return eCAL::sys::Error::ErrorCode::OK;
+            auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+            if (client_instance_response.first)
+            {
+              response.ParseFromString(client_instance_response.second.response);
+              return eCAL::sys::Error::ErrorCode::OK;
+            }
           }
         }
         return eCAL::sys::Error(eCAL::sys::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE, hostname);

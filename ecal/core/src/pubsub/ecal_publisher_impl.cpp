@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,11 @@
  * @brief  eCAL publisher implementation
 **/
 
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/log.h>
+#include <ecal/pubsub/payload_writer.h>
+#include <ecal/process.h>
+#include <ecal/time.h>
 
 #if ECAL_CORE_REGISTRATION
 #include "registration/ecal_registration_provider.h"
@@ -44,6 +45,7 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
+#include <limits>
 #include <mutex>
 #include <sstream>
 #include <string>
@@ -51,8 +53,8 @@
 
 struct SSndHash
 {
-  SSndHash(const eCAL::Registration::EntityIdT& t, long long c) : topic_id(t), snd_clock(c) {}
-  eCAL::Registration::EntityIdT topic_id;
+  SSndHash(const eCAL::EntityIdT& t, long long c) : topic_id(t), snd_clock(c) {}
+  eCAL::EntityIdT topic_id;
   long long                     snd_clock;
 };
 
@@ -63,7 +65,7 @@ namespace std
   public:
     size_t operator()(const SSndHash& h) const
     {
-      const size_t h1 = std::hash<eCAL::Registration::EntityIdT>()(h.topic_id);
+      const size_t h1 = std::hash<eCAL::EntityIdT>()(h.topic_id);
       const size_t h2 = std::hash<long long>()(h.snd_clock);
       return h1 ^ (h2 << 1);
     }
@@ -81,9 +83,9 @@ namespace
 
   // function to log the states of SLayerState
   void logLayerState(const std::string& layerName, const eCAL::CPublisherImpl::SLayerState& state) {
-    std::cout << layerName << " - Read Enabled: "   << boolToString(state.read_enabled)
-                           << ", Write Enabled: "   << boolToString(state.write_enabled)
-                           << ", Write Active : " << boolToString(state.active) << std::endl;
+    std::cout << layerName << " - Read Enabled: " << boolToString(state.read_enabled)
+      << ", Write Enabled: " << boolToString(state.write_enabled)
+      << ", Write Active : " << boolToString(state.active) << std::endl;
   }
 
   // function to log the states of SLayerStates
@@ -108,8 +110,14 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::Constructor");
 #endif
 
+    // build publisher id
+    m_publisher_id = std::chrono::steady_clock::now().time_since_epoch().count();
+
     // build topic id
-    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_topic_id.topic_name = m_attributes.topic_name;
+    m_topic_id.topic_id.entity_id = m_publisher_id;
+    m_topic_id.topic_id.host_name = m_attributes.host_name;
+    m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // mark as created
     m_created = true;
@@ -192,12 +200,12 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len                    = payload_buf_size;
-        wattr.id                     = m_id;
-        wattr.clock                  = m_clock;
-        wattr.hash                   = snd_hash;
-        wattr.time                   = time_;
-        wattr.zero_copy              = m_attributes.shm.zero_copy_mode;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
+        wattr.zero_copy = m_attributes.shm.zero_copy_mode;
         wattr.acknowledge_timeout_ms = m_attributes.shm.acknowledge_timeout_ms;
 
         // prepare send
@@ -255,12 +263,12 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len       = payload_buf_size;
-        wattr.id        = m_id;
-        wattr.clock     = m_clock;
-        wattr.hash      = snd_hash;
-        wattr.time      = time_;
-        wattr.loopback  = m_attributes.loopback;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
+        wattr.loopback = m_attributes.loopback;
 
         // prepare send
         if (m_writer_udp->PrepareWrite(wattr))
@@ -304,11 +312,11 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len   = payload_buf_size;
-        wattr.id    = m_id;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
         wattr.clock = m_clock;
-        wattr.hash  = snd_hash;
-        wattr.time  = time_;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
 
         // write to tcp layer
         tcp_sent = m_writer_tcp->Write(m_payload_buffer.data(), wattr);
@@ -344,26 +352,24 @@ namespace eCAL
     return(true);
   }
 
-  bool CPublisherImpl::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+  bool CPublisherImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
   {
-    m_attr[attr_name_] = attr_value_;
-
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetAttribute");
 #endif
-
-    return(true);
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::SetAttribute - Setting publisher attributes no longer has an effect.");
+    
+    return(false);
   }
 
-  bool CPublisherImpl::ClearAttribute(const std::string& attr_name_)
+  bool CPublisherImpl::ClearAttribute(const std::string& /* attr_name_ */)
   {
-    m_attr.erase(attr_name_);
-
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::ClearAttribute");
 #endif
+    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::ClearAttribute - Clear publisher attributes no longer has an effect.");
 
-    return(true);
+    return(false);
   }
 
   bool CPublisherImpl::SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_)
@@ -455,18 +461,18 @@ namespace eCAL
 
     m_layers.tcp.read_enabled = sub_layer_states_.tcp.read_enabled; // just for debugging/logging
 #endif
-    
+
     // determine if we need to start a transport layer
-    const TLayer::eTransportLayer layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
+    const TransportLayer::eType layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
     switch (layer2activate)
     {
-    case tl_ecal_udp:
+    case TransportLayer::eType::udp_mc:
       StartUdpLayer();
       break;
-    case tl_ecal_shm:
+    case TransportLayer::eType::shm:
       StartShmLayer();
       break;
-    case tl_ecal_tcp:
+    case TransportLayer::eType::tcp:
       StartTcpLayer();
       break;
     default:
@@ -489,8 +495,7 @@ namespace eCAL
 #endif
 
     // add key to connection map, including connection state
-    bool is_new_connection     = false;
-    bool is_updated_connection = false;
+    bool is_new_connection = false;
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       auto subscription_info_iter = m_connection_map.find(subscription_info_);
@@ -511,11 +516,6 @@ namespace eCAL
         {
           is_new_connection = true;
         }
-        // the connection was active, so we just update it
-        else
-        {
-          is_updated_connection = true;
-        }
 
         // update the data type, the layer states and set the state active
         connection = SConnection{ data_type_info_, sub_layer_states_, true };
@@ -531,11 +531,6 @@ namespace eCAL
     {
       // fire connect event
       FireConnectEvent(subscription_info_, data_type_info_);
-    }
-    else if (is_updated_connection)
-    {
-      // fire update event
-      FireUpdateEvent(subscription_info_, data_type_info_);
     }
 
 #ifndef NDEBUG
@@ -635,34 +630,33 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id  = m_topic_id;
-    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
+    ecal_reg_sample_identifier.entity_id = m_publisher_id;
+    ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
 
     // topic_information
     {
-      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.tdatatype;
+      auto& ecal_reg_sample_tdatatype = ecal_reg_sample_topic.datatype_information;
       ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
-    ecal_reg_sample_topic.attr  = m_attr;
-    ecal_reg_sample_topic.tsize = static_cast<int32_t>(m_topic_size);
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
     if (m_writer_udp)
     {
       eCAL::Registration::TLayer udp_tlayer;
-      udp_tlayer.type                      = tl_ecal_udp;
-      udp_tlayer.version                   = ecal_transport_layer_version;
-      udp_tlayer.enabled                   = m_layers.udp.write_enabled;
-      udp_tlayer.active                    = m_layers.udp.active;
+      udp_tlayer.type = tl_ecal_udp;
+      udp_tlayer.version = ecal_transport_layer_version;
+      udp_tlayer.enabled = m_layers.udp.write_enabled;
+      udp_tlayer.active = m_layers.udp.active;
       udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
-      ecal_reg_sample_topic.tlayer.push_back(udp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
@@ -671,12 +665,12 @@ namespace eCAL
     if (m_writer_shm)
     {
       eCAL::Registration::TLayer shm_tlayer;
-      shm_tlayer.type                    = tl_ecal_shm;
-      shm_tlayer.version                 = ecal_transport_layer_version;
-      shm_tlayer.enabled                 = m_layers.shm.write_enabled;
-      shm_tlayer.active                  = m_layers.shm.active;
+      shm_tlayer.type = tl_ecal_shm;
+      shm_tlayer.version = ecal_transport_layer_version;
+      shm_tlayer.enabled = m_layers.shm.write_enabled;
+      shm_tlayer.active = m_layers.shm.active;
       shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
-      ecal_reg_sample_topic.tlayer.push_back(shm_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
@@ -685,20 +679,20 @@ namespace eCAL
     if (m_writer_tcp)
     {
       eCAL::Registration::TLayer tcp_tlayer;
-      tcp_tlayer.type                    = tl_ecal_tcp;
-      tcp_tlayer.version                 = ecal_transport_layer_version;
-      tcp_tlayer.enabled                 = m_layers.tcp.write_enabled;
-      tcp_tlayer.active                  = m_layers.tcp.active;
+      tcp_tlayer.type = tl_ecal_tcp;
+      tcp_tlayer.version = ecal_transport_layer_version;
+      tcp_tlayer.enabled = m_layers.tcp.write_enabled;
+      tcp_tlayer.active = m_layers.tcp.active;
       tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
-      ecal_reg_sample_topic.tlayer.push_back(tcp_tlayer);
+      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
-    ecal_reg_sample_topic.did    = m_id;
-    ecal_reg_sample_topic.dclock = m_clock;
-    ecal_reg_sample_topic.dfreq  = GetFrequency();
+    ecal_reg_sample_topic.process_name = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_id      = m_id;
+    ecal_reg_sample_topic.data_clock       = m_clock;
+    ecal_reg_sample_topic.data_frequency        = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -713,8 +707,8 @@ namespace eCAL
       }
       ext_connections = m_connection_map.size() - loc_connections;
     }
-    ecal_reg_sample_topic.connections_loc = static_cast<int32_t>(loc_connections);
-    ecal_reg_sample_topic.connections_ext = static_cast<int32_t>(ext_connections);
+    ecal_reg_sample_topic.connections_local = static_cast<int32_t>(loc_connections);
+    ecal_reg_sample_topic.connections_external = static_cast<int32_t>(ext_connections);
   }
 
   void CPublisherImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -723,32 +717,31 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id  = m_topic_id;
-    ecal_reg_sample_identifier.host_name  = m_attributes.host_name;
+    ecal_reg_sample_identifier.entity_id = m_publisher_id;
+    ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
-    auto& ecal_reg_sample_topic  = ecal_unreg_sample.topic;
-    ecal_reg_sample_topic.hgname = m_attributes.host_group_name;
-    ecal_reg_sample_topic.pname  = m_attributes.process_name;
-    ecal_reg_sample_topic.tname  = m_attributes.topic_name;
-    ecal_reg_sample_topic.uname  = m_attributes.unit_name;
+    auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
+    ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
+    ecal_reg_sample_topic.process_name         = m_attributes.process_name;
+    ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
+    ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
   }
 
   void CPublisherImpl::FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     // new event handling with topic id
-    if(m_event_id_callback)
+    if (m_event_id_callback)
     {
       SPubEventCallbackData data;
-      data.type      = type_;
-      data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-      data.clock     = 0;
-      data.tdatatype = data_type_info_;
+      data.event_type = type_;
+      data.event_time = eCAL::Time::GetMicroSeconds();
+      data.subscriber_datatype = data_type_info_;
 
-      Registration::STopicId topic_id;
-      topic_id.topic_id.entity_id  = subscription_info_.entity_id;
+      STopicId topic_id;
+      topic_id.topic_id.entity_id = subscription_info_.entity_id;
       topic_id.topic_id.process_id = subscription_info_.process_id;
-      topic_id.topic_id.host_name  = subscription_info_.host_name;
-      topic_id.topic_name          = m_attributes.topic_name;
+      topic_id.topic_id.host_name = subscription_info_.host_name;
+      topic_id.topic_name = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
 
       // call event callback
@@ -762,10 +755,10 @@ namespace eCAL
       if (iter != m_event_callback_map.end() && iter->second)
       {
         v5::SPubEventCallbackData event_data;
-        event_data.type      = type_;
-        event_data.time      = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        event_data.clock     = 0;
-        event_data.tid       = std::to_string(subscription_info_.entity_id);
+        event_data.type = type_;
+        event_data.time = eCAL::Time::GetMicroSeconds();
+        event_data.clock = 0;
+        event_data.tid = std::to_string(subscription_info_.entity_id);
         event_data.tdatatype = data_type_info_;
 
         // call event callback
@@ -777,11 +770,6 @@ namespace eCAL
   void CPublisherImpl::FireConnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(ePublisherEvent::connected, subscription_info_, data_type_info_);
-  }
-
-  void CPublisherImpl::FireUpdateEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
-  {
-    FireEvent(ePublisherEvent::update_connection, subscription_info_, data_type_info_);
   }
 
   void CPublisherImpl::FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_)
@@ -815,7 +803,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -867,7 +855,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -884,15 +872,15 @@ namespace eCAL
   void CPublisherImpl::StopAllLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
-      // flag disabled
+    // flag disabled
     m_layers.udp.write_enabled = false;
-    
+
     // destroy writer
     m_writer_udp.reset();
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-      // flag disabled
+    // flag disabled
     m_layers.shm.write_enabled = false;
 
     // destroy writer
@@ -918,7 +906,7 @@ namespace eCAL
 
     // calculate unique send hash
     const std::hash<SSndHash> hf;
-    const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
+    const size_t snd_hash = hf(SSndHash(m_publisher_id, m_clock));
 
     // store size for monitoring
     m_topic_size = len_;
@@ -927,30 +915,45 @@ namespace eCAL
     return snd_hash;
   }
 
-  TLayer::eTransportLayer CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
+  TransportLayer::eType CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
     const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
 
     // find the highest priority transport layer that is available in both publisher and subscriber options
-    // TODO: we need to fusion the two layer enum types (eTransportLayer) in ecal_tlayer.h and ecal_struct_sample_common.hf
-    for (const TLayer::eTransportLayer layer : layer_priority_vector)
+    static const std::map<TransportLayer::eType, eTLayerType> transport_layer_mapping {
+      {TransportLayer::eType::none, tl_none },
+      {TransportLayer::eType::shm, tl_ecal_shm},
+      {TransportLayer::eType::udp_mc, tl_ecal_udp},
+      {TransportLayer::eType::tcp, tl_ecal_tcp},
+    };
+
+    for (const TransportLayer::eType layer : layer_priority_vector)
     {
-      if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), layer) != enabled_pub_layer_.end()
-       && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), layer) != enabled_sub_layer_.end())
+      if (std::find(enabled_pub_layer_.begin(), enabled_pub_layer_.end(), transport_layer_mapping.at(layer)) != enabled_pub_layer_.end()
+        && std::find(enabled_sub_layer_.begin(), enabled_sub_layer_.end(), transport_layer_mapping.at(layer)) != enabled_sub_layer_.end())
       {
         return layer;
       }
     }
 
     // return tl_none if no common transport layer is found
-    return TLayer::eTransportLayer::tlayer_none;
+    return TransportLayer::eType::none;
   }
 
   int32_t CPublisherImpl::GetFrequency()
   {
     const auto frequency_time = std::chrono::steady_clock::now();
     const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
-    return static_cast<int32_t>(m_frequency_calculator.getFrequency(frequency_time) * 1000);
+
+    const double frequency_in_mhz = m_frequency_calculator.getFrequency(frequency_time) * 1000;
+
+    if (frequency_in_mhz > static_cast<double>(std::numeric_limits<int32_t>::max())) {
+      return std::numeric_limits<int32_t>::max();
+    }
+    else if (frequency_in_mhz < static_cast<double>(std::numeric_limits<int32_t>::min())) {
+      return std::numeric_limits<int32_t>::min();
+    }
+    return static_cast<int32_t>(frequency_in_mhz);
   }
 }

@@ -23,7 +23,8 @@ add_library(${PROJECT_NAME} SHARED)
 
 target_sources(${PROJECT_NAME}
   PRIVATE
-    test.cs
+    PubSubReceiveTest.cs
+    PubSubEventHandlingTest.cs
 )
 
 target_link_libraries(${PROJECT_NAME} Continental.eCAL.Core)
@@ -43,9 +44,8 @@ set_property(TARGET ${PROJECT_NAME}  PROPERTY
 install(TARGETS ${PROJECT_NAME}
     # IMPORTANT: Add the library to the "export-set"
     EXPORT eCALTargets
-    RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT runtime
-    LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT sdk
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ecal" COMPONENT sdk
+    RUNTIME COMPONENT runtime
+    LIBRARY COMPONENT sdk
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/csharp)

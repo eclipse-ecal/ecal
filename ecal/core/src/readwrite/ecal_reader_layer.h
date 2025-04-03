@@ -37,7 +37,7 @@ namespace eCAL
     std::string                 host_name;
     int32_t                     process_id = 0;
     std::string                 topic_name;
-    Registration::EntityIdT     topic_id = 0;
+    EntityIdT     topic_id = 0;
     Registration::ConnectionPar parameter;
   };
 
@@ -55,10 +55,10 @@ namespace eCAL
     virtual void Initialize(const U& attr_) = 0;
 
     // activate / create a specific subscription
-    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const Registration::EntityIdT& topic_id_) = 0;
+    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) = 0;
 
     // deactivate / destroy a specific subscription
-    virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const Registration::EntityIdT& topic_id_) = 0;
+    virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) = 0;
 
     // connection parameter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;

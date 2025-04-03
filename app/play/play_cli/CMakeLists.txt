@@ -44,7 +44,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<BOOL:${MSVC}>:PCRE_STATIC;_UNICODE>)
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     termcolor::termcolor
     tclap::tclap
     eCAL::play_core

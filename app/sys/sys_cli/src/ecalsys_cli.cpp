@@ -27,11 +27,11 @@
 #include <thread>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 #include <ecalsys/ecal_sys.h>
 #include <ecalsys/esys_defs.h>
 
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/server.h>
 
 #ifdef _MSC_VER
@@ -76,7 +76,6 @@
   #define NOMINMAX
   #include <Windows.h>
 #endif // WIN32
-
 
 bool exit_command_received;
 
@@ -166,7 +165,7 @@ int main(int argc, char** argv)
   
   // Ecalsys instance and ecalsys service. We will only use one of those, depending on the remote-control setting
   std::shared_ptr<EcalSys>                                                ecalsys_instance;
-  std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>> remote_ecalsys_service;
+  std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>> remote_ecalsys_service;
   
   // Ptrs for eCAL Sys Service (only used in non-remote control mode)
   std::shared_ptr<eCALSysServiceImpl>                                     ecalsys_service_impl;
@@ -235,16 +234,22 @@ int main(int argc, char** argv)
   /************************************************************************/
   /*  Remote control mode                                                 */
   /************************************************************************/
+
+  struct EcalContext
+  {
+    EcalContext(const std::string& unit_name) { eCAL::Initialize(unit_name, eCAL::Init::All); }
+    ~EcalContext() { eCAL::Finalize(); }
+  };
+  EcalContext global_ecal_context(remote_control_arg.isSet() ? "eCALSys-Remote" : "eCALSys");
+
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
-    eCAL::Initialize("eCALSys-Remote", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
-    remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>();
+    remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>();
   }
   else                            // Non-remote control mode
   {
-    eCAL::Initialize("eCALSys", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     ecalsys_instance = std::make_shared<EcalSys>();
@@ -490,6 +495,5 @@ int main(int argc, char** argv)
     }
   }
 
-  eCAL::Finalize();
   return EXIT_SUCCESS;
 }

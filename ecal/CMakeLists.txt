@@ -25,16 +25,15 @@ set(ECAL_CORE_PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 # --------------------------------------------------------
 add_subdirectory(core)
 
-if(ECAL_CORE_HAS_PROTOBUF)
+if(ECAL_CORE_USE_PROTOBUF)
   add_subdirectory(core_pb)
 endif()
 
 # --------------------------------------------------------
 # core config
 # --------------------------------------------------------
-add_subdirectory(core/cfg)
 if(NOT CMAKE_CROSSCOMPILING)
-  add_subdirectory(core/cfg/gen)
+  add_subdirectory(core/cfg)
 endif()
 
 # --------------------------------------------------------

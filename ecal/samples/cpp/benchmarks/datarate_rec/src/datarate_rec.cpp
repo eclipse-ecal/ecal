@@ -25,7 +25,7 @@
 #include <tclap/CmdLine.h>
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 // main entry
 int main(int argc, char** argv)
@@ -52,8 +52,8 @@ int main(int argc, char** argv)
   std::vector<char> rec_buffer;
   auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
     // make a memory copy to emulate user action
-    rec_buffer.reserve(data_.size);
-    std::memcpy(rec_buffer.data(), data_.buf, data_.size);
+    rec_buffer.reserve(data_.buffer_size);
+    std::memcpy(rec_buffer.data(), data_.buffer, data_.buffer_size);
   };
   sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@
 #include <memory>
 #include <ecalsys/ecal_sys.h>
 
-#include <ecal/ecal_client.h>
+#include <ecal/service/client.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/sys/service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -54,11 +54,11 @@ namespace eCAL
         virtual std::string Example()  const = 0;
 
         virtual eCAL::sys::Error Execute(const std::shared_ptr<EcalSys>& ecalsys_instance, const std::vector<std::string>& argv) const = 0;
-        virtual eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const = 0;
+        virtual eCAL::sys::Error Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service, const std::vector<std::string>& argv) const = 0;
 
-        static eCAL::sys::Error GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output);
+        static eCAL::sys::Error GetRemoteSysStatus(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service, eCAL::pb::sys::State& state_output);
 
-        static eCAL::sys::Error CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::sys::Service>>& remote_ecalsys_service
+        static eCAL::sys::Error CallRemoteEcalsysService(const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>& remote_ecalsys_service
                                                         , const std::string&                hostname
                                                         , const std::string&                method_name
                                                         , const google::protobuf::Message&  request

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,8 @@
 
 #pragma once
 
-#include <ecal/ecal_deprecate.h>
 #include <ecal/msg/subscriber.h>
-#include <ecal/msg/capnproto/helper.h>
+#include <ecal/msg/capnproto/serializer.h>
 
 // capnp includes
 #ifdef _MSC_VER
@@ -39,38 +38,6 @@
 
 namespace eCAL
 {
-  namespace internal
-  {
-    template <typename T>
-    class CapnprotoDeserializer
-    {
-    public:
-      SDataTypeInformation GetDataTypeInformation()
-      {
-        SDataTypeInformation topic_info;
-        topic_info.encoding   = eCAL::capnproto::EncodingAsString();
-        topic_info.name       = eCAL::capnproto::TypeAsString<T>();
-        topic_info.descriptor = eCAL::capnproto::SchemaAsString<T>();
-        return topic_info;
-      }
-
-      // This function is NOT threadsafe!!!
-      bool Deserialize(typename T::Reader& msg_, const void* buffer_, size_t size_)
-      {     
-        kj::ArrayPtr<const capnp::word> words = kj::arrayPtr(reinterpret_cast<const capnp::word*>(buffer_), size_ / sizeof(capnp::word));
-        kj::ArrayPtr<const capnp::word> rest = initMessageBuilderFromFlatArrayCopy(words, m_msg_builder);
-
-        typename T::Builder root_builder = typename T::Builder(m_msg_builder.getRoot<T>());
-        msg_ = root_builder.asReader();
-
-        return(rest.size() == 0);
-      }
-
-    private:
-      capnp::MallocMessageBuilder m_msg_builder;
-    };
-  }
-
   namespace capnproto
   {
     /**
@@ -80,7 +47,7 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CSubscriber = CMessageSubscriber<typename T::Reader, internal::CapnprotoDeserializer<T>>;
+    using CSubscriber = CMessageSubscriber<typename T::Reader, internal::Serializer<T, SDataTypeInformation>>;
 
     /** @example addressbook_rec.cpp
     * This is an example how to use eCAL::capnproto::CSubscriber to receive capnp data with eCAL. To receive the data, see @ref addressbook_rec.cpp .

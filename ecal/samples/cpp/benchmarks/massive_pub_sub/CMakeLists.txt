@@ -18,8 +18,6 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(massive_pub_sub)
 
 find_package(eCAL REQUIRED)
@@ -30,7 +28,7 @@ set(massive_pub_sub_src
 
 ecal_add_sample(${PROJECT_NAME} ${massive_pub_sub_src})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::core
 )
 

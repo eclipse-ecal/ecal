@@ -20,8 +20,8 @@
 #include <chrono>
 #include <cstddef>
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/publisher.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <atomic>
 #include <functional>
@@ -45,7 +45,7 @@ namespace
   std::atomic<size_t> g_callback_received_count;
   void OnReceive(const struct eCAL::SReceiveCallbackData& data_)
   {
-    g_callback_received_bytes += data_.size;
+    g_callback_received_bytes += data_.buffer_size;
     g_callback_received_count++;
   }
 
@@ -395,7 +395,7 @@ TEST(core_cpp_pubsub /*unused*/, DISABLED_DestroyInCallback /*unused*/)
   eCAL::CSubscriber sub_destroy("destroy");
   std::atomic<bool> destroyed(false);
 
-  auto destroy_lambda = [&sub_foo, &destroyed](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+  auto destroy_lambda = [&sub_foo, &destroyed](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
     std::cout << "Receive destroy command" << std::endl;
     //sub_foo.Destroy();
     destroyed = true;
@@ -403,7 +403,7 @@ TEST(core_cpp_pubsub /*unused*/, DISABLED_DestroyInCallback /*unused*/)
   };
   sub_destroy.SetReceiveCallback(destroy_lambda);
 
-  auto receive_lambda = [](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+  auto receive_lambda = [](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
     std::cout << "Hello" << std::endl;
   };
   sub_foo.SetReceiveCallback(receive_lambda);
@@ -467,7 +467,7 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     size_t callback_received_count(0);
 
     eCAL::CSubscriber sub_foo("foo");
-    auto receive_lambda = [&callback_received_count](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+    auto receive_lambda = [&callback_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
       std::cout << "Receiving in scope 1" << std::endl;
       callback_received_count++;
     };
@@ -484,7 +484,7 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
     size_t callback_received_count(0);
 
     eCAL::CSubscriber sub_foo("foo");
-    auto receive_lambda = [&callback_received_count](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+    auto receive_lambda = [&callback_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
       std::cout << "Receiving in scope 2" << std::endl;
       callback_received_count++;
     };

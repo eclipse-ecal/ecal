@@ -26,10 +26,11 @@
 #include "ecal_def.h"
 #include "ecal_utils/ecal_utils.h"
 #include "ecal_utils/filesystem.h"
-#include "ecal/ecal_config.h"
-#include "ecal/ecal_util.h"
+#include "ecal/config.h"
+#include "ecal/util.h"
 #include "util/getenvvar.h"
 
+#include <fstream>
 #include <vector>
 
 // for cwd
@@ -41,6 +42,7 @@
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
+  #include <dlfcn.h>
 #endif
 
 namespace
@@ -162,10 +164,12 @@ namespace
 
   #ifdef ECAL_OS_WINDOWS
         
+    (void)linux_folder_name_; // suppress unused warning
     return buildPath(path_, win_folder_name_);
         
   #elif defined(ECAL_OS_LINUX)
         
+    (void)win_folder_name_; // suppress unused warning
     return buildPath(path_, linux_folder_name_);
         
   #else
@@ -173,6 +177,30 @@ namespace
     return {};
     
   #endif
+  }
+
+  std::string getLibraryPath(const eCAL::Util::IDirManager& dir_manager_) 
+  {
+    std::string return_path = {};
+  #ifdef ECAL_OS_WINDOWS
+    
+    HMODULE hModule = NULL;
+    char path[MAX_PATH];
+    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)getLibraryPath, &hModule);
+    GetModuleFileName(hModule, path, sizeof(path));
+    return_path = dir_manager_.getDirectoryPath(path);
+  
+  #elif defined(ECAL_OS_LINUX)
+    
+    Dl_info dl_info;
+    if (dladdr((void *)getLibraryPath, &dl_info)) 
+    {
+      return_path = dir_manager_.getDirectoryPath(dl_info.dli_fname);
+    }
+
+  #endif
+
+    return return_path;
   }
 }
 
@@ -226,6 +254,30 @@ namespace eCAL
 
       // If valid path is not encountered, defaults should be used
       return {};
+    }
+
+    bool DirManager::canWriteToDirectory(const std::string& path_) const 
+    {
+      const std::string testFilePath = path_ + "/test_file.txt";
+      std::ofstream testFile(testFilePath);
+      
+      if (testFile)
+      {
+        testFile.close();
+        std::remove(testFilePath.c_str());
+        return true;
+      } 
+      else 
+      {
+        return false;
+      }
+    }
+
+    // returns the directory path of the specified file
+    std::string DirManager::getDirectoryPath(const std::string& file_path_) const
+    {
+      const size_t pos = file_path_.find_last_of("/\\");
+      return (std::string::npos == pos) ? "" : file_path_.substr(0, pos);
     }
 
     // return a unique temporary folder name
@@ -291,12 +343,13 @@ namespace eCAL
       std::string system_dir;
     #ifdef ECAL_OS_WINDOWS
 
+      (void)dir_manager_; // suppress unused warning
       system_dir = getKnownFolderPath(FOLDERID_ProgramData);
     
     #elif defined(ECAL_OS_LINUX)
     
       // TODO PG: Check if we really want to give that back here
-      if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH)) 
+      if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH))
         system_dir = ECAL_LINUX_SYSTEM_PATH;
     
     #endif /* ECAL_OS_LINUX */
@@ -305,34 +358,34 @@ namespace eCAL
         
       return eCALPlatformSpecificFolder(system_dir, ECAL_FOLDER_NAME_LINUX);
     }
+
+    std::string DirProvider::eCALLibraryDir(const Util::IDirManager& dir_manager_) const
+    {
+      return getLibraryPath(dir_manager_);
+    }
   } // namespace Util
 
   namespace Config
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      const std::string local_user_dir = dir_provider_.eCALLocalUserDir();
-      const std::string data_system_path = dir_provider_.eCALDataSystemDir(dir_manager_);
+      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
+      const std::string ecal_data_env_dir = dir_provider_.eCALEnvVar(ECAL_DATA_VAR);
+      
       const std::vector<std::string> log_paths = {
         dir_provider_.eCALEnvVar(ECAL_LOG_VAR),
-        dir_provider_.eCALEnvVar(ECAL_DATA_VAR),
+        buildPath(ecal_data_env_dir, ECAL_FOLDER_NAME_LOG),
+        ecal_data_env_dir,
         config_.logging.provider.file_config.path,
-        buildPath(local_user_dir, ECAL_FOLDER_NAME_LOG),
-        buildPath(data_system_path, ECAL_FOLDER_NAME_LOG)
+        buildPath(config_file_dir, ECAL_FOLDER_NAME_LOG),
+        config_file_dir
       };
 
       for (const auto& path : log_paths)
       {
-        if (!path.empty())
+        if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
         {
-          if (dir_manager_.dirExists(path))
-          {
-            return path;
-          }
-          else
-          {
-            std::cout << "[eCAL] Log path does not exist: " << path << "\n";
-          }
+          return path;
         }
       }
       
@@ -378,6 +431,16 @@ namespace eCAL
       // precedence 3: eCAL data system path 
       // -----------------------------------------------------------
       ecal_default_paths.emplace_back(dir_provider_.eCALDataSystemDir(dir_manager_));
+
+      // -----------------------------------------------------------
+      // precedence 4: library path
+      // -----------------------------------------------------------
+      const std::string library_dir = dir_provider_.eCALLibraryDir(dir_manager_);
+      if (!library_dir.empty())
+      {
+        ecal_default_paths.emplace_back(buildPath(library_dir, ECAL_FOLDER_RELATIVE_ETC));
+      }
+
       return ecal_default_paths;
     }
 

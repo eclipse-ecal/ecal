@@ -22,8 +22,27 @@ find_package(eCAL REQUIRED)
 
 set(ecal_clr_src
     AssemblyInfo.cpp
-    ecal_clr.h
-    ecal_clr.cpp
+    ecal_clr_client.cpp
+    ecal_clr_client.h
+    ecal_clr_common.cpp
+    ecal_clr_common.h
+    ecal_clr_core.cpp
+    ecal_clr_core.h
+    ecal_clr_log.cpp
+    ecal_clr_log.h
+    ecal_clr_monitoring.cpp
+    ecal_clr_monitoring.h
+    ecal_clr_publisher.cpp
+    ecal_clr_publisher.h
+    ecal_clr_server.cpp
+    ecal_clr_server.h
+    ecal_clr_subscriber.cpp
+    ecal_clr_subscriber.h
+    ecal_clr_time.cpp
+    ecal_clr_time.h
+    ecal_clr_types.h
+    ecal_clr_types_pubsub.h
+    ecal_clr_types_service.h
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})
@@ -39,9 +58,8 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 install(TARGETS ${PROJECT_NAME}
     # IMPORTANT: Add the library to the "export-set"
     EXPORT eCALTargets
-    RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT runtime
-    LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT sdk
-    PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/ecal" COMPONENT sdk
+    RUNTIME COMPONENT runtime
+    LIBRARY COMPONENT sdk
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/csharp)

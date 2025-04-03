@@ -87,7 +87,7 @@ First check out the eCAL repository and all of the submodules:
    rem Replace with your Qt installation path:
    set "CMAKE_PREFIX_PATH=C:/Qt/5.15.2/msvc2019_64"
 
-   cmake ../.. -A x64 -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
+   cmake ../.. -A x64 -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=OFF
    cmake --build . --parallel --config Release
 
 This will create a :file:`_build\\complete\\` directory in your eCAL root folder and build eCAL there.
@@ -145,13 +145,13 @@ We support building on currently supported Ubuntu LTS releases.
 |fa-ubuntu| Ubuntu 22.04 / 20.04 build
 --------------------------------------
 
-#. Compile eCAL with the following options (additional set `BUILD_PY_BINDING` to `ON` if plan to build the python extension):
+#. Compile eCAL with the following options (additional set `ECAL_BUILD_PY_BINDING` to `ON` if plan to build the python extension):
 
    .. code-block:: bash
 
       mkdir _build
       cd _build
-      cmake .. -DCMAKE_BUILD_TYPE=Release -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_QWT=OFF
+      cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_QWT=OFF
       make -j4
 
 #. Create a debian package and install it:
@@ -162,9 +162,12 @@ We support building on currently supported Ubuntu LTS releases.
       sudo dpkg -i _deploy/eCAL-*
       sudo ldconfig
 
-#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `BUILD_PY_BINDING` CMake option in step 1):
+#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `ECAL_BUILD_PY_BINDING` CMake option in step 1):
 
    .. code-block:: bash
 
-      cmake --build . --target create_python_wheel --config Release
-      sudo pip3 install _deploy/ecal5-*
+      pip install wheel
+      pip install -r ../doc/requirements.txt
+      python -m pip install build
+      python -m build .. --outdir _deploy
+      sudo pip install _deploy/ecal5-*

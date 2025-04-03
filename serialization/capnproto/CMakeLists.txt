@@ -32,10 +32,10 @@ add_subdirectory(capnproto)
 # samples
 # --------------------------------------------------------
 if(ECAL_CAPNPROTO_BUILD_SAMPLES)
-  add_subdirectory(samples/pubsub/addressbook_rec)
-  add_subdirectory(samples/pubsub/addressbook_rec_cb)
-  add_subdirectory(samples/pubsub/addressbook_rec_dynamic)
-  add_subdirectory(samples/pubsub/addressbook_snd)
+  add_subdirectory(samples/pubsub/addressbook_receive)
+  add_subdirectory(samples/pubsub/addressbook_receive_dynamic)
+  add_subdirectory(samples/pubsub/addressbook_send)
+  add_subdirectory(samples/measurement)
 endif()
 
 # --------------------------------------------------------
@@ -43,4 +43,5 @@ endif()
 # --------------------------------------------------------
 if(ECAL_CAPNPROTO_BUILD_TESTS)
   enable_testing()
+  add_subdirectory(tests)
 endif()

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #include <QtWidgets/QMainWindow>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -57,5 +57,5 @@ private:
 private:
   Ui::EcalplayGuiServiceMainWindow ui_;
 
-  eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service_;
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::play::EcalPlayService> player_service_;
 };

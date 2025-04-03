@@ -39,7 +39,7 @@ struct LogEntry
   };
   int64_t time;
   std::string   host_name;
-  int32_t       pid;
+  int32_t       process_id;
   std::string   process_name;
   std::string   process_path;
   Level         log_level;
@@ -97,10 +97,10 @@ class LogModel
   {
     return LogEntry {
       val.time(),
-      val.hname(),
-      val.pid(),
-      val.uname(),
-      val.pname(),
+      val.host_name(),
+      val.process_id(),
+      val.unit_name(),
+      val.process_name(),
       ToLogLevel(val.level()),
       val.content()
     };

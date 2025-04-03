@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,14 +40,17 @@ namespace eCAL
 {
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.publisher = config_;
+
     // create publisher implementation
-    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
 
     // register publisher
-    if(g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
+    if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
   }
 
-  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT event_callback_, const Publisher::Configuration& config_) :
+  CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_) :
     CPublisher(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
@@ -58,7 +61,7 @@ namespace eCAL
   {
     // could be already destroyed by move
     if (m_publisher_impl == nullptr) return;
-    
+
     // unregister publisher
     if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   }
@@ -82,26 +85,25 @@ namespace eCAL
     CBufferPayloadWriter payload{ buf_, len_ };
     return Send(payload, time_);
   }
-  
+
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
     if (m_publisher_impl == nullptr) return false;
-    
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
      // then the data writer will only do some statistics
      // for the monitoring layer and return
-     if (GetSubscriberCount() == 0)
-     {
-       m_publisher_impl->RefreshSendCounter();
-       // we return false here to indicate that we did not really send something
-       return false;
-     }
+    if (GetSubscriberCount() == 0)
+    {
+      m_publisher_impl->RefreshSendCounter();
+      // we return false here to indicate that we did not really send something
+      return false;
+    }
 
-     // send content via data writer layer
-     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-     return m_publisher_impl->Write(payload_, write_time, 0);
+    // send content via data writer layer
+    const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
+    return m_publisher_impl->Write(payload_, write_time, 0);
   }
 
   bool CPublisher::Send(const std::string& payload_, long long time_)
@@ -115,21 +117,24 @@ namespace eCAL
     return(m_publisher_impl->GetSubscriberCount());
   }
 
-  std::string CPublisher::GetTopicName() const
+  const std::string& CPublisher::GetTopicName() const
   {
-    if (m_publisher_impl == nullptr) return "";
+    static const std::string empty_topic_name{};
+    if (m_publisher_impl == nullptr) return empty_topic_name;
     return(m_publisher_impl->GetTopicName());
   }
 
-  Registration::STopicId CPublisher::GetTopicId() const
+  const STopicId& CPublisher::GetTopicId() const
   {
-    if (m_publisher_impl == nullptr) return Registration::STopicId();
+    static const STopicId empty_topic_id{};
+    if (m_publisher_impl == nullptr) return empty_topic_id;
     return(m_publisher_impl->GetTopicId());
   }
 
-  SDataTypeInformation CPublisher::GetDataTypeInformation() const
+  const SDataTypeInformation& CPublisher::GetDataTypeInformation() const
   {
-    if (m_publisher_impl == nullptr) return SDataTypeInformation();
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_publisher_impl == nullptr) return empty_data_type_information;
     return(m_publisher_impl->GetDataTypeInformation());
   }
 }

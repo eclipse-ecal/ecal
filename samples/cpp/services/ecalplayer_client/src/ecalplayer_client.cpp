@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -34,37 +34,40 @@
 #include <thread>
 
 // callback for player service response
-void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
+void OnPlayerResponse(const eCAL::SServiceResponse& service_response_)
 {
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+
   switch (service_response_.call_state)
   {
   // service successful executed
   case eCAL::eCallState::executed:
   {
-    if (service_response_.method_name == "GetConfig")
+    if (method_name == "GetConfig")
     {
       eCAL::pb::play::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
-      std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+      std::cout << "PlayerService " << method_name << " called successfully on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_response_.method_name == "Response")
+    else if (method_name == "Response")
     {
       eCAL::pb::play::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+      std::cout << "PlayerService " << method_name << " called successfully on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
-    else if (service_response_.method_name == "GetState")
+    else if (method_name == "GetState")
     {
         eCAL::pb::play::State response;
         response.ParseFromString(service_response_.response);
-        std::cout << "PlayerService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+        std::cout << "PlayerService " << method_name << " called successfully on host " << host_name << std::endl;
         std::cout << response.DebugString();
     }
     else
     {
-        std::cout << "PlayerService " << service_response_.method_name << " received unknown message on host " << service_response_.host_name << std::endl;
+        std::cout << "PlayerService " << method_name << " received unknown message on host " << host_name << std::endl;
     }
   }
   break;
@@ -73,7 +76,7 @@ void OnPlayerResponse(const struct eCAL::SServiceResponse& service_response_)
   {
     eCAL::pb::play::Response response;
     response.ParseFromString(service_response_.response);
-    std::cout << "PlayerService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
+    std::cout << "PlayerService " << method_name << " failed with \"" << response.error() << "\" on host " << host_name << std::endl;
     std::cout << response.DebugString();
   }
   break;
@@ -89,8 +92,7 @@ int main()
   eCAL::Initialize("ecalplayer client");
 
   // create player service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;
-  player_service.AddResponseCallback(OnPlayerResponse);
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::play::EcalPlayService> player_service;
 
   // sleep for service matching
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -111,7 +113,7 @@ int main()
     // "GetConfig"                    //
     ////////////////////////////////////
     std::cout << "eCAL::pb::play::EcalPlayService:GetConfig()" << std::endl;
-    player_service.Call("GetConfig", get_config_request);
+    player_service.CallWithCallback("GetConfig", get_config_request, OnPlayerResponse);
     std::cout << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     ////////////////////////////////////
@@ -129,11 +131,11 @@ int main()
     (*config)["limit_interval_start_rel_secs"] = "1.0";                         // Start the playback from this time (relative value in seconds, 0.0 indicates the begin of the measurement)
     (*config)["limit_interval_end_rel_secs"]   = "8.0";                         // End the playback at this time (relative value in seconds)
 
-    player_service.Call("SetConfig", set_config_request);
+    player_service.CallWithCallback("SetConfig", set_config_request, OnPlayerResponse);
     std::cout << set_config_request.DebugString() << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-    player_service.Call("GetState", eCAL::pb::play::Empty());
+    player_service.CallWithCallback("GetState", eCAL::pb::play::Empty(), OnPlayerResponse);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     ////////////////////////////////////
@@ -143,7 +145,7 @@ int main()
     // "SetCommand - initialize"
     std::cout << "eCAL::pb::play::EcalPlayService:SetCommand() - initialize" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::initialize);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -153,7 +155,7 @@ int main()
     std::cout << "eCAL::pb::play::EcalPlayService:SetCommand() - jum_to 2.0s" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::jump_to);
     command_request.set_rel_time_secs(2.0);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -162,7 +164,7 @@ int main()
     // "SetCommand - play"
     std::cout << "eCAL::pb::play::EcalPlayService:SetCommand() - play" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::play);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -171,7 +173,7 @@ int main()
     // "SetCommand - pause"
     std::cout << "eCALPB.Play.GUIService:SetCommand() - pause" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::pause);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -180,7 +182,7 @@ int main()
     // "SetCommand - step"
     std::cout << "eCALPB.Play.GUIService:SetCommand() - step" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::step);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -190,7 +192,7 @@ int main()
     std::cout << "eCALPB.Play.GUIService:SetCommand() - step_channel \"VehiclePosePb\"" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::step_channel);
     command_request.set_step_reference_channel("VehiclePosePb");
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -199,7 +201,7 @@ int main()
     // "SetCommand - de_initialize"
     std::cout << "eCAL::pb::play::EcalPlayService:SetCommand() - de_initialize" << std::endl;
     command_request.set_command(eCAL::pb::play::CommandRequest::de_initialize);
-    player_service.Call("SetCommand", command_request);
+    player_service.CallWithCallback("SetCommand", command_request, OnPlayerResponse);
     std::cout << command_request.DebugString() << std::endl;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));

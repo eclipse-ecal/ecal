@@ -21,8 +21,9 @@
 #include "serialization/ecal_serialize_logging.h"
 #include "config/builder/udp_attribute_builder.h"
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 #include <ecal_utils/filesystem.h>
+#include <ecal_utils/string.h>
 
 #include <chrono>
 #include <iostream>
@@ -50,18 +51,8 @@ namespace
 #include <sys/time.h>
 #include <ctime>
 
-namespace{
-  bool isDirectory(const std::string& path_)
-  {
-    if (path_.empty()) return false;
-
-    struct stat st;
-    if (stat(path_.c_str(), &st) == 0)
-      return S_ISDIR(st.st_mode);
-
-    return false;
-  }
-
+namespace
+{
   std::string get_time_str()
   {
     char            fmt[64];
@@ -148,9 +139,9 @@ namespace eCAL
   namespace Logging
   {
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
-    : m_attributes(attr_)
-    , m_created(false)
+    : m_created(false)
     , m_logfile(nullptr)
+    , m_attributes(attr_)
     {
     }
 
@@ -188,8 +179,15 @@ namespace eCAL
       if (!isDirectoryOrCreate(m_attributes.file_config.path)) return false;
       
       const std::string tstring = get_time_str();
-  
-      m_logfile_name = m_attributes.file_config.path + tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      
+      std::string log_path = m_attributes.file_config.path;
+      if (EcalUtils::Filesystem::ToUnixSeperators(log_path).back() == '/')
+        log_path.pop_back();
+
+      const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      const std::vector<std::string> file_path_components = { log_path, file_name };
+      
+      m_logfile_name = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), file_path_components);
       m_logfile = fopen(m_logfile_name.c_str(), "w");
 
       if (m_logfile != nullptr)
@@ -216,9 +214,9 @@ namespace eCAL
       if(!m_created) return;
       if(msg_.empty()) return;
 
-      const Filter log_con  = level_ & m_attributes.console_sink.filter_log;
-      const Filter log_file = level_ & m_attributes.file_sink.filter_log;
-      const Filter log_udp  = level_ & m_attributes.udp_sink.filter_log;
+      const Filter log_con  = level_ & m_attributes.console_sink.log_level;
+      const Filter log_file = level_ & m_attributes.file_sink.log_level;
+      const Filter log_udp  = level_ & m_attributes.udp_sink.log_level;
       if((log_con | log_file | log_udp) == 0) return;
 
       auto log_time = eCAL::Time::ecal_clock::now();
@@ -248,13 +246,13 @@ namespace eCAL
       {
           // set up log message
           Logging::SLogMessage log_message;
-          log_message.time    = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
-          log_message.hname   = m_attributes.host_name;
-          log_message.pid     = m_attributes.process_id;
-          log_message.pname   = m_attributes.process_name;
-          log_message.uname   = m_attributes.unit_name;
-          log_message.level   = level_;
-          log_message.content = msg_;
+          log_message.time         = std::chrono::duration_cast<std::chrono::microseconds>(log_time.time_since_epoch()).count();
+          log_message.host_name    = m_attributes.host_name;
+          log_message.process_id   = m_attributes.process_id;
+          log_message.process_name = m_attributes.process_name;
+          log_message.unit_name    = m_attributes.unit_name;
+          log_message.level        = level_;
+          log_message.content      = msg_;
 
           // sent it
           m_log_message_vec.clear();

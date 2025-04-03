@@ -18,11 +18,11 @@
 */
 
 #include <chrono>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_core.h>
-#include <ecal/ecal_log.h>
-#include <ecal/ecal_log_level.h>
-#include <ecal/ecal_process.h>
+#include <ecal/config.h>
+#include <ecal/core.h>
+#include <ecal/log.h>
+#include <ecal/log_level.h>
+#include <ecal/process.h>
 
 #include <gtest/gtest.h>
 
@@ -58,7 +58,7 @@ eCAL::Configuration GetUDPConfiguration()
   config.logging.provider.console.enable  = false;
   config.logging.provider.udp.enable      = true;
   config.logging.receiver.enable          = true;
-  config.logging.provider.udp.filter_log  = eCAL::Logging::log_level_all;
+  config.logging.provider.udp.log_level   = eCAL::Logging::log_level_all;
   return config;
 }
 
@@ -69,7 +69,7 @@ eCAL::Configuration GetFileConfiguration(const std::string& path_)
   config.logging.provider.console.enable   = false;
   config.logging.provider.file.enable      = true;
   config.logging.provider.file_config.path = path_;
-  config.logging.provider.file.filter_log  = eCAL::Logging::log_level_all;
+  config.logging.provider.file.log_level   = eCAL::Logging::log_level_all;
   return config;
 }
 
@@ -79,7 +79,7 @@ eCAL::Configuration GetConsoleConfiguration()
   config.logging.provider.file.enable        = false;
   config.logging.provider.udp.enable         = false;
   config.logging.provider.console.enable     = true;
-  config.logging.provider.console.filter_log = eCAL::Logging::log_level_all;
+  config.logging.provider.console.log_level  = eCAL::Logging::log_level_all;
   return config;
 }
 
@@ -145,10 +145,10 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   // check before the size -> crashes the whole test if it's not checked before
   if (!log.log_messages.empty())
   {
-    EXPECT_EQ(log.log_messages.front().hname, eCAL::Process::GetHostName());
-    EXPECT_EQ(log.log_messages.front().pid,   eCAL::Process::GetProcessID());
-    EXPECT_EQ(log.log_messages.front().uname, unit_name);
-    EXPECT_EQ(log.log_messages.front().level, eCAL::Logging::eLogLevel::log_level_info);
+    EXPECT_EQ(log.log_messages.front().host_name,  eCAL::Process::GetHostName());
+    EXPECT_EQ(log.log_messages.front().process_id, eCAL::Process::GetProcessID());
+    EXPECT_EQ(log.log_messages.front().unit_name,  unit_name);
+    EXPECT_EQ(log.log_messages.front().level,      eCAL::Logging::eLogLevel::log_level_info);
     EXPECT_TRUE(log.log_messages.front().content.find(log_message) != std::string::npos);
   }
 
@@ -227,7 +227,7 @@ TEST(logging_levels /*unused*/, log_warning_vs_info /*unused*/)
   const std::string log_message  = "Logging level warning vs info test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-  ecal_config.logging.provider.udp.filter_log = eCAL::Logging::eLogLevel::log_level_warning;
+  ecal_config.logging.provider.udp.log_level = eCAL::Logging::eLogLevel::log_level_warning;
 
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 
@@ -250,7 +250,7 @@ TEST(logging_levels /*unused*/, none /*unused*/)
   const std::string log_message  = "Logging level none test for udp.";
   auto  ecal_config              = GetUDPConfiguration();
 
-   ecal_config.logging.provider.udp.filter_log = eCAL::Logging::eLogLevel::log_level_none;
+   ecal_config.logging.provider.udp.log_level = eCAL::Logging::eLogLevel::log_level_none;
 
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
 

@@ -19,8 +19,8 @@
 
 #include <chrono>
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/publisher.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <gtest/gtest.h>
 #include <ostream>
@@ -117,11 +117,11 @@ TEST_P(TestFixture, OnePubSub)
   eCAL::CPublisher  publisher ("foo", datatype_info);
   eCAL::CSubscriber subscriber("foo", datatype_info);
 
-  eCAL::Registration::STopicId callback_topic_id;
+  eCAL::STopicId callback_topic_id;
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;
@@ -157,11 +157,11 @@ TEST_P(TestFixture, MultiplePubSub)
   }
   eCAL::CSubscriber subscriber("foo");
 
-  eCAL::Registration::STopicId callback_topic_id;
+  eCAL::STopicId callback_topic_id;
   eCAL::SDataTypeInformation   callback_datatype_info;
   int                          callback_count{ 0 };
 
-  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::Registration::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
+  subscriber.SetReceiveCallback([&callback_topic_id, &callback_datatype_info, &callback_count](const eCAL::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData&)
     {
       ++callback_count;
       callback_topic_id = topic_id_;

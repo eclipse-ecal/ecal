@@ -27,7 +27,7 @@ Prerequisite
      * `Docker installation failed <https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058>`_
 
 * Optional: If you want your docker container to talk to eCAL Nodes on other machines:
-  Set up you :ref:`multicast routes <getting_started_cloud_ubuntu_routes>` on the host.
+  Set up you :ref:`multicast routes <getting_started_network_ubuntu_routes>` on the host.
 
 * Optional: If you want to use eCAL on your host to subscribe to data from your docker containers: :ref:`Install eCAL <getting_started_setup_ubuntu>` on the host.
 
@@ -193,13 +193,13 @@ Seamless IPC-Communication across host borders
 
 .. important::
    This will work with eCAL 5.12 and higher.
-   Older versions lack the ability to utilize the ``host_group_name`` in the :file:`ecal.yaml` file, thus it won't work.
+   Older versions lack the ability to utilize the ``shm_transport_domain`` in the :file:`ecal.yaml` file, thus it won't work.
 
 
-In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``host_group_name`` - in the following steps, you will learn how to set this up.
+In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``shm_transport_domain`` - in the following steps, you will learn how to set this up.
 
 .. note::
-    If we don't set the same ``host_group_name`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
+    If we don't set the same ``shm_transport_domain`` on our Host and our Containers, an IPC-Communication across host borders is not available with different host names.
 
 #. To encapsulate your container network from your host network, you need to create a new docker network with the following command:
 
@@ -215,7 +215,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
    * Search for the line ``registration->network_enabled`` and set it to ``true``.
 
-   * Search for the line ``registration->host_group_name`` and write your preferred name.
+   * Search for the line ``registration->shm_transport_domain`` and write your preferred name.
 
    * Save and close the :file:`ecal.yaml` file.
 
@@ -239,7 +239,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
 #. Configure the Host network
 
-   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. 
+   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_network_ubuntu_routes>`. 
      The idea is now, to successfully receive those messages from your previously started container on your host.
      For that, you need to add a route to your routing table.
      By typing ``ifconfig`` in your shell, you can identify the right docker network.

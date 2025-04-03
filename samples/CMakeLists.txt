@@ -19,29 +19,29 @@ cmake_minimum_required(VERSION 3.10)
 
 project(eCAL_samples VERSION "${ECAL_VERSION_STRING}")
 
-if(HAS_HDF5)
+if(ECAL_USE_HDF5)
 set(SAMPLE_PERSON_MEASUREMENT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/data/person)
-endif(HAS_HDF5)
+endif(ECAL_USE_HDF5)
 
 # --------------------------------------------------------
 # cpp samples
 # --------------------------------------------------------
 # measurement
-if(HAS_HDF5)
+if(ECAL_USE_HDF5)
 add_subdirectory(cpp/measurement/benchmark)
 add_subdirectory(cpp/measurement/measurement_read)
 add_subdirectory(cpp/measurement/measurement_write)
-endif(HAS_HDF5)
+endif(ECAL_USE_HDF5)
 
 # services
 add_subdirectory(cpp/services/ecalplayer_client)
-if(HAS_QT)
+if(ECAL_USE_QT)
   add_subdirectory(cpp/services/ecalplayer_gui_client)
-endif(HAS_QT)
+endif(ECAL_USE_QT)
 add_subdirectory(cpp/services/ecalsys_client)
 add_subdirectory(cpp/services/player_stepper)
 add_subdirectory(cpp/services/rec_client_service_cli)
-if(HAS_QT)
+if(ECAL_USE_QT)
   add_subdirectory(cpp/services/rec_client_service_gui)
   add_subdirectory(cpp/services/rec_server_service_gui)
-endif(HAS_QT)
+endif(ECAL_USE_QT)

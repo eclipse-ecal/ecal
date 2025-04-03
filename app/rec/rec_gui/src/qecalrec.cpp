@@ -23,7 +23,7 @@
 #include <rec_server_core/status.h>
 #include <rec_server_core/ecalstate_helpers.h>
 
-#include <ecal/ecal_process.h>
+#include <ecal/process.h>
 
 #include <QMessageBox>
 #include <QIcon>
@@ -98,7 +98,7 @@ Date: $HOST{TIME %F %R}
                                             });
 
   rec_server_service_ = std::make_shared<RecServerService>();
-  rec_server_service_server_.Create(rec_server_service_);
+  rec_server_service_server_ = std::make_unique<eCAL::protobuf::CServiceServer<eCAL::pb::rec_server::EcalRecServerService>>(rec_server_service_);
 }
 
 QEcalRec::~QEcalRec()

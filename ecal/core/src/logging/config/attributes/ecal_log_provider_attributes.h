@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 namespace eCAL
 {
@@ -32,7 +32,7 @@ namespace eCAL
       struct SSink
       {
         bool                enabled;
-        Filter              filter_log;
+        Filter              log_level;
       };
 
       struct SUDP

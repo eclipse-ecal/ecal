@@ -24,7 +24,7 @@
 #include <atomic>
 #include <ecal/ecal.h>
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include "ecal_def.h"
 #include "ecal_timegate.h"
@@ -132,9 +132,10 @@ namespace eCAL
     m_created = false;
   }
 
-  std::string CTimeGate::GetName()
+  const std::string& CTimeGate::GetName() const
   {
-    if (!m_created) return("");
+    static const std::string empty_string {};
+    if (!m_created) return empty_string;
     return(m_time_sync_modname);
   }
 

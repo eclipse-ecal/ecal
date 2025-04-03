@@ -1,0 +1,44 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2019 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+/**
+ * @file   defs.h
+ * @brief  eCAL core defines (version numbers)
+**/
+
+#ifndef defs_h_included
+#define defs_h_included
+#define ECAL_VERSION_MAJOR (@GIT_REVISION_MAJOR@)
+#define ECAL_VERSION_MINOR (@GIT_REVISION_MINOR@)
+#define ECAL_VERSION_PATCH (@GIT_REVISION_PATCH@)
+#define ECAL_VERSION "@GIT_DESCRIBE_TAG@"
+#define ECAL_DATE "@GIT_REVISION_DATE@"
+#define ECAL_PLATFORMTOOLSET "@eCAL_PLATFORM_TOOLSET@"
+
+#define ECAL_VERSION_INTEGER                          ECAL_VERSION_CALCULATE(ECAL_VERSION_MAJOR, ECAL_VERSION_MINOR, ECAL_VERSION_PATCH)
+#define ECAL_VERSION_CALCULATE(major, minor, patch)   (((major)<<16)|((minor)<<8)|(patch))
+
+#define ECAL_INSTALL_APP_DIR     "@eCAL_install_app_dir@"
+#define ECAL_INSTALL_SAMPLES_DIR "@eCAL_install_samples_dir@"
+#define ECAL_INSTALL_LIB_DIR     "@eCAL_install_lib_dir@"
+#define ECAL_INSTALL_CONFIG_DIR  "@eCAL_install_config_dir@"
+#define ECAL_INSTALL_INCLUDE_DIR "@eCAL_install_include_dir@"
+#define ECAL_INSTALL_PREFIX      "@CMAKE_INSTALL_PREFIX@"
+
+#endif // defs_h_included

@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # available (optional) thirdparty dependencies
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-option(ECAL_CORE_HAS_PROTOBUF                            "Protobuf library is available, eCAL protobuf support will be enabled"                                  ON)
+option(ECAL_CORE_USE_PROTOBUF                            "Protobuf library is available, eCAL protobuf support will be enabled"                                  ON)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # additional builds (adapt to your needs)

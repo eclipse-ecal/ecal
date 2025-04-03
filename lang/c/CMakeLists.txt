@@ -29,5 +29,6 @@ add_subdirectory(samples)
 endif()
 
 if (ECAL_C_BUILD_TESTS)
+enable_testing()
 add_subdirectory(tests)
 endif ()

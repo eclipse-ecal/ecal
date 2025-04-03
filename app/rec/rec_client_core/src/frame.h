@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include <ecal/ecal_time.h>
-#include <ecal/ecal_callback.h>
+#include <ecal/time.h>
+#include <ecal/pubsub/types.h>
 
 namespace eCAL
 {
@@ -33,15 +33,15 @@ namespace eCAL
     {
     public:
       Frame(const eCAL::SReceiveCallbackData* const callback_data, const std::string& topic_name, const eCAL::Time::ecal_clock::time_point receive_time, std::chrono::steady_clock::time_point system_receive_time)
-        : ecal_publish_time_(std::chrono::duration_cast<eCAL::Time::ecal_clock::duration>(std::chrono::microseconds(callback_data->time)))
+        : ecal_publish_time_(std::chrono::duration_cast<eCAL::Time::ecal_clock::duration>(std::chrono::microseconds(callback_data->send_timestamp)))
         , ecal_receive_time_(receive_time)
         , system_receive_time_(system_receive_time)
         , topic_name_(topic_name)
-        , clock_(callback_data->clock)
-        , id_(callback_data->id)
+        , clock_(callback_data->send_clock)
+        , id_(0) // TODO: We don't receive ids any more. We shoud probably adapt the frame class here.
       {
-        data_.reserve(callback_data->size);
-        data_.assign((char*)callback_data->buf, (char*)callback_data->buf + callback_data->size);
+        data_.reserve(callback_data->buffer_size);
+        data_.assign((char*)callback_data->buffer, (char*)callback_data->buffer + callback_data->buffer_size);
       }
 
       Frame()

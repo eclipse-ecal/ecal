@@ -24,8 +24,8 @@
 
 #include "ecal_process_registration.h"
 
-#include <ecal/ecal_init.h>
-#include <ecal/ecal_process.h>
+#include <ecal/init.h>
+#include <ecal/process.h>
 #include "ecal_global_accessors.h"
 #include "ecal_globals.h"
 #include "time/ecal_timegate.h"
@@ -38,45 +38,45 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   auto& process_sample_identifier = process_sample.identifier;
   process_sample_identifier.host_name  = eCAL::Process::GetHostName();
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
-  // We need to set the pid as entity_id.
+  // We need to set the process_id as entity_id.
   // However, we cannot send anything over the wire :(
   process_sample_identifier.entity_id = process_sample_identifier.process_id;
 
-  auto& process_sample_process = process_sample.process;
-  process_sample_process.hgname = eCAL::Process::GetHostGroupName();
-  process_sample_process.pname = eCAL::Process::GetProcessName();
-  process_sample_process.uname = eCAL::Process::GetUnitName();
-  process_sample_process.pparam = eCAL::Process::GetProcessParameter();
-  process_sample_process.state.severity = static_cast<Registration::eProcessSeverity>(g_process_severity);
+  auto& process_sample_process                = process_sample.process;
+  process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
+  process_sample_process.process_name         = eCAL::Process::GetProcessName();
+  process_sample_process.unit_name            = eCAL::Process::GetUnitName();
+  process_sample_process.process_parameter               = eCAL::Process::GetProcessParameter();
+  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
   process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-  process_sample_process.state.info = g_process_info;
+  process_sample_process.state.info           = g_process_info;
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {
-    process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
+    process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }
   else
   {
     if (!g_timegate()->IsSynchronized())
     {
-      process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
+      process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
     }
     else
     {
       switch (g_timegate()->GetSyncMode())
       {
       case CTimeGate::eTimeSyncMode::realtime:
-        process_sample_process.tsync_state = Registration::eTSyncState::tsync_realtime;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_realtime;
         break;
       case CTimeGate::eTimeSyncMode::replay:
-        process_sample_process.tsync_state = Registration::eTSyncState::tsync_replay;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_replay;
         break;
       default:
-        process_sample_process.tsync_state = Registration::eTSyncState::tsync_none;
+        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
         break;
       }
     }
-    process_sample_process.tsync_mod_name = g_timegate()->GetName();
+    process_sample_process.time_sync_module_name = g_timegate()->GetName();
   }
 #endif
 
@@ -92,6 +92,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.component_init_info = component_info;
 
   process_sample_process.ecal_runtime_version = eCAL::GetVersionString();
+  process_sample_process.config_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
 
   return process_sample;
 }
@@ -102,12 +103,12 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessUnregisterSample()
   process_sample.cmd_type = bct_unreg_process;
 
   auto& process_sample_identifier = process_sample.identifier;
-  process_sample_identifier.host_name = eCAL::Process::GetHostName();
+  process_sample_identifier.host_name  = eCAL::Process::GetHostName();
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
 
   auto& process_sample_process = process_sample.process;
-  process_sample_process.pname = eCAL::Process::GetProcessName();
-  process_sample_process.uname = eCAL::Process::GetUnitName();
+  process_sample_process.process_name = eCAL::Process::GetProcessName();
+  process_sample_process.unit_name    = eCAL::Process::GetUnitName();
 
   return process_sample;
 }

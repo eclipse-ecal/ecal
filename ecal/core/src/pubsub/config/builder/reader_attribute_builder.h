@@ -27,5 +27,5 @@
 
 namespace eCAL
 {
-  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_);
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const eCAL::Configuration& config_);
 }

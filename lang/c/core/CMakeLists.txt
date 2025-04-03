@@ -23,19 +23,25 @@ project(core_c VERSION ${eCAL_VERSION_STRING})
 # c interface
 ######################################
 set(ecal_c_src
-    src/ecal_client_cimpl.cpp
-    src/ecal_common_cimpl.cpp
-    src/ecal_common_cimpl.h
-    src/ecal_core_cimpl.cpp
-    src/ecal_log_cimpl.cpp
-    src/ecal_monitoring_cimpl.cpp
-    src/ecal_process_cimpl.cpp
-    src/ecal_publisher_cimpl.cpp
-    src/ecal_server_cimpl.cpp
-    src/ecal_subscriber_cimpl.cpp
-    src/ecal_time_cimpl.cpp
-    src/ecal_timer_cimpl.cpp
-    src/ecal_util_cimpl.cpp    
+    src/auxiliaries.cpp
+    src/client.cpp
+    src/client_instance.cpp
+    src/client_instance.h
+    src/common.h
+    src/configuration.cpp
+    src/configuration.h
+    src/config.cpp
+    src/core.cpp
+    src/log.cpp
+    src/monitoring.cpp
+    src/process.cpp
+    src/publisher.cpp
+    src/registration.cpp
+    src/server.cpp
+    src/subscriber.cpp
+    src/time.cpp
+    src/timer.cpp
+    src/util.cpp    
 )
 
 ######################################
@@ -51,28 +57,43 @@ endif()
 ######################################
 # public header
 ######################################
-
-
 set(ecal_header_cimpl
-    include/ecal/cimpl/ecal_callback_cimpl.h
-    include/ecal/cimpl/ecal_client_cimpl.h
-    include/ecal/cimpl/ecal_core_cimpl.h
-    include/ecal/cimpl/ecal_init_cimpl.h
-    include/ecal/cimpl/ecal_log_cimpl.h
-    include/ecal/cimpl/ecal_monitoring_cimpl.h
-    include/ecal/cimpl/ecal_process_cimpl.h
-    include/ecal/cimpl/ecal_publisher_cimpl.h
-    include/ecal/cimpl/ecal_server_cimpl.h
-    include/ecal/cimpl/ecal_service_info_cimpl.h
-    include/ecal/cimpl/ecal_subscriber_cimpl.h
-    include/ecal/cimpl/ecal_time_cimpl.h
-    include/ecal/cimpl/ecal_timer_cimpl.h
-    include/ecal/cimpl/ecal_util_cimpl.h
-    include/ecal/ecalc.h
-    include/ecal/ecalc_export.h
-    include/ecal/ecalc_types.h
+    include/ecal_c/config/application.h
+    include/ecal_c/config/configuration.h
+    include/ecal_c/config/logging.h
+    include/ecal_c/config/publisher.h
+    include/ecal_c/config/registration.h
+    include/ecal_c/config/subscriber.h
+    include/ecal_c/config/time.h
+    include/ecal_c/config/transport_layer.h
+    include/ecal_c/pubsub/payload_writer.h
+    include/ecal_c/pubsub/publisher.h
+    include/ecal_c/pubsub/subscriber.h
+    include/ecal_c/pubsub/types.h
+    include/ecal_c/service/client.h
+    include/ecal_c/service/client_instance.h
+    include/ecal_c/service/server.h
+    include/ecal_c/service/types.h
+    include/ecal_c/types/custom_data_types.h
+    include/ecal_c/types/logging.h
+    include/ecal_c/types/monitoring.h
+    include/ecal_c/auxiliaries.h
+    include/ecal_c/config.h
+    include/ecal_c/core.h
+    include/ecal_c/ecal.h
+    include/ecal_c/export.h
+    include/ecal_c/init.h
+    include/ecal_c/log.h
+    include/ecal_c/log_level.h
+    include/ecal_c/monitoring.h
+    include/ecal_c/process.h
+    include/ecal_c/process_severity.h
+    include/ecal_c/registration.h
+    include/ecal_c/time.h
+    include/ecal_c/timer.h
+    include/ecal_c/types.h
+    include/ecal_c/util.h
 )
-
 
 set(ecal_c_sources
     ${ecal_c_src}
@@ -80,7 +101,7 @@ set(ecal_c_sources
     ${ecal_header_cimpl}
 )
 
-ecal_add_ecal_shared_library(${PROJECT_NAME}
+ecal_add_shared_library(${PROJECT_NAME}
     ${ecal_c_sources}
 )
 
@@ -112,10 +133,10 @@ set_target_properties(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lang/c)
 
-ecal_install_ecal_shared_library(${PROJECT_NAME})
+ecal_install_shared_library(${PROJECT_NAME})
 
 install(DIRECTORY
-   "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 

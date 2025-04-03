@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@
 // This lets the compiler better optimize the code. 
 //
 #if ECAL_SERVICE_LOG_DEBUG_ENABLED
-  #define ECAL_SERVICE_LOG_DEBUG(logger, msg) logger(eCAL::service::LogLevel::Debug, msg)
+  #define ECAL_SERVICE_LOG_DEBUG(logger, msg) logger(ecal_service::LogLevel::Debug, msg)
 #else
   #define ECAL_SERVICE_LOG_DEBUG(...) /**/
 #endif
@@ -75,7 +75,7 @@
 // This lets the compiler better optimize the code. 
 //
 #if ECAL_SERVICE_LOG_DEBUG_VERBOSE_ENABLED
-  #define ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger,msg) do { logger(eCAL::service::LogLevel::DebugVerbose, msg); } while (0)
+  #define ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger,msg) do { logger(ecal_service::LogLevel::DebugVerbose, msg); } while (0)
 #else
   #define ECAL_SERVICE_LOG_DEBUG_VERBOSE(...) /**/
 #endif

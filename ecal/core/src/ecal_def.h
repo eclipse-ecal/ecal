@@ -24,9 +24,8 @@
 #pragma once
 
 #include <ecal/config/configuration.h>
-#include <ecal/ecal_tlayer.h>
-#include <ecal/ecal_log_level.h>
-#include <ecal/ecal_os.h>
+#include <ecal/log_level.h>
+#include <ecal/os.h>
 
 /**********************************************************************************************/
 /*                                     config settings                                        */
@@ -37,6 +36,14 @@ constexpr const char* ECAL_FOLDER_NAME_LINUX        = "ecal";
 constexpr const char* ECAL_FOLDER_NAME_HOME_LINUX   = ".ecal";
 constexpr const char* ECAL_FOLDER_NAME_LOG          = "logs";
 constexpr const char* ECAL_FOLDER_NAME_TMP_WINDOWS  = "Temp";
+
+#ifdef ECAL_OS_WINDOWS
+constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc";
+#elif defined(ECAL_OS_LINUX)
+constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "../etc/ecal";
+#else
+constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "..";
+#endif
 
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG              = "ecal.yaml";

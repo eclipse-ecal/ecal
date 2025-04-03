@@ -24,10 +24,10 @@
 
 #include "person.pb.h"
 
-void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackData* data_)
+void OnEvent(const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& data_)
 {
-  std::cout << "topic name       : " << topic_name_ << std::endl;
-  switch (data_->type)
+  std::cout << "topic name       : " << topic_id_.topic_name << std::endl;
+  switch (data_.event_type)
   {
   case eCAL::eSubscriberEvent::connected:
     std::cout << "event            : " << "connected" << std::endl;
@@ -36,18 +36,7 @@ void OnEvent(const char* topic_name_, const struct eCAL::v5::SSubEventCallbackDa
     std::cout << "event            : " << "disconnected" << std::endl;
     break;
   case eCAL::eSubscriberEvent::dropped:
-    std::cout << "event            : " << "dropped (" << data_->clock << " messages)" << std::endl;
-    break;
-  // not implemented yet
-  case eCAL::eSubscriberEvent::corrupted:
-    std::cout << "event            : " << "corrupted" << std::endl;
-    break;
-  case eCAL::eSubscriberEvent::update_connection:
-    std::cout << "event            : " << "update_connection" << std::endl;
-    std::cout << "  topic_id       : " << data_->tid << std::endl;
-    std::cout << "  topic_encoding : " << data_->tdatatype.encoding << std::endl;
-    std::cout << "  topic_type     : " << data_->tdatatype.name << std::endl;
-    //std::cout << "  topic_desc : " << data_->tdesc << std::endl;
+    std::cout << "event            : " << "dropped" << std::endl;
     break;
   default:
     std::cout << "event            : " << "unknown" << std::endl;
@@ -65,15 +54,7 @@ int main()
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
-
-  // add event callback function (_1 = topic_name, _2 = event data struct)
-  auto evt_callback = std::bind(OnEvent, std::placeholders::_1, std::placeholders::_2);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::connected,         evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::disconnected,      evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::dropped,           evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::corrupted,         evt_callback);
-  sub.AddEventCallback(eCAL::eSubscriberEvent::update_connection, evt_callback);
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", OnEvent);
 
   // start application and wait for events
   std::cout << "Please start 'person_snd_events sample." << std::endl << std::endl;

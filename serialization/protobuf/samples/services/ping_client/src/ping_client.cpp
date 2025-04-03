@@ -33,7 +33,7 @@ int main()
   eCAL::Initialize("ping client");
 
   // create ping service client
-  eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
+  const eCAL::protobuf::CServiceClient<PingService> ping_client("ping service");
 
   // waiting for service
   while (eCAL::Ok() && !ping_client.IsConnected())
@@ -50,27 +50,25 @@ int main()
       // Ping service (blocking call)
       //////////////////////////////////////
       PingRequest               ping_request;
-      eCAL::ServiceResponseVecT service_response_vec;
       ping_request.set_message("PING");
-      if (ping_client.Call("Ping", ping_request, -1, &service_response_vec))
+      auto ping_response = ping_client.CallWithResponse<PingRequest, PingResponse>("Ping", ping_request);
+      if (ping_response.first)
       {
         std::cout << std::endl << "PingService::Ping method called with message : " << ping_request.message() << std::endl;
 
-        for (auto service_response : service_response_vec)
+        for (const auto& service_response : ping_response.second)
         {
           switch (service_response.call_state)
           {
             // service successful executed
           case eCAL::eCallState::executed:
           {
-            PingResponse ping_response;
-            ping_response.ParseFromString(service_response.response);
-            std::cout << "Received response PingService / Ping : " << ping_response.answer() << " from host " << service_response.host_name << std::endl;
+            std::cout << "Received response PingService / Ping : " << service_response.response.answer() << " from host " << service_response.server_id.service_id.host_name << std::endl;
           }
           break;
           // service execution failed
           case eCAL::eCallState::failed:
-            std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.host_name << std::endl;
+            std::cout << "Received error PingService / Ping : " << service_response.error_msg << " from host " << service_response.server_id.service_id.host_name << std::endl;
             break;
           default:
             break;

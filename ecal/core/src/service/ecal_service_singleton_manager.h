@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 
 #include <atomic>
 #include <cstddef>
-#include <ecal/service/client_manager.h>
-#include <ecal/service/server_manager.h>
+#include <ecal_service/client_manager.h>
+#include <ecal_service/server_manager.h>
 
 #include <memory>
 #include <mutex>
@@ -59,8 +59,8 @@ namespace eCAL
       // Public API
       ////////////////////////////////////////////////////////////
     public:
-      std::shared_ptr<eCAL::service::ClientManager> get_client_manager();
-      std::shared_ptr<eCAL::service::ServerManager> get_server_manager();
+      std::shared_ptr<ecal_service::ClientManager> get_client_manager();
+      std::shared_ptr<ecal_service::ServerManager> get_server_manager();
 
       void stop();
       void reset();
@@ -77,8 +77,8 @@ namespace eCAL
       std::shared_ptr<asio::io_context>             m_io_context;
       std::vector<std::unique_ptr<std::thread>>     m_io_threads;
 
-      std::shared_ptr<eCAL::service::ClientManager> m_client_manager;
-      std::shared_ptr<eCAL::service::ServerManager> m_server_manager;
+      std::shared_ptr<ecal_service::ClientManager> m_client_manager;
+      std::shared_ptr<ecal_service::ServerManager> m_server_manager;
     };
 
   }

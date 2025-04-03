@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,14 +33,17 @@ namespace eCAL
 {
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Subscriber::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.subscriber = config_;
+
     // create subscriber implementation
-    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
 
     // register subscriber
     if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
   }
 
-  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT event_callback_, const Subscriber::Configuration& config_) :
+  CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_) :
     CSubscriber(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
@@ -56,19 +59,9 @@ namespace eCAL
     if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
   }
 
-  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept :
-    m_subscriber_impl(std::move(rhs.m_subscriber_impl))
-  {
-  }
+  CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept = default;
 
-  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
-  {
-    if (this != &rhs)
-    {
-      m_subscriber_impl = std::move(rhs.m_subscriber_impl);
-    }
-    return *this;
-  }
+  CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept = default;
 
   bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
@@ -88,21 +81,24 @@ namespace eCAL
     return m_subscriber_impl->GetPublisherCount();
   }
 
-  std::string CSubscriber::GetTopicName() const
+  const std::string& CSubscriber::GetTopicName() const
   {
-    if (m_subscriber_impl == nullptr) return "";
+    static const std::string empty_topic_name{};
+    if (m_subscriber_impl == nullptr) return empty_topic_name;
     return m_subscriber_impl->GetTopicName();
   }
 
-  Registration::STopicId CSubscriber::GetTopicId() const
+  const STopicId& CSubscriber::GetTopicId() const
   {
-    if (m_subscriber_impl == nullptr) return{};
-    return m_subscriber_impl->GetId();
+    static const STopicId empty_topic_id{};
+    if (m_subscriber_impl == nullptr) return empty_topic_id;
+    return m_subscriber_impl->GetTopicId();
   }
 
-  SDataTypeInformation CSubscriber::GetDataTypeInformation() const
+  const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
-    if (m_subscriber_impl == nullptr) return SDataTypeInformation{};
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_subscriber_impl == nullptr) return empty_data_type_information;
     return m_subscriber_impl->GetDataTypeInformation();
   }
 }

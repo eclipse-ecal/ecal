@@ -137,7 +137,7 @@ source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
 
 ecal_install_library(${PROJECT_NAME})
 install(DIRECTORY
-    "include/" DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT sdk
+    "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
     FILES_MATCHING PATTERN "*.h")
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib)

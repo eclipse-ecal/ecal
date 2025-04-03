@@ -31,7 +31,7 @@ EcalplayGuiClient::EcalplayGuiClient(QWidget *parent)
   eCAL::Initialize("ecalplayer gui client");
 
   // create player service client
-  player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
+  //player_service_.AddResponseCallback([this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalplayGuiClient::setConfigRequest);
@@ -50,7 +50,7 @@ EcalplayGuiClient::~EcalplayGuiClient()
 void EcalplayGuiClient::getConfigRequest()
 {
   eCAL::pb::play::GetConfigRequest get_config_request;
-  player_service_.Call("GetConfig", get_config_request);
+  player_service_.CallWithCallback("GetConfig", get_config_request, [this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 }
 
 void EcalplayGuiClient::setConfigRequest()
@@ -98,7 +98,7 @@ void EcalplayGuiClient::setConfigRequest()
     (*config)["limit_interval_end_rel_secs"] = ui_.set_config_limit_interval_end_rel_secs_lineedit->text().toStdString();
   }
 
-  player_service_.Call("SetConfig", set_config_request);
+  player_service_.CallWithCallback("SetConfig", set_config_request, [this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 }
 
 void EcalplayGuiClient::commandRequest()
@@ -188,7 +188,7 @@ void EcalplayGuiClient::commandRequest()
     command_request.set_rel_time_secs(ui_.command_request_rel_time_secs_spinbox->value());
   }
 
-  player_service_.Call("SetCommand", command_request);
+  player_service_.CallWithCallback("SetCommand", command_request, [this](const struct eCAL::SServiceResponse& service_response) {this->onPlayerResponse(service_response); });
 }
 
 
@@ -201,17 +201,20 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
   QString response_string;
   QTextStream response_stream(&response_string);
 
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+
   switch (service_response_.call_state)
   {
-    // service successful executed
+  // service successful executed
   case eCAL::eCallState::executed:
   {
-    if (service_response_.method_name == "GetConfig")
+    if (method_name == "GetConfig")
     {
       eCAL::pb::play::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
 
-      response_stream << "PlayerService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "PlayerService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -219,7 +222,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
     {
       eCAL::pb::play::Response response;
       response.ParseFromString(service_response_.response);
-      response_stream << "PlayerService " << service_response_.method_name.c_str() << " called successfully on host " << service_response_.host_name.c_str() << "\n";
+      response_stream << "PlayerService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
     }
@@ -230,7 +233,7 @@ void EcalplayGuiClient::onPlayerResponse(const struct eCAL::SServiceResponse& se
   {
     eCAL::pb::play::Response response;
     response.ParseFromString(service_response_.response);
-    response_stream << "PlayerService " << service_response_.method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << service_response_.host_name.c_str() << "\n";
+    response_stream << "PlayerService " << method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
     break;

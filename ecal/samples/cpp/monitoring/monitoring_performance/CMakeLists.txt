@@ -18,8 +18,6 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(monitoring_performance)
 
 find_package(eCAL REQUIRED)
@@ -31,7 +29,7 @@ set(monitoring_performance_src
 
 ecal_add_sample(${PROJECT_NAME} ${monitoring_performance_src})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
     eCAL::core
     eCAL::core_pb
     protobuf::libprotobuf

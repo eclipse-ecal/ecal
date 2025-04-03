@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/types/ecal_custom_data_types.h>
+#include <ecal/types/custom_data_types.h>
 
 #include <iostream>
 
@@ -28,7 +28,7 @@ int main()
   eCAL::Configuration my_config;
 
   // setting a configuration
-  my_config.registration.network_enabled = true;
+  my_config.communication_mode = eCAL::eCommunicationMode::network;
 
   // initialize eCAL API
   eCAL::Initialize(my_config, "config sample");

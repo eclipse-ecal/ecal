@@ -120,7 +120,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.tname + " : payload received without layer definition !");
+        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
       }
 #endif
 
@@ -149,7 +149,7 @@ namespace eCAL
       {
         // apply sample to data reader
         const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-        auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.tname);
+        auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.topic_name);
         std::transform(
           res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
         );
@@ -190,7 +190,7 @@ namespace eCAL
     // Apply the samples to the readers afterwards.
     {
       const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-      auto res = m_topic_name_subscriber_map.equal_range(topic_info_.tname);
+      auto res = m_topic_name_subscriber_map.equal_range(topic_info_.topic_name);
       std::transform(
         res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
       );
@@ -210,16 +210,16 @@ namespace eCAL
     if(!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     CSubscriberImpl::SLayerStates layer_states;
-    for (const auto& layer : ecal_topic.tlayer)
+    for (const auto& layer : ecal_topic.transport_layer)
     {
       // transport layer versions 0 and 1 did not support dynamic layer enable feature
       // so we set assume layer is enabled if we receive a registration in this case
@@ -227,13 +227,13 @@ namespace eCAL
       {
         switch (layer.type)
         {
-        case TLayer::tlayer_udp_mc:
+        case tl_ecal_udp:
           layer_states.udp.write_enabled = true;
           break;
-        case TLayer::tlayer_shm:
+        case tl_ecal_shm:
           layer_states.shm.write_enabled = true;
           break;
-        case TLayer::tlayer_tcp:
+        case tl_ecal_tcp:
           layer_states.tcp.write_enabled = true;
           break;
         default:
@@ -248,9 +248,9 @@ namespace eCAL
     for (auto iter = res.first; iter != res.second; ++iter)
     {
       // apply layer specific parameter
-      for (const auto& tlayer : ecal_sample_.topic.tlayer)
+      for (const auto& transport_layer : ecal_sample_.topic.transport_layer)
       {
-        iter->second->ApplyLayerParameter(publication_info, tlayer.type, tlayer.par_layer);
+        iter->second->ApplyLayerParameter(publication_info, transport_layer.type, transport_layer.par_layer);
       }
       iter->second->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
     }
@@ -261,13 +261,13 @@ namespace eCAL
     if (!m_created) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.tname;
+    const std::string& topic_name = ecal_topic.topic_name;
 
     // check topic name
     if (topic_name.empty()) return;
 
     const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.tdatatype;
+    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
 
     // unregister publisher
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);

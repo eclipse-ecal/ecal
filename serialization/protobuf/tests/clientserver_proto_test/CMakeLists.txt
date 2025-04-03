@@ -25,7 +25,9 @@ find_package(Protobuf REQUIRED)
 create_targets_protobuf()
 
 set(${PROJECT_NAME}_src
-  src/clientserver_test_proto.cpp
+  src/clientserver_event_test.cpp
+  src/clientserver_instances_test.cpp
+  src/clientserver_test.cpp
 )
 
 set(clientserver_test_proto

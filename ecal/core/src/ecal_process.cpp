@@ -168,7 +168,7 @@ namespace eCAL
 
       sstream << "------------------------- NETWORK --------------------------------" << '\n';
       sstream << "Host name                : " << Process::GetHostName() << '\n';
-      sstream << "Host group name          : " << Process::GetHostGroupName() << '\n';
+      sstream << "SHM transport domain     : " << Process::GetShmTransportDomain() << '\n';
 
       if (Config::IsNetworkEnabled())
       {
@@ -228,14 +228,14 @@ namespace eCAL
       cfg_s_ = sstream.str();
     }
 
-    std::string GetHostName()
+    const std::string& GetHostName()
     {
       if (g_host_name.empty())
       {
-        char hname[1024] = { 0 };
-        if (gethostname(hname, 1024) == 0)
+        char host_name[1024] = { 0 };
+        if (gethostname(host_name, 1024) == 0)
         {
-          g_host_name = hname;
+          g_host_name = host_name;
         }
         else
         {
@@ -245,25 +245,14 @@ namespace eCAL
       return(g_host_name);
     }
 
-    std::string GetHostGroupName()
+    const std::string& GetShmTransportDomain()
     {
-      return Config::GetHostGroupName().empty() ? GetHostName() : Config::GetHostGroupName();
+      return Config::GetShmTransportDomain().empty() ? GetHostName() : Config::GetShmTransportDomain();
     }
 
-    std::string GetUnitName()
+    const std::string& GetUnitName()
     {
       return(g_unit_name);
-    }
-
-    std::string GetTaskParameter(const char* sep_)
-    {
-      std::string par_line;
-      for (const auto& par : g_task_parameter)
-      {
-        if (!par_line.empty()) par_line += sep_;
-        par_line += par;
-      }
-      return(par_line);
     }
 
     void SleepMS(const long time_ms_)
@@ -289,14 +278,11 @@ namespace eCAL
       #endif
     }
 
-    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const char* info_)
+    void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_)
     {
       g_process_severity = severity_;
       g_process_severity_level = level_;
-      if (info_ != nullptr)
-      {
-        g_process_info = info_;
-      }
+      g_process_info = info_;
     }
   }
 }
@@ -326,24 +312,24 @@ namespace eCAL
       return(g_process_id);
     }
 
-    std::string GetProcessIDAsString()
+    const std::string& GetProcessIDAsString()
     {
       create_proc_id();
       return(g_process_id_s);
     }
 
-    std::string GetProcessName()
+    const std::string& GetProcessName()
     {
       if (g_process_name.empty())
       {
-        WCHAR pname[1024] = { 0 };
-        GetModuleFileNameExW(GetCurrentProcess(), nullptr, pname, 1024);
-        g_process_name = EcalUtils::StrConvert::WideToUtf8(pname);
+        WCHAR process_name[1024] = { 0 };
+        GetModuleFileNameExW(GetCurrentProcess(), nullptr, process_name, 1024);
+        g_process_name = EcalUtils::StrConvert::WideToUtf8(process_name);
       }
       return(g_process_name);
     }
 
-    std::string GetProcessParameter()
+    const std::string& GetProcessParameter()
     {
       if (g_process_par.empty())
       {
@@ -696,7 +682,7 @@ namespace eCAL
       return(g_process_id);
     }
 
-    std::string GetProcessIDAsString()
+    const std::string& GetProcessIDAsString()
     {
       create_proc_id();
       return(g_process_id_s);
@@ -707,8 +693,9 @@ namespace eCAL
     *
     * @return the process path
     */
-    std::string GetProcessName()
+    const std::string& GetProcessName()
     {
+      static const std::string empty_string {};
       if (g_process_name.empty()) {
         // Read the link to our own executable
         char buf[PATH_MAX] = { 0 };
@@ -717,7 +704,7 @@ namespace eCAL
         if (_NSGetExecutablePath(buf, &length) != 0)
         {
           // Buffer size is too small.
-          return "";
+          return empty_string;
         }
         length = strlen(buf);
 #elif defined(ECAL_OS_QNX)
@@ -738,7 +725,7 @@ namespace eCAL
         if (length < 0)
         {
           std::cerr << "Unable to get process name: " << strerror(errno) << std::endl;
-          return "";
+          return empty_string;
         }
 #endif
         // Copy the binary name to a std::string
@@ -747,12 +734,14 @@ namespace eCAL
       }
       return g_process_name;
     }
-    std::string GetProcessParameter()
+
+    const std::string& GetProcessParameter()
     {
+      static const std::string empty_string{};
       if (g_process_par.empty())
       {
 #if defined(ECAL_OS_MACOS)
-        int pid = getpid();
+        int process_id = getpid();
 
         int    mib[3], argmax, argc;
         size_t    size;
@@ -763,7 +752,7 @@ namespace eCAL
         size = sizeof(argmax);
         if (sysctl(mib, 2, &argmax, &size, NULL, 0) == -1)
         {
-          return "";
+          return empty_string;
         }
 
         /* Allocate space for the arguments. */
@@ -812,12 +801,12 @@ namespace eCAL
          */
         mib[0] = CTL_KERN;
         mib[1] = KERN_PROCARGS2;
-        mib[2] = pid;
+        mib[2] = process_id;
 
         size = (size_t)argmax;
         if (sysctl(mib, 3, procargs.data(), &size, NULL, 0) == -1)
         {
-          return "";
+          return empty_string;
         }
 
         // First few bytes are the argc
@@ -825,7 +814,7 @@ namespace eCAL
         size_t pos = sizeof(argc);
 
         if (argc == 0)
-          return "";
+          return empty_string;
 
         // Skip the saved exec_path
         for (; pos <= procargs.size(); pos++)
@@ -837,7 +826,7 @@ namespace eCAL
           }
         }
         if (pos >= procargs.size())
-          return "";
+          return empty_string;
 
         // Skip trailing '\0' characters
         for (; pos <= procargs.size(); pos++)
@@ -848,7 +837,7 @@ namespace eCAL
           }
         }
         if (pos >= procargs.size())
-          return "";
+          return empty_string;
 
         // Iterate through the '\0' terminated strings and copy them to a C++ vector
         std::vector<std::string> argument_vector;
@@ -873,7 +862,7 @@ namespace eCAL
 #elif defined(ECAL_OS_QNX)
         // TODO: Find a suitable method on QNX to get process arguments of the current executable
         std::vector<std::string> argument_vector;
-        g_process_par = "";
+        g_process_par = empty_string;
 #elif defined(ECAL_OS_FREEBSD)
         // create mib structure for sysctl call
         int mib[4];
@@ -908,7 +897,7 @@ namespace eCAL
         if (!cmdline_file.is_open())
         {
           std::cerr << "Failed to open " << filename << '\n';
-          return "";
+          return empty_string;
         }
         else
         {

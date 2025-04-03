@@ -21,7 +21,7 @@
  * @brief  tcp reader and layer
 **/
 
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 #include "config/builder/data_reader_tcp_attribute_builder.h"
 
 #include "ecal_global_accessors.h"
@@ -67,9 +67,11 @@ namespace eCAL
     auto sessions = m_subscriber->getSessions();
     for (const auto& session : sessions)
     {
-      auto address = session->getAddress();
-      auto port    = session->getPort();
-      if ((address == host_name_) && (port == port_))
+      // Get list of possible publishers of this session. We assume, that the
+      // first element holds the hostname, while the second elements holds
+      // hostname.local
+      auto publisher_list = session->getPublisherList();
+      if ((publisher_list.front().first == host_name_) && (publisher_list.front().second == port_))
       {
         new_session = false;
         break;
@@ -79,7 +81,12 @@ namespace eCAL
     // add new session and activate callback if we add the first session
     if (new_session)
     {
-      m_subscriber->addSession(host_name_, port_, m_attributes.max_reconnection_attempts);
+      // Add possible hostnames:
+      // 1. hostname:port
+      // 2. hostname.local:port (-> i.e. the mDNS variant)
+      const std::vector<std::pair<std::string, uint16_t>> publishers = { { host_name_, port_ } , {host_name_ + ".local", port_} };
+
+      m_subscriber->addSession(publishers, m_attributes.max_reconnection_attempts);
       if (!m_callback_active)
       {
         m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
@@ -140,7 +147,7 @@ namespace eCAL
     m_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, tcp_pubsub_logger);
   }
 
-  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const Registration::EntityIdT& /*topic_id_*/)
+  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     const std::string& map_key(topic_name_);
 
@@ -153,7 +160,7 @@ namespace eCAL
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
   }
 
-  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const Registration::EntityIdT& /*topic_id_*/)
+  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     const std::string& map_key(topic_name_);
 

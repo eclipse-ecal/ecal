@@ -18,15 +18,13 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(benchmark_hdf5)
 
 find_package(eCAL REQUIRED)
 
 ecal_add_sample(${PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
   eCAL::hdf5
 )
 

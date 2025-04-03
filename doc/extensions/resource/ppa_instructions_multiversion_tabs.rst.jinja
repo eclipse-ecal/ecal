@@ -1,0 +1,27 @@
+.. tabs::
+
+   .. tab:: Rolling Release
+
+      This is the rolling release PPA.
+      It will always upgrade your installation and you will always receive the latest-and-greatest eCAL version.
+      
+      .. code-block:: bash
+      
+         sudo add-apt-repository ppa:ecal/ecal-latest
+         sudo apt-get update
+         sudo apt-get install ecal
+
+      Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-latest>`_!
+
+   .. tab:: eCAL {{ ecal_version.major }}.{{ ecal_version.minor }}
+
+      This PPA will always stay on eCAL {{ ecal_version.major }}.{{ ecal_version.minor }}.
+      You will receive patches, but no upgrades to future eCAL Versions.
+
+      .. code-block:: bash
+      
+         sudo add-apt-repository ppa:ecal/ecal-{{ ecal_version.major }}.{{ ecal_version.minor }}
+         sudo apt-get update
+         sudo apt-get install ecal
+
+      Also check out this PPA on `Launchpad <https://launchpad.net/~ecal/+archive/ubuntu/ecal-{{ ecal_version.major }}.{{ ecal_version.minor }}>`_!

@@ -20,16 +20,16 @@
 #include "ecalmon.h"
 
 #include "ecal/ecal.h"
-#include <ecal/ecal_config.h>
+#include <ecal/config.h>
 
 #include "widgets/about_dialog/about_dialog.h"
 #include "widgets/license_dialog/license_dialog.h"
 #include "widgets/plugin_settings_dialog/plugin_settings_dialog.h"
 #include "widgets/visualisation_widget/visualisation_dock_widget.h"
 
-#ifdef ECAL_NPCAP_SUPPORT
+#ifdef ECAL_USE_NPCAP
 #include "widgets/npcap_status_dialog/npcap_status_dialog.h"
-#endif //ECAL_NPCAP_SUPPORT
+#endif //ECAL_USE_NPCAP
 
 #include "ecalmon_globals.h"
 #include "plugin/plugin_manager.h"
@@ -229,7 +229,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   // Parse Time
   connect(ui_.action_show_parsed_times, &QAction::toggled, this, &Ecalmon::setParseTimeEnabled);
 
-#ifdef ECAL_NPCAP_SUPPORT
+#ifdef ECAL_USE_NPCAP
   connect(ui_.action_npcap_status, &QAction::triggered, this,
       [this]()
       {
@@ -238,7 +238,7 @@ Ecalmon::Ecalmon(QWidget *parent)
       });
 #else
   ui_.action_npcap_status->setVisible(false);
-#endif // ECAL_NPCAP_SUPPORT
+#endif // ECAL_USE_NPCAP
 
   // Reset layout
   connect(ui_.action_reset_layout, &QAction::triggered, this, &Ecalmon::resetLayout);

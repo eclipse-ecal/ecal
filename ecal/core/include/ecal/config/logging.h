@@ -18,13 +18,13 @@
  */
 
 /**
- * @file   ecal_logging_config.h
+ * @file   config/logging.h
  * @brief  eCAL configuration for logging
 **/
 
 #pragma once
 
-#include <ecal/ecal_log_level.h>
+#include <ecal/log_level.h>
 
 #include <vector>
 #include <string>
@@ -39,7 +39,7 @@ namespace eCAL
       struct Sink
       {
         bool enable;                                    //!< Enable sink
-        Filter filter_log;                              //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
+        Filter log_level;                               //!< Log messages logged (all, info, warning, error, fatal, debug1, debug2, debug3, debug4)
       };
 
       namespace File

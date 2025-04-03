@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,12 +86,12 @@ void HostWidget::autoSizeColumns()
 
   auto example_process_pb = example_monitoring_pb.add_processes();
 
-  example_process_pb->set_rclock(999999);
-  example_process_pb->set_hname("CARPC00____");
-  example_process_pb->set_pid(999999);
-  example_process_pb->set_pname("");
-  example_process_pb->set_uname("CameraSensorMapFusionCAF___");
-  example_process_pb->set_pparam("");
+  example_process_pb->set_registration_clock(999999);
+  example_process_pb->set_host_name("CARPC00____");
+  example_process_pb->set_process_id(999999);
+  example_process_pb->set_process_name("");
+  example_process_pb->set_unit_name("CameraSensorMapFusionCAF___");
+  example_process_pb->set_process_parameter("");
 
   HostTreeItem* example_host_item = new HostTreeItem("CARPC00____");
   example_host_item->update(example_monitoring_pb);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,7 @@
 
 #include "frame_buffer.h"
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/subscriber.h>
 
 namespace eCAL
 {
@@ -115,7 +114,7 @@ namespace eCAL
 
       std::set<std::string> GetSubscribedTopics() const;
 
-      void EcalMessageReceived(const eCAL::Registration::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
+      void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
 
       //////////////////////////////////////
       //// API for external threads     ////

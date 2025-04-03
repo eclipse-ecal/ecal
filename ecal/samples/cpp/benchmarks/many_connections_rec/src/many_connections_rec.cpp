@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,10 @@ public:
 
     for (int i = 0; i < publisher_count; ++i)
     {
-      std::ostringstream tname;
-      tname << std::setw(5) << std::setfill('0') << i;
-      subscribers.emplace_back("Topic" + tname.str(), eCAL::SDataTypeInformation{ ttype, "", tdesc });
-      auto on_receive = [this](const eCAL::Registration::STopicId&, const eCAL::SDataTypeInformation&, const eCAL::SReceiveCallbackData&)
+      std::ostringstream topic_name;
+      topic_name << std::setw(5) << std::setfill('0') << i;
+      subscribers.emplace_back("Topic" + topic_name.str(), eCAL::SDataTypeInformation{ ttype, "", tdesc });
+      auto on_receive = [this](const eCAL::STopicId&, const eCAL::SDataTypeInformation&, const eCAL::SReceiveCallbackData&)
       {
         Receive();
       };

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings 
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/rec/server_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -68,6 +68,6 @@ public:
 // Member Variables
 ///////////////////////////////////////////////
 private:
-  int pid;
-  std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
+  int process_id;
+  std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>> remote_rec_server_service;
 };

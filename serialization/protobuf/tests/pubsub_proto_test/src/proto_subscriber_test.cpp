@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public:
 #endif
   }
 
-  void OnPerson(const char*, const pb::People::Person&, long long, long long)
+  void OnPerson()
   {
     received_callbacks++;
   }
@@ -79,41 +79,9 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_SendReceive)
 {
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
-  ASSERT_TRUE(person_rec.IsCreated());
+  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  person_rec.SetReceiveCallback(person_callback);
 
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-
-  ASSERT_TRUE(SendPerson(person_pub));
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // assert that the OnPerson callback has been called once.
-  ASSERT_EQ(1, received_callbacks);
-}
-
-TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
-{
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
-
-  ASSERT_TRUE(person_rec.IsCreated());
-
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved;
-
-  ASSERT_FALSE(person_moved.IsCreated());
-
-  person_moved = std::move(person_rec);
-
-  // New Subscriber must be initialized
-  ASSERT_TRUE(person_moved.IsCreated());
-  // Old subscriber is not initialized
-  ASSERT_FALSE(person_rec.IsCreated());
-  ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
-
-  // Assert that the move constructed object can receive something
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -126,26 +94,46 @@ TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveAssignment)
 
 TEST_F(core_cpp_pubsub_proto_sub, ProtoSubscriberTest_MoveConstruction)
 {
+
   // Assert that the Subscriber can be move constructed.
-  eCAL::protobuf::CSubscriber<pb::People::Person> person_rec("ProtoSubscriberTest");
-  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  person_rec.AddReceiveCallback(person_callback);
+  std::vector<eCAL::protobuf::CSubscriber<pb::People::Person>> subscribers;
+  subscribers.reserve(1000);
 
-  ASSERT_TRUE(person_rec.IsCreated());
+  subscribers.emplace_back("ProtoSubscriberTest");
+  auto& person_rec = subscribers[0];
+  auto person_callback = std::bind(&ProtoSubscriberTest::OnPerson, this);
+  person_rec.SetReceiveCallback(person_callback);
 
-  eCAL::protobuf::CSubscriber<pb::People::Person>person_moved{ std::move(person_rec) };
-
-  ASSERT_TRUE(person_moved.IsCreated());
-  ASSERT_FALSE(person_rec.IsCreated());
-  ASSERT_EQ("ProtoSubscriberTest", person_moved.GetTopicName());
-
+  std::atomic<bool> stop_publishing(false);
+  int numbers_of_sends = 0;
   // Assert that the move constructed object can receive something
-  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
+  eCAL::Publisher::Configuration pub_config;
+  pub_config.layer.shm.acknowledge_timeout_ms = 500;
+  eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest", pub_config);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-  ASSERT_TRUE(SendPerson(person_pub));
+  // Start publishing (With acknowledge?)
+  std::thread person_pub_thread([this, &person_pub, &stop_publishing, &numbers_of_sends]() {
+    while (!stop_publishing)
+    {
+      SendPerson(person_pub);
+      ++numbers_of_sends;
+    }
+    });
+
+  for (int i = 0; i < 999; ++i)
+  {
+    subscribers.emplace_back(std::move(subscribers[i]));
+    std::this_thread::yield();
+  }
+
   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  // assert that the OnPerson callback has been called once.
-  ASSERT_EQ(1, received_callbacks);
+
+  stop_publishing = true;
+  person_pub_thread.join();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+  ASSERT_EQ(numbers_of_sends, received_callbacks.load());
 }

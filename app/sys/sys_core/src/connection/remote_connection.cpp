@@ -3,6 +3,9 @@
 #include <sys_client_core/proto_helpers.h>
 
 #include <EcalParser/EcalParser.h>
+#include <ecal/config.h>
+
+#include <thread>
 
 namespace eCAL
 {
@@ -12,7 +15,6 @@ namespace eCAL
     RemoteConnection::RemoteConnection(const std::string& hostname)
       : AbstractConnection(hostname)
     {
-      sys_client_service_.SetHostName(hostname);
     }
 
     RemoteConnection::~RemoteConnection()
@@ -38,7 +40,7 @@ namespace eCAL
 
         for(const auto& task_response_pb : response_pb.responses())
         {
-          return_values.push_back(task_response_pb.pid());
+          return_values.push_back(task_response_pb.process_id());
         }
 
         return return_values;
@@ -124,19 +126,42 @@ namespace eCAL
     {
       std::lock_guard<decltype(connection_mutex_)> connection_lock(connection_mutex_);
 
-      eCAL::ServiceResponseVecT service_response_vec;
+      // After client creation it takes some time for the client to be actually connected.
+      // As the call and the creation is too close together, the first call will fail.
+      // Here we wait until the connection is established.
+      // 
+      // The overall handling will be reworked when using the V6 implementation.
+      // 
+      if (!sys_client_service_.IsConnected())
+      {
+        const auto maximum_wait_time = std::chrono::milliseconds(2 * eCAL::GetConfiguration().registration.registration_refresh);
+        const std::chrono::milliseconds wait_time(50);
+
+        const auto start_time = std::chrono::steady_clock::now();
+        while (std::chrono::steady_clock::now() - start_time <= maximum_wait_time && !sys_client_service_.IsConnected())
+        {
+          std::this_thread::sleep_for(wait_time);
+        }
+      }
+
       constexpr int timeout_ms = 1000;
 
-      if (sys_client_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      auto client_instances = sys_client_service_.GetClientInstances();
+        for (auto& client_instance : client_instances)
       {
-        if (service_response_vec.size() > 0)
+        // TODO: We need to filter for pid as well in the future?
+        // Currently empty hostname means "all hosts"
+        if (client_instance.GetClientID().host_name == m_hostname || m_hostname.empty())
         {
-          response.ParseFromString(service_response_vec[0].response);
-          return true;
+          auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+          if (client_instance_response.first)
+          {
+            response.ParseFromString(client_instance_response.second.response);
+            return true;
+          }
         }
       }
       return false;
     }
-
   }
 }

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  */
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/subscriber.h>
 #include "tclap/CmdLine.h"
 
@@ -44,7 +44,7 @@ std::string pauseName;   // receiving on this channel should pause playback
 std::string triggerName; // receiving on this channel should start playback
 bool received = false;
 
-void callback(const eCAL::Registration::STopicId& topic_id_)
+void callback(const eCAL::STopicId& topic_id_)
 {
     std::string topicName = topic_id_.topic_name;
     if (topicName == triggerName || topicName == pauseName)
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
     eCAL::Initialize("ecal stepper", eCAL::Init::Default);
 
     // create player service client
-    eCAL::protobuf::CServiceClient<eCAL::pb::play::EcalPlayService> player_service;
+    eCAL::protobuf::CServiceClientUntyped<eCAL::pb::play::EcalPlayService> player_service;
 
     // sleep for service matching
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -137,12 +137,14 @@ int main(int argc, char** argv)
                 command_request.set_command(eCAL::pb::play::CommandRequest::step_channel);
                 command_request.set_step_reference_channel(pauseName);
             }
-            player_service.Call("SetCommand", command_request);
+            // we are not interested in the response
+            player_service.CallWithCallback("SetCommand", command_request, nullptr);
         }
         else if (lastCallbackTopic == pauseName)
         {
             command_request.set_command(eCAL::pb::play::CommandRequest::pause);
-            player_service.Call("SetCommand", command_request);
+            // we are not interested in the response
+            player_service.CallWithCallback("SetCommand", command_request, nullptr);
         }
     }
     // finalize eCAL API

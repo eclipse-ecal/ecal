@@ -23,7 +23,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4100 4505 4800)
 #endif
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/app/pb/rec/client_service.pb.h>
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -36,23 +36,26 @@
 // callback for recorder service response
 void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
 {
+  const std::string& method_name = service_response_.service_method_information.method_name;
+  const std::string& host_name   = service_response_.server_id.service_id.host_name;
+  
   switch (service_response_.call_state)
   {
   // service successful executed
   case eCAL::eCallState::executed:
   {
-    if (service_response_.method_name == "GetConfig")
+    if (method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
-      std::cout << "RecorderService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+      std::cout << "RecorderService " << method_name << " called successfully on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
     else
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "RecorderService " << service_response_.method_name << " called successfully on host " << service_response_.host_name << std::endl;
+      std::cout << "RecorderService " << method_name << " called successfully on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
   }
@@ -60,27 +63,27 @@ void OnRecorderResponse(const struct eCAL::SServiceResponse& service_response_)
   // service execution failed
   case eCAL::eCallState::failed:
   {
-    if (service_response_.method_name == "GetConfig")
+    if (method_name == "GetConfig")
     {
       eCAL::pb::rec_client::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
-      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
+      std::cout << "RecorderService " << method_name << " failed with \"" << response.error() << "\" on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
 
-    if (service_response_.method_name == "SetConfig")
+    if (method_name == "SetConfig")
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
+      std::cout << "RecorderService " << method_name << " failed with \"" << response.error() << "\" on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
 
-    if (service_response_.method_name == "SetCommand")
+    if (method_name == "SetCommand")
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
-      std::cout << "RecorderService " << service_response_.method_name << " failed with \"" << response.error() << "\" on host " << service_response_.host_name << std::endl;
+      std::cout << "RecorderService " << method_name << " failed with \"" << response.error() << "\" on host " << host_name << std::endl;
       std::cout << response.DebugString();
     }
   }
@@ -97,8 +100,7 @@ int main()
   eCAL::Initialize("RecClientServiceCli");
 
   // create recorder service client
-  eCAL::protobuf::CServiceClient<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
-  recorder_service.AddResponseCallback(OnRecorderResponse);
+  eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_client::EcalRecClientService> recorder_service;
 
   // waiting for service
   while (!recorder_service.IsConnected())
@@ -110,7 +112,7 @@ int main()
   // "GetConfig"
   eCAL::pb::rec_client::GetConfigRequest get_config_request;
   std::cout << "eCAL.pb.rec.EcalRecService:GetConfig()" << std::endl;
-  recorder_service.Call("GetConfig", get_config_request);
+  recorder_service.CallWithCallback("GetConfig", get_config_request, OnRecorderResponse);
   std::cout << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // "SetConfig"
@@ -125,7 +127,7 @@ int main()
   (*config)["listed_topics"]              = "topic1\ntopic2\ntopic3";         // Whitelist / blacklist, when topic_mode is set accordingly (\n separated). If topic_mode is "all", this setting will be ignored.
   (*config)["enabled_addons"]             = "";                               // List of addon-IDs that shall be enabled (\n separated).
 
-  recorder_service.Call("SetConfig", set_config_request);
+  recorder_service.CallWithCallback("SetConfig", set_config_request, OnRecorderResponse);
   std::cout << set_config_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // state request
@@ -142,37 +144,37 @@ int main()
   // "initialize"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::initialize);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "de_initialize"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::de_initialize);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "start_recording"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::start_recording);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "stop_recording"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::stop_recording);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "save_pre_buffer"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::save_pre_buffer);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   // "exit"
   std::cout << "eCAL.pb.rec.EcalRecService:SetCommand()" << std::endl;
   state_request.set_command(eCAL::pb::rec_client::CommandRequest::exit);
-  recorder_service.Call("SetCommand", state_request);
+  recorder_service.CallWithCallback("SetCommand", state_request, OnRecorderResponse);
   std::cout << state_request.DebugString() << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // finalize eCAL API

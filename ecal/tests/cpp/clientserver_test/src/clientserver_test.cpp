@@ -56,41 +56,41 @@ namespace
   typedef std::vector<std::shared_ptr<eCAL::CServiceClient>> ClientVecT;
 
 #if DO_LOGGING
-  void PrintRequest(const eCAL::SMethodInfo& method_info_, const std::string& request_)
+  void PrintRequest(const eCAL::SServiceMethodInformation& method_info_, const std::string& request_)
   {
     std::cout << "------ REQUEST -------" << std::endl;
     std::cout << "Method name                    : " << method_info_.method_name        << std::endl;
-    std::cout << "Method request  type name      : " << method_info_.req_type.name      << std::endl;
-    std::cout << "Method request  type encoding  : " << method_info_.req_type.encoding  << std::endl;
-    std::cout << "Method response type name      : " << method_info_.resp_type.name     << std::endl;
-    std::cout << "Method response type encoding  : " << method_info_.resp_type.encoding << std::endl;
+    std::cout << "Method request  type name      : " << method_info_.request_type.name      << std::endl;
+    std::cout << "Method request  type encoding  : " << method_info_.request_type.encoding  << std::endl;
+    std::cout << "Method response type name      : " << method_info_.response_type.name     << std::endl;
+    std::cout << "Method response type encoding  : " << method_info_.response_type.encoding << std::endl;
     std::cout << "Method request                 : " << request_                        << std::endl;
     std::cout << std::endl;
   }
 #else
-  void PrintRequest(const eCAL::SMethodInfo& /*method_info_*/, const std::string& /*request_*/)
+  void PrintRequest(const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/)
   {
   }
 #endif
 
 #if DO_LOGGING
-  void PrintResponse(const struct eCAL::SServiceIDResponse& service_response_)
+  void PrintResponse(const struct eCAL::SServiceResponse& service_response_)
   {
     std::cout << "------ RESPONSE ------" << std::endl;
-    std::cout << "Executed on host name : " << service_response_.service_method_id.service_id.host_name << std::endl;
-    std::cout << "Executed service name : " << service_response_.service_method_id.service_name         << std::endl;
-    std::cout << "Executed method name  : " << service_response_.service_method_id.method_name          << std::endl;
+    std::cout << "Executed on host name : " << service_response_.server_id.service_id.host_name         << std::endl;
+    std::cout << "Executed service name : " << service_response_.server_id.service_name                 << std::endl;
+    std::cout << "Executed method name  : " << service_response_.service_method_information.method_name << std::endl;
     std::cout << "Return value          : " << service_response_.ret_state                              << std::endl;
     std::cout << "Execution state       : ";
     switch (service_response_.call_state)
     {
-    case none:
+    case eCAL::eCallState::none:
       std::cout << "call_state_none";
       break;
-    case executed:
+    case eCAL::eCallState::executed:
       std::cout << "call_state_executed";
       break;
-    case failed:
+    case eCAL::eCallState::failed:
       std::cout << "call_state_failed";
       break;
     }
@@ -100,7 +100,7 @@ namespace
     std::cout << std::endl;
   }
 #else
-  void PrintResponse(const struct eCAL::SServiceIDResponse& /*service_response_*/)
+  void PrintResponse(const struct eCAL::SServiceResponse& /*service_response_*/)
   {
   }
 #endif
@@ -116,7 +116,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // client event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_)
+  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_)
     {
       switch (data_.type)
       {
@@ -138,7 +138,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
     };
 
   // create client
-  eCAL::CServiceClient client("service", eCAL::ServiceMethodInformationMapT(), event_callback);
+  eCAL::CServiceClient client("service", eCAL::ServiceMethodInformationSetT(), event_callback);
 
   // check events
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
@@ -181,7 +181,7 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // server event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_) -> void
+  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_) -> void
     {
       switch (data_.type)
       {
@@ -259,7 +259,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
   // method callback function
   std::atomic<int> methods_executed(0);
   std::atomic<int> method_process_time(0);
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(method_process_time);
       PrintRequest(method_info_, request_);
@@ -271,10 +271,10 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
   // add method callbacks
   for (const auto& service : service_vec)
   {
-    eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""}};
-    eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-    service->SetMethodCallback("foo::method1", method1_info, method_callback);
-    service->SetMethodCallback("foo::method2", method2_info, method_callback);
+    eCAL::SServiceMethodInformation method1_info{"foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""}};
+    eCAL::SServiceMethodInformation method2_info{"foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+    service->SetMethodCallback(method1_info, method_callback);
+    service->SetMethodCallback(method2_info, method_callback);
   }
 
   // create service clients
@@ -286,7 +286,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -306,11 +306,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -323,11 +323,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -364,7 +364,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   // method callback function
   std::atomic<int> methods_executed(0);
   std::atomic<int> method_process_time(0);
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(method_process_time);
       PrintRequest(method_info_, request_);
@@ -376,15 +376,15 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   // add method callbacks
   for (const auto& service : service_vec)
   {
-    eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
-    eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-    service->SetMethodCallback("foo::method1", method1_info, method_callback);
-    service->SetMethodCallback("foo::method2", method2_info, method_callback);
+    eCAL::SServiceMethodInformation method1_info{ "foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
+    eCAL::SServiceMethodInformation method2_info{ "foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+    service->SetMethodCallback(method1_info, method_callback);
+    service->SetMethodCallback(method2_info, method_callback);
   }
 
   // event callback for timeout event
   std::atomic<int> timeout_fired(0);
-  auto event_callback = [&](const eCAL::Registration::SServiceMethodId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_) -> void
+  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_) -> void
     {
       if (data_.type == eCAL::eClientEvent::timeout)
       {
@@ -399,12 +399,12 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInformationMapT(), event_callback));
+    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInformationSetT(), event_callback));
   }
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -425,11 +425,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", -1, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", -1, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback);
       methods_called++;
     }
   }
@@ -454,11 +454,11 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", method_process_time * 4, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback, method_process_time * 4);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", method_process_time * 4, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback, method_process_time * 4);
       methods_called++;
     }
   }
@@ -483,12 +483,12 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     for (const auto& client : client_vec)
     {
       // call method 1
-      success &= client->CallWithCallback("foo::method1", "my request for method 1", method_process_time / 10, response_callback);
+      success &= client->CallWithCallback("foo::method1", "my request for method 1", response_callback, method_process_time / 10);
       eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
 
       // call method 2
-      success &= client->CallWithCallback("foo::method2", "my request for method 2", method_process_time / 10, response_callback);
+      success &= client->CallWithCallback("foo::method2", "my request for method 2", response_callback, method_process_time / 10);
       eCAL::Process::SleepMS(method_process_time * 4);
       methods_called++;
     }
@@ -520,7 +520,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 
   // method callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_info_, request_);
       response_ = "I answered on " + request_;
@@ -529,17 +529,17 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
     };
 
   // add callback for client request
-  eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
-  eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-  server.SetMethodCallback("foo::method1", method1_info, method_callback);
-  server.SetMethodCallback("foo::method2", method2_info, method_callback);
+  eCAL::SServiceMethodInformation method1_info{ "foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
+  eCAL::SServiceMethodInformation method2_info{ "foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+  server.SetMethodCallback(method1_info, method_callback);
+  server.SetMethodCallback(method2_info, method_callback);
 
   // create service client
   eCAL::CServiceClient client("service");
 
   // response callback function
   std::atomic<int> responses_executed(0);
-  auto response_callback = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
@@ -594,7 +594,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
   atomic_signalable<int> num_service_callbacks_finished(0);
   int service_callback_time_ms(0);
 
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       eCAL::Process::SleepMS(service_callback_time_ms);
       PrintRequest(method_info_, request_);
@@ -604,17 +604,17 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
     };
 
   // add callback for client request
-  eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
-  eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-  server.SetMethodCallback("foo::method1", method1_info, method_callback);
-  server.SetMethodCallback("foo::method2", method2_info, method_callback);
+  eCAL::SServiceMethodInformation method1_info{ "foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
+  eCAL::SServiceMethodInformation method2_info{ "foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+  server.SetMethodCallback(method1_info, method_callback);
+  server.SetMethodCallback(method2_info, method_callback);
 
   // create service client
   eCAL::CServiceClient client("service");
 
   // response callback function
   atomic_signalable<int> num_client_response_callbacks_finished(0);
-  auto response_callback = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
       num_client_response_callbacks_finished++;
@@ -704,7 +704,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
 
   // method callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_info_, request_);
       response_ = "I answer on " + request_;
@@ -715,10 +715,10 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
   // add method callback
   for (const auto& service : service_vec)
   {
-    eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
-    eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-    service->SetMethodCallback("foo::method1", method1_info, method_callback);
-    service->SetMethodCallback("foo::method2", method2_info, method_callback);
+    eCAL::SServiceMethodInformation method1_info{ "foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
+    eCAL::SServiceMethodInformation method2_info{ "foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+    service->SetMethodCallback(method1_info, method_callback);
+    service->SetMethodCallback(method2_info, method_callback);
   }
 
   // create service clients
@@ -734,14 +734,14 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
   // call service
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
-  eCAL::ServiceIDResponseVecT service_response_vec;
+  eCAL::ServiceResponseVecT service_response_vec;
   for (auto i = 0; i < calls; ++i)
   {
     // call methods
     for (const auto& client : client_vec)
     {
       // call method 1
-      if (client->CallWithResponse("foo::method1", "my request for method 1", -1, service_response_vec))
+      if (client->CallWithResponse("foo::method1", "my request for method 1", service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
 
@@ -755,7 +755,7 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
       }
 
       // call method 2
-      if (client->CallWithResponse("foo::method2", "my request for method 2", -1, service_response_vec))
+      if (client->CallWithResponse("foo::method2", "my request for method 2", service_response_vec))
       {
         ASSERT_EQ(2, service_response_vec.size());
 
@@ -801,7 +801,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 
   // request callback function
   std::atomic<int> methods_executed(0);
-  auto method_callback = [&](const eCAL::SMethodInfo& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
       PrintRequest(method_info_, request_);
       response_ = "I answer on " + request_;
@@ -810,10 +810,10 @@ TEST(core_cpp_clientserver, NestedRPCCall)
     };
 
   // add callback for client request
-  eCAL::SServiceMethodInformation method1_info{ {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
-  eCAL::SServiceMethodInformation method2_info{ {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
-  server.SetMethodCallback("foo::method1", method1_info, method_callback);
-  server.SetMethodCallback("foo::method2", method2_info, method_callback);
+  eCAL::SServiceMethodInformation method1_info{ "foo::method1", {"foo::req_type1", "", ""}, {"foo::resp_type1", "", ""} };
+  eCAL::SServiceMethodInformation method2_info{ "foo::method2", {"foo::req_type2", "", ""}, {"foo::resp_type2", "", ""} };
+  server.SetMethodCallback(method1_info, method_callback);
+  server.SetMethodCallback(method2_info, method_callback);
 
   // create service client
   eCAL::CServiceClient client1("service");
@@ -823,15 +823,15 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   std::atomic<int> methods_called(0);
   std::atomic<int> responses_executed(0);
   bool success(true);
-  auto response_callback2 = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback2 = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
       responses_executed++;
     };
-  auto response_callback1 = [&](const eCAL::Registration::SEntityId& /*entity_id_*/, const struct eCAL::SServiceIDResponse& service_response_)
+  auto response_callback1 = [&](const struct eCAL::SServiceResponse& service_response_)
     {
       PrintResponse(service_response_);
-      success &= client2.CallWithCallback("foo::method2", "my request for method 2", -1, response_callback2);
+      success &= client2.CallWithCallback("foo::method2", "my request for method 2", response_callback2);
       methods_called++;
       responses_executed++;
     };
@@ -843,7 +843,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   for (auto i = 0; i < calls; ++i)
   {
     // call method 1
-    success &= client1.CallWithCallback("foo::method1", "my request for method 1", -1, response_callback1);
+    success &= client1.CallWithCallback("foo::method1", "my request for method 1", response_callback1);
     eCAL::Process::SleepMS(sleep);
     methods_called++;
   }

@@ -18,39 +18,52 @@
 */
 
 #include "reader_attribute_builder.h"
-#include "ecal/ecal_process.h"
+#include "ecal/process.h"
+#include "ecal/config.h"
 
 namespace eCAL
 {
-  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const Subscriber::Configuration& sub_config_, const eCAL::TransportLayer::Configuration& tl_config_, const eCAL::Registration::Configuration& reg_config_)
+  eCALReader::SAttributes BuildReaderAttributes(const std::string& topic_name_, const eCAL::Configuration& config_)
   {
+    const auto& subscriber_config      = config_.subscriber;
+    const auto& transport_layer_config = config_.transport_layer;
+    const auto& registration_config    = config_.registration;
+
     eCALReader::SAttributes attributes;
 
-    attributes.network_enabled            = reg_config_.network_enabled;
-    attributes.loopback                   = reg_config_.loopback;
-    attributes.drop_out_of_order_messages = sub_config_.drop_out_of_order_messages;
-    attributes.registration_timeout_ms    = reg_config_.registration_timeout;
+    attributes.network_enabled            = config_.communication_mode == eCAL::eCommunicationMode::network;
+    attributes.loopback                   = registration_config.loopback;
+    attributes.drop_out_of_order_messages = subscriber_config.drop_out_of_order_messages;
+    attributes.registration_timeout_ms    = registration_config.registration_timeout;
     attributes.topic_name                 = topic_name_;
     attributes.host_name                  = Process::GetHostName();
-    attributes.host_group_name            = Process::GetHostGroupName();
+    attributes.shm_transport_domain       = Process::GetShmTransportDomain();
     attributes.process_id                 = Process::GetProcessID();
     attributes.process_name               = Process::GetProcessName();
     attributes.unit_name                  = Process::GetUnitName();
 
-    attributes.udp.enable        = sub_config_.layer.udp.enable;
-    attributes.udp.mode          = tl_config_.udp.mode;
-    attributes.udp.port          = tl_config_.udp.port;
-    attributes.udp.receivebuffer = tl_config_.udp.receive_buffer;
-
-    attributes.udp.local.group   = tl_config_.udp.local.group;
-
-    attributes.udp.network.group = tl_config_.udp.network.group;
-
-    attributes.tcp.enable                    = sub_config_.layer.tcp.enable;
-    attributes.tcp.thread_pool_size          = tl_config_.tcp.number_executor_reader;
-    attributes.tcp.max_reconnection_attempts = tl_config_.tcp.max_reconnections;
+    attributes.udp.enable        = subscriber_config.layer.udp.enable;
+    attributes.udp.broadcast     = config_.communication_mode == eCAL::eCommunicationMode::local;
+    attributes.udp.port          = transport_layer_config.udp.port;
+    attributes.udp.receivebuffer = transport_layer_config.udp.receive_buffer;
     
-    attributes.shm.enable = sub_config_.layer.shm.enable;
+    switch (config_.communication_mode)
+    {
+      case eCAL::eCommunicationMode::network:
+        attributes.udp.group = transport_layer_config.udp.network.group;
+        break;
+      case eCAL::eCommunicationMode::local:
+        attributes.udp.group = transport_layer_config.udp.local.group;
+        break;
+      default:
+        break;
+    }
+
+    attributes.tcp.enable                    = subscriber_config.layer.tcp.enable;
+    attributes.tcp.thread_pool_size          = transport_layer_config.tcp.number_executor_reader;
+    attributes.tcp.max_reconnection_attempts = transport_layer_config.tcp.max_reconnections;
+    
+    attributes.shm.enable = subscriber_config.layer.shm.enable;
     
     return attributes;
   }

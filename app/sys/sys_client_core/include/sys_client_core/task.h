@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ecal/ecal_process_mode.h>
+#include <ecal/process_mode.h>
 #include <ecal_utils/filesystem.h>
 #include <chrono>
 
@@ -54,11 +54,11 @@ namespace eCAL
     struct StopTaskParameters
     {
       StopTaskParameters()
-        : pid          (0)
+        : process_id          (0)
         , ecal_shutdown(false)
       {}
 
-      int32_t pid;
+      int32_t process_id;
       Task    task;
       bool    ecal_shutdown;
     };

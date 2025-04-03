@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 const auto g_snd_size (8* 1024 * 1024);
 const auto g_snd_loops(1000);
 
-void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer layer, bool zero_copy)
+void throughput_test(int snd_size, int snd_loops, eCAL::TransportLayer::eType layer, bool zero_copy)
 {
   // create payload
   CBinaryPayload payload(snd_size);
@@ -42,13 +42,13 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   pub_config.layer.tcp.enable = false;
   switch (layer)
   {
-  case eCAL::TLayer::tlayer_shm:
+  case eCAL::TransportLayer::eType::shm:
     pub_config.layer.shm.enable = true;
     break;
-  case eCAL::TLayer::tlayer_udp_mc:
+  case eCAL::TransportLayer::eType::udp_mc:
     pub_config.layer.udp.enable = true;
     break;
-  case eCAL::TLayer::tlayer_tcp:
+  case eCAL::TransportLayer::eType::tcp:
     pub_config.layer.tcp.enable = true;
     break;
   default:
@@ -69,7 +69,7 @@ void throughput_test(int snd_size, int snd_loops, eCAL::TLayer::eTransportLayer 
   // add callback
   std::atomic<size_t> received_bytes;
   auto on_receive = [&](const struct eCAL::SReceiveCallbackData& data_) {
-    received_bytes += data_.size;
+    received_bytes += data_.buffer_size;
   };
   sub.SetReceiveCallback(std::bind(on_receive, std::placeholders::_3));
 
@@ -116,13 +116,13 @@ int main()
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM"                  << '\n';
   std::cout << "---------------------------" << '\n';
-  throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, false);
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::eType::shm, false);
   std::cout << '\n' << '\n';
 
   std::cout << "---------------------------" << '\n';
   std::cout << "LAYER: SHM ZERO-COPY"        << '\n';
   std::cout << "---------------------------" << '\n';
-  throughput_test(g_snd_size, g_snd_loops, eCAL::TLayer::tlayer_shm, true);
+  throughput_test(g_snd_size, g_snd_loops, eCAL::TransportLayer::eType::shm, true);
   std::cout << '\n' << '\n';
 
   // finalize eCAL API

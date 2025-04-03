@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,19 +37,20 @@ public:
 
   enum class Columns : int
   {
-    RCLOCK,
-    HNAME,
-    HGNAME,
-    PID,
-    PNAME,
-    UNAME,
-    PPARAM,
+    REGISTRATION_CLOCK,
+    HOST_NAME,
+    SHM_TRANSPORT_DOMAIN,
+    PROCESS_ID,
+    PROCESS_NAME,
+    UNIT_NAME,
+    PROCESS_PARAMETER,
     SEVERITY,
     INFO,
-    TSYNC_STATE,
+    TIME_SYNC_STATE,
     TSYNC_MOD_NAME,
     COMPONENT_INIT_INFO,
-    ECAL_RUNTIME_VERSION
+    ECAL_RUNTIME_VERSION,
+    CONFIG_FILE_PATH
   };
 
   ProcessTreeItem();

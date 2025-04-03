@@ -22,14 +22,16 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_client_v5.h>
-#include <ecal/ecal_server_v5.h>
-#include <ecal/ecal_publisher_v5.h>
-#include <ecal/ecal_subscriber_v5.h>
+#include <ecal/v5/ecal_client.h>
+#include <ecal/v5/ecal_server.h>
+#include <ecal/v5/ecal_publisher.h>
+#include <ecal/v5/ecal_subscriber.h>
 
 #include "ecal_clang.h"
 
 #include <mutex>
+#include <cstring>
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <functional>
@@ -48,8 +50,10 @@ namespace
 
   bool GetTopicDataTypeInformation(const char* topic_name_, eCAL::SDataTypeInformation& topic_info_)
   {
+    std::set<eCAL::STopicId> pub_ids;
+    eCAL::Registration::GetPublisherIDs(pub_ids);
     // try to find topic name in publisher set
-    for (const auto& pub_id : eCAL::Registration::GetPublisherIDs())
+    for (const auto& pub_id : pub_ids)
     {
       if (pub_id.topic_name == topic_name_)
       {
@@ -57,7 +61,8 @@ namespace
       }
     }
     // try to find topic name in subscriber set
-    const auto& sub_ids = eCAL::Registration::GetSubscriberIDs();
+    std::set<eCAL::STopicId> sub_ids;
+    eCAL::Registration::GetSubscriberIDs(sub_ids);
     for (const auto& sub_id : sub_ids)
     {
       if (sub_id.topic_name == topic_name_)
@@ -80,8 +85,7 @@ namespace
     case eCAL::ePublisherEvent::connected:              return pub_event_connected;
     case eCAL::ePublisherEvent::disconnected:           return pub_event_disconnected;
     case eCAL::ePublisherEvent::dropped:                return pub_event_dropped;
-    case eCAL::ePublisherEvent::update_connection:      return pub_event_update_connection;
-    default:                                                      return pub_event_none;
+    default:                                            return pub_event_none;
     }
   }
 
@@ -91,7 +95,6 @@ namespace
     case pub_event_connected:              return eCAL::ePublisherEvent::connected;
     case pub_event_disconnected:           return eCAL::ePublisherEvent::disconnected;
     case pub_event_dropped:                return eCAL::ePublisherEvent::dropped;
-    case pub_event_update_connection:      return eCAL::ePublisherEvent::update_connection;
     default:                               return eCAL::ePublisherEvent::none;
     }
   }
@@ -102,9 +105,7 @@ namespace
     case eCAL::eSubscriberEvent::connected:              return sub_event_connected;
     case eCAL::eSubscriberEvent::disconnected:           return sub_event_disconnected;
     case eCAL::eSubscriberEvent::dropped:                return sub_event_dropped;
-    case eCAL::eSubscriberEvent::corrupted:              return sub_event_corrupted;
-    case eCAL::eSubscriberEvent::update_connection:      return sub_event_update_connection;
-    default:            return sub_event_none;
+    default:                                             return sub_event_none;
     }
   }
 
@@ -114,8 +115,6 @@ namespace
     case sub_event_connected:              return eCAL::eSubscriberEvent::connected;
     case sub_event_disconnected:           return eCAL::eSubscriberEvent::disconnected;
     case sub_event_dropped:                return eCAL::eSubscriberEvent::dropped;
-    case sub_event_corrupted:              return eCAL::eSubscriberEvent::corrupted;
-    case sub_event_update_connection:      return eCAL::eSubscriberEvent::update_connection;
     default:                               return eCAL::eSubscriberEvent::none;
     }
   }
@@ -175,14 +174,6 @@ int ecal_is_initialized()
 {
   //* @return 1 if eCAL is initialized.
   return static_cast<int>(eCAL::IsInitialized());
-}
-
-/****************************************/
-/*      ecal_set_unit_name              */
-/****************************************/
-int ecal_set_unit_name(const char* unit_name_)
-{
-  return static_cast<int>(eCAL::SetUnitName(unit_name_));
 }
 
 /****************************************/
@@ -399,13 +390,13 @@ static void g_pub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_pub_event_callback_mtx);
   SPubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.tid       = data_->tid.c_str();
-  data.tname     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 
@@ -539,7 +530,7 @@ bool sub_receive_buffer(ECAL_HANDLE handle_, const char** rcv_buf_, int* rcv_buf
 /*      sub_add_receive_callback        */
 /****************************************/
 static std::mutex g_sub_receive_callback_mtx;
-static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
+static void g_sub_receive_callback(const char* topic_name_, const struct eCAL::v5::SReceiveCallbackData* data_, const ReceiveCallbackCT callback_, void* par_)
 {
   const std::lock_guard<std::mutex> lock(g_sub_receive_callback_mtx);
   SReceiveCallbackDataC data{};
@@ -577,13 +568,13 @@ static void g_sub_event_callback(const char* topic_name_, const struct eCAL::v5:
 {
   const std::lock_guard<std::mutex> lock(g_sub_event_callback_mtx);
   SSubEventCallbackDataC data{};
-  data.type      = enum_class_to_enum(data_->type);
-  data.time      = data_->time;
-  data.clock     = data_->clock;
-  data.tid       = data_->tid.c_str();
-  data.tname     = data_->tdatatype.name.c_str();
-  data.tencoding = data_->tdatatype.encoding.c_str();
-  data.tdesc     = data_->tdatatype.descriptor.c_str();
+  data.type       = enum_class_to_enum(data_->type);
+  data.time       = data_->time;
+  data.clock      = data_->clock;
+  data.topic_id   = data_->tid.c_str();
+  data.topic_name = data_->tdatatype.name.c_str();
+  data.tencoding  = data_->tdatatype.encoding.c_str();
+  data.tdesc      = data_->tdatatype.descriptor.c_str();
   callback_(topic_name_, &data, par_);
 }
 

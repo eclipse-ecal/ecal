@@ -44,21 +44,14 @@
       "displayName": "eCAL Core",
       "description": "eCAL core library only configuration",
       "cacheVariables": {
-        "HAS_HDF5": "OFF",
-        "HAS_QT": "OFF",
-        "HAS_CURL": "OFF",
-        "HAS_FTXUI": "OFF",
-        "BUILD_APPS": "OFF",
-        "BUILD_SAMPLES": "OFF",
+        "ECAL_USE_HDF5": "OFF",
+        "ECAL_USE_QT": "OFF",
+        "ECAL_USE_CURL": "OFF",
+        "ECAL_USE_FTXUI": "OFF",
+        "ECAL_BUILD_APPS": "OFF",
+        "ECAL_BUILD_SAMPLES": "OFF",
         "ECAL_CORE_CONFIGURATION": "OFF",
-        "ECAL_INSTALL_SAMPLE_SOURCES": "OFF",
-        "ECAL_THIRDPARTY_BUILD_FINEFTP": "OFF",
-        "ECAL_THIRDPARTY_BUILD_FTXUI": "OFF",
-        "ECAL_THIRDPARTY_BUILD_SPDLOG": "OFF",
-        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "OFF",
-        "ECAL_THIRDPARTY_BUILD_TINYXML2": "OFF",
-        "ECAL_THIRDPARTY_BUILD_CURL": "OFF",
-        "ECAL_THIRDPARTY_BUILD_HDF5": "OFF"
+        "ECAL_INSTALL_SAMPLE_SOURCES": "OFF"
       }
     },
     {
@@ -67,10 +60,9 @@
       "displayName": "Python Extensions",
       "description": "Minimal build for Python extensions",
       "cacheVariables": {
-        "HAS_HDF5": "ON",
-        "BUILD_PY_BINDING": "ON",
-        "BUILD_SHARED": "OFF",
-        "ECAL_THIRDPARTY_BUILD_HDF5": "ON"
+        "ECAL_USE_HDF5": "ON",
+        "ECAL_BUILD_PY_BINDING": "ON",
+        "BUILD_SHARED": "OFF"
       }
     },
     {
@@ -79,7 +71,7 @@
       "displayName": "Documentation",
       "description": "Build documentation",
       "cacheVariables": {
-        "BUILD_DOCS": "ON"
+        "ECAL_BUILD_DOCS": "ON"
       }
     },
     {
@@ -88,18 +80,11 @@
       "displayName": "CLI Apps",
       "description": "eCAL CLI applications",
       "cacheVariables": {
-        "HAS_HDF5": "ON",
-        "HAS_CURL": "ON",
-        "HAS_FTXUI": "ON",
-        "BUILD_APPS": "ON",
-        "BUILD_SAMPLES": "ON",
-        "ECAL_THIRDPARTY_BUILD_FINEFTP": "ON",
-        "ECAL_THIRDPARTY_BUILD_FTXUI": "ON",
-        "ECAL_THIRDPARTY_BUILD_SPDLOG": "ON",
-        "ECAL_THIRDPARTY_BUILD_TERMCOLOR": "ON",
-        "ECAL_THIRDPARTY_BUILD_TINYXML2": "ON",
-        "ECAL_THIRDPARTY_BUILD_CURL": null,
-        "ECAL_THIRDPARTY_BUILD_HDF5": null
+        "ECAL_USE_HDF5": "ON",
+        "ECAL_USE_CURL": "ON",
+        "ECAL_USE_FTXUI": "ON",
+        "ECAL_BUILD_APPS": "ON",
+        "ECAL_BUILD_SAMPLES": "ON"
       }
     },
     {
@@ -108,7 +93,7 @@
       "displayName": "GUI Apps",
       "description": "eCAL GUI and CLI applications",
       "cacheVariables": {
-        "HAS_QT": "ON"
+        "ECAL_USE_QT": "ON"
       }
     }
   ],

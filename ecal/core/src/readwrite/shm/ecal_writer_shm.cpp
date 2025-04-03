@@ -21,7 +21,7 @@
  * @brief  memory file data writer
 **/
 
-#include <ecal/ecal_log.h>
+#include <ecal/log.h>
 
 #include "ecal_def.h"
 #include "ecal_writer_shm.h"
@@ -83,7 +83,7 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const Registration::EntityIdT& topic_id_, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
     if (host_name_ != m_attributes.host_name) return;
@@ -104,7 +104,11 @@ namespace eCAL
     }
   }
 
-  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const Registration::EntityIdT& topic_id_)
+  /*
+  * Potentially, a publisher has multiple subscribers within the same process
+  * 
+  */
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
@@ -131,11 +135,11 @@ namespace eCAL
         }
       }
     }
-
     // memory file is still connected to at least one topic id of this process id
     // no need to Disconnect process id
     if (memfile_has_subscriptions) return;
 
+    // If the removed subscription was the last one, we need to temporarily disconnect the process
     for (auto& memory_file : m_memory_file_vec)
     {
       memory_file->Disconnect(std::to_string(process_id_));

@@ -237,7 +237,7 @@ namespace eCAL
         return eCAL::rec::Error::ErrorCode::OK;
       }
 
-      eCAL::rec::Error SetConfig::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
+      eCAL::rec::Error SetConfig::Execute(const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& argv) const
       {
         CmdLine cmdline;
         cmdline.parse(argv);
@@ -643,7 +643,7 @@ namespace eCAL
       //////////////////////////////////////////////
       /// SetConfig functions (remote directly)
       //////////////////////////////////////////////
-      eCAL::rec::Error SetConfig::SetClient                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      eCAL::rec::Error SetConfig::SetClient                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(SetClient);
@@ -652,7 +652,7 @@ namespace eCAL
         return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetAddons                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      eCAL::rec::Error SetConfig::SetAddons                 (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(SetAddons);
@@ -661,7 +661,7 @@ namespace eCAL
         return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::RemoveClient              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
+      eCAL::rec::Error SetConfig::RemoveClient              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::vector<std::string>& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::vector<std::string>&)>(RemoveClient);
@@ -670,7 +670,7 @@ namespace eCAL
         return SetConfigDirectly<const std::vector<std::string>&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetFtpServer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetFtpServer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetFtpServer);
@@ -679,7 +679,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetDeleteAfterUpload      (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetDeleteAfterUpload      (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetDeleteAfterUpload);
@@ -688,7 +688,7 @@ namespace eCAL
         return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetBuiltInClientEnabled   (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetBuiltInClientEnabled   (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetBuiltInClientEnabled);
@@ -697,7 +697,7 @@ namespace eCAL
         return SetConfigDirectly<bool>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetPreBuffer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetPreBuffer              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetPreBuffer);
@@ -706,7 +706,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetBlacklist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetBlacklist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetBlacklist);
@@ -715,7 +715,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetWhitelist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetWhitelist              (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetWhitelist);
@@ -724,7 +724,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetMeasRootDir            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasRootDir            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMeasRootDir);
@@ -733,7 +733,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetMeasName               (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMeasName               (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMeasName);
@@ -742,7 +742,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetMaxFileSize            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetMaxFileSize            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetMaxFileSize);
@@ -751,7 +751,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetDescription            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
+      eCAL::rec::Error SetConfig::SetDescription            (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, const std::string& param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, const std::string&)>(SetDescription);
@@ -760,7 +760,7 @@ namespace eCAL
         return SetConfigDirectly<const std::string&>(hostname, remote_rec_server_service, param, f);
       }
 
-      eCAL::rec::Error SetConfig::SetOneFilePerTopicEnabled (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
+      eCAL::rec::Error SetConfig::SetOneFilePerTopicEnabled (const std::string& hostname, const std::shared_ptr<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>& remote_rec_server_service, bool param)
       {
         // Select the correct overload of the function and bind it to an std::function object
         auto f = static_cast<eCAL::rec::Error(*)(eCAL::pb::rec_server::RecServerConfig&, bool)>(SetOneFilePerTopicEnabled);

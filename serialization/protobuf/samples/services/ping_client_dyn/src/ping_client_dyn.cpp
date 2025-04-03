@@ -51,20 +51,29 @@ int main()
   std::string req_desc;
   std::string resp_type;
   std::string resp_desc;
-  auto service_ids = eCAL::Registration::GetServiceIDs();
+
+  std::set<eCAL::SServiceId> service_ids;
+  eCAL::Registration::GetServerIDs(service_ids);
   bool service_info_found(false);
   for (const auto& service_id : service_ids)
   {
-    if ((service_id.service_name == service_name) && (service_id.method_name == method_name))
+    if (service_id.service_name == service_name)
     {
-      eCAL::SServiceMethodInformation service_method_info;
-      eCAL::Registration::GetServiceInfo(service_id, service_method_info);
-      req_type  = service_method_info.request_type.name;
-      req_desc  = service_method_info.request_type.descriptor;
-      resp_type = service_method_info.response_type.name;
-      resp_desc = service_method_info.response_type.descriptor;
-      service_info_found = true;
-      break;
+      eCAL::ServiceMethodInformationSetT methods;
+      eCAL::Registration::GetServerInfo(service_id, methods);
+
+      for (const auto& method : methods)
+      {
+        if (method.method_name == method_name)
+        {
+          req_type = method.request_type.name;
+          req_desc = method.request_type.descriptor;
+          resp_type = method.response_type.name;
+          resp_desc = method.response_type.descriptor;
+          service_info_found = true;
+          break;
+        }
+      }
     }
   }
   if (!service_info_found)
@@ -95,8 +104,8 @@ int main()
     if (!ping_request.empty())
     {
       // call Ping service method
-      eCAL::ServiceIDResponseVecT service_response_vec;
-      if (ping_client.CallWithResponse("Ping", ping_request, -1, service_response_vec))
+      eCAL::ServiceResponseVecT service_response_vec;
+      if (ping_client.CallWithResponse("Ping", ping_request, service_response_vec))
       {
         std::cout << '\n' << "PingService::Ping method called with message (JSON) : " << req_json << '\n';
 
@@ -108,12 +117,12 @@ int main()
           case eCAL::eCallState::executed:
           {
             const std::string resp_json = GetJSONFromSerialzedMessage(resp_msg.get(), service_response.response);
-            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.service_method_id.service_id.host_name << '\n';
+            std::cout << "Received response PingService / Ping         (JSON) : " << resp_json << " from host " << service_response.server_id.service_id.host_name << '\n';
           }
           break;
           // service execution failed
           case eCAL::eCallState::failed:
-            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.service_method_id.service_id.host_name << '\n';
+            std::cout << "Received error PingService / Ping           : " << service_response.error_msg << " from host " << service_response.server_id.service_id.host_name << '\n';
             break;
           default:
             break;

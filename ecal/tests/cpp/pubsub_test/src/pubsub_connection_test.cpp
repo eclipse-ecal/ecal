@@ -18,8 +18,8 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/ecal_publisher.h>
-#include <ecal/ecal_subscriber.h>
+#include <ecal/pubsub/publisher.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <atomic>
 #include <chrono>
@@ -73,11 +73,11 @@ TEST(core_cpp_pubsub, TestSubscriberIsPublishedTiming)
     eCAL::CSubscriber sub("blob");
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.GetPublisherCount() > 0;
-        first_received_sample = std::string(static_cast<const char*>(data_.buf), data_.size);
+        first_received_sample = std::string(static_cast<const char*>(data_.buffer), data_.buffer_size);
       }
 
         if (sub_count < max_sub_count)
@@ -172,11 +172,11 @@ TEST(core_cpp_pubsub, TestPublisherIsSubscribedTiming)
     eCAL::CSubscriber sub("blob");
     const auto max_sub_count(10);
     auto sub_count(0);
-    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+    auto receive_lambda = [&max_sub_count, &sub_count, &publisher_seen_at_subscription_start, &first_received_sample, &sub](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
       if (sub_count == 0)
       {
         publisher_seen_at_subscription_start = sub.GetPublisherCount() > 0;
-        first_received_sample = std::string(static_cast<const char*>(data_.buf), data_.size);
+        first_received_sample = std::string(static_cast<const char*>(data_.buffer), data_.buffer_size);
       }
 
         if (sub_count < max_sub_count)
@@ -253,16 +253,16 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 
   // Subscriber1 with callback that triggers Publisher2
   eCAL::CSubscriber sub1("topic1");
-  auto subscriber1_callback = [&pub2](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
+  auto subscriber1_callback = [&pub2](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
     // On receiving data from Publisher1, Publisher2 sends the same data
-    const std::string received_data(static_cast<const char*>(data_.buf), data_.size);
+    const std::string received_data(static_cast<const char*>(data_.buffer), data_.buffer_size);
     pub2.Send(received_data);
     };
   sub1.SetReceiveCallback(subscriber1_callback);
 
   // Subscriber2 that receives data from Publisher2
   eCAL::CSubscriber sub2("topic2");
-  auto subscriber2_callback = [&subscriber2_received_count](const eCAL::Registration::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+  auto subscriber2_callback = [&subscriber2_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
     //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buf), data_.size) << std::endl;

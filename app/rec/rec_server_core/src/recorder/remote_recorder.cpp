@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,10 +53,8 @@ namespace eCAL
       , last_response_                      ({true, ""})
       , should_be_connected_to_ecal_        (false)
       , complete_settings_                  (initial_settings)
+      , hostname_                           (hostname)
     {
-      // Bind the recorder_service_ to the hostname
-      recorder_service_.SetHostName(hostname);
-
       // Initial Ping => to perform auto recovery, which also sets the initial settings
       actions_to_perform_.emplace_back(Action());
 
@@ -390,7 +388,7 @@ namespace eCAL
 
             eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
 
-            int32_t                   client_pid  = state_response_pb.pid();
+            int32_t                   client_pid  = state_response_pb.process_id();
 
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -667,16 +665,21 @@ namespace eCAL
 
     bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
     {
-      // The target (i.e. the hostname) has already been set in the Constructor.
+      constexpr int timeout_ms(1000);
 
-      eCAL::ServiceResponseVecT service_response_vec;
-      constexpr int timeout_ms = 1000;
-      if (recorder_service_.Call(method_name, request.SerializeAsString(), timeout_ms, &service_response_vec))
+      auto client_instances = recorder_service_.GetClientInstances();
+      for (auto& client_instance : client_instances)
       {
-        if (service_response_vec.size() > 0)
+        // TODO: We need to filter for pid as well in the future?
+        // Currently empty hostname means "all hosts"
+        if (client_instance.GetClientID().host_name == hostname_ || hostname_.empty())
         {
-          response.ParseFromString(service_response_vec[0].response);
-          return true;
+          auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+          if (client_instance_response.first)
+          {
+            response.ParseFromString(client_instance_response.second.response);
+            return true;
+          }
         }
       }
       return false;

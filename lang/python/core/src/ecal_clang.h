@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <ecal/ecalc.h>
+#include "ecal_clang_types.h"
 
 /*************************************************************************/
 /*  common                                                               */
@@ -78,15 +78,6 @@ int ecal_finalize();
  * @return 1 if eCAL is initialized.
 **/
 int ecal_is_initialized();
-
-/**
- * @brief  Set/change the unit name of current module.
- *
- * @param unit_name_  Defines the name of the eCAL unit.
- *
- * @return Zero if succeeded.
-**/
-int ecal_set_unit_name(const char *unit_name_);
 
 /**
  * @brief  Set process state info.

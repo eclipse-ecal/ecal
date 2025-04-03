@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ message SimTime
   sint64 simulation_time_nsecs  =  2;   // current eCAL simulation time in nanoseconds
   double real_time_factor       =  3;   // factor relative to the real time at which the simulation time hast to proceed
   uint64 local_time_nsecs       =  4;   // local PC timestamp in nanoseconds (used for interpolating)
-  string hostname               =  5;   // hostname of the PC that generated the local_time_nsecs value. Used for 
+  string host_name              =  5;   // hostname of the PC that generated the local_time_nsecs value. Used for 
                                         // deciding wether to use that number or rely on the receive time
   uint32 process_id             =  6;   // PID of the process that generated the simulation time
 }

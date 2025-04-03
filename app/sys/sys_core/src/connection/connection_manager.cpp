@@ -1,6 +1,6 @@
 #include "connection_manager.h"
 
-#include <ecal/ecal_process.h>
+#include <ecal/process.h>
 
 namespace eCAL
 {

@@ -1,4 +1,4 @@
-﻿/* ========================= eCAL LICENSE =================================
+/* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2023 Continental Corporation
  *
@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 struct SubscribedMessage
 {

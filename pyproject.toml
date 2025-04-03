@@ -43,9 +43,6 @@ sdist.only-include = [
   "/NOTICE.txt",
   "/README.md",
   "/app/app_pb/",
-  "/app/apps/",            # TODO: Remove this directory
-  "/app/rec/rec_addon_core/", # TODO: Remove this directory
-  "/app/rec/rec_addon_dummy/", # TODO: Remove this directory
   "/cmake/",
   "/contrib/",
   "/cpack/",
@@ -55,11 +52,11 @@ sdist.only-include = [
   "lang/c/",
   "lang/python/",
 
-  "serialization/protobuf", 
-  "serialization/string", 
+  "serialization/protobuf",
+  "serialization/string",
 
   "thirdparty/cmakefunctions/",
-  "thirdparty/ecaludp/",  
+  "thirdparty/ecaludp/",
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/tclap/",
@@ -82,21 +79,21 @@ sdist.only-include = [
 
 [tool.scikit-build]
 # Will be installed from PyPI if system version is too old/missing
-cmake.version = ">=3.18"
+cmake.version = ">=3.24" # For SET_DEPENDENCY_PROVIDER
 build.targets = ["ecal_python"] # Targets to build
 build-dir = "./_python_build"   # Build directory for unisolated builds
 install.components = ["python"] # CMake component to install
 
 [tool.scikit-build.cmake.define]
 CMAKE_PROJECT_TOP_LEVEL_INCLUDES = "cmake/submodule_dependencies.cmake"
-HAS_HDF5 = "ON"
-HAS_QT = "OFF"
-HAS_CURL = "OFF"
-HAS_FTXUI = "OFF"
-BUILD_APPS = "OFF"
-BUILD_SAMPLES = "OFF"
-BUILD_TIME = "OFF"
-BUILD_PY_BINDING = "ON"
+ECAL_USE_HDF5 = "ON"
+ECAL_USE_QT = "OFF"
+ECAL_USE_CURL = "OFF"
+ECAL_USE_FTXUI = "OFF"
+ECAL_BUILD_APPS = "OFF"
+ECAL_BUILD_SAMPLES = "OFF"
+ECAL_BUILD_TIMEPLUGINS = "OFF"
+ECAL_BUILD_PY_BINDING = "ON"
 BUILD_SHARED_LIBS = "OFF"
 ECAL_INSTALL_SAMPLE_SOURCES = "OFF"
 ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS = "ON"

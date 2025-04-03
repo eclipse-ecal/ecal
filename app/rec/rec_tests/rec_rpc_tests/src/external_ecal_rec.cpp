@@ -22,7 +22,7 @@
 #include <rec_server_core/proto_helpers.h>
 
 #include <ecal/ecal.h>
-#include <ecal/msg/protobuf/client.h>
+#include <ecal/msg/protobuf/client_untyped.h>
 #include <ecal/msg/protobuf/server.h>
 
 #include <string>
@@ -34,29 +34,28 @@
 ///////////////////////////////////////////////
 
 ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
-  : pid(0)
+  : process_id(0)
 {
   ecal_rec_cli_instance_lock.lock();
 
   eCAL::Initialize("Ecal Rec Tester");
   
-  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClient<eCAL::pb::rec_server::EcalRecServerService>>();
-  remote_rec_server_service->SetHostName(eCAL::Process::GetHostName());
+  remote_rec_server_service = std::make_shared<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_server::EcalRecServerService>>();
 
   if (gui)
   {
     std::cout << "Starting " << "\"" << ECAL_REC_GUI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
+    process_id = eCAL::Process::StartProcess(ECAL_REC_GUI_PATH, "", "", false, eCAL::Process::eStartMode::minimized, false);
   }
   else
   {
     std::cout << "Starting " << "\"" << ECAL_REC_CLI_PATH << "\"" << std::endl;
-    pid = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
+    process_id = eCAL::Process::StartProcess(ECAL_REC_CLI_PATH, "--interactive-dont-exit --no-default", "", false, eCAL::Process::eStartMode::hidden, false);
   }
 
-  if (pid != 0)
+  if (process_id != 0)
   {
-    std::cout << "Successfully started eCAL Rec " << (gui ? "GUI" : "CLI") << " with PID " << pid << std::endl;
+    std::cout << "Successfully started eCAL Rec " << (gui ? "GUI" : "CLI") << " with PID " << process_id << std::endl;
   }
   else
   {
@@ -87,8 +86,8 @@ ExternalEcalRecInstance::ExternalEcalRecInstance(bool gui)
 
 ExternalEcalRecInstance::~ExternalEcalRecInstance()
 {
-  if (pid > 0)
-    eCAL::Process::StopProcess(pid);
+  if (process_id > 0)
+    eCAL::Process::StopProcess(process_id);
   eCAL::Finalize();
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -119,17 +118,23 @@ eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::rec_server::RecS
 
 eCAL::rec::Error ExternalEcalRecInstance::GetConfigViaRpc(eCAL::pb::rec_server::RecServerConfig& config_pb_output)
 {
-  eCAL::pb::rec_server::GenericRequest request;
-  eCAL::ServiceResponseVecT            service_response_vec;
+  const auto&   hostname(eCAL::Process::GetHostName());
+  constexpr int timeout_ms(2000);
 
-  constexpr int timeout_ms = 1000;
-
-  if (remote_rec_server_service->Call("GetConfig", request.SerializeAsString(), timeout_ms, &service_response_vec))
+  auto client_instances = remote_rec_server_service->GetClientInstances();
+  for (auto& client_instance : client_instances)
   {
-    if (service_response_vec.size() > 0)
+    // TODO: We need to filter for pid as well in the future?
+    // hostname is fixed to the current host
+    if (client_instance.GetClientID().host_name == hostname)
     {
-      config_pb_output.ParseFromString(service_response_vec[0].response);
-      return eCAL::rec::Error::ErrorCode::OK;
+      eCAL::pb::rec_server::GenericRequest request;
+      auto client_instance_reponse = client_instance.CallWithResponse("GetConfig", request, timeout_ms);
+      if (client_instance_reponse.first)
+      {
+        config_pb_output.ParseFromString(client_instance_reponse.second.response);
+        return eCAL::rec::Error::ErrorCode::OK;
+      }
     }
   }
   return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE);
@@ -143,28 +148,31 @@ eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::rec_server
 
 eCAL::rec::Error ExternalEcalRecInstance::SetConfigViaRpc(const eCAL::pb::rec_server::RecServerConfig& config_pb)
 {
-  eCAL::ServiceResponseVecT service_response_vec;
+  const auto&   hostname   (eCAL::Process::GetHostName());
+  constexpr int timeout_ms (2000);
 
-  constexpr int timeout_ms = 1000;
-
-  if (remote_rec_server_service->Call("SetConfig", config_pb.SerializeAsString(), timeout_ms, &service_response_vec))
+  auto client_instances = remote_rec_server_service->GetClientInstances();
+  for (auto& client_instance : client_instances)
   {
-    if (service_response_vec.size() > 0)
+    // TODO: We need to filter for pid as well in the future?
+    // hostname is fixed to the current host
+    if (client_instance.GetClientID().host_name == hostname)
     {
-      eCAL::pb::rec_server::ServiceResult response_pb;
-
-      response_pb.ParseFromString(service_response_vec[0].response);
-
-      if (response_pb.error_code() != eCAL::pb::rec_server::ServiceResult_ErrorCode_no_error)
+      auto client_instance_reponse = client_instance.CallWithResponse("SetConfig", config_pb, timeout_ms);
+      if (client_instance_reponse.first)
       {
-        return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, response_pb.info_message());
-      }
-      else
-      {
-        return eCAL::rec::Error::ErrorCode::OK;
+        eCAL::pb::rec_server::ServiceResult response_pb;
+        response_pb.ParseFromString(client_instance_reponse.second.response);
+        if (response_pb.error_code() != eCAL::pb::rec_server::ServiceResult_ErrorCode_no_error)
+        {
+          return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::GENERIC_ERROR, response_pb.info_message());
+        }
+        else
+        {
+          return eCAL::rec::Error::ErrorCode::OK;
+        }
       }
     }
   }
-
   return eCAL::rec::Error(eCAL::rec::Error::ErrorCode::REMOTE_HOST_UNAVAILABLE);
 }

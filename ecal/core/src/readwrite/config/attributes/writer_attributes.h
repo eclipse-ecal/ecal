@@ -23,28 +23,21 @@
 #include <cstddef>
 #include <vector>
 
-#include <ecal/ecal_tlayer.h>
-
-#include "ecal/types/ecal_custom_data_types.h"
+#include <ecal/config/configuration.h>
+#include <ecal/config/transport_layer.h>
 
 namespace eCAL
 {
   namespace eCALWriter
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-      int         ttl;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      Types::UDPMode mode;
-      int            port;
-      int            send_buffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         send_buffer;
+      std::string group;
+      int         ttl;
     };
 
     struct STCPAttributes
@@ -66,7 +59,7 @@ namespace eCAL
 
     struct SAttributes
     {
-      using LayerPriorityVector = std::vector<TLayer::eTransportLayer>;
+      using LayerPriorityVector = std::vector<TransportLayer::eType>;
       LayerPriorityVector  layer_priority_local;
       LayerPriorityVector  layer_priority_remote;
 
@@ -74,16 +67,16 @@ namespace eCAL
       bool                 loopback;
 
       std::string          host_name;
-      std::string          host_group_name;
+      std::string          shm_transport_domain;
       int                  process_id;
       std::string          process_name;
 
       std::string          unit_name;
       std::string          topic_name;
 
-      SUDPAttributes     udp;
-      STCPAttributes     tcp;
-      SSHMAttributes     shm;
+      SUDPAttributes       udp;
+      STCPAttributes       tcp;
+      SSHMAttributes       shm;
     };
   }
 }

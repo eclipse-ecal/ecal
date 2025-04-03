@@ -56,7 +56,10 @@ endif()
 
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src INSTALL_FOLDER include ${ProtoFiles})
+protobuf_target_cpp(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src
+  INSTALL_FOLDER "${eCAL_install_include_dir}"
+  ${ProtoFiles}
+)
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE
@@ -65,7 +68,7 @@ target_compile_options(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
+target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 ecal_install_library(${PROJECT_NAME})

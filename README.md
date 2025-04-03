@@ -46,7 +46,7 @@ We provide binary installers for Windows and Ubuntu. If you need further help in
 
 ### Windows
 
-[Download](https://eclipse-ecal.github.io/ecal/_download_archive/download_archive.html) the latest eCAL Installer and follow the Setup Wizard
+[Download](https://eclipse-ecal.github.io/ecal/releases/) the latest eCAL Installer and follow the Setup Wizard
 
 ![eCAL Setup](doc/rst/getting_started/img/setup.png)
     
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
   eCAL::Initialize(argc, argv, "Hello World Publisher");
 
   // Create a String Publisher that publishes on the topic "hello_world_topic"
-  eCAL::string::CPublisher<std::string> publisher("hello_world_topic");
+  eCAL::string::CPublisher publisher("hello_world_topic");
 
   // Infinite loop
   while (eCAL::Ok())

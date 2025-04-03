@@ -23,11 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_callback_v5.h>
-#include <ecal/ecal_payload_writer.h>
-#include <ecal/ecal_config.h>
-#include <ecal/ecal_types.h>
+#include <ecal/pubsub/types.h>
+#include <ecal/pubsub/payload_writer.h>
+#include <ecal/config.h>
+#include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
@@ -104,15 +103,7 @@ namespace eCAL
     bool IsSubscribed() const;
     size_t GetSubscriberCount() const;
 
-    Registration::STopicId GetTopicId() const
-    {
-      Registration::STopicId id;
-      id.topic_name          = m_attributes.topic_name;
-      id.topic_id.entity_id  = m_topic_id;
-      id.topic_id.host_name  = m_attributes.host_name;
-      id.topic_id.process_id = m_attributes.process_id;
-      return id;
-    }
+    const STopicId& GetTopicId() const { return m_topic_id; }
 
     const std::string&          GetTopicName()           const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return m_topic_info; }
@@ -133,22 +124,21 @@ namespace eCAL
     void FireEvent(const ePublisherEvent type_, const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
-    void FireUpdateEvent    (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TLayer::eTransportLayer DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
-    Registration::EntityIdT                m_topic_id;
+    EntityIdT                              m_publisher_id;
     SDataTypeInformation                   m_topic_info;
-    std::map<std::string, std::string>     m_attr;
     size_t                                 m_topic_size = 0;
     eCAL::eCALWriter::SAttributes          m_attributes;
+    STopicId                               m_topic_id;
 
     std::vector<char>                      m_payload_buffer;
 
@@ -168,7 +158,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    PubEventCallbackT                    m_event_id_callback;
+    PubEventCallbackT                  m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;

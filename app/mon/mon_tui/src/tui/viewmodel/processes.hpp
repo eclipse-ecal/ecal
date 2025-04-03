@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public:
       case Column::Host:
         return value.host_name;
       case Column::PID:
-        return std::to_string(value.pid);
+        return std::to_string(value.process_id);
       case Column::Name:
         return value.name;
       case Column::Info:

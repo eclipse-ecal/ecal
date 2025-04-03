@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,24 +60,26 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
     eCAL::Process::SleepMS(2 * GetParam().configuration.registration.registration_refresh);
 
     // get the list of publisher IDs
-    const auto pub_ids1 = eCAL::Registration::GetPublisherIDs();
+    std::set<eCAL::STopicId> pub_ids1;
+    const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids1);
 
     // verify the number of publishers created
+    EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
     ASSERT_EQ(pub_ids1.size(), GetParam().publisher_count);
   }
 
@@ -85,9 +87,11 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
   eCAL::Process::SleepMS(GetParam().configuration.registration.registration_timeout);
 
   // get the list of publisher IDs
-  const auto pub_ids2 = eCAL::Registration::GetPublisherIDs();
+  std::set<eCAL::STopicId> pub_ids2;
+  const auto get_publisher_ids_succeeded = eCAL::Registration::GetPublisherIDs(pub_ids2);
 
   // all publisher should be timeouted
+  EXPECT_TRUE(get_publisher_ids_succeeded) << "GetPublisherIDs call failed";
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 
@@ -95,12 +99,12 @@ TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_publisher_num(0);
   std::atomic<size_t> deleted_publisher_num(0);
-  std::set<eCAL::Registration::STopicId> created_publisher_ids;
-  std::set<eCAL::Registration::STopicId> deleted_publisher_ids;
+  std::set<eCAL::STopicId> created_publisher_ids;
+  std::set<eCAL::STopicId> deleted_publisher_ids;
 
   // register the callback
   auto callback_token = eCAL::Registration::AddPublisherEventCallback(
-    [&](const eCAL::Registration::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
+    [&](const eCAL::STopicId& id, eCAL::Registration::RegistrationEventType event_type)
     {
       if (event_type == eCAL::Registration::RegistrationEventType::new_entity)
       {
@@ -119,15 +123,15 @@ TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
     std::vector<eCAL::CPublisher> publisher_vec;
     for (int i = 0; i < GetParam().publisher_count; ++i)
     {
-      std::stringstream tname;
-      tname << "topic_" << i;
+      std::stringstream topic_name;
+      topic_name << "topic_" << i;
 
       eCAL::SDataTypeInformation data_type_info;
-      data_type_info.name       = tname.str() + "_type_name";
-      data_type_info.encoding   = tname.str() + "_type_encoding";
-      data_type_info.descriptor = tname.str() + "_type_descriptor";
+      data_type_info.name       = topic_name.str() + "_type_name";
+      data_type_info.encoding   = topic_name.str() + "_type_encoding";
+      data_type_info.descriptor = topic_name.str() + "_type_descriptor";
 
-      publisher_vec.emplace_back(tname.str(), data_type_info);
+      publisher_vec.emplace_back(topic_name.str(), data_type_info);
     }
 
     // let's register
@@ -158,27 +162,36 @@ INSTANTIATE_TEST_SUITE_P(
     TestParams{ 10, []() {
       // shm
       eCAL::Configuration config;
+      config.communication_mode                = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable     = true;
-      config.registration.layer.udp.enable     = false;
       return config;
     }() },
     TestParams{ 10, []() {
-      // shm + host group name
+      // shm + shm transport domain
       eCAL::Configuration config;
-      config.registration.layer.shm.enable = true;
-      config.registration.layer.udp.enable = false;
-      config.registration.host_group_name = "abc";
+      config.communication_mode                = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
+      config.registration.shm_transport_domain = "abc";
       return config;
     }() },
     TestParams{ 10, []() {
-      // udp
+      // udp network
       eCAL::Configuration config;
+      config.communication_mode                  = eCAL::eCommunicationMode::network;
+      config.registration.network.transport_type = eCAL::Registration::Network::eTransportType::udp;
+      config.registration.registration_refresh   = 100;
+      config.registration.registration_timeout   = 200;
+      return config;
+    }() },
+    TestParams{ 10, []() {
+      // udp local
+      eCAL::Configuration config;
+      config.communication_mode                = eCAL::eCommunicationMode::local;
+      config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::udp;
       config.registration.registration_refresh = 100;
       config.registration.registration_timeout = 200;
-      config.registration.layer.shm.enable     = false;
-      config.registration.layer.udp.enable     = true;
       return config;
     }() }
   )

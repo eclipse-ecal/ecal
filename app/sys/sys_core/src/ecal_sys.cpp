@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,8 +84,6 @@ EcalSys::EcalSys(const std::string& config_path)
 
 EcalSys::~EcalSys() 
 {
-  eCAL::Finalize();
-
   m_monitor_thread->Interrupt();
   m_monitor_thread->Join();
 
@@ -684,10 +682,10 @@ void EcalSys::WaitForTaskActions()
   //m_task_list_action_thread_container.for_each(
   //  [](std::shared_ptr<TaskListThread> t)
   //  {
-  //    auto pid = t->get_pid();
-  //    std::cout << "Waiting for " << pid << std::endl;
+  //    auto process_id = t->get_pid();
+  //    std::cout << "Waiting for " << process_id << std::endl;
   //    t->Join(); 
-  //    std::cout << "Finished waiting for " << pid << std::endl;
+  //    std::cout << "Finished waiting for " << process_id << std::endl;
   //  }
   //);
 }

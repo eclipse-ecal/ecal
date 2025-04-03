@@ -23,10 +23,10 @@
 
 #pragma once
 
-#include <ecal/ecal_callback.h>
-#include <ecal/ecal_callback_v5.h>
-#include <ecal/ecal_service_info.h>
-#include <ecal/service/server.h>
+#include <ecal/namespace.h>
+#include <ecal/v5/ecal_callback.h>
+#include <ecal/service/types.h>
+#include <ecal_service/server.h>
 
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "serialization/ecal_struct_service.h"
@@ -56,7 +56,7 @@ namespace eCAL
   public:
     ~CServiceServerImpl();
 
-    bool SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_);
+    bool SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_);
     bool RemoveMethodCallback(const std::string& method_);
 
     // Check connection state of a specific service
@@ -69,10 +69,10 @@ namespace eCAL
     Registration::Sample GetRegistration();
 
     // Retrieves the service id
-    Registration::SServiceId GetServiceId() const;
+    const SServiceId& GetServiceId() const;
 
     // Retrieves the service name
-    std::string GetServiceName() const;
+    const std::string& GetServiceName() const;
 
     // Prevent copy and move operations
     CServiceServerImpl(const CServiceServerImpl&) = delete;
@@ -91,14 +91,15 @@ namespace eCAL
 
     // Request and event callback methods
     int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
-    void NotifyEventCallback(const Registration::SServiceMethodId& service_id_, eServerEvent event_type_, const std::string& message_);
+    void NotifyEventCallback(const SServiceId& service_id_, eServerEvent event_type_, const std::string& message_);
 
     // Server version (incremented for protocol or functionality changes)
     static constexpr int                   m_server_version = 1;
 
     // Server attributes
     std::string                            m_service_name;
-    Registration::EntityIdT                m_service_id;
+    EntityIdT                              m_server_id;
+    SServiceId                             m_service_id;
 
     // Server connection state and synchronization
     mutable std::mutex                     m_connected_mutex; // mutex protecting m_connected (modified by the event callbacks in another thread)
@@ -109,7 +110,7 @@ namespace eCAL
     struct SMethod
     {
       Service::Method     method;
-      MethodInfoCallbackT callback;
+      ServiceMethodCallbackT callback;
     };
 
     using MethodMapT = std::map<std::string, SMethod>;
@@ -118,9 +119,9 @@ namespace eCAL
 
     // Event callback and synchronization
     std::mutex                             m_event_callback_mutex;
-    ServerEventCallbackT                 m_event_callback;
+    ServerEventCallbackT                   m_event_callback;
 
     // Server interface
-    std::shared_ptr<eCAL::service::Server> m_tcp_server;
+    std::shared_ptr<ecal_service::Server> m_tcp_server;
   };
 }

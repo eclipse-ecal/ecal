@@ -40,7 +40,7 @@ int main()
   pb::People::Person person;
 
   eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
-  auto receive_lambda = [](const char* /*topic_name_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/, const long long /*id_*/){
+  auto receive_lambda = [](const eCAL::STopicId& /*topic_id_*/, const pb::People::Person& person_, const long long /*time_*/, const long long /*clock_*/){
     std::cout << "------------------------------------------" << std::endl;
     std::cout << " RECEIVED                                 " << std::endl;
     std::cout << "------------------------------------------" << std::endl;
@@ -54,7 +54,7 @@ int main()
     std::cout                                                 << std::endl;
 
   };
-  sub.AddReceiveCallback(receive_lambda);
+  sub.SetReceiveCallback(receive_lambda);
 
   // enter main loop
   auto cnt = 0;

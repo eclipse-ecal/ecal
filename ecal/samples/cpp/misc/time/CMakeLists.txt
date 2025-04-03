@@ -18,8 +18,6 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-
 project(time)
 
 find_package(eCAL REQUIRED)
@@ -30,7 +28,7 @@ set(time_src
 
 ecal_add_sample(${PROJECT_NAME} ${time_src})
 
-target_link_libraries(${PROJECT_NAME} eCAL::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

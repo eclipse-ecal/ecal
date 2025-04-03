@@ -24,7 +24,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/types.h>
-#include <ecal/ecal_util.h>
+#include <ecal/util.h>
 
 namespace LinuxPtpConfig {
 

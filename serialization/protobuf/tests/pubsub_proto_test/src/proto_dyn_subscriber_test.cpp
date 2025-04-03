@@ -96,8 +96,7 @@ TEST_F(core_cpp_pubsub_proto_dyn, ProtoDynSubscriberTest_SendReceiveCB)
   // Assert that the Subscriber can be move constructed.
   eCAL::protobuf::CDynamicSubscriber person_dyn_rec("ProtoSubscriberTest");
   auto person_callback = std::bind(&ProtoDynSubscriberTest::OnPerson, this, std::placeholders::_2, std::placeholders::_3);
-  person_dyn_rec.AddReceiveCallback(person_callback);
-  ASSERT_TRUE(person_dyn_rec.IsCreated());
+  person_dyn_rec.SetReceiveCallback(person_callback);
 
   eCAL::protobuf::CPublisher<pb::People::Person> person_pub("ProtoSubscriberTest");
 

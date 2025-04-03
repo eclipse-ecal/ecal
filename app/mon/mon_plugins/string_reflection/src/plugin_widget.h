@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ private slots:
 private:
   QTextEdit* text_edit_;
 
-  eCAL::string::CSubscriber<std::string>  subscriber_;
+  eCAL::string::CSubscriber               subscriber_;
   std::string                             last_message_;
   eCAL::Time::ecal_clock::time_point      last_message_publish_timestamp_;
   std::mutex                              message_mutex_;

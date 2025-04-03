@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ void HostTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
 
   for (const auto& process : monitoring_pb.processes())
   {
-    std::string host_name = process.hname();
+    std::string host_name = process.host_name();
 
     if (tree_item_map_.find(host_name) == tree_item_map_.end())
     {

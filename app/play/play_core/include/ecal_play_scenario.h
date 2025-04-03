@@ -22,7 +22,7 @@
 #include <chrono>
 #include <string>
 
-#include <ecal/ecal_time.h>
+#include <ecal/time.h>
 
 /**
  * @brief A Scenario is a named time point

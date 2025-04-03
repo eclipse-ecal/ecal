@@ -26,22 +26,21 @@
 #include "ecal_global_accessors.h"
 #include "ecal_def.h"
 #include "ecal_globals.h"
+#include "ecal_utils/filesystem.h"
 
 #include <atomic>
 #include <string>
 
 namespace eCAL
 {
-  CGlobals*                     g_globals_ctx(nullptr);
-  std::atomic<int>              g_globals_ctx_ref_cnt;
+  std::unique_ptr<CGlobals>     g_globals_ctx(nullptr);
 
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
   Configuration                 g_ecal_configuration{};
 
   std::string                   g_host_name;
   std::string                   g_unit_name;
-  std::vector<std::string>      g_task_parameter;
-
+  
   std::string                   g_process_name;
   std::string                   g_process_par;
   int                           g_process_id(0);
@@ -51,46 +50,19 @@ namespace eCAL
   eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
   eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
 
-  void InitGlobals()
-  {
-    if (g_globals_ctx == nullptr)
-      g_globals_ctx = new CGlobals;
-  }
-
   void SetGlobalUnitName(const char *unit_name_)
   {
-    // There is a function already "SetUnitName" which sets the g_unit_name just as string.
-    // Used in global API. It does not have the following logic -> should that be added/removed/combined?
-    // For previous consistency this function is added here for the time being.
     if(unit_name_ != nullptr) g_unit_name = unit_name_;
-      if (g_unit_name.empty())
-      {
-        g_unit_name = Process::GetProcessName();
-#ifdef ECAL_OS_WINDOWS
-        size_t p = g_unit_name.rfind('\\');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p+1);
-        }
-        p = g_unit_name.rfind('.');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(0, p);
-        }
-#endif
-#ifdef ECAL_OS_LINUX
-        const size_t p = g_unit_name.rfind('/');
-        if (p != std::string::npos)
-        {
-          g_unit_name = g_unit_name.substr(p + 1);
-        }
-#endif
-      }
+    
+    if (g_unit_name.empty())
+    {
+      g_unit_name = EcalUtils::Filesystem::BaseName(Process::GetProcessName());
+    }
   }
 
   CGlobals* g_globals()
   {
-    return g_globals_ctx;
+    return g_globals_ctx.get();
   }
 
   Logging::CLogReceiver* g_log_udp_receiver()

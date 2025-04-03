@@ -16,13 +16,10 @@
 #
 # ========================= eCAL LICENSE =================================
 
+##########################
+# std::string base functionality
+##########################
 
-##########################
-# String base functionality
-##########################
-
-# std::string core communication extension
-##########################
 add_library(string_base INTERFACE)
 add_library(eCAL::string_base ALIAS string_base)
 
@@ -32,7 +29,7 @@ target_sources(string_base
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/ecal/msg/string/message.h   
+      include/ecal/msg/string/serializer.h  
 )
 
 target_compile_features(string_base INTERFACE cxx_std_14)
@@ -53,8 +50,8 @@ add_library(eCAL::string_core ALIAS string_core)
 
 target_link_libraries(string_core 
   INTERFACE 
-    eCAL::core
     eCAL::string_base
+    eCAL::message_core
 )
 
 target_sources(string_core
@@ -75,4 +72,36 @@ install(
   ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   FILE_SET string_core_headers COMPONENT sdk
+)
+
+##########################
+# std::string measurement extension
+##########################
+add_library(string_measurement INTERFACE)
+add_library(eCAL::string_measurement ALIAS string_measurement)
+
+target_link_libraries(string_measurement 
+  INTERFACE 
+    eCAL::string_base
+    eCAL::message_measurement
+)
+
+target_sources(string_measurement
+  INTERFACE
+    FILE_SET string_measurement_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/string/imeasurement.h
+      include/ecal/msg/string/omeasurement.h
+)
+
+target_compile_features(string_measurement INTERFACE cxx_std_14)
+
+install(
+  TARGETS string_measurement
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET string_measurement_headers COMPONENT sdk
 )

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,10 @@ namespace eCAL
       }
 
       // compare topic info
-      if (sample1.topic_info.hname != sample2.topic_info.hname ||
-          sample1.topic_info.pid   != sample2.topic_info.pid ||
-          sample1.topic_info.tid   != sample2.topic_info.tid ||
-          sample1.topic_info.tname != sample2.topic_info.tname) {
+      if (sample1.topic_info.host_name  != sample2.topic_info.host_name ||
+          sample1.topic_info.process_id != sample2.topic_info.process_id ||
+          sample1.topic_info.topic_id   != sample2.topic_info.topic_id ||
+          sample1.topic_info.topic_name != sample2.topic_info.topic_name) {
         return false;
       }
 

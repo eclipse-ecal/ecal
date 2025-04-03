@@ -33,7 +33,7 @@ SET(CPACK_OUTPUT_FILE_PREFIX _deploy)
 if(WIN32)
   set(CPACK_GENERATOR "External")
   set(CPACK_EXTERNAL_ENABLE_STAGING ON)
-  if(CPACK_PACK_WITH_INNOSETUP)
+  if(ECAL_CPACK_PACK_WITH_INNOSETUP)
     set(CPACK_EXTERNAL_PACKAGE_SCRIPT "${ECAL_PROJECT_ROOT}/cpack/innosetup.cmake")
   endif()
 endif()
@@ -42,6 +42,10 @@ endif()
 if(UNIX)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_SOURCE_GENERATOR "TGZ")
+
+  # Enable component-based packaging for debian deployment
+  set(CPACK_DEB_COMPONENT_INSTALL ON)
+  set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 
   # When configuring the project, a header file with paths has been created.
   # These paths are used e.g. in eCAL Mon to find the plugin diretory. Thus we
@@ -63,13 +67,11 @@ set(CPACK_RESOURCE_FILE_README  ${ECAL_PROJECT_ROOT}/README.md)
 
 get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
 list(REMOVE_ITEM CPACK_COMPONENTS_ALL
-  #"libprotobuf-lite"
-  #"protobuf-export"
-  #"protobuf-headers"
-  #"protobuf-protos"
   "tinyxml2_config"
   "tinyxml2_headers"
   "tinyxml2_libraries"
+  "testing"
+  "python"
 )
 
 include(CPack)

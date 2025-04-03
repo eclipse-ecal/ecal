@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,17 +24,6 @@
 """
 
 import ecal._ecal_core_py as _ecal
-
-def initialize(args, unit_name):
-  """ initialize eCAL API
-
-  :param args:      command line argument list (sys.argv)
-  :param unit_name: instance unit name
-  :type unit_name:  string
-
-  """
-  print("[WARNING] 'initialize(args, unit_name)' is deprecated. Please use 'initialize(argv, unit_name)' instead.")
-  return initialize(unit_name)
 
 def initialize(unit_name):
   """ initialize eCAL API
@@ -68,15 +57,6 @@ def getversion_components():
   """ get ecal version as major, minor, patch tuple
   """
   return _ecal.getversion_components()
-
-
-def set_unit_name(unit_name):
-  """ set/change the unit name of the current module
-  
-  :param unit_name: Name of the eCAL unit
-  :type unit_name: string
-  """
-  return _ecal.set_unit_name(unit_name)
 
 
 def getdate():
@@ -149,16 +129,6 @@ def log_setlevel(level):
 
   """
   return _ecal.log_setlevel(level)
-
-
-def log_setcoretime(time):
-  """ log core time
-
-  :param time: module core time in ms
-  :type time: int
-  
-  """
-  return _ecal.log_setcoretime(time)
 
 
 def log_message(message):

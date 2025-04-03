@@ -29,7 +29,7 @@
 
 namespace eCAL
 {
-  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventCallbackT event_callback_)
+  CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
     : m_service_server_impl(nullptr)
   {
     // create server implementation
@@ -62,10 +62,10 @@ namespace eCAL
     return *this;
   }
 
-  bool CServiceServer::SetMethodCallback(const std::string& method_, const SServiceMethodInformation& method_info_, const MethodInfoCallbackT& callback_)
+  bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_)
   {
     if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->SetMethodCallback(method_, method_info_, callback_);
+    return m_service_server_impl->SetMethodCallback(method_info_, callback_);
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string& method_)
@@ -74,15 +74,17 @@ namespace eCAL
     return m_service_server_impl->RemoveMethodCallback(method_);
   }
 
-  std::string CServiceServer::GetServiceName()
+  const std::string& CServiceServer::GetServiceName()
   {
-    if (m_service_server_impl == nullptr) return "";
+    static const std::string empty_service_name {};
+    if (m_service_server_impl == nullptr) return empty_service_name;
     return m_service_server_impl->GetServiceName();
   }
 
-  Registration::SServiceId CServiceServer::GetServiceId() const
+  const SServiceId& CServiceServer::GetServiceId() const
   {
-    if (m_service_server_impl == nullptr) return Registration::SServiceId();
+    static const SServiceId empty_service_id {};
+    if (m_service_server_impl == nullptr) return empty_service_id;
     return m_service_server_impl->GetServiceId();
   }
 

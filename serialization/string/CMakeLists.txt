@@ -32,9 +32,9 @@ add_subdirectory(string)
 # samples
 # --------------------------------------------------------
 if(ECAL_STRING_BUILD_SAMPLES)
-  add_subdirectory(samples/pubsub/minimal_rec)
-  add_subdirectory(samples/pubsub/minimal_rec_cb)
-  add_subdirectory(samples/pubsub/minimal_snd)
+  add_subdirectory(samples/pubsub/hello_receive)
+  add_subdirectory(samples/pubsub/hello_send)
+  add_subdirectory(samples/measurement)
 endif()
 
 # --------------------------------------------------------
