@@ -29,9 +29,9 @@ namespace eCAL
   namespace Monitoring
   {
     // generate process
-    SProcessMon GenerateProcess()
+    SProcess GenerateProcess()
     {
-      SProcessMon process;
+      SProcess process;
       process.registration_clock    = rand() % 1000;
       process.host_name             = GenerateString(10);
       process.shm_transport_domain  = GenerateString(8);
@@ -52,9 +52,9 @@ namespace eCAL
     }
 
     // generate topic
-    STopicMon GenerateTopic(const std::string& direction)
+    STopic GenerateTopic(const std::string& direction)
     {
-      STopicMon topic;
+      STopic topic;
       topic.registration_clock   = rand() % 1000;
       topic.host_name            = GenerateString(10);
       topic.shm_transport_domain = GenerateString(8);
@@ -77,9 +77,9 @@ namespace eCAL
     }
 
     // generate servicemethod
-    SMethodMon GenerateServiceMethod()
+    SMethod GenerateServiceMethod()
     {
-      SMethodMon method;
+      SMethod method;
       method.method_name = GenerateString(8);
 
       method.request_datatype_information  = eCAL::Registration::GenerateDataTypeInformation();
@@ -90,9 +90,9 @@ namespace eCAL
     }
 
     // generate service
-    SServerMon GenerateService()
+    SServer GenerateService()
     {
-      SServerMon server;
+      SServer server;
       server.registration_clock = rand() % 1000;
       server.host_name          = GenerateString(10);
       server.process_name       = GenerateString(8);
@@ -111,9 +111,9 @@ namespace eCAL
     }
 
     // generate client
-    SClientMon GenerateClient()
+    SClient GenerateClient()
     {
-      SClientMon client;
+      SClient client;
       client.registration_clock = rand() % 1000;
       client.host_name          = GenerateString(10);
       client.process_name       = GenerateString(8);
@@ -139,17 +139,17 @@ namespace eCAL
       monitoring.processes.push_back(GenerateProcess());
 
       // generate topics
-      monitoring.publisher.push_back(GenerateTopic("publisher"));
-      monitoring.publisher.push_back(GenerateTopic("publisher"));
-      monitoring.publisher.push_back(GenerateTopic("publisher"));
-      monitoring.subscriber.push_back(GenerateTopic("subscriber"));
-      monitoring.subscriber.push_back(GenerateTopic("subscriber"));
-      monitoring.subscriber.push_back(GenerateTopic("subscriber"));
+      monitoring.publishers.push_back(GenerateTopic("publisher"));
+      monitoring.publishers.push_back(GenerateTopic("publisher"));
+      monitoring.publishers.push_back(GenerateTopic("publisher"));
+      monitoring.subscribers.push_back(GenerateTopic("subscriber"));
+      monitoring.subscribers.push_back(GenerateTopic("subscriber"));
+      monitoring.subscribers.push_back(GenerateTopic("subscriber"));
 
       // generate services
-      monitoring.server.push_back(GenerateService());
-      monitoring.server.push_back(GenerateService());
-      monitoring.server.push_back(GenerateService());
+      monitoring.servers.push_back(GenerateService());
+      monitoring.servers.push_back(GenerateService());
+      monitoring.servers.push_back(GenerateService());
 
       // generate clients
       monitoring.clients.push_back(GenerateClient());

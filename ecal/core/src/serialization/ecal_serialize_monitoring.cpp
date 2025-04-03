@@ -38,7 +38,7 @@ namespace
   /////////////////////////////////////////////////////////////////////////////////
   // Encode: eCAL::Monitoring::SProcessMon
   /////////////////////////////////////////////////////////////////////////////////
-  void PrepareEncoding(const eCAL::Monitoring::SProcessMon& process_, eCAL_pb_Process& pb_process_)
+  void PrepareEncoding(const eCAL::Monitoring::SProcess& process_, eCAL_pb_Process& pb_process_)
   {
     ///////////////////////////////////////////////
     // process information
@@ -84,7 +84,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* process_vec = static_cast<std::vector<eCAL::Monitoring::SProcessMon>*>(*arg);
+    auto* process_vec = static_cast<std::vector<eCAL::Monitoring::SProcess>*>(*arg);
 
     for (const auto& process : *process_vec)
     {
@@ -145,7 +145,7 @@ namespace
     pb_callback.arg = (void*)(&layer_vec);
   }
 
-  void PrepareEncoding(const eCAL::Monitoring::STopicMon& topic_, eCAL_pb_Topic& pb_topic_)
+  void PrepareEncoding(const eCAL::Monitoring::STopic& topic_, eCAL_pb_Topic& pb_topic_)
   {
     // registration_clock
     pb_topic_.registration_clock = topic_.registration_clock;
@@ -201,7 +201,7 @@ namespace
     //////////////////
     // publisher
     //////////////////
-    for (const auto& topic : monitoring->publisher)
+    for (const auto& topic : monitoring->publishers)
     {
       // encode topic tag
       if (!pb_encode_tag_for_field(stream, field))
@@ -223,7 +223,7 @@ namespace
     //////////////////
     // subscriber
     //////////////////
-    for (const auto& topic : monitoring->subscriber)
+    for (const auto& topic : monitoring->subscribers)
     {
       // encode topic tag
       if (!pb_encode_tag_for_field(stream, field))
@@ -253,7 +253,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethodMon>*>(*arg);
+    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethod>*>(*arg);
 
     for (const auto& method : *method_vec)
     {
@@ -286,13 +286,13 @@ namespace
     return true;
   }
 
-  void encode_mon_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::SMethodMon>& method_vec)
+  void encode_mon_service_methods(pb_callback_t& pb_callback, const std::vector<eCAL::Monitoring::SMethod>& method_vec)
   {
     pb_callback.funcs.encode = &encode_mon_service_methods_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = (void*)(&method_vec);
   }
 
-  void PrepareEncoding(const eCAL::Monitoring::SServerMon& service_, eCAL_pb_Service& pb_service_)
+  void PrepareEncoding(const eCAL::Monitoring::SServer& service_, eCAL_pb_Service& pb_service_)
   {
     ///////////////////////////////////////////////
     // service information
@@ -326,7 +326,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* service_vec = static_cast<std::vector<eCAL::Monitoring::SServerMon>*>(*arg);
+    auto* service_vec = static_cast<std::vector<eCAL::Monitoring::SServer>*>(*arg);
 
     for (const auto& service : *service_vec)
     {
@@ -353,7 +353,7 @@ namespace
   /////////////////////////////////////////////////////////////////////////////////
   // Encode: eCAL::Monitoring::SClientMon
   /////////////////////////////////////////////////////////////////////////////////
-  void PrepareEncoding(const eCAL::Monitoring::SClientMon& client_, eCAL_pb_Client& pb_client_)
+  void PrepareEncoding(const eCAL::Monitoring::SClient& client_, eCAL_pb_Client& pb_client_)
   {
     ///////////////////////////////////////////////
     // client information
@@ -383,7 +383,7 @@ namespace
     if (arg == nullptr)  return false;
     if (*arg == nullptr) return false;
 
-    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClientMon>*>(*arg);
+    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClient>*>(*arg);
 
     for (const auto& client : *client_vec)
     {
@@ -428,7 +428,7 @@ namespace
     // services
     ///////////////////////////////////////////////
     pb_mon_message_.services.funcs.encode = &encode_mon_message_services_field; // NOLINT(*-pro-type-union-access)
-    pb_mon_message_.services.arg = (void*)(&mon_message_.server);
+    pb_mon_message_.services.arg = (void*)(&mon_message_.servers);
 
     ///////////////////////////////////////////////
     // clients
@@ -486,7 +486,7 @@ namespace
   /////////////////////////////////////////////////////////////////////////////////
   // Decode: eCAL::Monitoring::SProcessMon
   /////////////////////////////////////////////////////////////////////////////////
-  void PrepareDecoding(eCAL_pb_Process& pb_process_, eCAL::Monitoring::SProcessMon& process_)
+  void PrepareDecoding(eCAL_pb_Process& pb_process_, eCAL::Monitoring::SProcess& process_)
   {
     // initialize
     pb_process_ = eCAL_pb_Process_init_default;
@@ -516,7 +516,7 @@ namespace
     eCAL::nanopb::decode_string(pb_process_.config_file_path, process_.config_file_path);
   }
 
-  void AssignValues(const eCAL_pb_Process& pb_process_, eCAL::Monitoring::SProcessMon& process_)
+  void AssignValues(const eCAL_pb_Process& pb_process_, eCAL::Monitoring::SProcess& process_)
   {
     ///////////////////////////////////////////////
     // assign values
@@ -541,7 +541,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Process pb_process = eCAL_pb_Process_init_default;
-    eCAL::Monitoring::SProcessMon process{};
+    eCAL::Monitoring::SProcess process{};
 
     // prepare sample for decoding
     PrepareDecoding(pb_process, process);
@@ -556,7 +556,7 @@ namespace
     AssignValues(pb_process, process);
 
     // add sample to vector
-    auto* processes_vec = static_cast<std::vector<eCAL::Monitoring::SProcessMon>*>(*arg);
+    auto* processes_vec = static_cast<std::vector<eCAL::Monitoring::SProcess>*>(*arg);
     processes_vec->push_back(process);
 
     return true;
@@ -596,7 +596,7 @@ namespace
     pb_callback.arg = &layer_vec;
   }
 
-  void PrepareDecoding(eCAL_pb_Topic& pb_topic_, eCAL::Monitoring::STopicMon& topic_)
+  void PrepareDecoding(eCAL_pb_Topic& pb_topic_, eCAL::Monitoring::STopic& topic_)
   {
     // initialize
     pb_topic_ = eCAL_pb_Topic_init_default;
@@ -628,7 +628,7 @@ namespace
     decode_mon_registration_layer(pb_topic_.transport_layer, topic_.transport_layer);
   }
 
-  void AssignValues(const eCAL_pb_Topic& pb_topic_, eCAL::Monitoring::STopicMon& topic_)
+  void AssignValues(const eCAL_pb_Topic& pb_topic_, eCAL::Monitoring::STopic& topic_)
   {
     ///////////////////////////////////////////////
     // assign values
@@ -659,7 +659,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Topic pb_topic = eCAL_pb_Topic_init_default;
-    eCAL::Monitoring::STopicMon topic{};
+    eCAL::Monitoring::STopic topic{};
 
     // prepare sample for decoding
     PrepareDecoding(pb_topic, topic);
@@ -677,11 +677,11 @@ namespace
     auto* monitoring = static_cast<eCAL::Monitoring::SMonitoring*>(*arg);
     if (topic.direction == "publisher")
     {
-      monitoring->publisher.push_back(topic);
+      monitoring->publishers.push_back(topic);
     }
     if (topic.direction == "subscriber")
     {
-      monitoring->subscriber.push_back(topic);
+      monitoring->subscribers.push_back(topic);
     }
 
     return true;
@@ -696,7 +696,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Method pb_method = eCAL_pb_Method_init_default;
-    eCAL::Monitoring::SMethodMon method{};
+    eCAL::Monitoring::SMethod method{};
 
     // decode method parameter
     eCAL::nanopb::decode_string(pb_method.method_name, method.method_name);
@@ -719,19 +719,19 @@ namespace
     method.call_count = pb_method.call_count;
 
     // add method to vector
-    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethodMon>*>(*arg);
+    auto* method_vec = static_cast<std::vector<eCAL::Monitoring::SMethod>*>(*arg);
     method_vec->emplace_back(method);
 
     return true;
   }
 
-  void decode_mon_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::SMethodMon>& method_vec)
+  void decode_mon_service_methods(pb_callback_t& pb_callback, std::vector<eCAL::Monitoring::SMethod>& method_vec)
   {
     pb_callback.funcs.decode = &decode_mon_service_methods_field; // NOLINT(*-pro-type-union-access)
     pb_callback.arg = &method_vec;
   }
 
-  void PrepareDecoding(eCAL_pb_Service& pb_service_, eCAL::Monitoring::SServerMon& service_)
+  void PrepareDecoding(eCAL_pb_Service& pb_service_, eCAL::Monitoring::SServer& service_)
   {
     // initialize
     pb_service_ = eCAL_pb_Service_init_default;
@@ -753,7 +753,7 @@ namespace
     decode_mon_service_methods(pb_service_.methods, service_.methods);
   }
 
-  void AssignValues(const eCAL_pb_Service& pb_service_, eCAL::Monitoring::SServerMon& service_)
+  void AssignValues(const eCAL_pb_Service& pb_service_, eCAL::Monitoring::SServer& service_)
   {
     ///////////////////////////////////////////////
     // assign values
@@ -776,7 +776,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Service pb_service = eCAL_pb_Service_init_default;
-    eCAL::Monitoring::SServerMon service{};
+    eCAL::Monitoring::SServer service{};
 
     // prepare sample for decoding
     PrepareDecoding(pb_service, service);
@@ -791,7 +791,7 @@ namespace
     AssignValues(pb_service, service);
 
     // add sample to vector
-    auto* services_vec = static_cast<std::vector<eCAL::Monitoring::SServerMon>*>(*arg);
+    auto* services_vec = static_cast<std::vector<eCAL::Monitoring::SServer>*>(*arg);
     services_vec->push_back(service);
 
     return true;
@@ -800,7 +800,7 @@ namespace
   /////////////////////////////////////////////////////////////////////////////////
   // Decode: eCAL::Monitoring::SClientMon
   /////////////////////////////////////////////////////////////////////////////////
-  void PrepareDecoding(eCAL_pb_Client& pb_client_, eCAL::Monitoring::SClientMon& client_)
+  void PrepareDecoding(eCAL_pb_Client& pb_client_, eCAL::Monitoring::SClient& client_)
   {
     // initialize
     pb_client_ = eCAL_pb_Client_init_default;
@@ -822,7 +822,7 @@ namespace
     decode_mon_service_methods(pb_client_.methods, client_.methods);
   }
 
-  void AssignValues(const eCAL_pb_Client& pb_client_, eCAL::Monitoring::SClientMon& client_)
+  void AssignValues(const eCAL_pb_Client& pb_client_, eCAL::Monitoring::SClient& client_)
   {
     ///////////////////////////////////////////////
     // assign values
@@ -841,7 +841,7 @@ namespace
     if (*arg == nullptr) return false;
 
     eCAL_pb_Client pb_client = eCAL_pb_Client_init_default;
-    eCAL::Monitoring::SClientMon client{};
+    eCAL::Monitoring::SClient client{};
 
     // prepare sample for decoding
     PrepareDecoding(pb_client, client);
@@ -856,7 +856,7 @@ namespace
     AssignValues(pb_client, client);
 
     // add sample to vector
-    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClientMon>*>(*arg);
+    auto* client_vec = static_cast<std::vector<eCAL::Monitoring::SClient>*>(*arg);
     client_vec->push_back(client);
 
     return true;
@@ -889,7 +889,7 @@ namespace
     // prepare services for decoding
     ///////////////////////////////////////////////
     pb_mon_message.services.funcs.decode = &decode_services_field; // NOLINT(*-pro-type-union-access)
-    pb_mon_message.services.arg = &mon_message_.server;
+    pb_mon_message.services.arg = &mon_message_.servers;
 
     ///////////////////////////////////////////////
     // prepare clients for decoding

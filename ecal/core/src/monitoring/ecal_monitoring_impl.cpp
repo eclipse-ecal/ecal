@@ -162,7 +162,7 @@ namespace eCAL
     /////////////////////////////////
     // register in topic map
     /////////////////////////////////
-    STopicMonMap* pTopicMap = GetMap(pubsub_type_);
+    STopicMap* pTopicMap = GetMap(pubsub_type_);
     if (pTopicMap != nullptr)
     {
       // acquire access
@@ -192,7 +192,7 @@ namespace eCAL
 
       // try to get topic info
       const auto& topic_map_key  = topic_id;
-      Monitoring::STopicMon& TopicInfo = (*pTopicMap->map)[topic_map_key];
+      Monitoring::STopic& TopicInfo = (*pTopicMap->map)[topic_map_key];
 
       // set static content
       TopicInfo.host_name            = host_name;
@@ -251,7 +251,7 @@ namespace eCAL
     const auto& topic_map_key = sample_.identifier.entity_id;
 
     // unregister from topic map
-    STopicMonMap* pTopicMap = GetMap(pubsub_type_);
+    STopicMap* pTopicMap = GetMap(pubsub_type_);
     if (pTopicMap != nullptr)
     {
       // acquire access
@@ -291,7 +291,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_process_map.sync);
 
     // try to get process info
-    Monitoring::SProcessMon& ProcessInfo = (*m_process_map.map)[process_map_key];
+    Monitoring::SProcess& ProcessInfo = (*m_process_map.map)[process_map_key];
 
     // set static content
     ProcessInfo.host_name            = host_name;
@@ -351,7 +351,7 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
     // try to get service info
-    Monitoring::SServerMon& ServerInfo = (*m_server_map.map)[service_map_key];
+    Monitoring::SServer& ServerInfo = (*m_server_map.map)[service_map_key];
 
     // set static content
     ServerInfo.host_name    = host_name;
@@ -368,7 +368,7 @@ namespace eCAL
     ServerInfo.methods.clear();
     for (const auto& sample_service_method : sample_.service.methods)
     {
-      struct Monitoring::SMethodMon method;
+      struct Monitoring::SMethod method;
       method.method_name   = sample_service_method.method_name;
 
       method.request_datatype_information  = sample_service_method.request_datatype_information;
@@ -411,10 +411,10 @@ namespace eCAL
     const auto& client_map_key = service_id;
 
     // acquire access
-    const std::lock_guard<std::mutex> lock(m_clients_map.sync);
+    const std::lock_guard<std::mutex> lock(m_client_map.sync);
 
     // try to get service info
-    Monitoring::SClientMon& ClientInfo = (*m_clients_map.map)[client_map_key];
+    Monitoring::SClient& ClientInfo = (*m_client_map.map)[client_map_key];
 
     // set static content
     ClientInfo.host_name    = host_name;
@@ -429,7 +429,7 @@ namespace eCAL
     ClientInfo.methods.clear();
     for (const auto& sample_client_method : sample_.client.methods)
     {
-      struct Monitoring::SMethodMon method;
+      struct Monitoring::SMethod method;
       method.method_name = sample_client_method.method_name;
       method.request_datatype_information = sample_client_method.request_datatype_information;
       method.response_datatype_information = sample_client_method.response_datatype_information;
@@ -446,17 +446,17 @@ namespace eCAL
     const auto& client_map_key = sample_.identifier.entity_id;
 
     // acquire access
-    const std::lock_guard<std::mutex> lock(m_clients_map.sync);
+    const std::lock_guard<std::mutex> lock(m_client_map.sync);
 
     // remove service info
-    m_clients_map.map->erase(client_map_key);
+    m_client_map.map->erase(client_map_key);
 
     return(true);
   }
 
-  CMonitoringImpl::STopicMonMap* CMonitoringImpl::GetMap(enum ePubSub pubsub_type_)
+  CMonitoringImpl::STopicMap* CMonitoringImpl::GetMap(enum ePubSub pubsub_type_)
   {
-    STopicMonMap* pHostMap = nullptr;
+    STopicMap* pHostMap = nullptr;
     switch (pubsub_type_)
     {
     case publisher:
@@ -523,53 +523,53 @@ namespace eCAL
     }
 
     // publisher
-    monitoring_.publisher.clear();
+    monitoring_.publishers.clear();
     if ((entities_ & Monitoring::Entity::Publisher) != 0u)
     {
       // lock map
       const std::lock_guard<std::mutex> lock(m_publisher_map.sync);
 
       // reserve target
-      monitoring_.publisher.reserve(m_publisher_map.map->size());
+      monitoring_.publishers.reserve(m_publisher_map.map->size());
 
       // iterate map
       for (const auto& publisher : (*m_publisher_map.map))
       {
-        monitoring_.publisher.emplace_back(publisher.second);
+        monitoring_.publishers.emplace_back(publisher.second);
       }
     }
 
     // subscriber
-    monitoring_.subscriber.clear();
+    monitoring_.subscribers.clear();
     if ((entities_ & Monitoring::Entity::Subscriber) != 0u)
     {
       // lock map
       const std::lock_guard<std::mutex> lock(m_subscriber_map.sync);
 
       // reserve target
-      monitoring_.subscriber.reserve(m_subscriber_map.map->size());
+      monitoring_.subscribers.reserve(m_subscriber_map.map->size());
 
       // iterate map
       for (const auto& subscriber : (*m_subscriber_map.map))
       {
-        monitoring_.subscriber.emplace_back(subscriber.second);
+        monitoring_.subscribers.emplace_back(subscriber.second);
       }
     }
 
     // server
-    monitoring_.server.clear();
+    monitoring_.servers.clear();
     if ((entities_ & Monitoring::Entity::Server) != 0u)
     {
       // lock map
       const std::lock_guard<std::mutex> lock(m_server_map.sync);
 
       // reserve target
-      monitoring_.server.reserve(m_server_map.map->size());
+      monitoring_.servers.reserve(m_server_map.map->size());
 
       // iterate map
       for (const auto& server : (*m_server_map.map))
       {
-        monitoring_.server.emplace_back(server.second);
+        monitoring_.servers.emplace_back(server.second);
       }
     }
 
@@ -578,13 +578,13 @@ namespace eCAL
     if ((entities_ & Monitoring::Entity::Client) != 0u)
     {
       // lock map
-      const std::lock_guard<std::mutex> lock(m_clients_map.sync);
+      const std::lock_guard<std::mutex> lock(m_client_map.sync);
 
       // reserve target
-      monitoring_.clients.reserve(m_clients_map.map->size());
+      monitoring_.clients.reserve(m_client_map.map->size());
 
       // iterate map
-      for (const auto& client : (*m_clients_map.map))
+      for (const auto& client : (*m_client_map.map))
       {
         monitoring_.clients.emplace_back(client.second);
       }
@@ -613,24 +613,24 @@ namespace eCAL
     for (const auto& server : (*m_server_map.map))
     {
       // add service
-      monitoring_.server.push_back(server.second);
+      monitoring_.servers.push_back(server.second);
     }
   }
 
   void CMonitoringImpl::MonitorClients(Monitoring::SMonitoring& monitoring_)
   {
     // acquire access
-    const std::lock_guard<std::mutex> lock(m_clients_map.sync);
+    const std::lock_guard<std::mutex> lock(m_client_map.sync);
 
     // iterate map
-    for (const auto& client : (*m_clients_map.map))
+    for (const auto& client : (*m_client_map.map))
     {
       // add client
       monitoring_.clients.push_back(client.second);
     }
   }
 
-  void CMonitoringImpl::MonitorTopics(STopicMonMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_)
+  void CMonitoringImpl::MonitorTopics(STopicMap& map_, Monitoring::SMonitoring& monitoring_, const std::string& direction_)
   {
     // acquire access
     const std::lock_guard<std::mutex> lock(map_.sync);
@@ -640,11 +640,11 @@ namespace eCAL
     {
       if (direction_ == "publisher")
       {
-        monitoring_.publisher.push_back(topic.second);
+        monitoring_.publishers.push_back(topic.second);
       }
       if (direction_ == "subscriber")
       {
-        monitoring_.subscriber.push_back(topic.second);
+        monitoring_.subscribers.push_back(topic.second);
       }
     }
   }

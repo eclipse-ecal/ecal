@@ -67,7 +67,7 @@ struct eCAL_Monitoring_STransportLayer
   int active;                                   // transport layer used?
 };
 
-struct eCAL_Monitoring_STopicMon
+struct eCAL_Monitoring_STopic
 {
   int32_t registration_clock;                   // registration clock (heart beat)
   const char* host_name;                        // host name
@@ -90,7 +90,7 @@ struct eCAL_Monitoring_STopicMon
   int32_t data_frequency;                       // data frequency (send / receive samples per second) [mHz]
 };
 
-struct eCAL_Monitoring_SProcessMon
+struct eCAL_Monitoring_SProcess
 {
   int32_t registration_clock;                   // registration clock
   const char* host_name;                        // host name
@@ -110,7 +110,7 @@ struct eCAL_Monitoring_SProcessMon
   const char* config_file_path;                 // Filepath of the configuration filepath that was loaded
 };
 
-struct eCAL_Monitoring_SMethodMon
+struct eCAL_Monitoring_SMethod
 {
   const char* method_name;                      // method name
   struct eCAL_SDataTypeInformation request_datatype_information; // request datatype information (encoding & type & description)
@@ -118,7 +118,7 @@ struct eCAL_Monitoring_SMethodMon
   long long call_count;                         // call counter
 };
 
-struct eCAL_Monitoring_SServerMon
+struct eCAL_Monitoring_SServer
 {
   int32_t registration_clock;                   // registration clock
   const char* host_name;                        // host name
@@ -130,11 +130,11 @@ struct eCAL_Monitoring_SServerMon
   uint32_t version;                             // service protocol version
   uint32_t tcp_port_v0;                         // the tcp port protocol version 0 used for that service
   uint32_t tcp_port_v1;                         // the tcp port protocol version 1 used for that service
-  struct eCAL_Monitoring_SMethodMon* methods;    // list of methods
+  struct eCAL_Monitoring_SMethod* methods;      // list of methods
   size_t methods_length;                        // array of methods
 };
 
-struct eCAL_Monitoring_SClientMon
+struct eCAL_Monitoring_SClient
 {
   int32_t registration_clock;                   // registration clock
   const char* host_name;                        // host name
@@ -143,22 +143,22 @@ struct eCAL_Monitoring_SClientMon
   int32_t process_id;                           // process id
   const char* service_name;                     // service name
   int64_t service_id;                           // service id
-  struct eCAL_Monitoring_SMethodMon* methods;    // list of methods
+  struct eCAL_Monitoring_SMethod* methods;      // list of methods
   size_t methods_length;                        // array of methods
   uint32_t version;                             // client protocol version
 };
 
 struct eCAL_Monitoring_SMonitoring
 {
-  struct eCAL_Monitoring_SProcessMon* processes; // process info
+  struct eCAL_Monitoring_SProcess* processes; // process info
   size_t processes_length;                      // array of process info
-  struct eCAL_Monitoring_STopicMon* publisher;   // publisher info array
-  size_t publisher_length;                      // array of publisher info
-  struct eCAL_Monitoring_STopicMon* subscriber;  // subscriber info array
-  size_t subscriber_length;                     // array of subscriber info
-  struct eCAL_Monitoring_SServerMon* server;     // server info array
-  size_t server_length;                         // array of server info
-  struct eCAL_Monitoring_SClientMon* clients;    // clients info array
+  struct eCAL_Monitoring_STopic* publishers;   // publisher info array
+  size_t publishers_length;                      // array of publisher info
+  struct eCAL_Monitoring_STopic* subscribers;  // subscriber info array
+  size_t subscribers_length;                     // array of subscriber info
+  struct eCAL_Monitoring_SServer* servers;     // server info array
+  size_t servers_length;                         // array of server info
+  struct eCAL_Monitoring_SClient* clients;    // clients info array
   size_t clients_length;                        // array of clients info
 };
 
