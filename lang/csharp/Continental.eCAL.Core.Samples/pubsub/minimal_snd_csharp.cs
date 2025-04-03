@@ -43,8 +43,8 @@ public class MinimalSend
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a publisher (topic name "Hello", type "std::string", encoding "base", description "").
-    Publisher publisher = new Publisher("Hello", new DataTypeInformation("std::string", "base", new byte[0]));
+    // Create a publisher (topic name "Hello", type "string", encoding "utf-8", description "").
+    Publisher publisher = new Publisher("Hello", new DataTypeInformation("string", "utf-8", new byte[0]));
 
     // Idle main thread.
     int loop = 0;
