@@ -83,27 +83,5 @@
 //     * @brief Send shutdown event to all local user processes.
 //    **/
 //    ECAL_API void ShutdownProcesses();
-//
-//    /**
-//     * @brief Splits the topic type (eCAL < 5.12) into encoding and types (>= eCAL 5.12)
-//     *
-//     * @param combined_topic_type_  "Old" typename.
-//     *
-//     * @return  std::pair(encoding, typename).
-//    **/
-//    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
-//    ECAL_API std::pair<std::string, std::string> SplitCombinedTopicType(const std::string& combined_topic_type_);
-//
-//    /**
-//     * @brief Combine separate encoding and type iinformation (>= eCAL 5.12) into a combined typename (eCAL < 5.12) 
-//     *
-//     * @param topic_encoding_ Topic Encoding
-//     * @param topic_type_     Topic Type
-//     *
-//     * @return "Old" typename. ( encoding:typename ).
-//    **/
-//    ECAL_DEPRECATE_SINCE_6_0("Please refactor your code to use SDatatypeInformation. This function will be removed with eCAL 7")
-//    ECAL_API std::string CombinedTopicEncodingAndType(const std::string& topic_encoding_, const std::string& topic_type_);
-//  }
 //}
 //

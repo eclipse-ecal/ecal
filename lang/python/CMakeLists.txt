@@ -30,6 +30,11 @@ option(ECAL_PYTHON_USE_HDF5      "Enables eCAL application cmd line interfaces" 
 
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
+# Try to make modules loadable by debug python version
+if(WIN32)
+  set(CMAKE_DEBUG_POSTFIX            _d)
+endif()
+
 # This function takes a list of python files to be copied to the package directory
 # and associates the files with a given python extension target
 # Using this function allows to create the whole python package editable in place

@@ -94,7 +94,9 @@ NB_MODULE(nanobind_core, core) {
   AddPubsubSubscriber(core);
   AddPubsubTypes(core);
 
-
   AddTypesCustomDataTypes(core);
   AddTypesLogging(core);
+
+  AddTypesMonitoring(core);
+  AddMonitoring(core);
 }
