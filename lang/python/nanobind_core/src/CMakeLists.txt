@@ -69,6 +69,7 @@ set(nanobind_sources
   core/types/py_logging.h
   core/types/py_monitoring.cpp
   core/types/py_monitoring.h
+  helper/bytestring_property.h
   nanobind_core.cpp
 )
 
@@ -93,6 +94,8 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES
 target_include_directories(nanobind_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(nanobind_core PRIVATE eCAL::core)
+# This is a hack to make sure the autolinking from Python (which is annoying) is able to locate the python library
+# target_link_directories(nanobind_core PRIVATE ${Python_LIBRARY_DIRS})
 
 # Install directive for scikit-build-core
 install(TARGETS nanobind_core LIBRARY DESTINATION nanobind_core)
