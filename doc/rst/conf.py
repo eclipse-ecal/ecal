@@ -233,7 +233,7 @@ html_theme_options = {
 
     # Enable a banner telling the user that they look at an outdated version of the documentation
     "show_version_warning_banner": True,
-    "pygment_light_style" : "vs",
+    "pygment_light_style" : "default",
 }
 
 html_sidebars = {
