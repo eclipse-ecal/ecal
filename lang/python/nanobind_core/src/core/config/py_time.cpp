@@ -19,6 +19,7 @@
 
 #include <core/config/py_time.h>
 #include <ecal/config/time.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 using namespace eCAL::Time;
