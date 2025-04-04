@@ -1,10 +1,10 @@
 .. include:: /include.txt
 
-.. _getting_started_hello_world_multilanguage:
+.. _getting_started_howto_pubsub_string_hello_world:
 
-===========
-Hello World
-===========
+===================
+String: Hello World
+===================
 
 After you have learned a lot about the pre-compiled applications that come with eCAL, let’s create our own!
 In the good habit of every tutorial, we will write a Hello World Application, that sends the string “Hello World” to an eCAL topic.
@@ -36,49 +36,50 @@ As this is simple string message, we will use the eCAL string publisher to send.
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/hello_world/hello_send/src/hello_send.cpp
+        .. literalinclude:: /source_code_samples/cpp/string/hello/hello_send/src/hello_send.cpp
             :language: cpp
             :linenos:
             :lines: 20-
 
     .. group-tab:: C
         
-        .. literalinclude:: /source_code_samples/c/hello_world/hello_send/src/hello_send.c
-            :language: cpp
+        .. literalinclude:: /source_code_samples/c/string/hello/hello_send/src/hello_send.c
+            :language: c
             :linenos:
             :lines: 20-
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/hello_world/hello_send.cs
-            :language: cpp
+        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_send.cs
+            :language: csharp
             :linenos:
             :lines: 31-
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/hello_world/hello_send.py
-            :language: cpp
+        .. literalinclude:: /source_code_samples/python/string/hello/hello_send.py
+            :language: python
             :linenos:
             :lines: 19-
 
-Files
-"""""
+
+Hello World Publisher Files
+===========================
 
 .. parsed-literal::
 
-   |fa-folder-open|
+   |fa-folder-open| Publisher samples
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`hello_send.cpp </source_code_samples/cpp/hello_world/hello_send/src/hello_send.cpp>`
+   │  └─ |fa-file-alt| :download:`hello_send.cpp </source_code_samples/cpp/string/hello/hello_send/src/hello_send.cpp>`
    │
    ├─ |fa-folder-open| C
-   │  └─ |fa-file-alt| :download:`hello_send.c </source_code_samples/c/hello_world/hello_send/src/hello_send.c>`
+   │  └─ |fa-file-alt| :download:`hello_send.c </source_code_samples/c/string/hello/hello_send/src/hello_send.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_send.cs </source_code_samples/csharp/hello_world/hello_send.cs>`
+   │  └─ |fa-file-alt| :download:`hello_send.cs </source_code_samples/csharp/string/hello/hello_send.cs>`
    │
    └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python/hello_world/hello_send.py>`
+      └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python/string/hello/hello_send.py>`
    
 
 Hello World Subscriber
@@ -98,46 +99,47 @@ The only difference is that you need to assign a callback function to the subscr
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/hello_world/hello_receive/src/hello_receive.cpp
+        .. literalinclude:: /source_code_samples/cpp/string/hello/hello_receive/src/hello_receive.cpp
             :language: cpp
             :linenos:
             :lines: 20-
 
     .. group-tab:: C
         
-        .. literalinclude:: /source_code_samples/c/hello_world/hello_receive/src/hello_receive.c
-            :language: cpp
+        .. literalinclude:: /source_code_samples/c/string/hello/hello_receive/src/hello_receive.c
+            :language: c
             :linenos:
             :lines: 20-
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/hello_world/hello_receive.cs
-            :language: cpp
+        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_receive.cs
+            :language: csharp
             :linenos:
             :lines: 31-
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/hello_world/hello_receive.py
-            :language: cpp
+        .. literalinclude:: /source_code_samples/python/string/hello/hello_receive.py
+            :language: python
             :linenos:
             :lines: 19-
 
-Files
-"""""
+
+Hello World Subscriber Files
+============================
 
 .. parsed-literal::
 
-   |fa-folder-open|
+   |fa-folder-open| Subscriber samples
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`hello_receive.cpp </source_code_samples/cpp/hello_world/hello_receive/src/hello_receive.cpp>`
+   │  └─ |fa-file-alt| :download:`hello_receive.cpp </source_code_samples/cpp/string/hello/hello_receive/src/hello_receive.cpp>`
    │
    ├─ |fa-folder-open| C
-   │  └─ |fa-file-alt| :download:`hello_receive.c </source_code_samples/c/hello_world/hello_receive/src/hello_receive.c>`
+   │  └─ |fa-file-alt| :download:`hello_receive.c </source_code_samples/c/string/hello/hello_receive/src/hello_receive.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_receive.cs </source_code_samples/csharp/hello_world/hello_receive.cs>`
+   │  └─ |fa-file-alt| :download:`hello_receive.cs </source_code_samples/csharp/string/hello/hello_receive.cs>`
    │
    └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python/hello_world/hello_receive.py>`
+      └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python/string/hello/hello_receive.py>`

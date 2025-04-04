@@ -71,11 +71,21 @@ add_custom_target(documentation_copy_rst_files ALL
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples                                            ${DOC_SOURCE_DIRECTORY}/source_code_samples
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/hello_world
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                       ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/hello_world
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Continental.eCAL.String.Samples/pubsub ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/hello_world
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                    ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/hello_world
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples                                              ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  # blob samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/pubsub/binary                       ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/binary/blob
+  # COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/binary/blob
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Continental.eCAL.Core.Samples/pubsub     ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/binary/blob
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/binary/blob
+  # string samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub                  ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Continental.eCAL.String.Samples/pubsub   ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/string/hello
+  # protobuf samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Continental.eCAL.Protobuf.Samples/pubsub ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 

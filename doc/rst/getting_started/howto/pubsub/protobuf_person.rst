@@ -1,0 +1,109 @@
+.. include:: /include.txt
+
+.. _getting_started_howto_pubsub_protobuf_person:
+
+================
+Protobuf: Person
+================
+
+In the last section you learned how to send strings to an eCAL Topic.
+Using strings is great for simple data that has a textual representation.
+Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.
+
+Of course, you can define your own protocol and pass the raw memory to eCAL (you would use the raw `eCAL::CPublisher()` to do that).
+Our recommended way however is to use Google protobuf, because:
+
+* It solves the problem of how to serialize and de-serialize data for you
+* You get downward compatibility out of the box (if you follow the guidelines)
+* It is maintained by Google and the API is stable
+* The eCAL Monitor can display a nice reflection view of the data
+
+.. important::
+   It is important to remember, that all your applications must agree on the data format.
+   As protobuf messages are defined in :file:`.proto` files, all of your applications should be compiled with the same files.
+
+
+Person Publisher
+================
+
+.. tabs::
+
+    .. group-tab:: C++
+
+        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/person_send.cpp
+            :language: cpp
+            :linenos:
+            :lines: 20-
+
+    .. group-tab:: C#
+
+        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_send.cs
+            :language: csharp
+            :linenos:
+            :lines: 31-
+
+    .. group-tab:: Python
+
+        .. literalinclude:: /source_code_samples/python/protobuf/person/person_send.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+
+Person Publisher Files
+======================
+
+.. parsed-literal::
+
+   |fa-folder-open|
+   ├─ |fa-folder-open| C++
+   │  └─ |fa-file-alt| :download:`person_send.cpp </source_code_samples/cpp/protobuf/person/person_send/src/person_send.cpp>`
+   │
+   ├─ |fa-folder-open| C#
+   │  └─ |fa-file-alt| :download:`person_send.cs </source_code_samples/csharp/protobuf/person/person_send.cs>`
+   │
+   └─ |fa-folder-open| Python
+      └─ |fa-file-alt| :download:`person_send.py </source_code_samples/python/protobuf/person/person_send.py>`
+   
+
+Person Subscriber
+=================
+
+.. tabs::
+
+    .. group-tab:: C++
+
+        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_receive/src/person_receive.cpp
+            :language: cpp
+            :linenos:
+            :lines: 20-
+
+    .. group-tab:: C#
+
+        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_receive.cs
+            :language: csharp
+            :linenos:
+            :lines: 31-
+
+    .. group-tab:: Python
+
+        .. literalinclude:: /source_code_samples/python/protobuf/person/person_receive.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+
+Person Subscriber Files
+=======================
+
+.. parsed-literal::
+
+   |fa-folder-open|
+   ├─ |fa-folder-open| C++
+   │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/person_receive/src/person_receive.cpp>`
+   │
+   ├─ |fa-folder-open| C#
+   │  └─ |fa-file-alt| :download:`person_receive.cs </source_code_samples/csharp/protobuf/person/person_receive.cs>`
+   │
+   └─ |fa-folder-open| Python
+      └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/person_receive.py>`
