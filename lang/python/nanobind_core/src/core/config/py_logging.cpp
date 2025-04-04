@@ -34,15 +34,27 @@ void AddConfigLogging(nanobind::module_& module)
         using namespace eCAL::Logging;
 
         nb::list log_levels;
-        // implement mapping here
-        if (self.log_level & log_level_fatal)   log_levels.append(log_level_fatal);
-        if (self.log_level & log_level_error)   log_levels.append(log_level_error);
-        if (self.log_level & log_level_warning) log_levels.append(log_level_warning);
-        if (self.log_level & log_level_info)    log_levels.append(log_level_info);
-        if (self.log_level & log_level_debug1)  log_levels.append(log_level_debug1);
-        if (self.log_level & log_level_debug2)  log_levels.append(log_level_debug2);
-        if (self.log_level & log_level_debug3)  log_levels.append(log_level_debug3);
-        if (self.log_level & log_level_debug4)  log_levels.append(log_level_debug4);
+
+        if (self.log_level == log_level_none)
+        {
+          log_levels.append(log_level_none);
+        }
+        else if (self.log_level == log_level_all)
+        {
+          log_levels.append(log_level_all);
+        }
+        else
+        {
+          // implement mapping here
+          if (self.log_level & log_level_fatal)   log_levels.append(log_level_fatal);
+          if (self.log_level & log_level_error)   log_levels.append(log_level_error);
+          if (self.log_level & log_level_warning) log_levels.append(log_level_warning);
+          if (self.log_level & log_level_info)    log_levels.append(log_level_info);
+          if (self.log_level & log_level_debug1)  log_levels.append(log_level_debug1);
+          if (self.log_level & log_level_debug2)  log_levels.append(log_level_debug2);
+          if (self.log_level & log_level_debug3)  log_levels.append(log_level_debug3);
+          if (self.log_level & log_level_debug4)  log_levels.append(log_level_debug4);
+        }
 
         return log_levels;
       },
