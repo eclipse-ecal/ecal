@@ -32,36 +32,36 @@ using namespace eCAL::Monitoring;
 
 void AddTypesMonitoring(nanobind::module_& m)
 {
-
+  nb::module_ m_monitoring = m.def_submodule("monitoring", "eCAL Monitoring related functionality");
 
   // Entity mask constants
-  nb::module_ entity_mod = m.def_submodule("Entity");
-  entity_mod.attr("Publisher") = Entity::Publisher;
-  entity_mod.attr("Subscriber") = Entity::Subscriber;
-  entity_mod.attr("Server") = Entity::Server;
-  entity_mod.attr("Client") = Entity::Client;
-  entity_mod.attr("Process") = Entity::Process;
-  entity_mod.attr("Host") = Entity::Host;
-  entity_mod.attr("All") = Entity::All;
-  entity_mod.attr("None") = Entity::None;
+  nb::module_ entity_mod = m_monitoring.def_submodule("Entity");
+  entity_mod.attr("PUBLISHER") = Entity::Publisher;
+  entity_mod.attr("SUBSCRIBER") = Entity::Subscriber;
+  entity_mod.attr("SERVER") = Entity::Server;
+  entity_mod.attr("CLIENT") = Entity::Client;
+  entity_mod.attr("PROCESS") = Entity::Process;
+  entity_mod.attr("HOST") = Entity::Host;
+  entity_mod.attr("ALL") = Entity::All;
+  entity_mod.attr("NONE") = Entity::None;
 
   // Enums
-  nb::enum_<eTransportLayerType>(m, "TransportLayerType")
-    .value("none", eTransportLayerType::none)
-    .value("udp_mc", eTransportLayerType::udp_mc)
-    .value("shm", eTransportLayerType::shm)
-    .value("tcp", eTransportLayerType::tcp)
+  nb::enum_<eTransportLayerType>(m_monitoring, "TransportLayerType")
+    .value("NONE", eTransportLayerType::none)
+    .value("UDP_MC", eTransportLayerType::udp_mc)
+    .value("SHM", eTransportLayerType::shm)
+    .value("TCP", eTransportLayerType::tcp)
     .export_values();
 
   // Transport Layer
-  nb::class_<STransportLayer>(m, "TransportLayer")
+  nb::class_<STransportLayer>(m_monitoring, "TransportLayer")
     .def(nb::init<>())
     .def_rw("type", &STransportLayer::type)
     .def_rw("version", &STransportLayer::version)
     .def_rw("active", &STransportLayer::active);
 
   // STopic
-  nb::class_<STopic>(m, "Topic")
+  nb::class_<STopic>(m_monitoring, "Topic")
     .def(nb::init<>())
     .def_rw("registration_clock", &STopic::registration_clock)
     .def_rw("host_name", &STopic::host_name)
@@ -83,7 +83,7 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("data_frequency", &STopic::data_frequency);
 
   // SProcess
-  nb::class_<SProcess>(m, "Process")
+  nb::class_<SProcess>(m_monitoring, "Process")
     .def(nb::init<>())
     .def_rw("registration_clock", &SProcess::registration_clock)
     .def_rw("host_name", &SProcess::host_name)
@@ -103,7 +103,7 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("config_file_path", &SProcess::config_file_path);
 
   // SMethod
-  nb::class_<SMethod>(m, "Method")
+  nb::class_<SMethod>(m_monitoring, "Method")
     .def(nb::init<>())
     .def_rw("method_name", &SMethod::method_name)
     .def_rw("request_datatype_information", &SMethod::request_datatype_information)
@@ -111,7 +111,7 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("call_count", &SMethod::call_count);
 
   // SServer
-  nb::class_<SServer>(m, "Server")
+  nb::class_<SServer>(m_monitoring, "Server")
     .def(nb::init<>())
     .def_rw("registration_clock", &SServer::registration_clock)
     .def_rw("host_name", &SServer::host_name)
@@ -126,7 +126,7 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("methods", &SServer::methods);
 
   // SClient
-  nb::class_<SClient>(m, "Client")
+  nb::class_<SClient>(m_monitoring, "Client")
     .def(nb::init<>())
     .def_rw("registration_clock", &SClient::registration_clock)
     .def_rw("host_name", &SClient::host_name)
@@ -139,7 +139,7 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("version", &SClient::version);
 
   // Root struct (anonymous originally)
-  nb::class_<SMonitoring>(m, "Monitoring")
+  nb::class_<SMonitoring>(m_monitoring, "Monitoring")
     .def(nb::init<>())
     .def_rw("processes", &SMonitoring::processes)
     .def_rw("publishers", &SMonitoring::publishers)
