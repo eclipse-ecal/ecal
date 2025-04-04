@@ -32,6 +32,8 @@ using namespace eCAL::Monitoring;
 
 void AddTypesMonitoring(nanobind::module_& m)
 {
+
+
   // Entity mask constants
   nb::module_ entity_mod = m.def_submodule("Entity");
   entity_mod.attr("Publisher") = Entity::Publisher;
@@ -58,90 +60,90 @@ void AddTypesMonitoring(nanobind::module_& m)
     .def_rw("version", &STransportLayer::version)
     .def_rw("active", &STransportLayer::active);
 
-  // STopicMon
-  nb::class_<STopicMon>(m, "TopicMon")
+  // STopic
+  nb::class_<STopic>(m, "Topic")
     .def(nb::init<>())
-    .def_rw("registration_clock", &STopicMon::registration_clock)
-    .def_rw("host_name", &STopicMon::host_name)
-    .def_rw("shm_transport_domain", &STopicMon::shm_transport_domain)
-    .def_rw("process_id", &STopicMon::process_id)
-    .def_rw("process_name", &STopicMon::process_name)
-    .def_rw("unit_name", &STopicMon::unit_name)
-    .def_rw("topic_id", &STopicMon::topic_id)
-    .def_rw("topic_name", &STopicMon::topic_name)
-    .def_rw("direction", &STopicMon::direction)
-    .def_rw("datatype_information", &STopicMon::datatype_information)
-    .def_rw("transport_layer", &STopicMon::transport_layer)
-    .def_rw("topic_size", &STopicMon::topic_size)
-    .def_rw("connections_local", &STopicMon::connections_local)
-    .def_rw("connections_external", &STopicMon::connections_external)
-    .def_rw("message_drops", &STopicMon::message_drops)
-    .def_rw("data_id", &STopicMon::data_id)
-    .def_rw("data_clock", &STopicMon::data_clock)
-    .def_rw("data_frequency", &STopicMon::data_frequency);
+    .def_rw("registration_clock", &STopic::registration_clock)
+    .def_rw("host_name", &STopic::host_name)
+    .def_rw("shm_transport_domain", &STopic::shm_transport_domain)
+    .def_rw("process_id", &STopic::process_id)
+    .def_rw("process_name", &STopic::process_name)
+    .def_rw("unit_name", &STopic::unit_name)
+    .def_rw("topic_id", &STopic::topic_id)
+    .def_rw("topic_name", &STopic::topic_name)
+    .def_rw("direction", &STopic::direction)
+    .def_rw("datatype_information", &STopic::datatype_information)
+    .def_rw("transport_layer", &STopic::transport_layer)
+    .def_rw("topic_size", &STopic::topic_size)
+    .def_rw("connections_local", &STopic::connections_local)
+    .def_rw("connections_external", &STopic::connections_external)
+    .def_rw("message_drops", &STopic::message_drops)
+    .def_rw("data_id", &STopic::data_id)
+    .def_rw("data_clock", &STopic::data_clock)
+    .def_rw("data_frequency", &STopic::data_frequency);
 
-  // SProcessMon
-  nb::class_<SProcessMon>(m, "ProcessMon")
+  // SProcess
+  nb::class_<SProcess>(m, "Process")
     .def(nb::init<>())
-    .def_rw("registration_clock", &SProcessMon::registration_clock)
-    .def_rw("host_name", &SProcessMon::host_name)
-    .def_rw("shm_transport_domain", &SProcessMon::shm_transport_domain)
-    .def_rw("process_id", &SProcessMon::process_id)
-    .def_rw("process_name", &SProcessMon::process_name)
-    .def_rw("unit_name", &SProcessMon::unit_name)
-    .def_rw("process_parameter", &SProcessMon::process_parameter)
-    .def_rw("state_severity", &SProcessMon::state_severity)
-    .def_rw("state_severity_level", &SProcessMon::state_severity_level)
-    .def_rw("state_info", &SProcessMon::state_info)
-    .def_rw("time_sync_state", &SProcessMon::time_sync_state)
-    .def_rw("time_sync_module_name", &SProcessMon::time_sync_module_name)
-    .def_rw("component_init_state", &SProcessMon::component_init_state)
-    .def_rw("component_init_info", &SProcessMon::component_init_info)
-    .def_rw("ecal_runtime_version", &SProcessMon::ecal_runtime_version)
-    .def_rw("config_file_path", &SProcessMon::config_file_path);
+    .def_rw("registration_clock", &SProcess::registration_clock)
+    .def_rw("host_name", &SProcess::host_name)
+    .def_rw("shm_transport_domain", &SProcess::shm_transport_domain)
+    .def_rw("process_id", &SProcess::process_id)
+    .def_rw("process_name", &SProcess::process_name)
+    .def_rw("unit_name", &SProcess::unit_name)
+    .def_rw("process_parameter", &SProcess::process_parameter)
+    .def_rw("state_severity", &SProcess::state_severity)
+    .def_rw("state_severity_level", &SProcess::state_severity_level)
+    .def_rw("state_info", &SProcess::state_info)
+    .def_rw("time_sync_state", &SProcess::time_sync_state)
+    .def_rw("time_sync_module_name", &SProcess::time_sync_module_name)
+    .def_rw("component_init_state", &SProcess::component_init_state)
+    .def_rw("component_init_info", &SProcess::component_init_info)
+    .def_rw("ecal_runtime_version", &SProcess::ecal_runtime_version)
+    .def_rw("config_file_path", &SProcess::config_file_path);
 
-  // SMethodMon
-  nb::class_<SMethodMon>(m, "MethodMon")
+  // SMethod
+  nb::class_<SMethod>(m, "Method")
     .def(nb::init<>())
-    .def_rw("method_name", &SMethodMon::method_name)
-    .def_rw("request_datatype_information", &SMethodMon::request_datatype_information)
-    .def_rw("response_datatype_information", &SMethodMon::response_datatype_information)
-    .def_rw("call_count", &SMethodMon::call_count);
+    .def_rw("method_name", &SMethod::method_name)
+    .def_rw("request_datatype_information", &SMethod::request_datatype_information)
+    .def_rw("response_datatype_information", &SMethod::response_datatype_information)
+    .def_rw("call_count", &SMethod::call_count);
 
-  // SServerMon
-  nb::class_<SServerMon>(m, "ServerMon")
+  // SServer
+  nb::class_<SServer>(m, "Server")
     .def(nb::init<>())
-    .def_rw("registration_clock", &SServerMon::registration_clock)
-    .def_rw("host_name", &SServerMon::host_name)
-    .def_rw("process_name", &SServerMon::process_name)
-    .def_rw("unit_name", &SServerMon::unit_name)
-    .def_rw("process_id", &SServerMon::process_id)
-    .def_rw("service_name", &SServerMon::service_name)
-    .def_rw("service_id", &SServerMon::service_id)
-    .def_rw("version", &SServerMon::version)
-    .def_rw("tcp_port_v0", &SServerMon::tcp_port_v0)
-    .def_rw("tcp_port_v1", &SServerMon::tcp_port_v1)
-    .def_rw("methods", &SServerMon::methods);
+    .def_rw("registration_clock", &SServer::registration_clock)
+    .def_rw("host_name", &SServer::host_name)
+    .def_rw("process_name", &SServer::process_name)
+    .def_rw("unit_name", &SServer::unit_name)
+    .def_rw("process_id", &SServer::process_id)
+    .def_rw("service_name", &SServer::service_name)
+    .def_rw("service_id", &SServer::service_id)
+    .def_rw("version", &SServer::version)
+    .def_rw("tcp_port_v0", &SServer::tcp_port_v0)
+    .def_rw("tcp_port_v1", &SServer::tcp_port_v1)
+    .def_rw("methods", &SServer::methods);
 
-  // SClientMon
-  nb::class_<SClientMon>(m, "ClientMon")
+  // SClient
+  nb::class_<SClient>(m, "Client")
     .def(nb::init<>())
-    .def_rw("registration_clock", &SClientMon::registration_clock)
-    .def_rw("host_name", &SClientMon::host_name)
-    .def_rw("process_name", &SClientMon::process_name)
-    .def_rw("unit_name", &SClientMon::unit_name)
-    .def_rw("process_id", &SClientMon::process_id)
-    .def_rw("service_name", &SClientMon::service_name)
-    .def_rw("service_id", &SClientMon::service_id)
-    .def_rw("methods", &SClientMon::methods)
-    .def_rw("version", &SClientMon::version);
+    .def_rw("registration_clock", &SClient::registration_clock)
+    .def_rw("host_name", &SClient::host_name)
+    .def_rw("process_name", &SClient::process_name)
+    .def_rw("unit_name", &SClient::unit_name)
+    .def_rw("process_id", &SClient::process_id)
+    .def_rw("service_name", &SClient::service_name)
+    .def_rw("service_id", &SClient::service_id)
+    .def_rw("methods", &SClient::methods)
+    .def_rw("version", &SClient::version);
 
   // Root struct (anonymous originally)
   nb::class_<SMonitoring>(m, "Monitoring")
     .def(nb::init<>())
     .def_rw("processes", &SMonitoring::processes)
-    .def_rw("publishers", &SMonitoring::publisher)
-    .def_rw("subscribers", &SMonitoring::subscriber)
-    .def_rw("servers", &SMonitoring::server)
+    .def_rw("publishers", &SMonitoring::publishers)
+    .def_rw("subscribers", &SMonitoring::subscribers)
+    .def_rw("servers", &SMonitoring::servers)
     .def_rw("clients", &SMonitoring::clients);
 }

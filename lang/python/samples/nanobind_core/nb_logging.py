@@ -23,7 +23,7 @@ def main():
   # However, in order to also receive logging information it's necessary to be turned on
   config = ecal_core.init.get_configuration()
   config.logging.receiver.enable = True
-  config.logging.provider.udp.log_levels = [ecal_core.LogLevel.INFO, ecal_core.LogLevel.WARNING, ecal_core.LogLevel.ERROR]
+  config.logging.provider.udp.log_levels = [ecal_core.LogLevel.INFO, ecal_core.LogLevel.WARNING, ecal_core.LogLevel.ERROR, ecal_core.LogLevel.FATAL]
   ecal_core.initialize(config, 'Logging Python Sample', ecal_core.init.ALL)
   
   ecal_core.log(ecal_core.LogLevel.INFO, "Hello Hello")
