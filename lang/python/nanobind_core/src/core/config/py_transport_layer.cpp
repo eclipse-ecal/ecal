@@ -28,10 +28,10 @@ void AddConfigTransportLayer(nanobind::module_& module)
 {
   // Bind TransportLayer::eType enum
   nb::enum_<eType>(module, "TransportType")
-    .value("none", eType::none)
-    .value("udp_mc", eType::udp_mc)
-    .value("shm", eType::shm)
-    .value("tcp", eType::tcp);
+    .value("NONE", eType::none)
+    .value("UDP_MC", eType::udp_mc)
+    .value("SHM", eType::shm)
+    .value("TCP", eType::tcp);
 
   // Bind TransportLayer::UDP::MulticastConfiguration struct
   nb::class_<UDP::MulticastConfiguration>(module, "MulticastConfiguration")

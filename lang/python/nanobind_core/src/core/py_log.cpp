@@ -36,9 +36,11 @@ using namespace eCAL::Logging;
 
 void AddLog(nanobind::module_& module)
 {
-  module.def("log", &Log, "Log a message", nb::arg("level"), nb::arg("message"));
+  nb::module_ m_logging = module.def_submodule("logging", "eCAL Logging related functionality");
+
+  m_logging.def("log", &Log, "Log a message", nb::arg("level"), nb::arg("message"));
   
-  module.def("get_logging", []() -> std::optional<std::list<SLogMessage>> {
+  m_logging.def("get_logging", []() -> std::optional<std::list<SLogMessage>> {
     SLogging log_output;
     if (GetLogging(log_output)) return log_output.log_messages;
     return std::nullopt;
