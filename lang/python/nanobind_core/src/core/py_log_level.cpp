@@ -25,20 +25,9 @@ using namespace eCAL::Logging;
 
 void AddLogLevel(nanobind::module_& module)
 {
-  // Log levels will be added as constants instead of enums, so we can create combinations in python
-  //nb::module_ log_leve_module = module.def_submodule("LogLevel");
-  //log_leve_module.attr("NONE")    = (int)log_level_none;
-  //log_leve_module.attr("ALL")     = (int)log_level_all;
-  //log_leve_module.attr("INFO")    = (int)log_level_info;
-  //log_leve_module.attr("WARNING") = (int)log_level_warning;
-  //log_leve_module.attr("ERROR")   = (int)log_level_error;
-  //log_leve_module.attr("FATAL")   = (int)log_level_fatal;
-  //log_leve_module.attr("DEBUG1")  = (int)log_level_debug1;
-  //log_leve_module.attr("DEBUG2")  = (int)log_level_debug2;
-  //log_leve_module.attr("DEBUG3")  = (int)log_level_debug3;
-  //log_leve_module.attr("DEBUG4")  = (int)log_level_debug4;
+  nb::module_ m_logging = module.def_submodule("logging", "eCAL Logging related functionality");
 
-  nb::enum_<eLogLevel>(module, "LogLevel")
+  nb::enum_<eLogLevel>(m_logging, "LogLevel")
     .value("NONE", log_level_none)
     .value("ALL", log_level_all)
     .value("INFO", log_level_info)

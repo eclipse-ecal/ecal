@@ -28,13 +28,11 @@ void AddConfigRegistration(nanobind::module_& module)
 {
   // Enums
   nb::enum_<eCAL::Registration::Local::eTransportType>(module, "LocalTransportType")
-    .value("shm", eCAL::Registration::Local::eTransportType::shm)
-    .value("udp", eCAL::Registration::Local::eTransportType::udp)
-    .export_values();
+    .value("SHM", eCAL::Registration::Local::eTransportType::shm)
+    .value("UDP", eCAL::Registration::Local::eTransportType::udp);
 
   nb::enum_<eCAL::Registration::Network::eTransportType>(module, "NetworkTransportType")
-    .value("udp", eCAL::Registration::Network::eTransportType::udp)
-    .export_values();
+    .value("UDP", eCAL::Registration::Network::eTransportType::udp);
 
   // Local::SHM::Configuration
   nb::class_<eCAL::Registration::Local::SHM::Configuration>(module, "LocalSHMConfig")

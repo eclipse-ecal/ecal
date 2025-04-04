@@ -31,20 +31,18 @@ void AddPubsubTypes(nanobind::module_& module)
   //-------------------------------------------------------------------------
   // Bind ePublisherEvent enum
   nb::enum_<eCAL::ePublisherEvent>(module, "PublisherEvent")
-    .value("none", eCAL::ePublisherEvent::none)
-    .value("connected", eCAL::ePublisherEvent::connected)
-    .value("disconnected", eCAL::ePublisherEvent::disconnected)
-    .value("dropped", eCAL::ePublisherEvent::dropped)
-    .export_values();
+    .value("NONE", eCAL::ePublisherEvent::none)
+    .value("CONNECTED", eCAL::ePublisherEvent::connected)
+    .value("DISCONNECTED", eCAL::ePublisherEvent::disconnected)
+    .value("DROPPED", eCAL::ePublisherEvent::dropped);
 
-  //-------------------------------------------------------------------------
-  // Bind eSubscriberEvent enum
-  nb::enum_<eCAL::eSubscriberEvent>(module, "SubscriberEvent")
-    .value("none", eCAL::eSubscriberEvent::none)
-    .value("connected", eCAL::eSubscriberEvent::connected)
-    .value("disconnected", eCAL::eSubscriberEvent::disconnected)
-    .value("dropped", eCAL::eSubscriberEvent::dropped)
-    .export_values();
+    //-------------------------------------------------------------------------
+    // Bind eSubscriberEvent enum
+    nb::enum_<eCAL::eSubscriberEvent>(module, "SubscriberEvent")
+    .value("NONE", eCAL::eSubscriberEvent::none)
+    .value("CONNECTED", eCAL::eSubscriberEvent::connected)
+    .value("DISCONNECTED", eCAL::eSubscriberEvent::disconnected)
+    .value("DROPPED", eCAL::eSubscriberEvent::dropped);
 
   //-------------------------------------------------------------------------
   // Bind STopicId struct

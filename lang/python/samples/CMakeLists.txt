@@ -31,6 +31,7 @@ set(python_samples_nanobind_core
   nanobind_core/service/nb_minimal_service_server.py
   nanobind_core/nb_logging.py
   nanobind_core/nb_monitoring.py
+  nanobind_core/nb_process.py
 )
 
 function(add_sample_to_solution python_filenname)

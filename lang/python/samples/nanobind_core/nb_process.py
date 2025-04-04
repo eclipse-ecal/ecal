@@ -15,26 +15,23 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
+import os
+import time
+
 import ecal.nanobind_core as ecal_core
 
 def main():
+  ecal_core.initialize('Process Python Sample', ecal_core.init.ALL)
 
-  # For pure logging, it's not necessary to modify the configuration.
-  # However, in order to also receive logging information it's necessary to be turned on
-  config = ecal_core.init.get_configuration()
-  config.logging.receiver.enable = True
-  config.logging.provider.udp.log_levels = [ecal_core.logging.LogLevel.INFO, ecal_core.logging.LogLevel.WARNING, ecal_core.logging.LogLevel.ERROR, ecal_core.logging.LogLevel.FATAL]
-  ecal_core.initialize(config, 'Logging Python Sample', ecal_core.init.ALL)
+  # We can query the eCAL Unit name which was set via `initialize`
+  unit_name = ecal_core.process.get_unit_name()
+  print("The name of this unit is '{}'".format(unit_name))
   
-  ecal_core.logging.log(ecal_core.logging.LogLevel.INFO, "Hello Hello")
-  ecal_core.logging.log(ecal_core.logging.LogLevel.WARNING, "Help") 
+  # We can set a process state that will be shown in eCAL Monitor and eCALSys.
+  ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I am doing fine")
   
-  all_logging = ecal_core.logging.get_logging()
-  
-  for log in all_logging:
-    print(log)
-    print("\n")
-  
+  time.sleep(10)
+
   ecal_core.finalize()
   
 if __name__ == "__main__":

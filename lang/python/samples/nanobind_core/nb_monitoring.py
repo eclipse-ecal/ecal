@@ -18,9 +18,6 @@
 import os
 import time
 
-pythonpath = os.getenv('PYTHONPATH')
-print("PYTHONPATH:", pythonpath)
-
 import ecal.nanobind_core as ecal_core
 
 def main():
