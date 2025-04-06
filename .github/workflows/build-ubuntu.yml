@@ -74,6 +74,7 @@ jobs:
       with:
         submodules:  'false'
         fetch-depth: 0
+        filter: 'tree:0' # Download all commits but blobs and trees on demand
 
     - name: Update / download Submodules (selected ones)
       run: |
@@ -82,7 +83,11 @@ jobs:
         git submodule deinit thirdparty/curl/curl
         git submodule deinit thirdparty/hdf5/hdf5
         git submodule deinit thirdparty/protobuf/protobuf
-        git submodule update
+        git submodule deinit \
+          thirdparty/gtest/googletest \
+          thirdparty/spdlog/spdlog \
+          thirdparty/yaml-cpp/yaml-cpp
+        git submodule update --single-branch --depth 1
 
     - name: Create venv for building docs
       shell: bash
