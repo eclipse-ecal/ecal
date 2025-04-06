@@ -22,47 +22,47 @@
 #include <chrono>
 #include <string>
 #include <ecal/types/custom_data_types.h>
+#include <ecal/config/configuration.h>
 
 namespace eCAL
 {
   namespace Registration
   {
-    struct SUDPModeAttributes
+    enum class eTransportMode
     {
-      std::string group;
-      int         ttl;
+      shm,
+      udp
     };
 
     struct SUDPAttributes
     {
-      Types::UDPMode mode;
+      bool           broadcast;
       int            port;
       int            sendbuffer;
       int            receivebuffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      std::string    group;
+      int            ttl;
     };
 
     struct SSHMAttributes
-    {    
-      std::string domain;
-      size_t      queue_size;
+    {
+      std::string    domain;
+      size_t         queue_size;
     };
 
     struct SAttributes
     {
       std::chrono::milliseconds timeout;
+      eTransportMode            transport_mode;
       bool                      network_enabled;
       bool                      loopback;
-      bool                      shm_enabled;
-      bool                      udp_enabled;
       unsigned int              refresh;
       std::string               host_name;
       std::string               shm_transport_domain;
       int                       process_id;
 
-      SUDPAttributes     udp;
-      SSHMAttributes     shm;
+      SUDPAttributes            udp;
+      SSHMAttributes            shm;
     };
   }
 }

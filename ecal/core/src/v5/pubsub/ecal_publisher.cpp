@@ -93,8 +93,11 @@ namespace eCAL
       if (m_publisher_impl != nullptr) return(false);
       if (topic_name_.empty())     return(false);
 
+      auto config = eCAL::GetConfiguration();
+      config.publisher = config_;
+
       // create publisher
-      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, eCAL::GetTransportLayerConfiguration(), eCAL::GetRegistrationConfiguration()));
+      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
 
       // register publisher
       g_pubgate()->Register(topic_name_, m_publisher_impl);

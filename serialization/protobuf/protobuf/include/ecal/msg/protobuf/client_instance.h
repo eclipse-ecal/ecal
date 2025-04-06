@@ -160,7 +160,7 @@ namespace eCAL
        *
        * @return The client entity id.
        */
-      SEntityId GetClientID() const
+      const SEntityId& GetClientID() const
       {
         return m_instance.GetClientID();
       }

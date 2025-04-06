@@ -23,7 +23,8 @@ add_library(${PROJECT_NAME} SHARED)
 
 target_sources(${PROJECT_NAME}
   PRIVATE
-    test.cs
+    PubSubReceiveTest.cs
+    PubSubEventHandlingTest.cs
 )
 
 target_link_libraries(${PROJECT_NAME} Continental.eCAL.Core)

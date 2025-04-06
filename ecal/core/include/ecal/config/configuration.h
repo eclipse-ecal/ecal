@@ -43,6 +43,12 @@
 
 namespace eCAL
 {
+  enum class eCommunicationMode
+  {
+    local,
+    network
+  };
+
   struct Configuration
   {
     TransportLayer::Configuration transport_layer;
@@ -53,12 +59,16 @@ namespace eCAL
     Application::Configuration    application;
     Logging::Configuration        logging;
 
+    eCommunicationMode            communication_mode { eCommunicationMode::local }; /*!< eCAL components communication mode:
+                                                                                           local: local host only communication (default)
+                                                                                           cloud: communication across network boundaries */
+
     ECAL_API Configuration();
 
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
-    ECAL_API std::string GetConfigurationFilePath() const;
+    ECAL_API const std::string& GetConfigurationFilePath() const;
 
     protected:
       std::string ecal_yaml_file_path;

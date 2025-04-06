@@ -70,7 +70,7 @@ namespace eCAL
     void Start(enum eTimeSyncMode sync_mode_);
     void Stop();
 
-    std::string GetName();
+    const std::string& GetName() const;
 
     long long GetMicroSeconds();
     long long GetNanoSeconds();

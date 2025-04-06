@@ -19,6 +19,7 @@
 
 #include "udp_attribute_builder.h"
 #include "ecal/types/custom_data_types.h"
+#include "ecal/config/configuration.h"
 
 namespace eCAL
 {
@@ -28,24 +29,12 @@ namespace eCAL
     {
       UDP::SAttributes attributes;
 
-      attributes.broadcast = !attr_.network_enabled;
-      attributes.loopback  = true;
-      
+      attributes.loopback       = true;
       attributes.receive_buffer = attr_.udp.receivebuffer;
       attributes.port           = attr_.udp.port;
+      attributes.broadcast      = attr_.udp.broadcast;
+      attributes.address        = attr_.udp.group;
 
-      switch (attr_.udp.mode)
-      {
-        case Types::UDPMode::NETWORK:
-          attributes.address = attr_.udp.network.group;
-          break;
-        case Types::UDPMode::LOCAL:
-          attributes.address = attr_.udp.local.group;
-          break;
-        default:
-          break;
-      }
-      
       return attributes;
     }    
   }
@@ -56,29 +45,16 @@ namespace eCAL
     {
       UDP::SAttributes attributes;
 
-      attributes.broadcast      = !attr_.network_enabled;
-      attributes.loopback       = attr_.loopback;
+      attributes.loopback    = attr_.loopback;
+      attributes.topic_id    = topic_id_;
+      attributes.topic_name  = attr_.topic_name;
+      attributes.host_name   = attr_.host_name;
+      attributes.broadcast   = attr_.udp.broadcast;
+      attributes.send_buffer = attr_.udp.send_buffer;
+      attributes.port        = attr_.udp.port;
+      attributes.address     = attr_.udp.group;
+      attributes.ttl         = attr_.udp.ttl;
 
-      attributes.topic_id       = topic_id_;
-      attributes.topic_name     = attr_.topic_name;
-      attributes.host_name      = attr_.host_name;
-      
-      attributes.send_buffer    = attr_.udp.send_buffer;
-      attributes.port           = attr_.udp.port;
-      
-      switch (attr_.udp.mode)
-      {
-        case Types::UDPMode::NETWORK:
-          attributes.address = attr_.udp.network.group;
-          attributes.ttl     = attr_.udp.network.ttl;
-          break;
-        case Types::UDPMode::LOCAL:
-          attributes.address = attr_.udp.local.group;
-          attributes.ttl     = attr_.udp.local.ttl;
-          break;
-        default:
-          break;
-      }
 
       return attributes;
     }

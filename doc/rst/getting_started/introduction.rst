@@ -6,7 +6,7 @@ Introduction
 ===========================
 
 The **enhanced communication abstraction layer** (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
-eCAL is designed for typical cloud computing scenarios where different processes exchange there I/O's using a publish/subscribe pattern.
+eCAL is designed for typical network computing scenarios where different processes exchange there I/O's using a publish/subscribe pattern.
 
 If you have ever worked with other publish subscribe middlewares like `MQTT <https://en.wikipedia.org/wiki/MQTT>`_ or `ROS <https://www.ros.org/>`_, you should be familiar with the terminology.
 But just in case you are new to this topic, let us clarify the basic terminology:

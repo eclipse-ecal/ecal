@@ -37,7 +37,7 @@ namespace eCAL
      *
      * @return  Get time sync interface name.
     **/
-    ECAL_API std::string GetName();
+    ECAL_API const std::string& GetName();
 
     /**
      * @brief  Get the current eCAL Time in microseconds.

@@ -25,7 +25,10 @@
 #include <ecal/ecal.h>
 #include <ecal_c/process.h>
 
+#include <map>
+
 #include "common.h"
+#include <cassert>
 
 extern "C"
 {
@@ -34,34 +37,33 @@ extern "C"
     eCAL::Process::DumpConfig();
   }
 
-  ECALC_API int eCAL_Process_GetHostName(void* name_, int name_len_)
+  ECALC_API void eCAL_Process_DumpConfigString(char** configuration_string_)
   {
-    const std::string name = eCAL::Process::GetHostName();
-    if (!name.empty())
+    assert(configuration_string_ != NULL);
+    assert(*configuration_string_ == NULL);
+    std::string buffer;
+    eCAL::Process::DumpConfig(buffer);
+    const auto size = buffer.size() + 1;
+    *configuration_string_ = reinterpret_cast<char*>(std::malloc(size));
+    if (*configuration_string_ != NULL)
     {
-      return(CopyBuffer(name_, name_len_, name));
+      std::strncpy(*configuration_string_, buffer.c_str(), size);
     }
-    return(0);
   }
 
-  ECALC_API int eCAL_Process_GetUnitName(void* name_, int name_len_)
+  ECALC_API const char* eCAL_Process_GetHostName()
   {
-    const std::string name = eCAL::Process::GetUnitName();
-    if (!name.empty())
-    {
-      return(CopyBuffer(name_, name_len_, name));
-    }
-    return(0);
+    return eCAL::Process::GetHostName().c_str();
   }
 
-  ECALC_API int eCAL_Process_GetTaskParameter(void* par_, int par_len_, const char* sep_)
+  ECALC_API const char* eCAL_Process_GetShmTransportDomain()
   {
-    const std::string par = eCAL::Process::GetTaskParameter(sep_);
-    if (!par.empty())
-    {
-      return(CopyBuffer(par_, par_len_, par));
-    }
-    return(0);
+    return eCAL::Process::GetShmTransportDomain().c_str();
+  }
+
+  ECALC_API const char* eCAL_Process_GetUnitName()
+  {
+    return eCAL::Process::GetUnitName().c_str();
   }
 
   ECALC_API void eCAL_Process_SleepMS(long time_ms_)
@@ -69,49 +71,53 @@ extern "C"
     eCAL::Process::SleepMS(time_ms_);
   }
 
+  ECALC_API void eCAL_Process_SleepNS(long long time_ns_)
+  {
+    eCAL::Process::SleepNS(time_ns_);
+  }
+
   ECALC_API int eCAL_Process_GetProcessID()
   {
-    return(eCAL::Process::GetProcessID());
+    return eCAL::Process::GetProcessID();
   }
 
-  ECALC_API int eCAL_Process_GetProcessName(void* name_, int name_len_)
+  ECALC_API const char* eCAL_Process_GetProcessIDAsString()
   {
-    const std::string name = eCAL::Process::GetProcessName();
-    if (!name.empty())
+    return eCAL::Process::GetProcessIDAsString().c_str();
+  }
+
+  ECALC_API const char* eCAL_Process_GetProcessName()
+  {
+    return eCAL::Process::GetProcessName().c_str();
+  }
+
+  ECALC_API const char* eCAL_Process_GetProcessParameter()
+  {
+    return eCAL::Process::GetProcessParameter().c_str();
+  }
+
+  ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverityLevel level_, const char* info_)
+  {
+    assert(info_ != NULL);
+
+    static const std::map<enum eCAL_Process_eSeverity, eCAL::Process::eSeverity> severity_map
     {
-      return(CopyBuffer(name_, name_len_, name));
-    }
-    return(0);
-  }
+      {eCAL_Process_eSeverity_unknown, eCAL::Process::eSeverity::unknown},
+      {eCAL_Process_eSeverity_healthy, eCAL::Process::eSeverity::healthy},
+      {eCAL_Process_eSeverity_warning, eCAL::Process::eSeverity::warning},
+      {eCAL_Process_eSeverity_critical, eCAL::Process::eSeverity::critical},
+      {eCAL_Process_eSeverity_failed, eCAL::Process::eSeverity::failed},
+    };
 
-  ECALC_API int eCAL_Process_GetProcessParameter(void* par_, int par_len_)
-  {
-    const std::string par = eCAL::Process::GetProcessParameter();
-    if (!par.empty())
+    static const std::map<enum eCAL_Process_eSeverityLevel, eCAL::Process::eSeverityLevel> severity_level_map
     {
-      return(CopyBuffer(par_, par_len_, par));
-    }
-    return(0);
-  }
+      {eCAL_Process_eSeverityLevel_level1, eCAL::Process::eSeverityLevel::level1},
+      {eCAL_Process_eSeverityLevel_level2, eCAL::Process::eSeverityLevel::level2},
+      {eCAL_Process_eSeverityLevel_level3, eCAL::Process::eSeverityLevel::level3},
+      {eCAL_Process_eSeverityLevel_level4, eCAL::Process::eSeverityLevel::level4},
+      {eCAL_Process_eSeverityLevel_level5, eCAL::Process::eSeverityLevel::level5},
+    };
 
-  ECALC_API void eCAL_Process_SetState(enum eCAL_Process_eSeverity severity_, enum eCAL_Process_eSeverity_Level level_, const char* info_)
-  {
-    // This is potentially dangerous, need to keep enums in sync.
-    eCAL::Process::SetState(static_cast<eCAL::Process::eSeverity>(severity_), static_cast<eCAL::Process::eSeverityLevel>(level_), info_);
-  }
-
-  ECALC_API int eCAL_Process_StartProcess(const char* proc_name_, const char* proc_args_, const char* working_dir_, int create_console_, enum eCAL_Process_eStartMode process_mode_, int block_)
-  {
-    return(eCAL::Process::StartProcess(proc_name_, proc_args_, working_dir_, create_console_ != 0, static_cast<eCAL::Process::eStartMode>(process_mode_), block_ != 0));
-  }
-
-  ECALC_API int eCAL_Process_StopProcessName(const char* proc_name_)
-  {
-    return static_cast<int>(eCAL::Process::StopProcess(proc_name_));
-  }
-
-  ECALC_API int eCAL_Process_StopProcessID(int proc_id_)
-  {
-    return static_cast<int>(eCAL::Process::StopProcess(proc_id_));
+    eCAL::Process::SetState(severity_map.at(severity_), severity_level_map.at(level_), info_);
   }
 }

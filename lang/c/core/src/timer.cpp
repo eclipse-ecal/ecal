@@ -25,48 +25,40 @@
 #include <ecal/ecal.h>
 #include <ecal_c/timer.h>
 
-#include <mutex>
-
-namespace
-{
-  std::recursive_mutex g_timer_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_timer_callback(const TimerCallbackCT callback_, void* par_)
-  {
-    const std::lock_guard<std::recursive_mutex> lock(g_timer_callback_mtx);
-    callback_(par_);
-  }
-}
+#include <cassert>
 
 extern "C"
 {
-  ECALC_API ECAL_HANDLE eCAL_Timer_Create()
+  struct eCAL_Timer
   {
-    auto* timer = new eCAL::CTimer; // NOLINT(*-owning-memory)
-    return(timer);
+    eCAL::CTimer* handle;
+  };
+
+  ECALC_API eCAL_Timer* eCAL_Timer_New()
+  {
+    return new eCAL_Timer{ new eCAL::CTimer() };
   }
 
-  ECALC_API int eCAL_Timer_Destroy(ECAL_HANDLE handle_)
+  ECALC_API void eCAL_Timer_Delete(eCAL_Timer* timer_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* timer = static_cast<eCAL::CTimer*>(handle_);
-    delete timer; // NOLINT(*-owning-memory)
-    return(1);
+    assert(timer_ != NULL);
+    delete timer_->handle;
+    delete timer_;
   }
 
-  ECALC_API int eCAL_Timer_Start(ECAL_HANDLE handle_, int timeout_, TimerCallbackCT callback_, int delay_, void* par_)
+  ECALC_API int eCAL_Timer_Start(eCAL_Timer* timer_, int timeout_, eCAL_TimerCallbackT callback_, void* user_argument_, const int* delay_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* timer = static_cast<eCAL::CTimer*>(handle_);
-    auto callback = std::bind(g_timer_callback, callback_, par_);
-    if (timer->Start(timeout_, callback, delay_)) return(1);
-    else                                         return(0);
+    assert(timer_ != NULL);
+    auto callback = [callback_, user_argument_]()
+    {
+      callback_(user_argument_);
+    };
+    return !static_cast<int>(timer_->handle->Start(timeout_, callback, (delay_ != NULL) ? *delay_ : 0));
   }
 
-  ECALC_API int eCAL_Timer_Stop(ECAL_HANDLE handle_)
+  ECALC_API int eCAL_Timer_Stop(eCAL_Timer* timer_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* timer = static_cast<eCAL::CTimer*>(handle_);
-    if (timer->Stop()) return(1);
-    else              return(0);
+    assert(timer_ != NULL);
+    return !static_cast<int>(timer_->handle->Stop());
   }
 }

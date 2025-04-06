@@ -74,15 +74,17 @@ namespace eCAL
     return m_service_server_impl->RemoveMethodCallback(method_);
   }
 
-  std::string CServiceServer::GetServiceName()
+  const std::string& CServiceServer::GetServiceName()
   {
-    if (m_service_server_impl == nullptr) return "";
+    static const std::string empty_service_name {};
+    if (m_service_server_impl == nullptr) return empty_service_name;
     return m_service_server_impl->GetServiceName();
   }
 
-  SServiceId CServiceServer::GetServiceId() const
+  const SServiceId& CServiceServer::GetServiceId() const
   {
-    if (m_service_server_impl == nullptr) return SServiceId();
+    static const SServiceId empty_service_id {};
+    if (m_service_server_impl == nullptr) return empty_service_id;
     return m_service_server_impl->GetServiceId();
   }
 

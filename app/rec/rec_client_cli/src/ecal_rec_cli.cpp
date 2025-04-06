@@ -68,7 +68,6 @@ std::condition_variable               ecal_rec_exit_cv_;
 std::chrono::steady_clock::time_point ctrl_exit_until(std::chrono::steady_clock::duration::max());
 bool                                  ctrl_exit_event(false);
 
-
 #ifdef WIN32
 int main()
 #else
@@ -140,6 +139,13 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error parsing command line: " << e.what() << std::endl;
   }
+  
+  struct EcalContext
+  {
+    EcalContext() { eCAL::Initialize("eCALRecClient", eCAL::Init::All); }
+    ~EcalContext() { eCAL::Finalize(); }
+  };
+  EcalContext global_ecal_context;
 
   // TODO: Check the validity of all arguments
   ecal_rec = std::make_shared<eCAL::rec::EcalRec>();
@@ -157,6 +163,7 @@ int main(int argc, char** argv)
       std::cout << addon_status.addon_id_ << " (" << addon_status.name_ << ") " << addon_status.addon_executable_path_ << std::endl;
     }
     ecal_rec = nullptr;
+
     return 0;
   }
 

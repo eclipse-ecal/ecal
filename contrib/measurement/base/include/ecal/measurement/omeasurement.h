@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <memory>
 #include <set>
 #include <string>
@@ -31,19 +32,21 @@ namespace eCAL
 {
   namespace measurement
   {
-    class OBinaryChannel
+    class OChannel
     {
-    public:
-      OBinaryChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const std::string& name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
-        : channel(name_, 0)
+      friend class OMeasurement;
+      // The constructor is private
+      // Only measurements can create Channel objects, not the user.
+      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, const experimental::measurement::base::Channel& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
+        : channel(channel_)
         , meas(meas_)
-        , id(0)
         , clock(0)
       {
         meas->SetChannelDataTypeInformation(channel, datatype_info);
       }
 
-      OBinaryChannel& operator<<(const BinaryFrame& entry_)
+    public:
+      OChannel& operator<<(const BinaryFrame& entry_)
       {
         eCAL::experimental::measurement::base::WriteEntry entry;
         entry.channel = channel;
@@ -51,7 +54,7 @@ namespace eCAL
         entry.size = entry_.message.size();
         entry.snd_timestamp = entry_.send_timestamp;
         entry.rcv_timestamp = entry_.receive_timestamp;
-        entry.sender_id = id;
+        // We no longer set an entry_id, deprecated with hdf5 v5.
         entry.clock = clock;
 
         meas->AddEntryToFile(entry);
@@ -59,68 +62,31 @@ namespace eCAL
         return *this;
       }
 
-      OBinaryChannel& operator<<(const SenderID& id_)
-      {
-        id = id_.ID;
-        return *this;
-      }
+      ~OChannel() = default;
 
-      bool operator==(const OBinaryChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
-      bool operator!=(const OBinaryChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
+      OChannel(const OChannel&) = delete;
+      OChannel& operator=(const OChannel&) = delete;
+
+      OChannel(OChannel&& rhs) = default;
+      OChannel& operator=(OChannel&& rhs) = default;
+
+      bool operator==(const OChannel& rhs) const { return channel == rhs.channel && meas == rhs.meas; /*return it == rhs.it; */ };
+      bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); /*return it == rhs.it; */ };
 
 
     private:
       const experimental::measurement::base::Channel channel;
       std::shared_ptr<experimental::measurement::base::Writer> meas;
 
-      long long id;
       long long clock;
     };
-
-
-    template <typename T>
-    class OChannel
-    {
-    public:
-      OChannel(std::shared_ptr<experimental::measurement::base::Writer> meas_, std::string name_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info)
-        : binary_channel(meas_, name_, datatype_info)
-      {
-      }
-
-      bool operator==(const OChannel& rhs) const { return  binary_channel == rhs.binary_channel ;}
-      bool operator!=(const OChannel& rhs) const { return !(operator==(rhs)); }
-
-      OChannel<T>& operator<<(const Frame<T>& entry_)
-      {
-        eCAL::message::Serialize(entry_.message, buffer);
-        BinaryFrame binary_frame{ buffer, entry_.send_timestamp, entry_.receive_timestamp };
-        binary_channel << binary_frame;
-        return *this;
-      }
-      
-
-      // Streaming operator to change the sender ID
-      OChannel<T>& operator<<(const SenderID& id_)
-      {
-        binary_channel << id_;
-        return *this;
-      }
-
-
-    protected:
-      OBinaryChannel binary_channel;
-      mutable std::string buffer;
-    };
-
-    using OStringChannel = OChannel<std::string>;
 
     class OMeasurement
     {
     public:
       OMeasurement(const std::string& base_path_, const std::string& measurement_name_= "measurement");
 
-      template<typename T>
-      OChannel<T> Create(const std::string& channel) const;
+      OChannel Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const;
 
     private:
       std::shared_ptr<experimental::measurement::base::Writer> meas;
@@ -134,21 +100,11 @@ namespace eCAL
       meas->SetFileBaseName(measurement_name_);
     }
 
-    // This will return a nullptr if channel name and 
-    // This will throw an exception if 
-    // a) channel does not exist in the OMeasurement
-    // b) the registered type does not match with the descriptor in the chanenel
-    template<typename T>
-    inline OChannel<T> OMeasurement::Create(const std::string& channel) const
+    inline OChannel OMeasurement::Create(const std::string& channel_, const eCAL::experimental::measurement::base::DataTypeInformation& datatype_info_) const
     {
-      static T msg;
-      const eCAL::experimental::measurement::base::DataTypeInformation datatype_info{
-        eCAL::message::GetTypeName(msg),
-        eCAL::message::GetEncoding(msg),
-        eCAL::message::GetDescription(msg)
-      };
-      // Construct a channel based 
-      return OChannel<T>{meas, channel, datatype_info};
+      // Construct a channel based
+      static eCAL::experimental::measurement::base::Channel::id_t i = 0;
+      return OChannel{ meas, {channel_, ++i}, datatype_info_ };
     }
 
     

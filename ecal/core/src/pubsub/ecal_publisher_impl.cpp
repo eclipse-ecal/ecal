@@ -110,8 +110,14 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::Constructor");
 #endif
 
+    // build publisher id
+    m_publisher_id = std::chrono::steady_clock::now().time_since_epoch().count();
+
     // build topic id
-    m_topic_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_topic_id.topic_name = m_attributes.topic_name;
+    m_topic_id.topic_id.entity_id = m_publisher_id;
+    m_topic_id.topic_id.host_name = m_attributes.host_name;
+    m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // mark as created
     m_created = true;
@@ -624,7 +630,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id = m_topic_id;
+    ecal_reg_sample_identifier.entity_id = m_publisher_id;
     ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
@@ -711,7 +717,7 @@ namespace eCAL
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
     ecal_reg_sample_identifier.process_id = m_attributes.process_id;
-    ecal_reg_sample_identifier.entity_id = m_topic_id;
+    ecal_reg_sample_identifier.entity_id = m_publisher_id;
     ecal_reg_sample_identifier.host_name = m_attributes.host_name;
 
     auto& ecal_reg_sample_topic = ecal_unreg_sample.topic;
@@ -797,7 +803,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartUdpLayer::ACTIVATED");
 
     // create writer
-    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_topic_id, m_attributes));
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -849,7 +855,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartTcpLayer::ACTIVATED");
 
     // create writer
-    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_topic_id, m_attributes));
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -900,7 +906,7 @@ namespace eCAL
 
     // calculate unique send hash
     const std::hash<SSndHash> hf;
-    const size_t snd_hash = hf(SSndHash(m_topic_id, m_clock));
+    const size_t snd_hash = hf(SSndHash(m_publisher_id, m_clock));
 
     // store size for monitoring
     m_topic_size = len_;

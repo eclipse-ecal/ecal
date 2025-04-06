@@ -34,15 +34,16 @@ namespace eCAL
 {
   namespace Time
   {
-    std::string GetName()
+    const std::string& GetName()
     {
+      static const std::string empty_string{ "" };
 #if ECAL_CORE_TIMEGATE
       if ((g_timegate() != nullptr) && g_timegate()->IsValid())
       {
         return(g_timegate()->GetName());
       }
 #endif
-      return "";
+      return empty_string;
     }
 
     long long GetMicroSeconds()

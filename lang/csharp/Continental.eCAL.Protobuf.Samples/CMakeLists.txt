@@ -16,30 +16,5 @@
 #
 # ========================= eCAL LICENSE =================================
 
-include(CSharpUtilities)
-project(person_rec_cs LANGUAGES CSharp)
-
-find_package(eCAL REQUIRED)
-
-macro(ecal_add_csharp_protobuf_sample sample_name)
-  ecal_add_sample(${sample_name} ${sample_name}.cs)
-  target_link_libraries(${sample_name} PRIVATE
-    Continental.eCAL.Protobuf
-    Continental.eCAL.Protobuf.Samples.Datatypes
-  )
-  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/protobuf)
-  
-  set_target_properties(${sample_name} PROPERTIES
-    VS_GLOBAL_ROOTNAMESPACE ${sample_name}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
-  )
-
-  set_property(TARGET ${sample_name}  PROPERTY
-    VS_PACKAGE_REFERENCES "Google.Protobuf_${ECAL_CSHARP_PROTOBUF_VERSION}"
-  )
-endmacro()
-
-ecal_add_csharp_protobuf_sample(pubsub_person_rec)
-ecal_add_csharp_protobuf_sample(pubsub_person_rec_cb)
-ecal_add_csharp_protobuf_sample(pubsub_person_snd)
-
+add_subdirectory(pubsub)
+#add_subdirectory(service)

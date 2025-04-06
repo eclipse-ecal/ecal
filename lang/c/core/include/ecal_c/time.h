@@ -32,12 +32,7 @@ extern "C"
 {
 #endif /*__cplusplus*/
 
-  /**
-   * @brief  Get interface name.
-   *
-   * @return  Get time sync interface name.
-  **/
-  ECALC_API int eCAL_Time_GetName(void* name_, int name_len_);
+  ECALC_API const char* eCAL_Time_GetName();
 
   /**
    * @brief  Get current time
@@ -58,21 +53,21 @@ extern "C"
    *
    * @param time_  Current time in ns.
    *
-   * @return  Zero if succeeded non zero otherwise.
+   * @return  Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API int eCAL_Time_SetNanoSeconds(long long time_);
 
   /**
    * @brief  Returns time synchronization state.
    *
-   * @return  Non zero if process is time synchronized.
+   * @return  Non-zero if process is time synchronized, zero otherwise.
   **/
   ECALC_API int eCAL_Time_IsTimeSynchronized();
 
   /**
    * @brief  Checks whether this host is time master.
    *
-   * @return  Non zero if host is time master.
+   * @return  Non-zero if host is time master, zero otherwise.
   **/
   ECALC_API int eCAL_Time_IsTimeMaster();
   
@@ -94,17 +89,12 @@ extern "C"
    * An error code of 0 is considered to be OK. Any other error code is
    * considered to indicate a problem. Time Adapters may use a set of error
    * codes to indicate specific problems.
-   * The status message may be a nullpointer. If the user is not interested in
-   * the status message, max_len_ has to be < 0.
-   * If max_len_ is ECAL_ALLOCATE_4ME, memory will be allocated. The calling
-   * function has to free it.
+   * The Status message may be a nullpointer.
    *
-   * @param error_ [out] The error code
-   * @param status_message_ [out] A pointer to a char array for the status message. The message will NOT be null-terminated.
-   * @param max_len_ [in] The length of the allocated memory for the status_message_, ECAL_ALOCATE_4ME if the function has to allocate memory or -1 if not interested in the message.
-   * @return
+   * @param[out] error_           Returned error code
+   * @param[out] status_message_  Returned null-terminated string of status message which may be NULL. Must point to NULL and needs to be released by eCAL_Free().
   **/
-  ECALC_API int eCAL_Time_GetStatus(int* error_, char** status_message_, const int max_len_);
+  ECALC_API void eCAL_Time_GetStatus(int* error_, char** status_message_);
   
 #ifdef __cplusplus
 }

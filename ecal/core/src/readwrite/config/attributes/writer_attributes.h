@@ -23,28 +23,21 @@
 #include <cstddef>
 #include <vector>
 
+#include <ecal/config/configuration.h>
 #include <ecal/config/transport_layer.h>
-
-#include "ecal/types/custom_data_types.h"
 
 namespace eCAL
 {
   namespace eCALWriter
   {
-    struct SUDPModeAttributes
-    {
-      std::string group;
-      int         ttl;
-    };
-
     struct SUDPAttributes
     {
-      bool           enable;
-      Types::UDPMode mode;
-      int            port;
-      int            send_buffer;
-      SUDPModeAttributes   network;
-      SUDPModeAttributes   local;
+      bool        enable;
+      bool        broadcast;
+      int         port;
+      int         send_buffer;
+      std::string group;
+      int         ttl;
     };
 
     struct STCPAttributes
@@ -81,9 +74,9 @@ namespace eCAL
       std::string          unit_name;
       std::string          topic_name;
 
-      SUDPAttributes     udp;
-      STCPAttributes     tcp;
-      SSHMAttributes     shm;
+      SUDPAttributes       udp;
+      STCPAttributes       tcp;
+      SSHMAttributes       shm;
     };
   }
 }

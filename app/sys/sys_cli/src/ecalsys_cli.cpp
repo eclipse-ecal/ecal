@@ -77,7 +77,6 @@
   #include <Windows.h>
 #endif // WIN32
 
-
 bool exit_command_received;
 
 #ifdef WIN32
@@ -235,16 +234,22 @@ int main(int argc, char** argv)
   /************************************************************************/
   /*  Remote control mode                                                 */
   /************************************************************************/
+
+  struct EcalContext
+  {
+    EcalContext(const std::string& unit_name) { eCAL::Initialize(unit_name, eCAL::Init::All); }
+    ~EcalContext() { eCAL::Finalize(); }
+  };
+  EcalContext global_ecal_context(remote_control_arg.isSet() ? "eCALSys-Remote" : "eCALSys");
+
   if (remote_control_arg.isSet()) // Remote-control-mode
   {
-    eCAL::Initialize("eCALSys-Remote", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     remote_ecalsys_service = std::make_shared<eCAL::protobuf::CServiceClientUntyped<eCAL::pb::sys::Service>>();
   }
   else                            // Non-remote control mode
   {
-    eCAL::Initialize("eCALSys", eCAL::Init::All);
     eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "Running");
 
     ecalsys_instance = std::make_shared<EcalSys>();
@@ -490,6 +495,5 @@ int main(int argc, char** argv)
     }
   }
 
-  eCAL::Finalize();
   return EXIT_SUCCESS;
 }

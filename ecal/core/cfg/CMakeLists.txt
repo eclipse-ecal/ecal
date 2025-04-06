@@ -25,6 +25,8 @@ set(TIME_YAML "ecaltime.yaml")
 set(ECAL_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${ECAL_YAML})
 set(TIME_YAML_PATH ${CMAKE_CURRENT_BINARY_DIR}/${TIME_YAML})
 
+set(ECAL_GENERATED_YAML_PATH ${ECAL_YAML_PATH} CACHE INTERNAL "Path to the generated eCAL YAML file")
+
 add_executable(${PROJECT_NAME} 
   ${ECAL_CORE_PROJECT_ROOT}/core/cfg/generate_configuration_yaml.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_writer.cpp
@@ -61,27 +63,27 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${ECAL_CORE_PROJECT_ROOT}/core/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-  eCAL::core
-  eCAL::ecal-utils
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
+    eCAL::core
+    eCAL::ecal-utils
 )
 
 # Select the correct ecal config directory on Linux and Windows
-if(UNIX)
-  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
-elseif(WIN32)
-  set(ECAL_SHARED_CONFIG ${eCAL_install_config_dir})
+if(UNIX OR WIN32)
+  set(ECAL_DEFAULT_CONFIG_LOCATION ${eCAL_install_config_dir})
 else()
   message(STATUS "Unsupported OS, not installing configs")
 endif()
 
 # Install the generated YAML file if not cross-compiling
-if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
+if(ECAL_DEFAULT_CONFIG_LOCATION AND NOT CMAKE_CROSSCOMPILING)
   install(
     FILES
       ${ECAL_YAML_PATH}             # Files to install
     DESTINATION
-      ${ECAL_SHARED_CONFIG}         # Destination directory
+      ${ECAL_DEFAULT_CONFIG_LOCATION}         # Destination directory
     COMPONENT configuration         # Installation component
   )
 
@@ -90,7 +92,7 @@ if(ECAL_SHARED_CONFIG AND NOT CMAKE_CROSSCOMPILING)
       FILES
         ${TIME_YAML_PATH}             # Files to install
       DESTINATION
-        ${ECAL_SHARED_CONFIG}         # Destination directory
+        ${ECAL_DEFAULT_CONFIG_LOCATION}         # Destination directory
       COMPONENT configuration         # Installation component
     )
   endif()

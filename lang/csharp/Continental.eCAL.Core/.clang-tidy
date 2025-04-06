@@ -1,0 +1,3 @@
+# This .clang-tidy file disables all clang-tidy checks.
+# All files in this folder will be ignored by clang-tidy.
+Checks: '-*'

@@ -40,8 +40,11 @@ namespace eCAL
 {
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const Publisher::Configuration& config_)
   {
+    auto config = eCAL::GetConfiguration();
+    config.publisher = config_;
+
     // create publisher implementation
-    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config_, GetTransportLayerConfiguration(), GetRegistrationConfiguration()));
+    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
 
     // register publisher
     if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
@@ -86,7 +89,6 @@ namespace eCAL
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
     if (m_publisher_impl == nullptr) return false;
-
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
@@ -115,21 +117,24 @@ namespace eCAL
     return(m_publisher_impl->GetSubscriberCount());
   }
 
-  std::string CPublisher::GetTopicName() const
+  const std::string& CPublisher::GetTopicName() const
   {
-    if (m_publisher_impl == nullptr) return "";
+    static const std::string empty_topic_name{};
+    if (m_publisher_impl == nullptr) return empty_topic_name;
     return(m_publisher_impl->GetTopicName());
   }
 
-  STopicId CPublisher::GetTopicId() const
+  const STopicId& CPublisher::GetTopicId() const
   {
-    if (m_publisher_impl == nullptr) return STopicId();
+    static const STopicId empty_topic_id{};
+    if (m_publisher_impl == nullptr) return empty_topic_id;
     return(m_publisher_impl->GetTopicId());
   }
 
-  SDataTypeInformation CPublisher::GetDataTypeInformation() const
+  const SDataTypeInformation& CPublisher::GetDataTypeInformation() const
   {
-    if (m_publisher_impl == nullptr) return SDataTypeInformation();
+    static const SDataTypeInformation empty_data_type_information{};
+    if (m_publisher_impl == nullptr) return empty_data_type_information;
     return(m_publisher_impl->GetDataTypeInformation());
   }
 }

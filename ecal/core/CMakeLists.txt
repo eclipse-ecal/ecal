@@ -33,7 +33,7 @@ if (ECAL_CORE_COMMAND_LINE)
 endif()
 
 if (ECAL_CORE_TRANSPORT_TCP)
-  find_package(tcp_pubsub     REQUIRED)
+  find_package(tcp_pubsub 2   REQUIRED)
 endif()
 
 # If we're currently doing a build within a git repository, we will configure the header files.
@@ -753,7 +753,7 @@ add_ecal_core_library(${PROJECT_NAME})
 ## 
 install(DIRECTORY
    "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h")
+    FILES_MATCHING PATTERN "*.h" PATTERN "v5" EXCLUDE)
 
 # install generated defs.h file    
 install(DIRECTORY

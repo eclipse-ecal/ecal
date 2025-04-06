@@ -26,19 +26,19 @@ namespace eCAL
   namespace Monitoring
   {
     // generate process
-    SProcessMon GenerateProcess();
+    SProcess GenerateProcess();
 
     // generate topic
-    STopicMon GenerateTopic(const std::string& direction);
+    STopic GenerateTopic(const std::string& direction);
 
     // generate servicemethod
-    SMethodMon GenerateServiceMethod();
+    SMethod GenerateServiceMethod();
 
     // generate service
-    SServerMon GenerateService();
+    SServer GenerateService();
 
     // generate client
-    SClientMon GenerateClient();
+    SClient GenerateClient();
 
     // generate monitoring
     SMonitoring GenerateMonitoring();

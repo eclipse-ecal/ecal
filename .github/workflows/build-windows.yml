@@ -142,13 +142,6 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
-
-    - name: Create config path and copy ecal.yaml
-      run: |
-           mkdir "%ALLUSERSPROFILE%\eCAL"
-           copy ".\ecal\core\cfg\ecal.yaml" "%ALLUSERSPROFILE%\eCAL"
-      working-directory: ${{ runner.workspace }}/_build/complete
-      shell: cmd
     
     - name: Run Tests
       run: ctest -C Release -V

@@ -33,7 +33,7 @@ Let's start a sample that creates and calls a service!
    Right after you started the client, it may print a few errors about the service not being found.
    Available eCAL services are propagated every 500ms, so it will always take a short amount of time until a service is known to exist.
 
-.. _getting_started_services_cloud:
+.. _getting_started_services_network:
 
 Hostname resolution
 ===================
