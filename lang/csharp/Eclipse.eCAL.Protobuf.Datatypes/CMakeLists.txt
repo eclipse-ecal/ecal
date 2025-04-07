@@ -28,7 +28,7 @@ project(Eclipse.eCAL.Protobuf.Datatypes LANGUAGES CSharp)
 
 add_library(${PROJECT_NAME} SHARED)
 
-set(PROTOBUF_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/ecal/core_pb/src")
+set(PROTOBUF_ORIGIN_DIR "${ECAL_PROJECT_ROOT}/ecal/core_pb/src")
 
 PROTOBUF_TARGET_CSHARP(${PROJECT_NAME} ${PROTOBUF_ORIGIN_DIR}
   ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/datatype.proto
