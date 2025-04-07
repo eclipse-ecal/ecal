@@ -35,8 +35,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'true'
+        submodules:  'false'
         fetch-depth: 0
+        filter: 'tree:0' # Download all commits but blobs and trees on demand
+
+    - name: Update / download Submodules (selected ones)
+      run: |
+        cd %GITHUB_WORKSPACE%
+        git submodule init
+        git submodule update --single-branch --depth 1
+      shell: cmd
 
     - name: Create Python virtualenv
       run: |

@@ -74,7 +74,7 @@ int main()
       {
         eCAL::Monitoring::SMonitoring monitoring;
         eCAL::Monitoring::GetMonitoring(monitoring);
-        num_topics = monitoring.publisher.size() + monitoring.subscriber.size();
+        num_topics = monitoring.publishers.size() + monitoring.subscribers.size();
       }
       auto diff_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time);
       std::cout << "Monitoring time to structs : " << static_cast<double>(diff_time.count()) / runs << " ms" << " (" << num_topics << " topics)" << std::endl;

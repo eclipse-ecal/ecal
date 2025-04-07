@@ -23,128 +23,107 @@
 **/
 
 #include <ecal/ecal.h>
-#include <ecal/v5/ecal_server.h>
 #include <ecal_c/service/server.h>
 
 #include "common.h"
-
-#include <mutex>
+#include <cassert>
 
 #if ECAL_CORE_SERVICE
 namespace
 {
-  eCAL_Server_Event enum_class_to_enum(eCAL::eServerEvent cpp_event_)
+  void Assign_SServerEventCallbackData(struct eCAL_SServerEventCallbackData* server_event_callback_data_c_, const eCAL::SServerEventCallbackData& server_event_callback_data_)
   {
-    switch (cpp_event_)
+    static const std::map<eCAL::eServerEvent, eCAL_eServerEvent> server_event_map
     {
-    case eCAL::eServerEvent::none:         return server_event_none;
-    case eCAL::eServerEvent::connected:    return server_event_connected;
-    case eCAL::eServerEvent::disconnected: return server_event_disconnected;
-    default:                                            return server_event_none;
-    }
-  }
+      {eCAL::eServerEvent::none, eCAL_eServerEvent_none},
+      {eCAL::eServerEvent::connected, eCAL_eServerEvent_connected},
+      {eCAL::eServerEvent::disconnected, eCAL_eServerEvent_disconnected}
+    };
 
-  eCAL::eServerEvent enum_to_enum_class(eCAL_Server_Event c_event)
-  {
-    switch (c_event)
-    {
-    case server_event_none:         return eCAL::eServerEvent::none;
-    case server_event_connected:    return eCAL::eServerEvent::connected;
-    case server_event_disconnected: return eCAL::eServerEvent::disconnected;
-    default:                        return eCAL::eServerEvent::none;
-    }
-  }
-
-
-
-  std::recursive_mutex g_method_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  int g_method_callback(const std::string& method_, const std::string& req_type_, const std::string& resp_type_, const std::string& request_, std::string& response_, MethodCallbackCT callback_, void* par_)
-  {
-    const std::lock_guard<std::recursive_mutex> lock(g_method_callback_mtx);
-    void* response(nullptr);
-    int   response_len(ECAL_ALLOCATE_4ME);
-    const int ret_state = callback_(method_.c_str(), req_type_.c_str(), resp_type_.c_str(), request_.c_str(), static_cast<int>(request_.size()), &response, &response_len, par_);
-    if (response_len > 0)
-    {
-      response_ = std::string(static_cast<const char*>(response), static_cast<size_t>(response_len));
-    }
-    return ret_state;
-  }
-
-  std::recursive_mutex g_server_event_callback_mtx; // NOLINT(*-avoid-non-const-global-variables)
-  void g_server_event_callback(const char* name_, const struct eCAL::v5::SServerEventCallbackData* data_, const ServerEventCallbackCT callback_, void* par_)
-  {
-    const std::lock_guard<std::recursive_mutex> lock(g_server_event_callback_mtx);
-    SServerEventCallbackDataC data{};
-    data.time = data_->time;
-    data.type = enum_class_to_enum(data_->type);
-    callback_(name_, &data, par_);
+    server_event_callback_data_c_->type = server_event_map.at(server_event_callback_data_.type);
+    server_event_callback_data_c_->time = server_event_callback_data_.time;
   }
 }
 
 extern "C"
 {
-  ECALC_API ECAL_HANDLE eCAL_Server_Create(const char* service_name_)
+  struct eCAL_ServiceServer
   {
-    if (service_name_ == nullptr) return(nullptr);
-    auto* server = new eCAL::v5::CServiceServer(service_name_);
-    return(server);
-  }
+    eCAL::CServiceServer* handle;
+    eCAL_SServiceId service_id;
+  };
 
-  ECALC_API int eCAL_Server_Destroy(ECAL_HANDLE handle_)
+  ECALC_API eCAL_ServiceServer* eCAL_ServiceServer_New(const char* service_name_, eCAL_ServerEventCallbackT event_callback_)
   {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    delete server; // NOLINT(*-owning-memory)
-    return(1);
-  }
-
-  ECALC_API int eCAL_Server_AddMethodCallback(ECAL_HANDLE handle_, const char* method_, const char* req_type_, const char* resp_type_, MethodCallbackCT callback_, void* par_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    auto callback = std::bind(g_method_callback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, callback_, par_);
-    return static_cast<int>(server->AddMethodCallback(method_, req_type_, resp_type_, callback));
-  }
-
-  ECALC_API int eCAL_Server_RemMethodCallback(ECAL_HANDLE handle_, const char* method_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    return static_cast<int>(server->RemMethodCallback(method_));
-  }
-
-  ECALC_API int eCAL_Server_AddEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_, ServerEventCallbackCT callback_, void* par_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    auto callback = std::bind(g_server_event_callback, std::placeholders::_1, std::placeholders::_2, callback_, par_);
-    if (server->AddEventCallback(enum_to_enum_class(type_), callback)) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Server_RemEventCallback(ECAL_HANDLE handle_, enum eCAL_Server_Event type_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    if (server->RemEventCallback(enum_to_enum_class(type_))) return(1);
-    return(0);
-  }
-
-  ECALC_API int eCAL_Server_GetServiceName(ECAL_HANDLE handle_, void* buf_, int buf_len_)
-  {
-    if (handle_ == nullptr) return(0);
-    auto* server = static_cast<eCAL::v5::CServiceServer*>(handle_);
-    const std::string service_name = server->GetServiceName();
-    const int buffer_len = CopyBuffer(buf_, buf_len_, service_name);
-    if (buffer_len != static_cast<int>(service_name.size()))
+    assert(service_name_ != NULL);
+    const auto event_callback = [event_callback_](const eCAL::SServiceId& service_id_, const struct eCAL::SServerEventCallbackData& server_event_callback_data_)
     {
-      return(0);
-    }
-    else
+      struct eCAL_SServiceId service_id_c;
+      struct eCAL_SServerEventCallbackData server_event_callback_data_c;
+
+      Assign_SServiceId(&service_id_c, service_id_);
+      Assign_SServerEventCallbackData(&server_event_callback_data_c, server_event_callback_data_);
+      event_callback_(&service_id_c, &server_event_callback_data_c);
+    };
+
+    return new eCAL_ServiceServer{ new eCAL::CServiceServer(service_name_, event_callback_ != NULL ? event_callback : eCAL::ServerEventCallbackT()) };
+  }
+
+  ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_)
+  {
+    assert(service_server_ != NULL);
+    delete service_server_->handle;
+    delete service_server_;
+  }
+
+  ECALC_API int eCAL_ServiceServer_SetMethodCallback(eCAL_ServiceServer* service_server_, const struct eCAL_SServiceMethodInformation* method_info_, eCAL_ServiceMethodCallbackT callback_, void* callback_user_argument_)
+  {
+    assert(service_server_ != NULL && method_info_ != NULL && callback_ != NULL);
+    eCAL::SServiceMethodInformation method_info;
+    Assign_SServiceMethodInformation(method_info, method_info_);
+
+    const auto callback = [callback_, callback_user_argument_](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
     {
-      return(buffer_len);
-    }
+      struct eCAL_SServiceMethodInformation method_info_c;
+      Assign_SServiceMethodInformation(&method_info_c, method_info_);
+
+      void* response_c = NULL;
+      size_t response_length_c = 0;
+      int ret_state = callback_(&method_info_c, request_.data(), request_.size(), &response_c, &response_length_c, callback_user_argument_);
+
+      if (response_c != NULL && response_length_c != 0)
+        response_.assign(static_cast<const char*>(response_c), response_length_c);
+      std::free(response_c);
+
+      return ret_state;
+    };
+
+    return !static_cast<int>(service_server_->handle->SetMethodCallback(method_info, callback));
+  }
+
+  ECALC_API int eCAL_ServiceServer_RemoveMethodCallback(eCAL_ServiceServer* service_server_, const char* method_name_)
+  {
+    assert(service_server_ != NULL && method_name_ != NULL);
+    return !static_cast<int>(service_server_->handle->RemoveMethodCallback(method_name_));
+  }
+
+  ECALC_API const char* eCAL_ServiceServer_GetServiceName(eCAL_ServiceServer* service_server_)
+  {
+    assert(service_server_ != NULL);
+    return service_server_->handle->GetServiceName().c_str();
+  }
+
+  ECALC_API const struct eCAL_SServiceId* eCAL_ServiceServer_GetServiceId(eCAL_ServiceServer* service_server_)
+  {
+    assert(service_server_ != NULL);
+    Assign_SServiceId(&service_server_->service_id, service_server_->handle->GetServiceId());
+    return &service_server_->service_id;
+  }
+
+  ECALC_API int eCAL_ServiceServer_IsConnected(eCAL_ServiceServer* service_server_)
+  {
+    assert(service_server_ != NULL);
+    return static_cast<int>(service_server_->handle->IsConnected());
   }
 }
 #endif // ECAL_CORE_SERVICE

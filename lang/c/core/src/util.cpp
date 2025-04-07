@@ -27,16 +27,29 @@
 
 #include "common.h"
 
+#include <cstring>
+#include <cassert>
+
 extern "C"
 {
-#if ECAL_CORE_MONITORING
-  ECALC_API void eCAL_Util_ShutdownUnitName(const char* unit_name_)
+  ECALC_API char* eCAL_Util_GeteCALDataDir()
   {
+    return Clone_CString(eCAL::Util::GeteCALDataDir().c_str());
+  }
+
+  ECALC_API char* eCAL_Util_GeteCALLogDir()
+  {
+    return Clone_CString(eCAL::Util::GeteCALLogDir().c_str());
+  }
+
+  ECALC_API void eCAL_Util_ShutdownProcess(const char* unit_name_)
+  {
+    assert(unit_name_ != NULL);
     const std::string unit_name = unit_name_;
     eCAL::Util::ShutdownProcess(unit_name);
   }
 
-  ECALC_API void eCAL_Util_ShutdownProcessID(int process_id_)
+  ECALC_API void eCAL_Util_ShutdownProcessId(int process_id_)
   {
     eCAL::Util::ShutdownProcess(process_id_);
   }
@@ -45,5 +58,4 @@ extern "C"
   {
     eCAL::Util::ShutdownProcesses();
   }
-#endif // ECAL_CORE_MONITORING
 }

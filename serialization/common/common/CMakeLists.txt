@@ -67,3 +67,35 @@ install(
   LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
   FILE_SET message_core_headers COMPONENT sdk
 )
+
+#######################################
+# eCAL measurement message extensions #
+#######################################
+add_library(message_measurement INTERFACE)
+add_library(eCAL::message_measurement ALIAS message_measurement)
+
+target_link_libraries(message_measurement 
+  INTERFACE 
+    eCAL::measurement
+)
+
+target_sources(message_measurement
+  INTERFACE
+    FILE_SET message_measurement_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+      include/ecal/msg/imeasurement.h
+      include/ecal/msg/omeasurement.h
+)
+
+target_compile_features(message_measurement INTERFACE cxx_std_14)
+
+install(
+  TARGETS message_measurement
+  EXPORT eCALCoreTargets  
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+  FILE_SET message_measurement_headers COMPONENT sdk
+)
+

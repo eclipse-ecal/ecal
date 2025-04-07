@@ -18,34 +18,20 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(measurement_read)
+project(blob_read)
 
 find_package(eCAL REQUIRED)
 
-find_package(Protobuf REQUIRED)
-create_targets_protobuf()
-
-set(PROJECT_NAME measurement_read)
-
-set(measurement_read_src
-    src/measurement_read.cpp
+set(blob_read_src
+    src/blob_read.cpp
 )
 
-set(measurement_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto    
-)
-ecal_add_sample(${PROJECT_NAME} ${measurement_read_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${measurement_proto})
-#target_include_directories(${PROJECT_NAME} PRIVATE .)
+ecal_add_sample(${PROJECT_NAME} ${blob_read_src})
 target_compile_definitions(${PROJECT_NAME} PRIVATE MEASUREMENT_PATH="${SAMPLE_PERSON_MEASUREMENT_PATH}")
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE 
-    eCAL::measurement_hdf5 
-    eCAL::protobuf_base
-    protobuf::libprotobuf
+    eCAL::measurement
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
@@ -56,4 +42,4 @@ if(MSVC)
     set_property(TARGET ${PROJECT_NAME} PROPERTY LINK_FLAGS "/ignore:4098,4099")
 endif(MSVC)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/measurement)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/measurement/binary)

@@ -33,17 +33,29 @@ namespace eCAL
   {
     namespace internal
     {
-      template <typename ObjectType>
+      /*
+      * Some restrictions:
+      * - The generated flatbuffers code does not contain information like descriptors or typenames
+      *   Those have to be generated additionally, thus they are not available for the DatatypeInformation.
+      */
+      template <typename ObjectType, typename DatatypeInformation>
       class BaseSerializer
       {
       public:
-        static SDataTypeInformation GetDataTypeInformation()
+        static DatatypeInformation GetDataTypeInformation()
         {
-          SDataTypeInformation topic_info;
-          topic_info.encoding = "flatb";
+          DatatypeInformation topic_info{};
+          topic_info.encoding = m_encoding;
           // empty type, empty descriptor
           return topic_info;
         }
+
+        static bool AcceptsDataWithType(const DatatypeInformation& datatype_info)
+        {
+          return datatype_info.encoding == m_encoding;
+        }
+      private:
+        static constexpr const char* m_encoding = "flatb";
       };
 
       /*
@@ -54,9 +66,9 @@ namespace eCAL
       *
       * Can be used with table types, e.g. MonsterT
       */
-      template <typename ObjectType>
+      template <typename ObjectType, typename DatatypeInformation>
       class ObjectSerializer 
-        : public BaseSerializer<ObjectType>
+        : public BaseSerializer<ObjectType, DatatypeInformation>
       {
       public:
         size_t MessageSize(const ObjectType& msg_)
@@ -82,12 +94,12 @@ namespace eCAL
        * This class works with Object Types, but has to be specialized with const *  only.
        * E.g. const MonsterT*
        */
-      template <typename ObjectType>
+      template <typename ObjectType, typename DatatypeInformation>
       class ObjectDeserializer
-        : public BaseSerializer<ObjectType>
+        : public BaseSerializer<ObjectType, DatatypeInformation>
       {
       public:
-        static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
+        static ObjectType Deserialize(const void* buffer_, size_t /*size_*/, const DatatypeInformation& /*data_type_info_*/)
         {
           using CleanObjectType = std::remove_const_t<std::remove_pointer_t<ObjectType>>;
 
@@ -105,12 +117,12 @@ namespace eCAL
        * This class works with Flat Types, but has to be specialized with const *  only.
        * E.g. const Monster*
        */
-      template <typename FlatType>
+      template <typename FlatType, typename DatatypeInformation>
       class FlatDeserializer 
-        : public BaseSerializer<FlatType>
+        : public BaseSerializer<FlatType, DatatypeInformation>
       {
       public:
-        static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const SDataTypeInformation& /*data_type_info_*/)
+        static FlatType Deserialize(const void* buffer_, size_t /*size_*/, const DatatypeInformation& /*data_type_info_*/)
         {
           using CleanFlatType = std::remove_const_t<std::remove_pointer_t<FlatType>>;
           const uint8_t* buffer = static_cast<const uint8_t*>(buffer_);

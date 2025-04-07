@@ -35,12 +35,12 @@ namespace eCAL
   {
 
     /**
-     * @brief  eCAL subscriber class for standard strings.
+     * @brief  eCAL Publisher class for standard strings.
      *
-     * Subscriber class for STL standard strings. For details see documentation of CSubscriber class.
+     * Publisher class for STL standard strings. For details see documentation of CPublisher class.
      *
     **/
-    using CPublisher = CMessagePublisher<std::string, internal::Serializer<std::string>>;
+    using CPublisher = CMessagePublisher<std::string, internal::Serializer<std::string, ::eCAL::SDataTypeInformation>>;
 
     /** @example minimal_snd.cpp
     * This is an example how to use eCAL::string::CPublisher to receive a std::string with eCAL.

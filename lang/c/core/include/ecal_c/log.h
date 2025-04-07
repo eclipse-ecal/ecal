@@ -26,45 +26,42 @@
 #define ecal_c_log_h_included
 
 #include <ecal_c/export.h>
+#include <ecal_c/log_level.h>
+#include <ecal_c/types/logging.h>
+
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /*__cplusplus*/
   /**
-   * @brief Values that represent different log level to filter on monitoring.
+   * @brief Log a message.
+   *
+   * @param level_   The level.
+   * @param message_ The log message string.
   **/
-  enum eCAL_Logging_eLogLevel
-  {
-    log_level_none = 0,
-    log_level_all = 255,
-    log_level_info = 1,
-    log_level_warning = 2,
-    log_level_error = 4,
-    log_level_fatal = 8,
-    log_level_debug1 = 16,
-    log_level_debug2 = 32,
-    log_level_debug3 = 64,
-    log_level_debug4 = 128,
-  };
+  ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* message_);
 
   /**
-   * @brief Log a message (with current log level). 
+   * @brief Get logging as serialized protobuf buffer.
    *
-   * @param msg_  The log message string.
+   * @param [out] logging_buffer_         Pointer to a protobuf serialized log buffer. Must point to NULL and needs to be released by eCAL_Free().
+   * @param [out] logging_buffer_length_  Length of the log buffer. Must point to zero.
+   * 
+   * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API void eCAL_Logging_Log(enum eCAL_Logging_eLogLevel level_, const char* const msg_);
+  ECALC_API int eCAL_Logging_GetLoggingBuffer(void** logging_buffer_, size_t* logging_buffer_length_);
 
   /**
-   * @brief Get logging string.
+   * @brief Get logging as deserialized log messages.
    *
-   * @param [out] buf_      Pointer to store the logging information.
-   * @param       buf_len_  Length of allocated buffer or ECAL_ALLOCATE_4ME if
-   *                        eCAL should allocate the buffer for you (see eCAL_FreeMem).
+   * @param [out] logging_     Pointer to deserialized log messages. Must point to NULL and needs to be released by eCAL_Free().
+   * @param [out] logging_     Pointer to deserialized log messages. Must point to NULL and needs to be released by eCAL_Free().
    *
-   * @return  Logging buffer length or zero if failed.
+   * @return Zero if succeeded, non-zero otherwise.
   **/
-  ECALC_API int eCAL_Logging_GetLogging(void* buf_, int buf_len_);
+  ECALC_API int eCAL_Logging_GetLogging(struct eCAL_Logging_SLogging** logging_);
 #ifdef __cplusplus
 }
 #endif /*__cplusplus*/

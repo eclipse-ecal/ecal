@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,59 +19,66 @@
 
 #include <ecal_c/ecal.h>
 
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h> //printf()
+#include <string.h> //memcpy(), memset()
 
-int OnMethodCallback(const char* method_, const char* req_type_, const char* resp_type_, const char* request_, int request_len_, void** response_, int* response_len_, void* par_)
+
+int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_, void* user_argument_)
 {
-  // unused param
-  (void)req_type_;
-  (void)resp_type_;
-  (void)par_;
+  (void)user_argument_;
 
-  static char response_buf[1024];
-  if ((unsigned int)request_len_ > sizeof(response_buf)) return 0;
+  // In order pass the server response properly to the callback API, the underlying memory needs to be allocated 
+  // with eCAL_Malloc(). The allocation via eCAL_Malloc() is required as the internal memory handler frees the
+  // resevered memory after callback execution.
+  *response_ = eCAL_Malloc(request_length_);
 
-  // echo request to response
-  memcpy(response_buf, request_, request_len_);
+  // In case of a failure, the value that response_ points to, remains NULL.
+  if (*response_ == NULL) return 1; // memory allocation failed
 
-  *response_     = response_buf;
-  *response_len_ = request_len_;
+  // The length of response buffer needs to be set accordingly
+  *response_length_ = request_length_;
 
-  printf("Method   : %s called\n", method_);
-  printf("Request  : %s\n",        request_);
-  printf("Response : %s\n",       (char*)(*response_));
+  // In this example the entire request buffer will be copied over to the response buffer.
+  memcpy(*response_, request_, request_length_);
+
+
+  printf("Method   : %s called\n", method_info_->method_name);
+  printf("Request  : %s\n",        (char*)request_);
+  printf("Response : %s\n",        (char*)(*response_));
   printf("\n");
 
-  // return success
-  return 42;
+  // Zero can be returned here as the callback has been successfully proceeded.
+  return 0;
 }
 
 int main()
 {
-  ECAL_HANDLE hserver = 0;
+  eCAL_ServiceServer *server;
+  struct eCAL_SServiceMethodInformation method_information;
 
-  // initialize eCAL API
-  eCAL_Initialize("minimal server c", eCAL_Init_Default);
+  // Iinitialize eCAL API
+  eCAL_Initialize("minimal server c", NULL, NULL);
 
-  // create server "service1"
-  hserver = eCAL_Server_Create("service1");
+  // Create server "service1"
+  server = eCAL_ServiceServer_New("service1", NULL);
 
-  // add method callback for method "echo"
-  eCAL_Server_AddMethodCallback(hserver, "echo", "", "", OnMethodCallback, 0);
+  // Define all available service methods by assiging the required fields of ServiceMethodInformation (e.g. method name) and attach the respective callback functions
+  memset(&method_information, 0, sizeof(struct eCAL_SServiceMethodInformation));
+  method_information.method_name = "echo";
+  eCAL_ServiceServer_SetMethodCallback(server, &method_information, OnMethodCallback, NULL);
 
-  // idle
+  // Idle
   while (eCAL_Ok())
   {
-    // sleep 100 ms
+    // Sleep for 100 ms
     eCAL_Process_SleepMS(100);
   }
 
-  // destroy server "service1"
-  eCAL_Server_Destroy(hserver);
+  // Destroy server "service1"
+  eCAL_ServiceServer_Delete(server);
 
-  // finalize eCAL API
+  // Finalize eCAL API
   eCAL_Finalize();
 
-  return(0);
+  return 0;
 }

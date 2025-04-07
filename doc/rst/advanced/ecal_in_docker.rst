@@ -27,7 +27,7 @@ Prerequisite
      * `Docker installation failed <https://forums.docker.com/t/cant-install-docker-on-ubuntu-20-04/93058>`_
 
 * Optional: If you want your docker container to talk to eCAL Nodes on other machines:
-  Set up you :ref:`multicast routes <getting_started_cloud_ubuntu_routes>` on the host.
+  Set up you :ref:`multicast routes <getting_started_network_ubuntu_routes>` on the host.
 
 * Optional: If you want to use eCAL on your host to subscribe to data from your docker containers: :ref:`Install eCAL <getting_started_setup_ubuntu>` on the host.
 
@@ -239,7 +239,7 @@ In eCAL, you are able to set host belonging over network borders by utilizing th
 
 #. Configure the Host network
 
-   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_cloud_ubuntu_routes>`. 
+   - eCAL is sending UDP messages to a multicast IP group ``239.0.0.0/24``, further information in :ref:`Getting Started Section <getting_started_network_ubuntu_routes>`. 
      The idea is now, to successfully receive those messages from your previously started container on your host.
      For that, you need to add a route to your routing table.
      By typing ``ifconfig`` in your shell, you can identify the right docker network.

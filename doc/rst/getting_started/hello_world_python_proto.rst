@@ -34,9 +34,9 @@ So, somewhere on your hard drive, create a directory :file:`proto_messages` with
 
    |fa-folder-open|
    └─ |fa-folder-open| proto_messages
-      └─ |fa-file-alt| :download:`hello_world.proto <src/hello_world_python_protobuf/proto_messages/hello_world.proto>`
+      └─ |fa-file-alt| :download:`hello_world.proto </source_code_samples/python/protobuf/proto_messages/hello_world.proto>`
 
-.. literalinclude:: src/hello_world_python_protobuf/proto_messages/hello_world.proto
+.. literalinclude:: /source_code_samples/python/protobuf/proto_messages/hello_world.proto
    :language: protobuf
    :linenos:
 
@@ -88,16 +88,16 @@ Protobuf Sender
 ===============
 
 Now let's start implementing the actual python code, that sends some protobuf-serialized data to an eCAL topic.
-For that, create a file :file:`protobuf_snd.py` next to your :file:`proto_messages` directory and paste the following content:
+For that, create a file :file:`hello_world_snd.py` next to your :file:`proto_messages` directory and paste the following content:
 
 .. parsed-literal::
 
    |fa-folder-open|
    ├─ |fa-folder-open| proto_messages
    │  └─ |fa-file-alt| hello_world.proto
-   └─ |fa-python| :download:`protobuf_snd.py <src/hello_world_python_protobuf/protobuf_snd.py>`
+   └─ |fa-python| :download:`hello_world_snd.py </source_code_samples/python/protobuf/hello_world_snd.py>`
 
-.. literalinclude:: src/hello_world_python_protobuf/protobuf_snd.py
+.. literalinclude:: /source_code_samples/python/protobuf/hello_world_snd.py
    :language: python
    :linenos:
 
@@ -135,7 +135,7 @@ Protobuf Receiver
 We know that the sender already works.
 So, let's implement a python script that can receive the serialized protobuf data, deserialize it and display the content of the message!
 
-Create a file :file:`protobuf_rec.py` next to the sender and paste the following content:
+Create a file :file:`hello_world_rec.py` next to the sender and paste the following content:
 
 .. parsed-literal::
 
@@ -143,9 +143,9 @@ Create a file :file:`protobuf_rec.py` next to the sender and paste the following
    ├─ |fa-folder-open| proto_messages
    │  └─ |fa-file-alt| hello_world.proto
    ├─ |fa-python| protobuf_snd.py
-   └─ |fa-python| :download:`protobuf_rec.py <src/hello_world_python_protobuf/protobuf_rec.py>`
+   └─ |fa-python| :download:`protobuf_rec.py </source_code_samples/python/protobuf/hello_world_rec.py>`
 
-.. literalinclude:: src/hello_world_python_protobuf/protobuf_rec.py
+.. literalinclude:: /source_code_samples/python/protobuf/hello_world_rec.py
    :language: python
    :linenos:
 
@@ -182,6 +182,6 @@ Files
 
    |fa-folder-open|
    ├─ |fa-folder-open| proto_messages
-   │  └─ |fa-file-alt| :download:`hello_world.proto <src/hello_world_python_protobuf/proto_messages/hello_world.proto>`
-   ├─ |fa-python| :download:`protobuf_snd.py <src/hello_world_python_protobuf/protobuf_snd.py>`
-   └─ |fa-python| :download:`protobuf_rec.py <src/hello_world_python_protobuf/protobuf_rec.py>`
+   │  └─ |fa-file-alt| :download:`hello_world.proto </source_code_samples/python/protobuf/proto_messages/hello_world.proto>`
+   ├─ |fa-python| :download:`protobuf_snd.py </source_code_samples/python/protobuf/hello_world_snd.py>`
+   └─ |fa-python| :download:`protobuf_rec.py </source_code_samples/python/protobuf/hello_world_rec.py>`

@@ -39,10 +39,10 @@ namespace eCAL
      *
     **/
     template <typename T>
-    using CObjectSubscriber = CMessageSubscriber<const T*, internal::ObjectDeserializer<const T*>>;
+    using CObjectSubscriber = CMessageSubscriber<const T*, internal::ObjectDeserializer<const T*, ::eCAL::SDataTypeInformation>>;
 
     template <typename T>
-    using CFlatSubscriber = CMessageSubscriber<const T*, internal::FlatDeserializer<const T*>>;
+    using CFlatSubscriber = CMessageSubscriber<const T*, internal::FlatDeserializer<const T*, ::eCAL::SDataTypeInformation>>;
 
     /** @example monster_rec.cpp
     * This is an example how to use eCAL::CSubscriber to receive goggle::flatbuffers data with eCAL. To send the data, see @ref monster_snd.cpp .

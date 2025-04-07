@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ find_package(Doxygen REQUIRED)
 set(DOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_sources)
 set(PYTHON_SOURCE_DIRECTORY ${CMAKE_BINARY_DIR}/python)
 
+set(ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/samples)
+
 #######################################
 # Copy RST files to build directory
 # Also display them all in the IDE
@@ -72,8 +74,24 @@ set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY} ${DOC_SOURCE_DIRECTORY}/source_code_samples
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
+
+add_custom_target(documentation_copy_config_file
+  COMMENT "Copying generated configuration file to documentation directory"
+  DEPENDS run_ecal_generate_config
+)
+set_property(TARGET documentation_copy_config_file  PROPERTY FOLDER docs)
+
+if (DEFINED ECAL_GENERATED_YAML_PATH)
+  add_custom_command(TARGET documentation_copy_config_file
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${DOC_SOURCE_DIRECTORY}/configuration_files
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ECAL_GENERATED_YAML_PATH} ${DOC_SOURCE_DIRECTORY}/configuration_files
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuration file copied successfully."
+    COMMAND ${CMAKE_COMMAND} -E echo "Configuration file not found, skipping copy." IF NOT EXISTS ${ECAL_GENERATED_YAML_PATH}
+  )
+endif()
 
 #######################################
 # Doxygen documentation with xml output
@@ -111,7 +129,7 @@ doxygen_add_docs(
   documentation_run_doxygen
   ./doc.hpp
   ../ecal/core/include/ecal
-  ../ecal/core/include/ecal/msg
+  #../ecal/core/include/ecal/msg
   #../ecal/core/include/ecal/cimpl
   #../lang/csharp/include
   ../contrib/ecalhdf5/include/ecalhdf5
@@ -161,7 +179,7 @@ add_custom_target(documentation_sphinx ALL
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_config_file
 )
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
@@ -171,3 +189,7 @@ install(DIRECTORY ${SPHINX_HTML_DIR}/
   DESTINATION ${eCAL_install_doc_dir}
   COMPONENT doc 
 )
+
+if (ECAL_BUILD_DOCS_SAMPLES)
+  add_subdirectory(samples)
+endif()

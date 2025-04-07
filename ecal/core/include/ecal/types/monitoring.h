@@ -69,7 +69,7 @@ namespace eCAL
       bool         active  = false;                                //<! transport layer used?
     };
 
-    struct STopicMon                                               //<! eCAL Topic struct
+    struct STopic                                                  //<! eCAL Topic struct
     {
       int32_t                             registration_clock{0};   //!< registration clock (heart beat)
       std::string                         host_name;               //!< host name
@@ -94,7 +94,7 @@ namespace eCAL
       int32_t                             data_frequency{0};       //!< data frequency (send / receive samples per second) [mHz]
     };
 
-    struct SProcessMon                                             //<! eCAL Process struct
+    struct SProcess                                                //<! eCAL Process struct
     {
       int32_t        registration_clock{0};                        //!< registration clock
       std::string    host_name;                                    //!< host name
@@ -130,7 +130,7 @@ namespace eCAL
       std::string    config_file_path;                          //!< Filepath of the configuration filepath that was loaded
     };
 
-    struct SMethodMon                                           //<! eCAL Server Method struct
+    struct SMethod                                              //<! eCAL Server Method struct
     {
       std::string           method_name;                        //<! method name
 
@@ -140,7 +140,7 @@ namespace eCAL
       long long             call_count{0};                      //<! call counter
     };
 
-    struct SServerMon                                           //<! eCAL Server struct
+    struct SServer                                              //<! eCAL Server struct
     {
       int32_t                  registration_clock{0};           //<! registration clock
       std::string              host_name;                       //<! host name
@@ -155,10 +155,10 @@ namespace eCAL
       uint32_t                 tcp_port_v0{0};                  //<! the tcp port protocol version 0 used for that service
       uint32_t                 tcp_port_v1{0};                  //<! the tcp port protocol version 1 used for that service
 
-      std::vector<SMethodMon>  methods;                         //<! list of methods
+      std::vector<SMethod>     methods;                         //<! list of methods
     };
 
-    struct SClientMon                                           //<! eCAL Client struct
+    struct SClient                                              //<! eCAL Client struct
     {
       int32_t                  registration_clock{0};           //<! registration clock
       std::string              host_name;                       //<! host name
@@ -169,18 +169,18 @@ namespace eCAL
       std::string              service_name;                    //<! service name
       EntityIdT                service_id{0};                          //<! service id
 
-      std::vector<SMethodMon>  methods;                         //<! list of methods
+      std::vector<SMethod>     methods;                         //<! list of methods
 
       uint32_t                 version{0};                      //<! client protocol version
     };
 
     struct SMonitoring                                          //<! eCAL Monitoring struct
     {
-      std::vector<SProcessMon>  processes;                      //<! process info
-      std::vector<STopicMon>    publisher;                      //<! publisher info vector
-      std::vector<STopicMon>    subscriber;                     //<! subscriber info vector
-      std::vector<SServerMon>   server;                         //<! server info vector
-      std::vector<SClientMon>   clients;                        //<! clients info vector
+      std::vector<SProcess>  processes;                      //<! process info
+      std::vector<STopic>    publishers;                      //<! publisher info vector
+      std::vector<STopic>    subscribers;                     //<! subscriber info vector
+      std::vector<SServer>   servers;                         //<! server info vector
+      std::vector<SClient>   clients;                        //<! clients info vector
     };
   }
 }

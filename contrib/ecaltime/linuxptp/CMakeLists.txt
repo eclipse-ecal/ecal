@@ -19,6 +19,8 @@
 project(ecaltime-linuxptp)
 
 find_package(yaml-cpp REQUIRED)
+include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
+yaml_cpp_create_compatibility_targets()
 
 set(ecal_time_linuxptp_src
   src/ecal_time_linuxptp.cpp
