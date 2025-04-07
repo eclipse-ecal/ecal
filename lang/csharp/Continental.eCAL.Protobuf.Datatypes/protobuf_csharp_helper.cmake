@@ -16,86 +16,105 @@
 #
 # ========================= eCAL LICENSE =================================
 
+# -----------------------------------------------------------------------------
+# Function: PROTOBUF_GENERATE_CSHARP
+# Description: Generates C# files from .proto files and places them in folders
+#              matching the proto folder structure under ${PROTO_OUT_DIR}.
+# -----------------------------------------------------------------------------
 function(PROTOBUF_GENERATE_CSHARP SRCS_RET PROTO_OUT_DIR_RET PROTO_ROOT)
   if(NOT ARGN)
-    message(SEND_ERROR "Error: PROTOBUF_GENERATE_CPP_EXT() called without any proto files")
+    message(SEND_ERROR "Error: PROTOBUF_GENERATE_CSHARP() called without any proto files")
     return()
   endif()
-  
-  #Backwards compatability
+
+  # Ensure protoc target exists
   if (NOT TARGET protobuf::protoc)
     if (Protobuf_PROTOC_EXECUTABLE)
-      ADD_EXECUTABLE(protobuf::protoc IMPORTED)
-      SET_TARGET_PROPERTIES(protobuf::protoc PROPERTIES
+      add_executable(protobuf::protoc IMPORTED)
+      set_target_properties(protobuf::protoc PROPERTIES
         IMPORTED_LOCATION "${Protobuf_PROTOC_EXECUTABLE}"
       )
-    else ()
-      message(FATAL_ERROR "Neither protobuf::protoc not the $(Protobuf_PROTOC_EXECUTABLE) variable is defined. Cannot generate protobuf files.")
-    endif ()     	
-  endif ()
+    else()
+      message(FATAL_ERROR "Neither protobuf::protoc nor Protobuf_PROTOC_EXECUTABLE is defined.")
+    endif()
+  endif()
 
   set(PROTO_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/protobuf")
-  file(MAKE_DIRECTORY ${PROTO_OUT_DIR})  
-  get_filename_component(PROTO_ROOT ${PROTO_ROOT} ABSOLUTE)
+  set(FLAT_OUT_DIR "${PROTO_OUT_DIR}/_flat")
+  file(MAKE_DIRECTORY "${FLAT_OUT_DIR}")
+  get_filename_component(PROTO_ROOT "${PROTO_ROOT}" ABSOLUTE)
 
-  message(STATUS ${Protobuf_PROTOC_EXECUTABLE})
+  set(SRCS "")
 
   foreach(FIL ${ARGN})
-    # Make the file path absolute, so that it is also normalized (no a\..\a\b)
-    get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
-    # Compute the relative path of the .proto file compared to the proto root
-    FILE(RELATIVE_PATH REL_FIL ${PROTO_ROOT} ${FIL})
-    # Remove the file extension
-    string(REGEX REPLACE "\\.[^.]*$" "" REL_FIL_WE ${REL_FIL})
+    get_filename_component(ABS_FIL "${FIL}" ABSOLUTE)
+    file(RELATIVE_PATH REL_FIL "${PROTO_ROOT}" "${ABS_FIL}")
+    get_filename_component(PROTO_DIR "${REL_FIL}" DIRECTORY)
+    get_filename_component(FILENAME_WE "${REL_FIL}" NAME_WE)
 
-    list(APPEND SRCS "${PROTO_OUT_DIR}/${REL_FIL_WE}.cs")
- 
+    set(FLAT_CS_FILE "${FLAT_OUT_DIR}/${FILENAME_WE}.cs")
+    set(FINAL_CS_FILE "${PROTO_OUT_DIR}/${PROTO_DIR}/${FILENAME_WE}.cs")
+
+    list(APPEND SRCS "${FINAL_CS_FILE}")
+    file(MAKE_DIRECTORY "${PROTO_OUT_DIR}/${PROTO_DIR}")
+
     add_custom_command(
-      OUTPUT "${PROTO_OUT_DIR}/${REL_FIL_WE}.cs"
+      OUTPUT "${FINAL_CS_FILE}"
       COMMAND protobuf::protoc
-      ARGS "--proto_path=${PROTO_ROOT}" "--csharp_out=${PROTO_OUT_DIR}" ${ABS_FIL}
-      DEPENDS ${ABS_FIL} protobuf::protoc
-      COMMENT "Running CSharp protocol buffer compiler on ${ABS_FIL}"
-      VERBATIM )
-
+      ARGS "--proto_path=." "--csharp_out=${FLAT_OUT_DIR}" "${REL_FIL}"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${FLAT_CS_FILE}" "${FINAL_CS_FILE}"
+      WORKING_DIRECTORY "${PROTO_ROOT}"
+      DEPENDS "${ABS_FIL}" protobuf::protoc
+      COMMENT "Generating and relocating CSharp file for ${REL_FIL}"
+      VERBATIM
+    )
   endforeach()
 
   set_source_files_properties(${SRCS} PROPERTIES GENERATED TRUE)
-  
-  
-  set(${SRCS_RET}          ${SRCS}          PARENT_SCOPE)
-  set(${PROTO_OUT_DIR_RET} ${PROTO_OUT_DIR} PARENT_SCOPE)
+  set(${SRCS_RET} "${SRCS}" PARENT_SCOPE)
+  set(${PROTO_OUT_DIR_RET} "${PROTO_OUT_DIR}" PARENT_SCOPE)
 endfunction()
 
-# CS_FILES
-# PROTO_FILES
+# -----------------------------------------------------------------------------
+# Function: PROTOBUF_ADD_CS_TO_TARGET
+# Description: Adds the .cs files to the CMake target and organizes them
+#              into source groups matching folder structure (for IDEs).
+# -----------------------------------------------------------------------------
 function(PROTOBUF_ADD_CS_TO_TARGET TARGET_NAME)
-set(multiValueArgs PROTO_FILES CS_FILES)
+  set(multiValueArgs PROTO_FILES CS_FILES)
 
-cmake_parse_arguments(INPUT "" 
-  ""
-  "${multiValueArgs}" ${ARGN} )
+  cmake_parse_arguments(INPUT "" "" "${multiValueArgs}" ${ARGN})
 
-  target_sources(${TARGET_NAME} PRIVATE ${INPUT_CS_FILES})  
-  
-  source_group(protobuf\\cs FILES
-    ${INPUT_CS_FILES} 
-  )
+  target_sources(${TARGET_NAME} PRIVATE ${INPUT_CS_FILES})
+
+  foreach(CS_FILE ${INPUT_CS_FILES})
+    file(RELATIVE_PATH REL_CS_PATH "${CMAKE_CURRENT_BINARY_DIR}/protobuf" "${CS_FILE}")
+    get_filename_component(SOURCE_GROUP_PATH "${REL_CS_PATH}" DIRECTORY)
+    string(REPLACE "/" "\\" SOURCE_GROUP_PATH "${SOURCE_GROUP_PATH}")
+    source_group("protobuf\\cs\\${SOURCE_GROUP_PATH}" FILES ${CS_FILE})
+  endforeach()
 endfunction()
 
-
+# -----------------------------------------------------------------------------
+# Function: PROTOBUF_TARGET_CSHARP
+# Description: Orchestrates generation, grouping, and optional install of C# sources.
+# -----------------------------------------------------------------------------
 function(PROTOBUF_TARGET_CSHARP TARGET_NAME PROTO_ROOT)
-  set(oneValueArgs   INSTALL_FOLDER)
-  cmake_parse_arguments(PROTOBUF_TARGET_CSHARP "" 
-    "${oneValueArgs}"
-    "" ${ARGN} )
-   
-  # PROTOBUF_TARGET_CSHARP_UNPARSED_ARGUMENTS: These are all .proto files
-  # INPUT_INSTALL_DIR: If this option is given, we want also to install files and and add them to the interface include path.
+  set(oneValueArgs INSTALL_FOLDER)
+  cmake_parse_arguments(PROTOBUF_TARGET_CSHARP "" "${oneValueArgs}" "" ${ARGN})
 
   PROTOBUF_GENERATE_CSHARP(proto_csharp proto_out_dir ${PROTO_ROOT} ${PROTOBUF_TARGET_CSHARP_UNPARSED_ARGUMENTS})
+
   PROTOBUF_ADD_CS_TO_TARGET(${TARGET_NAME}
     PROTO_FILES ${PROTOBUF_TARGET_CSHARP_UNPARSED_ARGUMENTS}
-    CS_FILES     ${proto_csharp}
+    CS_FILES    ${proto_csharp}
   )
+
+  if(PROTOBUF_TARGET_CSHARP_INSTALL_FOLDER)
+    install(
+      DIRECTORY "${proto_out_dir}/"
+      DESTINATION "${PROTOBUF_TARGET_CSHARP_INSTALL_FOLDER}"
+      FILES_MATCHING PATTERN "*.cs"
+    )
+  endif()
 endfunction()

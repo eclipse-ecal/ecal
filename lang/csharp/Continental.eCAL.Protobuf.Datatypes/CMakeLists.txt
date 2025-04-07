@@ -28,15 +28,17 @@ project(Continental.eCAL.Protobuf.Datatypes LANGUAGES CSharp)
 
 add_library(${PROJECT_NAME} SHARED)
 
-PROTOBUF_TARGET_CSHARP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/datatype.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/host.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/layer.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/logging.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/monitoring.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/process.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/service.proto
-  ${CMAKE_CURRENT_SOURCE_DIR}/topic.proto)
+set(PROTOBUF_ORIGIN_DIR "${CMAKE_SOURCE_DIR}/ecal/core_pb/src")
+
+PROTOBUF_TARGET_CSHARP(${PROJECT_NAME} ${PROTOBUF_ORIGIN_DIR}
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/datatype.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/host.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/layer.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/logging.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/monitoring.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/process.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/service.proto
+  ${PROTOBUF_ORIGIN_DIR}/ecal/core/pb/topic.proto)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
