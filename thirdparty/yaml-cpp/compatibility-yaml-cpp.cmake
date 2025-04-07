@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 # Create targets to be compatible with yaml-cpp < 0.8.0
 macro(yaml_cpp_create_compatibility_targets)
   if (NOT TARGET yaml-cpp::yaml-cpp AND TARGET yaml-cpp)
