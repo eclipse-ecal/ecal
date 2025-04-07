@@ -32,6 +32,7 @@ set(python_samples_nanobind_core
   nanobind_core/nb_logging.py
   nanobind_core/nb_monitoring.py
   nanobind_core/nb_process.py
+  nanobind_core/nb_util.py  
 )
 
 function(add_sample_to_solution python_filenname)
