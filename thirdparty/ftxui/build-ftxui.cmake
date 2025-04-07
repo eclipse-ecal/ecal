@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 option(FTXUI_BUILD_EXAMPLES "Set to ON to build examples" OFF)
 
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/ftxui thirdparty/ftxui EXCLUDE_FROM_ALL SYSTEM)
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ftxui" "${eCAL_BINARY_DIR}/thirdparty/ftxui" EXCLUDE_FROM_ALL SYSTEM)
 
 # Set ftxui_VERSION_MAJOR, because it's only defined in the subdirectory scope and we cannot access it
 # Reading it automatically is less error prone than setting itt by hand
