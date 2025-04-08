@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
+        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
 
     runs-on: ${{ matrix.os }}
     
@@ -33,23 +33,17 @@ jobs:
           libyaml-cpp-dev
           libspdlog-dev
           libgtest-dev libgmock-dev
+          python3 python3-venv python3-dev
         )
         specific_packages=()
 
         if [[ ${{ matrix.os }} == ubuntu-24.04* ]]; then
           specific_packages=(
             qt6-base-dev qt6-svg-dev
-            python3 python3-venv python3-dev
           )
         elif [[ ${{ matrix.os }} == ubuntu-22.04* ]]; then
           specific_packages=(
             qtbase5-dev libqt5opengl5-dev libqt5svg5-dev
-            python3 python3-venv python3-dev
-          )
-        elif [[ ${{ matrix.os }} == ubuntu-20.04* ]]; then
-          specific_packages=(
-            qt5-default libqt5opengl5-dev libqt5svg5-dev
-            python3.9 python3.9-venv python3.9-dev
           )
         fi
 
@@ -64,9 +58,6 @@ jobs:
         elif [[ ${{ matrix.os }} == ubuntu-22.04* ]]; then
           echo "ubuntu_codename=jammy"        >> "$GITHUB_ENV"
           echo "python_version=3"             >> "$GITHUB_ENV"   # => default python 3 version
-        elif [[ ${{ matrix.os }} == ubuntu-20.04* ]]; then
-          echo "ubuntu_codename=focal"        >> "$GITHUB_ENV"
-          echo "python_version=3.9"           >> "$GITHUB_ENV"
         fi
 
         # Get cpu architecture
