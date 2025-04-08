@@ -57,7 +57,7 @@ std::string GenerateSizedString(const std::string& name, size_t totalSize)
 int main()
 {
   // set eCAL configuration
-  eCAL::Configuration configuration;
+  eCAL::Configuration configuration = eCAL::Init::Configuration();
   configuration.registration.registration_timeout = 10000;                                           // registration timeout == 10 sec
   configuration.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;  // switch shm registration on and
 

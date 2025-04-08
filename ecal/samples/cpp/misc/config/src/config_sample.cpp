@@ -25,7 +25,7 @@
 int main()
 {
   // creating config object
-  eCAL::Configuration my_config;
+  eCAL::Configuration my_config = eCAL::Init::Configuration();
 
   // setting a configuration
   my_config.communication_mode = eCAL::eCommunicationMode::network;

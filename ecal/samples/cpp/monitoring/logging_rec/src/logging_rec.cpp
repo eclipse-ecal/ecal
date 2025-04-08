@@ -32,7 +32,7 @@
 int main()
 {
   // switch udp logging receiver on
-  eCAL::Configuration configuration;
+  eCAL::Configuration configuration = eCAL::Init::Configuration();
   configuration.logging.receiver.enable = true;
 
   // initialize eCAL core API
