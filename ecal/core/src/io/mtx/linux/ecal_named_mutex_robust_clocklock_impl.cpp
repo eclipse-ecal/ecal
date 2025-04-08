@@ -33,11 +33,11 @@
 #include <cstdint>
 #include <string>
 
-struct alignas(8) named_mutex
+struct alignas(8) eCAL::CNamedMutexRobustClockLockImpl::named_mutex_t
 {
   pthread_mutex_t  mtx;
 };
-typedef struct named_mutex named_mutex_t;
+using named_mutex_t = eCAL::CNamedMutexRobustClockLockImpl::named_mutex_t;
 
 namespace
 {
