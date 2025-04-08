@@ -31,8 +31,12 @@
 
 int main()
 {
+  // switch udp logging receiver on
+  eCAL::Configuration configuration;
+  configuration.logging.receiver.enable = true;
+
   // initialize eCAL core API
-  eCAL::Initialize("logging");
+  eCAL::Initialize(configuration, "logging");
 
   // logging instance to store snapshot
   eCAL::pb::LogMessageList logmessage_list;
