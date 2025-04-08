@@ -33,7 +33,7 @@ def main():
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # create publisher
-  pub = StringPublisher("Hello")
+  pub = StringPublisher("hello")
   msg = "HELLO WORLD FROM PYTHON"
   
   # send messages

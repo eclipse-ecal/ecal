@@ -23,7 +23,7 @@
  * @brief A minimal example of using the eCAL API to receive string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "Hello" (using "std::string" as the data type), register
+ * create a subscriber for the topic "hello" (using "std::string" as the data type), register
  * a receive callback to process incoming messages, and keep the application running until eCAL
  * is terminated. It serves as a basic reference for implementing a string subscriber in C#.
  */
@@ -41,8 +41,8 @@ public class StringReceive
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a string subscriber (topic name "Hello")
-    StringSubscriber subscriber = new StringSubscriber("Hello");
+    // Create a string subscriber (topic name "hello")
+    StringSubscriber subscriber = new StringSubscriber("hello");
 
     // Register a receive callback.
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>

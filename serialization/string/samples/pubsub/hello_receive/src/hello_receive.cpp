@@ -34,7 +34,7 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("hello_receive");
 
-  // subscriber for topic "Hello"
+  // subscriber for topic "hello"
   eCAL::string::CSubscriber sub("hello");
 
   // receive updates in a callback (lambda function)

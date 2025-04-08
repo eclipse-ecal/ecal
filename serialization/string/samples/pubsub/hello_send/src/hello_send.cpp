@@ -32,7 +32,7 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("hello_send");
 
-  // publisher for topic "Hello"
+  // publisher for topic "hello"
   eCAL::string::CPublisher pub("hello");
 
   // send updates

@@ -23,7 +23,7 @@
  * @brief A minimal example of using the eCAL API to send string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a string publisher for the topic "Hello", construct and send messages, and keep
+ * create a string publisher for the topic "hello", construct and send messages, and keep
  * the application running until eCAL is terminated. It serves as a basic reference for
  * implementing a string publisher in C#.
  */
@@ -42,8 +42,8 @@ public class StringSend
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a string publisher (topic name "Hello").
-    StringPublisher publisher = new StringPublisher("Hello");
+    // Create a string publisher (topic name "hello").
+    StringPublisher publisher = new StringPublisher("hello");
 
     // Idle main thread.
     int loop = 0;

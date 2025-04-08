@@ -32,7 +32,7 @@ def main():
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # create subscriber
-  sub = StringSubscriber("Hello")
+  sub = StringSubscriber("hello")
   
   # receive messages
   while ecal_core.ok():
