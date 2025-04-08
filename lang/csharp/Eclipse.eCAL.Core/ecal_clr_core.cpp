@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,46 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
-#include <ecal/types/custom_data_types.h>
+#include "ecal_clr_core.h"
+#include "ecal_clr_common.h"
 
-#include <iostream>
+#include <ecal/core.h>
+#include <ecal/defs.h>
 
-int main()
+using namespace Eclipse::eCAL::Core;
+using namespace Internal;
+
+System::String^ Core::GetVersion()
 {
-  // creating config object
-  eCAL::Configuration my_config = eCAL::Init::Configuration();
+  return ECAL_VERSION;
+}
 
-  // setting a configuration
-  my_config.communication_mode = eCAL::eCommunicationMode::network;
+System::String^ Core::GetDate()
+{
+  return ECAL_DATE;
+}
 
-  // initialize eCAL API
-  eCAL::Initialize(my_config, "config sample");
+void Core::Initialize(System::String^ unitName)
+{
+  ::eCAL::Initialize(StringToStlString(unitName));
+}
 
-  unsigned int counter = 0;
-  // enter main loop
-  while(eCAL::Ok())
-  {
-    // sleep 500 ms
-    eCAL::Process::SleepMS(500);
-    if (counter >= 10)
-    {
-      break;
-    }
+void Core::Initialize(System::String^ unitName, Init componentFlags)
+{
+  ::eCAL::Initialize(StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
+}
 
-    std::cout << "Finished loop " << ++counter << "\n";
-  }
+void Core::Terminate()
+{
+  ::eCAL::Finalize();
+}
 
-  // finalize eCAL API
-  eCAL::Finalize();
+bool Core::IsInitialized()
+{
+  return ::eCAL::IsInitialized();
+}
 
-  return(0);
+bool Core::Ok()
+{
+  return ::eCAL::Ok();
 }

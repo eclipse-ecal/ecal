@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,27 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/ecal.h>
-#include <ecal/types/custom_data_types.h>
+#include "ecal_clr_log.h"
+#include "ecal_clr_common.h"
 
-#include <iostream>
+#include <ecal/log.h>
 
-int main()
+using namespace Eclipse::eCAL::Core;
+using namespace Internal;
+
+void Logging::Log(LogLevel level, System::String^ message)
 {
-  // creating config object
-  eCAL::Configuration my_config = eCAL::Init::Configuration();
+  // Convert the managed string to a native std::string
+  std::string nativeMsg = StringToStlString(message);
+  
+  // Cast the managed LogLevel to the native eCAL::Logging::eLogLevel.
+  // The values match, so a static_cast is sufficient.
+  ::eCAL::Logging::Log(static_cast<::eCAL::Logging::eLogLevel>(level), nativeMsg);
+}
 
-  // setting a configuration
-  my_config.communication_mode = eCAL::eCommunicationMode::network;
-
-  // initialize eCAL API
-  eCAL::Initialize(my_config, "config sample");
-
-  unsigned int counter = 0;
-  // enter main loop
-  while(eCAL::Ok())
-  {
-    // sleep 500 ms
-    eCAL::Process::SleepMS(500);
-    if (counter >= 10)
-    {
-      break;
-    }
-
-    std::cout << "Finished loop " << ++counter << "\n";
-  }
-
-  // finalize eCAL API
-  eCAL::Finalize();
-
-  return(0);
+array<Byte>^ Logging::GetLogging()
+{
+  std::string logging;
+  ::eCAL::Logging::GetLogging(logging);
+  return StlStringToByteArray(logging);
 }
