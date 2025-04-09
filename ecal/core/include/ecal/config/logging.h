@@ -60,7 +60,7 @@ namespace eCAL
 
       struct Configuration
       {
-        Sink                console { true,  log_level_warning | log_level_error | log_level_fatal };                   //!< default: true, log_level_warning | log_level_error | log_level_fatal
+        Sink                console { true,  log_level_info | log_level_warning | log_level_error | log_level_fatal };  //!< default: true, log_level_info | log_level_warning | log_level_error | log_level_fatal
         Sink                file    { false, log_level_none };                                                          //!< default: false, log_level_none
         Sink                udp     { true,  log_level_info | log_level_warning | log_level_error | log_level_fatal };  //!< default: true, log_level_info | log_level_warning | log_level_error | log_level_fatal
         
