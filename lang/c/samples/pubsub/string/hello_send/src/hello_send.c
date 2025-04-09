@@ -50,9 +50,9 @@ int main()
 
     // send content
     if(!eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
+      printf("Published topic \"hello\" with \"%s\"\n", snd_s);
     else
-      printf("Sending topic \"Hello\" failed !\n");
+      printf("Sending topic \"hello\" failed !\n");
 
     // sleep 500 ms
     eCAL_Process_SleepMS(500);

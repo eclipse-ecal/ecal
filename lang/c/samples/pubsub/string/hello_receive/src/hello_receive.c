@@ -40,7 +40,7 @@ int main()
   // initialize eCAL API
   eCAL_Initialize("hello_receive_c", NULL, NULL);
 
-  // create subscriber "Hello"
+  // create subscriber "hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
   data_type_information.name = "string";
   data_type_information.encoding = "utf-8";
