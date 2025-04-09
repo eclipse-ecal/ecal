@@ -274,17 +274,41 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (ECAL_USE_QT)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-    if (NOT "${QT_FOUND}")
-	  include("cmake/qt_msvc_path.cmake")
-      autodetect_qt_msvc_dir()
-    endif()
+# -------
+# Select C++ standard
+# Abseil requires everything to be built with a consistent C++ standard.
+# If abseil is built with C++14 but a component building with C++17 tries to use
+# abseil (eg: via protobuf) there will be a mismatch and possibly a build failure.
+# This is most prevalent with string_view where C++14 will use the abseil type
+# but C++17 use std::string_view
+# -------
+
+# C++14 is the baseline required standard
+set(_ECAL_CXX_STD 14)
+
+# Some dependencies require C++17, which we must detect and push to everything
+if(ECAL_USE_QT)
+  find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
+  if(MSVC AND NOT "${QT_FOUND}")
+    include("cmake/qt_msvc_path.cmake")
+    autodetect_qt_msvc_dir()
   endif()
+  if("${QT_VERSION_MAJOR}" VERSION_GREATER 5)
+    # QT6 has C++17 usage requirements
+    set(_ECAL_CXX_STD 17)
+  endif()
+endif()
+
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
+  # eCAL is being compiled as the root project, and no standard version is set
+  set(CMAKE_CXX_STANDARD "${_ECAL_CXX_STD}")
+else()
+  # eCAL is part of a larger build or the standard was externally set
+endif()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_CXX_STD}")
+  message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
 endif()
 
 find_package(CMakeFunctions REQUIRED)
