@@ -35,13 +35,13 @@
 #include <cstdint>
 #include <string>
 
-struct alignas(8) named_mutex
+struct alignas(8) eCAL::CNamedMutexImpl::named_mutex_t
 {
   pthread_mutex_t  mtx;
   pthread_cond_t   cvar;
   uint8_t          locked;
 };
-typedef struct named_mutex named_mutex_t;
+using named_mutex_t = eCAL::CNamedMutexImpl::named_mutex_t;
 
 namespace
 {
