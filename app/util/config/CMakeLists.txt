@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(config)
+project(ecal_config)
 
 set(ecalconfig_src
   src/ecal_config.cpp
