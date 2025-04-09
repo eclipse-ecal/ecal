@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,4 +66,12 @@ macro(ecal_restore_warning_level)
     message(STATUS "reset thirdparty warnings for windows platform ..")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_OLD}")
   endif()
+endmacro()
+
+macro(ecal_variable_push var_name)
+  list(APPEND ecal_${var_name}_old "${${var_name}}")
+endmacro()
+
+macro(ecal_variable_pop var_name)
+  list(POP_BACK ecal_${var_name}_old "${var_name}")
 endmacro()

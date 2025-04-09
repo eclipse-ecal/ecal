@@ -935,7 +935,7 @@ PyObject* mon_finalize(PyObject* /*self*/, PyObject* /*args*/)
 /****************************************/
 namespace
 {
-  void PopulateTopics2List(PyObject* topic_list_, const std::vector<eCAL::Monitoring::STopicMon>& topic_vec_)
+  void PopulateTopics2List(PyObject* topic_list_, const std::vector<eCAL::Monitoring::STopic>& topic_vec_)
   {
     for (const auto& topic : topic_vec_)
     {
@@ -1106,7 +1106,7 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       PyObject* serviceList = PyList_New(0);
       PyDict_SetItemString(retDict, "services", serviceList); Py_DECREF(serviceList);
 
-      for (const auto& service : monitoring.server)
+      for (const auto& service : monitoring.servers)
       {
         PyObject* serviceDict = PyDict_New();
         PyList_Append(serviceList, serviceDict); Py_DECREF(serviceDict);
@@ -1244,9 +1244,9 @@ PyObject* mon_monitoring(PyObject* /*self*/, PyObject* /*args*/)
       PyObject* topicList = PyList_New(0);
       PyDict_SetItemString(retDict, "topics", topicList); Py_DECREF(topicList);
       // read out publisher
-      PopulateTopics2List(topicList, monitoring.publisher);
+      PopulateTopics2List(topicList, monitoring.publishers);
       // read out subscriber
-      PopulateTopics2List(topicList, monitoring.subscriber);
+      PopulateTopics2List(topicList, monitoring.subscribers);
     }
   }
 

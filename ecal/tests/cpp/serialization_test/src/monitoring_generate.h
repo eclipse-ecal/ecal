@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@ namespace eCAL
   namespace Monitoring
   {
     // generate process
-    SProcessMon GenerateProcess();
+    SProcess GenerateProcess();
 
     // generate topic
-    STopicMon GenerateTopic(const std::string& direction);
+    STopic GenerateTopic(const std::string& direction);
 
     // generate servicemethod
-    SMethodMon GenerateServiceMethod();
+    SMethod GenerateServiceMethod();
 
     // generate service
-    SServerMon GenerateService();
+    SServer GenerateService();
 
     // generate client
-    SClientMon GenerateClient();
+    SClient GenerateClient();
 
     // generate monitoring
     SMonitoring GenerateMonitoring();

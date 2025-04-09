@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ namespace
     return entities;
   }
 
-  size_t ExtSize_Monitoring_SProcessMon(const eCAL::Monitoring::SProcessMon& process_)
+  size_t ExtSize_Monitoring_SProcess(const eCAL::Monitoring::SProcess& process_)
   {
     return ExtSize_String(process_.component_init_info) +
       ExtSize_String(process_.config_file_path) +
@@ -72,9 +72,9 @@ namespace
       ExtSize_String(process_.unit_name);
   }
 
-  size_t ExtSize_Monitoring_SProcessMonArray(const std::vector<eCAL::Monitoring::SProcessMon>& processes_)
+  size_t ExtSize_Monitoring_SProcessArray(const std::vector<eCAL::Monitoring::SProcess>& processes_)
   {
-    return aligned_size(sizeof(struct eCAL_Monitoring_SProcessMon) * processes_.size());
+    return aligned_size(sizeof(struct eCAL_Monitoring_SProcess) * processes_.size());
   }
 
   size_t ExtSize_Monitoring_STransportLayerArray(const std::vector<eCAL::Monitoring::STransportLayer>& transport_layers_)
@@ -82,7 +82,7 @@ namespace
     return aligned_size(sizeof(struct eCAL_Monitoring_STransportLayer) * transport_layers_.size());
   }
 
-  size_t ExtSize_Monitoring_STopicMon(const eCAL::Monitoring::STopicMon& topic_)
+  size_t ExtSize_Monitoring_STopic(const eCAL::Monitoring::STopic& topic_)
   {
     return ExtSize_SDataTypeInformation(topic_.datatype_information) +
       ExtSize_String(topic_.direction) +
@@ -94,85 +94,85 @@ namespace
       ExtSize_Monitoring_STransportLayerArray(topic_.transport_layer);
   }
 
-  size_t ExtSize_Monitoring_STopicMonArray(const std::vector<eCAL::Monitoring::STopicMon>& topics_)
+  size_t ExtSize_Monitoring_STopicArray(const std::vector<eCAL::Monitoring::STopic>& topics_)
   {
-    return aligned_size(sizeof(struct eCAL_Monitoring_STopicMon) * topics_.size());
+    return aligned_size(sizeof(struct eCAL_Monitoring_STopic) * topics_.size());
   }
 
-  size_t ExtSize_Monitoring_SServerMonArray(const std::vector<eCAL::Monitoring::SServerMon>& servers_)
+  size_t ExtSize_Monitoring_SServerArray(const std::vector<eCAL::Monitoring::SServer>& servers_)
   {
-    return aligned_size(sizeof(struct eCAL_Monitoring_SServerMon) * servers_.size());
+    return aligned_size(sizeof(struct eCAL_Monitoring_SServer) * servers_.size());
   }
 
-  size_t ExtSize_Monitoring_SMethodMon(const eCAL::Monitoring::SMethodMon& method_)
+  size_t ExtSize_Monitoring_SMethod(const eCAL::Monitoring::SMethod& method_)
   {
     return ExtSize_String(method_.method_name) +
       ExtSize_SDataTypeInformation(method_.request_datatype_information) +
       ExtSize_SDataTypeInformation(method_.response_datatype_information);
   }
 
-  size_t ExtSize_Monitoring_SMethodMonArray(const std::vector<eCAL::Monitoring::SMethodMon>& methods_)
+  size_t ExtSize_Monitoring_SMethodArray(const std::vector<eCAL::Monitoring::SMethod>& methods_)
   {
-    return aligned_size(sizeof(struct eCAL_Monitoring_SMethodMon) * methods_.size());
+    return aligned_size(sizeof(struct eCAL_Monitoring_SMethod) * methods_.size());
   }
 
-  size_t ExtSize_Monitoring_SServerMon(const eCAL::Monitoring::SServerMon& server_)
+  size_t ExtSize_Monitoring_SServer(const eCAL::Monitoring::SServer& server_)
   {
     return ExtSize_String(server_.host_name) +
       ExtSize_String(server_.process_name) +
       ExtSize_String(server_.service_name) +
       ExtSize_String(server_.unit_name) +
-      ExtSize_Monitoring_SMethodMonArray(server_.methods) +
+      ExtSize_Monitoring_SMethodArray(server_.methods) +
       std::accumulate(server_.methods.begin(), server_.methods.end(), size_t{ 0 },
         [](auto size_, const auto& method_) {
-          return size_ + ExtSize_Monitoring_SMethodMon(method_);
+          return size_ + ExtSize_Monitoring_SMethod(method_);
         });
   }
 
-  size_t ExtSize_Monitoring_SClientMonArray(const std::vector<eCAL::Monitoring::SClientMon>& clients_)
+  size_t ExtSize_Monitoring_SClientArray(const std::vector<eCAL::Monitoring::SClient>& clients_)
   {
-    return aligned_size(sizeof(struct eCAL_Monitoring_SClientMon) * clients_.size());
+    return aligned_size(sizeof(struct eCAL_Monitoring_SClient) * clients_.size());
   }
 
-  size_t ExtSize_Monitoring_SClientMon(const eCAL::Monitoring::SClientMon& client_)
+  size_t ExtSize_Monitoring_SClient(const eCAL::Monitoring::SClient& client_)
   {
      return ExtSize_String(client_.host_name) +
        ExtSize_String(client_.process_name) +
        ExtSize_String(client_.service_name) +
        ExtSize_String(client_.unit_name) +
-       ExtSize_Monitoring_SMethodMonArray(client_.methods) +
+       ExtSize_Monitoring_SMethodArray(client_.methods) +
        std::accumulate(client_.methods.begin(), client_.methods.end(), size_t{ 0 },
          [](auto size_, const auto& method_) {
-           return size_ + ExtSize_Monitoring_SMethodMon(method_);
+           return size_ + ExtSize_Monitoring_SMethod(method_);
          });
   }
 
   size_t ExtSize_Monitoring_SMonitoring(const eCAL::Monitoring::SMonitoring& monitoring_)
   {
-    return ExtSize_Monitoring_SProcessMonArray(monitoring_.processes)
+    return ExtSize_Monitoring_SProcessArray(monitoring_.processes)
       + std::accumulate(monitoring_.processes.begin(), monitoring_.processes.end(), size_t{ 0 },
         [](auto size_, const auto& process_) {
-          return size_ + ExtSize_Monitoring_SProcessMon(process_);
+          return size_ + ExtSize_Monitoring_SProcess(process_);
         })
-      + ExtSize_Monitoring_STopicMonArray(monitoring_.publisher)
-      + std::accumulate(monitoring_.publisher.begin(), monitoring_.publisher.end(), size_t{ 0 },
+      + ExtSize_Monitoring_STopicArray(monitoring_.publishers)
+      + std::accumulate(monitoring_.publishers.begin(), monitoring_.publishers.end(), size_t{ 0 },
         [](auto size_, const auto& publisher_) {
-          return size_ + ExtSize_Monitoring_STopicMon(publisher_);
+          return size_ + ExtSize_Monitoring_STopic(publisher_);
         })
-      + ExtSize_Monitoring_STopicMonArray(monitoring_.subscriber)
-      + std::accumulate(monitoring_.subscriber.begin(), monitoring_.subscriber.end(), size_t{ 0 },
+      + ExtSize_Monitoring_STopicArray(monitoring_.subscribers)
+      + std::accumulate(monitoring_.subscribers.begin(), monitoring_.subscribers.end(), size_t{ 0 },
         [](auto size_, const auto& subscriber_) {
-          return size_ + ExtSize_Monitoring_STopicMon(subscriber_);
+          return size_ + ExtSize_Monitoring_STopic(subscriber_);
         })
-      + ExtSize_Monitoring_SServerMonArray(monitoring_.server)
-      + std::accumulate(monitoring_.server.begin(), monitoring_.server.end(), size_t{ 0 },
+      + ExtSize_Monitoring_SServerArray(monitoring_.servers)
+      + std::accumulate(monitoring_.servers.begin(), monitoring_.servers.end(), size_t{ 0 },
         [](auto size_, const auto& server_) {
-          return size_ + ExtSize_Monitoring_SServerMon(server_);
+          return size_ + ExtSize_Monitoring_SServer(server_);
         })
-      + ExtSize_Monitoring_SClientMonArray(monitoring_.clients);
+      + ExtSize_Monitoring_SClientArray(monitoring_.clients);
   }
 
-  void Assign_Monitoring_SProcessMon(struct eCAL_Monitoring_SProcessMon* process_c_, const eCAL::Monitoring::SProcessMon& process_, char** offset_)
+  void Assign_Monitoring_SProcess(struct eCAL_Monitoring_SProcess* process_c_, const eCAL::Monitoring::SProcess& process_, char** offset_)
   {
     process_c_->component_init_info = Convert_String(process_.component_init_info, offset_);
     process_c_->component_init_state = process_.component_init_state;
@@ -217,7 +217,7 @@ namespace
     }
   }
 
-  void Assign_Monitoring_STopicMon(struct eCAL_Monitoring_STopicMon* topic_c_, const eCAL::Monitoring::STopicMon& topic_, char** offset_)
+  void Assign_Monitoring_STopic(struct eCAL_Monitoring_STopic* topic_c_, const eCAL::Monitoring::STopic& topic_, char** offset_)
   {
     topic_c_->registration_clock = topic_.registration_clock;
     topic_c_->host_name = Convert_String(topic_.host_name, offset_);
@@ -240,7 +240,7 @@ namespace
     topic_c_->data_frequency = topic_.data_frequency;
   }
 
-  void Assign_Monitoring_SMethodMon(struct eCAL_Monitoring_SMethodMon* method_c_, const eCAL::Monitoring::SMethodMon& method_, char** offset_)
+  void Assign_Monitoring_SMethod(struct eCAL_Monitoring_SMethod* method_c_, const eCAL::Monitoring::SMethod& method_, char** offset_)
   {
     method_c_->call_count = method_.call_count;
     method_c_->method_name = Convert_String(method_.method_name, offset_);
@@ -248,20 +248,20 @@ namespace
     Assign_SDataTypeInformation(&(method_c_->response_datatype_information), method_.response_datatype_information, offset_);
   }
 
-  void Assign_Monitoring_SMethodMonArray(struct eCAL_Monitoring_SMethodMon** methods_c_, const std::vector<eCAL::Monitoring::SMethodMon>& methods_, char** offset_)
+  void Assign_Monitoring_SMethodArray(struct eCAL_Monitoring_SMethod** methods_c_, const std::vector<eCAL::Monitoring::SMethod>& methods_, char** offset_)
   {
-    *methods_c_ = reinterpret_cast<eCAL_Monitoring_SMethodMon*>(*offset_);
-    *offset_ += ExtSize_Monitoring_SMethodMonArray(methods_);
+    *methods_c_ = reinterpret_cast<eCAL_Monitoring_SMethod*>(*offset_);
+    *offset_ += ExtSize_Monitoring_SMethodArray(methods_);
     for (size_t i = 0; i < methods_.size(); ++i)
     {
-      Assign_Monitoring_SMethodMon(&((*methods_c_)[i]), methods_.at(i), offset_);
+      Assign_Monitoring_SMethod(&((*methods_c_)[i]), methods_.at(i), offset_);
     }
   }
 
-  void Assign_Monitoring_SServerMon(struct eCAL_Monitoring_SServerMon* server_c_, const eCAL::Monitoring::SServerMon& server_, char** offset_)
+  void Assign_Monitoring_SServer(struct eCAL_Monitoring_SServer* server_c_, const eCAL::Monitoring::SServer& server_, char** offset_)
   {
     server_c_->host_name = Convert_String(server_.host_name, offset_);
-    Assign_Monitoring_SMethodMonArray(&(server_c_->methods), server_.methods, offset_);
+    Assign_Monitoring_SMethodArray(&(server_c_->methods), server_.methods, offset_);
     server_c_->methods_length = server_.methods.size();
     server_c_->process_id = server_.process_id;
     server_c_->process_name = Convert_String(server_.process_name, offset_);
@@ -274,10 +274,10 @@ namespace
     server_c_->version = server_.version;
   }
 
-  void Assign_Monitoring_SClientMon(struct eCAL_Monitoring_SClientMon* client_c_, const eCAL::Monitoring::SClientMon& client_, char** offset_)
+  void Assign_Monitoring_SClient(struct eCAL_Monitoring_SClient* client_c_, const eCAL::Monitoring::SClient& client_, char** offset_)
   {
     client_c_->host_name = Convert_String(client_.host_name, offset_);
-    Assign_Monitoring_SMethodMonArray(&(client_c_->methods), client_.methods, offset_);
+    Assign_Monitoring_SMethodArray(&(client_c_->methods), client_.methods, offset_);
     client_c_->methods_length = client_.methods.size();
     client_c_->process_id = client_.process_id;
     client_c_->process_name = Convert_String(client_.process_name, offset_);
@@ -288,62 +288,62 @@ namespace
     client_c_->version = client_.version;
   }
 
-  void Assign_Monitoring_SProcessMonArray(struct eCAL_Monitoring_SProcessMon** processes_c_, const std::vector<eCAL::Monitoring::SProcessMon>& processes_, char** offset_)
+  void Assign_Monitoring_SProcessArray(struct eCAL_Monitoring_SProcess** processes_c_, const std::vector<eCAL::Monitoring::SProcess>& processes_, char** offset_)
   {
-    *processes_c_ = reinterpret_cast<eCAL_Monitoring_SProcessMon*>(*offset_);
-    *offset_ += ExtSize_Monitoring_SProcessMonArray(processes_);
+    *processes_c_ = reinterpret_cast<eCAL_Monitoring_SProcess*>(*offset_);
+    *offset_ += ExtSize_Monitoring_SProcessArray(processes_);
     for (size_t i = 0; i < processes_.size(); ++i)
     {
-      Assign_Monitoring_SProcessMon(&((*processes_c_)[i]), processes_.at(i), offset_);
+      Assign_Monitoring_SProcess(&((*processes_c_)[i]), processes_.at(i), offset_);
     }
   }
 
-  void Assign_Monitoring_STopicMonArray(struct eCAL_Monitoring_STopicMon** topics_c_, const std::vector<eCAL::Monitoring::STopicMon>& topics_, char** offset_)
+  void Assign_Monitoring_STopicArray(struct eCAL_Monitoring_STopic** topics_c_, const std::vector<eCAL::Monitoring::STopic>& topics_, char** offset_)
   {
-    *topics_c_ = reinterpret_cast<eCAL_Monitoring_STopicMon*>(*offset_);
-    *offset_ += ExtSize_Monitoring_STopicMonArray(topics_);
+    *topics_c_ = reinterpret_cast<eCAL_Monitoring_STopic*>(*offset_);
+    *offset_ += ExtSize_Monitoring_STopicArray(topics_);
     for (size_t i = 0; i < topics_.size(); ++i)
     {
-      Assign_Monitoring_STopicMon(&((*topics_c_)[i]), topics_.at(i), offset_);
+      Assign_Monitoring_STopic(&((*topics_c_)[i]), topics_.at(i), offset_);
     }
   }
 
-  void Assign_Monitoring_SServerMonArray(struct eCAL_Monitoring_SServerMon** servers_c_, const std::vector<eCAL::Monitoring::SServerMon>& servers_, char** offset_)
+  void Assign_Monitoring_SServerArray(struct eCAL_Monitoring_SServer** servers_c_, const std::vector<eCAL::Monitoring::SServer>& servers_, char** offset_)
   {
-    *servers_c_ = reinterpret_cast<eCAL_Monitoring_SServerMon*>(*offset_);
-    *offset_ += ExtSize_Monitoring_SServerMonArray(servers_);
+    *servers_c_ = reinterpret_cast<eCAL_Monitoring_SServer*>(*offset_);
+    *offset_ += ExtSize_Monitoring_SServerArray(servers_);
     for (size_t i = 0; i < servers_.size(); ++i)
     {
-      Assign_Monitoring_SServerMon(&((*servers_c_)[i]), servers_.at(i), offset_);
+      Assign_Monitoring_SServer(&((*servers_c_)[i]), servers_.at(i), offset_);
     }
   }
 
-  void Assign_Monitoring_SClientMonArray(struct eCAL_Monitoring_SClientMon** clients_c_, const std::vector<eCAL::Monitoring::SClientMon>& clients_, char** offset_)
+  void Assign_Monitoring_SClientArray(struct eCAL_Monitoring_SClient** clients_c_, const std::vector<eCAL::Monitoring::SClient>& clients_, char** offset_)
   {
-    *clients_c_ = reinterpret_cast<eCAL_Monitoring_SClientMon*>(*offset_);
-    *offset_ += ExtSize_Monitoring_SClientMonArray(clients_);
+    *clients_c_ = reinterpret_cast<eCAL_Monitoring_SClient*>(*offset_);
+    *offset_ += ExtSize_Monitoring_SClientArray(clients_);
     for (size_t i = 0; i < clients_.size(); ++i)
     {
-      Assign_Monitoring_SClientMon(&((*clients_c_)[i]), clients_.at(i), offset_);
+      Assign_Monitoring_SClient(&((*clients_c_)[i]), clients_.at(i), offset_);
     }
   }
 
   void Assign_Monitoring_SMonitoring(struct eCAL_Monitoring_SMonitoring* monitoring_c_, const eCAL::Monitoring::SMonitoring& monitoring_, char** offset_)
   {
     monitoring_c_->processes_length = monitoring_.processes.size();
-    Assign_Monitoring_SProcessMonArray(&(monitoring_c_->processes), monitoring_.processes, offset_);
+    Assign_Monitoring_SProcessArray(&(monitoring_c_->processes), monitoring_.processes, offset_);
     
-    monitoring_c_->publisher_length = monitoring_.publisher.size();
-    Assign_Monitoring_STopicMonArray(&(monitoring_c_->publisher), monitoring_.publisher, offset_);
+    monitoring_c_->publishers_length = monitoring_.publishers.size();
+    Assign_Monitoring_STopicArray(&(monitoring_c_->publishers), monitoring_.publishers, offset_);
 
-    monitoring_c_->subscriber_length = monitoring_.subscriber.size();
-    Assign_Monitoring_STopicMonArray(&(monitoring_c_->subscriber), monitoring_.subscriber, offset_);
+    monitoring_c_->subscribers_length = monitoring_.subscribers.size();
+    Assign_Monitoring_STopicArray(&(monitoring_c_->subscribers), monitoring_.subscribers, offset_);
 
-    monitoring_c_->server_length = monitoring_.server.size();
-    Assign_Monitoring_SServerMonArray(&(monitoring_c_->server), monitoring_.server, offset_);
+    monitoring_c_->servers_length = monitoring_.servers.size();
+    Assign_Monitoring_SServerArray(&(monitoring_c_->servers), monitoring_.servers, offset_);
 
     monitoring_c_->clients_length = monitoring_.clients.size();
-    Assign_Monitoring_SClientMonArray(&(monitoring_c_->clients), monitoring_.clients, offset_);
+    Assign_Monitoring_SClientArray(&(monitoring_c_->clients), monitoring_.clients, offset_);
   }
 }
 

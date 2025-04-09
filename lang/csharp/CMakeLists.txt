@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,22 +39,23 @@ option(ECAL_CSHARP_BUILD_TESTS   "BUILD eCAL C# unittests" ON)
 get_csharp_protobuf_version()
 message(STATUS "Using ECAL_CSHARP_PROTOBUF_VERSION: ${ECAL_CSHARP_PROTOBUF_VERSION}")
 
-add_subdirectory(Continental.eCAL.Core)
-add_subdirectory(Continental.eCAL.Protobuf)
-add_subdirectory(Continental.eCAL.String)
+add_subdirectory(Eclipse.eCAL.Core)
+add_subdirectory(Eclipse.eCAL.Protobuf)
+add_subdirectory(Eclipse.eCAL.Protobuf.Datatypes)
+add_subdirectory(Eclipse.eCAL.String)
 
 if (ECAL_CSHARP_BUILD_TESTS)
-add_subdirectory(Continental.eCAL.Core.Test)
-add_subdirectory(Continental.eCAL.Protobuf.Test)
+add_subdirectory(Eclipse.eCAL.Core.Test)
+add_subdirectory(Eclipse.eCAL.Protobuf.Test)
 endif()
 
 if (ECAL_CSHARP_BUILD_SAMPLES)
-add_subdirectory(Continental.eCAL.Core.Samples)
-add_subdirectory(Continental.eCAL.Protobuf.Samples)
-add_subdirectory(Continental.eCAL.String.Samples)
+add_subdirectory(Eclipse.eCAL.Core.Samples)
+add_subdirectory(Eclipse.eCAL.Protobuf.Samples)
+add_subdirectory(Eclipse.eCAL.String.Samples)
 endif ()
 
 if (ECAL_CSHARP_BUILD_SAMPLES OR ECAL_CSHARP_BUILD_TESTS)
 #Contains the person.proto which are being compiled to cs files
-add_subdirectory(Continental.eCAL.Protobuf.Samples.Datatypes)
+add_subdirectory(Eclipse.eCAL.Protobuf.Samples.Datatypes)
 endif()
