@@ -2,9 +2,9 @@
 
 .. _getting_started_howto_pubsub:
 
-======
-Pubsub 
-======
+===================
+PublisherSubscriber
+===================
 
 Publisher and subscriber are the bread and butter of the eCAL world.
 

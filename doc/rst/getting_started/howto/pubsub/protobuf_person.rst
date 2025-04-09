@@ -6,21 +6,26 @@
 Protobuf: Person
 ================
 
-In the last section you learned how to send strings to an eCAL Topic.
-Using strings is great for simple data that has a textual representation.
-Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.
+Let's implement a small application, that lets the user input his name and send a message to an eCAL topic.
 
-Of course, you can define your own protocol and pass the raw memory to eCAL (you would use the raw `eCAL::CPublisher()` to do that).
-Our recommended way however is to use Google protobuf, because:
 
-* It solves the problem of how to serialize and de-serialize data for you
-* You get downward compatibility out of the box (if you follow the guidelines)
-* It is maintained by Google and the API is stable
-* The eCAL Monitor can display a nice reflection view of the data
+Person Protobuf
+===============
 
-.. important::
-   It is important to remember, that all your applications must agree on the data format.
-   As protobuf messages are defined in :file:`.proto` files, all of your applications should be compiled with the same files.
+As the sender and receiver need the same .proto files, we place them in a separate directory next to the source directories for the sender and the receiver.
+
+.. parsed-literal::
+   
+   |fa-folder-open| Person Protobuf File
+   └─ |fa-file-alt| :download:`person.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto>`
+
+
+Let's start with the :file:`protobuf/person.proto` file!
+
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto
+   :language: protobuf
+   :linenos:
+   :lines: 20-
 
 
 Person Publisher
