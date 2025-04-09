@@ -12,5 +12,5 @@ set(CMAKE_FOLDER "thirdparty/yaml-cpp")
 
 ecal_variable_push(CMAKE_POLICY_VERSION_MINIMUM)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/yaml-cpp thirdparty/yaml-cpp EXCLUDE_FROM_ALL SYSTEM)
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/yaml-cpp" "${eCAL_BINARY_DIR}/thirdparty/yaml-cpp" EXCLUDE_FROM_ALL SYSTEM)
 ecal_variable_pop(CMAKE_POLICY_VERSION_MINIMUM)
