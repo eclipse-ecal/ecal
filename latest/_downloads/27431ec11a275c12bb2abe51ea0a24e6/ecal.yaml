@@ -197,7 +197,7 @@ logging:
       # Enable console logging
       enable: true
       # Log level for console output
-      log_level: ["warning", "error", "fatal"]
+      log_level: ["info", "warning", "error", "fatal"]
     # File logging configuration
     file:
       # Enable file logging
