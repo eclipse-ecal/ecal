@@ -295,6 +295,15 @@ yaml-cpp
     - Binary distributions for Windows
     - Binary distributions for Linux
 
+abseil
+  - License: Apache 2.0
+  - Project: https://github.com/abseil/abseil-cpp
+  - Copyright: 2017 The Abseil Authors.
+  - Included in:
+    - Git submodule `/thirdparty/absl/absl`
+    - Binary distributions for Windows
+    - Binary distributions for Linux
+
 ## Cryptography
 
 Content may contain encryption software. The country in which you are currently
