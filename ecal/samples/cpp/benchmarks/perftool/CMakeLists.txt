@@ -43,7 +43,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
     FILES
