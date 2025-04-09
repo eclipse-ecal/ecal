@@ -298,10 +298,15 @@ if(ECAL_USE_QT)
     set(_ECAL_CXX_STD 17)
   endif()
 endif()
+if(ECAL_USE_FTXUI)
+  # FTXUI requires C++17
+  set(_ECAL_CXX_STD 17)
+endif()
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
   # eCAL is being compiled as the root project, and no standard version is set
   set(CMAKE_CXX_STANDARD "${_ECAL_CXX_STD}")
+  message(STATUS "eCAL is using C++ ${_ECAL_CXX_STD}")
 else()
   # eCAL is part of a larger build or the standard was externally set
 endif()
