@@ -61,3 +61,6 @@
 [submodule "thirdparty/protozero/protozero"]
 	path = thirdparty/protozero/protozero
 	url = https://github.com/mapbox/protozero.git
+[submodule "thirdparty/absl"]
+	path = thirdparty/absl/absl
+	url = https://github.com/abseil/abseil-cpp.git

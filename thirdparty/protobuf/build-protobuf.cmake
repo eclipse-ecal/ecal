@@ -1,7 +1,10 @@
+# Protobuf 4(.25.X) is skipped because of a regression with msvc that never
+# had its fix backported.
+# https://github.com/protocolbuffers/protobuf/issues/14602
 set(Protobuf_PROTOC_EXECUTABLE protoc)
-set(Protobuf_VERSION 3.11.4)
-set(Protobuf_VERSION_MAJOR 3)
-set(Protobuf_VERSION_MINOR 11)
+set(Protobuf_VERSION 5.29.4)
+set(Protobuf_VERSION_MAJOR 5)
+set(Protobuf_VERSION_MINOR 29)
 set(Protobuf_VERSION_PATCH 4)
 
 include_guard(GLOBAL)
@@ -11,6 +14,8 @@ set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
 if(UNIX)
   set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
 endif()
+
+set(protobuf_ABSL_PROVIDER "package")
 
 if(MSVC)
   message(STATUS "supress thirdparty warnings for windows platform ..")
@@ -25,7 +30,7 @@ endif()
 ecal_disable_all_warnings()
 ecal_variable_push(CMAKE_POLICY_VERSION_MINIMUM)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/protobuf/cmake" "${eCAL_BINARY_DIR}/thirdparty/protobuf" SYSTEM)
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/protobuf" "${eCAL_BINARY_DIR}/thirdparty/protobuf" SYSTEM)
 ecal_variable_pop(CMAKE_POLICY_VERSION_MINIMUM)
 ecal_restore_warning_level()
 
