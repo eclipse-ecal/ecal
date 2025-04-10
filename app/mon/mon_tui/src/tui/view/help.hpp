@@ -30,6 +30,7 @@
 #include "tui/view/component/decorator.hpp"
 
 #include "tui/viewmodel/help.hpp"
+#include "tui/ftxui_version_compatibility.hpp"
 
 #include "ecal_mon_tui_defs.h"
 
@@ -108,11 +109,7 @@ public:
     return *view_model;
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  ftxui::Element OnRender() override
-#else
-  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
     return view->Render();

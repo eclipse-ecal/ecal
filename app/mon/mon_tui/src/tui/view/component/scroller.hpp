@@ -32,6 +32,8 @@
 #include "ftxui/dom/requirement.hpp"
 #include "ftxui/screen/box.hpp"
 
+#include <tui/ftxui_version_compatibility.hpp>
+
 namespace ftxui
 {
 class ScrollerBase : public ComponentBase
@@ -41,16 +43,12 @@ class ScrollerBase : public ComponentBase
   ScrollerBase(Component child) : selected_{selected_dummy} { Add(child); }
 
  private:
-#if FTXUI_VERSION_MAJOR >= 6
-  Element OnRender() final
-#else
-  Element Render() final
-#endif
+  Element FTXUI_COMPATIBILITY_RENDER() final
   {
     auto focused = Focused() ? focus : ftxui::select;
     auto style = Focused() ? inverted : nothing;
 
-    Element background = ComponentBase::Render();
+    Element background = ComponentBase::FTXUI_COMPATIBILITY_RENDER();
     background->ComputeRequirement();
     size_ = background->requirement().min_y;
     auto el =  dbox({
