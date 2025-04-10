@@ -27,11 +27,18 @@ jobs:
         short_sha=$(echo ${{ github.event.after }} | cut -c1-7)
         echo cherry_pick_branch=cherry-pick/$short_sha/${{matrix.target-branch}} >> $GITHUB_ENV
 
+    # Checkout with a specific fine-grained access token that has more permissions.
+    # When the token becomes invalid, this will show as the following error:
+    #  
+    #   /usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+    #   Error: fatal: could not read Username for 'https://github.com': terminal prompts disabled
+    #   Error: The process '/usr/bin/git' failed with exit code 128
+    #
     - name: Checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-03-26 and is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/4466#note_1987666
+        token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-04-10 and probably is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/5852#note_3593366
 
     - name: Determine PR number (if any)
       id: pr
@@ -45,7 +52,7 @@ jobs:
           echo continue_workflow=false >> $GITHUB_ENV
         fi
       env:
-        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-03-26 and is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/4466#note_1987666
+        GITHUB_TOKEN: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }}
 
     - name: Check for a cherry pick label and save whether that is the case
       if: ${{ env.continue_workflow == 'true' }}
