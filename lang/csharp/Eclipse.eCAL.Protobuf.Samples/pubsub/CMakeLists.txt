@@ -39,5 +39,5 @@ macro(ecal_add_csharp_protobuf_pubsub_sample sample_name)
   )
 endmacro()
 
-ecal_add_csharp_protobuf_pubsub_sample(person_rec_csharp)
-ecal_add_csharp_protobuf_pubsub_sample(person_snd_csharp)
+ecal_add_csharp_protobuf_pubsub_sample(person_send)
+ecal_add_csharp_protobuf_pubsub_sample(person_receive)
