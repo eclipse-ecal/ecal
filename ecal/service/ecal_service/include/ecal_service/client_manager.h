@@ -196,7 +196,7 @@ namespace ecal_service
 
     mutable std::mutex                          client_manager_mutex_;  //!< Mutex protecting the entire class
     bool                                        stopped_;               //!< Flag indicating, if the manager is stopped 
-    std::unique_ptr<asio::io_context::work>     work_;                  //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
+    asio::executor_work_guard<asio::io_context::executor_type> work_;   //!< Work object to keep the io_context alive. Will be resetted, when the manager is stopped.
     std::map<ClientSession*, std::weak_ptr<ClientSession>> sessions_;   //!< Map of all managed client sessions. The raw_ptr is used as key, because it is unique for each client. The weak_ptr is used to actually access the client object, because the client may already be dead and the raw ptr would be dangling in that case.
   };
 }

@@ -47,7 +47,7 @@ namespace ecal_service
     : io_context_(io_context)
     , logger_(logger)
     , stopped_(false)
-    , work_(std::make_unique<asio::io_context::work>(*io_context))
+    , work_(asio::make_work_guard(*io_context))
   {}
 
   ClientManager::~ClientManager()

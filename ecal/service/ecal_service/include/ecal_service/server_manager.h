@@ -181,7 +181,7 @@ namespace ecal_service
 
     mutable std::mutex                          server_manager_mutex_;  //!< Mutex protecting the entire class
     bool                                        stopped_;               //!< Flag indicating, if the manager is stopped
-    std::unique_ptr<asio::io_context::work>     work_;                  //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
+    asio::executor_work_guard<asio::io_context::executor_type> work_;   //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
     std::map<Server*, std::weak_ptr<Server>>    sessions_;              //!< Map of all servers, that are currently managed by this server manager. The raw_ptr is used as key, because it is unique for each server. The weak_ptr is used to actually access the server object, because the server may already be dead and the raw ptr would be dangling in that case.
   };
 

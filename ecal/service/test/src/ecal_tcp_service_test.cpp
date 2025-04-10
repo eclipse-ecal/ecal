@@ -66,7 +66,7 @@ TEST(ecal_service, RAII_TcpServiceServer) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     const ecal_service::Server::ServiceCallbackT service_callback
             = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
@@ -117,7 +117,7 @@ TEST(ecal_service, RAII_TcpServiceClient) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     const ecal_service::ClientSession::EventCallbackT client_event_callback
             = []
@@ -148,7 +148,7 @@ TEST(ecal_service, RAII_TcpServiceServerAndClient) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<bool> response_callback_called(false);
 
@@ -235,7 +235,7 @@ TEST(ecal_service, RAII_StopDuringServiceCall) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<bool> response_callback_called(false);
 
@@ -314,7 +314,7 @@ TEST(ecal_service, Communication_SlowCommunication) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_client_response_callback_called          (0);
@@ -424,7 +424,7 @@ TEST(ecal_service, CallbacksConnectDisconnect_ClientDisconnectsFirst) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_event_callback_called             (0);
     std::atomic<int> num_server_event_callback_called_connected   (0);
@@ -531,7 +531,7 @@ TEST(ecal_service, CommunicationAndCallbacks_ClientsDisconnectFirst) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     atomic_signalable<int> num_server_service_callback_called           (0);
     atomic_signalable<int> num_server_event_callback_called             (0);
@@ -724,7 +724,7 @@ TEST(ecal_service, CommunicationAndCallbacks_ServerDisconnectsFirst) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -876,7 +876,7 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunication) // NOLINT
     constexpr int num_calls_per_client = 15;
 
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     atomic_signalable<int> num_server_service_callback_called           (0);
     atomic_signalable<int> num_server_event_callback_called             (0);
@@ -1032,7 +1032,8 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationNoParallelCal
     constexpr std::chrono::milliseconds server_time_to_waste(50);
 
     const auto io_context = std::make_shared<asio::io_context>();
-    auto       dummy_work = std::make_unique<asio::io_context::work>(*io_context);
+    asio::executor_work_guard<asio::io_context::executor_type> dummy_work(io_context->get_executor());
+
 
     std::atomic<int> num_server_service_callback_started           (0);
     std::atomic<int> num_server_service_callback_finished          (0);
@@ -1163,7 +1164,7 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationMassivePayloa
   const auto payload = std::make_shared<const std::string>(payload_size_bytes, 'e');
 
   const auto io_context = std::make_shared<asio::io_context>();
-  const asio::io_context::work dummy_work(*io_context);
+  const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
   atomic_signalable<int> num_server_service_callback_called           (0);
   atomic_signalable<int> num_server_event_callback_called             (0);
@@ -1446,7 +1447,7 @@ TEST(ecal_service, Callback_ServiceCallFromCallback) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called(0);
     std::atomic<int> num_client_response_callback1_called(0);
@@ -1611,7 +1612,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     atomic_signalable<int> num_server_service_callback_called (0);
     atomic_signalable<int> num_server_event_callback_called   (0);
@@ -1758,7 +1759,7 @@ TEST(ecal_service, BackupHost)
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
     
     atomic_signalable<int> num_server_service_callback_called(0);
     atomic_signalable<int> num_server_event_callback_called  (0);
@@ -1877,7 +1878,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackNoServer) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     atomic_signalable<int> num_client_response_callback_called(0);
     std::atomic<int>       num_client_event_callback_called   (0);
@@ -1929,7 +1930,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackServerHasDisconnected) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    auto dummy_work = std::make_unique<asio::io_context::work>(*io_context);
+    asio::executor_work_guard<asio::io_context::executor_type> dummy_work(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_server_event_callback_called             (0);
@@ -2096,7 +2097,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackClientDisconnects) // NOLINT
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
     std::atomic<int> num_client_response_callback_called          (0);
@@ -2203,7 +2204,7 @@ TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThrough) // NOLINT
     constexpr std::chrono::milliseconds wait_time_for_destroying_server = server_time_to_waste * num_calls_per_client / 2;
 
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int>       num_server_service_callback_called           (0);
     atomic_signalable<int> num_server_event_callback_called             (0);
@@ -2563,7 +2564,7 @@ TEST(ecal_service, BlockingCall_RegularBlockingCall) // NOLINT
     constexpr int num_calls = 3;
 
     const auto io_context = std::make_shared<asio::io_context>();
-    const asio::io_context::work dummy_work(*io_context);
+    const asio::executor_work_guard<asio::io_context::executor_type> dummy_work_guard(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
 
@@ -2635,7 +2636,7 @@ TEST(ecal_service, BlockingCall_BlockingCallWithErrorHalfwayThrough) // NOLINT
     constexpr int num_calls_after_shutdown  = 3;
 
     const auto io_context = std::make_shared<asio::io_context>();
-    auto       dummy_work = std::make_unique<asio::io_context::work>(*io_context);
+    asio::executor_work_guard<asio::io_context::executor_type> dummy_work(io_context->get_executor());
 
     std::atomic<int> num_server_service_callback_called           (0);
 
