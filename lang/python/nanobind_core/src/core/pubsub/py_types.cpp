@@ -20,6 +20,8 @@
 #include <core/pubsub/py_types.h>
 #include <ecal/pubsub/types.h>
 
+#include <nanobind/stl/string.h>
+
 #include <sstream>
 
 namespace nb = nanobind;
@@ -73,10 +75,10 @@ void AddPubsubTypes(nanobind::module_& module)
       // This data will always be set by C++, hence it's not changeable
       nb::class_<eCAL::SReceiveCallbackData>(module, "ReceiveCallbackData")
         .def(nb::init<>())
-        .def("buffer", [](const SReceiveCallbackData& data) -> nb::bytes {
+        .def_prop_ro("buffer", [](const SReceiveCallbackData& data) -> nb::bytes {
           // Cast the void* to const char* and create a nb::bytes from it.
           return nb::bytes(static_cast<const char*>(data.buffer), data.buffer_size);
-          }, "Return the payload buffer as Python bytes")
+          }, "Payload buffer as Python bytes")
         .def_ro("send_timestamp", &eCAL::SReceiveCallbackData::send_timestamp, "Publisher send timestamp (µs)")
         .def_ro("send_clock", &eCAL::SReceiveCallbackData::send_clock, "Publisher send clock counter");
 

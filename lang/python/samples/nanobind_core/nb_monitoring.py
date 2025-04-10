@@ -27,7 +27,7 @@ def main():
     while ecal_core.ok():
         #TODO: is the naming good?
         # or ecal_core.monitoring.
-        monitoring = ecal_core.get_monitoring()
+        monitoring = ecal_core.monitoring.get_monitoring()
         
         print("There are {} publishers and {} subscribers in the system".format(len(monitoring.publishers), len(monitoring.subscribers)))
 
