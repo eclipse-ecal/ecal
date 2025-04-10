@@ -21,23 +21,14 @@ import time
 
 import ecal.nanobind_core as ecal_core
 
-# eCAL receive callback
-def callback(publisher_id, datatype_info, data):
-  try:
-    print(publisher_id)
-    print(datatype_info)
-    print(data)
-  except Exception as e:
-    print(e)
-  
-def event_callback(topic_id, data):
-  try:
-    print(topic_id)
-    print(data)
-  except Exception as e:
-    print(e)
-  
-  
+DATA_SIZE = 1024
+
+def my_event_callback(topic_id, callback_data):
+  print("Event callback invoked")
+  entity = topic_id.topic_id
+  print("A subscriber with id {} from host {} with PID {} has been {}".format(entity.entity_id, entity.host_name, entity.process_id, callback_data.event_type))
+
+
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
@@ -46,22 +37,29 @@ def main():
   ecal_core.initialize()
 
   # create publisher
-  config = ecal_core.get_subscriber_configuration()
+  config = ecal_core.get_publisher_configuration()
+
+  # We can assign a encoding, name or descriptor to the datatype_info.
+  # However, we don't have to provide any information here
+  # Specialized message publishers will set these fields
   datatype_info = ecal_core.DataTypeInformation()
-  datatype_info.encoding = "string"
-  datatype_info.descriptor = b"abcd"
+  # We can additionally register an event_callback, which will be called when another entity
+  # has been connected to this process
+  pub = ecal_core.Publisher("blob", datatype_info, config, event_callback = my_event_callback)
   
-  # create subscriber and connect callback
-  sub = ecal_core.Subscriber("Hello")
-  sub.set_receive_callback(callback)
+  print(pub.get_data_type_information())
   
-  # idle main thread
+  # send messages
+  i = 0
   while ecal_core.ok():
-    time.sleep(0.1)
+    filler_value = i % 256
+    byte_data =  bytes([filler_value] * DATA_SIZE)
+    pub.send(byte_data)
+    i = i + 1
+    time.sleep(0.5)
   
   # finalize eCAL API
   ecal_core.finalize()
-  
+
 if __name__ == "__main__":
   main()
-

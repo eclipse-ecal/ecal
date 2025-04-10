@@ -32,19 +32,20 @@ using namespace nb::literals;
 
 void AddMonitoring(nanobind::module_& m)
 {
+  nb::module_ m_monitoring = m.def_submodule("monitoring", "eCAL Monitoring related functionality");
+
   // Enum values from Entity namespace
-  nb::module_ entity_mod = m.def_submodule("Entity");
-  entity_mod.attr("Publisher") = eCAL::Monitoring::Entity::Publisher;
-  entity_mod.attr("Subscriber") = eCAL::Monitoring::Entity::Subscriber;
-  entity_mod.attr("Server") = eCAL::Monitoring::Entity::Server;
-  entity_mod.attr("Client") = eCAL::Monitoring::Entity::Client;
-  entity_mod.attr("Process") = eCAL::Monitoring::Entity::Process;
-  entity_mod.attr("Host") = eCAL::Monitoring::Entity::Host;
-  entity_mod.attr("All") = eCAL::Monitoring::Entity::All;
-  entity_mod.attr("None") = eCAL::Monitoring::Entity::None;
+  m_monitoring.attr("Publisher") = eCAL::Monitoring::Entity::Publisher;
+  m_monitoring.attr("Subscriber") = eCAL::Monitoring::Entity::Subscriber;
+  m_monitoring.attr("Server") = eCAL::Monitoring::Entity::Server;
+  m_monitoring.attr("Client") = eCAL::Monitoring::Entity::Client;
+  m_monitoring.attr("Process") = eCAL::Monitoring::Entity::Process;
+  m_monitoring.attr("Host") = eCAL::Monitoring::Entity::Host;
+  m_monitoring.attr("All") = eCAL::Monitoring::Entity::All;
+  m_monitoring.attr("None") = eCAL::Monitoring::Entity::None;
 
   // GetMonitoring: serialized string version
-  m.def("get_serialized_monitoring", [](unsigned int entities = eCAL::Monitoring::Entity::All) {
+  m_monitoring.def("get_serialized_monitoring", [](unsigned int entities = eCAL::Monitoring::Entity::All) {
     //nb::gil_scoped_release release_gil;
     std::string result;
     if (eCAL::Monitoring::GetMonitoring(result, entities)) {
@@ -57,7 +58,7 @@ void AddMonitoring(nanobind::module_& m)
     "Returns monitoring info as a serialized string. Can be deserialized using monitoring.proto");
 
   // GetMonitoring: struct version
-  m.def("get_monitoring", [](unsigned int entities = eCAL::Monitoring::Entity::All) {
+  m_monitoring.def("get_monitoring", [](unsigned int entities = eCAL::Monitoring::Entity::All) {
     //nb::gil_scoped_release release_gil;
     eCAL::Monitoring::SMonitoring mon;
     if (eCAL::Monitoring::GetMonitoring(mon, entities)) {
