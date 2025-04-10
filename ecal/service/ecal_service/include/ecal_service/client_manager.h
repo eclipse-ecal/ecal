@@ -47,7 +47,7 @@ namespace ecal_service
    * The ClientManager is only available as shared_ptr. It must be created
    * using the static create() method.
    * 
-   * - Upon creation, the ClientManager will create a work object for the
+   * - Upon creation, the ClientManager will create a work_guard object for the
    *   given io_context. This will keep the io_context alive, even if there
    *   are no clients running.
    * 
@@ -55,7 +55,7 @@ namespace ecal_service
    *   will create a new client instance and return a shared_ptr to it.
    * 
    * - For stopping all clients, the stop() method must be used. This
-   *   will stop all clients and delete the internal work object, so the 
+   *   will stop all clients and delete the internal work_guard object, so the 
    *   thread executing it can be joined.
    * 
    * =========================================================================
@@ -101,9 +101,9 @@ namespace ecal_service
     /**
      * @brief Create a new ClientManager instance, that can be used to create and stop ClientSession instances.
      * 
-     * After creation, the ClientManager will create a work object for the
+     * After creation, the ClientManager will create a work_guard object for the
      * given io_context. This will keep the io_context alive, even if there
-     * are no clients running. When stopping the clients, that work object
+     * are no clients running. When stopping the clients, that work_guard object
      * will be deleted and the io_context will run out of work on its own.
      * 
      * @param io_context The io context, that will be used for all client sessions
@@ -165,8 +165,8 @@ namespace ecal_service
      * @brief Stops the client manager and all managed client sessions
      * 
      * This will stop all managed client sessions and delete the internal
-     * work object, so the thread executing the io_context can be joined.
-     * The io context will run out of work on its own.
+     * work_guard object, so the thread executing the io_context can be joined.
+     * The io context will run out of work_guard on its own.
      * 
      * Once stopped, the client manager cannot be used anymore. It must be
      * deleted and a new one must be created.

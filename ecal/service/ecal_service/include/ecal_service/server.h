@@ -60,7 +60,7 @@ namespace ecal_service
    * Sample code:
    * 
    *     auto io_context = std::make_shared<asio::io_context>();
-   *     auto dummy_work = std::make_shared<asio::io_context::work>(*io_context);
+   *     asio::executor_work_guard<asio::io_context::executor_type> work_guard(io_context->get_executor());
    *     
    *     std::thread io_thread([&io_context]() { io_context->run(); });
    *     
@@ -69,7 +69,7 @@ namespace ecal_service
    *     // Do stuff
    *     
    *     server->stop();
-   *     dummy_work->reset();
+   *     work_guard.reset();
    *     io_thread.join();
    * 
    */
