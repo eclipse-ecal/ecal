@@ -36,6 +36,8 @@
 
 #include "tui/viewmodel/table.hpp"
 
+#include "tui/ftxui_version_compatibility.hpp"
+
 template<typename T>
 class TableView : public View
 {
@@ -135,11 +137,7 @@ public:
     return nullptr;
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  virtual  ftxui::Element OnRender() override
-#else
-  virtual  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 

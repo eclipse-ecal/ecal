@@ -27,6 +27,7 @@
 #include "tui/view/view.hpp"
 
 #include "tui/viewmodel/command_line.hpp"
+#include "tui/ftxui_version_compatibility.hpp"
 
 class CommandLineView : public View
 {
@@ -108,11 +109,7 @@ public:
     return true;
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  ftxui::Element OnRender() override
-#else
-  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 

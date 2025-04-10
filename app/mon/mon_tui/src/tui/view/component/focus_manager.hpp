@@ -20,6 +20,7 @@
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
+#include <tui/ftxui_version_compatibility.hpp>
 
 namespace ftxui {
 class ContainerBase : public ComponentBase {
@@ -97,11 +98,7 @@ class FocusManager : public ftxui::ContainerBase
  public:
   using ftxui::ContainerBase::ContainerBase;
 
-#if FTXUI_VERSION_MAJOR >= 6
-  ftxui::Element OnRender() override
-#else
-  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
     Elements elements;

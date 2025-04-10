@@ -25,6 +25,8 @@
 
 #include "tui/viewmodel/message_visualization/message_visualization.hpp"
 
+#include "tui/ftxui_version_compatibility.hpp"
+
 class MessageVisualizationView : public View
 {
   std::shared_ptr<MessageVisualizationViewModel> view_model;
@@ -41,11 +43,7 @@ public:
     return *view_model;
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  ftxui::Element OnRender() override
-#else
-  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 

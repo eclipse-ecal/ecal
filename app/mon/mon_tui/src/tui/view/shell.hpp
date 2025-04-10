@@ -35,6 +35,7 @@
 #include "tui/view/command_line.hpp"
 
 #include "tui/viewmodel/shell.hpp"
+#include "tui/ftxui_version_compatibility.hpp"
 
 class ShellView : public View
 {
@@ -150,11 +151,7 @@ public:
     }
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  ftxui::Element OnRender() override
-#else
-  ftxui::Element Render() override
-#endif
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 

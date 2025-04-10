@@ -38,6 +38,8 @@
 
 #include <ftxui/component/component.hpp>
 
+#include <tui/ftxui_version_compatibility.hpp>
+
 namespace ftxui
 {
 
@@ -820,11 +822,7 @@ public:
     return ComponentBase::OnEvent(event);
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  Element OnRender() override
-#else
-  Element Render() override
-#endif
+  Element FTXUI_COMPATIBILITY_RENDER() override
   {
     std::lock_guard<std::mutex> lock{data_mutex};
     return vbox(

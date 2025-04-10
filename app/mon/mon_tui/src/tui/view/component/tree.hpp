@@ -25,6 +25,8 @@
 
 #include "tui/view/component/decorator.hpp"
 
+#include <tui/ftxui_version_compatibility.hpp>
+
 namespace ftxui
 {
 
@@ -170,11 +172,7 @@ public:
     Add(tree);
   }
 
-#if FTXUI_VERSION_MAJOR >= 6
-  Element OnRender() override
-#else
-  Element Render() override
-#endif
+  Element FTXUI_COMPATIBILITY_RENDER() override
   {
     return tree->Render();
   }
