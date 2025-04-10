@@ -15,6 +15,8 @@ if(UNIX)
   set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
 endif()
 
+set(protobuf_BUILD_LIBUPB OFF CACHE BOOL "libupb is disabled" FORCE)
+set(protobuf_USE_EXTERNAL_GTEST ON CACHE BOOL "Do not use protobuf vendored gtest" FORCE)
 set(protobuf_ABSL_PROVIDER "package")
 
 if(MSVC)
