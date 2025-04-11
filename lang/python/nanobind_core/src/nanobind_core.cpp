@@ -90,9 +90,12 @@ NB_MODULE(nanobind_core, core) {
   AddConfigConfiguration(core); // need to add last, so the others are available.
   AddConfig(core);
 
+  AddPubsubTypes(core);
   AddPubsubPublisher(core);
   AddPubsubSubscriber(core);
-  AddPubsubTypes(core);
+
+  AddServiceTypes(core);
+  AddServiceServer(core);
 
   AddProcessSeverity(core);
   AddProcess(core);
