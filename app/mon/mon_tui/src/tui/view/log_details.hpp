@@ -28,6 +28,7 @@
 #include "tui/view/component/decorator.hpp"
 
 #include "tui/viewmodel/logs.hpp"
+#include "tui/ftxui_version_compatibility.hpp"
 
 class LogDetailsView : public View
 {
@@ -42,7 +43,7 @@ public:
     return *view_model;
   }
 
-  ftxui::Element Render() override
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
+#include <tui/ftxui_version_compatibility.hpp>
 
 namespace ftxui {
 class ContainerBase : public ComponentBase {
@@ -97,7 +98,8 @@ class FocusManager : public ftxui::ContainerBase
  public:
   using ftxui::ContainerBase::ContainerBase;
 
-  ftxui::Element Render() override {
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
+  {
     using namespace ftxui;
     Elements elements;
     for (auto& it : children_)

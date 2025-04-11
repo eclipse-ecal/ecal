@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@
 #include "ftxui/dom/requirement.hpp"
 #include "ftxui/screen/box.hpp"
 
+#include <tui/ftxui_version_compatibility.hpp>
+
 namespace ftxui
 {
 class ScrollerBase : public ComponentBase
@@ -41,12 +43,12 @@ class ScrollerBase : public ComponentBase
   ScrollerBase(Component child) : selected_{selected_dummy} { Add(child); }
 
  private:
-  Element Render() final
+  Element FTXUI_COMPATIBILITY_RENDER() final
   {
     auto focused = Focused() ? focus : ftxui::select;
     auto style = Focused() ? inverted : nothing;
 
-    Element background = ComponentBase::Render();
+    Element background = ComponentBase::FTXUI_COMPATIBILITY_RENDER();
     background->ComputeRequirement();
     size_ = background->requirement().min_y;
     auto el =  dbox({
