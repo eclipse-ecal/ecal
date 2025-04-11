@@ -133,9 +133,9 @@ namespace eCAL
      * @param msg_                     The message object.
      * @param time_                    Time stamp.
      *
-     * @return  Number of bytes sent.
+     * @return True if succeeded, otherwise false.
     **/
-    size_t Send(const T& msg_, long long time_ = CPublisher::DEFAULT_TIME_ARGUMENT)
+    bool Send(const T& msg_, long long time_ = CPublisher::DEFAULT_TIME_ARGUMENT)
     {
       CPayload payload{ msg_, m_serializer };
       return m_publisher.Send(payload, time_);
