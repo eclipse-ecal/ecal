@@ -27,6 +27,17 @@
 #include <string>
 #include <nanobind/nanobind.h>
 
+inline nanobind::bytes std_string_to_nb_bytes(const std::string& cpp_string)
+{
+  return nanobind::bytes(cpp_string.c_str(), cpp_string.size());
+}
+
+inline std::string nb_bytes_to_std_string(const nanobind::bytes& nb_bytes)
+{
+  return std::string(nb_bytes.c_str(), nb_bytes.size());
+}
+
+
 // This is a nb::def_visitor, which binds a std::string to a nb::bytes object
 // In eCAL, we often use std::string as a container for bytes, so these types should rather be 
 // mapped to python bytes objects and not strings.
@@ -39,7 +50,8 @@ struct bytestring_property : nanobind::def_visitor<bytestring_property<T>> {
     template <typename Class, typename... Extra>
     void execute(Class &cl, const Extra&... extra) {
         cl.def_prop_rw(name,
-                       [mptr=mptr](const T& self) { return nanobind::bytes((self.*mptr).c_str(), (self.*mptr).size()); },
-                       [mptr=mptr](T& self, nanobind::bytes val) { (self.*mptr).assign(val.c_str(), val.size()); });
+                       [mptr=mptr](const T& self) { return std_string_to_nb_bytes(self.*mptr); },
+                       [mptr=mptr](T& self, nanobind::bytes val) { (self.*mptr) = nb_bytes_to_std_string(val); });
     }
 };
+

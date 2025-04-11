@@ -23,42 +23,37 @@ import ecal.nanobind_core as ecal_core
 
 # define the server method "ping" function
 def echo_req_callback(
-      method_name : str, 
-      req_type : ecal_core.DataTypeInformation, 
-      resp_type : ecal_core.DataTypeInformation, 
+      method_information : ecal_core.ServiceMethodInformation,
       request : bytes) -> Tuple[int, bytes]:
-    print("Method '{}' called with request {}".format(method_name, request))
+    print("Method '{}' called with request {}".format(method_information.method_name, request))
     return 0, request
 
 # define the server method "ping" function
 def reverse_req_callback(
-      method_name : str, 
-      req_type : ecal_core.DataTypeInformation, 
-      resp_type : ecal_core.DataTypeInformation, 
+      method_information : ecal_core.ServiceMethodInformation,
       request : bytes) -> Tuple[int, bytes]:
-    print("Method '{}' called with {} request".format(method_name, request))
+    print("Method '{}' called with {} request".format(method_information.method_name, request))
     response = request[::-1] #reverse the request
     return 0, response
 
 def main():
   # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date()))
+  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
   
   # initialize eCAL API
   ecal_core.initialize()
-  ecal_core.set_unitname("py_minimal_service_server")
   
   # create a server for the "DemoService" service
   server = ecal_core.ServiceServer("mirror")
 
   # define service methods and add them to the callbacks
-  echo_method_info = ecal_core.ServiceMethodInfo()
-  echo_method_info.name = "echo"
-  server.add_method_callback(echo_method_info, echo_req_callback)
+  echo_method_info = ecal_core.ServiceMethodInformation()
+  echo_method_info.method_name = "echo"
+  server.set_method_callback(echo_method_info, echo_req_callback)
 
-  reverse_method_info = ecal_core.ServiceMethodInfo()
-  reverse_method_info.name = "reverse"
-  server.add_method_callback(reverse_method_info, reverse_req_callback)
+  reverse_method_info = ecal_core.ServiceMethodInformation()
+  reverse_method_info.method_name = "reverse"
+  server.set_method_callback(reverse_method_info, reverse_req_callback)
   
   # we can retrieve the services name / id
   print(server.get_service_name())
