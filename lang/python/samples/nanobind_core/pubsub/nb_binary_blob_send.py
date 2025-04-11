@@ -16,16 +16,16 @@
 #
 # ========================= eCAL LICENSE =================================
 
-import sys
 import time
 
 import ecal.nanobind_core as ecal_core
 
 DATA_SIZE = 1024
 
-def my_event_callback(topic_id, callback_data):
+# This function will be called when a subscriber is connected / disconnected to the publisher
+def subscriber_event_callback(subscriber_id : ecal_core.TopicId, callback_data : ecal_core.PubEventCallbackData):
   print("Event callback invoked")
-  entity = topic_id.topic_id
+  entity = subscriber_id.topic_id
   print("A subscriber with id {} from host {} with PID {} has been {}".format(entity.entity_id, entity.host_name, entity.process_id, callback_data.event_type))
 
 
@@ -45,8 +45,11 @@ def main():
   datatype_info = ecal_core.DataTypeInformation()
   # We can additionally register an event_callback, which will be called when another entity
   # has been connected to this process
-  pub = ecal_core.Publisher("blob", datatype_info, config, event_callback = my_event_callback)
+  pub = ecal_core.Publisher("blob", datatype_info, config, event_callback = subscriber_event_callback)
   
+  # Let's sleep before we start sending data, so other processes can connect
+  time.sleep(2)
+
   print(pub.get_data_type_information())
   
   # send messages

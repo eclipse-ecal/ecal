@@ -15,7 +15,6 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-import os
 import time
 
 import ecal.nanobind_core as ecal_core

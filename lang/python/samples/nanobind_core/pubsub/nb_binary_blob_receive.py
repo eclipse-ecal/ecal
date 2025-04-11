@@ -22,7 +22,7 @@ import time
 import ecal.nanobind_core as ecal_core
 
 # eCAL receive callback
-def callback(publisher_id, datatype_info, data):
+def data_callback(publisher_id : ecal_core.TopicId, datatype_info : ecal_core.DataTypeInformation, data : ecal_core.ReceiveCallbackData):
   output = """
   ----------------------------------------------
    Received binary buffer
@@ -33,9 +33,9 @@ def callback(publisher_id, datatype_info, data):
   """.format(len(data.buffer), data.send_timestamp, data.send_clock)
   print(output)
 
-def my_event_callback(topic_id, callback_data):
+def publisher_event_callback(publisher_id : ecal_core.TopicId, callback_data : ecal_core.SubEventCallbackData):
   print("Event callback invoked")
-  entity = topic_id.topic_id
+  entity = publisher_id.topic_id
   print("A publisher with id {} from host {} with PID {} has been {}".format(entity.entity_id, entity.host_name, entity.process_id, callback_data.event_type))
   
 def main():
@@ -53,8 +53,8 @@ def main():
   # Specialized message publishers will set these fields
   datatype_info = ecal_core.DataTypeInformation()
   # create subscriber and connect callback
-  sub = ecal_core.Subscriber("blob", datatype_info, config, event_callback = my_event_callback)
-  sub.set_receive_callback(callback)
+  sub = ecal_core.Subscriber("blob", datatype_info, config, event_callback = publisher_event_callback)
+  sub.set_receive_callback(data_callback)
   
   print(sub.get_data_type_information())
   

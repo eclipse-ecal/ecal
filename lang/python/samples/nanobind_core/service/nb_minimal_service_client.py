@@ -38,8 +38,8 @@ def main():
   # initialize eCAL API
   ecal_core.initialize()
   
-  # create a client for the "DemoService" service
-  client = ecal_core.ServiceClient("service1")
+  # create a client for the "mirror" service
+  client = ecal_core.ServiceClient("mirror")
     
   # and add it to the client
   client.add_response_callback(client_resp_callback)
@@ -48,15 +48,14 @@ def main():
   i = 0
   while(ecal_core.ok()):
     i = i + 1
-    # call foo
-    request = bytes("hello foo {}".format(i), "ascii")
-    print("'DemoService' method 'foo' requested with : {}".format(request))
-    client.call("foo", "request", 1234)
+    # call echo
+    request = bytes("xyz", "ascii")
+    client.call("echo", "request", 1234)
+
     time.sleep(0.5)
-    # call ping
-    request = bytes("ping number {}".format(i), "ascii")
-    print("'DemoService' method 'ping' requested with : {}".format(request))
-    client.call("ping", "request", 1234)
+    # call reverse
+    request = bytes("xyz", "ascii")
+    client.call("reverse", "request", 1234)
     time.sleep(0.5)
 
   # destroy client
