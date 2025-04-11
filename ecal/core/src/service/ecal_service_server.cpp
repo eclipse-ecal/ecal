@@ -74,7 +74,7 @@ namespace eCAL
     return m_service_server_impl->RemoveMethodCallback(method_);
   }
 
-  const std::string& CServiceServer::GetServiceName()
+  const std::string& CServiceServer::GetServiceName() const
   {
     static const std::string empty_service_name {};
     if (m_service_server_impl == nullptr) return empty_service_name;
@@ -88,7 +88,7 @@ namespace eCAL
     return m_service_server_impl->GetServiceId();
   }
 
-  bool CServiceServer::IsConnected()
+  bool CServiceServer::IsConnected() const
   {
     if (m_service_server_impl == nullptr) return false;
     return m_service_server_impl->IsConnected();
