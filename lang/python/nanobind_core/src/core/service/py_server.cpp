@@ -73,14 +73,14 @@ void AddServiceServer(nanobind::module_& m)
             try {
               // We aquire the gil, because now we need to call into Python code
               nb::gil_scoped_acquire acquire;
-              nb::object result = (*python_callback_pointer)(cpp_info, cpp_request);
+              nb::object result = (*python_callback_pointer)(cpp_info, std_string_to_nb_bytes(cpp_request));
 
               // Expect the Python callback to return a tuple (int (return_code), bytes (response))
               auto result_tuple = nb::cast<std::tuple<int, nb::bytes>>(result);
 
               int return_code = std::get<0>(result_tuple);
               const auto& python_response = std::get<1>(result_tuple);
-              cpp_response.assign(python_response.c_str(), python_response.size());
+              cpp_response = nb_bytes_to_std_string(python_response);
               return return_code;
             }
             catch (const std::exception& e) {
@@ -115,7 +115,7 @@ void AddServiceServer(nanobind::module_& m)
 
     // TODO fix later
     .def("__repr__", [](const eCAL::CServiceServer& self) {
-       return std::string("<ServiceServer name=" + self.GetServiceName() + "'>");
+       return std::string("<ServiceServer name='" + self.GetServiceName() + "'>");
       });
 
 }

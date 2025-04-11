@@ -33,7 +33,7 @@ def client_resp_callback(service_info, response):
       
 def main():
   # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date()))
+  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
   
   # initialize eCAL API
   ecal_core.initialize()
