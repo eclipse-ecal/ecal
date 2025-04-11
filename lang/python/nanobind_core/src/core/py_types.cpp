@@ -53,12 +53,8 @@ void AddTypes(nb::module_& m) {
     .def(bytestring_property("descriptor", &eCAL::SDataTypeInformation::descriptor))
     //.def("clear", &eCAL::SDataTypeInformation::clear,
     //  "Clears the name, encoding, and descriptor strings.")
-    .def("__eq__", [](const eCAL::SDataTypeInformation& a, const eCAL::SDataTypeInformation& b) {
-    return a == b;
-      })
-    .def("__lt__", [](const eCAL::SDataTypeInformation& a, const eCAL::SDataTypeInformation& b) {
-        return a < b;
-      })
+    .def("__eq__", &eCAL::SDataTypeInformation::operator==)
+    .def("__lt__", &eCAL::SDataTypeInformation::operator<)
     .def("__repr__", [](const eCAL::SDataTypeInformation& info) {
       return "<DataTypeInformation name='" + info.name +
         "', encoding='" + info.encoding +
@@ -77,9 +73,9 @@ void AddTypes(nb::module_& m) {
         .def("__lt__", [](const eCAL::SEntityId& a, const eCAL::SEntityId& b) {
             return a < b;
           })
-            .def("__repr__", [](const eCAL::SEntityId& id) {
+        .def("__repr__", [](const eCAL::SEntityId& id) {
             std::ostringstream oss;
-            oss << "SEntityId(entity_id: " << id.entity_id
+            oss << "EntityId(entity_id: " << id.entity_id
               << ", process_id: " << id.process_id
               << ", host_name: " << id.host_name << ")";
             return oss.str();
