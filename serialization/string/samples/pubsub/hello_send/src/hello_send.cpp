@@ -42,6 +42,18 @@ int main()
   eCAL::Initialize("hello_send");
 
   /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+
+  /*
     Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
     The topic we are going to publish is called "hello".
   */

@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the eCAL convenience header
 #include <ecal/ecal.h>
 
 #include <iostream>
@@ -24,7 +25,10 @@
 #include <chrono>
 #include <thread>
 
-// subscriber callback function
+/*
+  Here we create the subscriber callback function that is called everytime,
+  when a new message arrived from a publisher.
+*/
 void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
 {
   if (data_.buffer_size < 1) return;
@@ -41,19 +45,56 @@ void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInforma
 
 int main()
 {
-  // initialize eCAL API
+  std::cout << "---------------------" << std::endl;
+  std::cout << " C++: BLOB RECEIVER"   << std::endl;
+  std::cout << "---------------------" << std::endl;
+
+  /*
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "blob_receive". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
   eCAL::Initialize("blob_receive");
 
-  // subscriber for topic "blob"
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+
+  /*
+    Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+    The topic we are going to receive is called "blob".
+  */
   eCAL::CSubscriber sub("blob");
 
-  // assign callback
+  /*
+    Register a receive callback. The callback will be called whenever a new message is received.
+  */
   sub.SetReceiveCallback(OnReceive);
 
-  // idle main loop
-  while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  /*
+    Creating an infinite loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  */
+  while (eCAL::Ok())
+  {
+    /*
+      Sleep for 500ms to avoid busy waiting.
+    */
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
 
-  // finalize eCAL API
+  /*
+    Finalize eCAL. This will stop all eCAL processes and free all resources.
+    You should always finalize eCAL before exiting your application.
+  */
   eCAL::Finalize();
 
   return(0);

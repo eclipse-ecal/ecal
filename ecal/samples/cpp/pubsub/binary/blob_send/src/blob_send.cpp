@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the eCAL convenience header
 #include <ecal/ecal.h>
 
 #include <algorithm>
@@ -24,31 +25,67 @@
 
 int main()
 {
-  // initialize eCAL API
+  std::cout << "-------------------" << std::endl;
+  std::cout << " C++: BLOB SENDER"   << std::endl;
+  std::cout << "-------------------" << std::endl;
+
+  /*
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "blob_send". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
   eCAL::Initialize("blob_send");
 
-  // publisher for topic "blob"
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+
+  /*
+    Now we create a new publisher that will publish the topic "blob".
+  */
   eCAL::CPublisher pub("blob");
 
-  // create binary buffer
+  /*
+    Construct a message. As we are sending binary data, we just create a buffer of unsigned characters.
+  */
   std::vector<unsigned char> bin_buffer(1024);
 
-  // send updates
-  unsigned char cnt = 0;
+  /*
+    Creating an infinite publish-loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
+  */
+  unsigned char loop_count = 0;
   while (eCAL::Ok())
   {
-    // fill buffer
-    std::fill(bin_buffer.begin(), bin_buffer.end(), cnt++);
+    /*
+      Fill the buffer with the character that is defined by the counter variable.
+    */
+    std::fill(bin_buffer.begin(), bin_buffer.end(), loop_count++);
 
-    // send buffer
+    /*
+      Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
+    */
     pub.Send(bin_buffer.data(), bin_buffer.size());
-    std::cout << "Sent buffer filled with " << static_cast<int>(cnt) << std::endl;
+    std::cout << "Sent buffer filled with " << static_cast<int>(loop_count) << std::endl;
 
-    // sleep 100 ms
-    eCAL::Process::SleepMS(100);
+    /*
+      Sleep for 500ms to send in a frequency of 2 hz.
+    */
+    eCAL::Process::SleepMS(500);
   }
 
-  // finalize eCAL API
+  /*
+    Finalize eCAL. This will stop all eCAL processes and free all resources.
+    You should always finalize eCAL when you are done using it.
+  */
   eCAL::Finalize();
 
   return(0);

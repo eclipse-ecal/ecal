@@ -1,8 +1,8 @@
 .. _getting_started_howto:
 
-=====================
-How to integrate eCAL
-=====================
+===============
+How to use eCAL
+===============
 
 You have learned a lot about basic eCAL communication and the eCAL Tools that it comes with.
 Now it is time to write your own eCAL program!

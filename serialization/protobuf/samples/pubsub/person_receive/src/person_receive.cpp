@@ -17,13 +17,19 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Including the eCAL convenience header
 #include <ecal/ecal.h>
+// In addition we include the msg protobuf publisher
 #include <ecal/msg/protobuf/subscriber.h>
 
 #include <iostream>
 
 #include "person.pb.h"
 
+/*
+  Here we create the subscriber callback function that is called everytime,
+  when a new message arrived from a publisher.
+*/
 void OnPerson(const eCAL::STopicId& topic_id_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
   std::cout << "------------------------------------------" << std::endl;
@@ -47,34 +53,57 @@ void OnPerson(const eCAL::STopicId& topic_id_, const pb::People::Person& person_
 
 int main()
 {
-  // initialize eCAL API
+  std::cout << "----------------------" << std::endl;
+  std::cout << " C++: PERSON RECEIVER"  << std::endl;
+  std::cout << "----------------------" << std::endl;
+
+  /*
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "person_receive". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
   eCAL::Initialize("person_receive");
 
-  // set process state
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
   eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
-  // create a subscriber config
-  eCAL::Subscriber::Configuration sub_config;
+  /*
+    Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+    The topic we are going to receive is called "person".
+    The data type is "Pb.People.Person", generated from the protobuf definition.
+  */
+  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
 
-  // activate transport layer
-  sub_config.layer.shm.enable = true;
-  sub_config.layer.udp.enable = true;
-  sub_config.layer.tcp.enable = true;
+  /*
+    Create and register a receive callback. The callback will be called whenever a new message is received.
+  */
+  sub.SetReceiveCallback(&OnPerson);
 
-  // create a subscriber (topic name "person")
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person", sub_config);
-
-  // add receive callback function (_1 = topic_name, _2 = msg, _3 = time, _4 = clock, _5 = id)
-  auto callback = std::bind(OnPerson, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-  sub.SetReceiveCallback(callback);
-
+  /*
+    Creating an infinite loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  */
   while(eCAL::Ok())
   {
-    // sleep 100 ms
-    eCAL::Process::SleepMS(100);
+    /*
+      Sleep for 500ms to avoid busy waiting.
+    */
+    eCAL::Process::SleepMS(500);
   }
 
-  // finalize eCAL API
+  /*
+    Finalize eCAL. This will stop all eCAL processes and free all resources.
+    You should always finalize eCAL before exiting your application.
+  */
   eCAL::Finalize();
   
   return(0);

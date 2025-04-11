@@ -8,6 +8,14 @@ Protobuf: Person
 
 Let's implement a small application, that lets the user input his name and send a message to an eCAL topic.
 
+For this task we will use the protobuf serialization format.
+Protobuf is a language-neutral, platform-neutral extensible mechanism for serializing structured data.
+It is used by Google to serialize data in its internal RPC protocols and file formats.
+eCAL supports protobuf serialization natively.
+
+The usage of protobuf for data exchange in eCAL is very simple. You know already from the ":ref:`_getting_started_howto_pubsub_string_hello_world`" how to send and receive simple string data.
+The basic setup will be the same, but instead of using the string publisher, we will use the protobuf publisher and subscriber.
+
 
 Person Protobuf
 ===============

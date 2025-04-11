@@ -32,9 +32,9 @@
 
 int main()
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " C++: HELLO WORLD RECEIVER"      << std::endl;
-  std::cout << "-------------------------------" << std::endl;
+  std::cout << "-------------------------------" << "\n";
+  std::cout << " C++: HELLO WORLD RECEIVER"      << "\n";
+  std::cout << "-------------------------------" << "\n";
 
   /* 
     Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -42,6 +42,18 @@ int main()
     This name will be visible in the eCAL Monitor, once the process is running.
   */
   eCAL::Initialize("hello_receive");
+
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
 
   /*
     Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
@@ -52,7 +64,7 @@ int main()
   /*
     Creating a receive callback. The callback will be called whenever a new message is received.
   */
-  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
+  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << "\n"; };
   
   /*
     Register the callback with the subscriber so it can be called.

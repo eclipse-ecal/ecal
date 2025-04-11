@@ -6,13 +6,14 @@
 Binary: Blob
 ============
 
+Last but not least we want to show how you can send binary data with eCAL.
+When you read through the previous chapters, you will see that most of the code you are already familiar with.
 
-
+The biggest difference is, that you basically can send any kind of data. 
+But be aware, that you also need to handle the binary interpretation across multiple platforms, which is handled before simply through a serialization protocol.
 
 Blob Publisher
 ==============
-
-
 
 .. tabs::
 
@@ -25,7 +26,7 @@ Blob Publisher
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/binary/blob/minimal_snd_csharp.cs
+        .. literalinclude:: /source_code_samples/csharp/binary/blob/blob_send.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -49,7 +50,7 @@ Blob Publisher Files
    │  └─ |fa-file-alt| :download:`blob_send.cpp </source_code_samples/cpp/binary/blob/blob_send/src/blob_send.cpp>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`blob_send.cs </source_code_samples/csharp/binary/blob/minimal_snd_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`blob_send.cs </source_code_samples/csharp/binary/blob/blob_send.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python/binary/blob/blob_send.py>`
@@ -57,7 +58,6 @@ Blob Publisher Files
 
 Blob Subscriber
 ===============
-
 
 .. tabs::
 
@@ -70,7 +70,7 @@ Blob Subscriber
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/binary/blob/minimal_rec_csharp.cs
+        .. literalinclude:: /source_code_samples/csharp/binary/blob/blob_receive.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -93,7 +93,7 @@ Blob Subscriber Files
    │  └─ |fa-file-alt| :download:`blob_receive.cpp </source_code_samples/cpp/binary/blob/blob_receive/src/blob_receive.cpp>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`blob_receive.cs </source_code_samples/csharp/binary/blob/minimal_rec_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`blob_receive.cs </source_code_samples/csharp/binary/blob/blob_receive.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`blob_receive.py </source_code_samples/python/binary/blob/blob_receive.py>`
