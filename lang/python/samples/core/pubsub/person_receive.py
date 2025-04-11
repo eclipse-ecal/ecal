@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@
 import os
 import sys
 import time
-
+# import the eCAL core API
 import ecal.core.core as ecal_core
+# import the eCAL subscriber API
 from ecal.core.subscriber import ProtoSubscriber
 
 sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
+# import the protobuf generated classes
 import person_pb2
 
+# Create here the eCAL receive callback. This will be called whenever a new message is received.
 def callback(topic_name, person, time):
   print("")
   print("Received person ..")
@@ -37,24 +40,41 @@ def callback(topic_name, person, time):
   print("house.rooms  : {}".format(person.house.rooms))
 
 def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.getversion(),ecal_core.getdate()))
+  print("-------------------------")
+  print(" Python: PERSON RECEIVER")
+  print("-------------------------")
   
-  # initialize eCAL API
-  ecal_core.initialize("py_person_rec_cb")
-  
-  # set process state
-  ecal_core.set_process_state(1, 1, "I feel good")
+  # Initialize eCAL. You always have to initialize eCAL before using it.
+  # The name of our eCAL Process will be "person_receive_python".
+  # This name will be visible in the eCAL Monitor, once the process is running.
+  ecal_core.initialize("person_receive_python")
 
-  # create subscriber and connect callback
+  # Print used eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+  
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  ecal_core.set_process_state(1, 1, "I feel good")
+  
+  # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+  # The topic we are going to receive is called "person".
+  # The topic type is specified by the protobuf message class.
   sub = ProtoSubscriber("person", person_pb2.Person)
+  
+  # Register the callback with the subscriber so it can be called.
+  # The callback will be called whenever a new message is received.
   sub.set_callback(callback)
   
-  # idle main thread
+  # Creating an infinite loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   while ecal_core.ok():
-    time.sleep(0.1)
+    # Sleep for 500ms to avoid busy waiting.
+    # You can use eCAL::Process::SleepMS() to sleep in milliseconds.
+    time.sleep(0.5)
   
-  # finalize eCAL API
+  # Finalize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
   
 if __name__ == "__main__":

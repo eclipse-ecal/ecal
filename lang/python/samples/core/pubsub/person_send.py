@@ -30,15 +30,21 @@ sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
 import person_pb2
 
 def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+  print("-----------------------")
+  print(" Python: PERSON SENDER")
+  print("-----------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "python_person_send".
+  # The name of our eCAL Process will be "person_send_python".
   # This name will be visible in the eCAL Monitor, once the process is running.
   ecal_core.initialize("person_send_python")
   
-  # set process state
+  # Print used eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
@@ -56,19 +62,22 @@ def main():
   
   # Creating an inifite publish-loop.
   # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  loop_count = 0
   while ecal_core.ok():
+    
+    # Change something in the message so we can see that the message is changing, e.g. in eCAL Monitor.
+    loop_count = loop_count + 1
+    person.id = loop_count
   
-    # change person id
-    person.id = person.id + 1
-  
-    # send person
-    print("Sending person {}".format(person.id))
+    # Send the content to other eCAL Processes that have subscribed to the topic "person".
     pub.send(person)
+    print("Sending person {}".format(person.id))
   
-    # sleep 100 ms
-    time.sleep(0.1)
+    # Sleep for 500 ms so we send with a frequency of 2 Hz.
+    time.sleep(0.5)
   
-  # finalize eCAL API
+  # Finalize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
   
 if __name__ == "__main__":

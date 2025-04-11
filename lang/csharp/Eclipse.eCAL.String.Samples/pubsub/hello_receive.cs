@@ -18,26 +18,28 @@
 */
 
 /**
- * @file string_rec_csharp.cs
+ * @file hello_receive.cs
  *
  * @brief A minimal example of using the eCAL API to receive string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "Hello" (using "std::string" as the data type), register
+ * create a subscriber for the topic "hello" (using "std::string" as the data type), register
  * a receive callback to process incoming messages, and keep the application running until eCAL
  * is terminated. It serves as a basic reference for implementing a string subscriber in C#.
  */
 
 using System;
+// include ecal core namespace
 using Eclipse.eCAL.Core;
 
-public class StringReceive
+public class HelloReceive
 {
   public static void Main()
   {
-    Console.WriteLine("-------------------------------");
+    Console.WriteLine("--------------------------");
     Console.WriteLine(" C#: HELLO WORLD RECEIVER");
-    Console.WriteLine("-------------------------------");
+    Console.WriteLine("--------------------------");
+    
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
       The name of our eCAL Process will be "hello_receive_csharp". 
@@ -46,13 +48,25 @@ public class StringReceive
     Core.Initialize("hello_receive_csharp");
 
     /*
+      Print eCAL version information.
+    */
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+
+    /*
+      Set the state for the program.
+      You can vary between different states like healthy, warning, critical ...
+      This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+    */
+    // This function is not wrapped yet.
+
+    /*
       Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
       The topic we are going to receive is called "hello".
     */
     StringSubscriber subscriber = new StringSubscriber("hello");
 
     /*
-      Creating an register a receive callback. The callback will be called whenever a new message is received.
+      Create and register a receive callback. The callback will be called whenever a new message is received.
     */
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>
     {

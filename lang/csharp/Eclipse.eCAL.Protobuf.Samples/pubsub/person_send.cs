@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,22 +29,45 @@
  */
 
 using System;
+// Include the eCAL API namespace
 using Eclipse.eCAL.Core;
 
 public class PersonSend
 {
   static void Main()
   {
-    // Initialize eCAL API.
-    Core.Initialize("person publisher csharp");
+    Console.WriteLine("-------------------");
+    Console.WriteLine(" C#: PERSON SENDER");
+    Console.WriteLine("-------------------");
 
-    // Print version info.
+    /*
+      Initialize eCAL. You always have to initialize eCAL before using its API.
+      The name of our eCAL Process will be "person_send_csharp". 
+      This name will be visible in the eCAL Monitor, once the process is running.
+    */
+    Core.Initialize("person_send_csharp");
+
+    /*
+      Print version info.
+    */
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a protobuf publisher (topic name "person").
+    /*
+      Set the state for the program.
+      You can vary between different states like healthy, warning, critical ...
+      This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+    */
+    // This function is not wrapped yet.
+
+    /*
+      Now we create a new publisher that will publish the topic "person".
+      The data type is "Pb.People.Person", generated from the protobuf definition.    
+    */
     var publisher = new ProtobufPublisher<Pb.People.Person>("person");
 
-    int loop = 0;
+    /*
+      Construct a message. The message is a protobuf struct that will be sent to the subscribers.
+    */
     var person = new Pb.People.Person
     {
       Id = 0,
@@ -55,27 +78,40 @@ public class PersonSend
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    // Idle main thread.
+    int loop_count = 0;
+    /*
+      Creating an infinite publish-loop.
+      eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
+    */
     while (Core.Ok())
     {
-      // message to send
-      person.Id = loop;
-      loop++;
+      /*
+        Change in each loop the content of the message to see a difference per message.
+      */
+      person.Id = loop_count;
+      loop_count++;
 
-      // print message
+      /*
+        Send the message. The message is sent to all subscribers that are currently connected to the topic "person".
+      */
+      publisher.Send(person);
       Console.WriteLine(String.Format("Sending: {0}", person.ToString()));
 
-      // send the content
-      publisher.Send(person);
-
-      // cool down
+      /*
+        Sleep for 500ms to send in a frequency of 2 hz.
+      */
       System.Threading.Thread.Sleep(500);
     }
 
-    // Dispose publisher.
+    /*
+      Cleanup. Dispose the publisher to free resources.
+    */
     publisher.Dispose();
 
-    // Finalize eCAL API.
+    /*
+      Terminate eCAL. This will stop all eCAL processes and free all resources.
+      You should always terminate eCAL when you are done using it.
+    */
     Core.Terminate();
   }
 }

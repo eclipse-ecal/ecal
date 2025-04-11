@@ -18,12 +18,12 @@
 */
 
 /**
- * @file string_snd_csharp.cs
+ * @file hello_send.cs
  *
  * @brief A minimal example of using the eCAL API to send string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a string publisher for the topic "Hello", construct and send messages, and keep
+ * create a string publisher for the topic "hello", construct and send messages, and keep
  * the application running until eCAL is terminated. It serves as a basic reference for
  * implementing a string publisher in C#.
  */
@@ -33,13 +33,13 @@ using System.Threading;
 // Include the eCAL API namespace
 using Continental.eCAL.Core;
 
-public class StringSend
+public class HelloSend
 {
   public static void Main()
   {
-    Console.WriteLine("-------------------------------");
+    Console.WriteLine("------------------------");
     Console.WriteLine(" C#: HELLO WORLD SENDER");
-    Console.WriteLine("-------------------------------");
+    Console.WriteLine("------------------------");
 
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -47,6 +47,18 @@ public class StringSend
       This name will be visible in the eCAL Monitor, once the process is running.
     */
     Core.Initialize("hello_send_csharp");
+
+    /*
+      Print eCAL version information.
+    */
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+
+    /*
+      Set the state for the program.
+      You can vary between different states like healthy, warning, critical ...
+      This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+    */
+    // This function is not wrapped yet.
 
     /*
       Now we create a new publisher that will publish the topic "hello".      
@@ -72,7 +84,7 @@ public class StringSend
       Console.WriteLine(String.Format("Sent: {0}", message));
 
       /*
-        Sleep for 500ms to avoid busy waiting.
+        Sleep for 500ms to send in a frequency of 2 hz.
       */
       Thread.Sleep(500);
     }

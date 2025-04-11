@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,34 +20,54 @@ import sys
 import time
 import random
 
+# Import the eCAL core API
 import ecal.core.core as ecal_core
+# Import the eCAL binary publisher API
 from ecal.core.publisher import BinaryPublisher
 
 def main():
-  # print eCAL version and date
+  print("---------------------")
+  print(" Python: BLOB SENDER")
+  print("---------------------")
+  
+  # Initialize eCAL. You always have to initialize eCAL before using it.
+  # The name of our eCAL Process will be "blob_send_python".
+  # This name will be visible in the eCAL Monitor, once the process is running.
+  ecal_core.initialize("blob_send_python")
+  
+  # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
-  # initialize eCAL API
-  ecal_core.initialize("py_binary_snd")
-  
-  # set process state
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   ecal_core.set_process_state(1, 1, "I feel good")
 
-  # create publisher
-  pub = BinaryPublisher("Hello")
+  # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
+  # The topic we are going to publish is called "blob".
+  pub = BinaryPublisher("blob")
+  
+  # We create a message to send that will be altered later to notice different messages.
   msg_fox = b"4120717569636b2062726f776e20666f7820"
   
-  # send messages
-  msg_count = 0
+  loop_count = 0
+  # Creating an inifite publish-loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   while ecal_core.ok():
-    msg_count += 1
-    hex_ascii = bytes(''.join([hex(ord(digit))[2:] for digit in str(msg_count)]), "utf-8")
+    # Prepare the blob to send
+    loop_count += 1
+    hex_ascii = bytes(''.join([hex(ord(digit))[2:] for digit in str(loop_count)]), "utf-8")
     msg = msg_fox + hex_ascii
+    
+    # Send the content to other eCAL Processes that have subscribed to the topic "blob".
     pub.send(msg)
     print("Sent: ", msg)
-    time.sleep(0.01)
+    
+    # Sleep for 500 ms so we send with a frequency of 2 Hz.
+    time.sleep(0.5)
   
-  # finalize eCAL API
+  # Finalize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
 
 if __name__ == "__main__":

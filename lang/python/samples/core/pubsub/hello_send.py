@@ -33,14 +33,24 @@ def main():
   # This name will be visible in the eCAL Monitor, once the process is running.
   ecal_core.initialize("hello_send_python")
 
+  # Print used eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  ecal_core.set_process_state(1, 1, "I feel good")
+
   # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
   # The topic we are going to publish is called "hello".
   pub = StringPublisher("hello")
+  
+  # We create a message to send that will be altered later to notice different messages.
   msg = "HELLO WORLD FROM PYTHON"
   
+  loop_count = 0
   # Creating an inifite publish-loop.
   # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
-  loop_count = 0
   while ecal_core.ok():
     # Prepare the string to send
     loop_count = loop_count + 1
@@ -53,7 +63,7 @@ def main():
     # Sleep for 500 ms so we send with a frequency of 2 Hz.
     time.sleep(0.5)
   
-  # Deinitialize eCAL.
+  # Finalize eCAL.
   # You should always do that before your application exits.
   ecal_core.finalize()
 

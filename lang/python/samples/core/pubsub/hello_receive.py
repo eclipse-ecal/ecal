@@ -20,7 +20,7 @@ import sys
 import time
 # import the eCAL core API
 import ecal.core.core as ecal_core
-# import the eCAL publisher AP
+# import the eCAL subscriber API
 from ecal.core.subscriber import StringSubscriber
 
 # Create here the eCAL receive callback. This will be called whenever a new message is received.
@@ -38,6 +38,14 @@ def main():
   # This name will be visible in the eCAL Monitor, once the process is running.
   ecal_core.initialize("hello_receive_python")
   
+  # Print used eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
+  
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  ecal_core.set_process_state(1, 1, "I feel good")
+  
   # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
   # The topic we are going to receive is called "hello".
   sub = StringSubscriber("hello")
@@ -52,7 +60,7 @@ def main():
     # You can use eCAL::Process::SleepMS() to sleep in milliseconds.
     time.sleep(0.5)
   
-  # Deinitialize eCAL.
+  # Finalize eCAL.
   # You should always do that before your application exits.
   ecal_core.finalize()
 
