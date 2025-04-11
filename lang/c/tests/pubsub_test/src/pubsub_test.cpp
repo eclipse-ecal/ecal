@@ -47,7 +47,7 @@ class pubsub_test_c : public ::testing::Test {
     void TearDown() override {
       eCAL_Subscriber_Delete(subscriber);
       eCAL_Publisher_Delete(publisher);
-      0, eCAL_Finalize();
+      eCAL_Finalize();
     }
 };
 
@@ -110,7 +110,7 @@ TEST_F(pubsub_test_c, pubsub)
   EXPECT_EQ(0, eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, &callback_count));
 
   // sleep here because otherwise it takes to long to set the receive-callback
-  eCAL_Process_SleepMS(1000);
+  eCAL_Process_SleepMS(8000);
 
   // send messages
   for(int i = 0; i < 10; i++) 
