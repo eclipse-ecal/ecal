@@ -107,7 +107,7 @@ TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "string text 42"),
+    SetValue(custom_config.transport_layer.udp.network.group, "42"),
     std::invalid_argument);
 
   // Test the IpAddressV4 class with invalid addresses
@@ -145,6 +145,10 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
 TEST(core_cpp_config /*unused*/, config_custom_ipv4_datatype /*unused*/)
 {
   EXPECT_THROW(eCAL::Types::IpAddressV4("192.168.256.0"), std::invalid_argument);
+  EXPECT_THROW(eCAL::Types::IpAddressV4("192.168.1.1:50"), std::invalid_argument);
+  EXPECT_THROW(eCAL::Types::IpAddressV4("192.168.1"), std::invalid_argument);
+  EXPECT_THROW(eCAL::Types::IpAddressV4("192.168"), std::invalid_argument);
+  EXPECT_THROW(eCAL::Types::IpAddressV4("192"), std::invalid_argument);
   EXPECT_NO_THROW(eCAL::Types::IpAddressV4("192.168.1.0"));
   EXPECT_NO_THROW(eCAL::Types::IpAddressV4("255.255.255.240"));
   EXPECT_NO_THROW(eCAL::Types::IpAddressV4("255.255.255.255"));

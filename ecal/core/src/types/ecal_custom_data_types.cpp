@@ -45,10 +45,15 @@ namespace eCAL
     {
       asio::error_code ec{};
       const auto ip = asio::ip::make_address_v4(ip_address_, ec);
-      static_cast<void>(ip);
       if (ec) {
         throw std::invalid_argument("[IpAddressV4] Invalid IPv4 address: " +
                                     ip_address_);
+      }
+      if (ip.to_string() != ip_address_) {
+        throw std::invalid_argument(
+            "[IpAddressV4] IPv4 address: " + ip.to_string() +
+            " reinterpreted by the platform as " + ip_address_ +
+            " please use the full explicit form");
       }
       m_ip_address = ip_address_;
     }
