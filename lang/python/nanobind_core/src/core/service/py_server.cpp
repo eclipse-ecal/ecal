@@ -113,7 +113,6 @@ void AddServiceServer(nanobind::module_& m)
       &eCAL::CServiceServer::IsConnected,
       "Check if the server is connected to any client.")
 
-    // TODO fix later
     .def("__repr__", [](const eCAL::CServiceServer& self) {
        return std::string("<ServiceServer name='" + self.GetServiceName() + "'>");
       });
