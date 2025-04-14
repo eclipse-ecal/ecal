@@ -24,15 +24,11 @@
 #include "ecal/types/custom_data_types.h"
 
 #include <array>
-#include <regex>
 #include <algorithm>
 #include <cctype>
 #include <ecal_def.h>
 
-namespace{
-  const std::regex IPV4_DEC_REGEX = std::regex("^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$");
-  const std::regex IPV4_HEX_REGEX = std::regex("^([0-9a-fA-F]{1,2}\\.){3}[0-9a-fA-F]{1,2}$");
-}
+#include <asio/ip/address_v4.hpp>
 
 namespace eCAL
 {
@@ -50,16 +46,14 @@ namespace eCAL
 
     void IpAddressV4::validateIpString(const std::string& ip_address_)
     {
-      if (  std::regex_match(ip_address_, IPV4_DEC_REGEX)
-         || std::regex_match(ip_address_, IPV4_HEX_REGEX)
-      )
-      {        
-        m_ip_address = ip_address_;
+      asio::error_code ec{};
+      const auto ip = asio::ip::make_address_v4(ip_address_, ec);
+      static_cast<void>(ip);
+      if (ec) {
+        throw std::invalid_argument("[IpAddressV4] Invalid IPv4 address: " +
+                                    ip_address_);
       }
-      else
-      {
-        throw std::invalid_argument("[IpAddressV4] No valid IP address: " + ip_address_);
-      }
+      m_ip_address = ip_address_;
     }
 
     const std::string& IpAddressV4::Get() const                         { return m_ip_address; }

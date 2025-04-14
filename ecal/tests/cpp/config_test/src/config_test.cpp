@@ -141,3 +141,13 @@ TEST(core_cpp_config /*unused*/, config_custom_datatypes_tests /*unused*/)
 
   EXPECT_EQ(config1.transport_layer.udp.network.group, testValue);
 }
+
+TEST(core_cpp_config /*unused*/, config_custom_ipv4_datatype /*unused*/)
+{
+  EXPECT_THROW(eCAL::Types::IpAddressV4("192.168.256.0"), std::invalid_argument);
+  EXPECT_NO_THROW(eCAL::Types::IpAddressV4("192.168.1.0"));
+  EXPECT_NO_THROW(eCAL::Types::IpAddressV4("255.255.255.240"));
+  EXPECT_NO_THROW(eCAL::Types::IpAddressV4("255.255.255.255"));
+  EXPECT_NO_THROW(eCAL::Types::IpAddressV4("0.0.0.0"));
+  EXPECT_THROW(eCAL::Types::IpAddressV4("FF.FF.FF.F0"), std::invalid_argument);
+}
