@@ -27,9 +27,6 @@
 #include "ecal/os.h"
 
 #include <string>
-#include <iostream>
-#include <limits>
-#include <stdexcept>
 
 namespace eCAL
 {
@@ -53,13 +50,13 @@ namespace eCAL
       ECAL_API IpAddressV4& operator=(const std::string& ip_string_);
       ECAL_API IpAddressV4& operator=(const char* ip_string_);
       ECAL_API operator const std::string&() const;
-      ECAL_API bool operator==(const eCAL::Types::IpAddressV4& rhs) const;  
+      ECAL_API bool operator==(const eCAL::Types::IpAddressV4& rhs) const;
       ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_);
       ECAL_API friend bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs);
       ECAL_API friend bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_);
       ECAL_API friend bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs);
 
-    private:            
+    private:
       ECAL_API void validateIpString(const std::string& ip_address_);
 
       std::string m_ip_address{};

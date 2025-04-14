@@ -21,12 +21,9 @@
  * @brief  Definition of custom data types.
 **/
 
+#include <stdexcept>
+#include <utility>
 #include "ecal/types/custom_data_types.h"
-
-#include <array>
-#include <algorithm>
-#include <cctype>
-#include <ecal_def.h>
 
 #include <asio/ip/address_v4.hpp>
 
@@ -60,13 +57,11 @@ namespace eCAL
     IpAddressV4& IpAddressV4::operator=(const std::string& ip_string_)  { this->validateIpString(ip_string_); return *this; }
     IpAddressV4& IpAddressV4::operator=(const char* ip_string_)         { this->validateIpString(ip_string_); return *this; }
     IpAddressV4::operator const std::string&() const                    { return m_ip_address; }
-    
-    std::ostream& operator<<(std::ostream& os, const IpAddressV4& ipv4) { os << ipv4.Get(); return os; }
 
     bool IpAddressV4::operator==(const eCAL::Types::IpAddressV4& rhs) const        { return m_ip_address == rhs.Get(); }
     bool operator==(eCAL::Types::IpAddressV4 lhs, const char* ip_string_)          { return lhs.Get() == std::string(ip_string_); }
-    bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)          { return rhs == ip_string_; }
+    bool operator==(const char* ip_string_, eCAL::Types::IpAddressV4 rhs)          { return std::move(rhs) == ip_string_; }
     bool operator==(eCAL::Types::IpAddressV4 lhs, const std::string& ip_string_)   { return lhs.Get() == ip_string_; }
-    bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)   { return rhs == ip_string_; }
+    bool operator==(const std::string& ip_string_, eCAL::Types::IpAddressV4 rhs)   { return std::move(rhs) == ip_string_; }
   }  
 }
