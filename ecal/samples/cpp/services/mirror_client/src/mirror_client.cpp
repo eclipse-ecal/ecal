@@ -27,10 +27,10 @@
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("minimal client");
+  eCAL::Initialize("minimal client c++");
 
   // create minimal service client
-  const eCAL::CServiceClient minimal_client("service1", { {"echo", {}, {} } });
+  const eCAL::CServiceClient minimal_client("mirror", { {"echo", {}, {} } });
 
   // callback for service response
   auto service_response_callback = [](const eCAL::SServiceResponse& service_response_) {
@@ -60,9 +60,13 @@ int main()
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 
+  // allow to alternate between calling methods 'echo' / 'reverse'.
+  int i = 0;
+  std::vector<std::string> methods = { "echo", "reverse" };
+
   while(eCAL::Ok())
   {
-    std::string method_name("echo");
+    std::string method_name = methods[i++ % methods.size()];
     std::string request("Hello");
 
     // call all existing services

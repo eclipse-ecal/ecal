@@ -48,20 +48,22 @@ public class MinimalServiceClient
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal client csharp");
+    Core.Initialize("mirror client c#");
 
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // Create a service client for service "service1"
-    ServiceClient serviceClient = new ServiceClient("service1");
+    ServiceClient serviceClient = new ServiceClient("mirror");
+    string[] methods = new string[] { "echo", "reverse" };
+    int i = 0;
 
     while (Core.Ok())
     {
       // Create the request payload.
       byte[] content = Encoding.UTF8.GetBytes("hello");
 
-      // Call the service method "echo" with a 100 ms timeout.
-      List<ServiceResponse> responseList = serviceClient.CallWithResponse("echo", content, 100);
+      // Alternating call "echo" and "reverse".
+      List<ServiceResponse> responseList = serviceClient.CallWithResponse(methods[i%methods.Length], content, 100);
       if (responseList.Count > 0)
       {
         foreach (ServiceResponse response in responseList)
@@ -74,6 +76,7 @@ public class MinimalServiceClient
         Console.WriteLine("Calling service echo failed!");
       }
 
+      i = i+1;
       System.Threading.Thread.Sleep(1000);
     }
 

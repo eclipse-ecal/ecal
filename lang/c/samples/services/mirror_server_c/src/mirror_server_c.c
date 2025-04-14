@@ -22,7 +22,25 @@
 #include <stdio.h> //printf()
 #include <string.h> //memcpy(), memset()
 
+// Echo method, which will copy data to a response buffer
+void echo(const void* request_, size_t request_length_, void** response_)
+{
+  // In this example the entire request buffer will be copied over to the response buffer.
+  memcpy(*response_, request_, request_length_);
+}
 
+// Reverse method, which will copy data to a response buffer, but backwards
+void reverse(const void* request_, size_t request_length_, void** response_)
+{
+  const char* request = (const char*)request_;
+  char* response = (char*)(*response_);
+
+  for (size_t i = 0; i < request_length_; ++i) {
+    response[i] = request[request_length_ - 1 - i];
+  }
+}
+
+// This callback will handle both requests for "echo" and "reverse"
 int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_, void* user_argument_)
 {
   (void)user_argument_;
@@ -38,13 +56,19 @@ int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, 
   // The length of response buffer needs to be set accordingly
   *response_length_ = request_length_;
 
-  // In this example the entire request buffer will be copied over to the response buffer.
-  memcpy(*response_, request_, request_length_);
+  if (strcmp(method_info_->method_name, "echo") == 0)
+  {
+    echo(request_, request_length_, response_);
+  }
+  else if (strcmp(method_info_->method_name, "reverse") == 0)
+  {
+    reverse(request_, request_length_, response_);
+  }
 
-
-  printf("Method   : %s called\n", method_info_->method_name);
-  printf("Request  : %s\n",        (char*)request_);
-  printf("Response : %s\n",        (char*)(*response_));
+  // The data we get will not be \0 terminated. Hence we need to pass the size to printf.
+  printf("Method   : '%s' called\n", method_info_->method_name);
+  printf("Request  : %.*s\n", (int)request_length_, (char*)request_);
+  printf("Response : %.*s\n", (int)(*response_length_), (char*)(*response_));
   printf("\n");
 
   // Zero can be returned here as the callback has been successfully proceeded.
@@ -54,18 +78,23 @@ int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, 
 int main()
 {
   eCAL_ServiceServer *server;
-  struct eCAL_SServiceMethodInformation method_information;
+  struct eCAL_SServiceMethodInformation echo_method_information;
+  struct eCAL_SServiceMethodInformation reverse_method_information;
 
   // Iinitialize eCAL API
-  eCAL_Initialize("minimal server c", NULL, NULL);
+  eCAL_Initialize("mirror server c", NULL, NULL);
 
   // Create server "service1"
-  server = eCAL_ServiceServer_New("service1", NULL);
+  server = eCAL_ServiceServer_New("mirror", NULL);
 
   // Define all available service methods by assiging the required fields of ServiceMethodInformation (e.g. method name) and attach the respective callback functions
-  memset(&method_information, 0, sizeof(struct eCAL_SServiceMethodInformation));
-  method_information.method_name = "echo";
-  eCAL_ServiceServer_SetMethodCallback(server, &method_information, OnMethodCallback, NULL);
+  memset(&echo_method_information, 0, sizeof(struct eCAL_SServiceMethodInformation));
+  echo_method_information.method_name = "echo";
+  eCAL_ServiceServer_SetMethodCallback(server, &echo_method_information, OnMethodCallback, NULL);
+
+  memset(&reverse_method_information, 0, sizeof(struct eCAL_SServiceMethodInformation));
+  reverse_method_information.method_name = "reverse";
+  eCAL_ServiceServer_SetMethodCallback(server, &reverse_method_information, OnMethodCallback, NULL);
 
   // Idle
   while (eCAL_Ok())

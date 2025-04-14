@@ -23,30 +23,51 @@ using Eclipse.eCAL.Core;
 
 public class MinimalServiceServer
 {
-  static byte[] OnMethodCallback(ServiceMethodInformation methodInfo, byte[] request)
+  static byte[] OnEchoCallback(ServiceMethodInformation methodInfo, byte[] request)
   {
-    Console.WriteLine("Method called: " + methodInfo.MethodName);
-    Console.WriteLine("Request: " + Encoding.UTF8.GetString(request));
+    byte[] response = request;
+
+    Console.WriteLine("Method  : '" + methodInfo.MethodName + "' called");
+    Console.WriteLine("Request : " + Encoding.UTF8.GetString(request));
+    Console.WriteLine("Response: " + Encoding.UTF8.GetString(response));
+    Console.WriteLine();
 
     // Echo the request data back as the response.
     return request;
+  }
+  static byte[] OnReverseCallback(ServiceMethodInformation methodInfo, byte[] request)
+  {
+    byte[] response = (byte[])request.Clone();  // Make a copy
+    Array.Reverse(response);                    // Reverse in place
+
+    Console.WriteLine("Method  : '" + methodInfo.MethodName + "' called");
+    Console.WriteLine("Request : " + Encoding.UTF8.GetString(request));
+    Console.WriteLine("Response: " + Encoding.UTF8.GetString(response));
+    Console.WriteLine();
+
+    // Echo the request data back as the response.
+    return response;
   }
 
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal server csharp");
+    Core.Initialize("mirror server c#");
 
     // Print version info.
     Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // Create a service server named "service1".
-    ServiceServer serviceServer = new ServiceServer("service1");
+    ServiceServer serviceServer = new ServiceServer("mirror");
 
     // Register the method callback.
-    ServiceMethodInformation methodInfo = new ServiceMethodInformation();
-    methodInfo.MethodName = "echo";
-    serviceServer.SetMethodCallback(methodInfo, OnMethodCallback);
+    ServiceMethodInformation echoMethodInfo = new ServiceMethodInformation();
+    echoMethodInfo.MethodName = "echo";
+    serviceServer.SetMethodCallback(echoMethodInfo, OnEchoCallback);
+
+    ServiceMethodInformation reverseMethodInfo = new ServiceMethodInformation();
+    reverseMethodInfo.MethodName = "reverse";
+    serviceServer.SetMethodCallback(reverseMethodInfo, OnReverseCallback);
 
     // Idle main thread until eCAL is no longer OK.
     while (Core.Ok())
