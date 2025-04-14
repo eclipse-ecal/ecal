@@ -107,7 +107,7 @@ TEST(core_cpp_config /*unused*/, user_config_death_test /*unused*/)
 
   // Test the IpAddressV4 class with wrong values
   ASSERT_THROW(
-    SetValue(custom_config.transport_layer.udp.network.group, "42"),
+    SetValue(custom_config.transport_layer.udp.network.group, "string text 42"),
     std::invalid_argument);
 
   // Test the IpAddressV4 class with invalid addresses
