@@ -620,7 +620,7 @@ message(STATUS "ECAL_USE_FLATBUFFERS                                : ${ECAL_USE
 message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE_FTXUI}")
 message(STATUS "BUILD_SHARED_LIBS                                   : ${BUILD_SHARED_LIBS}")
 message(STATUS "ECAL_BUILD_DOCS                                     : ${ECAL_BUILD_DOCS}")
-message(STATUS "ECAL_BUILD_DOCS_SAMPLES"                            : ${ECAL_BUILD_DOCS_SAMPLES})
+message(STATUS "ECAL_BUILD_DOCS_SAMPLES                             : ${ECAL_BUILD_DOCS_SAMPLES}")
 message(STATUS "ECAL_BUILD_APPS                                     : ${ECAL_BUILD_APPS}")
 message(STATUS "ECAL_BUILD_APP_SDK                                  : ${ECAL_BUILD_APP_SDK}")
 message(STATUS "ECAL_BUILD_SAMPLES                                  : ${ECAL_BUILD_SAMPLES}")

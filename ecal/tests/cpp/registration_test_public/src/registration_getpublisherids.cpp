@@ -29,14 +29,14 @@
 #include <vector>
 
 // struct to hold the test parameters
-struct TestParams
+struct PublisherTestParams
 {
   int publisher_count = 0;
   eCAL::Configuration configuration;
 };
 
 // test class that accepts TestParams as a parameter
-class TestFixture : public ::testing::TestWithParam<TestParams>
+class PublisherTestFixture : public ::testing::TestWithParam<PublisherTestParams>
 {
 protected:
   void SetUp() override
@@ -53,7 +53,7 @@ protected:
   }
 };
 
-TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
+TEST_P(PublisherTestFixture, GetPublisherIDsReturnsCorrectNumber)
 {
   {
     // create publishers for testing
@@ -95,7 +95,7 @@ TEST_P(TestFixture, GetPublisherIDsReturnsCorrectNumber)
   ASSERT_EQ(pub_ids2.size(), 0);
 }
 
-TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
+TEST_P(PublisherTestFixture, PublisherEventCallbackIsTriggered)
 {
   std::atomic<size_t> created_publisher_num(0);
   std::atomic<size_t> deleted_publisher_num(0);
@@ -157,9 +157,9 @@ TEST_P(TestFixture, PublisherEventCallbackIsTriggered)
 // instantiate the test suite with different configurations and publisher counts
 INSTANTIATE_TEST_SUITE_P(
   core_cpp_registration_public,
-  TestFixture,
+  PublisherTestFixture,
   ::testing::Values(
-    TestParams{ 10, []() {
+    PublisherTestParams{ 10, []() {
       // shm
       eCAL::Configuration config;
       config.communication_mode                = eCAL::eCommunicationMode::local;
@@ -168,7 +168,7 @@ INSTANTIATE_TEST_SUITE_P(
       config.registration.registration_timeout = 200;
       return config;
     }() },
-    TestParams{ 10, []() {
+    PublisherTestParams{ 10, []() {
       // shm + shm transport domain
       eCAL::Configuration config;
       config.communication_mode                = eCAL::eCommunicationMode::local;
@@ -176,7 +176,7 @@ INSTANTIATE_TEST_SUITE_P(
       config.registration.shm_transport_domain = "abc";
       return config;
     }() },
-    TestParams{ 10, []() {
+    PublisherTestParams{ 10, []() {
       // udp network
       eCAL::Configuration config;
       config.communication_mode                  = eCAL::eCommunicationMode::network;
@@ -185,7 +185,7 @@ INSTANTIATE_TEST_SUITE_P(
       config.registration.registration_timeout   = 200;
       return config;
     }() },
-    TestParams{ 10, []() {
+    PublisherTestParams{ 10, []() {
       // udp local
       eCAL::Configuration config;
       config.communication_mode                = eCAL::eCommunicationMode::local;

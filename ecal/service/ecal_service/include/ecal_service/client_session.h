@@ -77,9 +77,9 @@ namespace ecal_service
    * 
    * @code{.cpp}
    * 
-   * // Create an io_context and a work object to keep it alive
+   * // Create an io_context and a work_guard object to keep it alive
    * auto io_context = std::make_shared<asio::io_context>();
-   * asio::io_context::work work(*io_context);
+   * asio::executor_work_guard<asio::io_context::executor_type> work_guard(io_context->get_executor());
    * 
    * // Creat a thread for the io_context
    * std::thread io_context_thread([&io_context]() { io_context->run(); });

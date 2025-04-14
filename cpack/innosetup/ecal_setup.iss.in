@@ -147,7 +147,7 @@ Name: "{group}\eCAL Sys";                             Filename: "{app}\bin\ecal_
 Name: "{group}\Configuration\Edit ecal.yaml";         Filename: "{commonappdata}\eCAL\ecal.yaml";                  Components: runtime
 
 Name: "{group}\{cm:UninstallProgram,{#AppName}}";     Filename: "{uninstallexe}"
-Name: "{commondesktop}\eCAL Launcher";                Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon; Components: applications
+Name: "{userdesktop}\eCAL Launcher";                  Filename: "{app}\bin\ecal_launcher.exe"; Tasks: desktopicon; Components: applications
 
 [Registry]
 ; Root key HKA is only available in Version 6 and above

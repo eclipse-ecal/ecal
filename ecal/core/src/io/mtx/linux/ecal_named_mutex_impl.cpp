@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2022 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,13 +35,13 @@
 #include <cstdint>
 #include <string>
 
-struct alignas(8) named_mutex
+struct alignas(8) eCAL::CNamedMutexImpl::named_mutex_t
 {
   pthread_mutex_t  mtx;
   pthread_cond_t   cvar;
   uint8_t          locked;
 };
-typedef struct named_mutex named_mutex_t;
+using named_mutex_t = eCAL::CNamedMutexImpl::named_mutex_t;
 
 namespace
 {
