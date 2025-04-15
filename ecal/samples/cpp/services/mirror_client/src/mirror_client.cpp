@@ -27,7 +27,7 @@
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("minimal client c++");
+  eCAL::Initialize("minimal client");
 
   // create minimal service client
   const eCAL::CServiceClient minimal_client("mirror", { {"echo", {}, {} } });
@@ -67,7 +67,7 @@ int main()
   while(eCAL::Ok())
   {
     std::string method_name = methods[i++ % methods.size()];
-    std::string request("Hello");
+    std::string request("stressed");
 
     // call all existing services
     for (auto& client_instance : minimal_client.GetClientInstances())

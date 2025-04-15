@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,11 @@ public class MinimalServiceClient
     while (Core.Ok())
     {
       // Create the request payload.
-      byte[] content = Encoding.UTF8.GetBytes("hello");
+      byte[] content = Encoding.UTF8.GetBytes("stressed");
+      string method = methods[i++ % methods.Length];
 
       // Alternating call "echo" and "reverse".
-      List<ServiceResponse> responseList = serviceClient.CallWithResponse(methods[i%methods.Length], content, 100);
+      List<ServiceResponse> responseList = serviceClient.CallWithResponse(method, content, 100);
       if (responseList.Count > 0)
       {
         foreach (ServiceResponse response in responseList)
@@ -73,10 +74,9 @@ public class MinimalServiceClient
       }
       else
       {
-        Console.WriteLine("Calling service echo failed!");
+        Console.WriteLine(String.Format("Calling service {0} failed!", method));
       }
 
-      i = i+1;
       System.Threading.Thread.Sleep(1000);
     }
 

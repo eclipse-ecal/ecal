@@ -57,7 +57,7 @@ int OnReverseCallback(const eCAL::SServiceMethodInformation& method_info_, const
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("minimal server c++");
+  eCAL::Initialize("minimal server");
 
   // create minimal service server
   eCAL::CServiceServer minimal_server("mirror");

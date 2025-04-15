@@ -24,7 +24,7 @@
 
 void CallMethod(eCAL_ServiceClient* client, const char* method_name)
 {
-  char                          request[] = "HELLO";
+  char                          request[] = "stressed";
   struct eCAL_SServiceResponse* response = NULL;
   size_t                        response_length = 0;
 
@@ -64,9 +64,6 @@ void CallMethod(eCAL_ServiceClient* client, const char* method_name)
 
   // Memory of response array needs to be deallocated explicitly.
   eCAL_Free(response);
-
-  // Sleep a second
-  eCAL_Process_SleepMS(1000);
 }
 
 
@@ -86,7 +83,10 @@ int main()
   {
     // Alternate calls to the "echo" and the "reverse" method of the server.
     CallMethod(client, "echo");
+    eCAL_Process_SleepMS(1000);
+
     CallMethod(client, "reverse");
+    eCAL_Process_SleepMS(1000);
   }
 
   // Destroy client for "service1"
