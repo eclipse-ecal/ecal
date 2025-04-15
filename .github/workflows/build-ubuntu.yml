@@ -24,14 +24,16 @@ jobs:
     - name: Install Dependencies
       run: |
         common_packages=(
-          ninja-build
-          doxygen
-          graphviz
+          ccache ninja-build
+          doxygen graphviz
           libcurl4-openssl-dev
           libprotobuf-dev libprotoc-dev protobuf-compiler
           libhdf5-dev
           libyaml-cpp-dev
           libspdlog-dev
+          libtclap-dev
+          libtinyxml2-dev
+          libcapnp-dev capnproto
           libgtest-dev libgmock-dev
           python3 python3-venv python3-dev
         )
@@ -63,17 +65,6 @@ jobs:
         # Get cpu architecture
         echo "cpu_architecture=$(dpkg --print-architecture)" >> "$GITHUB_ENV"
 
-    - name: Install Cap'n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-1.0.2.tar.gz
-        tar zxf capnproto-c++-1.0.2.tar.gz
-        cd capnproto-c++-1.0.2
-        ./configure
-        make -j$(($(nproc)*2))
-        sudo make install
-
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -83,16 +74,15 @@ jobs:
 
     - name: Update / download Submodules (selected ones)
       run: |
-        cd $GITHUB_WORKSPACE
-        git submodule init
-        git submodule deinit thirdparty/curl/curl
-        git submodule deinit thirdparty/hdf5/hdf5
-        git submodule deinit thirdparty/protobuf/protobuf
-        git submodule deinit \
-          thirdparty/gtest/googletest \
-          thirdparty/spdlog/spdlog \
-          thirdparty/yaml-cpp/yaml-cpp
-        git submodule update --single-branch --depth 1
+        git submodule update --init --single-branch --depth 1 \
+          thirdparty/asio/asio \
+          thirdparty/ecaludp/ecaludp \
+          thirdparty/fineftp/fineftp-server \
+          thirdparty/ftxui/ftxui \
+          thirdparty/qwt/qwt \
+          thirdparty/recycle/recycle \
+          thirdparty/tcp_pubsub/tcp_pubsub \
+          thirdparty/termcolor/termcolor
 
     - name: Create venv for building docs
       shell: bash
@@ -119,6 +109,7 @@ jobs:
         -DECAL_USE_CURL=ON \
         -DECAL_USE_CAPNPROTO=ON \
         -DECAL_USE_FTXUI=ON \
+        -DECAL_USE_NPCAP=OFF \
         -DECAL_BUILD_DOCS=ON \
         -DECAL_BUILD_APPS=ON \
         -DECAL_BUILD_SAMPLES=ON \
@@ -127,7 +118,6 @@ jobs:
         -DECAL_BUILD_CSHARP_BINDING=OFF \
         -DECAL_BUILD_TESTS=ON \
         -DECAL_INSTALL_SAMPLE_SOURCES=ON \
-        -DECAL_USE_NPCAP=OFF \
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON \
         -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=ON \
@@ -137,6 +127,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=OFF \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
+        -DECAL_THIRDPARTY_BUILD_TINYXML2=OFF \
+        -DECAL_THIRDPARTY_BUILD_TCLAP=OFF \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=OFF \
