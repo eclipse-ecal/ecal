@@ -30,7 +30,7 @@ int main()
   eCAL::Initialize("minimal client");
 
   // create minimal service client
-  const eCAL::CServiceClient minimal_client("mirror", { {"echo", {}, {} } });
+  const eCAL::CServiceClient mirror_client("mirror", { {"echo", {}, {} } });
 
   // callback for service response
   auto service_response_callback = [](const eCAL::SServiceResponse& service_response_) {
@@ -52,7 +52,7 @@ int main()
     };
 
   // are we connected to at least one service?
-  while (!minimal_client.IsConnected())
+  while (!mirror_client.IsConnected())
   {
     std::cout << "Waiting for a service .." << std::endl;
 
@@ -70,7 +70,7 @@ int main()
     std::string request("stressed");
 
     // call all existing services
-    for (auto& client_instance : minimal_client.GetClientInstances())
+    for (auto& client_instance : mirror_client.GetClientInstances())
     {
       //////////////////////////////////////
       // Service call (blocking)

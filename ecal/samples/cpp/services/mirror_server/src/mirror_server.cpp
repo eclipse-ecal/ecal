@@ -57,14 +57,14 @@ int OnReverseCallback(const eCAL::SServiceMethodInformation& method_info_, const
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("minimal server");
+  eCAL::Initialize("mirror server");
 
-  // create minimal service server
-  eCAL::CServiceServer minimal_server("mirror");
+  // create binary service server
+  eCAL::CServiceServer mirror_server("mirror");
 
   // this server offers two methods, 'echo' and 'reverse'
-  minimal_server.SetMethodCallback({ "echo", {}, {} }, OnEchoCallback);
-  minimal_server.SetMethodCallback({ "reverse", {}, {} }, OnReverseCallback);
+  mirror_server.SetMethodCallback({ "echo", {}, {} }, OnEchoCallback);
+  mirror_server.SetMethodCallback({ "reverse", {}, {} }, OnReverseCallback);
 
   // idle
   while(eCAL::Ok())

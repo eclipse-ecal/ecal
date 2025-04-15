@@ -23,16 +23,21 @@ using Eclipse.eCAL.Core;
 
 public class MinimalServiceServer
 {
-  static byte[] OnEchoCallback(ServiceMethodInformation methodInfo, byte[] request)
+  static void PrintCallbackInfo(string method, byte[] request, byte[] response)
   {
-    byte[] response = request;
-
-    Console.WriteLine("Method  : '" + methodInfo.MethodName + "' called");
+    Console.WriteLine("Method  : '" + method + "' called");
     Console.WriteLine("Request : " + Encoding.UTF8.GetString(request));
     Console.WriteLine("Response: " + Encoding.UTF8.GetString(response));
     Console.WriteLine();
+  }
 
+  static byte[] OnEchoCallback(ServiceMethodInformation methodInfo, byte[] request)
+  {
     // Echo the request data back as the response.
+    byte[] response = request;
+
+    PrintCallbackInfo(methodInfo.MethodName, request, response);
+    
     return response;
   }
   static byte[] OnReverseCallback(ServiceMethodInformation methodInfo, byte[] request)
@@ -40,12 +45,8 @@ public class MinimalServiceServer
     byte[] response = (byte[])request.Clone();  // Make a copy
     Array.Reverse(response);                    // Reverse in place
 
-    Console.WriteLine("Method  : '" + methodInfo.MethodName + "' called");
-    Console.WriteLine("Request : " + Encoding.UTF8.GetString(request));
-    Console.WriteLine("Response: " + Encoding.UTF8.GetString(response));
-    Console.WriteLine();
+    PrintCallbackInfo(methodInfo.MethodName, request, response);
 
-    // Echo the request data back as the response.
     return response;
   }
 
