@@ -19,17 +19,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(minimal_client_c)
+project(mirror_client_c)
 
 find_package(eCAL REQUIRED)
 
 remove_definitions(-std=c++14)
 
-set(minimal_client_c_src
-    src/minimal_client_c.c
+set(mirror_client_c_src
+    src/mirror_client_c.c
 )
 
-ecal_add_sample(${PROJECT_NAME} ${minimal_client_c_src})
+ecal_add_sample(${PROJECT_NAME} ${mirror_client_c_src})
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_c)
