@@ -22,12 +22,12 @@ jobs:
         os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
 
     runs-on: ${{ matrix.os }}
-    
+
     env:
       # enable starting Qt GUI Applications
       QT_QPA_PLATFORM: offscreen
       PROJECT_NAME: ecal
-      
+
     steps:
 
     - name: Install Dependencies
