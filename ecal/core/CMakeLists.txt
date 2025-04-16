@@ -43,6 +43,11 @@ if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs
   configure_file(src/defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h" @ONLY)
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
 
+if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/git_version.h")
+  configure_file(src/git_version.h.in "${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h" @ONLY)
+endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/git_version.h")
+
+
 if(UNIX)
  include (CheckSymbolExists)
  set(CMAKE_REQUIRED_DEFINITIONS "-D__USE_GNU"
@@ -592,9 +597,14 @@ set(ecal_sources
     ${ecal_header_cmn}
 )
 
+set(ecal_generated_sources
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
+    ${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h
+)
+
 ecal_add_shared_library(${TARGET_NAME}
     ${ecal_sources}
-    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
+    ${ecal_generated_sources}
 )
 
 if (ECAL_CORE_CONFIGURATION)
@@ -689,6 +699,7 @@ target_include_directories(${TARGET_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
@@ -721,6 +732,9 @@ ecal_install_shared_library(${TARGET_NAME})
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${ecal_sources}
+  )
+  source_group(TREE "${CMAKE_CURRENT_BINARY_DIR}" FILES 
+    ${ecal_binary_sources}
   )
 endif()
 

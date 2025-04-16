@@ -30,6 +30,7 @@
 #include "ecal_process_stub.h"
 #include "ecal_utils/command_line.h"
 #include "ecal_utils/str_convert.h"
+#include "git_version.h"
 
 #include "io/udp/ecal_udp_configurations.h"
 
