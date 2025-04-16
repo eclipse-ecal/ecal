@@ -38,7 +38,7 @@ int main()
   struct eCAL_SDataTypeInformation data_type_information;
 
   // initialize eCAL API
-  eCAL_Initialize("hello_receive_c", NULL, NULL);
+  eCAL_Initialize("hello receive c", NULL, NULL);
 
   // create subscriber "hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));

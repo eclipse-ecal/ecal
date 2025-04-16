@@ -31,7 +31,7 @@ int main()
   int cnt = 0;
 
   // initialize eCAL API
-  eCAL_Initialize("hello_send_c", NULL, NULL);
+  eCAL_Initialize("hello send c", NULL, NULL);
 
   // create publisher "Hello"
   memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));

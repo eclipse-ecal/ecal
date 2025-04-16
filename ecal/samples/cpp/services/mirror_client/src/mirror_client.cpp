@@ -27,9 +27,9 @@
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("minimal client");
+  eCAL::Initialize("mirror client c++");
 
-  // create minimal service client
+  // create binary service client
   const eCAL::CServiceClient mirror_client("mirror", { {"echo", {}, {} } });
 
   // callback for service response

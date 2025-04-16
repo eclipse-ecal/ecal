@@ -42,7 +42,7 @@ void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInforma
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("blob_receive");
+  eCAL::Initialize("blob receive c++");
 
   // subscriber for topic "blob"
   eCAL::CSubscriber sub("blob");
