@@ -299,5 +299,6 @@ void Assign_SServiceResponse(struct eCAL_SServiceResponse* service_response_c_, 
   Assign_SServiceMethodInformation(&service_response_c_->service_method_information, service_response_.service_method_information, offset_);
   service_response_c_->ret_state = service_response_.ret_state;
   service_response_c_->response = Convert_Array(service_response_.response, offset_);
+  service_response_c_->response_length = service_response_.response.size();
   service_response_c_->error_msg = Convert_String(service_response_.error_msg, offset_);
 }
