@@ -30,7 +30,7 @@
  * Helper functions
  *
  */
-inline std::size_t aligned_size(std::size_t size)
+std::size_t aligned_size(std::size_t size)
 {
   return (size + (sizeof(void*) - 1)) & ~(sizeof(void*) - 1);
 }
