@@ -26,7 +26,7 @@
 #include <ecal_c/types.h>
 #include <ecal_c/time.h>
 
-#include "common.h"
+#include <cstring>
 
 #include <cassert>
 
