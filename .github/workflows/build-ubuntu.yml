@@ -173,7 +173,7 @@ jobs:
         path: .ccache
         key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
       # Always save cache if configure succeeded (even if the build failed)
-      if: always() && ${{ steps.cmake-configure.outcome }} == 'success'
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Run Tests
       run: ctest -V --test-dir _build
