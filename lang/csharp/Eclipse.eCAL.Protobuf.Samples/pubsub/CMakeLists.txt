@@ -31,7 +31,6 @@ macro(ecal_add_csharp_protobuf_pubsub_sample sample_name)
   
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
   )
 
   set_property(TARGET ${sample_name}  PROPERTY
@@ -39,5 +38,5 @@ macro(ecal_add_csharp_protobuf_pubsub_sample sample_name)
   )
 endmacro()
 
-ecal_add_csharp_protobuf_pubsub_sample(person_send)
-ecal_add_csharp_protobuf_pubsub_sample(person_receive)
+ecal_add_csharp_protobuf_pubsub_sample(person_send_csharp)
+ecal_add_csharp_protobuf_pubsub_sample(person_receive_csharp)

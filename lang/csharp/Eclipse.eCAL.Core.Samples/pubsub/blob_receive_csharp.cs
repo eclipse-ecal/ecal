@@ -18,37 +18,38 @@
 */
 
 /**
- * @file hello_receive.cs
+ * @file blob_receive.cs
  *
- * @brief A minimal example of using the eCAL API to receive string messages.
+ * @brief A minimal example of using the eCAL API to receive messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "hello" (using "std::string" as the data type), register
+ * create a subscriber for the topic "blob" (using "std::string" as the data type), register
  * a receive callback to process incoming messages, and keep the application running until eCAL
- * is terminated. It serves as a basic reference for implementing a string subscriber in C#.
+ * is terminated. It serves as a basic reference for implementing a subscriber in C#.
  */
 
 using System;
+using System.Text;
 // include ecal core namespace
 using Eclipse.eCAL.Core;
 
-public class HelloReceive
+public class BlobReceive
 {
   public static void Main()
   {
-    Console.WriteLine("--------------------------");
-    Console.WriteLine(" C#: HELLO WORLD RECEIVER");
-    Console.WriteLine("--------------------------");
-    
-    /*
-      Initialize eCAL. You always have to initialize eCAL before using its API.
-      The name of our eCAL Process will be "hello_receive_csharp". 
-      This name will be visible in the eCAL Monitor, once the process is running.
-    */
-    Core.Initialize("hello_receive_csharp");
+    Console.WriteLine("-------------------");
+    Console.WriteLine(" C#: BLOB RECEIVER");
+    Console.WriteLine("-------------------");
 
     /*
-      Print eCAL version information.
+      Initialize eCAL. You always have to initialize eCAL before using its API.
+      The name of our eCAL Process will be "blob receive c#". 
+      This name will be visible in the eCAL Monitor, once the process is running.
+    */
+    Core.Initialize("blob receive c#");
+
+    /*
+      Print version info.
     */
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
@@ -61,15 +62,16 @@ public class HelloReceive
 
     /*
       Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
-      The topic we are going to receive is called "hello".
+      The topic we are going to receive is called "blob".
     */
-    StringSubscriber subscriber = new StringSubscriber("hello");
+    Subscriber subscriber = new Subscriber("blob");
 
     /*
       Create and register a receive callback. The callback will be called whenever a new message is received.
     */
-    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>
+    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
     {
+      string message = Encoding.UTF8.GetString(data.Buffer);
       Console.WriteLine(String.Format("Receiving: {0}", message));
     });
 

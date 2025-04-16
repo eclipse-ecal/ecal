@@ -30,9 +30,8 @@ macro(ecal_add_csharp_string_sample sample_name)
 
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
   )
 endmacro()
 
-ecal_add_csharp_string_sample(hello_receive)
-ecal_add_csharp_string_sample(hello_send)
+ecal_add_csharp_string_sample(hello_receive_csharp)
+ecal_add_csharp_string_sample(hello_send_csharp)

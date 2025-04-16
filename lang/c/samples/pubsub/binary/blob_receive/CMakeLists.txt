@@ -16,18 +16,27 @@
 #
 # ========================= eCAL LICENSE =================================
 
-include(CSharpUtilities)
-project(Eclipse.eCAL.Core.Samples LANGUAGES CSharp)
+cmake_minimum_required(VERSION 3.10)
+
+
+project(blob_receive_c)
 
 find_package(eCAL REQUIRED)
 
-macro(ecal_add_csharp_core_sample sample_name)
-  ecal_add_sample(${sample_name} ${sample_name}.cs)
-  target_link_libraries(${sample_name} PRIVATE Eclipse.eCAL.Core)
-  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/core/pubsub)
-endmacro()
+remove_definitions(-std=c++14)
 
-ecal_add_csharp_core_sample(minimal_events_rec_csharp)
-ecal_add_csharp_core_sample(minimal_events_snd_csharp)
-ecal_add_csharp_core_sample(blob_send_csharp)
-ecal_add_csharp_core_sample(blob_receive_csharp)
+set(blob_receive_c_src
+    src/blob_receive.c
+)
+
+ecal_add_sample(${PROJECT_NAME} ${blob_receive_c_src})
+
+target_include_directories(${PROJECT_NAME} PRIVATE .)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_c)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_sample(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/c/pubsub/binary)

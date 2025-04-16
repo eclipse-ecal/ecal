@@ -18,38 +18,38 @@
 */
 
 /**
- * @file blob_send.cs
+ * @file hello_send.cs
  *
- * @brief A minimal example of using the eCAL API to send messages.
+ * @brief A minimal example of using the eCAL API to send string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a publisher for the topic "blob" (using "std::string" as the data type), construct
- * and send messages, and keep the application running until eCAL is terminated. It serves as
- * a basic reference for implementing a publisher in C#.
+ * create a string publisher for the topic "hello", construct and send messages, and keep
+ * the application running until eCAL is terminated. It serves as a basic reference for
+ * implementing a string publisher in C#.
  */
 
 using System;
-using System.Text;
 using System.Threading;
+// Include the eCAL API namespace
 using Eclipse.eCAL.Core;
 
-public class BlobSend
+public class HelloSend
 {
   public static void Main()
   {
-    Console.WriteLine("-----------------");
-    Console.WriteLine(" C#: BLOB SENDER");
-    Console.WriteLine("-----------------");
+    Console.WriteLine("------------------------");
+    Console.WriteLine(" C#: HELLO WORLD SENDER");
+    Console.WriteLine("------------------------");
 
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
-      The name of our eCAL Process will be "blob_send_csharp". 
+      The name of our eCAL Process will be "hello send c#". 
       This name will be visible in the eCAL Monitor, once the process is running.
     */
-    Core.Initialize("blob_send_csharp");
+    Core.Initialize("hello send c#");
 
     /*
-      Print version info.
+      Print eCAL version information.
     */
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
@@ -61,10 +61,9 @@ public class BlobSend
     // This function is not wrapped yet.
 
     /*
-      Now we create a new publisher that will publish the topic "blob". 
-      In this case we use the data type "std::string" with UTF-8 encoding.     
+      Now we create a new publisher that will publish the topic "hello".      
     */
-    Publisher publisher = new Publisher("blob", new DataTypeInformation("string", "utf-8", new byte[0]));
+    StringPublisher publisher = new StringPublisher("hello");
 
     /*
       Creating an infinite publish-loop.
@@ -79,10 +78,10 @@ public class BlobSend
       string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop_count);
 
       /*
-        Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
+        Send the message. The message is sent to all subscribers that are currently connected to the topic "hello".
       */
-      publisher.Send(Encoding.UTF8.GetBytes(message));
-      Console.WriteLine(String.Format("Sending: {0}", message));
+      publisher.Send(message);
+      Console.WriteLine(String.Format("Sent: {0}", message));
 
       /*
         Sleep for 500ms to send in a frequency of 2 hz.

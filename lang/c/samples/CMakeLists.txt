@@ -23,6 +23,8 @@ cmake_minimum_required(VERSION 3.10)
 # pubsub
 add_subdirectory(pubsub/string/hello_send)
 add_subdirectory(pubsub/string/hello_receive)
+add_subdirectory(pubsub/binary/blob_send)
+add_subdirectory(pubsub/binary/blob_receive)
 
 #service
 add_subdirectory(services/minimal_client_c)

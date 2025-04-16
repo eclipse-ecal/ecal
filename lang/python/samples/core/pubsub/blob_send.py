@@ -31,9 +31,9 @@ def main():
   print("---------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "blob_send_python".
+  # The name of our eCAL Process will be "blob send python".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("blob_send_python")
+  ecal_core.initialize("blob send python")
   
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))

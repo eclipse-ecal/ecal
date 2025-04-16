@@ -36,10 +36,10 @@ int main()
 
   /* 
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "hello_send". 
+    The name of our eCAL Process will be "hello send". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL::Initialize("hello_send");
+  eCAL::Initialize("hello send");
 
   /*
     Print some eCAL version information.
@@ -75,7 +75,7 @@ int main()
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
     */
-    pub.Send(message.str(), loop_count);
+    pub.Send(message.str());
     std::cout << "Sent \"" << message.str() << "\"" << std::endl;
 
     /*

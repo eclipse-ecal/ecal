@@ -34,9 +34,9 @@ def main():
   print("-------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "hello_receive_python".
+  # The name of our eCAL Process will be "hello receive python".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("hello_receive_python")
+  ecal_core.initialize("hello receive python")
   
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))

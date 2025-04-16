@@ -11,7 +11,8 @@ Let's implement a small application, that lets the user input his name and send 
 For this task we will use the protobuf serialization format.
 Protobuf is a language-neutral, platform-neutral extensible mechanism for serializing structured data.
 It is used by Google to serialize data in its internal RPC protocols and file formats.
-eCAL supports protobuf serialization natively.
+
+eCAL supports protobuf serialization natively for C++, C# and Python.
 
 The usage of protobuf for data exchange in eCAL is very simple. You know already from the ":ref:`_getting_started_howto_pubsub_string_hello_world`" how to send and receive simple string data.
 The basic setup will be the same, but instead of using the string publisher, we will use the protobuf publisher and subscriber.
@@ -25,7 +26,11 @@ As the sender and receiver need the same .proto files, we place them in a separa
 .. parsed-literal::
    
    |fa-folder-open| Person Protobuf File
-   └─ |fa-file-alt| :download:`person.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto>`
+   ├─ |fa-file-alt| :download:`person.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto>`
+   │
+   ├─ |fa-file-alt| :download:`animal.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/animal.proto>`
+   │
+   └─ |fa-file-alt| :download:`house.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/house.proto>`
 
 
 Let's start with the :file:`protobuf/person.proto` file!
@@ -35,9 +40,27 @@ Let's start with the :file:`protobuf/person.proto` file!
    :linenos:
    :lines: 20-
 
+As you can see, the ``person.proto`` file imports also other message definitions: ``animal.proto`` and ``house.proto``.
+So we need them as well. The definitions are straight forward. For more information about protobuf, please refer to the detailed official documentation.
+
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/animal.proto
+   :language: protobuf
+   :linenos:
+   :lines: 20-
+
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/house.proto
+   :language: protobuf
+   :linenos:
+   :lines: 20-
+
 
 Person Publisher
 ================
+
+The main differences to the string publisher are:
+  - we need to include the protobuf publisher from ``ecal/msg/protobuf/publisher.h``
+  - also we need the compiled protobuf message header file ``person.pb.h`` and include it
+  - we need to utilize the protobuf message class ``Person`` instead of the string class ``std::string``
 
 .. tabs::
 
@@ -81,6 +104,8 @@ Person Publisher Files
 
 Person Subscriber
 =================
+
+For the subscriber the same changes apply as for the publisher.
 
 .. tabs::
 

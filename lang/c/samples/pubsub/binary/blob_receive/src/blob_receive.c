@@ -44,28 +44,27 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
 
 int main()
 {
-  printf("-------------------------------\n");
-  printf(" C: HELLO WORLD RECEIVER\n");
-  printf("-------------------------------\n");
+  printf("------------------\n");
+  printf(" C: BLOB RECEIVER\n");
+  printf("------------------\n");
 
   /*
     We create the objects we want to work with.
-    In this case we need a subscriber handle and a data type information structure.
+    In this case we need a subscriber handle.
   */
   eCAL_Subscriber *subscriber;
-  struct eCAL_SDataTypeInformation data_type_information;
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "hello receive c". 
+    The name of our eCAL Process will be "blob receive c". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL_Initialize("hello receive c", NULL, NULL);
+  eCAL_Initialize("blob receive c", NULL, NULL);
 
   /*
     Print some eCAL version information.
   */
-  printf("eCAL %s (%s)", eCAL_GetVersionString(), eCAL_GetVersionDateString());
+  printf("eCAL %s (%s)\n", eCAL_GetVersionString(), eCAL_GetVersionDateString());
 
   /*
     Set the state for the program.
@@ -73,23 +72,13 @@ int main()
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
   eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good !");
-
-  /*
-    We set all data in eCAL_SDataTypeInformation to zero.
-    We want to receive raw strings, so we set the name of the data type information
-    to "string" and the encoding to "utf-8".
-  */
-  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
-  data_type_information.name     = "string";
-  data_type_information.encoding = "utf-8";
   
   /*
-    Now we create a new subscriber that will subscribe to the topic "hello".
-    Furthermore we set the data type information of the subscriber.
-    The two additional parameters that could be set (eCAL_SubEventCallbackT and eCAL_Subscriber_Configuration)
+    Now we create a new subscriber that will subscribe to the topic "blob".
+    The three additional parameters that could be set (eCAL_SDatatypeInformation, eCAL_SubEventCallbackT and eCAL_Subscriber_Configuration)
     are set to NULL, because for this example we are fine with the default settings.
   */
-  subscriber = eCAL_Subscriber_New("hello", &data_type_information, NULL, NULL);
+  subscriber = eCAL_Subscriber_New("blob", NULL, NULL, NULL);
 
   /*
     In order to receive message, we need to register a receive callback.

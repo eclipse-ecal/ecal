@@ -24,33 +24,33 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 int main()
 {
-  printf("-------------------------------\n");
-  printf(" C: HELLO WORLD SENDER\n");
-  printf("-------------------------------\n");
+  printf("----------------\n");
+  printf(" C: BLOB SENDER\n");
+  printf("----------------\n");
 
   /*
     We create the objects we want to work with.
-    In this case we need a publisher handle and a data type information structure.
-    Additionally we need a string buffer to hold the content we want to send.
+    In this case we need a publisher handle.
+    Additionally we need a char buffer to hold the content we want to send.
   */
   eCAL_Publisher* publisher;
-  struct eCAL_SDataTypeInformation data_type_information;
   char message[256];
   int loop_count = 0;
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "hello send c". 
+    The name of our eCAL Process will be "blob send c". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL_Initialize("hello send c", NULL, NULL);
+  eCAL_Initialize("blob send c", NULL, NULL);
 
   /*
     Print some eCAL version information.
   */
-  printf("eCAL %s (%s)", eCAL_GetVersionString(), eCAL_GetVersionDateString());
+  printf("eCAL %s (%s)\n", eCAL_GetVersionString(), eCAL_GetVersionDateString());
 
   /*
     Set the state for the program.
@@ -60,21 +60,12 @@ int main()
   eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good !");
 
   /*
-    We set all data in eCAL_SDataTypeInformation to zero.
-    We want to publish raw strings, so we set the name of the data type information
-    to "string" and the encoding to "utf-8".
-  */
-  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
-  data_type_information.name     = "string";
-  data_type_information.encoding = "utf-8";
-
-  /*
-    Now we create a new publisher that will publish the topic "hello".
+    Now we create a new publisher that will publish the topic "blob".
     Furthermore we set the data type information of the publisher.
     The two additional parameters that could be set (eCAL_PubEventCallbackT and eCAL_Publisher_Configuration)
     are set to NULL, because for this example we are fine with the default settings.
   */
-  publisher = eCAL_Publisher_New("hello", &data_type_information, NULL, NULL);
+  publisher = eCAL_Publisher_New("blob", NULL, NULL, NULL);
 
   /*
     Get the topic id of the publisher by using eCAL_Publisher_GetTopicId and print it.
@@ -88,19 +79,18 @@ int main()
   while(eCAL_Ok())
   {
     /*
-      Build the string you want to send, using snprintf in this example.
-      The string will be "HELLO WORLD FROM C (1)", "HELLO WORLD FROM C (2)", ...
+      Build the blob you want to send. You can add any binary data here, we fill the message with the loop count.
     */
-    snprintf(message, sizeof(message), "HELLO WORLD FROM C (%d)", ++loop_count);
+    memset((unsigned char*)message, loop_count++, sizeof(message));
 
     /*
-      Send the content to other eCAL Processes that have subscribed to the topic "hello".
-      The message is sent as a raw string, so we use the length of the string as the size of the message.
+      Send the content to other eCAL Processes that have subscribed to the topic "blob".
+      The message is sent as binary, so we use the size of the message as the size of the message to send.
     */
-    if(!eCAL_Publisher_Send(publisher, message, strlen(message), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", message);
+    if(!eCAL_Publisher_Send(publisher, message, sizeof(message), NULL))
+      printf("Published topic \"blob\" with \"%s\"\n", message);
     else
-      printf("Sending topic \"Hello\" failed !\n");
+      printf("Sending topic \"blob\" failed !\n");
 
     /*
       Sleep for 500 ms so we send with a frequency of 2 Hz.

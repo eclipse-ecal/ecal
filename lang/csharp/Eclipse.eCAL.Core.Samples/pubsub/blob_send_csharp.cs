@@ -18,35 +18,35 @@
 */
 
 /**
- * @file blob_receive.cs
+ * @file blob_send.cs
  *
- * @brief A minimal example of using the eCAL API to receive messages.
+ * @brief A minimal example of using the eCAL API to send messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "blob" (using "std::string" as the data type), register
- * a receive callback to process incoming messages, and keep the application running until eCAL
- * is terminated. It serves as a basic reference for implementing a subscriber in C#.
+ * create a publisher for the topic "blob" (using "std::string" as the data type), construct
+ * and send messages, and keep the application running until eCAL is terminated. It serves as
+ * a basic reference for implementing a publisher in C#.
  */
 
 using System;
 using System.Text;
-// include ecal core namespace
+using System.Threading;
 using Eclipse.eCAL.Core;
 
-public class BlobReceive
+public class BlobSend
 {
   public static void Main()
   {
-    Console.WriteLine("-------------------");
-    Console.WriteLine(" C#: BLOB RECEIVER");
-    Console.WriteLine("-------------------");
+    Console.WriteLine("-----------------");
+    Console.WriteLine(" C#: BLOB SENDER");
+    Console.WriteLine("-----------------");
 
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
-      The name of our eCAL Process will be "blob_receive_csharp". 
+      The name of our eCAL Process will be "blob send c#". 
       This name will be visible in the eCAL Monitor, once the process is running.
     */
-    Core.Initialize("blob_receive_csharp");
+    Core.Initialize("blob send c#");
 
     /*
       Print version info.
@@ -61,40 +61,42 @@ public class BlobReceive
     // This function is not wrapped yet.
 
     /*
-      Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
-      The topic we are going to receive is called "blob".
+      Now we create a new publisher that will publish the topic "blob".    
     */
-    Subscriber subscriber = new Subscriber("blob", new DataTypeInformation("string", "utf-8", new byte[0]));
+    Publisher publisher = new Publisher("blob");
 
     /*
-      Create and register a receive callback. The callback will be called whenever a new message is received.
+      Creating an infinite publish-loop.
+      eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
     */
-    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
-    {
-      string message = Encoding.UTF8.GetString(data.Buffer);
-      Console.WriteLine(String.Format("Receiving: {0}", message));
-    });
-
-    /*
-      Creating an infinite loop.
-      eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
-    */
+    int loop_count = 0;
     while (Core.Ok())
     {
       /*
-        Sleep for 500ms to avoid busy waiting.
+        Construct a message. The message is a string that will be sent to the subscribers.
       */
-      System.Threading.Thread.Sleep(500);
+      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop_count);
+
+      /*
+        Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
+      */
+      publisher.Send(Encoding.UTF8.GetBytes(message));
+      Console.WriteLine(String.Format("Sending: {0}", message));
+
+      /*
+        Sleep for 500ms to send in a frequency of 2 hz.
+      */
+      Thread.Sleep(500);
     }
 
     /*
-      Cleanup. Dispose the subscriber to free resources.
+      Cleanup. Dispose the publisher to free resources.
     */
-    subscriber.Dispose();
+    publisher.Dispose();
 
     /*
       Terminate eCAL. This will stop all eCAL processes and free all resources.
-      You should always terminate eCAL before exiting your application.
+      You should always terminate eCAL when you are done using it.
     */
     Core.Terminate();
   }

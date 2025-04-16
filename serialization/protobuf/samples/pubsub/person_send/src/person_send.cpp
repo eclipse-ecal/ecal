@@ -35,10 +35,10 @@ int main()
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "person_send". 
+    The name of our eCAL Process will be "person send". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL::Initialize("person_send");
+  eCAL::Initialize("person send");
 
   /*
     Print some eCAL version information.

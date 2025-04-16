@@ -18,37 +18,37 @@
 */
 
 /**
- * @file person_rec_csharp.cs
+ * @file hello_receive.cs
  *
- * @brief A minimal example of using the eCAL API to receive protobuf messages.
+ * @brief A minimal example of using the eCAL API to receive string messages.
  *
  * This example demonstrates how to initialize the eCAL API, print version information,
- * create a subscriber for the topic "person" (using "Pb.People.Person" as the data type), register
+ * create a subscriber for the topic "hello" (using "std::string" as the data type), register
  * a receive callback to process incoming messages, and keep the application running until eCAL
- * is terminated. It serves as a basic reference for implementing a protobuf subscriber in C#.
+ * is terminated. It serves as a basic reference for implementing a string subscriber in C#.
  */
 
 using System;
 // include ecal core namespace
 using Eclipse.eCAL.Core;
 
-public class PersonReceive
+public class HelloReceive
 {
   public static void Main()
   {
-    Console.WriteLine("---------------------");
-    Console.WriteLine(" C#: PERSON RECEIVER");
-    Console.WriteLine("---------------------");
-
+    Console.WriteLine("--------------------------");
+    Console.WriteLine(" C#: HELLO WORLD RECEIVER");
+    Console.WriteLine("--------------------------");
+    
     /*
       Initialize eCAL. You always have to initialize eCAL before using its API.
-      The name of our eCAL Process will be "person_receive_csharp". 
+      The name of our eCAL Process will be "hello receive c#". 
       This name will be visible in the eCAL Monitor, once the process is running.
     */
-    Core.Initialize("person_receive_csharp");
+    Core.Initialize("hello receive c#");
 
     /*
-      Print version info.
+      Print eCAL version information.
     */
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
@@ -61,17 +61,16 @@ public class PersonReceive
 
     /*
       Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
-      The topic we are going to receive is called "person".
-      The data type is "Pb.People.Person", generated from the protobuf definition.
+      The topic we are going to receive is called "hello".
     */
-    var subscriber = new ProtobufSubscriber<Pb.People.Person>("person");
+    StringSubscriber subscriber = new StringSubscriber("hello");
 
     /*
       Create and register a receive callback. The callback will be called whenever a new message is received.
     */
-    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
+    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>
     {
-      Console.WriteLine(String.Format("Receiving: {0}", data.Message.ToString()));
+      Console.WriteLine(String.Format("Receiving: {0}", message));
     });
 
     /*

@@ -51,10 +51,10 @@ int main()
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "blob_receive". 
+    The name of our eCAL Process will be "blob receive". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL::Initialize("blob_receive");
+  eCAL::Initialize("blob receive");
 
   /*
     Print some eCAL version information.

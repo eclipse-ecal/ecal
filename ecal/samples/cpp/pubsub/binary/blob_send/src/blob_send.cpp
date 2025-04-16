@@ -31,10 +31,10 @@ int main()
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
-    The name of our eCAL Process will be "blob_send". 
+    The name of our eCAL Process will be "blob send". 
     This name will be visible in the eCAL Monitor, once the process is running.
   */
-  eCAL::Initialize("blob_send");
+  eCAL::Initialize("blob send");
 
   /*
     Print some eCAL version information.
@@ -72,6 +72,7 @@ int main()
 
     /*
       Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
+      For binary data you need to set a buffer pointer and the size of the buffer.
     */
     pub.Send(bin_buffer.data(), bin_buffer.size());
     std::cout << "Sent buffer filled with " << static_cast<int>(loop_count) << std::endl;
