@@ -30,13 +30,20 @@ def client_resp_callback(service_info, response):
     else:
         print("server {} response failed, error : '{}'".format(service_info["host_name"], service_info["error_msg"]))
         print()
-      
+
+# generator, alternating returns "echo", "reverse"
+def get_method():
+  methods = ["echo", "reverse"]
+  while True:
+    for method in methods:
+      yield method 
+
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
   
   # initialize eCAL API
-  ecal_core.initialize()
+  ecal_core.initialize("mirror client python")
   
   # create a client for the "mirror" service
   client = ecal_core.ServiceClient("mirror")
@@ -45,17 +52,9 @@ def main():
   client.add_response_callback(client_resp_callback)
 
   # idle and call service methods
-  i = 0
   while(ecal_core.ok()):
-    i = i + 1
-    # call echo
-    request = bytes("xyz", "ascii")
-    client.call("echo", "request", 1234)
-
-    time.sleep(0.5)
-    # call reverse
-    request = bytes("xyz", "ascii")
-    client.call("reverse", "request", 1234)
+    request = bytes("stressed", "ascii")
+    client.call(get_method(), request)
     time.sleep(0.5)
 
   # destroy client

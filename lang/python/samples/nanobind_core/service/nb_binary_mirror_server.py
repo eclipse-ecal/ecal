@@ -21,27 +21,34 @@ from typing import Tuple
 
 import ecal.nanobind_core as ecal_core
 
+def print_data(method_name : str, request : bytes, response : bytes):
+  print("Method   : '{}' called".format(method_name))
+  print("Requests : {}".format(request))
+  print("Response : {}".format(response))
+  print()
+
 # define the server method "ping" function
 def echo_req_callback(
-      method_information : ecal_core.ServiceMethodInformation,
-      request : bytes) -> Tuple[int, bytes]:
-    print("Method '{}' called with request {}".format(method_information.method_name, request))
-    return 0, request
+    method_information : ecal_core.ServiceMethodInformation,
+    request : bytes) -> Tuple[int, bytes]:
+  response = request  
+  print_data(method_information.method_name, request, response)
+  return 0, response
 
 # define the server method "ping" function
 def reverse_req_callback(
-      method_information : ecal_core.ServiceMethodInformation,
-      request : bytes) -> Tuple[int, bytes]:
-    print("Method '{}' called with {} request".format(method_information.method_name, request))
-    response = request[::-1] #reverse the request
-    return 0, response
+    method_information : ecal_core.ServiceMethodInformation,
+    request : bytes) -> Tuple[int, bytes]:
+  response = request[::-1] #reverse the request
+  print_data(method_information.method_name, request, response)
+  return 0, response
 
 def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
   
   # initialize eCAL API
-  ecal_core.initialize()
+  ecal_core.initialize("mirror server python")
   
   # create a server for the "DemoService" service
   server = ecal_core.ServiceServer("mirror")

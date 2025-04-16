@@ -1,189 +1,161 @@
-///* ========================= eCAL LICENSE =================================
-// *
-// * Copyright (C) 2016 - 2025 Continental Corporation
-// *
-// * Licensed under the Apache License, Version 2.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License at
-// *
-// *      http://www.apache.org/licenses/LICENSE-2.0
-// *
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// *
-// * ========================= eCAL LICENSE =================================
-//*/
-//
-///**
-// * @file   registration.h
-// * @brief  eCAL registration interface
-//**/
-//
-//#pragma once
-//
-//#include <ecal/os.h>
-//#include <ecal/pubsub/types.h>
-//#include <ecal/service/types.h>
-//
-//#include <cstdint>
-//#include <functional>
-//#include <map>
-//#include <set>
-//#include <string>
-//#include <vector>
-//
-//namespace eCAL
-//{
-//  namespace Registration
-//  {
-//    struct SServiceMethod
-//    {
-//      std::string service_name;
-//      std::string method_name;
-//
-//      bool operator<(const SServiceMethod& other) const
-//      {
-//        return std::tie(service_name, method_name) < std::tie(other.service_name, other.method_name);
-//      }
-//    };
-//
-//    using CallbackToken = std::size_t;
-//
-//    enum class RegistrationEventType
-//    {
-//      new_entity,     //!< Represents a new entity registration
-//      deleted_entity  //!< Represents a deletion of an entity
-//    };
-//
-//    /* @brief Event callback, when a topic related entity (publisher / subscriber) has been created or deleted */
-//    using TopicEventCallbackT = std::function<void(const STopicId&, RegistrationEventType)>;
-//
-//    /**
-//     * @brief Get complete snapshot of all known publisher.
-//     *
-//     * @return Set of topic id's.
-//    **/
-//    ECAL_API bool GetPublisherIDs(std::set<STopicId>& topic_ids_);
-//
-//    /**
-//     * @brief Get data type information with quality for specific publisher.
-//     *
-//     * @return True if information could be queried.
-//    **/
-//    ECAL_API bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
-//
-//    /**
-//     * @brief Register a callback function to be notified when a new publisher becomes available.
-//     *
-//     * @param callback_       The callback function to be called with the STopicId of the new publisher.
-//     *                        The callback function must not be blocked for a longer period of time, 
-//     *                        otherwise timeout mechanisms of the eCAL registration would be triggered.
-//     *
-//     * @return CallbackToken  Token that can be used to unregister the callback.
-//     */
-//    ECAL_API CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_);
-//
-//    /**
-//     * @brief Unregister the publisher callback using the provided token.
-//     *
-//     * @param token  The token returned by AddPublisherCallback.
-//    */
-//    ECAL_API void RemPublisherEventCallback(CallbackToken token_);
-//
-//    /**
-//     * @brief Get complete snapshot of all known subscriber.
-//     *
-//     * @return Set of topic id's.
-//    **/
-//    ECAL_API bool GetSubscriberIDs(std::set<STopicId>& topic_ids_);
-//
-//    /**
-//     * @brief Get data type information with quality for specific subscriber.
-//     *
-//     * @return True if information could be queried.
-//    **/
-//    ECAL_API bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_);
-//
-//    /**
-//     * @brief Register a callback function to be notified when a new subscriber becomes available.
-//     *
-//     * @param callback_       The callback function to be called with the STopicId of the new subscriber.
-//     *                        The callback function must not be blocked for a longer period of time, 
-//     *                        otherwise timeout mechanisms of the eCAL registration would be triggered.
-//     *
-//     * @return CallbackToken  Token that can be used to unregister the callback.
-//     */
-//    ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_);
-//
-//    /**
-//     * @brief Unregister the subscriber callback using the provided token.
-//     *
-//     * @param token  The token returned by AddSubscriberCallback.
-//    */
-//    ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
-//
-//    /**
-//     * @brief Get complete snapshot of all known servers.
-//     *
-//     * @return Set of service id's.
-//    **/
-//    ECAL_API bool GetServerIDs(std::set<SServiceId>& service_ids_);
-//
-//    /**
-//     * @brief Get service method information for a specific server.
-//     *
-//     * @return True if information could be queried.
-//    **/
-//    ECAL_API bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
-//
-//    /**
-//     * @brief Get complete snapshot of all known clients.
-//     *
-//     * @return Set of service id's.
-//    **/
-//    ECAL_API bool GetClientIDs(std::set<SServiceId>& service_ids_);
-//
-//    /**
-//     * @brief Get service method information for a specific client.
-//     *
-//     * @return True if information could be queried.
-//    **/
-//    ECAL_API bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_method_info_);
-//
-//    /**
-//     * @brief Get all names of topics that are being published.
-//     *        This is a convenience function. 
-//     *        It calls GetPublisherIDs() and filters by name
-//     *
-//     * @param topic_names_ Set to store the topic names.
-//    **/
-//    ECAL_API bool GetPublishedTopicNames(std::set<std::string>& topic_names_);
-//
-//    /**
-//     * @brief Get all names of topics that are being subscribed
-//     *        This is a convenience function. 
-//     *        It calls GetSubscriberIDs() and filters by name
-//     *
-//     * @param topic_names_ Set to store the topic names.
-//    **/
-//    ECAL_API bool GetSubscribedTopicNames(std::set<std::string>& topic_names_);
-//
-//        /**
-//     * @brief Get the pairs of service name / method name of all eCAL Servers.
-//     *
-//     * @param service_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).
-//    **/
-//    ECAL_API bool GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
-//
-//    /**
-//     * @brief Get the pairs of service name / method name of all eCAL Clients.
-//     *
-//     * @param client_method_names_ Set to store the client/method names (Set { (ClientName, MethodName) }).
-//    **/
-//    ECAL_API bool GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
-//  }
-//}
-//
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
+#include <core/py_registration.h>
+#include <ecal/registration.h>
+
+#include <nanobind/stl/string.h>
+#include <nanobind/stl/set.h>
+#include <nanobind/stl/pair.h>
+#include <nanobind/stl/optional.h>
+
+namespace nb = nanobind;
+
+struct PyCallbackToken {
+  explicit PyCallbackToken(std::size_t val) : value(val) {}
+  std::size_t value;
+
+  bool operator==(const PyCallbackToken& other) const {
+    return value == other.value;
+  }
+
+  std::string repr() const {
+    return "<CallbackToken " + std::to_string(value) + ">";
+  }
+};
+
+void AddRegistration(nanobind::module_& m)
+{
+  using namespace eCAL::Registration;
+
+  auto m_registration = m.def_submodule("registration", "eCAL Registration API.");
+
+  nb::class_<PyCallbackToken>(m_registration, "CallbackToken", "Opaque handle used to unregister a callback.")
+    .def("__eq__", &PyCallbackToken::operator==)
+    .def("__repr__", &PyCallbackToken::repr);
+
+  nb::enum_<RegistrationEventType>(m_registration, "RegistrationEventType", "Type of registration event (e.g., entity created or deleted).")
+    .value("NEW_ENTITY", RegistrationEventType::new_entity, "A new entity was registered.")
+    .value("DELETED_ENTITY", RegistrationEventType::deleted_entity, "An existing entity was unregistered.");
+
+  nb::class_<SServiceMethod>(m_registration, "ServiceMethod", "Combination of service and method name.")
+    .def(nb::init<>())
+    .def_rw("service_name", &SServiceMethod::service_name, "Name of the service.")
+    .def_rw("method_name", &SServiceMethod::method_name, "Name of the method.")
+    .def("__lt__", &SServiceMethod::operator<)
+    .def("__repr__", [](const SServiceMethod& sm) {
+    return "<ServiceMethod '" + sm.service_name + "::" + sm.method_name + "'>";
+      });
+
+  m_registration.def("get_publisher_ids", []() -> nb::object {
+    std::set<eCAL::STopicId> ids;
+    return GetPublisherIDs(ids) ? nb::cast(ids) : nb::none();
+    }, "Get all known publisher topic IDs.");
+
+  m_registration.def("get_subscriber_ids", []() -> nb::object {
+    std::set<eCAL::STopicId> ids;
+    return GetSubscriberIDs(ids) ? nb::cast(ids) : nb::none();
+    }, "Get all known subscriber topic IDs.");
+
+  m_registration.def("get_server_ids", []() -> nb::object {
+    std::set<eCAL::SServiceId> ids;
+    return GetServerIDs(ids) ? nb::cast(ids) : nb::none();
+    }, "Get all known server service IDs.");
+
+  m_registration.def("get_client_ids", []() -> nb::object {
+    std::set<eCAL::SServiceId> ids;
+    return GetClientIDs(ids) ? nb::cast(ids) : nb::none();
+    }, "Get all known client service IDs.");
+
+  m_registration.def("get_published_topic_names", []() -> nb::object {
+    std::set<std::string> names;
+    return GetPublishedTopicNames(names) ? nb::cast(names) : nb::none();
+    }, "Convenience: Get all topic names currently being published.");
+
+  m_registration.def("get_subscribed_topic_names", []() -> nb::object {
+    std::set<std::string> names;
+    return GetSubscribedTopicNames(names) ? nb::cast(names) : nb::none();
+    }, "Convenience: Get all topic names currently being subscribed to.");
+
+  m_registration.def("get_server_method_names", []() -> nb::object {
+    std::set<SServiceMethod> methods;
+    return GetServerMethodNames(methods) ? nb::cast(methods) : nb::none();
+    }, "Get all service/method name pairs of all eCAL servers.");
+
+  m_registration.def("get_client_method_names", []() -> nb::object {
+    std::set<SServiceMethod> methods;
+    return GetClientMethodNames(methods) ? nb::cast(methods) : nb::none();
+    }, "Get all service/method name pairs of all eCAL clients.");
+
+  m_registration.def("get_publisher_info", [](const eCAL::STopicId& id) -> nb::object {
+    eCAL::SDataTypeInformation info;
+    return GetPublisherInfo(id, info) ? nb::cast(info) : nb::none();
+    }, nb::arg("topic_id"), "Get datatype info for a specific publisher topic ID.");
+
+  m_registration.def("get_subscriber_info", [](const eCAL::STopicId& id) -> nb::object {
+    eCAL::SDataTypeInformation info;
+    return GetSubscriberInfo(id, info) ? nb::cast(info) : nb::none();
+    }, nb::arg("topic_id"), "Get datatype info for a specific subscriber topic ID.");
+
+  m_registration.def("get_server_info", [](const eCAL::SServiceId& id) -> nb::object {
+    eCAL::ServiceMethodInformationSetT methods;
+    return GetServerInfo(id, methods) ? nb::cast(methods) : nb::none();
+    }, nb::arg("server_id"), "Get method info for a specific server by ID.");
+
+  m_registration.def("get_client_info", [](const eCAL::SServiceId& id) -> nb::object {
+    eCAL:: ServiceMethodInformationSetT methods;
+    return GetClientInfo(id, methods) ? nb::cast(methods) : nb::none();
+    }, nb::arg("client_id"), "Get method info for a specific client by ID.");
+
+  m_registration.def("add_publisher_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
+    auto cb_ptr = std::make_shared<nb::callable>(py_cb);
+    TopicEventCallbackT cb = [cb_ptr](const eCAL::STopicId& id, RegistrationEventType type) {
+      try {
+        nb::gil_scoped_acquire acquire;
+        (*cb_ptr)(id, type);
+      }
+      catch (const std::exception& e) {
+        std::cerr << "Error in publisher callback: " << e.what() << std::endl;
+      }
+    };
+    nb::gil_scoped_release release;
+    return PyCallbackToken(AddPublisherEventCallback(cb));
+    }, nb::arg("callback"), "Register callback for new or removed publishers. Returns a token.");
+
+  m_registration.def("remove_publisher_event_callback", &RemPublisherEventCallback,
+    nb::arg("token"), "Unregister a publisher event callback by its token.");
+
+  m_registration.def("add_subscriber_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
+    auto cb_ptr = std::make_shared<nb::callable>(py_cb);
+    TopicEventCallbackT cb = [cb_ptr](const eCAL::STopicId& id, RegistrationEventType type) {
+      try {
+        nb::gil_scoped_acquire acquire;
+        (*cb_ptr)(id, type);
+      }
+      catch (const std::exception& e) {
+        std::cerr << "Error in subscriber callback: " << e.what() << std::endl;
+      }
+    };
+    nb::gil_scoped_release release;
+    return PyCallbackToken(AddSubscriberEventCallback(cb));
+    }, nb::arg("callback"), "Register callback for new or removed subscribers. Returns a token.");
+
+  m_registration.def("remove_subscriber_event_callback", &RemSubscriberEventCallback,
+    nb::arg("token"), "Unregister a subscriber event callback by its token.");
+}

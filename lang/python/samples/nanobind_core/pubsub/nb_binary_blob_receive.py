@@ -43,7 +43,7 @@ def main():
   print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
   
   # initialize eCAL API
-  ecal_core.initialize()
+  ecal_core.initialize("blob receive python")
 
   # create subscriber
   config = ecal_core.get_subscriber_configuration()

@@ -21,7 +21,7 @@ import time
 import ecal.nanobind_core as ecal_core
 
 def main():
-  ecal_core.initialize('Process Util Sample', ecal_core.init.ALL)
+  ecal_core.initialize('Util Python Sample', ecal_core.init.ALL)
 
   # Print the eCAL data directory
   print("eCAL Data directory: {}".format(ecal_core.get_ecal_data_dir()))
