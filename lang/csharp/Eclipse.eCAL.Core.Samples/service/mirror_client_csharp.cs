@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,20 +48,23 @@ public class MinimalServiceClient
   static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("minimal client csharp");
+    Core.Initialize("mirror client c#");
 
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     // Create a service client for service "service1"
-    ServiceClient serviceClient = new ServiceClient("service1");
+    ServiceClient serviceClient = new ServiceClient("mirror");
+    string[] methods = new string[] { "echo", "reverse" };
+    int i = 0;
 
     while (Core.Ok())
     {
       // Create the request payload.
-      byte[] content = Encoding.UTF8.GetBytes("hello");
+      byte[] content = Encoding.UTF8.GetBytes("stressed");
+      string method = methods[i++ % methods.Length];
 
-      // Call the service method "echo" with a 100 ms timeout.
-      List<ServiceResponse> responseList = serviceClient.CallWithResponse("echo", content, 100);
+      // Alternating call "echo" and "reverse".
+      List<ServiceResponse> responseList = serviceClient.CallWithResponse(method, content, 100);
       if (responseList.Count > 0)
       {
         foreach (ServiceResponse response in responseList)
@@ -71,7 +74,7 @@ public class MinimalServiceClient
       }
       else
       {
-        Console.WriteLine("Calling service echo failed!");
+        Console.WriteLine(String.Format("Calling service {0} failed!", method));
       }
 
       System.Threading.Thread.Sleep(1000);

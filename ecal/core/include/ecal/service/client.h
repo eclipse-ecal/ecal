@@ -102,7 +102,7 @@ namespace eCAL
      * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
      * @param       timeout_ms_            Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
      *
-     * @return  True if all calls were successful.
+     * @return  True if all calls were successful and minimum one instance was connected, otherwise false.
     **/
     ECAL_API_EXPORTED_MEMBER
       bool CallWithResponse(const std::string& method_name_, const std::string& request_, ServiceResponseVecT& service_response_vec_, int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const;
@@ -115,7 +115,7 @@ namespace eCAL
      * @param response_callback_  Callback function for the service method response.
      * @param timeout_ms_         Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
      *
-     * @return  True if all calls were successful.
+     * @return  True if all calls were successful and minimum one instance was connected, otherwise false.
     **/
     ECAL_API_EXPORTED_MEMBER
       bool CallWithCallback(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_, int timeout_ms_ = DEFAULT_TIME_ARGUMENT) const;
@@ -127,7 +127,7 @@ namespace eCAL
      * @param request_            Request string.
      * @param response_callback_  Callback function for the service method response.
      *
-     * @return  True if all calls were successful.
+     * @return  True if all calls were successful and minimum one instance was connected, otherwise false.
     **/
     ECAL_API_EXPORTED_MEMBER
       bool CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_) const;
