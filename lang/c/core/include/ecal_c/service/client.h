@@ -77,7 +77,7 @@ extern "C"
    * @param [out] service_response_vec_length_  Returned length of response array. Must point to zero.
    * @param       timeout_ms_                   Maximum time before operation returns. Optional, can be NULL.
    *
-   * @return Zero if succeeded, non-zero otherwise.
+   * @return Zero if all calls were successful and minimum one instance was connected, non-zero otherwise.
   **/
   ECALC_API int eCAL_ServiceClient_CallWithResponse(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, struct eCAL_SServiceResponse** service_response_vec_, size_t* service_response_vec_length_, const int* timeout_ms_);
   
@@ -92,7 +92,7 @@ extern "C"
    * @param callback_user_argument_  User argument that is forwarded to the callback. Optional, can be NULL.
    * @param timeout_ms_              Maximum time before operation returns. Optional, can be NULL.
    *
-   * @return Zero if succeeded, non-zero otherwise.
+   * @return Zero if all calls were successful and minimum one instance was connected, non-zero otherwise.
   **/
   ECALC_API int eCAL_ServiceClient_CallWithCallback(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_, const int* timeout_ms_);
   
@@ -106,7 +106,7 @@ extern "C"
    * @param callback_                Callback function for the service method response.
    * @param callback_user_argument_  User argument that is forwarded to the callback. Optional, can be NULL.
    *
-   * @return Zero if succeeded, non-zero otherwise.
+   * @return Zero if all calls were successful and minimum one instance was connected, non-zero otherwise.
   **/
   ECALC_API int eCAL_ServiceClient_CallWithCallbackAsync(eCAL_ServiceClient* service_client_, const char* method_name_, const void* request_, size_t request_length_, eCAL_ResponseCallbackT callback_, void* callback_user_argument_);
 
