@@ -172,7 +172,7 @@ add_custom_target(documentation_sphinx ALL
     #${SPHINX_APIDOC} -f
     #-o ${DOC_SOURCE_DIRECTORY}/_apidoc/ ${PYTHON_SOURCE_DIRECTORY}
     COMMAND ${SPHINX_EXECUTABLE}
-        -q -b html
+        -q -b html -j auto
         -c "${DOC_SOURCE_DIRECTORY}"
         -d "${SPHINX_CACHE_DIR}"
         -Dbreathe_projects.eCAL=${DOXYGEN_XML_OUTPUT}
