@@ -21,19 +21,18 @@
 #include "ecal_clr_common.h"
 
 #include <ecal/core.h>
-#include <ecal/defs.h>
 
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
 System::String^ Core::GetVersion()
 {
-  return ECAL_VERSION;
+  return StlStringToString(::eCAL::GetVersionString());
 }
 
 System::String^ Core::GetDate()
 {
-  return ECAL_DATE;
+  return StlStringToString(::eCAL::GetVersionDateString());
 }
 
 void Core::Initialize(System::String^ unitName)

@@ -122,6 +122,8 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE 
     ECAL_CORE_C_EXPORTS
     ECAL_NO_DEPRECATION_WARNINGS
+    ECAL_VERSION="${eCAL_COMPLETE_VERSION}"
+    ECAL_DATE="${eCAL_DATE}"
 )
 
 set_target_properties(${PROJECT_NAME}

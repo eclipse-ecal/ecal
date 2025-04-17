@@ -125,7 +125,7 @@ namespace
 /****************************************/
 const char* ecal_getversion()
 {
-  return(ECAL_VERSION);
+  return(eCAL::GetVersionString().c_str());
 }
 
 /****************************************/
@@ -146,7 +146,7 @@ int ecal_getversion_components(int* major_, int* minor_, int* patch_)
 /****************************************/
 const char* ecal_getdate()
 {
-  return(ECAL_DATE);
+  return(eCAL::GetVersionDateString().c_str());
 }
 
 /****************************************/

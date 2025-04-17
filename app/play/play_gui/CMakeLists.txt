@@ -167,6 +167,11 @@ endif()
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE 
+  ECAL_VERSION="${eCAL_COMPLETE_VERSION}"
+  ECAL_DATE="${eCAL_DATE}"
+)
+
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")

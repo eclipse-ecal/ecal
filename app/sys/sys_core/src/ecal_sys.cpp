@@ -188,7 +188,7 @@ void EcalSys::SetOptions(const EcalSys::Options& options) {
 void EcalSys::LogAppNameVersion() const
 {
   std::string app_version_header = " " + std::string(ECAL_SYS_LIB_NAME) + " " + std::string(ECAL_SYS_VERSION_STRING) + " ";
-  std::string ecal_version_header = " (eCAL Lib " + std::string(ECAL_VERSION) + ") ";
+  std::string ecal_version_header = " (eCAL Lib " + eCAL::GetVersionString() + ") ";
 
   EcalUtils::String::CenterString(app_version_header, '-', 79);
   EcalUtils::String::CenterString(ecal_version_header, ' ', 79);

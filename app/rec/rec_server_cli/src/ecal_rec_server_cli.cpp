@@ -299,7 +299,7 @@ int main(int argc, char** argv)
 
   std::string rec_name     = std::string("eCAL Recorder Host Application");
   std::string rec_version  = std::string("Version: ") + ECAL_REC_VERSION_STRING;
-  std::string ecal_version = std::string("eCAL ") + ECAL_VERSION + " (" + ECAL_DATE + ")";
+  std::string ecal_version = std::string("eCAL ") + eCAL::GetVersionString() + " (" + eCAL::GetVersionDateString() + ")";
 
   EcalUtils::String::CenterString(rec_name,     ' ', 73);
   EcalUtils::String::CenterString(rec_version,  ' ', 73);
