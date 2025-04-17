@@ -25,7 +25,7 @@ jobs:
       run: brew install qt@5
 
     - name: Install Dependencies
-      run: brew install ninja doxygen graphviz protobuf hdf5@1.10 pkg-config capnp
+      run: brew install ninja protobuf hdf5@1.10 pkg-config capnp ccache
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -36,30 +36,46 @@ jobs:
 
     - name: Update / download Submodules (selected ones)
       run: |
-        cd $GITHUB_WORKSPACE
-        git submodule init
-        git submodule deinit thirdparty/hdf5/hdf5 thirdparty/protobuf/protobuf
-        git submodule update --single-branch --depth 1
+        git submodule update --init --single-branch --depth 1 \
+          thirdparty/asio/asio \
+          thirdparty/ecaludp/ecaludp \
+          thirdparty/fineftp/fineftp-server \
+          thirdparty/ftxui/ftxui \
+          thirdparty/gtest/googletest \
+          thirdparty/qwt/qwt \
+          thirdparty/recycle/recycle \
+          thirdparty/spdlog/spdlog \
+          thirdparty/tclap/tclap \
+          thirdparty/tcp_pubsub/tcp_pubsub \
+          thirdparty/termcolor/termcolor \
+          thirdparty/tinyxml2/tinyxml2 \
+          thirdparty/yaml-cpp/yaml-cpp
 
-    - name: Display Python version
-      run: python -c "import sys; print(sys.version)"
-        
-    - name: Install Python requirements
-      run: |
-        sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
+    # - name: Display Python version
+    #   run: python -c "import sys; print(sys.version)"
+    #     
+    # - name: Install Python requirements
+    #   run: |
+    #     sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
+
+    - name: Prepare ccache and restore cache
+      id: ccache_cache-restore
+      uses: ./.github/actions/ccache-prepare
+      with:
+        key-root: macos-13
+        cache-dir: ${{ github.workspace }}/.ccache
 
     - name: CMake
+      id: cmake-configure
       run: |
-        mkdir "${{ runner.workspace }}/_build"
-        cd "${{ runner.workspace }}/_build"
-        cmake $GITHUB_WORKSPACE -G "Ninja" \
+        cmake -S . -B _build -G "Ninja" \
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DECAL_USE_HDF5=ON \
         -DECAL_USE_QT=ON \
         -DECAL_USE_CURL=ON \
         -DECAL_USE_CAPNPROTO=ON \
         -DECAL_USE_FTXUI=ON \
-        -DECAL_BUILD_DOCS=ON \
+        -DECAL_BUILD_DOCS=OFF \
         -DECAL_BUILD_APPS=ON \
         -DECAL_BUILD_SAMPLES=ON \
         -DECAL_BUILD_TIMEPLUGINS=ON \
@@ -79,6 +95,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
+        -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5" \
         -DCMAKE_CXX_STANDARD=17 \
@@ -88,8 +105,16 @@ jobs:
       shell: bash
 
     - name: Build Release
-      run: cmake --build . --config Release
-      working-directory: ${{ runner.workspace }}/_build
+      run: |
+        echo "${{ steps.cmake-configure.outcome }}"
+        cmake --build _build --config Release
+
+    - name: Save ccache cache to GitHub
+      uses: ./.github/actions/ccache-save
+      with:
+        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
+        cache-dir: ${{ github.workspace }}/.ccache
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
