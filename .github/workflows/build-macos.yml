@@ -53,7 +53,7 @@ jobs:
 
     # - name: Display Python version
     #   run: python -c "import sys; print(sys.version)"
-    #     
+    #
     # - name: Install Python requirements
     #   run: |
     #     sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
@@ -101,7 +101,7 @@ jobs:
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
-        -DPython_FIND_REGISTRY=NEVER        
+        -DPython_FIND_REGISTRY=NEVER
       shell: bash
 
     - name: Build Release
