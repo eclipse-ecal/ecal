@@ -82,7 +82,7 @@ The main differences to the string publisher are:
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_send.cs
+        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_send_csharp.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -105,7 +105,7 @@ Person Publisher Files
    │  └─ |fa-file-alt| :download:`person_send.cpp </source_code_samples/cpp/protobuf/person/person_send/src/person_send.cpp>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`person_send.cs </source_code_samples/csharp/protobuf/person/person_send.cs>`
+   │  └─ |fa-file-alt| :download:`person_send_csharp.cs </source_code_samples/csharp/protobuf/person/person_send_csharp.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`person_send.py </source_code_samples/python/protobuf/person/person_send.py>`
@@ -127,7 +127,7 @@ For the subscriber the same changes apply as for the publisher.
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_receive.cs
+        .. literalinclude:: /source_code_samples/csharp/protobuf/person/person_receive_csharp.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -150,7 +150,7 @@ Person Subscriber Files
    │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/person_receive/src/person_receive.cpp>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`person_receive.cs </source_code_samples/csharp/protobuf/person/person_receive.cs>`
+   │  └─ |fa-file-alt| :download:`person_receive_csharp.cs </source_code_samples/csharp/protobuf/person/person_receive_csharp.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/person_receive.py>`
