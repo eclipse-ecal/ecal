@@ -74,12 +74,12 @@ int main()
     Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
     The topic we are going to receive is called "blob".
   */
-  eCAL::CSubscriber sub("blob");
+  eCAL::CSubscriber subscriber("blob");
 
   /*
     Register a receive callback. The callback will be called whenever a new message is received.
   */
-  sub.SetReceiveCallback(OnReceive);
+  subscriber.SetReceiveCallback(OnReceive);
 
   /*
     Creating an infinite loop.

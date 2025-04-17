@@ -81,12 +81,12 @@ int main()
     The topic we are going to receive is called "person".
     The data type is "Pb.People.Person", generated from the protobuf definition.
   */
-  eCAL::protobuf::CSubscriber<pb::People::Person> sub("person");
+  eCAL::protobuf::CSubscriber<pb::People::Person> subscriber("person");
 
   /*
     Create and register a receive callback. The callback will be called whenever a new message is received.
   */
-  sub.SetReceiveCallback(&OnPerson);
+  subscriber.SetReceiveCallback(&OnPerson);
 
   /*
     Creating an infinite loop.

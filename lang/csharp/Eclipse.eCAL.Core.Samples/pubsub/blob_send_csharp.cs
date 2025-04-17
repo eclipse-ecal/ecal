@@ -95,8 +95,10 @@ public class BlobSend
       /*
         Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
       */
-      publisher.Send(buffer, buffer_size);
-      Console.WriteLine(String.Format("Sending binary data in C#: {0}", System.Text.Encoding.ASCII.GetString(buffer, 0, buffer_size)));
+      if(publisher.Send(buffer, buffer_size))
+        Console.WriteLine(String.Format("Sent binary data in C#: {0}", System.Text.Encoding.ASCII.GetString(buffer, 0, buffer_size)));
+      else
+        Console.WriteLine("Sending binary data in C# failed!");
 
       /*
         Sleep for 500ms to send in a frequency of 2 hz.

@@ -56,7 +56,7 @@ int main()
     Now we create a new publisher that will publish the topic "person".
     The data type is "pb.People.Person", generated from the protobuf definition.    
   */
-  eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+  eCAL::protobuf::CPublisher<pb::People::Person> publisher("person");
 
   /*
     Construct a message. The message is a protobuf struct that will be sent to the subscribers.
@@ -69,11 +69,11 @@ int main()
   person.mutable_dog()->set_name("Brandy");
   person.mutable_house()->set_rooms(4);
 
-  auto loop_count = 0;
   /*
     Creating an infinite publish-loop.
     eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
   */
+  auto loop_count = 0;
   while(eCAL::Ok())
   {
     /*
@@ -84,7 +84,7 @@ int main()
     /*
       Send the message. The message is sent to all subscribers that are currently connected to the topic "person".
     */
-    if (pub.Send(person)) 
+    if (publisher.Send(person)) 
     {
       std::cout << "----------------------------------"        << "\n";
       std::cout << "Sent protobuf message in C++: "            << "\n";

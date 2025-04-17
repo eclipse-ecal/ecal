@@ -59,12 +59,12 @@ int main()
     Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
     The topic we are going to receive is called "hello".
   */
-  eCAL::string::CSubscriber sub("hello");
+  eCAL::string::CSubscriber subscriber("hello");
 
   /*
     Creating a receive callback. The callback will be called whenever a new message is received.
   */
-  auto msg_cb = [](const eCAL::STopicId& publisher_id_, const std::string& message_, long long time_, long long clock_) { 
+  auto message_callback = [](const eCAL::STopicId& publisher_id_, const std::string& message_, long long time_, long long clock_) { 
     std::cout << "---------------------------------------------------"                                << "\n";
     std::cout << " Received string message from topic \"" << publisher_id_.topic_name << "\" in C++ " << "\n";
     std::cout << "---------------------------------------------------"                                << "\n";
@@ -78,7 +78,7 @@ int main()
   /*
     Register the callback with the subscriber so it can be called.
   */
-  sub.SetReceiveCallback(msg_cb);
+  subscriber.SetReceiveCallback(message_callback);
 
   /*
     Creating an infinite loop.

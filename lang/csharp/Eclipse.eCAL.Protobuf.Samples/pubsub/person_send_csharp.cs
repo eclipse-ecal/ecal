@@ -78,18 +78,17 @@ public class PersonSend
       House = new Pb.Environment.House { Rooms = 4 }
     };
 
-    int loop_count = 0;
     /*
       Creating an infinite publish-loop.
       eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
     */
+    int loop_count = 0;
     while (Core.Ok())
     {
       /*
         Change in each loop the content of the message to see a difference per message.
       */
-      person.Id = loop_count;
-      loop_count++;
+      person.Id = loop_count++;
 
       /*
         Send the message. The message is sent to all subscribers that are currently connected to the topic "person".

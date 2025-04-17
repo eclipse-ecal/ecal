@@ -57,7 +57,7 @@ int main()
     Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
     The topic we are going to publish is called "hello".
   */
-  eCAL::string::CPublisher pub("hello");
+  eCAL::string::CPublisher publisher("hello");
 
   /*
     Creating an inifite publish-loop.
@@ -75,7 +75,7 @@ int main()
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
     */
-    if(pub.Send(message.str()))
+    if(publisher.Send(message.str()))
       std::cout << "Sent string message in C++ \"" << message.str() << "\"" << "\n";
     else
       std::cout << "Sending string message in C++ failed!" << "\n";
