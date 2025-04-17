@@ -127,7 +127,7 @@ int main(int argc, char** argv)
   }
 
   std::string app_version_header  = " " + std::string(MMA_APPLICATION_NAME) + " " + std::string(MMA_VERSION) + " ";
-  std::string ecal_version_header = " (eCAL Lib " + std::string(ECAL_VERSION) + ") ";
+  std::string ecal_version_header = " (eCAL Lib " + eCAL::GetVersionString() + ") ";
 
   PadString(app_version_header,  '-', 79);
   PadString(ecal_version_header, ' ', 79);

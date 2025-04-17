@@ -22,6 +22,7 @@
 **/
 
 #include "ecal_def.h"
+#include "git_version.h"
 #include "ecal_event.h"
 #include "ecal_globals.h"
 #include <string>
