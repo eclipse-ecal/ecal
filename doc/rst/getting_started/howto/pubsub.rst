@@ -6,7 +6,10 @@
 PublisherSubscriber
 ===================
 
-Publisher and subscriber are the bread and butter of the eCAL world.
+In this section you will learn how to utilize the eCAL Publisher and Subscriber classes to send and receive data.
+You will find examples for C++, C, C# and Python that will help you understand the basic principles of setting up a publisher/subscriber based communication.
+
+Furthermore, you can discover different formats in which the data can be exchanged.
 
 .. toctree::
 

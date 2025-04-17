@@ -6,11 +6,20 @@
 Protobuf: Person
 ================
 
-Let's implement a small application, that lets the user input his name and send a message to an eCAL topic.
+In the last section you learned how to send strings to an eCAL Topic.
+Using strings is great for simple data that has a textual representation.
+Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.
 
-For this task we will use the protobuf serialization format.
-Protobuf is a language-neutral, platform-neutral extensible mechanism for serializing structured data.
-It is used by Google to serialize data in its internal RPC protocols and file formats.
+Our recommended way is to use Google protobuf to do that, because:
+
+* It solves the problem of how to serialize and de-serialize data for you
+* You get downward compatibility out of the box (if you follow the guidelines)
+* It is maintained by Google and the API is stable
+* The eCAL Monitor can display a nice reflection view of the data
+
+.. important::
+   It is important to remember, that all your applications must agree on the data format.
+   As protobuf messages are defined in :file:`.proto` files, all of your applications should share the same files.
 
 eCAL supports protobuf serialization natively for C++, C# and Python.
 

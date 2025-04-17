@@ -6,7 +6,8 @@
 ClientServer
 ============
 
-Client and server are the peanutbutter and jelly of the eCAL world.
+In this section you will learn how to use the eCAL ClientServer API for RPC calls.
+You will find examples in C++, C, C# and Python that will help you understand the basic principles of setting up a client/server based communication..
 
 .. toctree::
 

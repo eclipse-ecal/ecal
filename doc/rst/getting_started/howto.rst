@@ -12,3 +12,4 @@ Now it is time to write your own eCAL program!
    howto/pubsub
    howto/clientserver
    cmake_integration
+   python_preparation
