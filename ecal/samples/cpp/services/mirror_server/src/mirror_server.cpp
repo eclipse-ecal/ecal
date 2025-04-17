@@ -42,7 +42,7 @@ int OnEchoCallback(const eCAL::SServiceMethodInformation& method_info_, const st
 int OnReverseCallback(const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_)
 {
   response_.resize(request_.size());
-  std::copy(request_.rbegin(), request_.rend(), response_.rbegin());
+  std::copy(request_.rbegin(), request_.rend(), response_.begin());
 
   std::cout << "Method   : '" << method_info_.method_name << "' called" << std::endl;
   std::cout << "Request  : " << request_ << std::endl;
@@ -57,7 +57,7 @@ int OnReverseCallback(const eCAL::SServiceMethodInformation& method_info_, const
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("mirror server");
+  eCAL::Initialize("mirror server c++");
 
   // create binary service server
   eCAL::CServiceServer mirror_server("mirror");

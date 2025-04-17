@@ -116,7 +116,7 @@ private:
 
 int main()
 {
-  const char* nodeName       = "table_send";
+  const char* nodeName       = "table send c++";
   const char* topicName      = "table";
   const char* structTypeName = "STable";
 

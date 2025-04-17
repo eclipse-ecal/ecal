@@ -25,7 +25,7 @@
 int main()
 {
   // initialize eCAL API
-  eCAL::Initialize("blob_send");
+  eCAL::Initialize("blob send c++");
 
   // publisher for topic "blob"
   eCAL::CPublisher pub("blob");
