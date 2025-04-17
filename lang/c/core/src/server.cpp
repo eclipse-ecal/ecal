@@ -66,7 +66,7 @@ extern "C"
       event_callback_(&service_id_c, &server_event_callback_data_c);
     };
 
-    return new eCAL_ServiceServer{ new eCAL::CServiceServer(service_name_, event_callback_ != NULL ? event_callback : eCAL::ServerEventCallbackT()) };
+    return new eCAL_ServiceServer{ new eCAL::CServiceServer(service_name_, event_callback_ != NULL ? event_callback : eCAL::ServerEventCallbackT()), eCAL_SServiceId() };
   }
 
   ECALC_API void eCAL_ServiceServer_Delete(eCAL_ServiceServer* service_server_)

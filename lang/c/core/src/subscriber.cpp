@@ -90,7 +90,7 @@ extern "C"
       };
     }
 
-    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback, subscriber_configuration) };
+    return new eCAL_Subscriber{ new eCAL::CSubscriber(topic_name_, data_type_information, sub_event_callback, subscriber_configuration), eCAL_STopicId(), eCAL_SDataTypeInformation() };
   }
 
   ECALC_API void eCAL_Subscriber_Delete(eCAL_Subscriber* subscriber_)

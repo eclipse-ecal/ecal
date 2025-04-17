@@ -1,5 +1,14 @@
 name: Build Ubuntu
 
+env:
+  CCACHE_BASEDIR: ${GITHUB_WORKSPACE}
+  CCACHE_DIR: ${GITHUB_WORKSPACE}/.ccache
+  CCACHE_COMPRESS: true
+  CCACHE_COMPRESSLEVEL: 6
+  CCACHE_MAXSIZE: 100M
+  CMAKE_C_COMPILER_LAUNCHER: ccache
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache
+
 on:
   push:
   pull_request:
@@ -13,25 +22,27 @@ jobs:
         os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
 
     runs-on: ${{ matrix.os }}
-    
+
     env:
       # enable starting Qt GUI Applications
       QT_QPA_PLATFORM: offscreen
       PROJECT_NAME: ecal
-      
+
     steps:
 
     - name: Install Dependencies
       run: |
         common_packages=(
-          ninja-build
-          doxygen
-          graphviz
+          ccache ninja-build
+          doxygen graphviz
           libcurl4-openssl-dev
           libprotobuf-dev libprotoc-dev protobuf-compiler
           libhdf5-dev
           libyaml-cpp-dev
           libspdlog-dev
+          libtclap-dev
+          libtinyxml2-dev
+          libcapnp-dev capnproto
           libgtest-dev libgmock-dev
           python3 python3-venv python3-dev
         )
@@ -47,32 +58,12 @@ jobs:
           )
         fi
 
+        # Disable man-db update
+        echo 'set man-db/auto-update false' | sudo debconf-communicate >/dev/null
+        sudo dpkg-reconfigure man-db
+
         sudo apt-get update
         sudo apt-get install --no-install-recommends "${common_packages[@]}" "${specific_packages[@]}"
-
-    - name: Set variables
-      run: |
-        if [[ ${{ matrix.os }} == ubuntu-24.04* ]]; then
-          echo "ubuntu_codename=noble"        >> "$GITHUB_ENV"
-          echo "python_version=3"             >> "$GITHUB_ENV"   # => default python 3 version
-        elif [[ ${{ matrix.os }} == ubuntu-22.04* ]]; then
-          echo "ubuntu_codename=jammy"        >> "$GITHUB_ENV"
-          echo "python_version=3"             >> "$GITHUB_ENV"   # => default python 3 version
-        fi
-
-        # Get cpu architecture
-        echo "cpu_architecture=$(dpkg --print-architecture)" >> "$GITHUB_ENV"
-
-    - name: Install Cap'n Proto
-      run: |
-        mkdir "${{ runner.workspace }}/capnp"
-        cd "${{ runner.workspace }}/capnp"
-        curl -O https://capnproto.org/capnproto-c++-1.0.2.tar.gz
-        tar zxf capnproto-c++-1.0.2.tar.gz
-        cd capnproto-c++-1.0.2
-        ./configure
-        make -j$(($(nproc)*2))
-        sudo make install
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -81,37 +72,57 @@ jobs:
         fetch-depth: 0
         filter: 'tree:0' # Download all commits but blobs and trees on demand
 
-    - name: Update / download Submodules (selected ones)
+    - name: Set variables
       run: |
-        cd $GITHUB_WORKSPACE
-        git submodule init
-        git submodule deinit thirdparty/curl/curl
-        git submodule deinit thirdparty/hdf5/hdf5
-        git submodule deinit thirdparty/protobuf/protobuf
-        git submodule deinit \
-          thirdparty/gtest/googletest \
-          thirdparty/spdlog/spdlog \
-          thirdparty/yaml-cpp/yaml-cpp
-        git submodule update --single-branch --depth 1
+        # Use git describe to get the tag / commit description
+        VERSION="$(git describe --tags --dirty)"
+
+        # Remove the leading 'v' from the tag
+        VERSION="${VERSION#v}"
+
+        CODENAME="$(lsb_release --codename --short)"
+
+        echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
+        echo "ubuntu_codename=$CODENAME" >> "$GITHUB_ENV"
+        echo "DEB_VERSION=$VERSION-$CODENAME" >> "$GITHUB_ENV"
+
+    - name: Initialize required submodules
+      run: |
+        git submodule update --init --single-branch --depth 1 \
+          thirdparty/asio/asio \
+          thirdparty/ecaludp/ecaludp \
+          thirdparty/fineftp/fineftp-server \
+          thirdparty/ftxui/ftxui \
+          thirdparty/qwt/qwt \
+          thirdparty/recycle/recycle \
+          thirdparty/tcp_pubsub/tcp_pubsub \
+          thirdparty/termcolor/termcolor
 
     - name: Create venv for building docs
       shell: bash
       run: |
         mkdir ".venv_build"
-        python${{ env.python_version }} -m venv ".venv_build"
+        python3 -m venv ".venv_build"
         source ".venv_build/bin/activate"
         pip install --upgrade pip
         pip install wheel setuptools
         pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
+    - name: Restore ccache cache
+      id: ccache_cache-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: .ccache
+        key: ${{matrix.os}}-ccache-${{ github.run_id }}
+        restore-keys: |
+          ${{matrix.os}}-ccache-
+
     - name: CMake
+      id: cmake-configure
       run: |
         source ".venv_build/bin/activate"
-        
-        mkdir "${{ runner.workspace }}/_build"
-        cd "${{ runner.workspace }}/_build"
-        
-        cmake $GITHUB_WORKSPACE -G "Ninja" \
+
+        cmake -S . -B _build -G "Ninja" \
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DECAL_USE_HDF5=ON \
@@ -119,6 +130,7 @@ jobs:
         -DECAL_USE_CURL=ON \
         -DECAL_USE_CAPNPROTO=ON \
         -DECAL_USE_FTXUI=ON \
+        -DECAL_USE_NPCAP=OFF \
         -DECAL_BUILD_DOCS=ON \
         -DECAL_BUILD_APPS=ON \
         -DECAL_BUILD_SAMPLES=ON \
@@ -127,7 +139,6 @@ jobs:
         -DECAL_BUILD_CSHARP_BINDING=OFF \
         -DECAL_BUILD_TESTS=ON \
         -DECAL_INSTALL_SAMPLE_SOURCES=ON \
-        -DECAL_USE_NPCAP=OFF \
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON \
         -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=ON \
@@ -137,6 +148,8 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_GTEST=OFF \
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF \
         -DECAL_THIRDPARTY_BUILD_RECYCLE=ON \
+        -DECAL_THIRDPARTY_BUILD_TINYXML2=OFF \
+        -DECAL_THIRDPARTY_BUILD_TCLAP=OFF \
         -DECAL_THIRDPARTY_BUILD_TCP_PUBSUB=ON \
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=OFF \
@@ -150,41 +163,26 @@ jobs:
       shell: bash
 
     - name: Build Release
-      run: cmake --build . --parallel -- -k 0
-      working-directory: ${{ runner.workspace }}/_build
+      run: |
+        cmake --build _build --parallel -- -k 0
+
+    - name: Save ccache cache
+      id: ccache_cache-save
+      uses: actions/cache/save@v4
+      with:
+        path: .ccache
+        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
+      # Always save cache if configure succeeded (even if the build failed)
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Run Tests
-      run: ctest -V
-      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Get Project version from git tag
-      shell: bash
-      run: |
-        # Use git describe to get the tag / commit description
-        VERSION="$(git describe --tags --dirty)"
-
-        # Remove the leading 'v' from the tag
-        VERSION="${VERSION#v}"
-
-        echo "PROJECT_VERSION=$VERSION" >> "$GITHUB_ENV"
-
-    - name: Set output binary name
-      shell: bash
-      run: |
-        echo "BINARY_NAME=${{ env.PROJECT_NAME }}_${{ env.PROJECT_VERSION }}-${{ env.ubuntu_codename }}_${{ env.cpu_architecture }}" >> "$GITHUB_ENV"
+      run: ctest -V --test-dir _build
 
     - name: CPack
-      run: cpack -G DEB
-      working-directory: ${{ runner.workspace }}/_build
-
-    - name: Rename .deb installer
-      run: |
-        mv *.deb '${{ env.BINARY_NAME }}.deb'
-      shell: bash
-      working-directory: ${{runner.workspace}}/_build/_deploy/
+      run: cpack -G DEB -R '${{ env.DEB_VERSION }}' --config _build/CPackConfig.cmake
 
     - name: Upload Debian
       uses: actions/upload-artifact@v4
       with:
-        name: '${{ env.BINARY_NAME }}'
-        path: ${{ runner.workspace }}/_build/_deploy/*.deb
+        name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
+        path: _deploy/*.deb

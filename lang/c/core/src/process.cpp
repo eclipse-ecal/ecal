@@ -26,8 +26,8 @@
 #include <ecal_c/process.h>
 
 #include <map>
+#include <cstring>
 
-#include "common.h"
 #include <cassert>
 
 extern "C"

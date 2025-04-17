@@ -18,7 +18,6 @@
 */
 
 #include <ecal_c/auxiliaries.h>
-#include "common.h"
 
 #include <cstdlib>
 

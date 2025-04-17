@@ -18,15 +18,15 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(minimal_server)
+project(mirror_server)
 
 find_package(eCAL REQUIRED)
 
-set(minimal_server_src
-    src/minimal_server.cpp
+set(mirror_server_src
+    src/mirror_server.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${minimal_server_src})
+ecal_add_sample(${PROJECT_NAME} ${mirror_server_src})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     eCAL::core
@@ -36,4 +36,4 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/minimal)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/binary)

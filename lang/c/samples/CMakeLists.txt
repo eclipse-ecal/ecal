@@ -27,5 +27,5 @@ add_subdirectory(pubsub/binary/blob_send)
 add_subdirectory(pubsub/binary/blob_receive)
 
 #service
-add_subdirectory(services/minimal_client_c)
-add_subdirectory(services/minimal_server_c)
+add_subdirectory(services/mirror_client_c)
+add_subdirectory(services/mirror_server_c)

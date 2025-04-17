@@ -73,7 +73,7 @@ void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInforma
 
 int main()
 {
-  const char* nodeName  = "table_receive";
+  const char* nodeName  = "table receive c++";
   const char* topicName = "table";
 
   // initialize eCAL API

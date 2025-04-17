@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright (C) 2016 - 2019 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,24 +18,22 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-
-project(minimal_server_c)
+project(mirror_client)
 
 find_package(eCAL REQUIRED)
 
-remove_definitions(-std=c++14)
-
-set(minimal_server_c_src
-    src/minimal_server_c.c
+set(mirror_client_src
+    src/mirror_client.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${minimal_server_c_src})
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+ecal_add_sample(${PROJECT_NAME} ${mirror_client_src})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_c)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    eCAL::core
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/c/services)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/binary)

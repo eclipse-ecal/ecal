@@ -169,7 +169,11 @@ namespace
         [](auto size_, const auto& server_) {
           return size_ + ExtSize_Monitoring_SServer(server_);
         })
-      + ExtSize_Monitoring_SClientArray(monitoring_.clients);
+      + ExtSize_Monitoring_SClientArray(monitoring_.clients)
+      + std::accumulate(monitoring_.clients.begin(), monitoring_.clients.end(), size_t{ 0 },
+        [](auto size_, const auto& client_) {
+          return size_ + ExtSize_Monitoring_SClient(client_);
+        });
   }
 
   void Assign_Monitoring_SProcess(struct eCAL_Monitoring_SProcess* process_c_, const eCAL::Monitoring::SProcess& process_, char** offset_)
