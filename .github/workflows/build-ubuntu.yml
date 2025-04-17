@@ -1,14 +1,5 @@
 name: Build Ubuntu
 
-env:
-  CCACHE_BASEDIR: ${GITHUB_WORKSPACE}
-  CCACHE_DIR: ${GITHUB_WORKSPACE}/.ccache
-  CCACHE_COMPRESS: true
-  CCACHE_COMPRESSLEVEL: 6
-  CCACHE_MAXSIZE: 100M
-  CMAKE_C_COMPILER_LAUNCHER: ccache
-  CMAKE_CXX_COMPILER_LAUNCHER: ccache
-
 on:
   push:
   pull_request:
@@ -108,14 +99,12 @@ jobs:
         pip install wheel setuptools
         pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
-    - name: Restore ccache cache
+    - name: Prepare ccache and restore cache
       id: ccache_cache-restore
-      uses: actions/cache/restore@v4
+      uses: ./.github/actions/ccache-prepare
       with:
-        path: .ccache
-        key: ${{matrix.os}}-ccache-${{ github.run_id }}
-        restore-keys: |
-          ${{matrix.os}}-ccache-
+        key-root: ${{ matrix.os }}
+        cache-dir: ${{ github.workspace }}/.ccache
 
     - name: CMake
       id: cmake-configure
@@ -166,12 +155,11 @@ jobs:
       run: |
         cmake --build _build --parallel -- -k 0
 
-    - name: Save ccache cache
-      id: ccache_cache-save
-      uses: actions/cache/save@v4
+    - name: Save ccache cache to GitHub
+      uses: ./.github/actions/ccache-save
       with:
-        path: .ccache
         key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
+        cache-dir: ${{ github.workspace }}/.ccache
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
