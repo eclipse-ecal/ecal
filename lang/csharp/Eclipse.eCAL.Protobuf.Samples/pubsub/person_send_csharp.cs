@@ -18,7 +18,7 @@
 */
 
 /**
- * @file person_snd_csharp.cs
+ * @file person_send_csharp.cs
  *
  * @brief A minimal example of using the eCAL API to send protobuf messages.
  *
@@ -94,8 +94,24 @@ public class PersonSend
       /*
         Send the message. The message is sent to all subscribers that are currently connected to the topic "person".
       */
-      publisher.Send(person);
-      Console.WriteLine(String.Format("Sending: {0}", person.ToString()));
+      if (publisher.Send(person))
+      {
+        Console.WriteLine("----------------------------------");
+        Console.WriteLine("Sent protobuf message in C#: ");
+        Console.WriteLine("----------------------------------");
+        Console.WriteLine("person id    : {0}", person.Id);
+        Console.WriteLine("person name  : {0}", person.Name);
+        Console.WriteLine("person stype : {0}", person.Stype);
+        Console.WriteLine("person email : {0}", person.Email);
+        Console.WriteLine("dog.name     : {0}", person.Dog.Name);
+        Console.WriteLine("house.rooms  : {0}", person.House.Rooms);
+        Console.WriteLine("----------------------------------");
+        Console.WriteLine("");
+      }
+      else
+      {
+        Console.WriteLine("Sending protobuf message in C# failed!");
+      }
 
       /*
         Sleep for 500ms to send in a frequency of 2 hz.

@@ -71,8 +71,14 @@ public class BlobReceive
     */
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
     {
-      string message = Encoding.UTF8.GetString(data.Buffer);
-      Console.WriteLine(String.Format("Receiving: {0}", message));
+      Console.WriteLine("----------------------------------------------");
+      Console.WriteLine(" Received binary buffer in C# ");
+      Console.WriteLine("----------------------------------------------");
+      Console.WriteLine(" Size    : " + Buffer.ByteLength(data.Buffer));
+      Console.WriteLine(" Time    : " + data.SendTimestamp);
+      Console.WriteLine(" Clock   : " + data.SendClock);
+      Console.WriteLine(" Content : " + System.Text.Encoding.ASCII.GetString(data.Buffer));
+      Console.WriteLine("");
     });
 
     /*

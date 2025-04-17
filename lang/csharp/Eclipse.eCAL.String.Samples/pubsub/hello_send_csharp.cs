@@ -75,14 +75,16 @@ public class HelloSend
       /*
         Construct a message. The message is a string that will be sent to the subscribers.
       */
-      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop_count);
+      string message = String.Format("HELLO WORLD FROM C# ({0})", ++loop_count);
 
       /*
         Send the message. The message is sent to all subscribers that are currently connected to the topic "hello".
       */
-      publisher.Send(message);
-      Console.WriteLine(String.Format("Sent: {0}", message));
-
+      if(publisher.Send(message))
+        Console.WriteLine(String.Format("Sent string message in C#: \"{0}\"", message));
+      else
+        Console.WriteLine("Sending string message in C# failed!");
+      
       /*
         Sleep for 500ms to send in a frequency of 2 hz.
       */

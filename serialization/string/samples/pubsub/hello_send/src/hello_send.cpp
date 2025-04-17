@@ -30,9 +30,9 @@
 
 int main()
 {
-  std::cout << "-------------------------------" << std::endl;
+  std::cout << "--------------------------" << std::endl;
   std::cout << " C++: HELLO WORLD SENDER"        << std::endl;
-  std::cout << "-------------------------------" << std::endl;
+  std::cout << "--------------------------" << std::endl;
 
   /* 
     Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -51,7 +51,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
   /*
     Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
@@ -75,8 +75,10 @@ int main()
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
     */
-    pub.Send(message.str());
-    std::cout << "Sent \"" << message.str() << "\"" << std::endl;
+    if(pub.Send(message.str()))
+      std::cout << "Sent string message in C++ \"" << message.str() << "\"" << "\n";
+    else
+      std::cout << "Sending string message in C++ failed!" << "\n";
 
     /*
       Sleep for 500 ms so we send with a frequency of 2 Hz.

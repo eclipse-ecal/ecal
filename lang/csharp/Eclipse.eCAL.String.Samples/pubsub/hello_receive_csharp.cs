@@ -70,7 +70,14 @@ public class HelloReceive
     */
     subscriber.SetReceiveCallback((publisherId, dataTypeInfo, message) =>
     {
-      Console.WriteLine(String.Format("Receiving: {0}", message));
+      Console.WriteLine("---------------------------------------------------");
+      Console.WriteLine(" Received string message from topic \"{0}\" in C#", publisherId.TopicName);
+      Console.WriteLine("---------------------------------------------------");
+      Console.WriteLine(" Size    : n/a");
+      Console.WriteLine(" Time    : n/a");
+      Console.WriteLine(" Clock   : n/a");
+      Console.WriteLine(" Message : {0}", message);
+      Console.WriteLine("\n");
     });
 
     /*

@@ -57,7 +57,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good !");
+  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good!");
 
   /*
     We set all data in eCAL_SDataTypeInformation to zero.
@@ -77,11 +77,6 @@ int main()
   publisher = eCAL_Publisher_New("hello", &data_type_information, NULL, NULL);
 
   /*
-    Get the topic id of the publisher by using eCAL_Publisher_GetTopicId and print it.
-  */
-  printf("Publisher id: %ul\n\n", (unsigned long)eCAL_Publisher_GetTopicId(publisher)->topic_id.entity_id);
-  
-  /*
     Creating an infinite publish-loop.
     eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
   */
@@ -98,9 +93,9 @@ int main()
       The message is sent as a raw string, so we use the length of the string as the size of the message.
     */
     if(!eCAL_Publisher_Send(publisher, message, strlen(message), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", message);
+      printf("Sent string message in C: \"%s\"\n", message);
     else
-      printf("Sending topic \"Hello\" failed !\n");
+      printf("Sending string message in C failed!\n");
 
     /*
       Sleep for 500 ms so we send with a frequency of 2 Hz.

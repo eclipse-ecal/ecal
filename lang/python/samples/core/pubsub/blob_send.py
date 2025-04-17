@@ -25,6 +25,12 @@ import ecal.core.core as ecal_core
 # Import the eCAL binary publisher API
 from ecal.core.publisher import BinaryPublisher
 
+
+def generate_binary_message(buffer_size=16):
+  random.seed(time.time())
+  return ''.join(chr(random.randint(32, 126)) for _ in range(buffer_size))
+
+
 def main():
   print("---------------------")
   print(" Python: BLOB SENDER")
@@ -41,27 +47,24 @@ def main():
   # Set the state for the program.
   # You can vary between different states like healthy, warning, critical ...
   # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
-  ecal_core.set_process_state(1, 1, "I feel good")
+  ecal_core.set_process_state(1, 1, "I feel good!")
 
   # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
   # The topic we are going to publish is called "blob".
   pub = BinaryPublisher("blob")
-  
-  # We create a message to send that will be altered later to notice different messages.
-  msg_fox = b"4120717569636b2062726f776e20666f7820"
-  
+   
   loop_count = 0
   # Creating an inifite publish-loop.
   # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
   while ecal_core.ok():
-    # Prepare the blob to send
-    loop_count += 1
-    hex_ascii = bytes(''.join([hex(ord(digit))[2:] for digit in str(loop_count)]), "utf-8")
-    msg = msg_fox + hex_ascii
+    # Generate a random message of 16 bytes
+    msg = generate_binary_message(16)
     
     # Send the content to other eCAL Processes that have subscribed to the topic "blob".
     pub.send(msg)
     print("Sent: ", msg)
+    
+    loop_count += 1
     
     # Sleep for 500 ms so we send with a frequency of 2 Hz.
     time.sleep(0.5)

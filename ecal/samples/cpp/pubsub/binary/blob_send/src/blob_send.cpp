@@ -22,12 +22,33 @@
 
 #include <algorithm>
 #include <iostream>
+#include <chrono>
+
+/*
+  Some helper function to generate binary data into a buffer.
+  Clears the vector, resizes it to a specified size and fills it with random ascii characters.
+*/
+void fillBinaryBuffer(std::vector<unsigned char>& buffer) { 
+  constexpr unsigned int buffer_size = 16;
+  auto now = std::chrono::system_clock::now();
+  auto duration = now.time_since_epoch();
+  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+  
+  std::srand(milliseconds);
+  
+  buffer.clear();
+  buffer.resize(buffer_size);
+
+  for (int i = 0; i < buffer_size; ++i) {
+    buffer[i] = static_cast<char>(std::rand() % 95 + 32);
+  }
+}
 
 int main()
 {
-  std::cout << "-------------------" << std::endl;
-  std::cout << " C++: BLOB SENDER"   << std::endl;
-  std::cout << "-------------------" << std::endl;
+  std::cout << "-------------------" << "\n";
+  std::cout << " C++: BLOB SENDER"   << "\n";
+  std::cout << "-------------------" << "\n";
 
   /*
     Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -46,7 +67,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
   /*
     Now we create a new publisher that will publish the topic "blob".
@@ -56,26 +77,27 @@ int main()
   /*
     Construct a message. As we are sending binary data, we just create a buffer of unsigned characters.
   */
-  std::vector<unsigned char> bin_buffer(1024);
+  std::vector<unsigned char> binary_buffer;
 
   /*
     Creating an infinite publish-loop.
     eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
   */
-  unsigned char loop_count = 0;
   while (eCAL::Ok())
   {
     /*
       Fill the buffer with the character that is defined by the counter variable.
     */
-    std::fill(bin_buffer.begin(), bin_buffer.end(), loop_count++);
+    fillBinaryBuffer(binary_buffer);
 
     /*
       Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
       For binary data you need to set a buffer pointer and the size of the buffer.
     */
-    pub.Send(bin_buffer.data(), bin_buffer.size());
-    std::cout << "Sent buffer filled with " << static_cast<int>(loop_count) << std::endl;
+    if (pub.Send(binary_buffer.data(), binary_buffer.size()))
+      std::cout << "Sent binary data in C++: " << std::string(binary_buffer.begin(), binary_buffer.end()) << "\n";
+    else
+      std::cout << "Sending binary data in C++ failed!" << "\n";
 
     /*
       Sleep for 500ms to send in a frequency of 2 hz.

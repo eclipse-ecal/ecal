@@ -32,23 +32,23 @@
 */
 void OnPerson(const eCAL::STopicId& topic_id_, const pb::People::Person& person_, const long long time_, const long long clock_)
 {
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << " HEAD "                                     << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << "topic name   : " << topic_id_.topic_name    << std::endl;
-  std::cout << "topic time   : " << time_                   << std::endl;
-  std::cout << "topic clock  : " << clock_                  << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << " CONTENT "                                  << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout << "person id    : " << person_.id()            << std::endl;
-  std::cout << "person name  : " << person_.name()          << std::endl;
-  std::cout << "person stype : " << person_.stype()         << std::endl;
-  std::cout << "person email : " << person_.email()         << std::endl;
-  std::cout << "dog.name     : " << person_.dog().name()    << std::endl;
-  std::cout << "house.rooms  : " << person_.house().rooms() << std::endl;
-  std::cout << "------------------------------------------" << std::endl;
-  std::cout                                                 << std::endl;
+  std::cout << "------------------------------------------"                    << "\n";
+  std::cout << " Received Protobuf message in C++ "                            << "\n";
+  std::cout << "------------------------------------------"                    << "\n";
+  std::cout << " topic name   : " << topic_id_.topic_name                      << "\n";
+  std::cout << " topic time   : " << time_                                     << "\n";
+  std::cout << " topic clock  : " << clock_                                    << "\n";
+  std::cout << ""                                                              << "\n";
+  std::cout << " Content of message type \"" << person_.GetTypeName()  << "\"" << "\n";
+  std::cout << "------------------------------------------"                    << "\n";
+  std::cout << " id          : " << person_.id()                               << "\n";
+  std::cout << " name        : " << person_.name()                             << "\n";
+  std::cout << " stype       : " << person_.stype()                            << "\n";
+  std::cout << " email       : " << person_.email()                            << "\n";
+  std::cout << " dog.name    : " << person_.dog().name()                       << "\n";
+  std::cout << " house.rooms : " << person_.house().rooms()                    << "\n";
+  std::cout << "------------------------------------------"                    << "\n";
+  std::cout                                                                    << "\n";
 }
 
 int main()
@@ -74,7 +74,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
   /*
     Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).

@@ -35,6 +35,19 @@ using Eclipse.eCAL.Core;
 
 public class BlobSend
 {
+  /*
+    Some helper function to generate binary data into a buffer.
+    Clears the vector, resizes it to a specified size and fills it with random ascii characters.
+  */
+  static void GenerateBinaryMessage(byte[] buffer)
+  {
+    Random rand = new Random();
+    for (int i = 0; i < buffer.Length; ++i)
+    {
+      buffer[i] = (byte)(rand.Next(32, 127)); // ASCII range 32-126
+    }
+  }
+
   public static void Main()
   {
     Console.WriteLine("-----------------");
@@ -65,23 +78,25 @@ public class BlobSend
     */
     Publisher publisher = new Publisher("blob");
 
+    const int buffer_size = 16;
+    byte[] buffer = new byte[buffer_size];
+
     /*
       Creating an infinite publish-loop.
       eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
     */
-    int loop_count = 0;
     while (Core.Ok())
     {
       /*
         Construct a message. The message is a string that will be sent to the subscribers.
       */
-      string message = String.Format("HELLO WORLD FROM C# {0,6}", ++loop_count);
+      GenerateBinaryMessage(buffer);
 
       /*
         Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
       */
-      publisher.Send(Encoding.UTF8.GetBytes(message));
-      Console.WriteLine(String.Format("Sending: {0}", message));
+      publisher.Send(buffer, buffer_size);
+      Console.WriteLine(String.Format("Sending binary data in C#: {0}", System.Text.Encoding.ASCII.GetString(buffer, 0, buffer_size)));
 
       /*
         Sleep for 500ms to send in a frequency of 2 hz.

@@ -50,7 +50,7 @@ As this is simple string message, we will use the eCAL string publisher to send.
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_send.cs
+        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_send_csharp.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -76,7 +76,7 @@ Hello World Publisher Files
    │  └─ |fa-file-alt| :download:`hello_send.c </source_code_samples/c/string/hello/hello_send/src/hello_send.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_send.cs </source_code_samples/csharp/string/hello/hello_send.cs>`
+   │  └─ |fa-file-alt| :download:`hello_send_csharp.cs </source_code_samples/csharp/string/hello/hello_send_csharp.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python/string/hello/hello_send.py>`
@@ -113,7 +113,7 @@ The only difference is that you need to assign a callback function to the subscr
 
     .. group-tab:: C#
 
-        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_receive.cs
+        .. literalinclude:: /source_code_samples/csharp/string/hello/hello_receive_csharp.cs
             :language: csharp
             :linenos:
             :lines: 31-
@@ -139,7 +139,7 @@ Hello World Subscriber Files
    │  └─ |fa-file-alt| :download:`hello_receive.c </source_code_samples/c/string/hello/hello_receive/src/hello_receive.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_receive.cs </source_code_samples/csharp/string/hello/hello_receive.cs>`
+   │  └─ |fa-file-alt| :download:`hello_receive_csharp.cs </source_code_samples/csharp/string/hello/hello_receive_csharp.cs>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python/string/hello/hello_receive.py>`

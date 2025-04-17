@@ -18,7 +18,7 @@
 */
 
 /**
- * @file person_rec_csharp.cs
+ * @file person_receive_csharp.cs
  *
  * @brief A minimal example of using the eCAL API to receive protobuf messages.
  *
@@ -69,9 +69,25 @@ public class PersonReceive
     /*
       Create and register a receive callback. The callback will be called whenever a new message is received.
     */
-    subscriber.SetReceiveCallback((publisherId, dataTypeInfo, data) =>
+    subscriber.SetReceiveCallback((topicId, dataTypeInfo, person) =>
     {
-      Console.WriteLine(String.Format("Receiving: {0}", data.Message.ToString()));
+      Console.WriteLine("------------------------------------------");
+      Console.WriteLine(" Received Protobuf message in C#");
+      Console.WriteLine("------------------------------------------");
+      Console.WriteLine(" topic name   : {0}", topicId.TopicName);
+      Console.WriteLine(" topic time   : n/a");
+      Console.WriteLine(" topic clock  : n/a");
+      Console.WriteLine("");
+      Console.WriteLine(" Content of message type \"{0}\"", person.Message.GetType());
+      Console.WriteLine("------------------------------------------");
+      Console.WriteLine(" id          : {0}", person.Message.Id);
+      Console.WriteLine(" name        : {0}", person.Message.Name);
+      Console.WriteLine(" stype       : {0}", person.Message.Stype);
+      Console.WriteLine(" email       : {0}", person.Message.Email);
+      Console.WriteLine(" dog.name    : {0}", person.Message.Dog.Name);
+      Console.WriteLine(" house.rooms : {0}", person.Message.House.Rooms);
+      Console.WriteLine("------------------------------------------");
+      Console.WriteLine("");
     });
 
     /*

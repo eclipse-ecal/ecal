@@ -38,8 +38,14 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
   (void)data_type_information_;
   (void)user_argument_;
 
-  printf("Received topic \"%s\" with ", topic_id_->topic_name);
-  printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
+  printf("---------------------------------------------------\n");
+  printf(" Received string message from topic \"%s\" in C\n", topic_id_->topic_name);
+  printf("---------------------------------------------------\n");
+  printf(" Size    : %lld\n",  callback_data_->buffer_size);
+  printf(" Time    : %lld\n",  callback_data_->send_timestamp);
+  printf(" Clock   : %lld\n",  callback_data_->send_clock);
+  printf(" Message : %.*s\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
+  printf("\n");
 }
 
 int main()
@@ -72,7 +78,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good !");
+  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good!");
 
   /*
     We set all data in eCAL_SDataTypeInformation to zero.
@@ -96,11 +102,6 @@ int main()
     The callback will be called whenever a new message is received.
   */
   eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL);
-
-  /*
-    Get the topic id of the subscriber by using eCAL_Subscriber_GetTopicId and print it.
-  */
-  printf("Subscriber id: %ul\n\n", (unsigned long)eCAL_Subscriber_GetTopicId(subscriber)->topic_id.entity_id);
 
   /*
     Creating an infinite loop.

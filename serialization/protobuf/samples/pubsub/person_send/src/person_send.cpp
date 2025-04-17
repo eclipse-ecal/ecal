@@ -50,7 +50,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
   /*
     Now we create a new publisher that will publish the topic "person".
@@ -84,15 +84,24 @@ int main()
     /*
       Send the message. The message is sent to all subscribers that are currently connected to the topic "person".
     */
-    pub.Send(person);
-    std::cout << "Sent message: "                            << "\n";
-    std::cout << "person id    : " << person.id()            << "\n";
-    std::cout << "person name  : " << person.name()          << "\n";
-    std::cout << "person stype : " << person.stype()         << "\n";
-    std::cout << "person email : " << person.email()         << "\n";
-    std::cout << "dog.name     : " << person.dog().name()    << "\n";
-    std::cout << "house.rooms  : " << person.house().rooms() << "\n";
-    std::cout                                                << "\n";
+    if (pub.Send(person)) 
+    {
+      std::cout << "----------------------------------"        << "\n";
+      std::cout << "Sent protobuf message in C++: "            << "\n";
+      std::cout << "----------------------------------"        << "\n";
+      std::cout << "person id    : " << person.id()            << "\n";
+      std::cout << "person name  : " << person.name()          << "\n";
+      std::cout << "person stype : " << person.stype()         << "\n";
+      std::cout << "person email : " << person.email()         << "\n";
+      std::cout << "dog.name     : " << person.dog().name()    << "\n";
+      std::cout << "house.rooms  : " << person.house().rooms() << "\n";
+      std::cout << "----------------------------------"        << "\n";
+      std::cout                                                << "\n";
+    }
+    else
+    {
+      std::cout << "Failed to send Protobuf message in C++!"   << "\n";
+    }
 
     /*
       Sleep for 500ms to send in a frequency of 2 hz.

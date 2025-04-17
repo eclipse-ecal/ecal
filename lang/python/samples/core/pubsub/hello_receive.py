@@ -44,7 +44,7 @@ def main():
   # Set the state for the program.
   # You can vary between different states like healthy, warning, critical ...
   # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
-  ecal_core.set_process_state(1, 1, "I feel good")
+  ecal_core.set_process_state(1, 1, "I feel good!")
   
   # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
   # The topic we are going to receive is called "hello".

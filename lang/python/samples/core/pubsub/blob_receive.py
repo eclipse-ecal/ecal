@@ -27,7 +27,14 @@ from ecal.core.subscriber import BinarySubscriber
 # Here we create the subscriber callback function that is called everytime,
 # when a new message arrived from a publisher.
 def callback(topic_name, msg, time):
-  print("Received:  {} ms   {}".format(time, bytes.fromhex(msg.decode("utf-8"))))
+  print("----------------------------------------------")
+  print(" Received binary buffer in Python ")
+  print("----------------------------------------------")
+  print(" Size    : ", msg.buffer_size)
+  print(" Time    : ", msg.send_timestamp)
+  print(" Clock   : ", msg.send_clock)
+  print(" Content : ", msg.buffer)
+  print("")
 
 def main():
   print("-----------------------")
@@ -45,7 +52,7 @@ def main():
   # Set the state for the program.
   # You can vary between different states like healthy, warning, critical ...
   # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
-  ecal_core.set_process_state(1, 1, "I feel good")
+  ecal_core.set_process_state(1, 1, "I feel good!")
 
   # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
   # The topic we are going to receive is called "blob".

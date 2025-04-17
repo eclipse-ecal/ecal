@@ -32,9 +32,9 @@
 
 int main()
 {
-  std::cout << "-------------------------------" << "\n";
-  std::cout << " C++: HELLO WORLD RECEIVER"      << "\n";
-  std::cout << "-------------------------------" << "\n";
+  std::cout << "----------------------------" << "\n";
+  std::cout << " C++: HELLO WORLD RECEIVER"   << "\n";
+  std::cout << "----------------------------" << "\n";
 
   /* 
     Initialize eCAL. You always have to initialize eCAL before using its API.
@@ -53,7 +53,7 @@ int main()
     You can vary between different states like healthy, warning, critical ...
     This can be used to communicate the application state to applications like eCAL Monitor/Sys.
   */
-  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good !");
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
   /*
     Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
@@ -64,12 +64,21 @@ int main()
   /*
     Creating a receive callback. The callback will be called whenever a new message is received.
   */
-  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << "\n"; };
+  auto msg_cb = [](const eCAL::STopicId& publisher_id_, const std::string& message_, long long time_, long long clock_) { 
+    std::cout << "---------------------------------------------------"                                << "\n";
+    std::cout << " Received string message from topic \"" << publisher_id_.topic_name << "\" in C++ " << "\n";
+    std::cout << "---------------------------------------------------"                                << "\n";
+    std::cout << " Size    : " << message_.size()                                                     << "\n";
+    std::cout << " Time    : " << time_                                                               << "\n";
+    std::cout << " Clock   : " << clock_                                                              << "\n";
+    std::cout << " Message : " << message_                                                            << "\n";
+    std::cout << "\n";
+  };
   
   /*
     Register the callback with the subscriber so it can be called.
   */
-  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  sub.SetReceiveCallback(msg_cb);
 
   /*
     Creating an infinite loop.
