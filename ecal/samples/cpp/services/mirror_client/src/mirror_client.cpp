@@ -29,10 +29,11 @@ int main()
   // initialize eCAL API
   eCAL::Initialize("mirror client c++");
 
-  // create binary service client
-  const eCAL::CServiceClient mirror_client("mirror", { {"echo", {}, {} } });
+  // Create a client that connects to a mirror server.
+  // It may call the methods "echo" and "reverse"
+  const eCAL::CServiceClient mirror_client("mirror", { {"echo", {}, {} }, {"reverse", {}, {} } });
 
-  // callback for service response
+  // This is a lambda serves as a callback, which will be executed, when we receive a respone from a server
   auto service_response_callback = [](const eCAL::SServiceResponse& service_response_) {
     switch (service_response_.call_state)
     {
@@ -79,7 +80,7 @@ int main()
       if (std::get<0>(service_response))
       {
         auto& response_content = std::get<1>(service_response);
-        std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
+        std::cout << std::endl << "Method '" << method_name << "' called with message : " << request << std::endl;
         auto& server_host_name = response_content.server_id.service_id.host_name;
         switch (response_content.call_state)
         {
@@ -107,7 +108,7 @@ int main()
       //////////////////////////////////////
       if (client_instance.CallWithCallback(method_name, request, service_response_callback))
       {
-        std::cout << std::endl << "Method 'echo' called with message : " << request << std::endl;
+        std::cout << std::endl << "Method '" << method_name << "' called with message : " << request << std::endl;
       }
       else
       {
