@@ -16,6 +16,26 @@
 #
 # ========================= eCAL LICENSE =================================
 
+# Use smart configure to avoid rebuild / updated timestamps on generated files
+# if the content hasn't changed
+macro(smart_configure INPUT_FILE OUTPUT_FILE)
+  # Define the temporary file name as OUTPUT_FILE.tmp
+  set(TEMP_FILE "${OUTPUT_FILE}.tmp")
+  
+  # Generate the file into the temporary location using the @ONLY mode.
+  configure_file("${INPUT_FILE}" "${TEMP_FILE}" @ONLY)
+  
+  # Copy the temporary file to the final destination if its content is different.
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${TEMP_FILE}" "${OUTPUT_FILE}"
+  )
+  
+  # Remove the temporary file.
+  file(REMOVE "${TEMP_FILE}")
+endmacro()
+
+
 project(core VERSION ${eCAL_VERSION_STRING})
 
 find_package(asio             REQUIRED)
@@ -40,11 +60,11 @@ endif()
 # Else, (e.g. for source packages such as debian source packages) we will use a preconfigured file.
 # If there is really no information available, it will generate a dummy version file 0.0.0
 if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
-  configure_file(src/defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h" @ONLY)
+  smart_configure(src/defs.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h")
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/ecal/defs.h")
 
 if     (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/git_version.h")
-  configure_file(src/git_version.h.in "${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h" @ONLY)
+  smart_configure(src/git_version.h.in "${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h")
 endif  (IS_GIT_TREE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/git_version.h")
 
 
