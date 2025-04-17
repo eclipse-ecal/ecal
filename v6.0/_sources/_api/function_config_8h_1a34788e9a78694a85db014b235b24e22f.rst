@@ -1,0 +1,14 @@
+.. _exhale_function_config_8h_1a34788e9a78694a85db014b235b24e22f:
+
+Function eCAL::Config::GetTimesyncModuleReplay
+==============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetTimesyncModuleReplay()
+   :project: eCAL

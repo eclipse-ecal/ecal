@@ -1,0 +1,14 @@
+.. _exhale_define_eh5__defs_8h_1a1e3b049958f67461359ecf9d9876e461:
+
+Define ECAL_HDF5_VERSION_MAJOR
+==============================
+
+- Defined in :ref:`file_contrib_ecalhdf5_include_ecalhdf5_eh5_defs.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ECAL_HDF5_VERSION_MAJOR
+   :project: eCAL

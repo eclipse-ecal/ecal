@@ -1,0 +1,229 @@
+#  _____     _ _                                ____    _    _                             
+# | ____|___| (_)_ __  ___  ___            ___ / ___|  / \  | |                            
+# |  _| / __| | | '_ \/ __|/ _ \  _____   / _ \ |     / _ \ | |                            
+# | |__| (__| | | |_) \__ \  __/ |_____| |  __/ |___ / ___ \| |___                         
+# |_____\___|_|_| .__/|___/\___|          \___|\____/_/   \_\_____|                        
+#               |_|                                                                            
+#        _       _           _                    __ _                       _   _             
+#   __ _| | ___ | |__   __ _| |   ___ ___  _ __  / _(_) __ _ _   _ _ __ __ _| |_(_) ___  _ __  
+#  / _` | |/ _ \| '_ \ / _` | |  / __/ _ \| '_ \| |_| |/ _` | | | | '__/ _` | __| |/ _ \| '_ \ 
+# | (_| | | (_) | |_) | (_| | | | (_| (_) | | | |  _| | (_| | |_| | | | (_| | |_| | (_) | | | |
+#  \__, |_|\___/|_.__/ \__,_|_|  \___\___/|_| |_|_| |_|\__, |\__,_|_|  \__,_|\__|_|\___/|_| |_|
+#  |___/                                               |___/                                   
+
+
+# Operation configuration
+# eCAL components communication mode ("local" or "network"):
+#   "local": local host only communication (default)
+#   "network": communication across network boundaries
+communication_mode: "local"
+
+
+# Registration layer configuration
+registration:
+  # Topic registration refresh cylce (has to be smaller then registration timeout! Default: 1000)
+  registration_refresh: 1000
+  # Timeout for topic registration in ms (internal, Default: 60000)
+  registration_timeout: 10000
+  # Enable to receive registration information on the same local machine
+  loopback: true
+  # SHM transport domain that enables interprocess mechanisms across (virtual)
+  # host borders (e.g, Docker); by default equivalent to local host name
+  shm_transport_domain: ""
+
+  local:
+    # Specify the transport type for local registration
+    #   "shm": shared memory based registration
+    #   "udp": udp based registration (default)
+    transport_type: "udp"
+    shm:
+      # Domain name for shared memory based registration
+      domain:  "ecal_mon"
+      # Queue size of registration events
+      queue_size: 1024
+    udp:
+      # Specify port for local registration traffic
+      port: 14000
+
+  network:
+    # Specify the transport type for network registration
+    #   "udp": udp based registration (default)
+    transport_type: "udp"
+    udp:
+    # Specify port for network registration traffic
+      port: 14000
+
+
+# Transport layer configuration
+transport_layer:
+  udp:
+    # UDP configuration version (Since eCAL 5.12.)
+    # v1: default behavior
+    # v2: new behavior, comes with a bit more intuitive handling regarding masking of the groups
+    config_version: "v2"
+    # Multicast port number
+    port: 14002
+    # v1: Mask maximum number of dynamic multicast group (range 0.0.0.1-0.0.0.255)
+    # v2: Masks are now considered like routes masking (range 255.0.0.0-255.255.255.255)
+    mask: "255.255.255.240"
+    # Send buffer in bytes
+    send_buffer: 5242880
+    # Receive buffer in bytes
+    receive_buffer: 5242880
+    # Linux specific setting to join all network interfaces independend of their link state.
+    # Enabling ensures that eCAL processes receive data when they are started before the
+    # network devices are up and running.
+    join_all_interfaces: false
+    # Windows specific setting to enable receiving UDP traffic with the Npcap based receiver
+    npcap_enabled: false
+
+    # Local mode multicast group and ttl
+    local:
+      # Multicast group base. All registration and logging is sent on this address
+      group: "127.255.255.255"
+      # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+      ttl: 1
+
+    network:
+      # Multicast group base. All registration and logging is sent on this address
+      group: "239.0.0.1"
+      # TTL (hop limit) is used to determine the amount of routers being traversed towards the destination
+      ttl: 3
+
+  tcp: 
+    # Reader amount of threads that shall execute workload
+    number_executor_reader: 4
+    # Writer amount of threads that shall execute workload
+    number_executor_writer: 4
+    # Reconnection attemps the session will try to reconnect in case of an issue
+    max_reconnections: 5
+
+
+# Publisher specific base settings
+publisher:
+  layer:
+    # Base configuration for shared memory publisher
+    shm:
+      # Enable layer
+      enable: true
+      # Enable zero copy shared memory transport mode
+      zero_copy_mode: false
+      # Force connected subscribers to send acknowledge event after processing the message.
+      # The publisher send call is blocked on this event with this timeout (0 == no handshake).
+      acknowledge_timeout_ms: 0
+      # Maximum number of used buffers (needs to be greater than 1, default = 1)
+      memfile_buffer_count: 1
+      # Default memory file size for new publisher
+      memfile_min_size_bytes: 4096
+      # Dynamic file size reserve before recreating memory file if topic size changes
+      memfile_reserve_percent: 50
+
+    # Base configuration for UDP publisher
+    udp:
+      # Enable layer
+      enable: true
+
+    # Base configuration for TCP publisher
+    tcp:
+      # Enable layer
+      enable: true
+
+  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP)
+  priority_local: ["shm", "udp", "tcp"]
+  # Priority list for layer usage in cloud mode (Default: UDP > TCP)
+  priority_network: ["udp", "tcp"]
+
+
+# Subscriber specific base configuration
+subscriber:
+  layer:
+    # Base configuration for shared memory subscriber
+    shm:
+      # Enable layer
+      enable: true
+
+    # Base configuration for UDP subscriber
+    udp:
+      # Enabler layer
+      enable: true
+
+    # Base configuration for TCP subscriber
+    tcp:
+      # Enable layer
+      enable: false
+
+  # Enable dropping of payload messages that arrive out of order
+  drop_out_of_order_messages: true
+
+
+# Time configuration
+time:
+  # Time synchronisation interface name (dynamic library)
+  # The name will be extended with platform suffix (32|64), debug suffix (d) and platform extension (.dll|.so)
+  # Available modules are:
+  #   - ecaltime-localtime    local system time without synchronization
+  #   - ecaltime-linuxptp     For PTP / gPTP synchronization over ethernet on Linux
+  #                           (device configuration in ecaltime.ini)
+  rt: "ecaltime-localtime"
+  # Specify the module name for replaying
+  replay: ""
+
+
+# eCAL Application Configuration
+application:
+  # Configuration for eCAL Sys
+  sys:
+    # Apps blacklist to be excluded when importing tasks from cloud
+    filter_excl: "^eCALSysClient$|^eCALSysGUI$|^eCALSys$"
+  # Process specific configuration
+  terminal:
+    # Linux only command for starting applications with an external terminal emulator. 
+    # e.g. /usr/bin/x-terminal-emulator -e
+    #      /usr/bin/gnome-terminal -x
+    #      /usr/bin/xterm -e
+    # If empty, the command will be ignored.
+    emulator: ""
+
+
+# Logging configuration
+logging:
+  # Configuration for file, udp and console log provider
+  # Possible levels are: "info", "warning", "error", "fatal", "debug1", "debug2", "debug3", "debug4"
+  # Can be combined like
+  # log_level: ["warning", "fatal", "debug1", ...]
+  provider:
+    # Console logging configuration
+    console:
+      # Enable console logging
+      enable: true
+      # Log level for console output
+      log_level: ["info", "warning", "error", "fatal"]
+    # File logging configuration
+    file:
+      # Enable file logging
+      enable: false
+      # Log level for file output
+      log_level: []
+    # UDP logging configuration
+    udp:
+      # Enable UDP logging
+      enable: true
+      # Log level for UDP output
+      log_level: ["info", "warning", "error", "fatal"]
+    # File specific configuration
+    file_config: 
+      # Log file path
+      path: ""
+    # UDP specific configuration
+    udp_config:
+      # UDP Port for sending logging data
+      port: 14001
+  # Configuration for udp log receiver
+  receiver:
+    # Enable log receiving (UDP only)
+    enable: false
+    # UDP specific configuration
+    udp_config:
+      # UDP Port for sending logging data
+      port: 14001
+

@@ -1,0 +1,14 @@
+.. _exhale_function_config_8h_1a3253931786d5bbb82c458c56d9b2a767:
+
+Function eCAL::Config::GetShmMonitoringDomain
+=============================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_config.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Config::GetShmMonitoringDomain()
+   :project: eCAL

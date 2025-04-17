@@ -1,0 +1,14 @@
+.. _exhale_function_namespaceeCAL_1a6342e514137136747e6339844b25e432:
+
+Function eCAL::Finalize
+=======================
+
+- Defined in :ref:`file_ecal_core_include_ecal_core.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Finalize()
+   :project: eCAL

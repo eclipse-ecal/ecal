@@ -1,0 +1,14 @@
+.. _exhale_function_ecaltime_8h_1a38cbc3be2b54d74505358388e1098863:
+
+Function etime_initialize
+=========================
+
+- Defined in :ref:`file_contrib_ecaltime_include_ecaltime.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: etime_initialize(void)
+   :project: eCAL

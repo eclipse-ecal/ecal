@@ -1,0 +1,14 @@
+.. _exhale_variable_init_8h_1a22080445d470b45111073af0b9462e65:
+
+Variable eCAL::Init::Logging
+============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_init.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: eCAL::Init::Logging
+   :project: eCAL
