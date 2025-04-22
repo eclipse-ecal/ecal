@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,9 +30,8 @@ macro(ecal_add_csharp_string_sample sample_name)
 
   set_target_properties(${sample_name} PROPERTIES
     VS_GLOBAL_ROOTNAMESPACE ${sample_name}
-    VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
   )
 endmacro()
 
-ecal_add_csharp_string_sample(string_rec_csharp)
-ecal_add_csharp_string_sample(string_snd_csharp)
+ecal_add_csharp_string_sample(hello_receive_csharp)
+ecal_add_csharp_string_sample(hello_send_csharp)

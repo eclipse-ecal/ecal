@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,17 @@
 
 syntax = "proto3";
 
+// import message definitions from different proto files
 import "animal.proto";
 import "house.proto";
 
+// assign a package name, that will appear as a namespace
 package pb.People;
 
+// create the message "Person" with
+//   - base types like int32 and string
+//   - individual defined enum SType
+//   - imported message types
 message Person
 {
   enum SType
