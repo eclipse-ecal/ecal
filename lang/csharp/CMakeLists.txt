@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ else ()
 set(ECAL_CSHARP_PROTOBUF_VERSION "${Protobuf_VERSION}")
 endif ()
 endmacro()
+
+set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION  "v4.7.1")
 
 option(ECAL_CSHARP_BUILD_SAMPLES "BUILD eCAL C# samples" ON)
 option(ECAL_CSHARP_BUILD_TESTS   "BUILD eCAL C# unittests" ON)
