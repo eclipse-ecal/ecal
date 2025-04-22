@@ -63,21 +63,28 @@ set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples                                              ${DOC_SOURCE_DIRECTORY}/source_code_samples
-  # blob samples
+  # pubsub blob samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/pubsub/binary                       ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/binary/blob
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/binary                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/binary/blob
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Core.Samples/pubsub         ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/binary/blob
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/binary/blob
-  # string samples
+  # pubsub string samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub                  ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/string/hello
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/string/hello
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.String.Samples/pubsub       ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/string/hello
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/string/hello
-  # protobuf samples
+  # pubsub protobuf samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Protobuf.Samples/pubsub     ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person
-)
+  # sercli binary samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/services                            ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/binary/mirror
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/services                              ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/binary/mirror
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Core.Samples/service        ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/binary/mirror
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/service                     ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/binary/mirror
+  # sercli protobuf samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/services              ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/math
+  )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_config_file
