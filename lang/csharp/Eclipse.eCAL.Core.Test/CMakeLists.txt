@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ target_link_libraries(${PROJECT_NAME} Eclipse.eCAL.Core)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_GLOBAL_ROOTNAMESPACE ${PROJECT_NAME}
-  VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1"
   # mark this is a unit testing project, see https://cmake.org/cmake/help/latest/prop_tgt/VS_GLOBAL_PROJECT_TYPES.html
   VS_GLOBAL_PROJECT_TYPES "{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
 )

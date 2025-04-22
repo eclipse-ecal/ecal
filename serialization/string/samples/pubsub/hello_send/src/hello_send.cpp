@@ -17,7 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the basic eCAL header
 #include <ecal/ecal.h>
+/* 
+  We want to publish raw strings, so wie include the string publisher header.
+  eCAL supports multiple message formats.
+*/
 #include <ecal/msg/string/publisher.h>
 
 #include <iostream>
@@ -25,33 +30,66 @@
 
 int main()
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " HELLO WORLD SENDER"             << std::endl;
-  std::cout << "-------------------------------" << std::endl;
+  std::cout << "--------------------------" << std::endl;
+  std::cout << " C++: HELLO WORLD SENDER"        << std::endl;
+  std::cout << "--------------------------" << std::endl;
 
-  // initialize eCAL API
-  eCAL::Initialize("hello_send");
+  /* 
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "hello send". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
+  eCAL::Initialize("hello send");
 
-  // publisher for topic "hello"
-  eCAL::string::CPublisher pub("hello");
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
 
-  // send updates
-  int cnt = 0;
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
+
+  /*
+    Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
+    The topic we are going to publish is called "hello".
+  */
+  eCAL::string::CPublisher publisher("hello");
+
+  /*
+    Creating an inifite publish-loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  */
+  int loop_count = 0;
   while (eCAL::Ok())
   {
-    // build string
-    std::stringstream snd_content;
-    snd_content << "HELLO WORLD FROM C++" << " (" << ++cnt << ")";
+    /*
+      Build the string you want to send, using a stringstream in this example.
+    */
+    std::stringstream message;
+    message << "HELLO WORLD FROM C++" << " (" << ++loop_count << ")";
 
-    // send content
-    pub.Send(snd_content.str(), cnt);
-    std::cout << "Sent \"" << snd_content.str() << "\"" << std::endl;
+    /*
+      Send the content to other eCAL Processes that have subscribed to the topic "hello".
+    */
+    if(publisher.Send(message.str()))
+      std::cout << "Sent string message in C++ \"" << message.str() << "\"" << "\n";
+    else
+      std::cout << "Sending string message in C++ failed!" << "\n";
 
-    // sleep 10 ms
+    /*
+      Sleep for 500 ms so we send with a frequency of 2 Hz.
+    */
     eCAL::Process::SleepMS(500);
   }
 
-  // finalize eCAL API
+  /*
+    Deinitialize eCAL.
+    You should always do that before your application exits.
+  */
   eCAL::Finalize();
 
   return(0);

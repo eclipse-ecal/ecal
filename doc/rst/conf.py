@@ -42,7 +42,7 @@ sys.path.insert(0, sphinx_custom_extension_dir)
 # -- Project information -----------------------------------------------------
 
 project = u'Eclipse eCAL™'
-copyright = u'2023, Continental'
+copyright = u'2025, Continental'
 #author = u'Continental'
 
 # The short X.Y version
@@ -193,7 +193,6 @@ exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 html_theme = 'sphinx_book_theme'
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -234,6 +233,7 @@ html_theme_options = {
 
     # Enable a banner telling the user that they look at an outdated version of the documentation
     "show_version_warning_banner": True,
+    "pygment_light_style" : "default",
 }
 
 html_sidebars = {
