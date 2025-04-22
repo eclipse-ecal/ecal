@@ -43,9 +43,7 @@ jobs:
 
     - name: Update / download Submodules (selected ones)
       run: |
-        cd %GITHUB_WORKSPACE%
-        git submodule init
-        git submodule update --single-branch --depth 1
+        git submodule update --init --single-branch --depth 1
       shell: cmd
 
     - name: Create Python virtualenv
