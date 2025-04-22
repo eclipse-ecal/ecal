@@ -64,12 +64,28 @@ jobs:
 
       shell: cmd
 
+      # Using ccache on Windows requires the Ninja generator
+      # This action calls vcvarsall for us to setup the desired toolchain
+    - name: Setup MSVC toolchain
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        toolset: 14.29 # v141 / vs2019
+
+    - name: Prepare ccache and restore cache
+      id: ccache_cache-restore
+      uses: ./.github/actions/ccache-prepare
+      with:
+        key-root: windows-2019
+        cache-dir: ${{ github.workspace }}/.ccache
+
     - name: CMake SDK
       run: |
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
 
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
+        -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
@@ -105,10 +121,12 @@ jobs:
       shell: cmd
 
     - name: CMake Complete
+      id: cmake-configure
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
+        -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
@@ -121,7 +139,7 @@ jobs:
         -DECAL_BUILD_SAMPLES=ON ^
         -DECAL_BUILD_TIMEPLUGINS=ON ^
         -DECAL_BUILD_PY_BINDING=OFF ^
-        -DECAL_BUILD_CSHARP_BINDING=ON ^
+        -DECAL_BUILD_CSHARP_BINDING=OFF ^
         -DECAL_BUILD_TESTS=ON ^
         -DECAL_INSTALL_SAMPLE_SOURCES=ON ^
         -DECAL_USE_NPCAP=ON ^
@@ -150,7 +168,21 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
-    
+
+    - name: Save ccache cache to GitHub
+      uses: ./.github/actions/ccache-save
+      with:
+        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
+        cache-dir: ${{ github.workspace }}/.ccache
+      # Always save cache if configure succeeded (even if the build failed)
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
+
+    - name: Create eCAL install tree for for C# bindings
+      run: |
+        cmake --install "${{ runner.workspace }}/_build/complete" ^
+        --prefix "${{ runner.workspace }}/_install/complete"
+      shell: cmd
+
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
