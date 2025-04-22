@@ -183,6 +183,26 @@ jobs:
         --prefix "${{ runner.workspace }}/_install/complete"
       shell: cmd
 
+    - name: Configure C# bindings
+      run: |
+        cmake -S lang/csharp -B "${{ runner.workspace }}/_build/csharp" ^
+        -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        -DBUILD_SHARED_LIBS=OFF ^
+        -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/complete" ^
+        -DCMAKE_BUILD_TYPE=Release ^
+        -DCMAKE_CONFIGURATION_TYPES=Release ^
+        -DECAL_CSHARP_BUILD_SAMPLES=ON ^
+        -DECAL_CSHARP_BUILD_TESTS=ON ^
+        -DECAL_PROJECT_ROOT="${{ github.workspace }}"
+      shell: cmd
+
+    - name: Build C# bindings
+      run: cmake --build "${{ runner.workspace }}/_build/csharp" --config Release
+      shell: cmd
+
+    - name: Run C# Tests
+      run: ctest -C Release -V --test-dir "${{ runner.workspace }}/_build/csharp"
+
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -190,6 +210,10 @@ jobs:
     - name: Pack SDK
       run: cpack -C Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
+
+    - name: Package C# Bindings
+      run: cpack -C Release -DCPACK_COMPONENTS_ALL="runtime"
+      working-directory: ${{ runner.workspace }}/_build/csharp
 
     - name: Pack complete setup
       run: cpack -C Release
