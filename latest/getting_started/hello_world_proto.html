@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.2. Hello World with protobuf &#8212; Eclipse eCAL™</title>
+    <title>Hello World with protobuf &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8. Development (Python)" href="development_python.html" />
-    <link rel="prev" title="7.1. Hello World" href="hello_world.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -113,6 +111,8 @@
     <div class="bd-container__inner bd-page-width">
       
       
+      
+        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -187,7 +187,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
@@ -200,14 +200,20 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="development.html">7. Development (C++)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.2. Hello World with protobuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. How to use eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="development_python.html">8. Development (Python)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -687,9 +693,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">7.2.1. Protobuf sender</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">7.2.2. Protobuf receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">7.2.3. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">Protobuf sender</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">Protobuf receiver</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
             </nav>
         </div>
@@ -702,7 +708,7 @@
                 <article class="bd-article">
                   
   <section id="hello-world-with-protobuf">
-<span id="getting-started-hello-world-proto"></span><h1><span class="section-number">7.2. </span>Hello World with protobuf<a class="headerlink" href="#hello-world-with-protobuf" title="Link to this heading">#</a></h1>
+<span id="getting-started-hello-world-proto"></span><h1>Hello World with protobuf<a class="headerlink" href="#hello-world-with-protobuf" title="Link to this heading">#</a></h1>
 <p>In the last section you learned how to send strings to an eCAL Topic.
 Using strings is great for simple data that has a textual representation.
 Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.</p>
@@ -720,7 +726,7 @@ Our recommended way however is to use Google protobuf, because:</p>
 As protobuf messages are defined in <code class="file docutils literal notranslate"><span class="pre">.proto</span></code> files, all of your applications should be compiled with the same files.</p>
 </div>
 <section id="protobuf-sender">
-<h2><span class="section-number">7.2.1. </span>Protobuf sender<a class="headerlink" href="#protobuf-sender" title="Link to this heading">#</a></h2>
+<h2>Protobuf sender<a class="headerlink" href="#protobuf-sender" title="Link to this heading">#</a></h2>
 <p>Let’s implement a small application, that lets the user input his name and send a message to an eCAL topic.
 As the sender and receiver need the same .proto files, we place them in a separate directory next to the source directories for the sender and the receiver:</p>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
@@ -729,18 +735,6 @@ As the sender and receiver need the same .proto files, we place them in a separa
 ├─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span></code>
 └─ <i class="far fa-folder"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world_rec</span></code></pre>
 <p>Let’s start with the <code class="file docutils literal notranslate"><span class="pre">proto_messages/hello_world.proto</span></code> file!</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto3&quot;</span><span class="p">;</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">package</span><span class="w"> </span><span class="nn">proto_messages</span><span class="p">;</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="kd">message</span><span class="w"> </span><span class="nc">HelloWorld</span>
-<span class="linenos"> 6</span><span class="p">{</span>
-<span class="linenos"> 7</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="linenos"> 8</span><span class="w">  </span><span class="kt">uint32</span><span class="w"> </span><span class="na">id</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">msg</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="linenos">10</span><span class="p">}</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -748,99 +742,30 @@ As the sender and receiver need the same .proto files, we place them in a separa
 <p><strong>Line 5-10</strong> Creates a message “HelloWorld”, that holds the fields “name”, “id” and “msg”.</p>
 </div>
 <p>Now start implementing the actual sender application. Just as in the <a class="reference internal" href="hello_world.html#getting-started-hello-world"><span class="std std-ref">last section</span></a> create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> in the <code class="file docutils literal notranslate"><span class="pre">hello_world_snd</span></code> directory and paste the following content:</p>
-<ul>
-<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">protobuf_snd</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="nb">find_package</span><span class="p">(</span><span class="s">Protobuf</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">12</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">13</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="nb">set</span><span class="p">(</span><span class="s">protobuf_files</span>
-<span class="linenos">16</span><span class="w">    </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/hello_world.proto</span>
-<span class="linenos">17</span><span class="p">)</span>
-<span class="linenos">18</span>
-<span class="linenos">19</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="nb">PROTOBUF_TARGET_CPP</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/</span><span class="w"> </span><span class="o">${</span><span class="nv">protobuf_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">22</span>
-<span class="linenos">23</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">24</span><span class="w">  </span><span class="s">PRIVATE</span>
-<span class="linenos">25</span><span class="w">  </span><span class="s">eCAL::protobuf_core</span>
-<span class="linenos">26</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>What is happening here?</strong></p>
-<p><strong>Line 9</strong> adds Protobuf as dependency</p>
-<p><strong>Line 15-17</strong> Creates a list of .proto files. We only have one.</p>
-<p><strong>Line 21</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).
-The <code class="docutils literal notranslate"><span class="pre">PROTOBUF_TARGET_CPP</span></code> function is a convenience function from eCAL.
-If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:</p>
+<ul class="simple">
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p></li>
+</ul>
+<dl>
+<dt>The <code class="docutils literal notranslate"><span class="pre">PROTOBUF_TARGET_CPP</span></code> function is a convenience function from eCAL.</dt><dd><blockquote>
+<div><p>If you have already worked with Protobuf and CMake, you may be more familiar with the following code, which basically does the same thing:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="o">}</span><span class="p">)</span>
 <span class="nb">protobuf_generate_cpp</span><span class="p">(</span><span class="s">PROTO_SRCS</span><span class="w"> </span><span class="s">PROTO_HDRS</span><span class="w"> </span><span class="o">${</span><span class="nv">protobuf_files</span><span class="o">}</span><span class="p">)</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">PROTO_SRCS</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">PROTO_HDRS</span><span class="o">}</span><span class="p">)</span>
 </pre></div>
 </div>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>What is happening here?</strong></p>
+<p><strong>Line 9</strong> adds Protobuf as dependency</p>
+<p><strong>Line 15-17</strong> Creates a list of .proto files. We only have one.</p>
+<p><strong>Line 21</strong> Compiles the .proto file to a C++ header file (<code class="file docutils literal notranslate"><span class="pre">hello_world.pb.h</span></code>).</p>
 <p><strong>Line 23-26</strong> links the executable against protobuf</p>
 </div>
-</li>
+</dd>
+</dl>
+<ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/protobuf/publisher.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;hello_world.pb.h&quot;</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos">10</span><span class="p">{</span>
-<span class="linenos">11</span><span class="w">  </span><span class="c1">// Initialize eCAL and create a protobuf publisher</span>
-<span class="linenos">12</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Protobuf Publisher&quot;</span><span class="p">);</span>
-<span class="linenos">13</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">proto_messages</span><span class="o">::</span><span class="n">HelloWorld</span><span class="o">&gt;</span><span class="w"> </span><span class="n">publisher</span><span class="p">(</span><span class="s">&quot;hello_world_protobuf&quot;</span><span class="p">);</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="w">  </span><span class="c1">// Ask the user to input his name</span>
-<span class="linenos">16</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Please enter your name: &quot;</span><span class="p">;</span>
-<span class="linenos">17</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
-<span class="linenos">18</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
-<span class="linenos">19</span>
-<span class="linenos">20</span><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="w">  </span><span class="c1">// Infinite loop (using eCAL::Ok() will enable us to gracefully shutdown the</span>
-<span class="linenos">23</span><span class="w">  </span><span class="c1">// Process from another application)</span>
-<span class="linenos">24</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">25</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">26</span><span class="w">    </span><span class="c1">// Let the user input a message</span>
-<span class="linenos">27</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Type the message you want to send: &quot;</span><span class="p">;</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">message</span><span class="p">;</span>
-<span class="linenos">29</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
-<span class="linenos">30</span>
-<span class="linenos">31</span><span class="w">    </span><span class="c1">// Create a protobuf message object</span>
-<span class="linenos">32</span><span class="w">    </span><span class="n">proto_messages</span><span class="o">::</span><span class="n">HelloWorld</span><span class="w"> </span><span class="n">hello_world_message</span><span class="p">;</span>
-<span class="linenos">33</span><span class="w">    </span><span class="n">hello_world_message</span><span class="p">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-<span class="linenos">34</span><span class="w">    </span><span class="n">hello_world_message</span><span class="p">.</span><span class="n">set_msg</span><span class="w"> </span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
-<span class="linenos">35</span><span class="w">    </span><span class="n">hello_world_message</span><span class="p">.</span><span class="n">set_id</span><span class="w">  </span><span class="p">(</span><span class="n">id</span><span class="o">++</span><span class="p">);</span>
-<span class="linenos">36</span>
-<span class="linenos">37</span><span class="w">    </span><span class="c1">// Send the message</span>
-<span class="linenos">38</span><span class="w">    </span><span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">hello_world_message</span><span class="p">);</span>
-<span class="linenos">39</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sent message!&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">40</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">41</span>
-<span class="linenos">42</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">43</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">44</span><span class="p">}</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -864,74 +789,10 @@ So, you will only see messages that were sent <em>after</em> you have opened the
 </div>
 </section>
 <section id="protobuf-receiver">
-<h2><span class="section-number">7.2.2. </span>Protobuf receiver<a class="headerlink" href="#protobuf-receiver" title="Link to this heading">#</a></h2>
+<h2>Protobuf receiver<a class="headerlink" href="#protobuf-receiver" title="Link to this heading">#</a></h2>
 <ul>
-<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">protobuf_rec</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="nb">find_package</span><span class="p">(</span><span class="s">Protobuf</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">12</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">13</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="nb">set</span><span class="p">(</span><span class="s">protobuf_files</span>
-<span class="linenos">16</span><span class="w">    </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/hello_world.proto</span>
-<span class="linenos">17</span><span class="p">)</span>
-<span class="linenos">18</span>
-<span class="linenos">19</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="nb">PROTOBUF_TARGET_CPP</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/../proto_messages/</span><span class="w"> </span><span class="o">${</span><span class="nv">protobuf_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">22</span>
-<span class="linenos">23</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">24</span><span class="w">  </span><span class="s">PRIVATE</span>
-<span class="linenos">25</span><span class="w">  </span><span class="s">eCAL::protobuf_core</span>
-<span class="linenos">26</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
+<li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p></li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/protobuf/subscriber.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;hello_world.pb.h&quot;</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="kt">void</span><span class="w"> </span><span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">proto_messages</span><span class="o">::</span><span class="n">HelloWorld</span><span class="o">&amp;</span><span class="w"> </span><span class="n">hello_world_msg</span><span class="p">)</span>
-<span class="linenos">10</span><span class="p">{</span>
-<span class="linenos">11</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hello_world_msg</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; sent a message with ID &quot;</span>
-<span class="linenos">12</span><span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hello_world_msg</span><span class="p">.</span><span class="n">id</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span>
-<span class="linenos">13</span><span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">hello_world_msg</span><span class="p">.</span><span class="n">msg</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">14</span><span class="p">}</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos">17</span><span class="p">{</span>
-<span class="linenos">18</span><span class="w">  </span><span class="c1">// Initialize eCAL and create a protobuf subscriber</span>
-<span class="linenos">19</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Protobuf Subscriber&quot;</span><span class="p">);</span>
-<span class="linenos">20</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">&lt;</span><span class="n">proto_messages</span><span class="o">::</span><span class="n">HelloWorld</span><span class="o">&gt;</span><span class="w"> </span><span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;hello_world_protobuf&quot;</span><span class="p">);</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="w">  </span><span class="c1">// Set the Callback</span>
-<span class="linenos">23</span><span class="w">  </span><span class="n">subscriber</span><span class="p">.</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HelloWorldCallback</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>
-<span class="linenos">24</span>
-<span class="linenos">25</span><span class="w">  </span><span class="c1">// Just don&#39;t exit</span>
-<span class="linenos">26</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">27</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-<span class="linenos">29</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">30</span>
-<span class="linenos">31</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">32</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">33</span><span class="p">}</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -951,18 +812,18 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 <p>If you experience issues, you can create a <a class="reference external" href="https://github.com/eclipse-ecal/ecal/issues">GitHub issue</a>, to get help.</p>
 </section>
 <section id="files">
-<h2><span class="section-number">7.2.3. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> proto_messages
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/8f652403ea4a592fe055c9925df27475/hello_world.proto"><code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code>
 │
 ├─ <i class="far fa-folder-open"></i> protobuf_snd
-│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/8e4faf47d6da87add9de91480b691e18/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/1b44a68eeec4bf9cd91ce12e48d4fa22/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+│  ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+│  └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code>
 │
 └─ <i class="far fa-folder-open"></i> protobuf_rec
-   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/fdded0d86e2678920f4f582efec39502/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/641ba126af5f65bf3f23a53175511a0d/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+   ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+   └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></pre>
 </section>
 </section>
 
@@ -977,24 +838,6 @@ Now go ahead and use eCAL in your real-world scenario.</p>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="hello_world.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.1. </span>Hello World</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="development_python.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">8. </span>Development (Python)</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -1012,9 +855,9 @@ Now go ahead and use eCAL in your real-world scenario.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">7.2.1. Protobuf sender</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">7.2.2. Protobuf receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">7.2.3. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">Protobuf sender</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">Protobuf receiver</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
   </nav></div>
 
@@ -1035,7 +878,7 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 
   <p class="copyright">
     
-      © Copyright 2023, Continental.
+      © Copyright 2025, Continental.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8.2. Hello World with protobuf (Python) &#8212; Eclipse eCAL™</title>
+    <title>Hello World with protobuf (Python) &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Building eCAL" href="../development/build_ecal.html" />
-    <link rel="prev" title="8.1. Hello World (Python)" href="hello_world_python.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -187,7 +185,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
@@ -200,14 +198,20 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="development.html">7. Development (C++)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. How to use eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="development_python.html">8. Development (Python)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.2. Hello World with protobuf (Python)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -687,10 +691,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-in-python">8.2.1. Protobuf in Python</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">8.2.2. Protobuf Sender</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">8.2.3. Protobuf Receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">8.2.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-in-python">Protobuf in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">Protobuf Sender</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">Protobuf Receiver</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
             </nav>
         </div>
@@ -703,7 +707,7 @@
                 <article class="bd-article">
                   
   <section id="hello-world-with-protobuf-python">
-<span id="getting-started-hello-world-python-proto"></span><h1><span class="section-number">8.2. </span>Hello World with protobuf (Python)<a class="headerlink" href="#hello-world-with-protobuf-python" title="Link to this heading">#</a></h1>
+<span id="getting-started-hello-world-python-proto"></span><h1>Hello World with protobuf (Python)<a class="headerlink" href="#hello-world-with-protobuf-python" title="Link to this heading">#</a></h1>
 <p>In the last section you learned how to send strings to an eCAL Topic.
 Using strings is great for simple data that has a textual representation.
 Quite often however your data will be more complex, so you need some kind of protocol that defines how your data is structured.</p>
@@ -720,25 +724,13 @@ Quite often however your data will be more complex, so you need some kind of pro
 As protobuf messages are defined in <code class="file docutils literal notranslate"><span class="pre">.proto</span></code> files, all of your applications should share the same files.</p>
 </div>
 <section id="protobuf-in-python">
-<h2><span class="section-number">8.2.1. </span>Protobuf in Python<a class="headerlink" href="#protobuf-in-python" title="Link to this heading">#</a></h2>
+<h2>Protobuf in Python<a class="headerlink" href="#protobuf-in-python" title="Link to this heading">#</a></h2>
 <p>Let’s start with creating the protobuf file.
 As the sender and receiver need the same .proto files, we place them in a separate directory that will be accessible both for the sender and receiver script.</p>
 <p>So, somewhere on your hard drive, create a directory <code class="file docutils literal notranslate"><span class="pre">proto_messages</span></code> with a file <code class="file docutils literal notranslate"><span class="pre">hello_world.proto</span></code> and paste the following content into that file.</p>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 └─ <i class="far fa-folder-open"></i> proto_messages
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/055873d54ada0688710a12f60e8cd6df/hello_world.proto"><code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></a></pre>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto3&quot;</span><span class="p">;</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">package</span><span class="w"> </span><span class="nn">proto_messages</span><span class="p">;</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="kd">message</span><span class="w"> </span><span class="nc">HelloWorld</span>
-<span class="linenos"> 6</span><span class="p">{</span>
-<span class="linenos"> 7</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">name</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="linenos"> 8</span><span class="w">  </span><span class="kt">uint32</span><span class="w"> </span><span class="na">id</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">msg</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="linenos">10</span><span class="p">}</span>
-</pre></div>
-</div>
+   └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -779,66 +771,13 @@ protoc<span class="w"> </span>--python_out<span class="o">=</span>.<span class="
 This is the file we are going to use in python in the next step.</p>
 </section>
 <section id="protobuf-sender">
-<h2><span class="section-number">8.2.2. </span>Protobuf Sender<a class="headerlink" href="#protobuf-sender" title="Link to this heading">#</a></h2>
+<h2>Protobuf Sender<a class="headerlink" href="#protobuf-sender" title="Link to this heading">#</a></h2>
 <p>Now let’s start implementing the actual python code, that sends some protobuf-serialized data to an eCAL topic.
 For that, create a file <code class="file docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code> next to your <code class="file docutils literal notranslate"><span class="pre">proto_messages</span></code> directory and paste the following content:</p>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> proto_messages
 │  └─ <i class="far fa-file-alt"></i> hello_world.proto
-└─ <i class="fab fa-python"></i> <a class="reference download internal" download="" href="../_downloads/6d5d3f2e3c53cc631e96343e99f8d250/hello_world_snd.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code></a></pre>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
-<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.core.publisher</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtoPublisher</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="c1"># Import the &quot;hello_world_pb2.py&quot; file that we have just generated from the</span>
-<span class="linenos"> 8</span><span class="c1"># proto_messages directory </span>
-<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">proto_messages.hello_world_pb2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hello_world_pb2</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos">12</span>  <span class="c1"># initialize eCAL API. The name of our Process will be</span>
-<span class="linenos">13</span>  <span class="c1"># &quot;Python Protobuf Publisher&quot;</span>
-<span class="linenos">14</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;Python Protobuf Publisher&quot;</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span>  <span class="c1"># Create a Protobuf Publisher that publishes on the topic</span>
-<span class="linenos">17</span>  <span class="c1"># &quot;hello_world_python_protobuf_topic&quot;. We also pass it the datatype we are</span>
-<span class="linenos">18</span>  <span class="c1"># going to send later. By doing this we enable the eCAL Monitor to dynamically</span>
-<span class="linenos">19</span>  <span class="c1"># show the content of the messages.</span>
-<span class="linenos">20</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">ProtoPublisher</span><span class="p">(</span><span class="s2">&quot;hello_world_python_protobuf_topic&quot;</span>
-<span class="linenos">21</span>                      <span class="p">,</span> <span class="n">hello_world_pb2</span><span class="o">.</span><span class="n">HelloWorld</span><span class="p">)</span>
-<span class="linenos">22</span>  
-<span class="linenos">23</span>  <span class="c1"># Create a counter and some messages, so we see something changing in the</span>
-<span class="linenos">24</span>  <span class="c1"># message, later</span>
-<span class="linenos">25</span>  <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">26</span>  <span class="n">dummy_messages</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;The story so far:&quot;</span>
-<span class="linenos">27</span>                  <span class="p">,</span> <span class="s2">&quot;In the beginning the Universe was created.&quot;</span>
-<span class="linenos">28</span>                  <span class="p">,</span> <span class="s2">&quot;This has made a lot of people very angry&quot;</span>
-<span class="linenos">29</span>                  <span class="p">,</span> <span class="s2">&quot;and been widely regarded as a bad move.&quot;</span><span class="p">]</span>
-<span class="linenos">30</span>  
-<span class="linenos">31</span>  <span class="c1"># Infinite loop (using ecal_core.ok() will enable us to gracefully shutdown</span>
-<span class="linenos">32</span>  <span class="c1"># the process from another application)</span>
-<span class="linenos">33</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">34</span>    <span class="c1"># Create a message and fill it with some data</span>
-<span class="linenos">35</span>    <span class="n">protobuf_message</span> <span class="o">=</span> <span class="n">hello_world_pb2</span><span class="o">.</span><span class="n">HelloWorld</span><span class="p">()</span>
-<span class="linenos">36</span>    <span class="n">protobuf_message</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Douglas Adams&quot;</span>
-<span class="linenos">37</span>    <span class="n">protobuf_message</span><span class="o">.</span><span class="n">id</span>   <span class="o">=</span> <span class="n">counter</span>
-<span class="linenos">38</span>    <span class="n">protobuf_message</span><span class="o">.</span><span class="n">msg</span>  <span class="o">=</span> <span class="n">dummy_messages</span><span class="p">[</span><span class="n">counter</span> <span class="o">%</span> <span class="mi">4</span><span class="p">]</span>
-<span class="linenos">39</span>
-<span class="linenos">40</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sending message </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">counter</span><span class="p">))</span>
-<span class="linenos">41</span>
-<span class="linenos">42</span>    <span class="c1"># actually send the message to the topic this publisher was created for</span>
-<span class="linenos">43</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">protobuf_message</span><span class="p">)</span>
-<span class="linenos">44</span>    
-<span class="linenos">45</span>    <span class="c1"># Sleep 1s</span>
-<span class="linenos">46</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">47</span>    
-<span class="linenos">48</span>    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="linenos">49</span>  
-<span class="linenos">50</span>  <span class="c1"># finalize eCAL API</span>
-<span class="linenos">51</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-</pre></div>
-</div>
+└─ <i class="fab fa-python"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code></pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -859,7 +798,7 @@ By providing the type, eCAL knows how to dynamically deserialize the message.</p
 <img alt="Hello World Python Protobuf in eCAL Monitor" src="../_images/hello_world_python_protobuf_monitor.png" />
 </section>
 <section id="protobuf-receiver">
-<h2><span class="section-number">8.2.3. </span>Protobuf Receiver<a class="headerlink" href="#protobuf-receiver" title="Link to this heading">#</a></h2>
+<h2>Protobuf Receiver<a class="headerlink" href="#protobuf-receiver" title="Link to this heading">#</a></h2>
 <p>We know that the sender already works.
 So, let’s implement a python script that can receive the serialized protobuf data, deserialize it and display the content of the message!</p>
 <p>Create a file <code class="file docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code> next to the sender and paste the following content:</p>
@@ -867,45 +806,7 @@ So, let’s implement a python script that can receive the serialized protobuf d
 ├─ <i class="far fa-folder-open"></i> proto_messages
 │  └─ <i class="far fa-file-alt"></i> hello_world.proto
 ├─ <i class="fab fa-python"></i> protobuf_snd.py
-└─ <i class="fab fa-python"></i> <a class="reference download internal" download="" href="../_downloads/5441740ff3dbfc75a30a2714255fec93/hello_world_rec.py"><code class="xref download docutils literal notranslate"><span class="pre">protobuf_rec.py</span></code></a></pre>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
-<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.core.subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtoSubscriber</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="c1"># Import the &quot;hello_world_pb2.py&quot; file that we have just generated from the</span>
-<span class="linenos"> 8</span><span class="c1"># proto_messages directory </span>
-<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">proto_messages.hello_world_pb2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">hello_world_pb2</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="c1"># Callback for receiving messages</span>
-<span class="linenos">12</span><span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">topic_name</span><span class="p">,</span> <span class="n">hello_world_proto_msg</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
-<span class="linenos">13</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message </span><span class="si">{}</span><span class="s2"> from </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hello_world_proto_msg</span><span class="o">.</span><span class="n">id</span>
-<span class="linenos">14</span>                                      <span class="p">,</span> <span class="n">hello_world_proto_msg</span><span class="o">.</span><span class="n">name</span>
-<span class="linenos">15</span>                                      <span class="p">,</span> <span class="n">hello_world_proto_msg</span><span class="o">.</span><span class="n">msg</span><span class="p">))</span>
-<span class="linenos">16</span>
-<span class="linenos">17</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos">18</span>  <span class="c1"># initialize eCAL API. The name of our Process will be</span>
-<span class="linenos">19</span>  <span class="c1"># &quot;Python Protobuf Subscriber&quot;</span>
-<span class="linenos">20</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;Python Protobuf Subscriber&quot;</span><span class="p">)</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span>  <span class="c1"># Create a Protobuf Publisher that publishes on the topic</span>
-<span class="linenos">23</span>  <span class="c1"># &quot;hello_world_python_protobuf_topic&quot;. The second parameter tells eCAL which</span>
-<span class="linenos">24</span>  <span class="c1"># datatype we are expecting to receive on that topic.</span>
-<span class="linenos">25</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">ProtoSubscriber</span><span class="p">(</span><span class="s2">&quot;hello_world_python_protobuf_topic&quot;</span>
-<span class="linenos">26</span>                      <span class="p">,</span> <span class="n">hello_world_pb2</span><span class="o">.</span><span class="n">HelloWorld</span><span class="p">)</span>
-<span class="linenos">27</span>
-<span class="linenos">28</span>  <span class="c1"># Set the Callback</span>
-<span class="linenos">29</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-<span class="linenos">30</span>  
-<span class="linenos">31</span>  <span class="c1"># Just don&#39;t exit</span>
-<span class="linenos">32</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">33</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">34</span>  
-<span class="linenos">35</span>  <span class="c1"># finalize eCAL API</span>
-<span class="linenos">36</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-</pre></div>
-</div>
+└─ <i class="fab fa-python"></i> <code class="xref download docutils literal notranslate"><span class="pre">protobuf_rec.py</span></code></pre>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -925,12 +826,12 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 <p>If you experience issues, you can create a <a class="reference external" href="https://github.com/eclipse-ecal/ecal/issues">GitHub issue</a>, to get help.</p>
 </section>
 <section id="files">
-<h2><span class="section-number">8.2.4. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> proto_messages
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/055873d54ada0688710a12f60e8cd6df/hello_world.proto"><code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code></a>
-├─ <i class="fab fa-python"></i> <a class="reference download internal" download="" href="../_downloads/6d5d3f2e3c53cc631e96343e99f8d250/hello_world_snd.py"><code class="xref download docutils literal notranslate"><span class="pre">protobuf_snd.py</span></code></a>
-└─ <i class="fab fa-python"></i> <a class="reference download internal" download="" href="../_downloads/5441740ff3dbfc75a30a2714255fec93/hello_world_rec.py"><code class="xref download docutils literal notranslate"><span class="pre">protobuf_rec.py</span></code></a></pre>
+│  └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world.proto</span></code>
+├─ <i class="fab fa-python"></i> <code class="xref download docutils literal notranslate"><span class="pre">protobuf_snd.py</span></code>
+└─ <i class="fab fa-python"></i> <code class="xref download docutils literal notranslate"><span class="pre">protobuf_rec.py</span></code></pre>
 </section>
 </section>
 
@@ -945,24 +846,6 @@ Now go ahead and use eCAL in your real-world scenario.</p>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="hello_world_python.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">8.1. </span>Hello World (Python)</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../development/build_ecal.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Building eCAL</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -980,10 +863,10 @@ Now go ahead and use eCAL in your real-world scenario.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-in-python">8.2.1. Protobuf in Python</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">8.2.2. Protobuf Sender</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">8.2.3. Protobuf Receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">8.2.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-in-python">Protobuf in Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-sender">Protobuf Sender</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-receiver">Protobuf Receiver</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
   </nav></div>
 
@@ -1004,7 +887,7 @@ Now go ahead and use eCAL in your real-world scenario.</p>
 
   <p class="copyright">
     
-      © Copyright 2023, Continental.
+      © Copyright 2025, Continental.
       <br/>
     
   </p>

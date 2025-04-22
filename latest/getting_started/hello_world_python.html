@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8.1. Hello World (Python) &#8212; Eclipse eCAL™</title>
+    <title>Hello World (Python) &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8.2. Hello World with protobuf (Python)" href="hello_world_python_proto.html" />
-    <link rel="prev" title="8. Development (Python)" href="development_python.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -187,7 +185,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
@@ -200,14 +198,20 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="development.html">7. Development (C++)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. How to use eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="development_python.html">8. Development (Python)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.1. Hello World (Python)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -687,10 +691,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">8.1.1. Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">8.1.2. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">8.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">8.1.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
             </nav>
         </div>
@@ -703,7 +707,7 @@
                 <article class="bd-article">
                   
   <section id="hello-world-python">
-<span id="getting-started-hello-world-python"></span><h1><span class="section-number">8.1. </span>Hello World (Python)<a class="headerlink" href="#hello-world-python" title="Link to this heading">#</a></h1>
+<span id="getting-started-hello-world-python"></span><h1>Hello World (Python)<a class="headerlink" href="#hello-world-python" title="Link to this heading">#</a></h1>
 <p>While eCAL is written in C++, it also offers a great python integration.
 Again, we are going to explore that integration by implementing a Hello World Application, that sends the string “Hello World” to an eCAL topic.</p>
 <div class="admonition important">
@@ -713,7 +717,7 @@ With the <code class="docutils literal notranslate"><span class="pre">5</span></
 The other name has already been taken by another package.</p>
 </div>
 <section id="dependencies">
-<h2><span class="section-number">8.1.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>First, you have to install some more development dependencies:</p>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
@@ -755,43 +759,10 @@ Open a terminal in your donwload directory and install the python whl with:</p>
 </ul>
 </section>
 <section id="hello-world-publisher">
-<h2><span class="section-number">8.1.2. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
+<h2>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
 <p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">hello_world.py</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world.py</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
-<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.core.publisher</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringPublisher</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos"> 8</span>  <span class="c1"># initialize eCAL API. The name of our Process will be &quot;Python Hello World Publisher&quot;</span>
-<span class="linenos"> 9</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;Python Hello World Publisher&quot;</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span>  <span class="c1"># Create a String Publisher that publishes on the topic &quot;hello_world_python_topic&quot;</span>
-<span class="linenos">12</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">StringPublisher</span><span class="p">(</span><span class="s2">&quot;hello_world_python_topic&quot;</span><span class="p">)</span>
-<span class="linenos">13</span>  
-<span class="linenos">14</span>  <span class="c1"># Create a counter, so something changes in our message</span>
-<span class="linenos">15</span>  <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">16</span>  
-<span class="linenos">17</span>  <span class="c1"># Infinite loop (using ecal_core.ok() will enable us to gracefully shutdown</span>
-<span class="linenos">18</span>  <span class="c1"># the process from another application)</span>
-<span class="linenos">19</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">20</span>    <span class="c1"># Create a message with a counter an publish it to the topic</span>
-<span class="linenos">21</span>    <span class="n">current_message</span> <span class="o">=</span> <span class="s2">&quot;Hello World </span><span class="si">{:6d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
-<span class="linenos">22</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sending: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_message</span><span class="p">))</span>
-<span class="linenos">23</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">current_message</span><span class="p">)</span>
-<span class="linenos">24</span>    
-<span class="linenos">25</span>    <span class="c1"># Sleep 500 ms</span>
-<span class="linenos">26</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">27</span>    
-<span class="linenos">28</span>    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="linenos">29</span>  
-<span class="linenos">30</span>  <span class="c1"># finalize eCAL API</span>
-<span class="linenos">31</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -819,38 +790,10 @@ You will see the “Python Hello World Publisher” process and the “hello_wor
 <img alt="eCAL Monitor Hello World" src="../_images/python_hello_world_snd_monitor.png" />
 </section>
 <section id="hello-world-subscriber">
-<h2><span class="section-number">8.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
+<h2>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
 <p>For the subscriber, create another file <code class="file docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
-<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.core.subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringSubscriber</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="c1"># Callback for receiving messages</span>
-<span class="linenos"> 8</span><span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">topic_name</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
-<span class="linenos"> 9</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos">12</span>  <span class="c1"># Initialize eCAL</span>
-<span class="linenos">13</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;Python Hello World Publisher&quot;</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span>  <span class="c1"># Create a subscriber that listenes on the &quot;hello_world_python_topic&quot;</span>
-<span class="linenos">16</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">StringSubscriber</span><span class="p">(</span><span class="s2">&quot;hello_world_python_topic&quot;</span><span class="p">)</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span>  <span class="c1"># Set the Callback</span>
-<span class="linenos">19</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-<span class="linenos">20</span>  
-<span class="linenos">21</span>  <span class="c1"># Just don&#39;t exit</span>
-<span class="linenos">22</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">23</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">24</span>  
-<span class="linenos">25</span>  <span class="c1"># finalize eCAL API</span>
-<span class="linenos">26</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -875,10 +818,10 @@ In general however you will want to have a better way to structure your data tha
 So let’s head on to the next topic where we will check out protobuf!</p>
 </section>
 <section id="files">
-<h2><span class="section-number">8.1.4. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
-├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/c5924f0b1406c9d8637317fb1fe54df8/hello_world_snd.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code></a>
-└─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/5635d7068b1baad5104c71ceb7d929cb/hello_world_rec.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code></a></pre>
+├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world_snd.py</span></code>
+└─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">hello_world_rec.py</span></code></pre>
 </section>
 </section>
 
@@ -893,24 +836,6 @@ So let’s head on to the next topic where we will check out protobuf!</p>
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="development_python.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">8. </span>Development (Python)</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="hello_world_python_proto.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">8.2. </span>Hello World with protobuf (Python)</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -928,10 +853,10 @@ So let’s head on to the next topic where we will check out protobuf!</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">8.1.1. Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">8.1.2. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">8.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">8.1.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
   </nav></div>
 
@@ -952,7 +877,7 @@ So let’s head on to the next topic where we will check out protobuf!</p>
 
   <p class="copyright">
     
-      © Copyright 2023, Continental.
+      © Copyright 2025, Continental.
       <br/>
     
   </p>

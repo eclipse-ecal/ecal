@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. Development (Python) &#8212; Eclipse eCAL™</title>
+    <title>Development (Python) &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8.1. Hello World (Python)" href="hello_world_python.html" />
-    <link rel="prev" title="7.2. Hello World with protobuf" href="hello_world_proto.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -113,6 +111,8 @@
     <div class="bd-container__inner bd-page-width">
       
       
+      
+        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -187,7 +187,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
@@ -200,14 +200,20 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="development.html">7. Development (C++)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world.html">7.1. Hello World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. How to use eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">8. Development (Python)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -690,24 +696,24 @@
                 <article class="bd-article">
                   
   <section id="development-python">
-<span id="getting-started-development-python"></span><h1><span class="section-number">8. </span>Development (Python)<a class="headerlink" href="#development-python" title="Link to this heading">#</a></h1>
+<span id="getting-started-development-python"></span><h1>Development (Python)<a class="headerlink" href="#development-python" title="Link to this heading">#</a></h1>
 <p>Along with the C++ API, eCAL offers a great pyhton integration.
 You will find this especially usefull if you are more familiar with python than C++ or you just want to quickly develop anything that doesn’t require that extreme level of control and performance of C++.</p>
 <p>So let’s quickly dive into Python and eCAL with some Hello World Examples!</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#dependencies">8.1.1. Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#hello-world-publisher">8.1.2. Hello World Publisher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#hello-world-subscriber">8.1.3. Hello World Subscriber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#files">8.1.4. Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hello_world_python.html">Hello World (Python)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#hello-world-publisher">Hello World Publisher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#hello-world-subscriber">Hello World Subscriber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html#files">Files</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-in-python">8.2.1. Protobuf in Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-sender">8.2.2. Protobuf Sender</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-receiver">8.2.3. Protobuf Receiver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#files">8.2.4. Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hello_world_python_proto.html">Hello World with protobuf (Python)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-in-python">Protobuf in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-sender">Protobuf Sender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#protobuf-receiver">Protobuf Receiver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html#files">Files</a></li>
 </ul>
 </li>
 </ul>
@@ -725,24 +731,6 @@ You will find this especially usefull if you are more familiar with python than 
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="hello_world_proto.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.2. </span>Hello World with protobuf</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="hello_world_python.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">8.1. </span>Hello World (Python)</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -765,7 +753,7 @@ You will find this especially usefull if you are more familiar with python than 
 
   <p class="copyright">
     
-      © Copyright 2023, Continental.
+      © Copyright 2025, Continental.
       <br/>
     
   </p>

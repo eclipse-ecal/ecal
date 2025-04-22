@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.1. Hello World &#8212; Eclipse eCAL™</title>
+    <title>Hello World &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,6 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7.2. Hello World with protobuf" href="hello_world_proto.html" />
-    <link rel="prev" title="7. Development (C++)" href="development.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -113,6 +111,8 @@
     <div class="bd-container__inner bd-page-width">
       
       
+      
+        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -187,7 +187,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
@@ -200,14 +200,20 @@
 <li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="development.html">7. Development (C++)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.1. Hello World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_proto.html">7.2. Hello World with protobuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. How to use eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="development_python.html">8. Development (Python)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python.html">8.1. Hello World (Python)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_python_proto.html">8.2. Hello World with protobuf (Python)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -687,10 +693,10 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.1.1. Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.1.2. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">7.1.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
             </nav>
         </div>
@@ -703,7 +709,7 @@
                 <article class="bd-article">
                   
   <section id="hello-world">
-<span id="getting-started-hello-world"></span><h1><span class="section-number">7.1. </span>Hello World<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h1>
+<span id="getting-started-hello-world"></span><h1>Hello World<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h1>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p><i class="fab fa-windows"></i> This tutorial will <strong>only work with eCAL 5.7.3</strong> and upwards.
@@ -715,7 +721,7 @@ In the good habit of every tutorial, we will write a Hello World Application, th
 <p>eCAL uses CMake as a cross-platform build toolchain.
 We will explain the CMake commands needed for the tutorial, but not extensively dive into CMake.</p>
 <section id="dependencies">
-<h2><span class="section-number">7.1.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>First, you have to install some more development dependencies:</p>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
@@ -737,31 +743,10 @@ We will explain the CMake commands needed for the tutorial, but not extensively 
 </ul>
 </section>
 <section id="hello-world-publisher">
-<span id="getting-started-hello-world-publisher"></span><h2><span class="section-number">7.1.2. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
+<span id="getting-started-hello-world-publisher"></span><h2>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
 <p>Somewhere on your hard drive create an empty directory and create a file <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_snd</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">12</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">PRIVATE</span>
-<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::string_core</span>
-<span class="linenos">19</span><span class="p">)</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -775,41 +760,6 @@ We add that source file for compiling our executable in <strong>line 14</strong>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/string/publisher.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos"> 8</span><span class="p">{</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="c1">// Initialize eCAL. The name of our Process will be &quot;Hello World Publisher&quot;</span>
-<span class="linenos">10</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Publisher&quot;</span><span class="p">);</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="w">  </span><span class="c1">// Create a String Publisher that publishes on the topic &quot;hello_world_topic&quot;</span>
-<span class="linenos">13</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CPublisher</span><span class="w"> </span><span class="n">publisher</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="w">  </span><span class="c1">// Create a counter, so something changes in our message</span>
-<span class="linenos">16</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="w">  </span><span class="c1">// Infinite loop (using eCAL::Ok() will enable us to gracefully shutdown the</span>
-<span class="linenos">19</span><span class="w">  </span><span class="c1">// Process from another application)</span>
-<span class="linenos">20</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">21</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">22</span><span class="w">    </span><span class="c1">// Create a message with a counter an publish it to the topic</span>
-<span class="linenos">23</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello World &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="o">++</span><span class="n">counter</span><span class="p">);</span>
-<span class="linenos">24</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sending message: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">25</span><span class="w">    </span><span class="n">publisher</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
-<span class="linenos">26</span>
-<span class="linenos">27</span><span class="w">    </span><span class="c1">// Sleep 500 ms</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-<span class="linenos">29</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">30</span>
-<span class="linenos">31</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">32</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">33</span><span class="p">}</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -854,31 +804,10 @@ You will see the “Hello World Publisher” process and the “hello_world_topi
 <img alt="eCAL Monitor Hello World" src="../_images/hello_world_snd_monitor.png" />
 </section>
 <section id="hello-world-subscriber">
-<span id="getting-started-hello-world-subscriber"></span><h2><span class="section-number">7.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
+<span id="getting-started-hello-world-subscriber"></span><h2>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
 <p>Again, create a new directory somewhere and add create the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> and <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code> with the following content:</p>
 <ul>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="nb">project</span><span class="p">(</span><span class="s">hello_world_rec</span><span class="p">)</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="nb">find_package</span><span class="p">(</span><span class="s">eCAL</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="nb">set</span><span class="p">(</span><span class="s">source_files</span>
-<span class="linenos">11</span><span class="w">  </span><span class="s">main.cpp</span>
-<span class="linenos">12</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">source_files</span><span class="o">}</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
-<span class="linenos">17</span><span class="w">  </span><span class="s">PRIVATE</span>
-<span class="linenos">18</span><span class="w">  </span><span class="s">eCAL::string_core</span>
-<span class="linenos">19</span><span class="p">)</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -887,40 +816,6 @@ This is the only difference to the hello_world_snd Project.</p>
 </div>
 </li>
 <li><p><i class="far fa-file-alt"></i> <code class="file docutils literal notranslate"><span class="pre">main.cpp</span></code>:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
-<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/string/subscriber.h&gt;</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="c1">// Callback for receiving messages</span>
-<span class="linenos"> 8</span><span class="kt">void</span><span class="w"> </span><span class="nf">HelloWorldCallback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">message</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="p">{</span>
-<span class="linenos">10</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Received Message: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">11</span><span class="p">}</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span>
-<span class="linenos">14</span><span class="p">{</span>
-<span class="linenos">15</span><span class="w">  </span><span class="c1">// Initialize eCAL</span>
-<span class="linenos">16</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;Hello World Subscriber&quot;</span><span class="p">);</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="w">  </span><span class="c1">// Create a subscriber that listenes on the &quot;hello_world_topic&quot;</span>
-<span class="linenos">19</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">CSubscriber</span><span class="w"> </span><span class="n">subscriber</span><span class="p">(</span><span class="s">&quot;hello_world_topic&quot;</span><span class="p">);</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="w">  </span><span class="c1">// Set the Callback</span>
-<span class="linenos">22</span><span class="w">  </span><span class="n">subscriber</span><span class="p">.</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HelloWorldCallback</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="w">  </span><span class="c1">// Just don&#39;t exit</span>
-<span class="linenos">25</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">26</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">27</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
-<span class="linenos">28</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">29</span>
-<span class="linenos">30</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
-<span class="linenos">31</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">32</span><span class="p">}</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>What is happening here?</strong></p>
@@ -961,15 +856,15 @@ make
 <p>In the next chapter you will learn how to properly structure your messages with protobuf!</p>
 </section>
 <section id="files">
-<h2><span class="section-number">7.1.4. </span>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> hello_world_snd
-│  ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/9bfb0538b9fe8665c94fa82e5be2e206/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/00549bfd70e8195533a17ed0dad8ee46/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a>
+│  ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+│  └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code>
 │
 └─ <i class="far fa-folder-open"></i> hello_world_rec
-   ├─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/ec892da5d184149bb490137a7726fcce/CMakeLists.txt"><code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a>
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../_downloads/c9d35ba1894089044e78f1b1ae7e8d4e/main.cpp"><code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></a></pre>
+   ├─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+   └─ <i class="far fa-file-alt"></i> <code class="xref download docutils literal notranslate"><span class="pre">main.cpp</span></code></pre>
 </section>
 </section>
 
@@ -984,24 +879,6 @@ make
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="development.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7. </span>Development (C++)</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="hello_world_proto.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.2. </span>Hello World with protobuf</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -1019,10 +896,10 @@ make
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.1.1. Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.1.2. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">7.1.4. Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#files">Files</a></li>
 </ul>
   </nav></div>
 
@@ -1043,7 +920,7 @@ make
 
   <p class="copyright">
     
-      © Copyright 2023, Continental.
+      © Copyright 2025, Continental.
       <br/>
     
   </p>
