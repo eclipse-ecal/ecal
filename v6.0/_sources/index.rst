@@ -85,8 +85,7 @@ Eclipse eCAL™ is a trademark of the Eclipse Foundation, Inc. and is used with 
    getting_started/network
    getting_started/services
    getting_started/applications
-   getting_started/development
-   getting_started/development_python
+   getting_started/howto
 
 .. toctree::
    :hidden:
