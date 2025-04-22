@@ -158,7 +158,7 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
-        -DECAL_CPACK_PACK_WITH_INNOSETUP=ON        
+        -DECAL_CPACK_PACK_WITH_INNOSETUP=ON
       shell: cmd
 
     - name: Build SDK
@@ -227,7 +227,7 @@ jobs:
 
         #remove the leading 'v' from the tag, if it exists
         $VERSION = $VERSION -replace '^v', ''
-        
+
         echo "VERSION=$VERSION" >> "$Env:GITHUB_ENV"
 
     - name: Set output binary name
@@ -294,7 +294,7 @@ jobs:
         $AUTH_CREDENTIAL = $Env:JENKINS_USERNAME + ':' + $Env:JENKINS_API_TOKEN
         $AUTH_ENCODED = [System.Text.Encoding]::UTF8.GetBytes($AUTH_CREDENTIAL)
         $AUTH_INFO = [System.Convert]::ToBase64String($AUTH_ENCODED)
-        
+
         $CRUMB_HEADERS = @{
           'Authorization'="Basic $($AUTH_INFO)"
         }
@@ -350,7 +350,7 @@ jobs:
               Write-Output "    ** determination of the new build number failed after $COUNTER_LIMIT tries" 
               Exit 1
           }
-          
+
           $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL
           $RES_CODE = $RESPONSE.StatusCode
           Write-Output "    ++ build number retrieval - HTTP status code: $RES_CODE"
@@ -397,7 +397,7 @@ jobs:
                   Break
                 } else {
                   Write-Output "    ** build failure"
-                  Exit 1        
+                  Exit 1
                 }
               }
             } else {
