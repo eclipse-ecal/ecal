@@ -26,6 +26,7 @@
 #define OutputName              str("ecal-")+str(AppVersion)+str("-win64")
 #define ComponentStagingDir     "@CPACK_TEMPORARY_INSTALL_DIRECTORY@"
 #define DebugSdkStagingDir      StringChange(ComponentStagingDir, "/complete/", "/sdk/")
+#define CSharpStagingDir        StringChange(StringChange(ComponentStagingDir, "/complete/", "/csharp/"), "/eCAL-", "/ecal_csharp-")
 #define OutputDir               "@CPACK_PACKAGE_DIRECTORY@/@CPACK_OUTPUT_FILE_PREFIX@"
 #define LicenseFile             "@CPACK_RESOURCE_FILE_LICENSE@"
 
@@ -84,6 +85,8 @@ Source: "{#ComponentStagingDir}\configuration\etc\ecaltime.yaml";  DestDir: "{ap
 Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app}\etc\"; Tasks: not replaceconf; Flags: ignoreversion skipifsourcedoesntexist confirmoverwrite; Components: runtime
 Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app}\etc\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 Source: "{#ComponentStagingDir}\_configuration\etc\ecaltime.yaml"; DestDir: "{app}\etc\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
+
+Source: "{#CSharpStagingDir}\runtime\*";              DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
