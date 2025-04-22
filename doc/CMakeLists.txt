@@ -179,7 +179,7 @@ add_custom_target(documentation_sphinx ALL
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_config_file
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files documentation_copy_sample_files documentation_copy_config_file
 )
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
