@@ -20,6 +20,11 @@ set(UDPCAP_THIRDPARTY_USE_BUILTIN_ASIO OFF)
 # Add udpcap library from subdirectory
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/udpcap" "${eCAL_BINARY_DIR}/thirdparty/udpcap" EXCLUDE_FROM_ALL SYSTEM)
 
+# ecaludp delay loads wpcap.dll and Ninja does not implicitly link delayimp.lib
+# unlike the Visual Studio generators.
+# So we explictly set it to be linked
+target_link_options(udpcap PUBLIC delayimp.lib)
+
 # Reset static / shared libs to old value
 set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_OLD})
 unset(BUILD_SHARED_LIBS_OLD)
