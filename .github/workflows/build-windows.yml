@@ -18,12 +18,14 @@ jobs:
 
     steps:
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
-        setup-python: 'false'
-        version: '6.6.1'
+        setup-python: 'true'
+        version: '6.6.*'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
+        archives: 'qtbase qtsvg'
+        cache: 'true'
 
     - name: Install Dependencies
       # Pin to latest doxygen version.
