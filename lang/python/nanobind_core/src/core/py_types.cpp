@@ -19,6 +19,7 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/stl/optional.h>
 #include <sstream>         // for constructing __repr__ strings
 
 // Include the header file that contains the eCAL types.
@@ -46,7 +47,24 @@ void AddTypes(nb::module_& m) {
 
   // Wrap SDataTypeInformation
   nb::class_<eCAL::SDataTypeInformation>(m, "DataTypeInformation")
-    .def(nb::init<>())
+    .def("__init__", [](eCAL::SDataTypeInformation* self,
+      std::optional<std::string> name,
+      std::optional<std::string> encoding,
+      nb::object py_descriptor) {
+        std::string cpp_descriptor;
+        if (!py_descriptor.is_none())
+          cpp_descriptor = nb_bytes_to_std_string(nb::bytes(py_descriptor));
+
+        new (self) eCAL::SDataTypeInformation{
+          name.value_or(""),
+          encoding.value_or(""),
+          cpp_descriptor
+        };
+      },
+        nb::arg("name") = nb::none(),
+        nb::arg("encoding") = nb::none(),
+        nb::arg("descriptor") = nb::none(),
+        "Construct with optional name, encoding, descriptor.")
     .def_rw("name", &eCAL::SDataTypeInformation::name)
     .def_rw("encoding", &eCAL::SDataTypeInformation::encoding)
     // descriptors are bytes, e.g. the std::string needs to be mapped to python bytes
