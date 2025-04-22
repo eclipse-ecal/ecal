@@ -90,7 +90,8 @@ int main()
 
     /*
       Send the content to other eCAL Processes that have subscribed to the topic "hello".
-      The message is sent as a raw string, so we use the length of the string as the size of the message.
+      eCAL transports messages as a byte array and length, so for interop with other languages, 
+      we will send a non-null terminated strings over the wire.
     */
     if(!eCAL_Publisher_Send(publisher, message, strlen(message), NULL))
       printf("Sent string message in C: \"%s\"\n", message);
