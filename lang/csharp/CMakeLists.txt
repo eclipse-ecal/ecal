@@ -33,7 +33,7 @@ set(ECAL_CSHARP_PROTOBUF_VERSION "${Protobuf_VERSION}")
 endif ()
 endmacro()
 
-set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION  "v4.7.1")
+set(CMAKE_DOTNET_TARGET_FRAMEWORK_VERSION "v4.7.1" CACHE STRING "Specify the .NET framework version to use.")
 
 option(ECAL_CSHARP_BUILD_SAMPLES "BUILD eCAL C# samples" ON)
 option(ECAL_CSHARP_BUILD_TESTS   "BUILD eCAL C# unittests" ON)
