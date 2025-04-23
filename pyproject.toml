@@ -23,6 +23,11 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel.hooks.scikit-build]
 experimental = true
 
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest"
+]
+
 [tool.hatch.version]
 source = "vcs"
 
@@ -76,6 +81,13 @@ sdist.only-include = [
   "!/thirdparty/hdf5/hdf5/java/",
   "!/thirdparty/hdf5/hdf5/fortran/",
 ]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "lang/python/tests/",
+]
+python_files = "*_test.py"
+
 
 [tool.scikit-build]
 # Will be installed from PyPI if system version is too old/missing

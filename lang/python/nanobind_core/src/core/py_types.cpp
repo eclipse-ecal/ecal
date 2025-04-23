@@ -77,6 +77,10 @@ void AddTypes(nb::module_& m) {
       return "<DataTypeInformation name='" + info.name +
         "', encoding='" + info.encoding +
         "', descriptor='" + info.descriptor + "'>";
+      })
+    .def("__hash__",
+      [](const eCAL::SDataTypeInformation& self) {
+        return std::hash<eCAL::SDataTypeInformation>{}(self);
       });
 
     // Wrap SEntityId

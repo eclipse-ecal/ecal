@@ -93,11 +93,13 @@ void AddRegistration(nanobind::module_& m)
     return GetSubscribedTopicNames(names) ? nb::cast(names) : nb::none();
     }, "Convenience: Get all topic names currently being subscribed to.");
 
+  // TODO: Should we wrap this function or should we deprecate it on C++ side
   m_registration.def("get_server_method_names", []() -> nb::object {
     std::set<SServiceMethod> methods;
     return GetServerMethodNames(methods) ? nb::cast(methods) : nb::none();
     }, "Get all service/method name pairs of all eCAL servers.");
 
+  // TODO: Should we wrap this function or should we deprecate it on C++ side
   m_registration.def("get_client_method_names", []() -> nb::object {
     std::set<SServiceMethod> methods;
     return GetClientMethodNames(methods) ? nb::cast(methods) : nb::none();
@@ -138,8 +140,9 @@ void AddRegistration(nanobind::module_& m)
     return PyCallbackToken(AddPublisherEventCallback(cb));
     }, nb::arg("callback"), "Register callback for new or removed publishers. Returns a token.");
 
-  m_registration.def("remove_publisher_event_callback", &RemPublisherEventCallback,
-    nb::arg("token"), "Unregister a publisher event callback by its token.");
+  m_registration.def("remove_publisher_event_callback", [](const PyCallbackToken& token) {
+    RemPublisherEventCallback(token.value);
+    }, nb::arg("token"), "Unregister a publisher event callback using its token.");
 
   m_registration.def("add_subscriber_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
     auto cb_ptr = std::make_shared<nb::callable>(py_cb);
@@ -156,6 +159,7 @@ void AddRegistration(nanobind::module_& m)
     return PyCallbackToken(AddSubscriberEventCallback(cb));
     }, nb::arg("callback"), "Register callback for new or removed subscribers. Returns a token.");
 
-  m_registration.def("remove_subscriber_event_callback", &RemSubscriberEventCallback,
-    nb::arg("token"), "Unregister a subscriber event callback by its token.");
+  m_registration.def("remove_subscriber_event_callback", [](const PyCallbackToken& token) {
+    RemSubscriberEventCallback(token.value);
+    }, nb::arg("token"), "Unregister a subscriber event callback using its token.");
 }

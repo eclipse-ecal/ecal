@@ -205,3 +205,31 @@ namespace eCAL
   using ServerEventCallbackT = std::function<void(const SServiceId& service_id_, const struct SServerEventCallbackData& data_)>;
 
 }
+
+
+namespace std
+{
+  template<>
+  class hash<eCAL::SServiceId> {
+  public:
+    size_t operator()(const eCAL::SServiceId& id) const
+    {
+      std::size_t h1 = std::hash<std::string>{}(id.service_name);
+      std::size_t h2 = std::hash<uint64_t>{}(id.service_id.entity_id);
+      return h1 ^ (h2 << 1); // basic combination
+    }
+  };
+
+  template<>
+  class hash<eCAL::SServiceMethodInformation> {
+  public:
+    size_t operator()(const eCAL::SServiceMethodInformation& info) const
+    {
+      std::size_t h1 = std::hash<std::string>{}(info.method_name);
+      std::size_t h2 = std::hash<eCAL::SDataTypeInformation>{}(info.request_type);
+      std::size_t h3 = std::hash<eCAL::SDataTypeInformation>{}(info.response_type);
+      return h1 ^ (h2 << 1) ^ (h3 << 2);
+    }
+  };
+}
+

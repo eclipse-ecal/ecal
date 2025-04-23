@@ -52,23 +52,20 @@ void AddPubsubTypes(nanobind::module_& module)
     .def(nb::init<>())
     .def_rw("topic_id", &eCAL::STopicId::topic_id, "Unique topic identifier (SEntityId)")
     .def_rw("topic_name", &eCAL::STopicId::topic_name, "Topic name as a string")
-    .def("__eq__",
-      [](const eCAL::STopicId& self, const eCAL::STopicId& other) -> bool {
-        return self == other;
-      },
-      "Equality comparison")
-    .def("__lt__",
-      [](const eCAL::STopicId& self, const eCAL::STopicId& other) -> bool {
-        return self < other;
-      },
-      "Less-than comparison")
+    .def("__eq__", &eCAL::STopicId::operator==)
+    .def("__lt__", &eCAL::STopicId::operator<)
     .def("__repr__",
       [](const eCAL::STopicId& self) {
         std::ostringstream oss;
         oss << self;  // uses the provided operator<< overload
-        return oss.str().c_str();
+        return oss.str();
       },
-      "Return the string representation of TopicId");
+      "Return the string representation of TopicId")
+    .def("__hash__", 
+      [](const eCAL::STopicId& self) {
+        return std::hash<eCAL::STopicId>{}(self);
+      },
+      "Hash calculation");
 
       //-------------------------------------------------------------------------
       // Bind SReceiveCallbackData struct
