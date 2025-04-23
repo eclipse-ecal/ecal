@@ -54,7 +54,11 @@ void AddServiceTypes(nanobind::module_& m)
     .def_rw("service_id", &eCAL::SServiceId::service_id)
     .def_rw("service_name", &eCAL::SServiceId::service_name)
     .def("__eq__", &eCAL::SServiceId::operator==)
-    .def("__lt__", &eCAL::SServiceId::operator<);
+    .def("__lt__", &eCAL::SServiceId::operator<)
+    .def("__hash__",
+    [](const eCAL::SServiceId& self) {
+      return std::hash<eCAL::SServiceId>{}(self);
+    });
 
   nb::class_<eCAL::SServiceMethodInformation>(m, "ServiceMethodInformation")
     .def(nb::init<>())
@@ -62,7 +66,11 @@ void AddServiceTypes(nanobind::module_& m)
     .def_rw("request_type", &eCAL::SServiceMethodInformation::request_type)
     .def_rw("response_type", &eCAL::SServiceMethodInformation::response_type)
     .def("__eq__", &eCAL::SServiceMethodInformation::operator==)
-    .def("__lt__", &eCAL::SServiceMethodInformation::operator<);
+    .def("__lt__", &eCAL::SServiceMethodInformation::operator<)
+    .def("__hash__",
+      [](const eCAL::SServiceMethodInformation& self) {
+        return std::hash<eCAL::SServiceMethodInformation>{}(self);
+      });
 
   nb::class_<eCAL::SServiceResponse>(m, "ServiceResponse")
     .def(nb::init<>())

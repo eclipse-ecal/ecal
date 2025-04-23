@@ -105,6 +105,7 @@ NB_MODULE(nanobind_core, core) {
 
   AddTypesMonitoring(core);
   AddMonitoring(core);
+  AddRegistration(core);
 
   AddUtil(core);
 }
