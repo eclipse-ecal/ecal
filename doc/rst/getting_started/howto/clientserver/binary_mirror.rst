@@ -6,7 +6,10 @@
 Binary: Mirror
 ==============
 
-Here will rise some client/server examples using binary data.
+Under this section you will find a simple example of a client/server application using the eCAL ClientServer API.
+You should be already familiar with the base handling of eCAL from the Publisher/Subscriber samples, so this we will not cover in detail anymore.
+
+In this section we will introduce the client/server API and show you how to use it.
 
 Mirror Server
 =============

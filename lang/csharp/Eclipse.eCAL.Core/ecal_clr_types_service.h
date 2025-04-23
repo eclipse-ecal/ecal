@@ -241,18 +241,18 @@ namespace Eclipse {
        *
        * This can be used to pass multiple service method definitions.
        */
-      public ref class ServiceMethodInformationList {
+      public ref class ServiceMethodInformationList : public List<ServiceMethodInformation^> {
       public:
         /**
          * @brief Gets the collection of service method information.
          */
-        property List<ServiceMethodInformation^>^ Methods;
+        // property List<ServiceMethodInformation^>^ Methods;
 
         /**
          * @brief Constructor.
          */
-        ServiceMethodInformationList() {
-          Methods = gcnew List<ServiceMethodInformation^>();
+        ServiceMethodInformationList() : List<ServiceMethodInformation^>() {
+          // Methods = gcnew List<ServiceMethodInformation^>();
         }
       };
 

@@ -21,65 +21,90 @@ using System;
 using System.Text;
 using Eclipse.eCAL.Core;
 
-public class MinimalServiceServer
+public class MirrorServer
 {
-  static void PrintCallbackInfo(string method, byte[] request, byte[] response)
+  static void PrintCallbackInformation(string method, byte[] request, byte[] response)
   {
-    Console.WriteLine("Method  : '" + method + "' called");
-    Console.WriteLine("Request : " + Encoding.UTF8.GetString(request));
-    Console.WriteLine("Response: " + Encoding.UTF8.GetString(response));
+    Console.WriteLine("Method   : '" + method + "' called in C#");
+    Console.WriteLine("Request  : " + Encoding.UTF8.GetString(request));
+    Console.WriteLine("Response : " + Encoding.UTF8.GetString(response));
     Console.WriteLine();
   }
 
+  /*
+    We define the callback function that will be called when a client calls the service method "echo".
+    This callback will simply return the request as the response.
+  */
   static byte[] OnEchoCallback(ServiceMethodInformation methodInfo, byte[] request)
   {
-    // Echo the request data back as the response.
     byte[] response = request;
 
-    PrintCallbackInfo(methodInfo.MethodName, request, response);
+    PrintCallbackInformation(methodInfo.MethodName, request, response);
     
     return response;
   }
+
+  /* 
+    This callback will be called when a client calls the service method "reverse".
+    It will return the request in reverse order as the response.
+  */
   static byte[] OnReverseCallback(ServiceMethodInformation methodInfo, byte[] request)
   {
-    byte[] response = (byte[])request.Clone();  // Make a copy
-    Array.Reverse(response);                    // Reverse in place
+    byte[] response = (byte[])request.Clone();
+    Array.Reverse(response);
 
-    PrintCallbackInfo(methodInfo.MethodName, request, response);
+    PrintCallbackInformation(methodInfo.MethodName, request, response);
 
     return response;
   }
 
   static void Main()
   {
-    // Initialize eCAL API.
+    Console.WriteLine("-------------------");
+    Console.WriteLine(" C#: MIRROR SERVER");
+    Console.WriteLine("-------------------");
+
+    /*
+      As always: initialize the eCAL API and give your process a name.
+    */
     Core.Initialize("mirror server c#");
 
-    // Print version info.
     Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a service server named "service1".
-    ServiceServer serviceServer = new ServiceServer("mirror");
+    /*
+      Now we create the mirror server and give it the name "mirror".
+    */
+    ServiceServer mirrorServer = new ServiceServer("mirror");
 
-    // Register the method callback.
+    /*
+      The server will have two methods: "echo" and "reverse".
+      To set a callback, we need to set a ServiceMethodInformation struct as well as the callback function.
+      In our example we will just set the method name of the struct and leave the other two fields empty.
+    */
     ServiceMethodInformation echoMethodInfo = new ServiceMethodInformation();
     echoMethodInfo.MethodName = "echo";
-    serviceServer.SetMethodCallback(echoMethodInfo, OnEchoCallback);
+    mirrorServer.SetMethodCallback(echoMethodInfo, OnEchoCallback);
 
     ServiceMethodInformation reverseMethodInfo = new ServiceMethodInformation();
     reverseMethodInfo.MethodName = "reverse";
-    serviceServer.SetMethodCallback(reverseMethodInfo, OnReverseCallback);
+    mirrorServer.SetMethodCallback(reverseMethodInfo, OnReverseCallback);
 
-    // Idle main thread until eCAL is no longer OK.
+    /*
+      Now we will go in an infinite loop, to wait for incoming service calls that will be handled with the callbacks.
+    */
     while (Core.Ok())
     {
-      System.Threading.Thread.Sleep(100);
+      System.Threading.Thread.Sleep(500);
     }
 
-    // Dispose service server.
-    serviceServer.Dispose();
+    /*
+      When finished, we need to dispose the server to clean up properly.
+    */
+    mirrorServer.Dispose();
 
-    // Finalize eCAL API.
+    /*
+      After we are done, as always, finalize the eCAL API.
+    */
     Core.Terminate();
   }
 }

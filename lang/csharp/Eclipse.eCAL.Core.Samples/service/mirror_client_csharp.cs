@@ -22,49 +22,87 @@ using System.Collections.Generic;
 using System.Text;
 using Eclipse.eCAL.Core;
 
-public class MinimalServiceClient
+public class MirrorClient
 {
-  // Print the result of a service call.
+  /*
+    Helper function to print the service response.
+  */
   static void PrintServiceResponse(ServiceResponse serviceResponse)
   {
+    string callState;
     switch (serviceResponse.CallState)
     {
       case CallState.Executed:
-        Console.WriteLine("Received response for method " +
-            serviceResponse.MethodInformation.MethodName +
-            ": " + Encoding.UTF8.GetString(serviceResponse.Response) +
-            " from host " + serviceResponse.ServerId.EntityID.HostName);
+        callState = "EXECUTED";
         break;
       case CallState.Failed:
-        Console.WriteLine("Received error: " + serviceResponse.ErrorMessage +
-            " from host " + serviceResponse.ServerId.EntityID.HostName);
+        callState = "FAILED";
         break;
       default:
-        Console.WriteLine("Received response in unknown state.");
+        callState = "UNKNOWN";
         break;
     }
+
+    Console.WriteLine("Received service response in C: " + callState);
+    Console.WriteLine("Method    : " + serviceResponse.MethodInformation.MethodName);
+    Console.WriteLine("Response  : " + Encoding.UTF8.GetString(serviceResponse.Response));
+    Console.WriteLine("Server ID : " + serviceResponse.ServerId.EntityID.Id);
+    Console.WriteLine("Host      : " + serviceResponse.ServerId.EntityID.HostName);
+    Console.WriteLine();
   }
 
   static void Main()
   {
-    // Initialize eCAL API.
+    Console.WriteLine("-------------------");
+    Console.WriteLine(" C#: MIRROR CLIENT");
+    Console.WriteLine("-------------------");
+
+    /*
+      As always: initialize the eCAL API and give your process a name.
+    */
     Core.Initialize("mirror client c#");
 
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create a service client for service "service1"
-    ServiceClient serviceClient = new ServiceClient("mirror");
-    string[] methods = new string[] { "echo", "reverse" };
+    /*
+      Create a client that connects to a "mirror" server.
+      It may call the methods "echo" and "reverse"
+    */
+    ServiceMethodInformationList methodInformationList = new ServiceMethodInformationList();
+    methodInformationList.Add(new ServiceMethodInformation("echo", new DataTypeInformation(), new DataTypeInformation()));
+    methodInformationList.Add(new ServiceMethodInformation("reverse", new DataTypeInformation(), new DataTypeInformation()));
+    
+    ServiceClient mirrorClient = new ServiceClient("mirror", methodInformationList);
+    
+    /*
+      We wait until the client is connected to a server,
+      so we don't call methods that are not available.
+    */
+    // isConnected() function not implemented in C# yet
+
+    /*
+      Allow to alternate between the two methods "echo" and "reverse".
+    */
     int i = 0;
+    string[] methods = new string[] { "echo", "reverse" };
 
     while (Core.Ok())
     {
-      // Create the request payload.
-      byte[] content = Encoding.UTF8.GetBytes("stressed");
+      /* 
+        Alternate between the two methods "echo" and "reverse".
+        Create the request payload.
+      */
       string method = methods[i++ % methods.Length];
+      byte[] request = Encoding.UTF8.GetBytes("stressed");
 
-      // Alternating call "echo" and "reverse".
-      List<ServiceResponse> responseList = serviceClient.CallWithResponse(method, content, 100);
+      /*
+        Service call: blocking
+      */
+      List<ServiceResponse> responseList = mirrorClient.CallWithResponse(method, request, (int)Eclipse.eCAL.Core.ServiceClient.DefaultTimeArgument);
+      
+      /*
+        Iterate through all responses and print them.
+      */
       if (responseList.Count > 0)
       {
         foreach (ServiceResponse response in responseList)
@@ -74,16 +112,20 @@ public class MinimalServiceClient
       }
       else
       {
-        Console.WriteLine(String.Format("Calling service {0} failed!", method));
+        Console.WriteLine("Method blocking call failed.");
       }
 
       System.Threading.Thread.Sleep(1000);
     }
 
-    // Dispose the service client.
-    serviceClient.Dispose();
+    /*
+      When finished, we need to dispose the client to clean up properly.
+    */
+    mirrorClient.Dispose();
 
-    // Finalize eCAL API.
+    /*
+      After we are done, as always, finalize the eCAL API.
+    */
     Core.Terminate();
   }
 }
