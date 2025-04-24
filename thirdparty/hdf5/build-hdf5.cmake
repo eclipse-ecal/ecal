@@ -42,7 +42,7 @@ include_guard(GLOBAL)
   #We need to build hdf5 as shared to enable the threadsafe option. HDF5 uses the BUILD_SHARED_LIBS to check if shared build is on.
   # Hence we need to save the old value, enable it, and then set it back to the old value
 
-  add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/hdf5 thirdparty/hdf5 SYSTEM)
+  add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/hdf5" "${eCAL_BINARY_DIR}/thirdparty/hdf5" SYSTEM)
 
   if(NOT TARGET hdf5::hdf5-shared)
     add_library(hdf5::hdf5-shared ALIAS hdf5-shared)

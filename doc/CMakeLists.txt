@@ -40,15 +40,6 @@ project(documentation_sphinx)
 # message(STATUS "========Python executable: ${PYTHON_EXECUTABLE}")
 # message(STATUS "========PYTHON_VENV_PATH : ${PYTHON_VENV_PATH}")
 
-
-
-
-
-
-
-
-
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Sphinx REQUIRED)
 find_package(Doxygen REQUIRED)
@@ -56,8 +47,6 @@ find_package(Doxygen REQUIRED)
 # This directory contains all files for creating the actual documentation
 set(DOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/_sources)
 set(PYTHON_SOURCE_DIRECTORY ${CMAKE_BINARY_DIR}/python)
-
-set(ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/samples)
 
 #######################################
 # Copy RST files to build directory
@@ -73,8 +62,21 @@ add_custom_target(documentation_copy_rst_files ALL
 set_property(TARGET documentation_copy_rst_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_sample_files ALL
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples/ ${DOC_SOURCE_DIRECTORY}/source_code_samples
-  COMMAND cmake -E copy_directory ${ECAL_DOCS_SAMPLE_SOURCE_DIRECTORY} ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/samples                                              ${DOC_SOURCE_DIRECTORY}/source_code_samples
+  # blob samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/pubsub/binary                       ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/binary/blob
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/binary                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/binary/blob
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Core.Samples/pubsub         ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/binary/blob
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/binary/blob
+  # string samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/string/samples/pubsub                  ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/pubsub/string                         ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.String.Samples/pubsub       ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/string/hello
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/string/hello
+  # protobuf samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Protobuf.Samples/pubsub     ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person
 )
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
@@ -172,14 +174,14 @@ add_custom_target(documentation_sphinx ALL
     #${SPHINX_APIDOC} -f
     #-o ${DOC_SOURCE_DIRECTORY}/_apidoc/ ${PYTHON_SOURCE_DIRECTORY}
     COMMAND ${SPHINX_EXECUTABLE}
-        -q -b html
+        -q -b html -j auto
         -c "${DOC_SOURCE_DIRECTORY}"
         -d "${SPHINX_CACHE_DIR}"
         -Dbreathe_projects.eCAL=${DOXYGEN_XML_OUTPUT}
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
-    DEPENDS documentation_run_doxygen documentation_copy_rst_files _ecal_core_py _ecal_hdf5_py documentation_copy_sample_files documentation_copy_config_file
+    DEPENDS documentation_run_doxygen documentation_copy_rst_files documentation_copy_sample_files documentation_copy_config_file
 )
     
 set_property(TARGET documentation_sphinx  PROPERTY FOLDER docs)
@@ -189,7 +191,3 @@ install(DIRECTORY ${SPHINX_HTML_DIR}/
   DESTINATION ${eCAL_install_doc_dir}
   COMPONENT doc 
 )
-
-if (ECAL_BUILD_DOCS_SAMPLES)
-  add_subdirectory(samples)
-endif()

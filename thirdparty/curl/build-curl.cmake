@@ -15,7 +15,7 @@ set(BUILD_EXAMPLES  OFF CACHE BOOL "Disable curl examples" FORCE)
 set(CMAKE_FOLDER "thirdparty/curl")
 
 ecal_disable_all_warnings()
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/curl thirdparty/curl EXCLUDE_FROM_ALL SYSTEM)
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/curl" "${eCAL_BINARY_DIR}/thirdparty/curl" EXCLUDE_FROM_ALL SYSTEM)
 ecal_restore_warning_level()
 
 if (NOT TARGET CURL::libcurl)

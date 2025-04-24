@@ -1,0 +1,31 @@
+name: 'Save ccache cache'
+description: 'Saves the ccache cache'
+
+inputs:
+  key:
+    description: 'An explicit key for saving the cache'
+    required: true
+  cache-dir:
+    description: 'Directory the compilation cache is stored in'
+    default: ${GITHUB_WORKSPACE}/.ccache
+    required: false
+
+runs:
+  using: composite
+  steps:
+
+    - name: Clear old cache entries
+      run: ccache --evict-older-than 3600s
+      shell: bash
+
+    - name: Show stats, then zero
+      run: |
+        ccache --show-stats
+        ccache --zero-stats
+      shell: bash
+
+    - name: Save ccache cache
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ inputs.cache-dir }}
+        key: ${{ inputs.key }}

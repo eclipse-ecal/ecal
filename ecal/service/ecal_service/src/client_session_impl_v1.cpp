@@ -103,11 +103,10 @@ namespace ecal_service
   {
     ECAL_SERVICE_LOG_DEBUG(logger_, "Resolving endpoint [" + server_list_[server_list_index].first + ":" + std::to_string(server_list_[server_list_index].second) + "]...");
 
-    const asio::ip::tcp::resolver::query query(server_list_[server_list_index].first, std::to_string(server_list_[server_list_index].second));
-
-    resolver_.async_resolve(query
+    resolver_.async_resolve(server_list_[server_list_index].first
+                          , std::to_string(server_list_[server_list_index].second)
                           , service_call_queue_strand_.wrap([me = enable_shared_from_this<ClientSessionV1>::shared_from_this(), server_list_index_copy = server_list_index]
-                            (asio::error_code ec, const asio::ip::tcp::resolver::iterator& resolved_endpoints)
+                            (asio::error_code ec, const asio::ip::tcp::resolver::results_type& resolved_endpoints)
                             {
                               if (ec)
                               {
@@ -145,9 +144,9 @@ namespace ecal_service
                                 // Verbose-debug log of all endpoints
                                 {
                                   std::string endpoints_str = "Resolved endpoints for " + me->server_list_[server_list_index_copy].first + ": ";
-                                  for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
+                                  for (const auto& endpoint : resolved_endpoints)
                                   {
-                                    endpoints_str += endpoint_to_string(*it) + ", ";
+                                    endpoints_str += endpoint_to_string(endpoint) + ", ";
                                   }
                                   ECAL_SERVICE_LOG_DEBUG_VERBOSE(me->logger_, endpoints_str);
                                 }
@@ -157,14 +156,14 @@ namespace ecal_service
                             }));
   }
 
-  void ClientSessionV1::connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints, size_t server_list_index)
+  void ClientSessionV1::connect_to_endpoint(const asio::ip::tcp::resolver::results_type& resolved_endpoints, size_t server_list_index)
   {
     // Convert the resolved_endpoints iterator to an endpoint sequence
     // (i.e. a vector of endpoints)
     auto endpoint_sequence = std::make_shared<std::vector<asio::ip::tcp::endpoint>>();
-    for (auto it = resolved_endpoints; it != asio::ip::tcp::resolver::iterator(); ++it)
+    for (const auto& endpoint : resolved_endpoints)
     {
-      endpoint_sequence->push_back(*it);
+      endpoint_sequence->push_back(endpoint);
     }
 
     const std::lock_guard<std::mutex> socket_lock(socket_mutex_);
@@ -377,7 +376,8 @@ namespace ecal_service
     }
     else
     {
-      service_call_queue_strand_.post([me = shared_from_this(), request, response_callback]()
+      asio::post(service_call_queue_strand_
+              , [me = shared_from_this(), request, response_callback]()
                             {
                               // Variable that enables us to unlock the mutex before actually calling the callback
                               bool call_response_callback_with_error(false);
@@ -650,7 +650,8 @@ namespace ecal_service
 
   void ClientSessionV1::call_all_callbacks_with_error()
   {
-    service_call_queue_strand_.post([me = shared_from_this()]()
+    asio::post(service_call_queue_strand_
+            , [me = shared_from_this()]()
                                     {
                                       ServiceCall first_service_call;
                                       bool        more_service_calls(false);

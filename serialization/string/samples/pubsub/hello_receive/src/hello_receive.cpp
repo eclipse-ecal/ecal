@@ -17,7 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the basic eCAL header
 #include <ecal/ecal.h>
+/* 
+  We want to receive raw strings, so wie include the string subscriber header.
+  eCAL supports multiple message formats.
+*/
 #include <ecal/msg/string/subscriber.h>
 
 #include <iostream>
@@ -27,24 +32,71 @@
 
 int main()
 {
-  std::cout << "-------------------------------" << std::endl;
-  std::cout << " HELLO WORLD RECEIVER"           << std::endl;
-  std::cout << "-------------------------------" << std::endl;
+  std::cout << "----------------------------" << "\n";
+  std::cout << " C++: HELLO WORLD RECEIVER"   << "\n";
+  std::cout << "----------------------------" << "\n";
 
-  // initialize eCAL API
-  eCAL::Initialize("hello_receive");
+  /* 
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "hello receive". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
+  eCAL::Initialize("hello receive");
 
-  // subscriber for topic "Hello"
-  eCAL::string::CSubscriber sub("hello");
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
 
-  // receive updates in a callback (lambda function)
-  auto msg_cb = [](const std::string& msg_) { std::cout << "Received \"" << msg_ << "\"" << std::endl; };
-  sub.SetReceiveCallback(std::bind(msg_cb, std::placeholders::_2));
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
-  // idle main loop
-  while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  /*
+    Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+    The topic we are going to receive is called "hello".
+  */
+  eCAL::string::CSubscriber subscriber("hello");
 
-  // finalize eCAL API
+  /*
+    Creating a receive callback. The callback will be called whenever a new message is received.
+  */
+  auto message_callback = [](const eCAL::STopicId& publisher_id_, const std::string& message_, long long time_, long long clock_) { 
+    std::cout << "---------------------------------------------------"                                << "\n";
+    std::cout << " Received string message from topic \"" << publisher_id_.topic_name << "\" in C++ " << "\n";
+    std::cout << "---------------------------------------------------"                                << "\n";
+    std::cout << " Size    : " << message_.size()                                                     << "\n";
+    std::cout << " Time    : " << time_                                                               << "\n";
+    std::cout << " Clock   : " << clock_                                                              << "\n";
+    std::cout << " Message : " << message_                                                            << "\n";
+    std::cout << "\n";
+  };
+  
+  /*
+    Register the callback with the subscriber so it can be called.
+  */
+  subscriber.SetReceiveCallback(message_callback);
+
+  /*
+    Creating an infinite loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  */
+  while (eCAL::Ok())
+  {
+    /*
+      Sleep for 500ms to avoid busy waiting.
+      You can use eCAL::Process::SleepMS() to sleep in milliseconds.
+    */
+    eCAL::Process::SleepMS(500);
+  }
+
+  /*
+    Deinitialize eCAL.
+    You should always do that before your application exits.
+  */
   eCAL::Finalize();
 
   return(0);

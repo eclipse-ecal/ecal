@@ -107,7 +107,7 @@ namespace eCAL
      * @return  The service name.
     **/
     ECAL_API_EXPORTED_MEMBER
-      const std::string& GetServiceName();
+      const std::string& GetServiceName() const;
 
     /**
      * @brief Retrieve the service id.
@@ -123,7 +123,7 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool IsConnected();
+      bool IsConnected() const;
 
   private:
     std::shared_ptr<CServiceServerImpl> m_service_server_impl;

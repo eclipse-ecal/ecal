@@ -312,6 +312,9 @@ set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
 set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
 set(eCAL_VERSION_STRING ${eCAL_VERSION_MAJOR}.${eCAL_VERSION_MINOR}.${eCAL_VERSION_PATCH})
 set(eCAL_VERSION        ${eCAL_VERSION_STRING})
+set(eCAL_COMPLETE_VERSION ${GIT_DESCRIBE_TAG})
+set(eCAL_DATE             ${GIT_REVISION_DATE})
+
 
 message(STATUS "eCAL version: ${eCAL_VERSION_STRING}")
 message(DEBUG "eCAL git describe tag: ${GIT_DESCRIBE_TAG}")
@@ -636,7 +639,7 @@ message(STATUS "ECAL_USE_FLATBUFFERS                                : ${ECAL_USE
 message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE_FTXUI}")
 message(STATUS "BUILD_SHARED_LIBS                                   : ${BUILD_SHARED_LIBS}")
 message(STATUS "ECAL_BUILD_DOCS                                     : ${ECAL_BUILD_DOCS}")
-message(STATUS "ECAL_BUILD_DOCS_SAMPLES"                            : ${ECAL_BUILD_DOCS_SAMPLES})
+message(STATUS "ECAL_BUILD_DOCS_SAMPLES                             : ${ECAL_BUILD_DOCS_SAMPLES}")
 message(STATUS "ECAL_BUILD_APPS                                     : ${ECAL_BUILD_APPS}")
 message(STATUS "ECAL_BUILD_APP_SDK                                  : ${ECAL_BUILD_APP_SDK}")
 message(STATUS "ECAL_BUILD_SAMPLES                                  : ${ECAL_BUILD_SAMPLES}")

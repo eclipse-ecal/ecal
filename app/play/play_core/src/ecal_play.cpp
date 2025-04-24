@@ -640,7 +640,7 @@ long long EcalPlay::GetCurrentFrameIndex() const
 void EcalPlay::LogAppNameVersion() const
 {
   std::string app_version_header = " " + std::string(EcalPlayGlobals::ECAL_PLAY_NAME) + " " + std::string(EcalPlayGlobals::VERSION_STRING) + " ";
-  std::string ecal_version_header = " (eCAL Lib " + std::string(ECAL_VERSION) + ") ";
+  std::string ecal_version_header = " (eCAL Lib " + eCAL::GetVersionString() + ") ";
 
   EcalUtils::String::CenterString(app_version_header, '-', 79);
   EcalUtils::String::CenterString(ecal_version_header, ' ', 79);

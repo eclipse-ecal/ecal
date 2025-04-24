@@ -17,43 +17,86 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the eCAL convenience header
 #include <ecal/ecal.h>
 
 #include <iostream>
 #include <sstream>
 #include <chrono>
 #include <thread>
+#include <string>
 
-// subscriber callback function
-void OnReceive(const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
+/*
+  Here we create the subscriber callback function that is called everytime,
+  when a new message arrived from a publisher.
+*/
+void OnReceive(const eCAL::STopicId& topic_id_, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_)
 {
   if (data_.buffer_size < 1) return;
-
-  int content(static_cast<int>(static_cast<const unsigned char*>(data_.buffer)[0]));
-  std::cout << "----------------------------------------------" << std::endl;
-  std::cout << " Received binary buffer " << content            << std::endl;
-  std::cout << "----------------------------------------------" << std::endl;
-  std::cout << " Size         : " << data_.buffer_size          << std::endl;
-  std::cout << " Time         : " << data_.send_timestamp       << std::endl;
-  std::cout << " Clock        : " << data_.send_clock           << std::endl;
-  std::cout                                                     << std::endl;
+  const char* char_buffer = static_cast<const char*>(data_.buffer);
+  
+  std::cout << "------------------------------------------------------------"                  << "\n";
+  std::cout << " Received binary buffer from topic \"" << topic_id_.topic_name << "\" in C++ " << "\n";
+  std::cout << "------------------------------------------------------------"                  << "\n";
+  std::cout << " Size    : " << data_.buffer_size                                              << "\n";
+  std::cout << " Time    : " << data_.send_timestamp                                           << "\n";
+  std::cout << " Clock   : " << data_.send_clock                                               << "\n";
+  std::cout << " Content : " << std::string(char_buffer, data_.buffer_size)                    << "\n";
+  std::cout << "\n";
 }
 
 int main()
 {
-  // initialize eCAL API
-  eCAL::Initialize("blob_receive");
+  std::cout << "---------------------" << "\n";
+  std::cout << " C++: BLOB RECEIVER"   << "\n";
+  std::cout << "---------------------" << "\n";
 
-  // subscriber for topic "blob"
-  eCAL::CSubscriber sub("blob");
+  /*
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "blob receive". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
+  eCAL::Initialize("blob receive");
 
-  // assign callback
-  sub.SetReceiveCallback(OnReceive);
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
 
-  // idle main loop
-  while (eCAL::Ok()) std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
 
-  // finalize eCAL API
+  /*
+    Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
+    The topic we are going to receive is called "blob".
+  */
+  eCAL::CSubscriber subscriber("blob");
+
+  /*
+    Register a receive callback. The callback will be called whenever a new message is received.
+  */
+  subscriber.SetReceiveCallback(OnReceive);
+
+  /*
+    Creating an infinite loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  */
+  while (eCAL::Ok())
+  {
+    /*
+      Sleep for 500ms to avoid busy waiting.
+    */
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
+
+  /*
+    Finalize eCAL. This will stop all eCAL processes and free all resources.
+    You should always finalize eCAL before exiting your application.
+  */
   eCAL::Finalize();
 
   return(0);

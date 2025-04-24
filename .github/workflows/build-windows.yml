@@ -18,25 +18,33 @@ jobs:
 
     steps:
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
-        setup-python: 'false'
-        version: '6.6.1'
+        setup-python: 'true'
+        version: '6.6.*'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
+        archives: 'qtbase qtsvg'
+        cache: 'true'
 
-    - name: Install Dependencies
+    - name: Install doxygen
       # Pin to latest doxygen version.
       run: choco install doxygen.install --version=1.13.2
 
-    - name: Uninstall Chocolatey
-      run: move "$env:PROGRAMDATA\chocolatey" "$env:PROGRAMDATA\_chocolatey"
+    - name: Install ccache
+      run: choco install ccache --version=4.11.2
 
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'true'
+        submodules:  'false'
         fetch-depth: 0
+        filter: 'tree:0' # Download all commits but blobs and trees on demand
+
+    - name: Update / download Submodules (selected ones)
+      run: |
+        git submodule update --init --single-branch --depth 1
+      shell: cmd
 
     - name: Create Python virtualenv
       run: |
@@ -56,12 +64,28 @@ jobs:
 
       shell: cmd
 
+      # Using ccache on Windows requires the Ninja generator
+      # This action calls vcvarsall for us to setup the desired toolchain
+    - name: Setup MSVC toolchain
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        toolset: 14.29 # v141 / vs2019
+
+    - name: Prepare ccache and restore cache
+      id: ccache_cache-restore
+      uses: ./.github/actions/ccache-prepare
+      with:
+        key-root: windows-2019
+        cache-dir: ${{ github.workspace }}/.ccache
+
     - name: CMake SDK
       run: |
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
 
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
+        -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
@@ -97,10 +121,12 @@ jobs:
       shell: cmd
 
     - name: CMake Complete
+      id: cmake-configure
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Ninja" ^
+        -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
@@ -113,7 +139,7 @@ jobs:
         -DECAL_BUILD_SAMPLES=ON ^
         -DECAL_BUILD_TIMEPLUGINS=ON ^
         -DECAL_BUILD_PY_BINDING=OFF ^
-        -DECAL_BUILD_CSHARP_BINDING=ON ^
+        -DECAL_BUILD_CSHARP_BINDING=OFF ^
         -DECAL_BUILD_TESTS=ON ^
         -DECAL_INSTALL_SAMPLE_SOURCES=ON ^
         -DECAL_USE_NPCAP=ON ^
@@ -132,7 +158,7 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
-        -DECAL_CPACK_PACK_WITH_INNOSETUP=ON        
+        -DECAL_CPACK_PACK_WITH_INNOSETUP=ON
       shell: cmd
 
     - name: Build SDK
@@ -142,7 +168,41 @@ jobs:
     - name: Build Release
       run: cmake --build . --config Release
       working-directory: ${{ runner.workspace }}/_build/complete
-    
+
+    - name: Save ccache cache to GitHub
+      uses: ./.github/actions/ccache-save
+      with:
+        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
+        cache-dir: ${{ github.workspace }}/.ccache
+      # Always save cache if configure succeeded (even if the build failed)
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
+
+    - name: Create eCAL install tree for for C# bindings
+      run: |
+        cmake --install "${{ runner.workspace }}/_build/complete" ^
+        --prefix "${{ runner.workspace }}/_install/complete"
+      shell: cmd
+
+    - name: Configure C# bindings
+      run: |
+        cmake -S lang/csharp -B "${{ runner.workspace }}/_build/csharp" ^
+        -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        -DBUILD_SHARED_LIBS=OFF ^
+        -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/complete" ^
+        -DCMAKE_BUILD_TYPE=Release ^
+        -DCMAKE_CONFIGURATION_TYPES=Release ^
+        -DECAL_CSHARP_BUILD_SAMPLES=ON ^
+        -DECAL_CSHARP_BUILD_TESTS=ON ^
+        -DECAL_PROJECT_ROOT="${{ github.workspace }}"
+      shell: cmd
+
+    - name: Build C# bindings
+      run: cmake --build "${{ runner.workspace }}/_build/csharp" --config Release
+      shell: cmd
+
+    - name: Run C# Tests
+      run: ctest -C Release -V --test-dir "${{ runner.workspace }}/_build/csharp"
+
     - name: Run Tests
       run: ctest -C Release -V
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -150,6 +210,10 @@ jobs:
     - name: Pack SDK
       run: cpack -C Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
+
+    - name: Package C# Bindings
+      run: cpack -C Release -DCPACK_COMPONENTS_ALL="runtime"
+      working-directory: ${{ runner.workspace }}/_build/csharp
 
     - name: Pack complete setup
       run: cpack -C Release
@@ -163,7 +227,7 @@ jobs:
 
         #remove the leading 'v' from the tag, if it exists
         $VERSION = $VERSION -replace '^v', ''
-        
+
         echo "VERSION=$VERSION" >> "$Env:GITHUB_ENV"
 
     - name: Set output binary name
@@ -230,7 +294,7 @@ jobs:
         $AUTH_CREDENTIAL = $Env:JENKINS_USERNAME + ':' + $Env:JENKINS_API_TOKEN
         $AUTH_ENCODED = [System.Text.Encoding]::UTF8.GetBytes($AUTH_CREDENTIAL)
         $AUTH_INFO = [System.Convert]::ToBase64String($AUTH_ENCODED)
-        
+
         $CRUMB_HEADERS = @{
           'Authorization'="Basic $($AUTH_INFO)"
         }
@@ -286,7 +350,7 @@ jobs:
               Write-Output "    ** determination of the new build number failed after $COUNTER_LIMIT tries" 
               Exit 1
           }
-          
+
           $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL
           $RES_CODE = $RESPONSE.StatusCode
           Write-Output "    ++ build number retrieval - HTTP status code: $RES_CODE"
@@ -333,7 +397,7 @@ jobs:
                   Break
                 } else {
                   Write-Output "    ** build failure"
-                  Exit 1        
+                  Exit 1
                 }
               }
             } else {

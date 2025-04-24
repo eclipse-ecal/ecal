@@ -81,7 +81,7 @@ extern "C"
       event_callback_(&service_id_c, &client_event_callback_data_c);
     };
 
-    return new eCAL_ServiceClient{ new eCAL::CServiceClient(service_name_, method_information_set, event_callback_ != NULL ? event_callback : eCAL::ClientEventCallbackT()) };
+    return new eCAL_ServiceClient{ new eCAL::CServiceClient(service_name_, method_information_set, event_callback_ != NULL ? event_callback : eCAL::ClientEventCallbackT()), eCAL_SServiceId(), eCAL_SEntityId() };
   }
 
   ECALC_API void eCAL_ServiceClient_Delete(eCAL_ServiceClient* service_client_)
@@ -101,7 +101,7 @@ extern "C"
     {
       for (std::size_t i = 0; i < client_instances.size(); ++i)
       {
-        client_instances_c[i] = new eCAL_ClientInstance{new eCAL::CClientInstance(std::move(client_instances[i]))};
+        client_instances_c[i] = new eCAL_ClientInstance{new eCAL::CClientInstance(std::move(client_instances[i])), eCAL_SServiceId(), eCAL_SEntityId()};
       }
       client_instances_c[client_instances.size()] = NULL;
     }

@@ -44,7 +44,7 @@ namespace ecal_service
    * The ServerManager is only available as shared_ptr. It must be created
    * using the static create() method.
    *
-   * - Upon creation, the ServerManager will create a work object for the
+   * - Upon creation, the ServerManager will create a work_guard object for the
    *   given io_context. This will keep the io_context alive, even if there
    *   are no servers running.
    * 
@@ -52,7 +52,7 @@ namespace ecal_service
    *   will create a new server instance and return a shared_ptr to it.
    * 
    * - For stopping all servers, the stop() method must be used. This
-   *   will stop all servers and delete the internal work object, so the
+   *   will stop all servers and delete the internal work_guard object, so the
    *   thread executing it can be joined.
    * 
    * =========================================================================
@@ -94,9 +94,9 @@ namespace ecal_service
     /**
      * @brief Create a new server manager, that can be used to create and stop servers
      * 
-     * After creation, the server manager will create a work object for the
+     * After creation, the server manager will create a work_guard object for the
      * given io_context. This will keep the io_context alive, even if there
-     * are no servers running. When stopping the servers, that work object
+     * are no servers running. When stopping the servers, that work_guard object
      * will be deleted and the io_context will run out of work on its own.
      * 
      * @param io_context  The io context, that will be used for all servers
@@ -154,7 +154,7 @@ namespace ecal_service
     /**
      * @brief Stop all servers that are currently managed by this server manager
      * 
-     * This will also delete the internal work object, so the thread executing
+     * This will also delete the internal work_guard object, so the thread executing
      * the io_context can be joined. The io context will run out of work on
      * its own.
      * Obviously, this is only true if no other managers etc. use the io_context.
@@ -181,7 +181,7 @@ namespace ecal_service
 
     mutable std::mutex                          server_manager_mutex_;  //!< Mutex protecting the entire class
     bool                                        stopped_;               //!< Flag indicating, if the manager is stopped
-    std::unique_ptr<asio::io_context::work>     work_;                  //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
+    asio::executor_work_guard<asio::io_context::executor_type> work_;   //!< Work object to keep the io_context alive. Will be deleted, when the manager is stopped.
     std::map<Server*, std::weak_ptr<Server>>    sessions_;              //!< Map of all servers, that are currently managed by this server manager. The raw_ptr is used as key, because it is unique for each server. The weak_ptr is used to actually access the server object, because the server may already be dead and the raw ptr would be dangling in that case.
   };
 

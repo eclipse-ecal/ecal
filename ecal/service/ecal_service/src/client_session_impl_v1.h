@@ -82,7 +82,7 @@ namespace ecal_service
   //////////////////////////////////////
   private:
     void resolve_endpoint(size_t server_list_index);
-    void connect_to_endpoint(const asio::ip::tcp::resolver::iterator& resolved_endpoints, size_t server_list_index);
+    void connect_to_endpoint(const asio::ip::tcp::resolver::results_type& resolved_endpoints, size_t server_list_index);
 
     void send_protocol_handshake_request();
     void receive_protocol_handshake_response();

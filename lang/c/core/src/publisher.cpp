@@ -114,7 +114,7 @@ extern "C"
       };
     }
 
-    return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, pub_event_callback, publisher_configuration) };
+    return new eCAL_Publisher{ new eCAL::CPublisher(topic_name_, data_type_information, pub_event_callback, publisher_configuration), eCAL_STopicId(),  eCAL_SDataTypeInformation()};
   }
 
   ECALC_API void eCAL_Publisher_Delete(eCAL_Publisher* publisher_)

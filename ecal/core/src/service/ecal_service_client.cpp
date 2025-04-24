@@ -83,6 +83,10 @@ namespace eCAL
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
+    // in case of no instance is connected we return fasle immediately
+    if (num_instances == 0)
+      return false;
+
     // vector to hold futures for the return values and responses
     std::vector<std::future<std::pair<bool, SServiceResponse>>> futures;
     futures.reserve(num_instances);
@@ -138,6 +142,10 @@ namespace eCAL
     auto instances = GetClientInstances();
     size_t num_instances = instances.size();
 
+    // in case of no instance is connected we return fasle immediately
+    if (num_instances == 0)
+      return false;
+
     // vector to hold futures for the return values
     std::vector<std::future<bool>> futures;
     futures.reserve(num_instances);
@@ -170,8 +178,13 @@ namespace eCAL
 
   bool CServiceClient::CallWithCallbackAsync(const std::string& method_name_, const std::string& request_, const ResponseCallbackT& response_callback_) const
   {
-    bool return_state = true;
     auto instances = GetClientInstances();
+
+    // in case of no instance is connected we return fasle immediately
+    if (instances.size() == 0)
+      return false;
+
+    bool return_state = true;
     for (auto& instance : instances)
     {
       return_state &= instance.CallWithCallbackAsync(method_name_, request_, response_callback_);

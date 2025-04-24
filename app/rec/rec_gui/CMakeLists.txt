@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -201,6 +201,11 @@ if (WIN32 AND (${QT_VERSION_MAJOR} EQUAL 5))
 endif()
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE 
+  ECAL_VERSION="${eCAL_COMPLETE_VERSION}"
+  ECAL_DATE="${eCAL_DATE}"
+)
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")

@@ -54,11 +54,14 @@ namespace ecal_service
 
   inline std::string endpoint_to_string(const asio::ip::tcp::endpoint& endpoint)
   {
-    asio::error_code ec;
-    const std::string address_string = endpoint.address().to_string(ec);
-    if (!ec)
-      return address_string + ":" + std::to_string(endpoint.port());
-    else
+    std::string address_string;
+    
+    try {
+      address_string = endpoint.address().to_string();
+    } catch (asio::system_error&) {
       return "???";
+    }
+
+    return address_string + ":" + std::to_string(endpoint.port());
   }
 }// namespace ecal_service

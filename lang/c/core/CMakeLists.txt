@@ -27,6 +27,7 @@ set(ecal_c_src
     src/client.cpp
     src/client_instance.cpp
     src/client_instance.h
+    src/common.cpp
     src/common.h
     src/configuration.cpp
     src/configuration.h
@@ -121,6 +122,8 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE 
     ECAL_CORE_C_EXPORTS
     ECAL_NO_DEPRECATION_WARNINGS
+    ECAL_VERSION="${eCAL_COMPLETE_VERSION}"
+    ECAL_DATE="${eCAL_DATE}"
 )
 
 set_target_properties(${PROJECT_NAME}

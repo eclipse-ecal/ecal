@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2022 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@
 #include <cstdint>
 #include <string>
 
-typedef struct named_mutex named_mutex_t;
-
 namespace eCAL
 {
   class CNamedMutexRobustClockLockImpl : public CNamedMutexImplBase
@@ -53,6 +51,7 @@ namespace eCAL
     bool Lock(int64_t timeout_) final;
     void Unlock() final;
 
+    struct named_mutex_t;
   private:
     named_mutex_t* m_mutex_handle;
     std::string m_named;
