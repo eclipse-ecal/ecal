@@ -1,6 +1,7 @@
 # eCAL Base Image for Local Integration Tests
 FROM ubuntu:22.04
 
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
@@ -23,18 +24,18 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6
     rm cmake-3.31.6-linux-x86_64.sh
 RUN cmake --version
 
-# Copy local eCAL source code into container
+# Copy eCAL source
 WORKDIR /opt
 COPY . /opt/ecal
 RUN rm -rf /opt/ecal/_build
+RUN mkdir -p /usr/local/etc/ecal/configs && \
+    cp /opt/ecal/ecal/tests/integration_tests/cfg/*.yaml /usr/local/etc/ecal/configs/
 
-
-# Build eCAL using the same flags as used locally
+# Build eCAL
 WORKDIR /opt/ecal
 RUN git submodule init && \
     git submodule update && \
-    mkdir -p _build && \
-    cd _build && \
+    mkdir -p _build && cd _build && \
     cmake .. \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
@@ -46,12 +47,7 @@ RUN git submodule init && \
     make install && \
     ldconfig
 
-# Fix missing symlink for ecaltime
+# Fix symlinks
 RUN ln -s /usr/local/lib/libecaltime-localtime.so /usr/local/lib/libecaltime.so && \
+    ln -sf /usr/local/lib/libecal_core.so /usr/local/lib/libecal.so && \
     ldconfig
-
-# Fix missing symlink for libecal
-RUN ln -sf /usr/local/lib/libecal_core.so /usr/local/lib/libecal.so && \
-    ldconfig
-
-RUN sed -i 's/communication_mode: "local"/communication_mode: "network"/' /usr/local/etc/ecal/ecal.yaml
