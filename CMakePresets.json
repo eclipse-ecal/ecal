@@ -62,6 +62,7 @@
       "cacheVariables": {
         "ECAL_USE_HDF5": "ON",
         "ECAL_BUILD_PY_BINDING": "ON",
+        "ECAL_BUILD_C_BINDING": "OFF",
         "BUILD_SHARED": "OFF"
       }
     },
