@@ -69,8 +69,8 @@ public class MirrorClient
       It may call the methods "echo" and "reverse"
     */
     ServiceMethodInformationList methodInformationList = new ServiceMethodInformationList();
-    methodInformationList.Add(new ServiceMethodInformation("echo", new DataTypeInformation(), new DataTypeInformation()));
-    methodInformationList.Add(new ServiceMethodInformation("reverse", new DataTypeInformation(), new DataTypeInformation()));
+    methodInformationList.Methods.Add(new ServiceMethodInformation("echo", new DataTypeInformation(), new DataTypeInformation()));
+    methodInformationList.Methods.Add(new ServiceMethodInformation("reverse", new DataTypeInformation(), new DataTypeInformation()));
     
     ServiceClient mirrorClient = new ServiceClient("mirror", methodInformationList);
     

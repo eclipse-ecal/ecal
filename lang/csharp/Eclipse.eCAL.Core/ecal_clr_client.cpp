@@ -43,7 +43,7 @@ ServiceClient::ServiceClient(String^ serviceName, ServiceMethodInformationList^ 
   // Only convert if methodInformationList is provided.
   if (methodInformationList != nullptr)
   {
-    for each(ServiceMethodInformation^ mInfo in methodInformationList)
+    for each(ServiceMethodInformation^ mInfo in methodInformationList->Methods)
     {
       ::eCAL::SServiceMethodInformation nativeInfo;
       nativeInfo.method_name = StringToStlString(mInfo->MethodName);
