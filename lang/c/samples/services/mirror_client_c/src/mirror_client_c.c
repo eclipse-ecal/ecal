@@ -78,7 +78,7 @@ int main()
   eCAL_Initialize("mirror client c", NULL, NULL);
 
   printf("eCAL %s (%s)\n", eCAL_GetVersionString(), eCAL_GetVersionDateString());
-  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "I feel good!");
+  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "Waiting for a service ...");
 
   /*
     Create a ServiceMethodInformation struct that contains the information about the service methods we want to call.
@@ -112,11 +112,17 @@ int main()
   }
 
   /*
+    Now that we are connected, we can set the process state to "healthy" and communicate the connection.
+  */
+  eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "Connected!");
+
+  /*
     Allow alternating between the two methods "echo" and "reverse".
   */
   const char* methods[] = { "echo", "reverse" };
   size_t method_count = sizeof(methods) / sizeof(methods[0]);
   size_t i = 0;
+  unsigned int calls_ok = 0;
 
   while (eCAL_Ok())
   {
@@ -127,36 +133,70 @@ int main()
     const char* method_name = methods[i++ % method_count];
     char request[] = "stressed";
     
+    struct eCAL_ClientInstance** client_instances = eCAL_ServiceClient_GetClientInstances(mirror_client);
+    calls_ok = client_instances != NULL && client_instances[0] != NULL;
+
     /*
-      Service call: blocking
+      We iterate now over all client instances and call the methods by name.
+      With this approach we have the option to filter out client instances that we don't want to call.
+      If you want to call either way all instances, then you can use
+
+      eCAL_ServiceClient_CallWithResponse(mirror_client, ...)
+      eCAL_ServiceClient_CallWithCallback(mirror_client, ...)
+
+      instead of the loop.
     */
-    struct eCAL_SServiceResponse* response_vec = NULL;
-    size_t response_vec_length = 0;
- 
-    if (eCAL_ServiceClient_CallWithResponse(mirror_client, method_name, request, strlen(request), &response_vec, &response_vec_length, NULL) == 0)
+    
+    if (client_instances != NULL)
     {
-      for (size_t i = 0; i < response_vec_length; ++i)
+      for (size_t j = 0; client_instances[j] != NULL; ++j)
       {
-        printServiceResponse(&response_vec[i]);
+        /*
+          Service call: blocking
+          We leave the default timeout value (infinite) for the blocking call.
+          You can change this for a specified timeout in ms.
+        */
+        struct eCAL_SServiceResponse* response = eCAL_ClientInstance_CallWithResponse(client_instances[j], method_name, request, strlen(request), NULL);
+        if (response != NULL)
+        {
+          printServiceResponse(response);
+          eCAL_Free(response);
+        }
+        else
+        {
+          printf("Method blocking call failed.\n");
+          calls_ok = 0;
+        }
+
+        /*
+          Service call: with callback
+          The callback will be executed when the server has processed the request and sent a response.
+          You can again set a timeout value for an internal waiting time. By default, we wait infinitely.
+        */
+        if(eCAL_ClientInstance_CallWithCallback(client_instances[j], method_name, request, strlen(request), serviceResponseCallback, NULL, NULL) != 0)
+        {
+          printf("Method callback call failed.\n");
+          calls_ok = 0;
+        }
       }
+
+      /*
+        After usage, free the memory from the client instances.
+      */
+      eCAL_ClientInstances_Delete(client_instances);
+    }
+
+    /*
+      Now we set the process state according to the result of the service calls.
+      You will see the state in the eCAL Monitor or the eCAL Sys application.
+    */
+    if (calls_ok != 0)
+    {
+      eCAL_Process_SetState(eCAL_Process_eSeverity_healthy, eCAL_Process_eSeverityLevel_level1, "Connected!");
     }
     else
     {
-      printf("Method blocking call failed.\n");
-    }
-  
-    /*
-      After usage, free the response memory.
-    */
-    eCAL_Free(response_vec);
-
-    /*
-      Service call: with callback
-      The callback will be executed when the server has processed the request and sent a response.
-    */
-    if (eCAL_ServiceClient_CallWithCallback(mirror_client, method_name, request, strlen(request), serviceResponseCallback, NULL, NULL) != 0)
-    {
-      printf("Method callback call failed.\n");
+      eCAL_Process_SetState(eCAL_Process_eSeverity_critical, eCAL_Process_eSeverityLevel_level3, "Calls failed!");
     }
 
     eCAL_Process_SleepMS(1000);
