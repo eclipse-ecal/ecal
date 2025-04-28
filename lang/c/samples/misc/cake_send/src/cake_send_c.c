@@ -66,20 +66,20 @@ int main()
   /*
     Next we alter the configuration in order to have the communication via UDP.
   */
-  struct eCAL_Publisher_Configuration* custom_publisher_config = (struct eCAL_Publisher_Configuration*)eCAL_Malloc(sizeof(struct eCAL_Publisher_Configuration));
-  memcpy(custom_publisher_config, eCAL_GetPublisherConfiguration(), sizeof(struct eCAL_Publisher_Configuration));
-  custom_publisher_config->layer.udp.enable = 1;
-  custom_publisher_config->layer.shm.enable = 0;
+  struct eCAL_Publisher_Configuration custom_publisher_config;
+  memcpy(&custom_publisher_config, eCAL_GetPublisherConfiguration(), sizeof(struct eCAL_Publisher_Configuration));
+  custom_publisher_config.layer.udp.enable = 1;
+  custom_publisher_config.layer.shm.enable = 0;
  
-  eCAL_Publisher* publisher_udp = eCAL_Publisher_New(topic_name, NULL, NULL, custom_publisher_config);
+  eCAL_Publisher* publisher_udp = eCAL_Publisher_New(topic_name, NULL, NULL, &custom_publisher_config);
 
   /*
     Last we create a publisher and subscriber that will communicate via TCP.
   */
-  custom_publisher_config->layer.tcp.enable = 1;
-  custom_publisher_config->layer.udp.enable = 0;
+  custom_publisher_config.layer.tcp.enable = 1;
+  custom_publisher_config.layer.udp.enable = 0;
 
-  eCAL_Publisher* publisher_tcp = eCAL_Publisher_New(topic_name, NULL, NULL, custom_publisher_config);
+  eCAL_Publisher* publisher_tcp = eCAL_Publisher_New(topic_name, NULL, NULL, &custom_publisher_config);
 
   /*
     Now we can start the publisher and subscriber.
@@ -122,7 +122,6 @@ int main()
   eCAL_Publisher_Delete(publisher_udp);
   eCAL_Publisher_Delete(publisher_tcp);
   eCAL_Configuration_Delete(my_config);
-  eCAL_Free(custom_publisher_config);
 
   /*
     And as always we need to finalize the eCAL API.

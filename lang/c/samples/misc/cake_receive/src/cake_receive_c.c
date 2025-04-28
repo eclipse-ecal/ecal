@@ -83,22 +83,22 @@ int main()
   /*
     Next we alter the configuration in order to have the communication via UDP.
   */
-  struct eCAL_Subscriber_Configuration* custom_subscriber_config = (struct eCAL_Subscriber_Configuration*)eCAL_Malloc(sizeof(struct eCAL_Subscriber_Configuration));
-  memcpy(custom_subscriber_config, eCAL_GetSubscriberConfiguration(), sizeof(struct eCAL_Subscriber_Configuration));
-  custom_subscriber_config->layer.udp.enable = 1;
-  custom_subscriber_config->layer.shm.enable = 0;
+  struct eCAL_Subscriber_Configuration custom_subscriber_config;
+  memcpy(&custom_subscriber_config, eCAL_GetSubscriberConfiguration(), sizeof(struct eCAL_Subscriber_Configuration));
+  custom_subscriber_config.layer.udp.enable = 1;
+  custom_subscriber_config.layer.shm.enable = 0;
  
-  eCAL_Subscriber* subscriber_udp = eCAL_Subscriber_New(topic_name, NULL, NULL, custom_subscriber_config);
+  eCAL_Subscriber* subscriber_udp = eCAL_Subscriber_New(topic_name, NULL, NULL, &custom_subscriber_config);
 
   eCAL_Subscriber_SetReceiveCallback(subscriber_udp, OnReceive, "UDP");
 
   /*
     Last we create subscriber that will communicate via TCP.
   */
-  custom_subscriber_config->layer.tcp.enable = 1;
-  custom_subscriber_config->layer.udp.enable = 0;
+  custom_subscriber_config.layer.tcp.enable = 1;
+  custom_subscriber_config.layer.udp.enable = 0;
 
-  eCAL_Subscriber* subscriber_tcp = eCAL_Subscriber_New(topic_name, NULL, NULL, custom_subscriber_config);
+  eCAL_Subscriber* subscriber_tcp = eCAL_Subscriber_New(topic_name, NULL, NULL, &custom_subscriber_config);
 
   eCAL_Subscriber_SetReceiveCallback(subscriber_tcp, OnReceive, "TCP");
 
@@ -117,7 +117,6 @@ int main()
   eCAL_Subscriber_Delete(subscriber_udp);
   eCAL_Subscriber_Delete(subscriber_tcp);
   eCAL_Configuration_Delete(my_config);
-  eCAL_Free(custom_subscriber_config);
 
   /*
     And as always we need to finalize the eCAL API.
