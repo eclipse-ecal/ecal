@@ -6,9 +6,9 @@
 Protobuf: Math
 ==============
 
-In C++ we also support the protobuf serialization format for the client/server API.
+In C++ eCAL also supports the protobuf serialization format for the client/server API.
 
-That means that for your request and response you can define an interface as protobuf message in order to make it easier to handle requests.
+That means that for the request and response, an interface can be defined as a protobuf message in order to make it easier to handle requests.
 
 
 Protobuf file
