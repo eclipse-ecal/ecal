@@ -47,7 +47,7 @@ void printServiceResponse(const struct eCAL_SServiceResponse* service_response)
   printf("Received service response in C: %s\n", call_state);
   printf("Method    : %s\n", service_response->service_method_information.method_name);
   printf("Response  : %.*s\n", (int)service_response->response_length, (char*)service_response->response);
-  printf("Server ID : %lu\n", service_response->server_id.service_id.entity_id);
+  printf("Server ID : %llu\n", service_response->server_id.service_id.entity_id);
   printf("Host      : %s\n", service_response->server_id.service_id.host_name);
   printf("\n");
 }
