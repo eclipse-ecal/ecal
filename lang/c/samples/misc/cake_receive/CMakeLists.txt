@@ -15,21 +15,28 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
+
 cmake_minimum_required(VERSION 3.10)
 
-# --------------------------------------------------------
-# c samples
-# --------------------------------------------------------
-# pubsub
-add_subdirectory(pubsub/string/hello_send)
-add_subdirectory(pubsub/string/hello_receive)
-add_subdirectory(pubsub/binary/blob_send)
-add_subdirectory(pubsub/binary/blob_receive)
 
-#service
-add_subdirectory(services/mirror_client_c)
-add_subdirectory(services/mirror_server_c)
+project(cake_receive_c)
 
-# misc
-add_subdirectory(misc/cake_send)
-add_subdirectory(misc/cake_receive)
+find_package(eCAL REQUIRED)
+
+remove_definitions(-std=c++14)
+
+set(cake_receive_c_src
+    src/cake_receive_c.c
+)
+
+ecal_add_sample(${PROJECT_NAME} ${cake_receive_c_src})
+
+target_include_directories(${PROJECT_NAME} PRIVATE .)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core_c)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_sample(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/c/misc/cake_receive)

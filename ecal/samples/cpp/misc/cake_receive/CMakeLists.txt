@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,20 +18,20 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-project(config_sample)
+project(cake_receive)
 
 find_package(eCAL REQUIRED)
 
-set(config_src
-    src/config_sample.cpp
+set(cake_receive_src
+    src/cake_receive.cpp
 )
 
-ecal_add_sample(${PROJECT_NAME} ${config_src})
+ecal_add_sample(${PROJECT_NAME} ${cake_receive_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
 target_link_libraries (${PROJECT_NAME} PRIVATE
-    eCAL::core
+    eCAL::string_core
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
