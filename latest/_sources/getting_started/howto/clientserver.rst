@@ -11,5 +11,5 @@ You will find examples in C++, C, C# and Python that will help you understand th
 
 .. toctree::
 
-    clientserver/binary
-    clientserver/protobuf
+    clientserver/binary_mirror
+    clientserver/protobuf_math

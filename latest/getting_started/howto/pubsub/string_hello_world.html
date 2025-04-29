@@ -209,12 +209,13 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary.html">7.2.1. Binary C/S</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cmake_integration.html">7.3. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../python_preparation.html">7.4. Python preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.3. Runtime Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmake_integration.html">7.4. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_preparation.html">7.5. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -398,7 +399,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../configuration/options.html">ecal.yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../configuration/runtime_configuration.html">Runtime configuration</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../applications.html">Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -1186,7 +1186,7 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos"> 22</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;---------------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="linenos"> 23</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Received string message from topic </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s"> in C</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">topic_id_</span><span class="o">-&gt;</span><span class="n">topic_name</span><span class="p">);</span>
 <span class="linenos"> 24</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;---------------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 25</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Size    : %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w">  </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">);</span>
+<span class="linenos"> 25</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Size    : %zu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w">  </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">);</span>
 <span class="linenos"> 26</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Time    : %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w">  </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_timestamp</span><span class="p">);</span>
 <span class="linenos"> 27</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Clock   : %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w">  </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_clock</span><span class="p">);</span>
 <span class="linenos"> 28</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Message : %.*s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer</span><span class="p">));</span>

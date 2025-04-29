@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.4. Python preparation &#8212; Eclipse eCAL™</title>
+    <title>7.5. Python preparation &#8212; Eclipse eCAL™</title>
   
   
   
@@ -62,7 +62,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Building eCAL" href="../development/build_ecal.html" />
-    <link rel="prev" title="7.3. CMake Integration" href="cmake_integration.html" />
+    <link rel="prev" title="7.4. CMake Integration" href="cmake_integration.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -208,12 +208,13 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.3. CMake Integration</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.4. Python preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/configuration.html">7.3. Runtime Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake_integration.html">7.4. CMake Integration</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.5. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -397,7 +398,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/options.html">ecal.yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration/runtime_configuration.html">Runtime configuration</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -693,7 +693,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.4.1. Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.5.1. Dependencies</a></li>
 </ul>
             </nav>
         </div>
@@ -706,7 +706,7 @@
                 <article class="bd-article">
                   
   <section id="python-preparation">
-<span id="getting-started-python-preparation"></span><h1><span class="section-number">7.4. </span>Python preparation<a class="headerlink" href="#python-preparation" title="Link to this heading">#</a></h1>
+<span id="getting-started-python-preparation"></span><h1><span class="section-number">7.5. </span>Python preparation<a class="headerlink" href="#python-preparation" title="Link to this heading">#</a></h1>
 <p>While eCAL is written in C++, it also offers a great python integration.
 In this chapter we show how to setup python for eCAL, so you can start using the samples from <span class="xref std std-ref">_getting_started_howto_pubsub_string_hello_world</span>.</p>
 <div class="admonition important">
@@ -716,7 +716,7 @@ With the <code class="docutils literal notranslate"><span class="pre">5</span></
 The other name has already been taken by another package.</p>
 </div>
 <section id="dependencies">
-<h2><span class="section-number">7.4.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.5.1. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>First, you have to install some more development dependencies:</p>
 <ul>
 <li><p><i class="fab fa-windows"></i> Windows:</p>
@@ -776,7 +776,7 @@ Open a terminal in your donwload directory and install the python whl with:</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.3. </span>CMake Integration</p>
+        <p class="prev-next-title"><span class="section-number">7.4. </span>CMake Integration</p>
       </div>
     </a>
     <a class="right-next"
@@ -805,7 +805,7 @@ Open a terminal in your donwload directory and install the python whl with:</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.4.1. Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">7.5.1. Dependencies</a></li>
 </ul>
   </nav></div>
 

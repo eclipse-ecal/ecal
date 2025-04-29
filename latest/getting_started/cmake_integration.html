@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.3. CMake Integration &#8212; Eclipse eCAL™</title>
+    <title>7.4. CMake Integration &#8212; Eclipse eCAL™</title>
   
   
   
@@ -61,8 +61,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7.4. Python preparation" href="python_preparation.html" />
-    <link rel="prev" title="7.2.2. Protobuf C/S" href="howto/clientserver/protobuf.html" />
+    <link rel="next" title="7.5. Python preparation" href="python_preparation.html" />
+    <link rel="prev" title="7.3. Runtime Configuration" href="howto/configuration.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -208,12 +208,13 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary.html">7.2.1. Binary C/S</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf.html">7.2.2. Protobuf C/S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.3. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.4. Python preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto/configuration.html">7.3. Runtime Configuration</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.4. CMake Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_preparation.html">7.5. Python preparation</a></li>
 </ul>
 </details></li>
 </ul>
@@ -397,7 +398,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../configuration/options.html">ecal.yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration/runtime_configuration.html">Runtime configuration</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../applications.html">Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -693,9 +693,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-string-entity-integration">7.3.1. Basic string entity integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-entity-integration">7.3.2. Protobuf entity integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cmake-targets">7.3.3. Common CMake targets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-string-entity-integration">7.4.1. Basic string entity integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-entity-integration">7.4.2. Protobuf entity integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cmake-targets">7.4.3. Common CMake targets</a></li>
 </ul>
             </nav>
         </div>
@@ -708,12 +708,12 @@
                 <article class="bd-article">
                   
   <section id="cmake-integration">
-<span id="getting-started-cmake-integration"></span><h1><span class="section-number">7.3. </span>CMake Integration<a class="headerlink" href="#cmake-integration" title="Link to this heading">#</a></h1>
+<span id="getting-started-cmake-integration"></span><h1><span class="section-number">7.4. </span>CMake Integration<a class="headerlink" href="#cmake-integration" title="Link to this heading">#</a></h1>
 <p>In this chapter we will show how to setup a simply CMake project using eCAL.
 We will show the two most common use cases to generate eCAL processes.
 With this knowledge you will be able to create your own CMake project and transfer the knowledge to other use cases.</p>
 <section id="basic-string-entity-integration">
-<h2><span class="section-number">7.3.1. </span>Basic string entity integration<a class="headerlink" href="#basic-string-entity-integration" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4.1. </span>Basic string entity integration<a class="headerlink" href="#basic-string-entity-integration" title="Link to this heading">#</a></h2>
 <p>For a basic integration, you will need to call <code class="docutils literal notranslate"><span class="pre">find_package(eCAL</span> <span class="pre">REQUIRED)</span></code> in addition to your normal project.
 Furthermore, you link the <code class="docutils literal notranslate"><span class="pre">eCAL::string_core</span></code> in order to be able to create string publishers and subscribers.</p>
 <p>The CMakeLists.txt looks as follows:</p>
@@ -751,7 +751,7 @@ Furthermore, you link the <code class="docutils literal notranslate"><span class
 </div>
 </section>
 <section id="protobuf-entity-integration">
-<h2><span class="section-number">7.3.2. </span>Protobuf entity integration<a class="headerlink" href="#protobuf-entity-integration" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4.2. </span>Protobuf entity integration<a class="headerlink" href="#protobuf-entity-integration" title="Link to this heading">#</a></h2>
 <p>In addtition to the previous example, you will need to call <code class="docutils literal notranslate"><span class="pre">find_package(Protobuf</span> <span class="pre">REQUIRED)</span></code>.
 Furthermore you want to handle the generation of the protobuf headers for your language.</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
@@ -811,7 +811,7 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
 </div>
 </section>
 <section id="common-cmake-targets">
-<h2><span class="section-number">7.3.3. </span>Common CMake targets<a class="headerlink" href="#common-cmake-targets" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4.3. </span>Common CMake targets<a class="headerlink" href="#common-cmake-targets" title="Link to this heading">#</a></h2>
 <p>It follows a list of common eCAL CMake targets.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-text">eCAL CMake targets</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
@@ -876,12 +876,12 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="howto/clientserver/protobuf.html"
+       href="howto/configuration.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.2.2. </span>Protobuf C/S</p>
+        <p class="prev-next-title"><span class="section-number">7.3. </span>Runtime Configuration</p>
       </div>
     </a>
     <a class="right-next"
@@ -889,7 +889,7 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.4. </span>Python preparation</p>
+        <p class="prev-next-title"><span class="section-number">7.5. </span>Python preparation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -910,9 +910,9 @@ If you have already worked with Protobuf and CMake, you may be more familiar wit
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-string-entity-integration">7.3.1. Basic string entity integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-entity-integration">7.3.2. Protobuf entity integration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cmake-targets">7.3.3. Common CMake targets</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-string-entity-integration">7.4.1. Basic string entity integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-entity-integration">7.4.2. Protobuf entity integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-cmake-targets">7.4.3. Common CMake targets</a></li>
 </ul>
   </nav></div>
 
