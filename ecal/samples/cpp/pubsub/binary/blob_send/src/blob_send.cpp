@@ -39,7 +39,7 @@ void fillBinaryBuffer(std::vector<unsigned char>& buffer) {
   buffer.clear();
   buffer.resize(buffer_size);
 
-  for (int i = 0; i < buffer_size; ++i) {
+  for (unsigned int i = 0; i < buffer_size; ++i) {
     buffer[i] = static_cast<char>(std::rand() % 95 + 32);
   }
 }
