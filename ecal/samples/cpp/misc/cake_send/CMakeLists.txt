@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright (C) 2016 - 2024 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,21 +15,28 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
+
 cmake_minimum_required(VERSION 3.10)
 
-# --------------------------------------------------------
-# c samples
-# --------------------------------------------------------
-# pubsub
-add_subdirectory(pubsub/string/hello_send)
-add_subdirectory(pubsub/string/hello_receive)
-add_subdirectory(pubsub/binary/blob_send)
-add_subdirectory(pubsub/binary/blob_receive)
+project(cake_send)
 
-#service
-add_subdirectory(services/mirror_client_c)
-add_subdirectory(services/mirror_server_c)
+find_package(eCAL REQUIRED)
 
-# misc
-add_subdirectory(misc/cake_send)
-add_subdirectory(misc/cake_receive)
+set(cake_send_src
+    src/cake_send.cpp
+)
+
+ecal_add_sample(${PROJECT_NAME} ${cake_send_src})
+
+target_include_directories(${PROJECT_NAME} PRIVATE .)
+
+target_link_libraries (${PROJECT_NAME} PRIVATE
+    eCAL::string_core
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_sample(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/misc)
+

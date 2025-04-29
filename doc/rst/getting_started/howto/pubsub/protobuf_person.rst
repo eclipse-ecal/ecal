@@ -23,7 +23,7 @@ Our recommended way is to use Google protobuf to do that, because:
 
 eCAL supports protobuf serialization natively for C++, C# and Python.
 
-The usage of protobuf for data exchange in eCAL is very simple. You know already from the ":ref:`_getting_started_howto_pubsub_string_hello_world`" how to send and receive simple string data.
+The usage of protobuf for data exchange in eCAL is very simple. You know already from the ":ref:`getting_started_howto_pubsub_string_hello_world`" how to send and receive simple string data.
 The basic setup will be the same, but instead of using the string publisher, we will use the protobuf publisher and subscriber.
 
 
