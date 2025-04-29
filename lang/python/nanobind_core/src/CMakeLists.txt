@@ -70,6 +70,7 @@ set(nanobind_sources
   core/types/py_monitoring.cpp
   core/types/py_monitoring.h
   helper/bytestring_property.h
+  helper/make_gil_safe_shared.h
   nanobind_core.cpp
 )
 

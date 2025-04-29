@@ -23,6 +23,8 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
+#include <helper/make_gil_safe_shared.h>
+
 #include <exception>
 
 namespace nb = nanobind;
@@ -62,7 +64,8 @@ void AddPubsubSubscriber(nanobind::module_& module)
         // Adjust the callback parameters according to the actual signature of ReceiveCallbackT.
         // We use a shared pointer of the callback, because this way the reference count does not have to be
         // increased when we set the callback. Because we cannot hold the GIL when we set the callback, du to potential deadlocks
-        std::shared_ptr<nb::callable> python_callback_pointer = std::make_shared<nb::callable>(py_callback);
+        // also we need to make sure that the GIL is held whenever the callback is destroyed
+        auto python_callback_pointer = make_gil_safe_shared<nb::callable>(py_callback);
         auto wrapped_callback = [python_callback_pointer](auto&&... args) {
           try {
             nb::gil_scoped_acquire acquire;

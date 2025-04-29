@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   service/py_types.h
+ * @file   service/py_server.h
  * @brief  eCAL service callback interface
 **/
 

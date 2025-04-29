@@ -25,6 +25,8 @@
 #include <nanobind/stl/pair.h>
 #include <nanobind/stl/optional.h>
 
+#include <helper/make_gil_safe_shared.h>
+
 namespace nb = nanobind;
 
 struct PyCallbackToken {
@@ -126,7 +128,7 @@ void AddRegistration(nanobind::module_& m)
     }, nb::arg("client_id"), "Get method info for a specific client by ID.");
 
   m_registration.def("add_publisher_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
-    auto cb_ptr = std::make_shared<nb::callable>(py_cb);
+    auto cb_ptr = make_gil_safe_shared<nb::callable>(py_cb);
     TopicEventCallbackT cb = [cb_ptr](const eCAL::STopicId& id, RegistrationEventType type) {
       try {
         nb::gil_scoped_acquire acquire;
@@ -145,7 +147,7 @@ void AddRegistration(nanobind::module_& m)
     }, nb::arg("token"), "Unregister a publisher event callback using its token.");
 
   m_registration.def("add_subscriber_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
-    auto cb_ptr = std::make_shared<nb::callable>(py_cb);
+    auto cb_ptr = make_gil_safe_shared<nb::callable>(py_cb);
     TopicEventCallbackT cb = [cb_ptr](const eCAL::STopicId& id, RegistrationEventType type) {
       try {
         nb::gil_scoped_acquire acquire;

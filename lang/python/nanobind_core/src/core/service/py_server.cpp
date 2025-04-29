@@ -26,6 +26,7 @@
 #include <nanobind/stl/tuple.h>
 
 #include <helper/bytestring_property.h>
+#include <helper/make_gil_safe_shared.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -36,15 +37,14 @@ void AddServiceServer(nanobind::module_& m)
     .def("__init__",
       [](eCAL::CServiceServer* self,
         nb::str service_name,
-        const nb::object& event_callback_obj) {
-
+        const nb::object& callback_python) {
           eCAL::ServerEventCallbackT event_callback_cpp = nullptr;
-          if (!event_callback_obj.is_none()) {
-            event_callback_cpp = [event_callback_obj](const eCAL::SServiceId& service_id,
+          if (!callback_python.is_none()) {
+            event_callback_cpp = [callback_python](const eCAL::SServiceId& service_id,
               const eCAL::SServerEventCallbackData& data) {
                 try {
                   nb::gil_scoped_acquire acquire;
-                  event_callback_obj(service_id, data);
+                  callback_python(service_id, data);
                 }
                 catch (const std::exception& e) {
                   std::cerr << "Error in server event callback: " << e.what() << std::endl;
@@ -55,15 +55,15 @@ void AddServiceServer(nanobind::module_& m)
           new (self) eCAL::CServiceServer(service_name.c_str(), event_callback_cpp);
       },
       nb::arg("service_name"),
-        nb::arg("event_callback") = nb::none(),
-        "Create a service server with an optional event callback.")
+      nb::arg("event_callback") = nb::none(),
+      "Create a service server with an optional event callback.")
 
     .def("set_method_callback",
       [](eCAL::CServiceServer& self,
         const eCAL::SServiceMethodInformation& method_info,
         const nb::callable& py_callback) {
           // Wrap the Python callback
-          std::shared_ptr<nb::callable> python_callback_pointer = std::make_shared<nb::callable>(py_callback);
+          std::shared_ptr<nb::callable> python_callback_pointer = make_gil_safe_shared<nb::callable>(py_callback);
 
           auto wrapped_callback = [python_callback_pointer](
             const eCAL::SServiceMethodInformation& cpp_info,
