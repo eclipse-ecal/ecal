@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file ecal_clr_types_service.h
+ * @file clr_types_service.h
  *
  * @brief Managed type definitions for eCAL services.
  *
@@ -28,7 +28,7 @@
  * eCAL service types. They can be used by the C++/CLI client and server APIs.
  */
 
-#include "ecal_clr_types.h"
+#include "../clr_types.h"
 
 using namespace System;
 using namespace System::Collections::Generic;

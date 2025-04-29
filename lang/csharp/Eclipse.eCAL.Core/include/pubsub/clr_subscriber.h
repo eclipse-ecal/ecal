@@ -20,15 +20,12 @@
 #pragma once
 
 /**
- * @file ecal_clr_publisher.h
- * @brief Managed wrapper for the native eCAL::CPublisher class.
- *
- * This class provides methods to send messages over eCAL and query information about the publisher.
- */
+ * @file  clr_subscriber.h
+**/
 
-#include "ecal_clr_types_pubsub.h"
+#include "pubsub/clr_types.h"
 
-#include <ecal/pubsub/publisher.h>
+#include <ecal/pubsub/subscriber.h>
 
 using namespace System;
 
@@ -37,75 +34,69 @@ namespace Eclipse {
     namespace Core {
 
       /**
-       * @brief Managed wrapper for the native eCAL::CPublisher class.
+       * @brief Managed wrapper for the native eCAL::CSubscriber class.
+       *
+       * This class provides methods to receive messages over eCAL and query subscriber information.
        */
-      public ref class Publisher
+      public ref class Subscriber
       {
       public:
         /**
-         * @brief Constant used as the default time argument to let eCAL determine the send timestamp.
-         */
-        literal long long DEFAULT_TIME_ARGUMENT = -1;
-
-        /**
-         * @brief Constructs a Publisher with the given topic name.
+         * @brief Constructs a Subscriber with the given topic name.
          *
          * @param topicName Unique topic name.
          */
-        Publisher(String^ topicName) : Publisher(topicName, nullptr, nullptr) {}
+        Subscriber(String^ topicName) : Subscriber(topicName, nullptr, nullptr) {}
 
         /**
-         * @brief Constructs a Publisher with the given topic name and data type information.
+         * @brief Constructs a Subscriber with the given topic name and data type information.
          *
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr) {}
+        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo) : Subscriber(topicName, dataTypeInfo, nullptr) {}
 
         /**
-         * @brief Constructs a Publisher with the given topic name, data type information, and an event callback.
+         * @brief Constructs a Subscriber with the given topic name, data type information, and an event callback.
          *
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
-         * @param eventCallback Optional publisher event callback.
+         * @param eventCallback Optional subscriber event callback.
          */
-        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback);
+        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback);
 
         /**
          * @brief Destructor.
          */
-        ~Publisher();
+        ~Subscriber();
 
         /**
          * @brief Finalizer.
          */
-        !Publisher();
+        !Subscriber();
 
         /**
-         * @brief Sends a message to all subscribers using a byte array payload (using eCAL time).
+         * @brief Sets or overwrites the receive callback.
          *
-         * @param data Payload as a byte array.
+         * @param callback The callback function to set.
          *
-         * @return True if the send operation succeeded; otherwise false.
+         * @return True if the operation succeeded; otherwise false.
          */
-        bool Send(array<Byte>^ data);
+        bool SetReceiveCallback(ReceiveCallbackDelegate^ callback);
 
         /**
-         * @brief Sends a message to all subscribers using a byte array payload.
+         * @brief Removes the receive callback.
          *
-         * @param data Payload as a byte array.
-         * @param time Send time in microseconds.
-         * 
-         * @return True if the send operation succeeded; otherwise false.
+         * @return True if the operation succeeded; otherwise false.
          */
-        bool Send(array<Byte>^ data, long long time);
+        bool RemoveReceiveCallback();
 
         /**
-         * @brief Queries the number of subscribers.
+         * @brief Queries the number of connected publishers.
          *
-         * @return The number of subscribers.
+         * @return The number of connected publishers.
          */
-        int GetSubscriberCount();
+        int GetPublisherCount();
 
         /**
          * @brief Retrieves the topic name.
@@ -130,9 +121,14 @@ namespace Eclipse {
 
       private:
         /**
-         * @brief Pointer to the native CPublisher instance.
+         * @brief Pointer to the native CSubscriber instance.
          */
-        ::eCAL::CPublisher* m_native_publisher;
+        ::eCAL::CSubscriber* m_native_subscriber;
+
+        /**
+         * @brief Stored managed callback to prevent garbage collection.
+         */
+        ReceiveCallbackDelegate^ m_receiveCallback;
       };
 
     } // namespace Core
