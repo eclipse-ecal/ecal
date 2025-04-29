@@ -20,10 +20,10 @@
 #pragma once
 
 /**
- * @file  ecal_clr_server.h
+ * @file  clr_server.h
 **/
 
-#include "ecal_clr_types_service.h"
+#include "service/clr_types.h"
 
 #include <ecal/service/server.h>
 

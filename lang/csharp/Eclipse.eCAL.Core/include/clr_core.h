@@ -20,10 +20,10 @@
 #pragma once
 
 /**
- * @file  ecal_clr_core.h
+ * @file  clr_core.h
 **/
 
-#include "ecal_clr_types.h"
+#include "clr_types.h"
 
 using namespace System;
 

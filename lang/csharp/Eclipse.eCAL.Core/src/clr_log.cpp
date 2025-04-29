@@ -17,45 +17,27 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_core.h"
-#include "ecal_clr_common.h"
+#include "clr_log.h"
+#include "clr_common.h"
 
-#include <ecal/core.h>
+#include <ecal/log.h>
 
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
-System::String^ Core::GetVersion()
+void Logging::Log(LogLevel level, System::String^ message)
 {
-  return StlStringToString(::eCAL::GetVersionString());
+  // Convert the managed string to a native std::string
+  std::string nativeMsg = StringToStlString(message);
+  
+  // Cast the managed LogLevel to the native eCAL::Logging::eLogLevel.
+  // The values match, so a static_cast is sufficient.
+  ::eCAL::Logging::Log(static_cast<::eCAL::Logging::eLogLevel>(level), nativeMsg);
 }
 
-System::String^ Core::GetDate()
+array<Byte>^ Logging::GetLogging()
 {
-  return StlStringToString(::eCAL::GetVersionDateString());
-}
-
-void Core::Initialize(System::String^ unitName)
-{
-  ::eCAL::Initialize(StringToStlString(unitName));
-}
-
-void Core::Initialize(System::String^ unitName, Init componentFlags)
-{
-  ::eCAL::Initialize(StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
-}
-
-void Core::Terminate()
-{
-  ::eCAL::Finalize();
-}
-
-bool Core::IsInitialized()
-{
-  return ::eCAL::IsInitialized();
-}
-
-bool Core::Ok()
-{
-  return ::eCAL::Ok();
+  std::string logging;
+  ::eCAL::Logging::GetLogging(logging);
+  return StlStringToByteArray(logging);
 }

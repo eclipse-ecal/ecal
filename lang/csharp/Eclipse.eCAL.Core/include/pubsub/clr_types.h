@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file ecal_clr_types_pubsub.h
+ * @file clr_types.h
  *
  * @brief Managed wrappers for eCAL pub/sub types.
  *
@@ -30,7 +30,7 @@
  * for publisher/subscriber events.
  */
 
-#include "ecal_clr_types.h"
+#include "../clr_types.h"
 
 using namespace System;
 using namespace System::Collections::Generic;

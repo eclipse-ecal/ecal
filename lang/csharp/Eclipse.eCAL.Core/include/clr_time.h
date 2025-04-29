@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file  ecal_clr_time.h
+ * @file  clr_time.h
 **/
 
 using namespace System;
