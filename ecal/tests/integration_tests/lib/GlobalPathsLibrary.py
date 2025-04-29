@@ -18,8 +18,11 @@ class GlobalPathsLibrary:
 
     @keyword
     def get_build_script_path(self):
-        return os.path.join(self.integration_tests_root, "test_1_1_2_pubsub", "scripts", "build_pubsub_images.sh")
+        return os.path.join(self.integration_tests_root, "pub_sub_tests", "scripts", "build_pubsub_images.sh")
 
+    @keyword
+    def get_build_script_args(self):
+        return ["basic_pub_sub", "basic_pub_sub"]
 
     @keyword
     def get_network_name(self):

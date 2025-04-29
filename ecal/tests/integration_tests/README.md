@@ -1,57 +1,76 @@
-# Integration Tests for eCAL
+# Integration Tests for eCAL Middleware
 
-This directory contains integration-level tests for the eCAL middleware.
+This directory contains a structured suite of integration tests for the eCAL (enhanced Communication Abstraction Layer) middleware. The goal is to validate the functionality, robustness, and performance of inter-process communication scenarios within distributed systems using eCAL.
 
-Unlike unit tests, integration tests verify communication between multiple components and processes. These tests simulate real-world usage of eCAL, such as message transmission, subscriber behavior, fault handling, and performance under load.
-
-## Purpose
-
-The goal is to ensure that eCAL works correctly in distributed systems with realistic scenarios. These tests are also designed to be reusable and automation-friendly, making them suitable for CI/CD environments.
-
-## Structure
-
-Each test is placed in its own folder:
+## Directory Structure
 
 ```
-integration_tests/
-├── test_1_1_pubsub/         # Test for basic publisher-to-subscriber communication
-├── test_1_2_multisub/       # (Example) Test with multiple subscribers
-├── test_4_1_fault_injection/
-└── ...
+ecal/tests/integration_tests
+├── cfg/                   # Configuration files (e.g., ecal.yaml)
+├── lib/                   # Shared Python libraries for Robot Framework
+├── pub_sub_tests/         # Tests based on Publisher-Subscriber communication
+│   ├── docker/            # Generic Dockerfile used across pub-sub tests
+│   ├── scripts/           # Shared scripts (build, entrypoint, etc.)
+│   ├── src/               # C++ source files for pub/sub implementations
+│   └── robottests/        # Robot Framework test cases
+├── CMakeLists.txt         # CMake integration for building components
+├── requirements.txt       # List of requirements 
+└── README.md              # This file
 ```
 
-Each test folder is organized as follows for example:
+## How to Use
 
-```
-test_1_1_pubsub/
-├── src/
-│   ├── publisher.cpp            # C++ source for the publisher node
-│   └── subscriber.cpp           # C++ source for the subscriber node
-├── robot/
-│   └── test_pubsub.robot        # Robot Framework test orchestration file
-├── docker/ 
-│   └── Dockerfile               # Builds the container image with both binaries 
-├── scripts/
-│   ├── entrypoint.sh            # Entry point for launching publisher or subscriber  
-│   └── requirements.txt         # Python dependencies for Robot Framework 
-└── README.md
-```
+### Prerequisites
+- Docker installed and working
+- eCAL base image built/tagged as `ecal_base`
+- `robot` and dependencies if you want to run tests locally:  
+  `pip install -r requirements.txt`
 
-## Running Tests
+**Note:** Before building the test images, make sure the base image `ecal_base` exists locally.
+You can build it from the eCAL source root with the following command:
 
-Most tests are designed to be run using [Robot Framework](https://robotframework.org/) and [DockerLibrary](https://pypi.org/project/robotframework-dockerlibrary/). This allows tests to be executed in isolated containers and automated pipelines.
-
-To run a test:
 ```bash
-cd test_1_1_pubsub/robot
-robot test_pubsub.robot
+docker build -t ecal_base -f ./docker/Dockerfile.ecal_base .
 ```
 
-Make sure Docker is installed and running on your machine.
+### Build Docker Images
+```bash
+./pub_sub_tests/scripts/build_pubsub_images.sh basic_pub_sub
+```
 
-## Requirements
+### Run Robot Tests
+You can run tests manually using Robot Framework CLI or VSCode extension:
+```bash
+robot pub_sub_tests/robottests/basic_pub_sub.robot
+```
 
-- Docker
-- Python 3
-- Robot Framework
-- DockerLibrary (`pip install robotframework-dockerlibrary`)
+Or with arguments:
+```bash
+robot --variable BASE_IMAGE:basic_pub_sub pub_sub_tests/robottests/basic_pub_sub.robot
+```
+
+## Test Categories
+
+| Category | Description | Subfolder | Details |
+|----------|-------------|-----------|---------|
+| Basic Publisher-Subscriber | Tests for 1:1, 1:N, and N:1 communication | [pub_sub_tests/](pub_sub_tests/) | [basic_pub_sub](pub_sub_tests/README.md) |
+| Message Validation | Payload correctness and malformed handling | (planned) |  |
+| Fault Injection | Crash handling, reconnects, network loss | (planned) |  |
+| Scalability | Stress tests with many nodes and topics | (planned) |  |
+| RPC Services | Tests for Request/Response over eCAL | (planned) |  |
+| Filtering | Content/topic-based subscriber filters | (planned) |  |
+
+## How to Add a New Test Case
+1. Create a new .robot file in `pub_sub_tests/robottests/` (e.g., `new_pub_sub.robot`).
+2. Reuse the shared `src/`, `docker/`, and `scripts/` if applicable.
+3. If required, extend `build_pubsub_images.sh` with new tags for additional scenarios.
+4. Document the test scenario in `README.md`.
+
+## CI Integration
+These tests are designed to be used in CI. You can integrate them into GitHub Actions, GitLab CI, or Jenkins by calling:
+```bash
+robot --outputdir results pub_sub_tests/robottests/
+```
+
+## Author
+Emircan Tutar

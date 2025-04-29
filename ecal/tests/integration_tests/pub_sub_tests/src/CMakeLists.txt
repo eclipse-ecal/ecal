@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(pubsub_ecal_test LANGUAGES CXX)
+project(pub_sub_tests LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

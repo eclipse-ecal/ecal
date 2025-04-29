@@ -20,7 +20,7 @@ class MyDockerLibrary:
 
         container = self.client.containers.run(
             image=image,
-            command=list(command_parts),  # <<< Übergib als Liste
+            command=list(command_parts),
             name=name,
             detach=True,
             remove=False,

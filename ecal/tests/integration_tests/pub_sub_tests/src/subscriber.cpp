@@ -23,7 +23,7 @@ void OnReceive(const eCAL::STopicId&, const eCAL::SDataTypeInformation&, const e
 
 int main(int argc, char* argv[])
 {
-  eCAL::Initialize("sub_test_1_1");
+  eCAL::Initialize("sub_test");
   
   if (argc < 2)
   {

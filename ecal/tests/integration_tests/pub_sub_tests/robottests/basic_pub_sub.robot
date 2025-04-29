@@ -1,14 +1,14 @@
 *** Settings ***
 Library           OperatingSystem
 Library           Process
-Library           ${CURDIR}/../lib/MyDockerLibrary.py
-Library           ${CURDIR}/../lib/GlobalPathsLibrary.py
+Library           ${CURDIR}/../../lib/MyDockerLibrary.py
+Library           ${CURDIR}/../../lib/GlobalPathsLibrary.py
 Suite Setup       Build Docker Images
 
 *** Variables ***
 ${NETWORK}        ${EMPTY}
 ${BUILD_SCRIPT}   ${EMPTY}
-${BASE_IMAGE}     ecal_test_pubsub_1_1_2  # New base image name with version
+${BASE_IMAGE}     basic_pub_sub  
 
 *** Test Cases ***
 Local SHM Communication
@@ -28,14 +28,16 @@ Network TCP Communication
 
 *** Keywords ***
 Build Docker Images
-    ${build}=   Get Build Script Path
-    ${net}=     Get Network Name
+    ${build}=    Get Build Script Path
+    ${net}=      Get Network Name
+    ${args}=     Get Build Script Args
     Set Suite Variable    ${BUILD_SCRIPT}   ${build}
     Set Suite Variable    ${NETWORK}        ${net}
 
     Log To Console    [SETUP] Checking and building Docker images if needed...
-    ${result}=    Run Process    ${BUILD_SCRIPT}
+    ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
     Should Be Equal As Integers    ${result.rc}    0    Failed to build Docker images!
+
 
 Run PubSub Test
     [Arguments]    ${layer_tag}    ${mode}

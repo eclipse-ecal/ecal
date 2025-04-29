@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[])
 {
-  eCAL::Initialize("pub_test_1_1_2");
+  eCAL::Initialize("pub_test");
 
   if (argc < 2)
   {
