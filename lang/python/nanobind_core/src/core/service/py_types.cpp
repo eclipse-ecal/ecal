@@ -20,6 +20,7 @@
 #include <core/service/py_types.h>
 #include <ecal/service/types.h>
 
+#include <nanobind/stl/optional.h>
 #include <nanobind/stl/string.h>
 #include <nanobind/stl/vector.h>
 #include <nanobind/stl/set.h>
@@ -61,7 +62,20 @@ void AddServiceTypes(nanobind::module_& m)
     });
 
   nb::class_<eCAL::SServiceMethodInformation>(m, "ServiceMethodInformation")
-    .def(nb::init<>())
+    .def("__init__", [](eCAL::SServiceMethodInformation* self,
+      std::string method_name,
+      eCAL::SDataTypeInformation request_type,
+      eCAL::SDataTypeInformation response_type) {
+        new (self) eCAL::SServiceMethodInformation{
+          method_name,
+          request_type,
+          response_type
+        };
+      },
+      nb::arg("method_name") = std::string{},
+      nb::arg("request_type") = eCAL::SDataTypeInformation{},
+      nb::arg("response_type") = eCAL::SDataTypeInformation{},
+      "Construct with optional name, encoding, descriptor.")
     .def_rw("method_name", &eCAL::SServiceMethodInformation::method_name)
     .def_rw("request_type", &eCAL::SServiceMethodInformation::request_type)
     .def_rw("response_type", &eCAL::SServiceMethodInformation::response_type)

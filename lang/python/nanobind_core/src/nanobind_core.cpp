@@ -96,6 +96,8 @@ NB_MODULE(nanobind_core, core) {
 
   AddServiceTypes(core);
   AddServiceServer(core);
+  AddServiceClientInstance(core);
+  AddServiceClient(core);
 
   AddProcessSeverity(core);
   AddProcess(core);
