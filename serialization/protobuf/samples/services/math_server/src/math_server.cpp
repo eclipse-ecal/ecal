@@ -29,39 +29,56 @@
 
 #include "math.pb.h"
 
-///////////////////////////////////////////////
-// Math Service
-///////////////////////////////////////////////
+/*
+  Here we derive our service implementation from the generated protobuf service class.abort
+  We override the methods Add, Multiplay and Divide which we defined in the protobuf file.
+*/
 class MathServiceImpl : public MathService
 {
 public:
-  virtual void Add(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Add(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
-    // print request and
-    std::cout << "Received request MathService / Add      : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
-    // create response
+    std::cout << "Received request for MathService in C++: Add" << "\n";
+    std::cout << "Input1 : " << request_->inp1() << "\n";
+    std::cout << "Input2 : " << request_->inp2() << "\n";
+    std::cout << "\n";
+
+    /*
+      The request is a pointer to the protobuf message SFloatTuple.
+      We can access the input values inp1 and inp2 using the generated getter methods.
+      The response is a pointer to the protobuf message SFloat.
+      We set the output value using the generated setter method set_out.
+
+      This is very convenient, because we can simply work with the protobuf messages without additional function calls.
+    */
     response_->set_out(request_->inp1() + request_->inp2());
   }
 
-  virtual void Multiply(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Multiply(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
-    // print request and
-    std::cout << "Received request MathService / Multiply : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
-    // create response
+    std::cout << "Received request for MathService in C++: Multiply" << "\n";
+    std::cout << "Input1 : " << request_->inp1() << "\n";
+    std::cout << "Input2 : " << request_->inp2() << "\n";
+    std::cout << "\n";
+
     response_->set_out(request_->inp1() * request_->inp2());
   }
 
-  virtual void Divide(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */)
+  void Divide(::google::protobuf::RpcController* /* controller_ */, const ::SFloatTuple* request_, ::SFloat* response_, ::google::protobuf::Closure* /* done_ */) override
   {
-    // print request and
-    std::cout << "Received request MathService / Divide   : " << request_->inp1() << " and " << request_->inp2() << std::endl << std::endl;
-    // create response
+    std::cout << "Received request for MathService in C++: Divide" << "\n";
+    std::cout << "Input1 : " << request_->inp1() << "\n";
+    std::cout << "Input2 : " << request_->inp2() << "\n";
+    std::cout << "\n";
+
     if(std::fabs(request_->inp2()) > DBL_EPSILON) response_->set_out(request_->inp1() / request_->inp2());
     else                                          response_->set_out(0.0);
   }
 };
 
-// server state callback
+/*
+  We define a callback function that will be called when the an event happens on the server, like connected or disconnected.
+*/
 void OnServerEvent(const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_)
 {
   switch (data_.type)
@@ -82,23 +99,32 @@ void OnServerEvent(const eCAL::SServiceId& /*service_id_*/, const struct eCAL::S
   }
 }
 
-// main entry
 int main()
 {
-  // initialize eCAL API
+  /*
+    As always: initialize the eCAL API and give your process a name.
+  */
   eCAL::Initialize("math server");
 
-  // create Math service server
+  /*
+    Here we need to create a shared pointer to our service implementation class.
+  */
   std::shared_ptr<MathService> math_service = std::make_shared<MathServiceImpl>();
+  
+  /*
+    Now we create the math server and give as parameter the service shared pointer.
+    Additionally we want to listen to server events, so we pass the callback function OnServerEvent.
+  */
   eCAL::protobuf::CServiceServer<MathService> math_server(math_service, OnServerEvent);
 
   while(eCAL::Ok())
   {
-    // sleep 100 ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
-  // finalize eCAL API
+  /*
+    As always, when we are done, finalize the eCAL API.
+  */
   eCAL::Finalize();
 
   return(0);
