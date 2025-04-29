@@ -45,7 +45,7 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
   printf("----------------------------------------------\n");
   printf(" Received binary buffer in C\n");
   printf("----------------------------------------------\n");
-  printf(" Size         : %lld\n", callback_data_->buffer_size);
+  printf(" Size         : %zu\n", callback_data_->buffer_size);
   printf(" Time         : %lld\n", callback_data_->send_timestamp);
   printf(" Clock        : %lld\n", callback_data_->send_clock);
   printf(" Content      : %.*s\n", (int)callback_data_->buffer_size, char_buffer);
