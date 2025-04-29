@@ -16,33 +16,17 @@
 #
 # ========================= eCAL LICENSE =================================
 
-import sys
-import time
+import pytest
+import ecal.nanobind_core as ecal_core
 
-import nanobind_core as ecal_core
+def test_get_unit_name():
+    unit_name = "Python Test"
+    ecal_core.initialize(unit_name)
+    assert ecal_core.process.get_unit_name() == unit_name   
+    ecal_core.finalize()
 
-# eCAL receive callback
-def callback(topic_name, msg, time):
-  print("Received:  {} ms   {}".format(time, msg))
-  
-def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date()))
-
-  # initialize eCAL API
-  ecal_core.initialize()
-
-  # create subscriber and connect callback
-  sub = ecal_core.Subscriber("Hello")
-  sub.add_receive_callback(callback)
-  
-  # idle main thread
-  while ecal_core.ok():
-    time.sleep(0.1)
-  
-  # finalize eCAL API
-  ecal_core.finalize()
-  
-if __name__ == "__main__":
-  main()
-
+def test_set_process_state():
+    ecal_core.initialize()
+    ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I am doing fine")
+    # we could check via monitoring that the state is set correctly. however, we're not doing that atm
+    ecal_core.finalize()
