@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file  ecal_clr_log.h
+ * @file  clr_monitoring.h
 **/
 
 using namespace System;
@@ -29,38 +29,34 @@ namespace Eclipse {
   namespace eCAL {
     namespace Core {
 
-      // Expose a managed log level enum with values matching the native API.
-      [System::Flags]
-      public enum class LogLevel : unsigned char
+      // Managed representation of the native monitoring entities bitmask.
+      [Flags]
+      public enum class MonitoringEntity : unsigned int
       {
-        None    = 0,
-        Info    = 1,    // native: log_level_info
-        Warning = 2,    // native: log_level_warning
-        Error   = 4,    // native: log_level_error
-        Fatal   = 8,    // native: log_level_fatal
-        All     = 255   // native: log_level_all
+        None       = 0x000,
+        Publisher  = 0x001,
+        Subscriber = 0x002,
+        Server     = 0x004,
+        Client     = 0x008,
+        Process    = 0x010,
+        Host       = 0x020,
+        All        = Publisher | Subscriber | Server | Client | Process | Host
       };
 
       /**
-       * @brief eCAL logging class.
-      **/
-      public ref class Logging
+       * @brief eCAL monitoring class.
+       **/
+      public ref class Monitoring
       {
       public:
         /**
-         * @brief Log a message with a specified log level.
+         * @brief Get host, process and topic monitoring as raw message bytes.
          *
-         * @param level    The log level.
-         * @param message  The message string to log.
-        **/
-        static void Log(LogLevel level, System::String^ message);
-
-        /**
-         * @brief Get global log message as raw message bytes.
-         *
-         * @return The logging message as a byte array.
+         * @param entities Specifies which entities to include (default is All).
+         * 
+         * @return The monitoring message as a byte array.
          **/
-        static array<Byte>^ GetLogging();
+        static array<Byte>^ GetMonitoring(MonitoringEntity entities);
       };
 
     } // namespace Core

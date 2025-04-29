@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file ecal_clr_types.h
+ * @file clr_types.h
  *
  * @brief Managed type definitions for eCAL topics.
  *

@@ -19,10 +19,10 @@
 
 #include <msclr/marshal_cppstd.h>
 
-#include "ecal_clr_publisher.h"
+#include "pubsub/clr_publisher.h"
 
-#include "ecal_clr_common.h"
-#include "ecal_clr_types.h"
+#include "clr_common.h"
+#include "clr_types.h"
 
 #include <sstream>
 #include <vcclr.h>

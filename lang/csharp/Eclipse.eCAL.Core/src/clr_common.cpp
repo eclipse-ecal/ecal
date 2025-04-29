@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_common.h"
+#include "clr_common.h"
 
 using namespace System::Runtime::InteropServices;
 

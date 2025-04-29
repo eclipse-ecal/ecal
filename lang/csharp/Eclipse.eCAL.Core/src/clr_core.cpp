@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,21 +17,45 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+#include "clr_core.h"
+#include "clr_common.h"
 
-/**
- * @file  ecal_clr_common.h
-**/
+#include <ecal/core.h>
 
-#include <string>
+using namespace Eclipse::eCAL::Core;
+using namespace Internal;
 
-using namespace System;
-
-namespace Internal
+System::String^ Core::GetVersion()
 {
-  System::String^ StlStringToString(const std::string& ss_);
-  std::string     StringToStlString(System::String^ s_);
+  return StlStringToString(::eCAL::GetVersionString());
+}
 
-  std::string  ByteArrayToStlString(array<Byte>^ a_);
-  array<Byte>^ StlStringToByteArray(const std::string& ss_);
+System::String^ Core::GetDate()
+{
+  return StlStringToString(::eCAL::GetVersionDateString());
+}
+
+void Core::Initialize(System::String^ unitName)
+{
+  ::eCAL::Initialize(StringToStlString(unitName));
+}
+
+void Core::Initialize(System::String^ unitName, Init componentFlags)
+{
+  ::eCAL::Initialize(StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
+}
+
+void Core::Terminate()
+{
+  ::eCAL::Finalize();
+}
+
+bool Core::IsInitialized()
+{
+  return ::eCAL::IsInitialized();
+}
+
+bool Core::Ok()
+{
+  return ::eCAL::Ok();
 }

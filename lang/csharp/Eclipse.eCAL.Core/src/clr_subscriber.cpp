@@ -17,11 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_subscriber.h"
+#include "pubsub/clr_subscriber.h"
+#include "pubsub/clr_types.h"
 
-#include "ecal_clr_common.h"
-#include "ecal_clr_types.h"
-#include "ecal_clr_types_pubsub.h"
+#include "clr_common.h"
+#include "clr_types.h"
 
 #include <sstream>
 #include <vcclr.h>

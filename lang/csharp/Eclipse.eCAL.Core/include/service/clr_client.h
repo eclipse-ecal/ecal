@@ -20,13 +20,13 @@
 #pragma once
 
 /**
- * @file ecal_clr_client.h
+ * @file clr_client.h
  * @brief Managed wrapper for the native CServiceClient API.
  *
  * This file provides the managed interface for eCAL service clients.
  */
 
-#include "ecal_clr_types_service.h"
+#include "service/clr_types.h"
 
 #include <ecal/service/client.h>
 
