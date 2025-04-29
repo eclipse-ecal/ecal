@@ -77,6 +77,9 @@ add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Protobuf.Samples/pubsub     ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person
+  # config samples
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/misc                                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/misc
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/misc                                  ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/misc
   # sercli binary samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/ecal/samples/cpp/services                            ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/binary/mirror
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/c/samples/services                              ${DOC_SOURCE_DIRECTORY}/source_code_samples/c/binary/mirror
@@ -85,6 +88,7 @@ add_custom_target(documentation_copy_sample_files ALL
   # sercli protobuf samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/services              ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/math
   )
+
 set_property(TARGET documentation_copy_sample_files  PROPERTY FOLDER docs)
 
 add_custom_target(documentation_copy_config_file
