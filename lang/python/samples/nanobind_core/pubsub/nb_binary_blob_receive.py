@@ -23,14 +23,15 @@ import ecal.nanobind_core as ecal_core
 
 # eCAL receive callback
 def data_callback(publisher_id : ecal_core.TopicId, datatype_info : ecal_core.DataTypeInformation, data : ecal_core.ReceiveCallbackData):
-  output = """
+  output = f"""
   ----------------------------------------------
-   Received binary buffer
+   Received binary buffer in Python
   ----------------------------------------------
-  Size         : {}
-  Time         : {}
-  Clock        : {}
-  """.format(len(data.buffer), data.send_timestamp, data.send_clock)
+  Size         : {len(data.buffer)}
+  Time         : {data.send_timestamp}
+  Clock        : {data.send_clock}
+  Content      : {data.buffer}
+  """
   print(output)
 
 def publisher_event_callback(publisher_id : ecal_core.TopicId, callback_data : ecal_core.SubEventCallbackData):
