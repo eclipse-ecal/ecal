@@ -16,11 +16,12 @@
 #
 # ========================= eCAL LICENSE =================================
 
+import random
 import time
 
 import ecal.nanobind_core as ecal_core
 
-DATA_SIZE = 1024
+DATA_SIZE = 16
 
 # This function will be called when a subscriber is connected / disconnected to the publisher
 def subscriber_event_callback(subscriber_id : ecal_core.TopicId, callback_data : ecal_core.PubEventCallbackData):
@@ -28,6 +29,15 @@ def subscriber_event_callback(subscriber_id : ecal_core.TopicId, callback_data :
   entity = subscriber_id.topic_id
   print("A subscriber with id {} from host {} with PID {} has been {}".format(entity.entity_id, entity.host_name, entity.process_id, callback_data.event_type))
 
+def random_printable_bytes(length: int) -> bytes:
+    """
+    Generate a bytes object of the given length, where each byte is
+    a randomly chosen printable ASCII character (code points 32–126).
+
+    :param length: Number of bytes in the resulting bytes object.
+    :return: bytes of size `length`, with each element in [32,126].
+    """
+    return bytes(random.randint(32, 126) for _ in range(length))
 
 def main():
   # print eCAL version and date
@@ -53,12 +63,9 @@ def main():
   print(pub.get_data_type_information())
   
   # send messages
-  i = 0
   while ecal_core.ok():
-    filler_value = i % 256
-    byte_data =  bytes([filler_value] * DATA_SIZE)
+    byte_data = random_printable_bytes(DATA_SIZE)
     pub.send(byte_data)
-    i = i + 1
     time.sleep(0.5)
   
   # finalize eCAL API
