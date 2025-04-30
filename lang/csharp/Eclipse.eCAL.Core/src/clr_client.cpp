@@ -23,6 +23,7 @@
 #include "service/clr_types.h"
 
 #include "clr_common.h"
+#include "clr_bubble.h"
 
 #include <vector>
 
