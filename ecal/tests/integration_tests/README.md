@@ -4,73 +4,93 @@ This directory contains a structured suite of integration tests for the eCAL (en
 
 ## Directory Structure
 
-```
+```text
 ecal/tests/integration_tests
 ├── cfg/                   # Configuration files (e.g., ecal.yaml)
 ├── lib/                   # Shared Python libraries for Robot Framework
+│   ├── MyDockerLibrary.py
+│   └── GlobalPathsLibrary.py
 ├── pub_sub_tests/         # Tests based on Publisher-Subscriber communication
 │   ├── docker/            # Generic Dockerfile used across pub-sub tests
 │   ├── scripts/           # Shared scripts (build, entrypoint, etc.)
 │   ├── src/               # C++ source files for pub/sub implementations
-│   └── robottests/        # Robot Framework test cases
+│   └── robottests/        # Robot Framework test cases (.robot)
 ├── CMakeLists.txt         # CMake integration for building components
-├── requirements.txt       # List of requirements 
+├── requirements.txt       # List of requirements
 └── README.md              # This file
 ```
 
 ## How to Use
 
 ### Prerequisites
-- Docker installed and working
-- eCAL base image built/tagged as `ecal_base`
-- `robot` and dependencies if you want to run tests locally:  
-  `pip install -r requirements.txt`
 
-**Note:** Before building the test images, make sure the base image `ecal_base` exists locally.
-You can build it from the eCAL source root with the following command:
+* Docker installed and working
+* eCAL base image built/tagged as `ecal_base`
+* `robot` and dependencies if you want to run tests locally:
+
+```bash
+pip install -r requirements.txt
+```
+
+To build the base image (required before running tests):
 
 ```bash
 docker build -t ecal_base -f ./docker/Dockerfile.ecal_base .
 ```
 
-### Build Docker Images
+### Build Docker Images (Optional)
+
+Each test scenario requires its own set of images. It will be builded in the .robot file:
+
 ```bash
 ./pub_sub_tests/scripts/build_pubsub_images.sh basic_pub_sub
+./pub_sub_tests/scripts/build_pubsub_images.sh multi_pub_sub
 ```
 
+This builds five variants per scenario:
+
+* `local_shm`
+* `local_udp`
+* `local_tcp`
+* `network_udp`
+* `network_tcp`
+
 ### Run Robot Tests
-You can run tests manually using Robot Framework CLI or VSCode extension:
+
+To execute a specific test suite for example:
+
 ```bash
 robot pub_sub_tests/robottests/basic_pub_sub.robot
 ```
 
-Or with arguments:
-```bash
-robot --variable BASE_IMAGE:basic_pub_sub pub_sub_tests/robottests/basic_pub_sub.robot
-```
-
 ## Test Categories
 
-| Category | Description | Subfolder | Details |
-|----------|-------------|-----------|---------|
-| Basic Publisher-Subscriber | Tests for 1:1, 1:N, and N:1 communication | [pub_sub_tests/](pub_sub_tests/) | [basic_pub_sub](pub_sub_tests/README.md) |
-| Message Validation | Payload correctness and malformed handling | (planned) |  |
-| Fault Injection | Crash handling, reconnects, network loss | (planned) |  |
-| Scalability | Stress tests with many nodes and topics | (planned) |  |
-| RPC Services | Tests for Request/Response over eCAL | (planned) |  |
-| Filtering | Content/topic-based subscriber filters | (planned) |  |
+| Category                   | Description                                   | Subfolder        | More Info                         |
+| -------------------------- | --------------------------------------------- | ---------------- | --------------------------------- |
+| Basic Publisher-Subscriber | 1:1, 1\:N, N:1, N\:N pub/sub communication    | `pub_sub_tests/` | [README](pub_sub_tests/README.md) |
+| Message Validation         | Payload correctness, malformed input handling | (planned)        |                                   |
+| Fault Injection            | Crash handling, disconnects, recovery         | (planned)        |                                   |
+| Scalability                | Many nodes, topics, message rate              | (planned)        |                                   |
+| RPC Services               | Request/Response testing                      | (planned)        |                                   |
+| Filtering                  | Subscriber-side filtering                     | (planned)        |                                   |
 
-## How to Add a New Test Case
-1. Create a new .robot file in `pub_sub_tests/robottests/` (e.g., `new_pub_sub.robot`).
-2. Reuse the shared `src/`, `docker/`, and `scripts/` if applicable.
-3. If required, extend `build_pubsub_images.sh` with new tags for additional scenarios.
-4. Document the test scenario in `README.md`.
+## Adding a New Test Case
+
+1. Create a new `.robot` file in `pub_sub_tests/robottests/` (e.g., `advanced_pub_sub.robot`).
+2. Reuse the shared `src/`, `docker/`, and `scripts/` folders if possible.
+3. Adjust `GlobalPathsLibrary.py` if a new image/tag is introduced.
+4. Update the `README.md` inside `pub_sub_tests/` with the new test case.
 
 ## CI Integration
-These tests are designed to be used in CI. You can integrate them into GitHub Actions, GitLab CI, or Jenkins by calling:
+
+These tests are CI-friendly and can be used in pipelines:
+
 ```bash
 robot --outputdir results pub_sub_tests/robottests/
 ```
 
+Artifacts like `output.xml`, `log.html`, and `report.html` can be used for further analysis.
+
 ## Author
+
 Emircan Tutar
