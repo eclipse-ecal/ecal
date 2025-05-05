@@ -3,10 +3,22 @@ from robot.api.deco import keyword
 
 class GlobalPathsLibrary:
     def __init__(self):
-        # Always resolve relative to the current .robot file location
+        # Resolve to /integration_tests directory
         current_file_dir = os.path.dirname(os.path.abspath(__file__))
-        # Go one level up from /lib to /integration_tests
         self.integration_tests_root = os.path.abspath(os.path.join(current_file_dir, ".."))
+
+        # Default values (can be overridden)
+        self.test_case_folder = "pub_sub_tests"
+        self.tag_prefix = "basic_pub_sub"
+
+    @keyword
+    def set_test_context(self, test_case_folder: str, tag_prefix: str):
+        """
+        Sets the test folder (e.g. pub_sub_tests) and tag prefix (e.g. basic_pub_sub).
+        Should be called once in Suite Setup if you're using non-default test cases.
+        """
+        self.test_case_folder = test_case_folder
+        self.tag_prefix = tag_prefix
 
     @keyword
     def get_project_root(self):
@@ -18,11 +30,11 @@ class GlobalPathsLibrary:
 
     @keyword
     def get_build_script_path(self):
-        return os.path.join(self.integration_tests_root, "pub_sub_tests", "scripts", "build_pubsub_images.sh")
+        return os.path.join(self.integration_tests_root, self.test_case_folder, "scripts", "build_pubsub_images.sh")
 
     @keyword
     def get_build_script_args(self):
-        return ["basic_pub_sub", "basic_pub_sub"]
+        return [self.tag_prefix]
 
     @keyword
     def get_network_name(self):

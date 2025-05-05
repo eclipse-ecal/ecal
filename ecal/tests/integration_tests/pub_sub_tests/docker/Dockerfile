@@ -1,6 +1,7 @@
 FROM ecal_base
 
 WORKDIR /app
+RUN apt-get update && apt-get install -y libtclap-dev
 
 COPY ../src/ ./src/
 COPY ../scripts/entrypoint.sh ./entrypoint.sh

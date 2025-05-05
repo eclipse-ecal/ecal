@@ -3,7 +3,7 @@
 #include <ecal/ecal.h>
 #include <iostream>
 
-void setup_ecal_configuration(const std::string& mode, bool is_publisher)
+void setup_ecal_configuration(const std::string& mode, bool is_publisher, const std::string& node_name)
 {
   eCAL::Configuration config;
 
@@ -93,5 +93,5 @@ void setup_ecal_configuration(const std::string& mode, bool is_publisher)
     exit(1);
   }
 
-  eCAL::Initialize(config, is_publisher ? "pub_test" : "sub_test", eCAL::Init::Default);
+  eCAL::Initialize(config, node_name, eCAL::Init::All);
 }
