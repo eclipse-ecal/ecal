@@ -23,35 +23,7 @@ pub_sub_tests/
 └── README.md            # This file
 ```
 
-## How to Build Images (optional)
-
-To build all pub/sub test images:
-
-```bash
-./pub_sub_tests/scripts/build_pubsub_images.sh basic_pub_sub
-```
-
-This builds five image variants (local SHM, local UDP, local TCP, network UDP, network TCP) tagged as `basic_pub_sub_<mode>`.
-
-## How to Run Tests
-
-Use Robot Framework CLI:
-
-```bash
-robot pub_sub_tests/robottests/basic_pub_sub.robot
-```
-
-Or use the `robotcode` extension inside VSCode for step-by-step debugging.
-
-## Adding New Test Scenarios
-
-You can reuse most of the infrastructure for new scenarios (e.g., multi pub/sub, fault injection):
-
-1. Add a new `.robot` file to `pub_sub_tests/robottests/`, e.g. `new_pub_sub.robot`
-2. If needed, adjust `src/` or clone it per test scenario
-3. The shared `Dockerfile` and `entrypoint.sh` will continue to work as long as the structure remains consistent
-4. Extend `build_pubsub_images.sh` only if a separate image tag or build context is needed
-5. Document the new scenario in this README (see below)
+---
 
 ## Available Test Scenarios
 
