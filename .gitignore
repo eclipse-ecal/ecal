@@ -69,5 +69,8 @@ CMakeUserPresets.json
 /dependencies.txt
 /summary.txt
 
-# resultsfolder of robottest
+# robottest
 /results
+log.html
+output.xml
+report.html
