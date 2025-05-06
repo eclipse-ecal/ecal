@@ -216,6 +216,7 @@ set(ECAL_CORE_MONITORING                                                        
 set(ECAL_CORE_PUBLISHER                                                                                                 ON)
 set(ECAL_CORE_SUBSCRIBER                                                                                                ON)
 set(ECAL_CORE_SERVICE                                                                                                   ON)
+set(ECAL_CORE_TIMEGATE                                                                                                  ON)
 set(ECAL_CORE_TIMEPLUGIN                                                                                                ON)
 set(ECAL_CORE_NPCAP_SUPPORT                                                                              ${ECAL_USE_NPCAP})
 set(ECAL_CORE_REGISTRATION_SHM                                                                                          ON)
