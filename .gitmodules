@@ -49,3 +49,6 @@
 [submodule "thirdparty/ecaludp/ecaludp"]
 	path = thirdparty/ecaludp/ecaludp
 	url = https://github.com/eclipse-ecal/ecaludp.git
+[submodule "thirdparty/benchmark/benchmark"]
+	path = thirdparty/benchmark/benchmark
+	url = https://github.com/google/benchmark.git

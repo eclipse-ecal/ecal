@@ -24,8 +24,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_GENERATOR_PLATFORM x64)
 
-
-set(benchmark_DIR D:/Google_Benchmark/benchmark/build)
 find_package(benchmark REQUIRED)
 
 find_package(eCAL REQUIRED)
