@@ -67,7 +67,7 @@ robot pub_sub_tests/robottests/basic_pub_sub.robot
 
 | Category                   | Description                                   | Subfolder        | More Info                         |
 | -------------------------- | --------------------------------------------- | ---------------- | --------------------------------- |
-| Basic Publisher-Subscriber | 1:1, 1\:N, N:1, N\:N pub/sub communication    | `pub_sub_tests/` | [README](pub_sub_tests/README.md) |
+| Publisher-Subscriber       | 1:1, 1\:N, N:1, N\:N pub/sub communication    | `pub_sub_tests/` | [README](pub_sub_tests/README.md) |
 | Message Validation         | Payload correctness, malformed input handling | (planned)        |                                   |
 | Fault Injection            | Crash handling, disconnects, recovery         | (planned)        |                                   |
 | Scalability                | Many nodes, topics, message rate              | (planned)        |                                   |
