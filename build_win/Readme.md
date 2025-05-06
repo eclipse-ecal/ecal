@@ -9,6 +9,8 @@ If you want to cmake / build / setup eCAL step by step do the following steps:
 ```bash
 win_make_cmake.bat
 win_make_build.bat
+win_make_install.bat
+win_make_csharp.bat
 win_make_setup.bat
 ```
 
