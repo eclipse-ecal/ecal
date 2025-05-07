@@ -22,11 +22,8 @@ project(ecal_benchmark_pubsub)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_GENERATOR_PLATFORM x64)
 
 find_package(benchmark REQUIRED)
-
-find_package(eCAL REQUIRED)
 
 set(source_files
   benchmark_pubsub.cpp
@@ -35,6 +32,7 @@ set(source_files
 add_executable(${PROJECT_NAME} ${source_files})
 
 target_link_libraries(${PROJECT_NAME}
-   benchmark::benchmark
-   eCAL::core
+  PRIVATE
+    benchmark::benchmark
+    eCAL::core
 )
