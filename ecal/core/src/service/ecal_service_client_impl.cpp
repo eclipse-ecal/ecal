@@ -75,17 +75,17 @@ namespace eCAL
 {
     // Factory method to create a new instance of CServiceClientImpl
     std::shared_ptr<CServiceClientImpl> CServiceClientImpl::CreateInstance(
-        const std::string & service_name_, const ServiceMethodInformationSetT & method_information_map_, const ClientEventCallbackT & event_callback_)
+        const std::string & service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT & event_callback_)
     {
   #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CreateInstance: Creating instance of CServiceClientImpl for service: " + service_name_);
   #endif
-      return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_map_, event_callback_));
+      return std::shared_ptr<CServiceClientImpl>(new CServiceClientImpl(service_name_, method_information_set_, event_callback_));
     }
 
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
-      const std::string & service_name_, const ServiceMethodInformationSetT & method_information_set_, const ClientEventCallbackT & event_callback_)
+      const std::string & service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT & event_callback_)
       : m_service_name(service_name_), m_method_information_set(method_information_set_)
   {
 #ifndef NDEBUG

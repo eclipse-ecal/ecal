@@ -23,7 +23,8 @@
  * @file clr_client.h
  * @brief Managed wrapper for the native CServiceClient API.
  *
- * This file provides the managed interface for eCAL service clients.
+ * This file provides the managed interface for eCAL service clients,
+ * including both blocking calls and callback‐based calls.
  */
 
 #include "service/clr_types.h"
@@ -31,7 +32,6 @@
 #include <ecal/service/client.h>
 
 using namespace System::Collections::Generic;
-using namespace System::Runtime::InteropServices;
 
 namespace Eclipse {
   namespace eCAL {
@@ -50,9 +50,16 @@ namespace Eclipse {
          * @brief Constructor.
          *
          * @param serviceName Unique service name.
-         * @param methodInformationList Optional list of service method information.
          */
-        ServiceClient(System::String^ serviceName, [Optional] ServiceMethodInformationList^ methodInformationList);
+        ServiceClient(String^ serviceName);
+
+        /**
+         * @brief Constructor.
+         *
+         * @param serviceName           Unique service name.
+         * @param methodInformationList List of service method information.
+         */
+        ServiceClient(String^ serviceName, ServiceMethodInformationList^ methodInformationList);
 
         /**
          * @brief Destructor.
@@ -68,12 +75,32 @@ namespace Eclipse {
          * @brief Blocking call of a service method.
          *
          * @param methodName The method name.
-         * @param request The request as a string.
-         * @param timeoutMs Maximum time before the operation returns (in milliseconds, use DefaultTimeArgument for infinite timeout).
+         * @param request    The request as a string.
+         * @param timeoutMs  Maximum time before the operation returns (in milliseconds, use DefaultTimeArgument for infinite timeout).
          *
          * @return List of service responses.
          */
-        List<ServiceResponse^>^ CallWithResponse(System::String^ methodName, array<System::Byte>^ request, int timeoutMs);
+        List<ServiceResponse^>^ CallWithResponse(String^ methodName,
+                                                 array<Byte>^ request,
+                                                 int timeoutMs);
+
+        /**
+         * @brief Blocking call with callback.
+         *
+         * Calls the service and invokes `callback` for each response.
+         *
+         * @param methodName The method name.
+         * @param request    The request payload as a byte array.
+         * @param callback   Managed callback for each response.
+         * @param timeoutMs  Maximum time before returning (ms, use DefaultTimeArgument for infinite).
+         *
+         * @return True if the call succeeded.
+         */
+
+        bool CallWithCallback(String^ methodName,
+                              array<Byte>^ request,
+                              ResponseCallback^ callback,
+                              int timeoutMs);
 
         /**
          * @brief Retrieve the service name.
@@ -104,6 +131,12 @@ namespace Eclipse {
       private:
         /// Pointer to the native CServiceClient instance.
         ::eCAL::CServiceClient* m_native_service_client;
+
+        /**
+         * @brief Helper: wrap a managed ResponseCallback in a native std::function.
+         */
+        static std::function<void(const ::eCAL::SServiceResponse&)>
+          CreateNativeResponseCallback(ResponseCallback^ managed);
       };
 
     } // namespace Core
