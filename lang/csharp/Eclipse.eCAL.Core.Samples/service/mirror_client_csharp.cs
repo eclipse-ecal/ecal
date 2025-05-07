@@ -24,9 +24,7 @@ using Eclipse.eCAL.Core;
 
 public class MirrorClient
 {
-  /*
-    Helper function to print the service response.
-  */
+  // Print a service response
   static void PrintServiceResponse(ServiceResponse serviceResponse)
   {
     string callState;
@@ -43,7 +41,7 @@ public class MirrorClient
         break;
     }
 
-    Console.WriteLine("Received service response in C: " + callState);
+    Console.WriteLine("Received service response in C#: " + callState);
     Console.WriteLine("Method    : " + serviceResponse.MethodInformation.MethodName);
     Console.WriteLine("Response  : " + Encoding.UTF8.GetString(serviceResponse.Response));
     Console.WriteLine("Server ID : " + serviceResponse.ServerId.EntityID.Id);
@@ -57,52 +55,40 @@ public class MirrorClient
     Console.WriteLine(" C#: MIRROR CLIENT");
     Console.WriteLine("-------------------");
 
-    /*
-      As always: initialize the eCAL API and give your process a name.
-    */
+    // Initialize eCAL API
     Core.Initialize("mirror client c#");
-
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    /*
-      Create a client that connects to a "mirror" server.
-      It may call the methods "echo" and "reverse"
-    */
+    // Prepare the method information list (echo + reverse)
     ServiceMethodInformationList methodInformationList = new ServiceMethodInformationList();
     methodInformationList.Methods.Add(new ServiceMethodInformation("echo", new DataTypeInformation(), new DataTypeInformation()));
     methodInformationList.Methods.Add(new ServiceMethodInformation("reverse", new DataTypeInformation(), new DataTypeInformation()));
     
+    // Create the client
     ServiceClient mirrorClient = new ServiceClient("mirror", methodInformationList);
     
-    /*
-      We wait until the client is connected to a server,
-      so we don't call methods that are not available.
-    */
-    // isConnected() function not implemented in C# yet
+    // Wait until we have at least one server connected
+    while(!mirrorClient.IsConnected())
+    {
+      System.Threading.Thread.Sleep(100);
+    }
 
-    /*
-      Allow to alternate between the two methods "echo" and "reverse".
-    */
+    // Alternate calls between "echo" and "reverse"
     int i = 0;
     string[] methods = new string[] { "echo", "reverse" };
 
     while (Core.Ok())
     {
-      /* 
-        Alternate between the two methods "echo" and "reverse".
-        Create the request payload.
-      */
       string method = methods[i++ % methods.Length];
       byte[] request = Encoding.UTF8.GetBytes("stressed");
 
-      /*
-        Service call: blocking
-      */
-      List<ServiceResponse> responseList = mirrorClient.CallWithResponse(method, request, (int)Eclipse.eCAL.Core.ServiceClient.DefaultTimeArgument);
+      // Call with response
+      List<ServiceResponse> responseList = mirrorClient.CallWithResponse(
+        method,
+        request,
+        (int)ServiceClient.DefaultTimeArgument);
       
-      /*
-        Iterate through all responses and print them.
-      */
+      // Iterate through all responses and print them
       if (responseList.Count > 0)
       {
         foreach (ServiceResponse response in responseList)
@@ -118,14 +104,10 @@ public class MirrorClient
       System.Threading.Thread.Sleep(1000);
     }
 
-    /*
-      When finished, we need to dispose the client to clean up properly.
-    */
+    // Dispose the client to clean up properly
     mirrorClient.Dispose();
 
-    /*
-      After we are done, as always, finalize the eCAL API.
-    */
+    // Finalize eCAL API
     Core.Terminate();
   }
 }
