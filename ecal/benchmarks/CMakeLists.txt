@@ -20,9 +20,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(ecal_benchmark_pubsub)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 find_package(benchmark REQUIRED)
 
 set(source_files
@@ -36,3 +33,5 @@ target_link_libraries(${PROJECT_NAME}
     benchmark::benchmark
     eCAL::core
 )
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
