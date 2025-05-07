@@ -71,8 +71,14 @@ namespace eCAL
     auto sessions = m_subscriber->getSessions();
     for (const auto& session : sessions)
     {
+#if TCP_PUBSUB_VERSION_MAJOR >= 2
+      auto publisher = session->getPublisherList().front();
+      auto address   = publisher.first;
+      auto port      = publisher.second;
+#else
       auto address = session->getAddress();
       auto port    = session->getPort();
+#endif
       if ((address == host_name_) && (port == port_))
       {
         new_session = false;
