@@ -32,7 +32,7 @@ public class MirrorServer
   }
 
   /*
-    This callback will be called when a client calls the service method "echo".
+    We define the callback function that will be called when a client calls the service method "echo".
     This callback will simply return the request as the response.
   */
   static byte[] OnEchoCallback(ServiceMethodInformation methodInfo, byte[] request)
@@ -64,11 +64,16 @@ public class MirrorServer
     Console.WriteLine(" C#: MIRROR SERVER");
     Console.WriteLine("-------------------");
 
-    // Initialize eCAL API
+    /*
+      As always: initialize the eCAL API and give your process a name.
+    */
     Core.Initialize("mirror server c#");
+
     Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
-    // Create the server
+    /*
+      Now we create the mirror server and give it the name "mirror".
+    */
     ServiceServer mirrorServer = new ServiceServer("mirror");
 
     /*
@@ -92,10 +97,14 @@ public class MirrorServer
       System.Threading.Thread.Sleep(500);
     }
 
-    // Dispose the server to clean up properly
+    /*
+      When finished, we need to dispose the server to clean up properly.
+    */
     mirrorServer.Dispose();
 
-    // Finalize eCAL API
+    /*
+      After we are done, as always, finalize the eCAL API.
+    */
     Core.Terminate();
   }
 }

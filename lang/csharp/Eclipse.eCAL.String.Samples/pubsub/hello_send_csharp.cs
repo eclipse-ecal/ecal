@@ -54,6 +54,13 @@ public class HelloSend
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
 
     /*
+      Set the state for the program.
+      You can vary between different states like healthy, warning, critical ...
+      This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+    */
+    // This function is not wrapped yet.
+
+    /*
       Now we create a new publisher that will publish the topic "hello".      
     */
     StringPublisher publisher = new StringPublisher("hello");
