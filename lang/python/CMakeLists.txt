@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ option(ECAL_PYTHON_BUILD_TESTS   "Includes the python tests"                    
 option(ECAL_PYTHON_USE_HDF5      "Enables eCAL application cmd line interfaces" ON)
 
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# Try to make modules loadable by debug python version
+if(WIN32)
+  set(CMAKE_DEBUG_POSTFIX            _d)
+endif()
 
 # This function takes a list of python files to be copied to the package directory
 # and associates the files with a given python extension target
@@ -131,6 +136,9 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH "ON")
 
 add_subdirectory(core)
 add_dependencies(${PROJECT_NAME} _ecal_core_py)
+
+add_subdirectory(nanobind_core/src)
+add_dependencies(${PROJECT_NAME} nanobind_core)
 
 if(ECAL_USE_HDF5)
   add_subdirectory(ecalhdf5)
