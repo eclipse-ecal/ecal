@@ -1,0 +1,7 @@
+syntax = "proto3";
+package test;
+
+message TestMessage {
+  int32 id = 1;
+  string payload = 2;
+}
