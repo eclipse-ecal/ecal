@@ -28,6 +28,8 @@ set(source_files
 
 add_executable(${PROJECT_NAME} ${source_files})
 
+add_dependencies(${PROJECT_NAME} core)
+
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     benchmark::benchmark
