@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
     {
         TCLAP::CmdLine cmd("eCAL Message Publisher", ' ', "1.0");
 
-        // Nur die wichtigen Argumente über TCLAP
         TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
         TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_message", "string");
         TCLAP::ValueArg<std::string> name_arg("n", "name", "eCAL node name", false, "msg_publisher", "string");
