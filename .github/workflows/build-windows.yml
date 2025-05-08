@@ -133,7 +133,7 @@ jobs:
         -DECAL_USE_CURL=ON ^
         -DECAL_USE_CAPNPROTO=OFF ^
         -DECAL_USE_FTXUI=ON ^
-        -DECAL_BUILD_DOCS=ON ^
+        -DECAL_BUILD_DOCS=OFF ^
         -DECAL_BUILD_APPS=ON ^
         -DECAL_BUILD_APP_SDK=ON ^
         -DECAL_BUILD_SAMPLES=ON ^
