@@ -28,12 +28,10 @@ set(source_files
 
 add_executable(${PROJECT_NAME} ${source_files})
 
-add_dependencies(${PROJECT_NAME} core)
-
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    benchmark::benchmark
     eCAL::core
+    benchmark::benchmark
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
