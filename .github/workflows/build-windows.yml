@@ -271,9 +271,10 @@ jobs:
         path: ${{ runner.workspace }}/benchmarks
     
     - name: Run Publisher/Subscriber Benchmark
-      run: ${{ runner.workspace }}/benchmarks/ecal_benchmark_pubsub.exe ^
-      --benchmark_out=ecal_benchmark_pubsub_log.json ^
-      --benchmark_out_format=json
+      run: |
+        ${{ runner.workspace }}/benchmarks/ecal_benchmark_pubsub.exe ^
+        --benchmark_out=ecal_benchmark_pubsub_log.json ^
+        --benchmark_out_format=json
       shell: cmd
 
     - name: Upload Benchmark Results
