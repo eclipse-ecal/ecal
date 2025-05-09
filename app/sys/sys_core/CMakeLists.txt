@@ -74,7 +74,7 @@ set(ecalsyscore_src
   src/task/task_group.cpp
 )
 
-add_library(${PROJECT_NAME} ${ecalsyscore_src})
+ecal_add_library(${PROJECT_NAME} ${ecalsyscore_src})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
@@ -87,16 +87,19 @@ target_compile_definitions(${PROJECT_NAME}
 create_targets_protobuf()
 
 target_link_libraries(${PROJECT_NAME}
-  Threads::Threads
-  tinyxml2::tinyxml2
+  PUBLIC
+  eCAL::core
   spdlog::spdlog
-  protobuf::libprotobuf
-  eCAL::protobuf_core
+  eCAL::sys_client_core
   eCAL::core_pb
   eCAL::app_pb
-  EcalParser
-  eCAL::sys_client_core
   eCAL::ecal-utils
+  PRIVATE
+  Threads::Threads
+  tinyxml2::tinyxml2
+  protobuf::libprotobuf
+  eCAL::protobuf_core
+  EcalParser
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)

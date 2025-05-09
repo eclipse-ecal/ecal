@@ -21,7 +21,7 @@ project(measurement)
 ###################################
 # Base Measurement common headers #
 ###################################
-add_library(measurement_base INTERFACE)
+ecal_add_interface_library(measurement_base)
 add_library(eCAL::measurement_base ALIAS measurement_base)
 
 target_sources(measurement_base
@@ -49,7 +49,7 @@ install(
 ###################################
 # Measurement library             #
 ###################################
-add_library(measurement INTERFACE)
+ecal_add_interface_library(measurement)
 add_library(eCAL::measurement ALIAS measurement)
 
 target_sources(measurement
