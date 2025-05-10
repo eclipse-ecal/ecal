@@ -1,4 +1,4 @@
-#include "ecal_config_helper.h"
+#include <EcalConfigHelper/ecal_config_helper.h>
 #include "test_message.pb.h"
 #include <ecal/ecal.h>
 #include <tclap/CmdLine.h>

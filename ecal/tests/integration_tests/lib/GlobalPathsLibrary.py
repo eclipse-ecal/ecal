@@ -8,16 +8,16 @@ class GlobalPathsLibrary:
         self.integration_tests_root = os.path.abspath(os.path.join(current_file_dir, ".."))
 
         # Default values (can be overridden)
-        self.test_case_folder = "pub_sub_tests"
+        self.test_case_folder = "basic_pub_sub"
         self.tag_prefix = "basic_pub_sub"
 
     @keyword
     def set_test_context(self, test_case_folder: str, tag_prefix: str):
         """
-        Sets the test folder (e.g. pub_sub_tests or message_validation) and tag prefix (e.g. basic_pub_sub).
+        Sets the test folder (e.g. basic_pub_sub or message_validation) and tag prefix (e.g. basic_pub_sub).
         Should be called once in Suite Setup if you're using non-default test cases.
         """
-        if test_case_folder in ["pub_sub_tests", "message_validation"]:
+        if test_case_folder in ["basic_pub_sub", "multi_pub_sub", "pub_sub_crash", "network_crash", "message_validation"]:
             self.test_case_folder = test_case_folder
             self.tag_prefix = tag_prefix
         else:
@@ -33,13 +33,7 @@ class GlobalPathsLibrary:
 
     @keyword
     def get_build_script_path(self):
-        """
-        Dynamically returns the build script path based on the selected test case folder.
-        """
-        if self.test_case_folder == "message_validation":
-            return os.path.join(self.integration_tests_root, self.test_case_folder, "scripts", "build_message_validation_images.sh")
-        else:
-            return os.path.join(self.integration_tests_root, self.test_case_folder, "scripts", "build_pubsub_images.sh")
+        return os.path.join(self.integration_tests_root, self.test_case_folder, "scripts", "build_images.sh")
 
     @keyword
     def get_build_script_args(self):
