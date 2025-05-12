@@ -254,7 +254,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: benchmarks
-        path: ${{ runner.workspace }}/_build/complete/bin/Release/ecal_benchmark*.exe
+        path: ${{ runner.workspace }}/_build/complete/bin/Release/ecal_benchmark_pubsub.exe
 
     # --------------------------------------------------------------------------------------------------
 
