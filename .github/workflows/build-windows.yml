@@ -250,29 +250,9 @@ jobs:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
-    - name: Upload Benchmarks
-      uses: actions/upload-artifact@v4
-      with:
-        name: benchmarks
-        path: ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark*.exe
-
-    # --------------------------------------------------------------------------------------------------
-
-  run-benchmarks:
-    runs-on: windows-2019
-    needs: build-windows
-
-    steps:
-
-    - name: Download Benchmark Executables
-      uses: actions/download-artifact@v4
-      with:
-        name: benchmarks
-        path: ${{ runner.workspace }}/benchmarks
-    
     - name: Run Publisher/Subscriber Benchmark
       run: |
-        ${{ runner.workspace }}/benchmarks/ecal_benchmark_pubsub.exe ^
+        ${{ runner.workspace }}/bin/ecal_benchmark_pubsub.exe ^
         --benchmark_out=ecal_benchmark_pubsub_log.json ^
         --benchmark_out_format=json
       shell: cmd
@@ -281,8 +261,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: benchmark-logs
-        path: ${{ runner.workspace }}/benchmarks/*.json
+        path: ${{ runner.workspace }}/bin/*.json
 
+    - name: Upload Benchmarks
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmarks
+        path: ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark*.exe
+ 
     # --------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
