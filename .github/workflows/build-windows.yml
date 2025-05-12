@@ -252,7 +252,7 @@ jobs:
 
     - name: Run Publisher/Subscriber Benchmark
       run: |
-        ${{ runner.workspace }}/bin/ecal_benchmark_pubsub.exe ^
+        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe ^
         --benchmark_out=ecal_benchmark_pubsub_log.json ^
         --benchmark_out_format=json
       shell: cmd
@@ -261,7 +261,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: benchmark-logs
-        path: ${{ runner.workspace }}/bin/*.json
+        path: ${{ runner.workspace }}/_build/complete/bin/*.json
 
     - name: Upload Benchmarks
       uses: actions/upload-artifact@v4
