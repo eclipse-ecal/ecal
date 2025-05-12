@@ -252,9 +252,7 @@ jobs:
 
     - name: Run Publisher/Subscriber Benchmark
       run: |
-        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe ^
-        --benchmark_out=ecal_benchmark_pubsub_log.json ^
-        --benchmark_out_format=json
+        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
       shell: cmd
 
     - name: Upload Benchmark Results
