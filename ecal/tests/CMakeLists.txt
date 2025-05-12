@@ -28,7 +28,8 @@ add_subdirectory(cpp/descgate_test)
 add_subdirectory(cpp/config_test)
 
 add_subdirectory(integration_tests/message_validation/src)
-
+add_subdirectory(integration_tests/lib/MonitoringLibrary)
+add_subdirectory(integration_tests/lib/EcalConfigHelper)
 
 if(ECAL_CORE_REGISTRATION)
   add_subdirectory(cpp/registration_test)
