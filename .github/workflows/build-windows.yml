@@ -261,7 +261,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: benchmark-logs
-        path: ${{ runner.workspace }}/_build/complete/bin/*.json
+        path: ${{ runner.workspace }}/_build/complete/bin/*
 
     - name: Upload Benchmarks
       uses: actions/upload-artifact@v4
