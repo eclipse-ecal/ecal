@@ -22,6 +22,11 @@ target_include_directories(EcalConfigHelper
         ${ECAL_INCLUDE_DIRS}
 )
 
+#target_link_libraries(EcalConfigHelper 
+#    PUBLIC 
+#        eCAL::core
+#)
+
 # Set C++ standard
 set_target_properties(EcalConfigHelper PROPERTIES
     CXX_STANDARD 17

@@ -19,7 +19,14 @@ target_include_directories(MonitoringLibrary
     PUBLIC 
         $<BUILD_INTERFACE:${SRC_DIR}>
         $<INSTALL_INTERFACE:include/MonitoringLibrary>
+        ${eCAL_INCLUDE_DIRS}
 )
+
+# Link against eCAL to ensure the include directories are set correctly
+#target_link_libraries(MonitoringLibrary 
+#   PUBLIC 
+#        eCAL::core
+#)
 
 # Set C++ standard
 set_target_properties(MonitoringLibrary PROPERTIES
