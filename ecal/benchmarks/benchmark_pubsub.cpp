@@ -31,7 +31,7 @@
 #define REGISTRATION_DELAY_MS   2000
 #define RANGE_MULTIPLIER        1<<6
 #define RANGE_START             1
-#define RANGE_LIMIT             1<<18
+#define RANGE_LIMIT             1<<24
 #define WARMUP_TIME_S           2
 
 
@@ -62,7 +62,7 @@ namespace Send {
     eCAL::Finalize();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->MinWarmUpTime(WARMUP_TIME_S)->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->Unit(benchmark::kMicrosecond);
 }
 
 
@@ -128,6 +128,7 @@ namespace Receive_Latency {
 
   void callback_manual(){
     time_end = std::chrono::high_resolution_clock::now();
+
     std::lock_guard<std::mutex> lock(mtx);
     msg_received = true;
     convar.notify_one();
@@ -152,9 +153,11 @@ namespace Receive_Latency {
       msg_received = false;
       publisher.Send(content_vector.data(), payload_size);
       std::unique_lock<std::mutex> lock(mtx);
+
       time_start = std::chrono::high_resolution_clock::now();
       convar.wait(lock, [&]() {return msg_received;});
 
+      // Calculate time difference between message sent and message received
       auto time_elapsed = std::chrono::duration_cast<std::chrono::duration<double>> (time_end - time_start);
       state.SetIterationTime(time_elapsed.count());
     }
