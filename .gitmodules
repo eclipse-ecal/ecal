@@ -52,3 +52,6 @@
 [submodule "thirdparty/nanobind/nanobind"]
 	path = thirdparty/nanobind/nanobind
 	url = https://github.com/wjakob/nanobind.git
+[submodule "thirdparty/robin-map/robin-map"]
+	path = thirdparty/robin-map/robin-map
+	url = https://github.com/Tessil/robin-map.git
