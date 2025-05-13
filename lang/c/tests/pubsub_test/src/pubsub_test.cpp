@@ -110,7 +110,7 @@ TEST_F(pubsub_test_c, pubsub)
   EXPECT_EQ(0, eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, &callback_count));
 
   // sleep here because otherwise it takes to long to set the receive-callback
-  eCAL_Process_SleepMS(8000);
+  eCAL_Process_SleepMS(2000);
 
   // send messages
   for(int i = 0; i < 10; i++) 
