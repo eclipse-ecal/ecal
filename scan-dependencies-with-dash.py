@@ -118,6 +118,7 @@ if __name__ == "__main__":
     clearlydefined_ids.append("git/github/seladb/PcapPlusPlus/cb97f6e7d22cbacd6a5ad843356dc6be012fa7e1")
     clearlydefined_ids.append("git/github/qt/qtbase/v6.6.3")
     clearlydefined_ids.append("git/github/nanopb/nanopb/0.4.9")
+    clearlydefined_ids.append("git/github/nmap/npcap/v1.8.1")
     
     # Write the clearlydefined identifiers to the output file
     with open(output_path, 'w') as f:
