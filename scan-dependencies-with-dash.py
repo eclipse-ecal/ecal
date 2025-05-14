@@ -115,8 +115,8 @@ if __name__ == "__main__":
             clearlydefined_ids.append(clearlydefined_id)
 
     # Hardcoded dependencies that are not submodules
-    clearlydefined_ids.append("git/github/seladb/PcapPlusPlus/v22.11")
-    clearlydefined_ids.append("git/github/qt/qtbase/v6.6.1")
+    clearlydefined_ids.append("git/github/seladb/PcapPlusPlus/cb97f6e7d22cbacd6a5ad843356dc6be012fa7e1")
+    clearlydefined_ids.append("git/github/qt/qtbase/v6.6.3")
     clearlydefined_ids.append("git/github/nanopb/nanopb/0.4.9")
     
     # Write the clearlydefined identifiers to the output file
