@@ -36,7 +36,7 @@ namespace eCAL
     {
       // initialize io context
       m_io_context = std::make_unique<asio::io_context>();
-      m_work       = std::make_unique<asio::io_context::work>(*m_io_context);
+      m_work       = std::make_unique<work_guard_t>(m_io_context->get_executor());
 
       // create the socket and set all socket options
       InitializeSocket(attr_);
