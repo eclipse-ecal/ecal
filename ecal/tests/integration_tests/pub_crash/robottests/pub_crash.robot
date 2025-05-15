@@ -1,19 +1,18 @@
-# This Robot Framework test validates communication resilience when a publisher crashes.
-# 
-# Test Objective:
-#   Ensure that communication to the subscriber continues even if one publisher fails.
-#
-# Test Scenario:
-#   - Two publishers are started: 
-#       1. crash_publisher: sends a few messages (value 42) and then crashes.
-#       2. test_publisher: continuously sends messages (value 43).
-#   - One subscriber receives data from both publishers.
-#   - A monitoring process tracks process appearance.
-#
-# Success Criteria:
-#   - Subscriber receives enough messages with value 43 after crash_publisher crashes.
-#   - Subscriber exits with code 0, indicating continued communication.
-#   - All containers terminate cleanly.
+*** Comments ***
+ Test Objective:
+   Ensure that communication to the subscriber continues even if one publisher crashes.
+
+ Test Scenario:
+   - Two publishers are started: 
+       1. crash_publisher: sends a few messages (value 42) and then crashes.
+       2. test_publisher: continuously sends messages (value 43).
+   - One subscriber receives data from both publishers.
+   - A monitoring process tracks process appearance.
+
+ Success Criteria:
+   - Subscriber receives enough messages with value 43 after crash_publisher crashes.
+   - Subscriber exits with code 0, indicating continued communication.
+   - All containers terminate cleanly.
 
 *** Settings ***
 Library           OperatingSystem

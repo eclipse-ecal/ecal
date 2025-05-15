@@ -1,19 +1,18 @@
-# This Robot Framework test verifies communication robustness when a subscriber crashes.
-#
-# Test Objective:
-#   Ensure that a second subscriber continues to receive messages even if one subscriber crashes.
-#
-# Test Scenario:
-#   - One publisher (`test_publisher`) sends continuous messages (value 43).
-#   - Two subscribers are started:
-#       1. `crash_subscriber`: receives a few messages and then crashes.
-#       2. `test_subscriber`: receives messages throughout the test duration.
-#   - A monitoring process tracks all components.
-#
-# Success Criteria:
-#   - `test_subscriber` must receive a number of messages.
-#   - `test_subscriber` must exit with code 0.
-#   - The crash of one subscriber does not affect the continued communication of the other.
+*** Comments ***
+ Test Objective:
+   Ensure that a second subscriber continues to receive messages even if one subscriber crashes.
+
+ Test Scenario:
+   - One publisher (`test_publisher`) sends continuous messages (value 43).
+   - Two subscribers are started:
+       1. `crash_subscriber`: receives a few messages and then crashes.
+       2. `test_subscriber`: receives messages throughout the test duration.
+   - A monitoring process tracks all components.
+
+ Success Criteria:
+   - `test_subscriber` must receive a number of messages.
+   - `test_subscriber` must exit with code 0.
+   - The crash of one subscriber does not affect the continued communication of the other.
 
 *** Settings ***
 Library           OperatingSystem

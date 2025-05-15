@@ -1,3 +1,15 @@
+*** Comments ***
+This test checks basic communication between one publisher and one subscriber.
+
+It verifies that:
+- The publisher sends messages on a single topic.
+- The subscriber receives the messages correctly.
+- Communication works in all 5 eCAL modes: local_shm, local_udp, local_tcp, network_udp, network_tcp.
+
+Success criteria:
+- The subscriber receives the expected number of messages.
+- The subscriber exits with code 0 if successful.
+
 *** Settings ***
 Library           OperatingSystem
 Library           Process
@@ -50,8 +62,7 @@ Run PubSub Test
 
     Log To Console    Running ${mode.capitalize()} Test: ${layer_tag}
 
-    Run Keyword If    '${mode}' == 'network'
-    ...    Create Docker Network    ${NETWORK}
+    Create Docker Network    ${NETWORK}
 
     Run Keyword If    '${mode}' == 'local'
     ...    Run Local Container    ${IMAGE}    ${layer_tag}
@@ -68,7 +79,6 @@ Run Local Container
     Should Be Equal As Integers    ${exit_code}    0    Communication failed!
     Log Test Summary    PubSub ${layer_tag}    ${True}
     Stop Container    ${NAME}
-
 
 Run Network Containers
     [Arguments]    ${image}    ${layer_tag}

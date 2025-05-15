@@ -1,3 +1,15 @@
+*** Comments ***
+This test checks communication in a multi-publisher, multi-subscriber scenario.
+
+It verifies that:
+- Two publishers (one sends 42, the other sends 43) publish messages on the same topic.
+- Two subscribers receive all messages from both publishers.
+- The communication works correctly in all 5 eCAL modes: local_shm, local_udp, local_tcp, network_udp, network_tcp.
+
+Success criteria:
+- Each subscriber must receive messages from both publishers.
+- The subscriber exits with code 0 if messages from both publishers were received.
+
 *** Settings ***
 Library           OperatingSystem
 Library           Process
@@ -11,114 +23,95 @@ ${BUILD_SCRIPT}   ${EMPTY}
 ${BASE_IMAGE}     multi_pub_sub
 
 *** Test Cases ***
+Multi Pub/Sub Local SHM Test
+    [Tags]    multi_pub_sub_local_shm
+    Run Multi Pub Sub Test Local    local_shm
 
-# --- Case 1: One Publisher → Multiple Subscribers ---
+Multi Pub/Sub Local UDP Test
+    [Tags]    multi_pub_sub_local_udp
+    Run Multi Pub Sub Test Local    local_udp
 
-Local SHM: 1 Pub to N Subs
-    [Tags]    multi_PubSub_local_shm_1pub_Nsubs
-    Run MultiPubSub Test    local_shm    local    1    3
+Multi Pub/Sub Local TCP Test
+    [Tags]    multi_pub_sub_local_tcp
+    Run Multi Pub Sub Test Local    local_tcp
 
-Local UDP: 1 Pub to N Subs
-    [Tags]    multi_PubSub_local_udp_1pub_Nsubs
-    Run MultiPubSub Test    local_udp    local    1    3
+Multi Pub/Sub Network UDP Test
+    [Tags]    multi_pub_sub_network_udp
+    Run Multi Pub Sub Network Test    network_udp    network
 
-Local TCP: 1 Pub to N Subs
-    [Tags]    multi_PubSub_local_tcp_1pub_Nsubs
-    Run MultiPubSub Test    local_tcp    local    1    3
-
-Network UDP: 1 Pub to N Subs
-    [Tags]    multi_PubSub_network_udp_1pub_Nsubs
-    Run MultiPubSub Test    network_udp    network    1    3
-
-Network TCP: 1 Pub to N Subs
-    [Tags]    multi_PubSub_network_tcp_1pub_Nsubs
-    Run MultiPubSub Test    network_tcp    network    1    3
-
-# --- Case 2: Multiple Publishers → One Subscriber ---
-
-Local SHM: N Pubs to 1 Sub
-    [Tags]    multi_PubSub_local_shm_Npubs_1sub
-    Run MultiPubSub Test    local_shm    local    3    1
-
-Local UDP: N Pubs to 1 Sub
-    [Tags]    multi_PubSub_local_udp_Npubs_1sub
-    Run MultiPubSub Test    local_udp    local    3    1
-
-Local TCP: N Pubs to 1 Sub
-    [Tags]    multi_PubSub_local_tcp_Npubs_1sub
-    Run MultiPubSub Test    local_tcp    local    3    1
-
-Network UDP: N Pubs to 1 Sub
-    [Tags]    multi_PubSub_network_udp_Npubs_1sub
-    Run MultiPubSub Test    network_udp    network    3    1
-
-Network TCP: N Pubs to 1 Sub
-    [Tags]    multi_PubSub_network_tcp_Npubs_1sub
-    Run MultiPubSub Test    network_tcp    network    3    1
-
-# --- Case 3: Multiple Publishers → Multiple Subscribers ---
-
-Local SHM: N Pubs to N Subs
-    [Tags]    multi_PubSub_local_shm_Npubs_Nsubs
-    Run MultiPubSub Test    local_shm    local    3    3
-
-Local UDP: N Pubs to N Subs
-    [Tags]    multi_PubSub_local_udp_Npubs_Nsubs
-    Run MultiPubSub Test    local_udp    local    3    3
-
-Local TCP: N Pubs to N Subs
-    [Tags]    multi_PubSub_local_tcp_Npubs_Nsubs
-    Run MultiPubSub Test    local_tcp    local    3    3
-
-Network UDP: N Pubs to N Subs
-    [Tags]    multi_PubSub_network_udp_Npubs_Nsubs
-    Run MultiPubSub Test    network_udp    network    3    3
-
-Network TCP: N Pubs to N Subs
-    [Tags]    multi_PubSub_network_tcp_Npubs_Nsubs
-    Run MultiPubSub Test    network_tcp    network    3    3
-
+Multi Pub/Sub Network TCP Test
+    [Tags]    multi_pub_sub_network_tcp
+    Run Multi Pub Sub Network Test    network_tcp    network
+ 
 *** Keywords ***
 Init Test Context
     Set Test Context    multi_pub_sub    multi_pub_sub
-    ${build}=           Get Build Script Path
-    ${net}=             Get Network Name
-    ${args}=            Get Build Script Args
-    Set Suite Variable    ${BUILD_SCRIPT}   ${build}
-    Set Suite Variable    ${NETWORK}        ${net}
+    ${build}=    Get Build Script Path
+    ${net}=      Get Network Name
+    ${args}=     Get Build Script Args
+    Set Suite Variable    ${BUILD_SCRIPT}    ${build}
+    Set Suite Variable    ${NETWORK}         ${net}
 
-    Log To Console    [SETUP] Checking and building Docker images...
-    ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
-    Should Be Equal As Integers    ${result.rc}    0    Failed to build Docker images!
+    Log To Console    [SETUP] Building Docker image...
+    ${result}=    Run Process    ${BUILD_SCRIPT}    @{args}
+    Should Be Equal As Integers    ${result.rc}    0    Build failed!
 
-Run MultiPubSub Test
-    [Arguments]    ${layer_tag}    ${mode}    ${pub_count}    ${sub_count}
+Run Multi Pub Sub Network Test
+    [Arguments]    ${layer_tag}    ${mode}
     ${IMAGE}=    Set Variable    ${BASE_IMAGE}_${layer_tag}
-    ${TOPIC}=    Set Variable    topic_${layer_tag}
+    ${TOPIC}=    Set Variable    test_topic
+    ${PUB1}=     Set Variable    pub1_${layer_tag}
+    ${PUB2}=     Set Variable    pub2_${layer_tag}
+    ${SUB1}=     Set Variable    sub1_${layer_tag}
+    ${SUB2}=     Set Variable    sub2_${layer_tag}
 
-    Run Keyword If    '${mode}' == 'network'
-    ...    Create Docker Network    ${NETWORK}
+    Log To Console    \n[INFO] Starting multi pub/sub test with ${layer_tag}
 
-    FOR    ${i}    IN RANGE    ${sub_count}
-        ${NAME}=    Set Variable    sub_${layer_tag}_${i}
-        Start Container    ${NAME}    ${IMAGE}    subscriber    --mode=${layer_tag}    --topic=${TOPIC}    --name=${NAME}    network=${NETWORK}
-    END
+    Create Docker Network    ${NETWORK}
 
-    FOR    ${j}    IN RANGE    ${pub_count}
-        ${NAME}=    Set Variable    pub_${layer_tag}_${j}
-        Start Container    ${NAME}    ${IMAGE}    publisher    --mode=${layer_tag}    --topic=${TOPIC}    --name=${NAME}    network=${NETWORK}
-    END
+    Start Container    ${SUB1}    ${IMAGE}    multi_subscriber    ${layer_tag}    ${TOPIC}    network=${NETWORK}
+    Start Container    ${SUB2}    ${IMAGE}    multi_subscriber2    ${layer_tag}    ${TOPIC}    network=${NETWORK}
+    Sleep    1s
+    Start Container    ${PUB1}    ${IMAGE}    multi_publisher     ${layer_tag}    ${TOPIC}    network=${NETWORK}
+    Start Container    ${PUB2}    ${IMAGE}    multi_publisher2     ${layer_tag}    ${TOPIC}    network=${NETWORK}
 
-    Sleep    5s
+    Wait For Container Exit    ${SUB1}
+    Wait For Container Exit    ${SUB2}
+    Wait For Container Exit    ${PUB1}
+    Wait For Container Exit    ${PUB2}
 
-    FOR    ${i}    IN RANGE    ${sub_count}
-        ${NAME}=    Set Variable    sub_${layer_tag}_${i}
-        ${exit_code}=    Wait For Container Exit    ${NAME}
-        Should Be Equal As Integers    ${exit_code}    0
-        Stop Container    ${NAME}
-    END
+    ${log1}=    Get Container Logs    ${SUB1}
+    Log To Console    \n[SUBSCRIBER 1 LOGS]\n${log1}
 
-    FOR    ${j}    IN RANGE    ${pub_count}
-        ${NAME}=    Set Variable    pub_${layer_tag}_${j}
-        Stop Container    ${NAME}
-    END
+    ${log2}=    Get Container Logs    ${SUB2}
+    Log To Console    \n[SUBSCRIBER 2 LOGS]\n${log2}
+
+    ${exit1}=    Wait For Container Exit    ${SUB1}
+    ${exit2}=    Wait For Container Exit    ${SUB2}
+    Should Be Equal As Integers    ${exit1}    0    Subscriber 1 failed!
+    Should Be Equal As Integers    ${exit2}    0    Subscriber 2 failed!
+
+    Log Test Summary    Multi Pub/Sub Test ${layer_tag}    ${True}
+
+    Stop Container    ${SUB1}
+    Stop Container    ${SUB2}
+    Stop Container    ${PUB1}
+    Stop Container    ${PUB2}
+
+Run Multi Pub Sub Test Local
+    [Arguments]    ${layer_tag}
+    ${IMAGE}=      Set Variable    ${BASE_IMAGE}_${layer_tag}
+    ${CONTAINER}=  Set Variable    multi_local${layer_tag}
+
+    Log To Console    \n[INFO] Running local multi pub/sub test all bins in One Container with ${layer_tag}
+    Create Docker Network    ${NETWORK}
+
+    Start Container    ${CONTAINER}    ${IMAGE}    local_multi    ${layer_tag}
+    
+    ${exit_code}=    Wait For Container Exit    ${CONTAINER}
+    Should Be Equal As Integers    ${exit_code}    0    Local Multi Pub/Sub Test test failed!
+
+    ${logs}=    Get Container Logs    ${CONTAINER}
+    Log To Console    \n[Local Multi Pub/Sub Test OUTPUT]\n${logs}
+
+    Stop Container    ${CONTAINER}

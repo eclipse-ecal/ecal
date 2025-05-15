@@ -7,17 +7,11 @@ RUN apt-get update && apt-get install -y libtclap-dev
 
 # Copy libraries and scripts
 COPY lib/EcalConfigHelper /app/lib/EcalConfigHelper
-COPY lib/MonitoringLibrary /app/lib/MonitoringLibrary
 COPY message_validation/src/ ./src/
 COPY message_validation/scripts/entrypoint.sh ./entrypoint.sh
 
-# Build the libraries (EcalConfigHelper and MonitoringLibrary)
+# Build the libraries
 WORKDIR /app/lib/EcalConfigHelper
-RUN mkdir -p build && cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && \
-    make -j$(nproc) && make install
-
-WORKDIR /app/lib/MonitoringLibrary
 RUN mkdir -p build && cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && \
     make -j$(nproc) && make install

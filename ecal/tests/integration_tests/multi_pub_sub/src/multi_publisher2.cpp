@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     setup_ecal_configuration(mode, true, node_name);
 
     eCAL::CPublisher pub(topic);
-    std::vector<unsigned char> buffer(10, 43);
+    std::vector<unsigned char> buffer(10, 42);
 
     std::cout << "[Publisher] Started with mode=" << mode
               << ", topic=" << topic
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < count && eCAL::Ok(); ++i)
     {
       pub.Send(buffer.data(), buffer.size());
-      //std::cout << "[Publisher] Sent buffer with content: 43 (message " << i + 1 << ")" << std::endl;
+      //std::cout << "[Publisher] Sent buffer with content: 42 (message " << i + 1 << ")" << std::endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
     }
 
