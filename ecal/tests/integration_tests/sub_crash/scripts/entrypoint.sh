@@ -3,7 +3,9 @@
 ROLE=$1        # publisher | subscriber | monitor
 MODE=$2        # local_shm | local_udp | etc.
 TOPIC=$3       # topic name (pub/sub) OR monitored process (monitor)
-EXTRA=$4       # optional extra args
+NAME=$4        # optional node name
+EXTRA=$5       # optional extra args
+
 
 if [ -z "$ROLE" ] || [ -z "$MODE" ]; then
   echo "Usage: $0 <publisher|subscriber|monitor> <mode> [topic_or_process] [extra args]"
@@ -14,12 +16,12 @@ TOPIC=${TOPIC:-test_topic}
 
 cd /app/src/build
 
-if [ "$ROLE" = "publisher" ]; then
+if [ "$ROLE" = "test_subscriber" ]; then
   echo "[Entrypoint] Starting crash publisher in mode $MODE"
   ARGS="--mode $MODE --topic $TOPIC"
-  ./crash_publisher $ARGS $EXTRA
+  ./test_subscriber $ARGS $EXTRA
 
-elif [ "$ROLE" = "subscriber" ]; then
+elif [ "$ROLE" = "crash_subscriber" ]; then
   echo "[Entrypoint] Starting crash subscriber in mode $MODE"
   ARGS="--mode $MODE --topic $TOPIC"
   ./crash_subscriber $ARGS $EXTRA
@@ -30,7 +32,7 @@ elif [ "$ROLE" = "monitor" ]; then
   ./monitoring $ARGS $EXTRA
   sleep 1
 
-elif [ "$ROLE" = "test_pub" ]; then
+elif [ "$ROLE" = "test_publisher" ]; then
   echo "[Entrypoint] Starting resilient publisher in mode $MODE"
   ARGS="--mode $MODE --topic $TOPIC --name ${NAME:-test_pub}"
   ./test_publisher $ARGS $EXTRA
@@ -40,7 +42,7 @@ elif [ "$ROLE" = "local_all" ]; then
 
   ARGS="--mode $MODE --topic $TOPIC"
 
-  ./monitoring "--mode $MODE" &
+  ./monitoring --mode $MODE &
   MON_PID=$!
 
   sleep 1
@@ -48,12 +50,21 @@ elif [ "$ROLE" = "local_all" ]; then
   ./crash_subscriber $ARGS &
   SUB_PID=$!
 
-  ./crash_publisher $ARGS &
-  PUB_PID=$!
+  ./test_subscriber $ARGS &
+  CRASH_SUB_PID=$!
 
-  wait $SUB_PID
-  wait $PUB_PID
+  ./test_publisher $ARGS &
+  TEST_PUB_PID=$!
+
+  wait $TEST_PUB_PID
+  wait $CRASH_SUB_PID
   wait $MON_PID
+  wait $SUB_PID
+
+if [[ $? -eq 134 ]]; then
+  echo "Subscriber crashed as expected"
+  exit 0
+fi
 
 else
   echo "[Entrypoint] Unknown role: $ROLE"

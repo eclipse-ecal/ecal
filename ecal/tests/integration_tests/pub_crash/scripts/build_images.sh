@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage: ./build_images.sh <tag_prefix>
-# Example: ./build_images.sh pub_sub_crash
+# Example: ./build_images.sh pub_crash
 
 TAG_PREFIX="$1"
 

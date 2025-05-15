@@ -20,21 +20,20 @@ int main(int argc, char* argv[])
 {
   try
   {
-    // Argumente parsen
     TCLAP::CmdLine cmd("eCAL Monitoring", ' ', "1.0");
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "eCAL transport mode", true, "", "string");
     cmd.add(mode_arg);
     cmd.parse(argc, argv);
 
-    // Initialisierung
     std::string node_name = std::string(argv[0]);
     setup_ecal_configuration(mode_arg.getValue(), false, node_name);
 
-    std::cout << "[Monitoring] Started process monitor (mode=" << mode_arg.getValue()
+    std::cout << "\n[Monitoring] Started process monitor (mode=" << mode_arg.getValue()
               << ", node=" << node_name << ")" << std::endl;
 
     const std::vector<std::string> process_names = {
-      "/app/src/build/crash_publisher",
+      "/app/src/build/test_publisher",
+      "/app/src/build/test_subscriber",
       "/app/src/build/crash_subscriber"
     };
 
@@ -53,14 +52,14 @@ int main(int argc, char* argv[])
       auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start_time).count();
       if (elapsed >= max_duration_sec)
       {
-        std::cout << "[Monitoring] Exiting after " << max_duration_sec << " seconds." << std::endl;
+        std::cout << "\n[Monitoring] Exiting after " << max_duration_sec << " seconds." << std::endl;
         break;
       }
 
       eCAL::Monitoring::SMonitoring mon;
       if (!eCAL::Monitoring::GetMonitoring(mon, eCAL::Monitoring::Entity::Process))
       {
-        std::cerr << "[Monitoring] Failed to get monitoring data." << std::endl;
+        std::cerr << "\n[Monitoring] Failed to get monitoring data." << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(1));
         continue;
       }
@@ -88,8 +87,7 @@ int main(int argc, char* argv[])
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    // Zusammenfassung
-    std::cout << "\n[Monitoring] Summary after " << max_duration_sec << " seconds:\n";
+    std::cout << "\n[Monitoring] Summary after " << max_duration_sec << " seconds (not always accurate output):\n";
     for (const auto& [proc_name, status] : monitored_processes)
     {
       if (status.seen)
@@ -107,7 +105,7 @@ int main(int argc, char* argv[])
   }
   catch (const TCLAP::ArgException& e)
   {
-    std::cerr << "TCLAP error: " << e.error() << " (arg: " << e.argId() << ")" << std::endl;
+    std::cerr << "\nTCLAP error: " << e.error() << " (arg: " << e.argId() << ")" << std::endl;
     return 1;
   }
 

@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
-project(pub_sub_crash)
+project(sub_crash)
 
 find_package(EcalConfigHelper REQUIRED)
 find_package(eCAL REQUIRED)
 
-add_executable(crash_publisher crash_publisher.cpp)
+add_executable(test_subscriber test_subscriber.cpp)
 add_executable(test_publisher test_publisher.cpp)
 add_executable(crash_subscriber crash_subscriber.cpp)
 add_executable(monitoring monitoring.cpp)
 
-target_link_libraries(crash_publisher
+target_link_libraries(test_subscriber
   EcalConfigHelper::EcalConfigHelper
   eCAL::core
 )

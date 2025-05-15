@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y libtclap-dev
 
 # Copy libraries and scripts
 COPY lib/EcalConfigHelper /app/lib/EcalConfigHelper
-COPY pub_sub_crash/src/ ./src/
-COPY pub_sub_crash/scripts/entrypoint.sh ./entrypoint.sh
+COPY pub_crash/src/ ./src/
+COPY pub_crash/scripts/entrypoint.sh ./entrypoint.sh
 
 # Build the libraries
 WORKDIR /app/lib/EcalConfigHelper

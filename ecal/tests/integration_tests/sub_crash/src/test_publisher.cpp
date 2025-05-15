@@ -10,13 +10,13 @@ int main(int argc, char* argv[])
 {
   try
   {
-    TCLAP::CmdLine cmd("eCAL Test Publisher", ' ', "1.0");
+    TCLAP::CmdLine cmd("Test Publisher", ' ', "1.0");
 
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode (e.g., network_udp)", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
     TCLAP::ValueArg<std::string> name_arg("n", "name", "eCAL node name", false, "test_publisher", "string");
-    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages to send", false, 50, "int");
-    TCLAP::ValueArg<int> delay_arg("d", "delay", "Delay between sends in milliseconds", false, 1000, "int");
+    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages to send", false, 40, "int");
+    TCLAP::ValueArg<int> delay_arg("d", "delay", "Delay between sends in milliseconds", false, 500, "int");
 
     cmd.add(mode_arg);
     cmd.add(topic_arg);
@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
     setup_ecal_configuration(mode, true, node_name);
 
     eCAL::CPublisher pub(topic);
-    std::vector<unsigned char> buffer(10, 43);  // Different content (43) for distinction
+    std::vector<unsigned char> buffer(10, 43);
 
-    std::cout << "[Test Publisher] Started with mode=" << mode
+    std::cout << "[Publisher] Started with mode=" << mode
               << ", topic=" << topic
               << ", node=" << node_name
               << ", count=" << count
@@ -45,17 +45,17 @@ int main(int argc, char* argv[])
     for (int i = 0; i < count && eCAL::Ok(); ++i)
     {
       pub.Send(buffer.data(), buffer.size());
-      std::cout << "[Test Publisher] Sent buffer with content: 43 (message " << i + 1 << ")" << std::endl;
+      //std::cout << "[Publisher] Sent buffer with content: 43 (message " << i + 1 << ")" << std::endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
     }
 
-    std::cout << "[Test Publisher] Finished sending messages." << std::endl;
+    std::cout << "\n[Publisher] Finished sending messages." << std::endl;
     eCAL::Finalize();
     return 0;
   }
   catch (const TCLAP::ArgException& e)
   {
-    std::cerr << "TCLAP error: " << e.error() << " (arg: " << e.argId() << ")" << std::endl;
+    std::cerr << "\nTCLAP error: " << e.error() << " (arg: " << e.argId() << ")" << std::endl;
     return 1;
   }
 }
