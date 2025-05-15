@@ -45,6 +45,7 @@ namespace Send {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
 
     // Initialize eCAL and create sender and receiver
     eCAL::Initialize("Benchmark");
@@ -55,7 +56,7 @@ namespace Send {
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
-      publisher.Send(content_vector.data(), payload_size);
+      publisher.Send(content_addr, payload_size);
     }
 
     // Finalize eCAL
@@ -88,6 +89,7 @@ namespace Send_and_Receive {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender and receiver and register callback function
     eCAL::Initialize("Benchmark");
@@ -100,7 +102,7 @@ namespace Send_and_Receive {
     // This is the benchmarked section: Sending the payload and waiting for the receive callback
     for (auto _ : state) {
       msg_received = false;
-      publisher.Send(content_vector.data(), payload_size);
+      publisher.Send(content_addr, payload_size);
       std::unique_lock<std::mutex> lock(mtx);
       convar.wait(lock, [] {return msg_received;});
     }
