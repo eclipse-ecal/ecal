@@ -55,7 +55,8 @@ namespace eCAL
       void Receive();
 
       std::unique_ptr<asio::io_context>       m_io_context;
-      std::unique_ptr<asio::io_context::work> m_work;
+      using work_guard_t = asio::executor_work_guard<asio::io_context::executor_type>;
+      std::unique_ptr<work_guard_t>           m_work;
       std::unique_ptr<ecaludp::SocketNpcap>   m_socket;
 
       asio::ip::udp::endpoint                 m_sender_endpoint;
