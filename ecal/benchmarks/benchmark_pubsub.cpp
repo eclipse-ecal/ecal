@@ -47,10 +47,16 @@ namespace Send {
     std::vector<char> content_vector(payload_size);
     char* content_addr = content_vector.data();
 
-    // Initialize eCAL and create sender and receiver
+    // Initialize eCAL and create sender
     eCAL::Initialize("Benchmark");
     eCAL::CPublisher publisher("benchmark_topic");
-    eCAL::CSubscriber subscriber("benchmark_topic");
+
+    // Create receiver in a different thread
+    std::thread receiver_thread([]() { 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      while(eCAL::Ok()) {__nop();}
+    } );
+    
     // Wait for eCAL synchronization
     std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
 
@@ -59,11 +65,12 @@ namespace Send {
       publisher.Send(content_addr, payload_size);
     }
 
-    // Finalize eCAL
+    // Finalize eCAL and wait for receiver thread to finish
     eCAL::Finalize();
+    receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Unit(benchmark::kMicrosecond);
 }
 
 
@@ -91,11 +98,17 @@ namespace Send_and_Receive {
     std::vector<char> content_vector(payload_size);
     char* content_addr = content_vector.data();
 
-    // Initialize eCAL, create sender and receiver and register callback function
+    // Initialize eCAL, create sender
     eCAL::Initialize("Benchmark");
     eCAL::CPublisher publisher("benchmark_topic");
-    eCAL::CSubscriber subscriber("benchmark_topic");
-    subscriber.SetReceiveCallback(std::bind(&callback));
+
+    // Create receiver in a different thread and register callback function
+    std::thread receiver_thread([](){ 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      subscriber.SetReceiveCallback(std::bind(&callback));
+      while(eCAL::Ok()) {__nop();}
+    });
+
     // Wait for eCAL synchronization
     std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
 
@@ -107,12 +120,12 @@ namespace Send_and_Receive {
       convar.wait(lock, [] {return msg_received;});
     }
 
-    // Finalize eCAL
+    // Finalize eCAL and wait for receiver thread to finish
     eCAL::Finalize();
+    receiver_thread.join();
   }
-  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Unit(benchmark::kMicrosecond);
 }
-
 
 
 /*
