@@ -183,29 +183,11 @@ TEST_F(pubsub_test_c, pub_GetSubscriberCount)
   EXPECT_EQ(3, eCAL_Publisher_GetSubscriberCount(publisher));
 }
 
-/*
-TEST(pubsub_test_c, pub_SendPayloadWriter) 
+
+TEST_F(pubsub_test_c, pub_SendPayloadWriter) 
 {
-  eCAL_Publisher* publisher;
-  struct eCAL_SDataTypeInformation data_type_information;
-  const char *topic_name = "hello";
-
-  // initialize eCAL API
-  EXPECT_EQ(0, eCAL_Initialize("hello_send_c", NULL, NULL));
-
-  // create publisher "Hello"
-  memset(&data_type_information, 0, sizeof(struct eCAL_SDataTypeInformation));
-  data_type_information.name = "string";
-  data_type_information.encoding = "utf-8";
-
-  publisher = eCAL_Publisher_New(topic_name, &data_type_information, NULL, NULL);
-  EXPECT_NE(nullptr, publisher);
-
+  eCAL_PayloadWriter payload_writer;
+  payload_writer.WriteFull
   // actual test
-  // EXPECT_EQ(0, eCAL_Publisher_SendPayloadWriter(publisher, payload_writer, NULL));
-
-  eCAL_Publisher_Delete(publisher);
-
-  EXPECT_EQ(0, eCAL_Finalize());
+  EXPECT_EQ(0, eCAL_Publisher_SendPayloadWriter(publisher, payload_writer, NULL));
 }
-*/
