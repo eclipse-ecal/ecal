@@ -1,5 +1,5 @@
-#include <EcalConfigHelper/ecal_config_helper.h>
-#include <ecal/monitoring.h>
+#include <ecal_config_helper.h>
+#include <ecal/ecal.h>
 #include <tclap/CmdLine.h>
 
 #include <iostream>

@@ -1,6 +1,6 @@
-#include <EcalConfigHelper/ecal_config_helper.h>
-#include "test_message.pb.h"
+#include <ecal_config_helper.h>
 #include <ecal/ecal.h>
+#include "test_message.pb.h"
 #include <tclap/CmdLine.h>
 #include <iostream>
 #include <fstream>

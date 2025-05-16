@@ -2,27 +2,18 @@ FROM ecal_base
 
 WORKDIR /app
 
-# Install dependencies
+# Dependencies
 RUN apt-get update && apt-get install -y libtclap-dev
 
-# Copy libraries and scripts
 COPY lib/EcalConfigHelper /app/lib/EcalConfigHelper
-COPY message_validation/src/ ./src/
-COPY message_validation/scripts/entrypoint.sh ./entrypoint.sh
+COPY message_validation/src/ /app/src/
+COPY message_validation/scripts/entrypoint.sh /app/entrypoint.sh
 
-# Build the libraries
-WORKDIR /app/lib/EcalConfigHelper
-RUN mkdir -p build && cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && \
-    make -j$(nproc) && make install
-
-# Build publisher and subscriber
 WORKDIR /app/src
-RUN mkdir -p build && cd build && \
-    cmake .. && \
+RUN mkdir build && cd build && \
+    cmake -DECALCONFIGHELPER_PATH=/app/lib/EcalConfigHelper .. && \
     make -j$(nproc)
 
-# Set entrypoint
 WORKDIR /app
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
