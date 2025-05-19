@@ -41,7 +41,7 @@ void printAddressBook(AddressBook::Builder addressBook)
   std::cout << "our string: " << m_string.cStr() << std::endl;
 }
 
-int main(int argc, char **argv)
+int main()
 {
   // initialize eCAL API
   eCAL::Initialize("addressbook_send");
