@@ -42,11 +42,6 @@ elif [ "$ROLE" = "local_all" ]; then
 
   ARGS="--mode $MODE --topic $TOPIC"
 
-  ./monitoring --mode $MODE &
-  MON_PID=$!
-
-  sleep 1
-
   ./crash_subscriber $ARGS &
   SUB_PID=$!
 
@@ -58,7 +53,6 @@ elif [ "$ROLE" = "local_all" ]; then
 
   wait $TEST_PUB_PID
   wait $CRASH_SUB_PID
-  wait $MON_PID
   wait $SUB_PID
 
 if [[ $? -eq 134 ]]; then

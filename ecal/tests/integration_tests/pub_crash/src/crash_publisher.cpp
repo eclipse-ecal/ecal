@@ -26,22 +26,23 @@ int main(int argc, char* argv[])
 
     eCAL::CPublisher pub(topic_arg.getValue());
     std::vector<unsigned char> buf(10, 42);
+    wait_for_subscriber(topic_arg.getValue(), 1, 5000);
 
     std::cout << "[Crash Publisher] Starting and will crash after 10 messages..." << std::endl;
     for (int i = 0; i < total_arg.getValue(); ++i)
     {
       pub.Send(buf.data(), buf.size());
-      std::cout << "[Crash Publisher] SEND '42' , this is message number " << i << std::endl;
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      std::cout << "[Crash Publisher] Sent buffer with content: 42 (message " << i + 1 << ")" << std::endl;
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
       if (i == crash_at_arg.getValue())
       {
         std::cout << "[Crash Publisher] Crashing after message " << i << std::endl;
-        std::exit(1);
+        std::abort();
       }
     }
     std::cout << "[Crash Publisher] Crashing now." << std::endl;
-    std::exit(1);
+    std::abort();
   }
   catch (...)
   {

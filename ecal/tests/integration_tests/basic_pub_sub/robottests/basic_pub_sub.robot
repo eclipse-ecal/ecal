@@ -7,7 +7,7 @@ It verifies that:
 - Communication works in all 5 eCAL modes: local_shm, local_udp, local_tcp, network_udp, network_tcp.
 
 Success criteria:
-- The subscriber receives the expected number of messages.
+- The subscriber receives a message.
 - The subscriber exits with code 0 if successful.
 
 *** Settings ***
@@ -20,77 +20,87 @@ Suite Setup       Init Test Context
 *** Variables ***
 ${NETWORK}        ${EMPTY}
 ${BUILD_SCRIPT}   ${EMPTY}
-${BASE_IMAGE}     basic_pub_sub  
+${BASE_IMAGE}     basic_pub_sub
 
 *** Test Cases ***
-Local SHM Communication
-    [Tags]    basic_PubSub_local_shm
-    Run PubSub Test    local_shm    local
+Basic Pub/Sub Local SHM
+    [Tags]    basic_pub_sub_local_shm
+    Run Local Pub Sub Test    local_shm
 
-Local UDP Communication
-    [Tags]    basic_PubSub_local_udp
-    Run PubSub Test    local_udp    local
+Basic Pub/Sub Local UDP
+    [Tags]    basic_pub_sub_local_udp
+    Run Local Pub Sub Test    local_udp
 
-Local TCP Communication
-    [Tags]    basic_PubSub_local_tcp
-    Run PubSub Test    local_tcp    local
+Basic Pub/Sub Local TCP
+    [Tags]    basic_pub_sub_local_tcp
+    Run Local Pub Sub Test    local_tcp
 
-Network UDP Communication
-    [Tags]    basic_PubSub_network_udp
-    Run PubSub Test    network_udp    network
+Basic Pub/Sub Network UDP
+    [Tags]    basic_pub_sub_network_udp
+    Run Network Pub Sub Test    network_udp    network
 
-Network TCP Communication
-    [Tags]    basic_PubSub_network_tcp
-    Run PubSub Test    network_tcp    network
+Basic Pub/Sub Network TCP
+    [Tags]    basic_pub_sub_network_tcp
+    Run Network Pub Sub Test    network_tcp    network
 
 *** Keywords ***
 Init Test Context
     Set Test Context    basic_pub_sub    basic_pub_sub
-    ${build}=           Get Build Script Path
-    ${net}=             Get Network Name
-    ${args}=            Get Build Script Args
-    Set Suite Variable    ${BUILD_SCRIPT}   ${build}
-    Set Suite Variable    ${NETWORK}        ${net}
+    ${build}=    Get Build Script Path
+    ${net}=      Get Network Name
+    ${args}=     Get Build Script Args
+    Set Suite Variable    ${BUILD_SCRIPT}    ${build}
+    Set Suite Variable    ${NETWORK}         ${net}
 
-    Log To Console    [SETUP] Checking and building Docker images if needed...
-    ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
-    Should Be Equal As Integers    ${result.rc}    0    Failed to build Docker images!
-    
-Run PubSub Test
-    [Arguments]    ${layer_tag}    ${mode}
-    ${IMAGE}=    Set Variable    ${BASE_IMAGE}_${layer_tag}
-
-    Log To Console    Running ${mode.capitalize()} Test: ${layer_tag}
+    Log To Console    [SETUP] Building Docker image...
+    ${result}=    Run Process    ${BUILD_SCRIPT}    @{args}
+    Should Be Equal As Integers    ${result.rc}    0    Failed to build Docker image!
 
     Create Docker Network    ${NETWORK}
+    Sleep    3s
 
-    Run Keyword If    '${mode}' == 'local'
-    ...    Run Local Container    ${IMAGE}    ${layer_tag}
-    ...  ELSE
-    ...    Run Network Containers    ${IMAGE}    ${layer_tag}
+Run Local Pub Sub Test
+    [Arguments]    ${layer_tag}
+    ${IMAGE}=      Set Variable    ${BASE_IMAGE}_${layer_tag}
+    ${CONTAINER}=  Set Variable    basic_local_${layer_tag}
 
-Run Local Container
-    [Arguments]    ${image}    ${layer_tag}
-    ${NAME}=    Set Variable    pubsub_${layer_tag}
-    ${TOPIC}=   Set Variable    topic_${layer_tag}
-    Start Container    ${NAME}    ${image}    both    ${layer_tag}    ${TOPIC}    ${NAME}    network=${NETWORK}
- 
-    ${exit_code}=    Wait For Container Exit    ${NAME}
-    Should Be Equal As Integers    ${exit_code}    0    Communication failed!
-    Log Test Summary    PubSub ${layer_tag}    ${True}
-    Stop Container    ${NAME}
+    Log To Console    \n[INFO] Running local pub/sub test in mode: ${layer_tag}
 
-Run Network Containers
-    [Arguments]    ${image}    ${layer_tag}
+    Start Container    ${CONTAINER}    ${IMAGE}    local    ${layer_tag}    test_topic    ${CONTAINER}
+    
+    ${exit_code}=    Wait For Container Exit    ${CONTAINER}
+    Should Be Equal As Integers    ${exit_code}    0    Local communication test failed!
+
+    ${logs}=    Get Container Logs    ${CONTAINER}
+    Log To Console    \n[CONTAINER LOG: LOCAL PUB+SUB]\n${logs}
+
+    Log Test Summary    Basic Pub/Sub Local ${layer_tag}    ${True}
+    Stop Container      ${CONTAINER}
+    Sleep               1s
+
+Run Network Pub Sub Test
+    [Arguments]    ${layer_tag}    ${mode}
+    ${IMAGE}=      Set Variable    ${BASE_IMAGE}_${layer_tag}
     ${TOPIC}=      Set Variable    topic_${layer_tag}
     ${SUB_NAME}=   Set Variable    sub_${layer_tag}
     ${PUB_NAME}=   Set Variable    pub_${layer_tag}
-    Start Container    ${SUB_NAME}    ${image}    subscriber    ${layer_tag}    ${TOPIC}    ${SUB_NAME}    network=${NETWORK}
-    Start Container    ${PUB_NAME}    ${image}    publisher    ${layer_tag}    ${TOPIC}    ${PUB_NAME}    network=${NETWORK}
- 
+
+    Log To Console    \n[INFO] Running network pub/sub test in mode: ${layer_tag}
+
+    Start Container    ${SUB_NAME}    ${IMAGE}    subscriber    ${layer_tag}    ${TOPIC}    ${SUB_NAME}    network=${NETWORK}
+    Start Container    ${PUB_NAME}    ${IMAGE}    publisher     ${layer_tag}    ${TOPIC}    ${PUB_NAME}    network=${NETWORK}
+
     ${exit_code}=    Wait For Container Exit    ${SUB_NAME}
-    Should Be Equal As Integers    ${exit_code}    0    Communication failed!
-    Log Test Summary    PubSub ${layer_tag}    ${True}
+    Should Be Equal As Integers    ${exit_code}    0    Subscriber failed in ${layer_tag}!
+
+    ${log_sub}=    Get Container Logs    ${SUB_NAME}
+    ${log_pub}=    Get Container Logs    ${PUB_NAME}
+
+    Log To Console    \n[CONTAINER LOG: SUBSCRIBER]\n${log_sub}
+    Log To Console    \n[CONTAINER LOG: PUBLISHER]\n${log_pub}
+
+    Log Test Summary    Basic Pub/Sub Network ${layer_tag}    ${True}
+
     Stop Container    ${SUB_NAME}
     Stop Container    ${PUB_NAME}
-
+    Sleep            1s

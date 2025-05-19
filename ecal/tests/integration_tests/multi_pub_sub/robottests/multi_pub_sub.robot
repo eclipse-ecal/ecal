@@ -54,7 +54,10 @@ Init Test Context
 
     Log To Console    [SETUP] Building Docker image...
     ${result}=    Run Process    ${BUILD_SCRIPT}    @{args}
-    Should Be Equal As Integers    ${result.rc}    0    Build failed!
+    Should Be Equal As Integers    ${result.rc}    0    Failed to build Docker image!
+
+    Create Docker Network    ${NETWORK}
+    Sleep    3s
 
 Run Multi Pub Sub Network Test
     [Arguments]    ${layer_tag}    ${mode}
@@ -67,11 +70,8 @@ Run Multi Pub Sub Network Test
 
     Log To Console    \n[INFO] Starting multi pub/sub test with ${layer_tag}
 
-    Create Docker Network    ${NETWORK}
-
     Start Container    ${SUB1}    ${IMAGE}    multi_subscriber    ${layer_tag}    ${TOPIC}    network=${NETWORK}
     Start Container    ${SUB2}    ${IMAGE}    multi_subscriber2    ${layer_tag}    ${TOPIC}    network=${NETWORK}
-    Sleep    1s
     Start Container    ${PUB1}    ${IMAGE}    multi_publisher     ${layer_tag}    ${TOPIC}    network=${NETWORK}
     Start Container    ${PUB2}    ${IMAGE}    multi_publisher2     ${layer_tag}    ${TOPIC}    network=${NETWORK}
 
@@ -81,10 +81,10 @@ Run Multi Pub Sub Network Test
     Wait For Container Exit    ${PUB2}
 
     ${log1}=    Get Container Logs    ${SUB1}
-    Log To Console    \n[SUBSCRIBER 1 LOGS]\n${log1}
+    Log To Console    \n[CONTAINER LOG: SUBSCRIBER 1]\n${log1}
 
     ${log2}=    Get Container Logs    ${SUB2}
-    Log To Console    \n[SUBSCRIBER 2 LOGS]\n${log2}
+    Log To Console    \n[CONTAINER LOG: SUBSCRIBER 2]\n${log2}
 
     ${exit1}=    Wait For Container Exit    ${SUB1}
     ${exit2}=    Wait For Container Exit    ${SUB2}
@@ -97,14 +97,14 @@ Run Multi Pub Sub Network Test
     Stop Container    ${SUB2}
     Stop Container    ${PUB1}
     Stop Container    ${PUB2}
+    Sleep    1s
 
 Run Multi Pub Sub Test Local
     [Arguments]    ${layer_tag}
     ${IMAGE}=      Set Variable    ${BASE_IMAGE}_${layer_tag}
     ${CONTAINER}=  Set Variable    multi_local${layer_tag}
 
-    Log To Console    \n[INFO] Running local multi pub/sub test all bins in One Container with ${layer_tag}
-    Create Docker Network    ${NETWORK}
+    Log To Console    \n[INFO] Running local multi pub/sub test (all binarys in same Container) with ${layer_tag}
 
     Start Container    ${CONTAINER}    ${IMAGE}    local_multi    ${layer_tag}
     
@@ -112,6 +112,7 @@ Run Multi Pub Sub Test Local
     Should Be Equal As Integers    ${exit_code}    0    Local Multi Pub/Sub Test test failed!
 
     ${logs}=    Get Container Logs    ${CONTAINER}
-    Log To Console    \n[Local Multi Pub/Sub Test OUTPUT]\n${logs}
+    Log To Console    \n[CONTAINER LOG: All Local Binarys Multi Pub/Sub]\n${logs}
 
     Stop Container    ${CONTAINER}
+    Sleep    1s

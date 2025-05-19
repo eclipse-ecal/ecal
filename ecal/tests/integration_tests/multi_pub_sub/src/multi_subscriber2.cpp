@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
-    TCLAP::ValueArg<int> wait_arg("w", "wait", "Wait duration (seconds)", false, 7, "int");
+    TCLAP::ValueArg<int> wait_arg("w", "wait", "Wait duration (seconds)", false, 18, "int");
 
     cmd.add(mode_arg);
     cmd.add(topic_arg);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
     std::cout << "[Summary] Received " << count_42 << " x 42, " << count_43 << " x 43" << std::endl;
 
-    if (count_42 >= 3 && count_43 >= 3)
+    if (count_42 >= 14 && count_43 >= 14)
     {
       std::cout << "[✓] Received messages from both publishers." << std::endl;
       return 0;

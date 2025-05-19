@@ -14,12 +14,12 @@ ${BASE_IMAGE}     message_validation
 Valid Protobuf Transmission
     [Tags]    message_validation_valid
     Set Test Context    message_validation    message_validation
-    Run MessageValidation Test    local_shm    local    --payload="Hello"
+    Run MessageValidation Test    network_tcp    network    --payload="Hello"
 
 Malformed Protobuf Transmission
     [Tags]    message_validation_malformed
     Set Test Context    message_validation    message_validation
-    Run MessageValidation Test    local_shm    local    --malformed
+    Run MessageValidation Test    network_tcp    network    --malformed
 
 *** Keywords ***
 Init Test Context
@@ -30,9 +30,11 @@ Init Test Context
     Set Suite Variable    ${BUILD_SCRIPT}   ${build}
     Set Suite Variable    ${NETWORK}        ${net}
 
-    Log To Console    [SETUP] Building Docker images if not already present...
+    Log To Console    [SETUP] Building Docker images...
     ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
     Should Be Equal As Integers    ${result.rc}    0    Docker build failed!
+    Create Docker Network    ${NETWORK}
+    Sleep    3s
 
 Run MessageValidation Test
     [Arguments]    ${layer_tag}    ${mode}    ${extra_args}
@@ -41,18 +43,18 @@ Run MessageValidation Test
     ${PUB_NAME}=    Set Variable    msg_validation_pub_${layer_tag}
     ${SUB_NAME}=    Set Variable    msg_validation_sub_${layer_tag}
 
-    Create Docker Network    ${NETWORK}
-
-    # Start Subscriber
     Start Container    ${SUB_NAME}    ${IMAGE}    subscriber    ${layer_tag}    ${TOPIC}    ${SUB_NAME}    ${extra_args}    network=${NETWORK}
-    
-    # Start Publisher
     Start Container    ${PUB_NAME}    ${IMAGE}    publisher    ${layer_tag}    ${TOPIC}    ${PUB_NAME}    ${extra_args}    network=${NETWORK}
-    
-    # Wait for Subscriber to finish
+
     ${exit_code}=    Wait For Container Exit    ${SUB_NAME}
     Should Be Equal As Integers    ${exit_code}    0    Communication failed!
+   
+    ${logs}=    Get Container Logs    ${PUB_NAME}
+    Log To Console    \n[CONTAINER LOG: All Local Binarys Multi Pub/Sub]\n${logs}
+    
+    ${logs}=    Get Container Logs    ${SUB_NAME}
+    Log To Console    \n[CONTAINER LOG: All Local Binarys Multi Pub/Sub]\n${logs}
 
-    # Stop Publisher and Subscriber
     Stop Container    ${PUB_NAME}
     Stop Container    ${SUB_NAME}
+    Sleep    1s

@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
         std::cout << "[Publisher] Configuration set. Mode: " << mode_arg.getValue() << std::endl;
 
         eCAL::CPublisher pub(topic_arg.getValue());
-        std::this_thread::sleep_for(std::chrono::seconds(5)); // Ensure subscriber is ready
+        wait_for_subscriber(topic_arg.getValue(), 1, 5000);
 
         if (malformed_arg.getValue())
         {

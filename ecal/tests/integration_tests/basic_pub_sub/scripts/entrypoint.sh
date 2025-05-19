@@ -1,13 +1,13 @@
 #!/bin/bash
 
-ROLE=$1        # publisher | subscriber | both
+ROLE=$1        # publisher | subscriber | local
 MODE=$2        # local_shm | local_udp | etc.
 TOPIC=$3       # optional topic name
 NAME=$4        # optional node name
 EXTRA=$5       # optional extra args
 
 if [ -z "$ROLE" ] || [ -z "$MODE" ]; then
-  echo "Usage: $0 <publisher|subscriber|both> <mode> [topic] [name] [extra args]"
+  echo "Usage: $0 <publisher|subscriber|local> <mode> [topic] [name] [extra args]"
   exit 1
 fi
 
@@ -25,12 +25,10 @@ if [ "$ROLE" = "publisher" ]; then
 elif [ "$ROLE" = "subscriber" ]; then
   echo "[Entrypoint] Starting subscriber in mode $MODE"
   ./one_subscriber $ARGS $EXTRA
-  sleep 2
 
-elif [ "$ROLE" = "both" ]; then
+elif [ "$ROLE" = "local" ]; then
   echo "[Entrypoint] Starting subscriber and publisher in mode $MODE"
   ./one_subscriber -m "$MODE" &
-  sleep 1
   SUB_PID=$!
   ./one_publisher -m "$MODE"
   wait $SUB_PID

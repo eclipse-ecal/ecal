@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
-    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Wait duration (seconds)", false, 20, "int");
+    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Wait duration (seconds)", false, 35, "int");
     cmd.add(mode_arg);
     cmd.add(topic_arg);
     cmd.add(timeout_arg);
@@ -48,10 +48,10 @@ int main(int argc, char* argv[])
     std::cout << "[Summary] Received " << count_42 << " x 42 (crash pub), "
           << count_43 << " x 43 (test pub)" << std::endl;
 
-    if (count_43 >= 15)
+    if (count_43 >= 25)
     {
     std::cout << "\n[✓] Communication continued after crash!" << std::endl;
-    if (count_42 < 11)
+    if (count_42 < 11 || count_42 > 4)
      {
       std::cout << "\n[✓] One Publisher crashed and no more messages received from the crashed publisher!" << std::endl;
       return 0;

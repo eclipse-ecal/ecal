@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
     TCLAP::ValueArg<std::string> name_arg("n", "name", "eCAL node name", false, "sub_test", "string");
-    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Wait duration (seconds)", false, 10, "int");
+    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Wait duration (seconds)", false, 15, "int");
 
     cmd.add(mode_arg);
     cmd.add(topic_arg);

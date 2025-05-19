@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
-    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Timeout in seconds", false, 20, "int");
+    TCLAP::ValueArg<int> timeout_arg("w", "wait", "Timeout in seconds", false, 34, "int");
 
     cmd.add(mode_arg);
     cmd.add(topic_arg);
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     std::this_thread::sleep_for(std::chrono::seconds(timeout_arg.getValue()));
     eCAL::Finalize();
 
-    if (message_count > 20)
+    if (message_count >= 30)
     {
       std::cout << "\n[✓] Communication successful, received " << message_count << " messages." << std::endl;
       return 0;

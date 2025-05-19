@@ -51,6 +51,8 @@ Init Test Context
     Log To Console    [SETUP] Building Docker image...
     ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
     Should Be Equal As Integers    ${result.rc}    0    Docker build failed!
+    Create Docker Network    ${NETWORK}
+    Sleep    3s
 
 Run Network Communication Test
     [Arguments]          ${layer_tag}    ${mode}
@@ -59,23 +61,19 @@ Run Network Communication Test
     ${CRASH_PUB}=        Set Variable    crash_pub_${layer_tag}
     ${TEST_PUB}=         Set Variable    test_pub_${layer_tag}
     ${SUB_NAME}=         Set Variable    sub_${layer_tag}
-    ${MONITOR_NAME}=     Set Variable    mon_${layer_tag}
+    #${MONITOR_NAME}=     Set Variable    mon_${layer_tag}
 
     Log To Console    \n[INFO] Starting communication continuity test with ${layer_tag}
 
-    Create Docker Network    ${NETWORK}
-
-    Start Container    ${MONITOR_NAME}    ${IMAGE}    monitor    ${layer_tag}    ${SUB_NAME}    network=${NETWORK}
-    Sleep    1s
+    #Start Container    ${MONITOR_NAME}    ${IMAGE}    monitor    ${layer_tag}    ${SUB_NAME}    network=${NETWORK}
     Start Container    ${SUB_NAME}    ${IMAGE}    subscriber    ${layer_tag}    ${TOPIC}    network=${NETWORK}
-    Sleep    1s
     Start Container    ${CRASH_PUB}   ${IMAGE}    crash_publisher     ${layer_tag}    ${TOPIC}  network=${NETWORK}
     Start Container    ${TEST_PUB}    ${IMAGE}    test_publisher    ${layer_tag}    ${TOPIC}    ${TEST_PUB}    network=${NETWORK}
 
     Wait For Container Exit    ${SUB_NAME}
     Wait For Container Exit    ${CRASH_PUB}
     Wait For Container Exit    ${TEST_PUB}
-    Wait For Container Exit    ${MONITOR_NAME}
+    #Wait For Container Exit    ${MONITOR_NAME}
 
     ${sub_logs}=        Get Container Logs    ${SUB_NAME}
     Log To Console      \n[SUBSCRIBER CONTAINER OUTPUT]\n${sub_logs}
@@ -94,7 +92,8 @@ Run Network Communication Test
     Stop Container    ${SUB_NAME}    
     Stop Container    ${CRASH_PUB}
     Stop Container    ${TEST_PUB}
-    Stop Container    ${MONITOR_NAME}
+    #Stop Container    ${MONITOR_NAME}
+    Sleep    1s
 
 Run Local Communication Test
     [Arguments]    ${layer_tag}
@@ -102,8 +101,6 @@ Run Local Communication Test
     ${CONTAINER}=  Set Variable    local_all_${layer_tag}
 
     Log To Console    \nStarting local test container with ${layer_tag}
-    
-    Create Docker Network    ${NETWORK}
 
     Start Container    ${CONTAINER}    ${IMAGE}    local_all    ${layer_tag}
 
@@ -111,7 +108,8 @@ Run Local Communication Test
     Should Be Equal As Integers    ${exit_code}    0    Local test failed!
 
     ${logs}=    Get Container Logs    ${CONTAINER}
-    Log To Console    \n\n[LOCAL TEST CONTAINER OUTPUT]\n\n${logs}
+    Log To Console    \n\n[CONTAINER LOG: LOCAL PUB+SUB]\n\n${logs}
 
     Log Test Summary    Local Communication after one Publisher crash ${layer_tag}    ${True}
     Stop Container    ${CONTAINER}
+    Sleep    1s

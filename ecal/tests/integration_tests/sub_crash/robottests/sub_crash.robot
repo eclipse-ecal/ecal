@@ -51,6 +51,8 @@ Init Test Context
     Log To Console    [SETUP] Building Docker image...
     ${result}=        Run Process    ${BUILD_SCRIPT}    @{args}
     Should Be Equal As Integers    ${result.rc}    0    Docker build failed!
+    Create Docker Network    ${NETWORK}
+    Sleep    3s
 
 Run Network Communication Test
     [Arguments]          ${layer_tag}    ${mode}
@@ -59,23 +61,21 @@ Run Network Communication Test
     ${CRASH_SUB}=        Set Variable    crash_sub_${layer_tag}
     ${TEST_SUB}=         Set Variable    test_sub_${layer_tag}
     ${TEST_PUB}=         Set Variable    test_pub_${layer_tag}
-    ${MONITOR_NAME}=     Set Variable    mon_${layer_tag}
+    #${MONITOR_NAME}=     Set Variable    mon_${layer_tag}
 
     Log To Console    \n[INFO] Starting subscriber crash continuity test with ${layer_tag}
 
     Create Docker Network    ${NETWORK}
 
-    Start Container    ${MONITOR_NAME}    ${IMAGE}    monitor    ${layer_tag}    ${CRASH_SUB}    network=${NETWORK}
-    Sleep    1s
+    #Start Container    ${MONITOR_NAME}    ${IMAGE}    monitor    ${layer_tag}    ${CRASH_SUB}    network=${NETWORK}
     Start Container    ${CRASH_SUB}      ${IMAGE}    crash_subscriber    ${layer_tag}    ${TOPIC}    ${CRASH_SUB}    network=${NETWORK}
     Start Container    ${TEST_SUB}       ${IMAGE}    test_subscriber     ${layer_tag}    ${TOPIC}    ${TEST_SUB}     network=${NETWORK}
-    Sleep    1s
     Start Container    ${TEST_PUB}       ${IMAGE}    test_publisher      ${layer_tag}    ${TOPIC}    ${TEST_PUB}     network=${NETWORK}
 
     Wait For Container Exit    ${CRASH_SUB}
     Wait For Container Exit    ${TEST_SUB}
     Wait For Container Exit    ${TEST_PUB}
-    Wait For Container Exit    ${MONITOR_NAME}
+    #Wait For Container Exit    ${MONITOR_NAME}
 
     ${test_sub_logs}=    Get Container Logs    ${TEST_SUB}
     Log To Console        \n[SUBSCRIBER CONTAINER OUTPUT]\n${test_sub_logs}
@@ -94,7 +94,7 @@ Run Network Communication Test
     Stop Container    ${CRASH_SUB}
     Stop Container    ${TEST_SUB}
     Stop Container    ${TEST_PUB}
-    Stop Container    ${MONITOR_NAME}
+    #Stop Container    ${MONITOR_NAME}
 
 Run Local Communication Test
     [Arguments]    ${layer_tag}

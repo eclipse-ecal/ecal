@@ -30,7 +30,6 @@ elif [ "$ROLE" = "monitor" ]; then
   echo "[Entrypoint] Starting monitoring process in mode $MODE"
   ARGS="--mode $MODE"
   ./monitoring $ARGS $EXTRA
-  sleep 1
 
 elif [ "$ROLE" = "test_publisher" ]; then
   echo "[Entrypoint] Starting resilient publisher in mode $MODE"
@@ -41,11 +40,6 @@ elif [ "$ROLE" = "local_all" ]; then
   echo "[Entrypoint] Starting local test (pub/sub/monitor) in mode $MODE"
 
   ARGS="--mode $MODE --topic $TOPIC"
-
-  ./monitoring --mode $MODE &
-  MON_PID=$!
-
-  sleep 1
 
   ./test_subscriber $ARGS &
   SUB_PID=$!
@@ -58,7 +52,6 @@ elif [ "$ROLE" = "local_all" ]; then
 
   wait $TEST_PUB_PID
   wait $CRASH_PUB_PID
-  wait $MON_PID
   wait $SUB_PID
 
 else

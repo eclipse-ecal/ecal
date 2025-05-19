@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<std::string> mode_arg("m", "mode", "Transport mode", true, "", "string");
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
     TCLAP::ValueArg<std::string> name_arg("n", "name", "eCAL node name", false, "pub_test", "string");
-    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages", false, 1, "int");
+    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages", false, 3, "int");
     TCLAP::ValueArg<int> delay_arg("d", "delay", "Delay between sends (ms)", false, 1000, "int");
 
     cmd.add(mode_arg);
@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
 
     eCAL::CPublisher pub(topic_arg.getValue());
     std::vector<unsigned char> bin_buffer(10, 42);
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    wait_for_subscriber(topic_arg.getValue(), 1, 5000);
 
     for (int i = 0; i < count_arg.getValue() && eCAL::Ok(); ++i)
     {

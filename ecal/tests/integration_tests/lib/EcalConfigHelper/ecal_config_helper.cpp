@@ -3,6 +3,48 @@
 #include <ecal/ecal.h>
 #include <iostream>
 
+#include <set>
+#include <chrono>
+
+void wait_for_subscriber(const std::string& topic_name, int min_subscribers = 1, int timeout_ms = 5000)
+{
+  int waited_ms = 0;
+  const int interval_ms = 100;
+
+  std::cout << "[Publisher] Waiting for at least " << min_subscribers
+            << " subscriber(s) on topic: " << topic_name << std::endl;
+
+  while (waited_ms < timeout_ms)
+  {
+    std::set<eCAL::STopicId> sub_ids;
+    if (eCAL::Registration::GetSubscriberIDs(sub_ids))
+    {
+      int count = 0;
+      for (const auto& id : sub_ids)
+      {
+        if (id.topic_name == topic_name)
+        {
+          ++count;
+        }
+      }
+
+      if (count >= min_subscribers)
+      {
+        std::cout << "[Publisher] Found " << count << " subscriber(s). Proceeding to send messages." << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        return;
+      }
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
+    waited_ms += interval_ms;
+  }
+
+  std::cout << "[Publisher] Timeout reached. Only " << waited_ms / interval_ms
+            << " intervals passed. Proceeding anyway." << std::endl;
+
+}
+
 void setup_ecal_configuration(const std::string& mode, bool is_publisher, const std::string& node_name)
 {
   eCAL::Configuration config;
