@@ -1,4 +1,7 @@
 #include "clr_config.h"
+#include <msclr/marshal_cppstd.h>
+        
+using namespace Eclipse::eCAL::Core::Config;
 
 namespace Eclipse {
   namespace eCAL {
@@ -6,39 +9,17 @@ namespace Eclipse {
       namespace Config {
         Configuration^ ConfigWrapper::GetConfiguration() {
           const ::eCAL::Configuration& native_config = ::eCAL::GetConfiguration();
-          Configuration^ managed_config = gcnew Configuration();
-          managed_config->TransportLayer = gcnew TransportLayerConfiguration();
-          managed_config->Registration = gcnew RegistrationConfiguration();
-          managed_config->Subscriber = gcnew SubscriberConfiguration();
-          managed_config->Publisher = gcnew PublisherConfiguration();
-          managed_config->TimeSync = gcnew TimeConfiguration();
-          managed_config->Application = gcnew ApplicationConfiguration();
-          managed_config->Logging = gcnew LoggingConfiguration();
-          managed_config->CommunicationMode = static_cast<int>(native_config.communication_mode);
-          return managed_config;
+          return gcnew Configuration(native_config);
         }
 
         SubscriberConfiguration^ ConfigWrapper::GetSubscriberConfiguration() {
           const ::eCAL::Subscriber::Configuration& native_config = ::eCAL::GetSubscriberConfiguration();
-          SubscriberConfiguration^ managed_config = gcnew SubscriberConfiguration();
-          managed_config->Layer = gcnew SubscriberLayerConfiguration();
-          managed_config->DropOutOfOrderMessages = native_config.drop_out_of_order_messages;
-          return managed_config;
+          return gcnew SubscriberConfiguration(native_config);
         }
 
         PublisherConfiguration^ ConfigWrapper::GetPublisherConfiguration() {
           const ::eCAL::Publisher::Configuration& native_config = ::eCAL::GetPublisherConfiguration();
-          PublisherConfiguration^ managed_config = gcnew PublisherConfiguration();
-          managed_config->Layer = gcnew PublisherLayerConfiguration();
-          managed_config->LayerPriorityLocal = gcnew System::Collections::Generic::List<int>();
-          for (auto layer : native_config.layer_priority_local) {
-            managed_config->LayerPriorityLocal->Add(static_cast<int>(layer));
-          }
-          managed_config->LayerPriorityRemote = gcnew System::Collections::Generic::List<int>();
-          for (auto layer : native_config.layer_priority_remote) {
-            managed_config->LayerPriorityRemote->Add(static_cast<int>(layer));
-          }
-          return managed_config;
+          return gcnew PublisherConfiguration(native_config);
         }
 
         String^ ConfigWrapper::GetLoadedEcalIniPath() {

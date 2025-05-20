@@ -11,7 +11,6 @@
 #include "clr_time.h"
 #include "clr_transport_layer.h"
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -79,6 +78,25 @@ namespace Eclipse {
           }
 
           /**
+           * @brief Native struct constructor.
+           * @param native_config Native ::eCAL::Configuration structure.
+           */
+          Configuration(const ::eCAL::Configuration& native_config) {
+            // Initialize managed properties from the native struct
+            TransportLayer = gcnew TransportLayerConfiguration(native_config.transport_layer);
+            Registration   = gcnew RegistrationConfiguration(native_config.registration);
+            Subscriber     = gcnew SubscriberConfiguration(native_config.subscriber);
+            Publisher      = gcnew PublisherConfiguration(native_config.publisher);
+            TimeSync       = gcnew TimeConfiguration(native_config.timesync);
+            Application    = gcnew ApplicationConfiguration(native_config.application);
+            Logging        = gcnew LoggingConfiguration(native_config.logging);
+            CommunicationMode = static_cast<int>(native_config.communication_mode);
+
+            // Optionally, you can also initialize the native_config pointer if needed:
+            this->native_config = new ::eCAL::Configuration(native_config);
+          }
+
+          /**
            * @brief Destructor to clean up native resources.
            */
           ~Configuration() {
@@ -97,7 +115,7 @@ namespace Eclipse {
            * @brief Initializes the configuration from a YAML file.
            * @param yamlPath Path to the YAML configuration file.
            */
-          void InitFromFile(String^ yamlPath) {
+          void InitFromFile(System::String^ yamlPath) {
             std::string native_yaml_path = msclr::interop::marshal_as<std::string>(yamlPath);
             native_config->InitFromFile(native_yaml_path);
             UpdateManagedProperties();
@@ -107,8 +125,8 @@ namespace Eclipse {
            * @brief Gets the path to the current configuration file.
            * @return Path to the configuration file.
            */
-          String^ GetConfigurationFilePath() {
-            return gcnew String(native_config->GetConfigurationFilePath().c_str());
+          System::String^ GetConfigurationFilePath() {
+            return gcnew System::String(native_config->GetConfigurationFilePath().c_str());
           }
 
           /**

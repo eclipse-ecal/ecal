@@ -23,14 +23,13 @@
  * @file  clr_monitoring.h
 **/
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
 
       // Managed representation of the native monitoring entities bitmask.
-      [Flags]
+      [System::Flags]
       public enum class MonitoringEntity : unsigned int
       {
         None       = 0x000,
@@ -50,13 +49,13 @@ namespace Eclipse {
       {
       public:
         /**
-         * @brief Get host, process and topic monitoring as raw message bytes.
+         * @brief Get host, process and topic monitoring as raw message System::Bytes.
          *
          * @param entities Specifies which entities to include (default is All).
          * 
-         * @return The monitoring message as a byte array.
+         * @return The monitoring message as a System::Byte array.
          **/
-        static array<Byte>^ GetMonitoring(MonitoringEntity entities);
+        static array<System::Byte>^ GetMonitoring(MonitoringEntity entities);
       };
 
     } // namespace Core

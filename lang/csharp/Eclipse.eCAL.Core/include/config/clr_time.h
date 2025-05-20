@@ -4,8 +4,6 @@
 #include <ecal/config/time.h>
 #include <msclr/marshal_cppstd.h>
 
-using namespace System;
-
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
@@ -19,12 +17,12 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the time synchronization module for real-time.
            */
-          property String^ TimeSyncModuleRT;
+          property System::String^ TimeSyncModuleRT;
 
           /**
            * @brief Gets or sets the time synchronization module for replay.
            */
-          property String^ TimeSyncModuleReplay;
+          property System::String^ TimeSyncModuleReplay;
 
           /**
            * @brief Default constructor.
@@ -32,8 +30,16 @@ namespace Eclipse {
           TimeConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Time::Configuration native_config;
-            TimeSyncModuleRT = gcnew String(native_config.timesync_module_rt.c_str());
-            TimeSyncModuleReplay = gcnew String(native_config.timesync_module_replay.c_str());
+            TimeSyncModuleRT = gcnew System::String(native_config.timesync_module_rt.c_str());
+            TimeSyncModuleReplay = gcnew System::String(native_config.timesync_module_replay.c_str());
+          }
+
+          /**
+           * @brief Native struct constructor.
+           */
+          TimeConfiguration(const ::eCAL::Time::Configuration& native_config) {
+            TimeSyncModuleRT = gcnew System::String(native_config.timesync_module_rt.c_str());
+            TimeSyncModuleReplay = gcnew System::String(native_config.timesync_module_replay.c_str());
           }
 
           /**

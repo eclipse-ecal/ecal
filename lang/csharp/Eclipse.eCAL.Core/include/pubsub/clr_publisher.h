@@ -30,7 +30,6 @@
 
 #include <ecal/pubsub/publisher.h>
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -52,7 +51,7 @@ namespace Eclipse {
          *
          * @param topicName Unique topic name.
          */
-        Publisher(String^ topicName) : Publisher(topicName, nullptr, nullptr) {}
+        Publisher(System::String^ topicName) : Publisher(topicName, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name and data type information.
@@ -60,7 +59,7 @@ namespace Eclipse {
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr) {}
+        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name, data type information, and an event callback.
@@ -69,7 +68,7 @@ namespace Eclipse {
          * @param dataTypeInfo Topic data type information.
          * @param eventCallback Optional publisher event callback.
          */
-        Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback);
+        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback);
 
         /**
          * @brief Destructor.
@@ -88,7 +87,7 @@ namespace Eclipse {
          *
          * @return True if the send operation succeeded; otherwise false.
          */
-        bool Send(array<Byte>^ data);
+        bool Send(array<System::Byte>^ data);
 
         /**
          * @brief Sends a message to all subscribers using a byte array payload.
@@ -98,7 +97,7 @@ namespace Eclipse {
          * 
          * @return True if the send operation succeeded; otherwise false.
          */
-        bool Send(array<Byte>^ data, long long time);
+        bool Send(array<System::Byte>^ data, long long time);
 
         /**
          * @brief Queries the number of subscribers.
@@ -110,9 +109,9 @@ namespace Eclipse {
         /**
          * @brief Retrieves the topic name.
          *
-         * @return The topic name as a System::String^.
+         * @return The topic name as a System::System::String^.
          */
-        String^ GetTopicName();
+        System::String^ GetTopicName();
 
         /**
          * @brief Retrieves the topic identifier.

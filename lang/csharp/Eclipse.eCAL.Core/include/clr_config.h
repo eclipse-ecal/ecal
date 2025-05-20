@@ -7,8 +7,6 @@
 #include "clr_common.h"
 #include "config/clr_configuration.h"
 
-using namespace System;
-
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
@@ -38,7 +36,7 @@ namespace Eclipse {
            * @brief Gets the path to the loaded eCAL INI file.
            * @return Path to the loaded INI file.
            */
-          static String^ GetLoadedEcalIniPath();
+          static System::String^ GetLoadedEcalIniPath();
 
           /**
            * @brief Gets the registration timeout in milliseconds.
@@ -62,25 +60,25 @@ namespace Eclipse {
            * @brief Gets the time synchronization module name.
            * @return Name of the time synchronization module.
            */
-          static String^ GetTimesyncModuleName();
+          static System::String^ GetTimesyncModuleName();
 
           /**
            * @brief Gets the time synchronization module for replay.
            * @return Name of the time synchronization module for replay.
            */
-          static String^ GetTimesyncModuleReplay();
+          static System::String^ GetTimesyncModuleReplay();
 
           /**
            * @brief Gets the terminal emulator command.
            * @return Terminal emulator command.
            */
-          static String^ GetTerminalEmulatorCommand();
+          static System::String^ GetTerminalEmulatorCommand();
 
           /**
            * @brief Gets the eCAL system filter exclusion list.
            * @return System filter exclusion list.
            */
-          static String^ GetEcalSysFilterExcludeList();
+          static System::String^ GetEcalSysFilterExcludeList();
 
           /**
            * @brief Checks if out-of-order messages are dropped for subscribers.
@@ -98,7 +96,7 @@ namespace Eclipse {
            * @brief Gets the shared memory monitoring domain.
            * @return Shared memory monitoring domain.
            */
-          static String^ GetShmMonitoringDomain();
+          static System::String^ GetShmMonitoringDomain();
         };
 
       } // namespace Config

@@ -4,7 +4,6 @@
 #include <ecal/config/registration.h>
 #include <msclr/marshal_cppstd.h>
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -16,12 +15,18 @@ namespace Eclipse {
          */
         public ref class RegistrationLocalSHMConfiguration {
         public:
-          property String^ Domain;
+          property System::String^ Domain;
           property size_t QueueSize;
 
           RegistrationLocalSHMConfiguration() {
             ::eCAL::Registration::Local::SHM::Configuration native_config;
-            Domain = gcnew String(native_config.domain.c_str());
+            Domain = gcnew System::String(native_config.domain.c_str());
+            QueueSize = native_config.queue_size;
+          }
+
+          // Native struct constructor
+          RegistrationLocalSHMConfiguration(const ::eCAL::Registration::Local::SHM::Configuration& native_config) {
+            Domain = gcnew System::String(native_config.domain.c_str());
             QueueSize = native_config.queue_size;
           }
 
@@ -42,6 +47,11 @@ namespace Eclipse {
 
           RegistrationLocalUDPConfiguration() {
             ::eCAL::Registration::Local::UDP::Configuration native_config;
+            Port = native_config.port;
+          }
+
+          // Native struct constructor
+          RegistrationLocalUDPConfiguration(const ::eCAL::Registration::Local::UDP::Configuration& native_config) {
             Port = native_config.port;
           }
 
@@ -68,6 +78,13 @@ namespace Eclipse {
             UDP = gcnew RegistrationLocalUDPConfiguration();
           }
 
+          // Native struct constructor
+          RegistrationLocalConfiguration(const ::eCAL::Registration::Local::Configuration& native_config) {
+            TransportType = static_cast<int>(native_config.transport_type);
+            SHM = gcnew RegistrationLocalSHMConfiguration(native_config.shm);
+            UDP = gcnew RegistrationLocalUDPConfiguration(native_config.udp);
+          }
+
           ::eCAL::Registration::Local::Configuration ToNative() {
             ::eCAL::Registration::Local::Configuration native_config;
             native_config.transport_type = static_cast<::eCAL::Registration::Local::eTransportType>(TransportType);
@@ -86,6 +103,11 @@ namespace Eclipse {
 
           RegistrationNetworkUDPConfiguration() {
             ::eCAL::Registration::Network::UDP::Configuration native_config;
+            Port = native_config.port;
+          }
+
+          // Native struct constructor
+          RegistrationNetworkUDPConfiguration(const ::eCAL::Registration::Network::UDP::Configuration& native_config) {
             Port = native_config.port;
           }
 
@@ -110,6 +132,12 @@ namespace Eclipse {
             UDP = gcnew RegistrationNetworkUDPConfiguration();
           }
 
+          // Native struct constructor
+          RegistrationNetworkConfiguration(const ::eCAL::Registration::Network::Configuration& native_config) {
+            TransportType = static_cast<int>(native_config.transport_type);
+            UDP = gcnew RegistrationNetworkUDPConfiguration(native_config.udp);
+          }
+
           ::eCAL::Registration::Network::Configuration ToNative() {
             ::eCAL::Registration::Network::Configuration native_config;
             native_config.transport_type = static_cast<::eCAL::Registration::Network::eTransportType>(TransportType);
@@ -126,7 +154,7 @@ namespace Eclipse {
           property unsigned int RegistrationTimeout;
           property unsigned int RegistrationRefresh;
           property bool Loopback;
-          property String^ ShmTransportDomain;
+          property System::String^ ShmTransportDomain;
           property RegistrationLocalConfiguration^ Local;
           property RegistrationNetworkConfiguration^ Network;
 
@@ -135,9 +163,19 @@ namespace Eclipse {
             RegistrationTimeout = native_config.registration_timeout;
             RegistrationRefresh = native_config.registration_refresh;
             Loopback = native_config.loopback;
-            ShmTransportDomain = gcnew String(native_config.shm_transport_domain.c_str());
+            ShmTransportDomain = gcnew System::String(native_config.shm_transport_domain.c_str());
             Local = gcnew RegistrationLocalConfiguration();
             Network = gcnew RegistrationNetworkConfiguration();
+          }
+
+          // Native struct constructor
+          RegistrationConfiguration(const ::eCAL::Registration::Configuration& native_config) {
+            RegistrationTimeout = native_config.registration_timeout;
+            RegistrationRefresh = native_config.registration_refresh;
+            Loopback = native_config.loopback;
+            ShmTransportDomain = gcnew System::String(native_config.shm_transport_domain.c_str());
+            Local = gcnew RegistrationLocalConfiguration(native_config.local);
+            Network = gcnew RegistrationNetworkConfiguration(native_config.network);
           }
 
           ::eCAL::Registration::Configuration ToNative() {

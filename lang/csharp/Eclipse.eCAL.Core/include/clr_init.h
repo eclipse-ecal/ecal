@@ -4,7 +4,6 @@
 #include <msclr/marshal_cppstd.h>
 #include "config/clr_configuration.h"
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {

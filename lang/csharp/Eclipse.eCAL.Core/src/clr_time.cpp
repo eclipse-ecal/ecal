@@ -22,6 +22,7 @@
 
 #include <ecal/time.h>
 
+using namespace System;
 using namespace Eclipse::eCAL::Time;
 using namespace Internal;
 

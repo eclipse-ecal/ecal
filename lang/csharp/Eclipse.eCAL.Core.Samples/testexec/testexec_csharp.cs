@@ -18,36 +18,73 @@
 */
 
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Reflection;
-using Eclipse.eCAL.Core;
 
 public class TestExec
 {
   static void Main()
   {
-    var assembly = Assembly.LoadFrom("Eclipse.Ecal.Core.Testd.dll");
-    var testClass = assembly.GetType("ConfigTest");
-    
-// Iterate through all types in the assembly
-    foreach (Type type in assembly.GetTypes())
+    var testCases = new Dictionary<string, List<string>>
     {
-      Console.WriteLine($"Type: {type.FullName}");
+      { "ConfigTest", new List<string> { "TestConfigPassing" } },
+      // Add more test classes and methods here
+      // { "AnotherTestClass", new List<string> { "Test1", "Test2" } }
+    };
 
-              // Iterate through all methods in the type
-      foreach (MethodInfo method in type.GetMethods())
+    string assemblyPath = "Eclipse.Ecal.Core.Testd.dll";
+    var assembly = Assembly.LoadFrom(assemblyPath);
+
+    var failedTests = new List<string>();
+
+    foreach (var kvp in testCases)
+    {
+      string className = kvp.Key;
+      var testClass = assembly.GetType(className);
+      if (testClass == null)
       {
-        Console.WriteLine($"  Method: {method.Name}");
+        Console.WriteLine($"[ERROR] Test class '{className}' not found.");
+        failedTests.Add($"{className} (class not found)");
+        continue;
+      }
+
+      object instance = Activator.CreateInstance(testClass);
+
+      foreach (var methodName in kvp.Value)
+      {
+        var method = testClass.GetMethod(methodName);
+        if (method == null)
+        {
+          Console.WriteLine($"[ERROR] Method '{methodName}' not found in '{className}'.");
+          failedTests.Add($"{className}.{methodName} (method not found)");
+          continue;
+        }
+
+        try
+        {
+          Console.WriteLine($"Running {className}.{methodName}... ");
+          object result = method.Invoke(instance, null);
+          Console.WriteLine("SUCCESS");
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine("FAILED");
+          Console.WriteLine($"  Exception: {ex.InnerException?.Message ?? ex.Message}");
+          failedTests.Add($"{className}.{methodName}");
+        }
       }
     }
 
-    var testMethod = testClass.GetMethod("TestConfigPassing");
-    var instance = Activator.CreateInstance(testClass);
-    
-// Invoke the method  
-    object result = testMethod.Invoke(instance, null);
-// Display the result
-    Console.WriteLine(result);
-
+    Console.WriteLine("\nTest run complete.");
+    if (failedTests.Count > 0)
+    {
+      Console.WriteLine("Failed tests:");
+      foreach (var fail in failedTests)
+        Console.WriteLine($"  {fail}");
+    }
+    else
+    {
+      Console.WriteLine("All tests passed!");
+    }
   }
 }

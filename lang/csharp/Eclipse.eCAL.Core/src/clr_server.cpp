@@ -26,6 +26,7 @@
 
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
+using namespace System;
 using namespace System::Collections::Generic;
 
 ServiceServer::ServiceServer(String^ serverName)
