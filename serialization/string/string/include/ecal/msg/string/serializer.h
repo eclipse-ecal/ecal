@@ -39,14 +39,14 @@ namespace eCAL
       public:
         static DatatypeInformation GetDataTypeInformation()
         {
-          static const DatatypeInformation datatype_info = []() {
+          static const DatatypeInformation datatype_info_string = []() {
             DatatypeInformation datatype_info{};
             datatype_info.encoding = "utf-8";
             datatype_info.name = "string";
             // empty descriptor
             return datatype_info;
           }();
-          return datatype_info;
+          return datatype_info_string;
         }
 
         static bool AcceptsDataWithType(const DatatypeInformation& datatype_info_)
