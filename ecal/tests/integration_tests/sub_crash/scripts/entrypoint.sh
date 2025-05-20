@@ -43,7 +43,7 @@ elif [ "$ROLE" = "local_all" ]; then
   ARGS="--mode $MODE --topic $TOPIC"
 
   ./crash_subscriber $ARGS &
-  SUB_PID=$!
+  CRASH_SUB_PID=$!
 
   ./test_subscriber $ARGS &
   CRASH_SUB_PID=$!
@@ -53,12 +53,7 @@ elif [ "$ROLE" = "local_all" ]; then
 
   wait $TEST_PUB_PID
   wait $CRASH_SUB_PID
-  wait $SUB_PID
-
-if [[ $? -eq 134 ]]; then
-  echo "Subscriber crashed as expected"
-  exit 0
-fi
+  wait $TEST_SUB_PID
 
 else
   echo "[Entrypoint] Unknown role: $ROLE"

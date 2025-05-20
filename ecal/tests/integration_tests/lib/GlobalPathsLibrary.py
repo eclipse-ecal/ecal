@@ -17,7 +17,7 @@ class GlobalPathsLibrary:
         Sets the test folder (e.g. basic_pub_sub or message_validation) and tag prefix (e.g. basic_pub_sub).
         Should be called once in Suite Setup if you're using non-default test cases.
         """
-        if test_case_folder in ["basic_pub_sub", "multi_pub_sub", "pub_crash", "sub_crash", "network_crash", "message_validation"]:
+        if test_case_folder in ["basic_pub_sub","sub_send_crash", "multi_pub_sub", "pub_crash", "sub_crash", "network_crash", "message_validation"]:
             self.test_case_folder = test_case_folder
             self.tag_prefix = tag_prefix
         else:

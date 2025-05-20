@@ -27,17 +27,25 @@ ${BUILD_SCRIPT}   ${EMPTY}
 ${BASE_IMAGE}     sub_crash
 
 *** Test Cases ***
-Communication Continues After Subscriber Crash (UDP)
+Network Communication Continues After Subscriber Crash (UDP)
     [Tags]    sub_crash_network_udp
     Run Network Communication Test   network_udp    network
 
-Communication Continues After Publisher Crash (TCP)
+Network Communication Continues After Publisher Crash (TCP)
    [Tags]    pub_crash_network_tcp
     Run Network Communication Test    network_tcp    network
 
-Communication Continues After Subscriber Crash (SHM)
+Local Communication Continues After Subscriber Crash (SHM)
     [Tags]    sub_crash_local_shm
     Run Local Communication Test    local_shm
+
+Local Communication Continues After Subscriber Crash (UDP)
+    [Tags]    sub_crash_local_udp
+    Run Local Communication Test    local_udp
+
+Local Communication Continues After Subscriber Crash (TCP)
+    [Tags]    sub_crash_local_tcp
+    Run Local Communication Test    local_tcp
 
 *** Keywords ***
 Init Test Context
