@@ -59,7 +59,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules:  'recursive'
+        submodules:  'false'
         fetch-depth: 0
         filter: 'tree:0' # Download all commits but blobs and trees on demand
 
@@ -84,8 +84,10 @@ jobs:
           thirdparty/ecaludp/ecaludp \
           thirdparty/fineftp/fineftp-server \
           thirdparty/ftxui/ftxui \
+          thirdparty/nanobind/nanobind \
           thirdparty/qwt/qwt \
           thirdparty/recycle/recycle \
+          thirdparty/tsl-robin-map/tsl-robin-map \
           thirdparty/tcp_pubsub/tcp_pubsub \
           thirdparty/termcolor/termcolor
 
