@@ -23,7 +23,6 @@
  * @file  clr_log.h
 **/
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -60,7 +59,7 @@ namespace Eclipse {
          *
          * @return The logging message as a byte array.
          **/
-        static array<Byte>^ GetLogging();
+        static array<System::Byte>^ GetLogging();
       };
 
     } // namespace Core

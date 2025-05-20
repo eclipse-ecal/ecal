@@ -35,6 +35,16 @@ namespace Eclipse {
             MemfileReservePercent = native_config.memfile_reserve_percent;
           }
 
+          // Native struct constructor
+          PublisherLayerSHMConfiguration(const ::eCAL::Publisher::Layer::SHM::Configuration& native_config) {
+            Enable = native_config.enable;
+            ZeroCopyMode = native_config.zero_copy_mode;
+            AcknowledgeTimeoutMs = native_config.acknowledge_timeout_ms;
+            MemfileBufferCount = native_config.memfile_buffer_count;
+            MemfileMinSizeBytes = native_config.memfile_min_size_bytes;
+            MemfileReservePercent = native_config.memfile_reserve_percent;
+          }
+
           ::eCAL::Publisher::Layer::SHM::Configuration ToNative() {
             ::eCAL::Publisher::Layer::SHM::Configuration native_config;
             native_config.enable = Enable;
@@ -59,6 +69,11 @@ namespace Eclipse {
             Enable = native_config.enable;
           }
 
+          // Native struct constructor
+          PublisherLayerUDPConfiguration(const ::eCAL::Publisher::Layer::UDP::Configuration& native_config) {
+            Enable = native_config.enable;
+          }
+
           ::eCAL::Publisher::Layer::UDP::Configuration ToNative() {
             ::eCAL::Publisher::Layer::UDP::Configuration native_config;
             native_config.enable = Enable;
@@ -75,6 +90,11 @@ namespace Eclipse {
 
           PublisherLayerTCPConfiguration() {
             ::eCAL::Publisher::Layer::TCP::Configuration native_config;
+            Enable = native_config.enable;
+          }
+
+          // Native struct constructor
+          PublisherLayerTCPConfiguration(const ::eCAL::Publisher::Layer::TCP::Configuration& native_config) {
             Enable = native_config.enable;
           }
 
@@ -101,6 +121,13 @@ namespace Eclipse {
             TCP = gcnew PublisherLayerTCPConfiguration();
           }
 
+          // Native struct constructor
+          PublisherLayerConfiguration(const ::eCAL::Publisher::Layer::Configuration& native_config) {
+            SHM = gcnew PublisherLayerSHMConfiguration(native_config.shm);
+            UDP = gcnew PublisherLayerUDPConfiguration(native_config.udp);
+            TCP = gcnew PublisherLayerTCPConfiguration(native_config.tcp);
+          }
+
           ::eCAL::Publisher::Layer::Configuration ToNative() {
             ::eCAL::Publisher::Layer::Configuration native_config;
             native_config.shm = SHM->ToNative();
@@ -122,6 +149,21 @@ namespace Eclipse {
           PublisherConfiguration() {
             ::eCAL::Publisher::Configuration native_config;
             Layer = gcnew PublisherLayerConfiguration();
+
+            LayerPriorityLocal = gcnew List<int>();
+            for (auto layer : native_config.layer_priority_local) {
+              LayerPriorityLocal->Add(static_cast<int>(layer));
+            }
+
+            LayerPriorityRemote = gcnew List<int>();
+            for (auto layer : native_config.layer_priority_remote) {
+              LayerPriorityRemote->Add(static_cast<int>(layer));
+            }
+          }
+
+          // Native struct constructor
+          PublisherConfiguration(const ::eCAL::Publisher::Configuration& native_config) {
+            Layer = gcnew PublisherLayerConfiguration(native_config.layer);
 
             LayerPriorityLocal = gcnew List<int>();
             for (auto layer : native_config.layer_priority_local) {

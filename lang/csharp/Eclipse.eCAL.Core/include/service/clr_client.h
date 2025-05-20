@@ -30,7 +30,6 @@
 
 #include <ecal/service/client.h>
 
-using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 
@@ -53,7 +52,7 @@ namespace Eclipse {
          * @param serviceName Unique service name.
          * @param methodInformationList Optional list of service method information.
          */
-        ServiceClient(String^ serviceName, [Optional] ServiceMethodInformationList^ methodInformationList);
+        ServiceClient(System::String^ serviceName, [Optional] ServiceMethodInformationList^ methodInformationList);
 
         /**
          * @brief Destructor.
@@ -74,14 +73,14 @@ namespace Eclipse {
          *
          * @return List of service responses.
          */
-        List<ServiceResponse^>^ CallWithResponse(String^ methodName, array<Byte>^ request, int timeoutMs);
+        List<ServiceResponse^>^ CallWithResponse(System::String^ methodName, array<System::Byte>^ request, int timeoutMs);
 
         /**
          * @brief Retrieve the service name.
          *
-         * @return The service name as a System::String^.
+         * @return The service name as a System::System::String^.
          */
-        String^ GetServiceName();
+        System::String^ GetServiceName();
 
         /**
          * @brief Retrieve the service ID.

@@ -32,7 +32,6 @@
 
 #include "../clr_types.h"
 
-using namespace System;
 using namespace System::Collections::Generic;
 
 namespace Eclipse {
@@ -55,7 +54,7 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the topic name.
          */
-        property String^ TopicName;
+        property System::String^ TopicName;
 
         /**
          * @brief Default constructor.
@@ -68,7 +67,7 @@ namespace Eclipse {
          * @param entityID The unique topic id.
          * @param topicName The topic name.
          */
-        TopicId(EntityId^ entityID, String^ topicName) {
+        TopicId(EntityId^ entityID, System::String^ topicName) {
           EntityID = entityID;
           TopicName = topicName;
         }
@@ -85,7 +84,7 @@ namespace Eclipse {
         /**
          * @brief Gets the payload buffer as a byte array.
          */
-        property array<Byte>^ Buffer;
+        property array<System::Byte>^ Buffer;
 
         /**
          * @brief Gets the publisher send timestamp in microseconds.

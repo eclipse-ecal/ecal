@@ -23,10 +23,10 @@
 #include "service/clr_types.h"
 
 #include "clr_common.h"
-#include "clr_bubble.h"
 
 #include <vector>
 
+using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 

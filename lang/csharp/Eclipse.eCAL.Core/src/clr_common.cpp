@@ -19,6 +19,7 @@
 
 #include "clr_common.h"
 
+using namespace System;
 using namespace System::Runtime::InteropServices;
 
 namespace Internal

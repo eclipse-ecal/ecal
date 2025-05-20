@@ -4,7 +4,6 @@
 #include <ecal/config/logging.h>
 #include <msclr/marshal_cppstd.h>
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -65,7 +64,7 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the path to the log file.
            */
-          property String^ Path;
+          property System::String^ Path;
 
           /**
            * @brief Default constructor.
@@ -73,7 +72,7 @@ namespace Eclipse {
           LoggingProviderFileConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Logging::Provider::File::Configuration native_file_config;
-            Path = gcnew String(native_file_config.path.c_str());
+            Path = gcnew System::String(native_file_config.path.c_str());
           }
 
           /**
@@ -81,7 +80,7 @@ namespace Eclipse {
            * @param native_file_config Native File::Configuration structure.
            */
           LoggingProviderFileConfiguration(const ::eCAL::Logging::Provider::File::Configuration& native_file_config) {
-            Path = gcnew String(native_file_config.path.c_str());
+            Path = gcnew System::String(native_file_config.path.c_str());
           }
 
           /**
@@ -310,6 +309,16 @@ namespace Eclipse {
             ::eCAL::Logging::Configuration native_config;
             Provider = gcnew LoggingProviderConfiguration(native_config.provider);
             Receiver = gcnew LoggingReceiverConfiguration(native_config.receiver);
+          }
+
+          /**
+           * @brief Parameterized constructor.
+           * @param native_logging_config Native Receiver::Configuration structure.
+           */
+          LoggingConfiguration(const ::eCAL::Logging::Configuration& native_logging_config) {
+            // Use the default values from the native structure
+            Provider = gcnew LoggingProviderConfiguration(native_logging_config.provider);
+            Receiver = gcnew LoggingReceiverConfiguration(native_logging_config.receiver);
           }
 
           /**

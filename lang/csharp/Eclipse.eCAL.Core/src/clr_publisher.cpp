@@ -29,6 +29,7 @@
 #include <functional>
 
 using namespace Eclipse::eCAL::Core;
+using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace Internal;
 

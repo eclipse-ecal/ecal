@@ -45,6 +45,12 @@ void Core::Initialize(System::String^ unitName, Init componentFlags)
   ::eCAL::Initialize(StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
 }
 
+void Core::Initialize(Config::Configuration^ config, System::String^ unitName, Init componentFlags)
+{
+  auto native_config = config->ToNative();
+  ::eCAL::Initialize(native_config, StringToStlString(unitName), static_cast<unsigned int>(componentFlags));
+}
+
 void Core::Terminate()
 {
   ::eCAL::Finalize();

@@ -25,13 +25,12 @@
 
 #include <string>
 
-using namespace System;
 
 namespace Internal
 {
   System::String^ StlStringToString(const std::string& ss_);
   std::string     StringToStlString(System::String^ s_);
 
-  std::string  ByteArrayToStlString(array<Byte>^ a_);
-  array<Byte>^ StlStringToByteArray(const std::string& ss_);
+  std::string  ByteArrayToStlString(array<System::Byte>^ a_);
+  array<System::Byte>^ StlStringToByteArray(const std::string& ss_);
 }

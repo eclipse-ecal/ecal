@@ -24,6 +24,7 @@
 #include <ecal/log.h>
 #include <ecal/monitoring.h>
 
+using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 

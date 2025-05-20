@@ -24,8 +24,7 @@
 **/
 
 #include "clr_types.h"
-
-using namespace System;
+#include "config/clr_configuration.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -65,6 +64,15 @@ namespace Eclipse {
         * @param componentFlags The components to initialize.
         **/
         static void Initialize(System::String^ unitName, Init componentFlags);
+        
+        /**
+        * @brief Initialize eCAL API.
+        *
+        * @param config The configuration to use.
+        * @param unitName The instance unit (node) name.
+        * @param componentFlags The components to initialize.
+        **/
+        static void Initialize(Config::Configuration^ config, System::String^ unitName, Init componentFlags);
 
         /**
         * @brief Finalize eCAL API.

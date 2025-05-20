@@ -23,6 +23,11 @@ namespace Eclipse {
             Enable = native_config.enable;
           }
 
+          // Native struct constructor
+          SubscriberLayerSHMConfiguration(const ::eCAL::Subscriber::Layer::SHM::Configuration& native_config) {
+            Enable = native_config.enable;
+          }
+
           ::eCAL::Subscriber::Layer::SHM::Configuration ToNative() {
             ::eCAL::Subscriber::Layer::SHM::Configuration native_config;
             native_config.enable = Enable;
@@ -42,6 +47,11 @@ namespace Eclipse {
             Enable = native_config.enable;
           }
 
+          // Native struct constructor
+          SubscriberLayerUDPConfiguration(const ::eCAL::Subscriber::Layer::UDP::Configuration& native_config) {
+            Enable = native_config.enable;
+          }
+
           ::eCAL::Subscriber::Layer::UDP::Configuration ToNative() {
             ::eCAL::Subscriber::Layer::UDP::Configuration native_config;
             native_config.enable = Enable;
@@ -58,6 +68,11 @@ namespace Eclipse {
 
           SubscriberLayerTCPConfiguration() {
             ::eCAL::Subscriber::Layer::TCP::Configuration native_config;
+            Enable = native_config.enable;
+          }
+
+          // Native struct constructor
+          SubscriberLayerTCPConfiguration(const ::eCAL::Subscriber::Layer::TCP::Configuration& native_config) {
             Enable = native_config.enable;
           }
 
@@ -84,6 +99,13 @@ namespace Eclipse {
             TCP = gcnew SubscriberLayerTCPConfiguration();
           }
 
+          // Native struct constructor
+          SubscriberLayerConfiguration(const ::eCAL::Subscriber::Layer::Configuration& native_config) {
+            SHM = gcnew SubscriberLayerSHMConfiguration(native_config.shm);
+            UDP = gcnew SubscriberLayerUDPConfiguration(native_config.udp);
+            TCP = gcnew SubscriberLayerTCPConfiguration(native_config.tcp);
+          }
+
           ::eCAL::Subscriber::Layer::Configuration ToNative() {
             ::eCAL::Subscriber::Layer::Configuration native_config;
             native_config.shm = SHM->ToNative();
@@ -104,6 +126,12 @@ namespace Eclipse {
           SubscriberConfiguration() {
             ::eCAL::Subscriber::Configuration native_config;
             Layer = gcnew SubscriberLayerConfiguration();
+            DropOutOfOrderMessages = native_config.drop_out_of_order_messages;
+          }
+
+          // Native struct constructor
+          SubscriberConfiguration(const ::eCAL::Subscriber::Configuration& native_config) {
+            Layer = gcnew SubscriberLayerConfiguration(native_config.layer);
             DropOutOfOrderMessages = native_config.drop_out_of_order_messages;
           }
 

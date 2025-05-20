@@ -23,8 +23,6 @@
 #include <ecal/config/application.h>
 #include <msclr/marshal_cppstd.h>
 
-using namespace System;
-
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
@@ -38,7 +36,7 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the filter exclusion regex.
            */
-          property String^ FilterExcl;
+          property System::String^ FilterExcl;
 
           /**
            * @brief Default constructor.
@@ -46,7 +44,7 @@ namespace Eclipse {
           SysConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Application::Sys::Configuration native_config;
-            FilterExcl = gcnew String(native_config.filter_excl.c_str());
+            FilterExcl = gcnew System::String(native_config.filter_excl.c_str());
           }
 
           /**
@@ -54,7 +52,7 @@ namespace Eclipse {
            * @param native_config Native Sys::Configuration structure.
            */
           SysConfiguration(const ::eCAL::Application::Sys::Configuration& native_config) {
-            FilterExcl = gcnew String(native_config.filter_excl.c_str());
+            FilterExcl = gcnew System::String(native_config.filter_excl.c_str());
           }
 
           /**
@@ -76,7 +74,7 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the terminal emulator command.
            */
-          property String^ TerminalEmulator;
+          property System::String^ TerminalEmulator;
 
           /**
            * @brief Default constructor.
@@ -84,7 +82,7 @@ namespace Eclipse {
           StartupConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Application::Startup::Configuration native_config;
-            TerminalEmulator = gcnew String(native_config.terminal_emulator.c_str());
+            TerminalEmulator = gcnew System::String(native_config.terminal_emulator.c_str());
           }
 
           /**
@@ -92,7 +90,7 @@ namespace Eclipse {
            * @param native_config Native Startup::Configuration structure.
            */
           StartupConfiguration(const ::eCAL::Application::Startup::Configuration& native_config) {
-            TerminalEmulator = gcnew String(native_config.terminal_emulator.c_str());
+            TerminalEmulator = gcnew System::String(native_config.terminal_emulator.c_str());
           }
 
           /**

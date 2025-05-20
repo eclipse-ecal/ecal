@@ -22,6 +22,7 @@
 
 #include <ecal/log.h>
 
+using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 

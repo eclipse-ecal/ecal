@@ -23,7 +23,6 @@
  * @file  clr_time.h
 **/
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -42,9 +41,9 @@ namespace Eclipse {
         /**
          * @brief Gets the time synchronization interface name.
          *
-         * @return The interface name as a System::String^.
+         * @return The interface name as a System::System::String^.
          */
-        static String^ GetName();
+        static System::String^ GetName();
 
         /**
          * @brief Gets the current eCAL time in microseconds.
@@ -104,7 +103,7 @@ namespace Eclipse {
          * @param error [out] The error code.
          * @param statusMessage [out] A human-readable status message. May be empty if no message is provided.
          */
-        static void GetStatus([System::Runtime::InteropServices::Out] int% error, [System::Runtime::InteropServices::Out] String^% statusMessage);
+        static void GetStatus([System::Runtime::InteropServices::Out] int% error, [System::Runtime::InteropServices::Out] System::String^% statusMessage);
       };
 
     } // namespace Time
