@@ -21,6 +21,7 @@
 
 #include <gtest/gtest.h>
 
+
 class pubsub_test_c : public ::testing::Test {
 
   protected:
@@ -63,6 +64,17 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
   printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
 }
 
+int DummyWriteFull(void* buffer, size_t size) 
+{
+  memset(buffer, 0x42, size);
+  return 0;
+}
+
+size_t DummyGetSize()
+{
+  return 64;
+}
+  
 TEST_F(pubsub_test_c, subscriber)
 {
   // test subscriber instantiation
@@ -177,17 +189,19 @@ TEST_F(pubsub_test_c, pub_GetSubscriberCount)
   publisher = eCAL_Publisher_New(topic_name, &data_type_information, NULL, NULL);
   EXPECT_NE(nullptr, publisher);
 
-  eCAL_Process_SleepMS(5000);
+  eCAL_Process_SleepMS(2000);
 
   // actual test 2 subscribers + 1 from SetUp()
   EXPECT_EQ(3, eCAL_Publisher_GetSubscriberCount(publisher));
 }
 
-
 TEST_F(pubsub_test_c, pub_SendPayloadWriter) 
 {
-  eCAL_PayloadWriter payload_writer;
-  payload_writer.WriteFull
-  // actual test
-  EXPECT_EQ(0, eCAL_Publisher_SendPayloadWriter(publisher, payload_writer, NULL));
+  eCAL_PayloadWriter writer = {};
+  writer.WriteFull = DummyWriteFull;
+  writer.GetSize = DummyGetSize;
+  
+  eCAL_Process_SleepMS(2000);
+
+  EXPECT_EQ(0, eCAL_Publisher_SendPayloadWriter(publisher, &writer, nullptr));
 }
