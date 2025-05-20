@@ -21,6 +21,7 @@ set(ecal_submodule_dependencies
   tclap
   tcp_pubsub
   termcolor
+  tsl-robin-map
   tinyxml2
   udpcap
   yaml-cpp
