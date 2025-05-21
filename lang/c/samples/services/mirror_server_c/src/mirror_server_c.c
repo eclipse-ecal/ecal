@@ -22,7 +22,7 @@
 #include <stdio.h> //printf()
 #include <string.h> //memcpy(), memset()
 
-void printCallbackInformation(const struct eCAL_SServiceMethodInformation* method_info_, const char* request_, unsigned long request_length_, const char* response_, unsigned long* response_length_)
+void printCallbackInformation(const struct eCAL_SServiceMethodInformation* method_info_, const char* request_, size_t request_length_, const char* response_, size_t* response_length_)
 {
    /*
     The data we get will not be \0 terminated. Hence we need to pass the size to printf.
@@ -37,7 +37,7 @@ void printCallbackInformation(const struct eCAL_SServiceMethodInformation* metho
   We define the callback function that will be called when a client calls the service method "echo".
   This callback will simply return the request as the response.
 */
-void OnEchoCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, unsigned long request_length_, void** response_, unsigned long* response_length_, void* user_argument_)
+int OnEchoCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_, void* user_argument_)
 {
   (void)user_argument_;
 
@@ -51,7 +51,7 @@ void OnEchoCallback(const struct eCAL_SServiceMethodInformation* method_info_, c
   /*
     In case of a failure, the value that response_ points to, remains NULL.
   */
-  if (*response_ == NULL) return; // memory allocation failed
+  if (*response_ == NULL) return -1; // memory allocation failed
 
   /*
     The length of response buffer needs to be set accordingly
@@ -63,13 +63,15 @@ void OnEchoCallback(const struct eCAL_SServiceMethodInformation* method_info_, c
   memcpy(*response_, request_, request_length_);
 
   printCallbackInformation(method_info_, (const char*)request_, request_length_, (const char*)(*response_), response_length_);
+
+  return 0;
 }
 
 /* 
   This callback will be called when a client calls the service method "reverse".
   It will return the request in reverse order as the response.
 */
-void OnReverseCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, unsigned long request_length_, void** response_, unsigned long* response_length_, void* user_argument_)
+int OnReverseCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_, void* user_argument_)
 {
   (void)user_argument_;
 
@@ -83,7 +85,7 @@ void OnReverseCallback(const struct eCAL_SServiceMethodInformation* method_info_
   /*
     In case of a failure, the value that response_ points to, remains NULL.
   */
-  if (*response_ == NULL) return; // memory allocation failed
+  if (*response_ == NULL) return -1; // memory allocation failed
 
   /*
     The length of response buffer needs to be set accordingly
@@ -98,6 +100,8 @@ void OnReverseCallback(const struct eCAL_SServiceMethodInformation* method_info_
   }
 
   printCallbackInformation(method_info_, (const char*)request_, request_length_, (const char*)(*response_), response_length_);
+
+  return 0;
 }
 
 int main()
