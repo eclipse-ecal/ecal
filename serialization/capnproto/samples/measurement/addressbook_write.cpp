@@ -54,7 +54,6 @@ void PrepareAddressbook(capnp::MallocMessageBuilder& message, int bob_id)
   alice.setData(aliceData);
 
   auto bob = people[1];
-  int bobid = 456;
   bob.setName("Bob");
   bob.setEmail("bob@example.com");
 
