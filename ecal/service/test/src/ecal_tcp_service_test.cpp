@@ -1665,7 +1665,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
 
     const ecal_service::ClientSession::ResponseCallbackT client_response_callback
               = [&num_client_response_callback_called, &client]
-                (const ecal_service::Error& error, const std::shared_ptr<std::string>& /*response*/) -> void
+                (const ecal_service::Error& /*error*/, const std::shared_ptr<std::string>& /*response*/) -> void
                 {
                   if(client)
                   {

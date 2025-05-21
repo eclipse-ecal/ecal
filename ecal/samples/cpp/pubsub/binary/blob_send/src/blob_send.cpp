@@ -23,24 +23,25 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <random>
 
 /*
   Some helper function to generate binary data into a buffer.
-  Clears the vector, resizes it to a specified size and fills it with random ascii characters.
+  Clears the vector, resizes it to a specified size and fills it with random printable ascii characters.
 */
 void fillBinaryBuffer(std::vector<unsigned char>& buffer) { 
   constexpr unsigned int buffer_size = 16;
-  auto now = std::chrono::system_clock::now();
-  auto duration = now.time_since_epoch();
-  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-  
-  std::srand(milliseconds);
+
+  static std::random_device random_device;
+  static std::mt19937 generator(random_device());
+  // Useful random characters are in the range [32, 126]
+  static std::uniform_int_distribution<> printable_ascii_char(32, 126);
   
   buffer.clear();
   buffer.resize(buffer_size);
 
   for (unsigned int i = 0; i < buffer_size; ++i) {
-    buffer[i] = static_cast<char>(std::rand() % 95 + 32);
+    buffer[i] = static_cast<char>(printable_ascii_char(generator));
   }
 }
 
