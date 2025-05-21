@@ -29,7 +29,7 @@ build_image() {
 
 # Build all variants
 #build_image "${TAG_PREFIX}_local_shm"
-#build_image "${TAG_PREFIX}_local_udp"
+build_image "${TAG_PREFIX}_local_udp"
 #build_image "${TAG_PREFIX}_local_tcp"
 build_image "${TAG_PREFIX}_network_udp"
 #build_image "${TAG_PREFIX}_network_tcp"

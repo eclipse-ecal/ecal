@@ -6,8 +6,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libtclap-dev
 
 COPY lib/EcalConfigHelper /app/lib/EcalConfigHelper
-COPY message_validation/src/ /app/src/
-COPY message_validation/scripts/entrypoint.sh /app/entrypoint.sh
+COPY network_crash/src/ /app/src/
+COPY network_crash/scripts/entrypoint.sh /app/entrypoint.sh
 
 WORKDIR /app/src
 RUN mkdir build && cd build && \

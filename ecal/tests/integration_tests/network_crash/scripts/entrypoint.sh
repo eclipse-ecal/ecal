@@ -1,39 +1,41 @@
 #!/bin/bash
 
-ROLE=$1        # publisher | subscriber | both
-MODE=$2        # local_shm | local_udp | etc.
-TOPIC=$3       # optional topic name
-NAME=$4        # optional node name
-EXTRA=$5       # optional extra args
+ROLE=$1        # udp_local_all | udp_network_pub
+TOPIC=$2       # optional (default: test_topic)
+NAME=$3        # optional container name
+EXTRA=$4       # optional extra args
 
-if [ -z "$ROLE" ] || [ -z "$MODE" ]; then
-  echo "Usage: $0 <publisher|subscriber|both> <mode> [topic] [name] [extra args]"
+if [ -z "$ROLE" ]; then
+  echo "Usage: $0 <udp_local_all|udp_network_pub> [topic] [name] [extra args]"
   exit 1
 fi
 
 TOPIC=${TOPIC:-test_topic}
-NAME=${NAME:-${ROLE}_test}
+NAME=${NAME:-${ROLE}_node}
 
 cd /app/src/build
 
-ARGS="--mode $MODE --topic $TOPIC --name $NAME"
+if [ "$ROLE" = "udp_local_all" ]; then
+  echo "[Entrypoint] Starting UDP subscriber, then UDP publisher..."
 
-if [ "$ROLE" = "publisher" ]; then
-  echo "[Entrypoint] Starting publisher in mode $MODE"
-  ./network_crash_publisher $ARGS $EXTRA
-
-elif [ "$ROLE" = "subscriber" ]; then
-  echo "[Entrypoint] Starting subscriber in mode $MODE"
-  ./network_crash_subscriber $ARGS $EXTRA
-  sleep 2
-
-elif [ "$ROLE" = "both" ]; then
-  echo "[Entrypoint] Starting subscriber and publisher in mode $MODE"
-  ./network_crash_subscriber -m "$MODE" &
-  sleep 1
+  ./network_crash_sub --topic "$TOPIC" --name sub_${NAME} $EXTRA &
   SUB_PID=$!
-  ./network_crash_publisher -m "$MODE"
+
+  ./local_udp_pub --topic "$TOPIC" --name local_udp_pub_${NAME} $EXTRA &
+  PUB_PID=$!
+
   wait $SUB_PID
+  EXIT_CODE=$?
+  echo "[Entrypoint] Subscriber exited with code $EXIT_CODE"
+  exit $EXIT_CODE
+
+elif [ "$ROLE" = "udp_network_pub" ]; then
+  echo "[Entrypoint] Starting network UDP publisher..."
+
+  ./network_udp_pub --topic "$TOPIC" --name network_udp_pub_${NAME} $EXTRA
+  EXIT_CODE=$?
+  echo "[Entrypoint] Network UDP Publisher exited with code $EXIT_CODE"
+  exit $EXIT_CODE
 
 else
   echo "[Entrypoint] Unknown role: $ROLE"
