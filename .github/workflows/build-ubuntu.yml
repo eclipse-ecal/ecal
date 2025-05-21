@@ -144,6 +144,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_SPDLOG=OFF \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF \
+        -DECAL_THIRDPARTY_BUILD_BENCHMARK=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -175,3 +176,9 @@ jobs:
       with:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
+        
+    - name: Upload file system
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'File system'
+        path: *
