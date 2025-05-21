@@ -731,96 +731,97 @@ But be aware that you also need to handle the binary interpretation across multi
 <span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
 <span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
 <span class="linenos"> 6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="cm">/*</span>
-<span class="linenos"> 9</span><span class="cm">  Some helper function to generate binary data into a buffer.</span>
-<span class="linenos">10</span><span class="cm">  Clears the vector, resizes it to a specified size and fills it with random ascii characters.</span>
-<span class="linenos">11</span><span class="cm">*/</span>
-<span class="linenos">12</span><span class="kt">void</span><span class="w"> </span><span class="nf">fillBinaryBuffer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="linenos">13</span><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">buffer_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
-<span class="linenos">14</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
-<span class="linenos">15</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="p">.</span><span class="n">time_since_epoch</span><span class="p">();</span>
-<span class="linenos">16</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">milliseconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">duration</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
-<span class="linenos">17</span><span class="w">  </span>
-<span class="linenos">18</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">srand</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">);</span>
-<span class="linenos">19</span><span class="w">  </span>
-<span class="linenos">20</span><span class="w">  </span><span class="n">buffer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<span class="linenos">21</span><span class="w">  </span><span class="n">buffer</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">);</span>
-<span class="linenos">22</span>
-<span class="linenos">23</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">buffer_size</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="linenos">24</span><span class="w">    </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">95</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">32</span><span class="p">);</span>
-<span class="linenos">25</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">26</span><span class="p">}</span>
-<span class="linenos">27</span>
-<span class="linenos">28</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
-<span class="linenos">29</span><span class="p">{</span>
-<span class="linenos">30</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;-------------------&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">31</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; C++: BLOB SENDER&quot;</span><span class="w">   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">32</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;-------------------&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">33</span>
-<span class="linenos">34</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">35</span><span class="cm">    Initialize eCAL. You always have to initialize eCAL before using its API.</span>
-<span class="linenos">36</span><span class="cm">    The name of our eCAL Process will be &quot;blob send&quot;. </span>
-<span class="linenos">37</span><span class="cm">    This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">38</span><span class="cm">  */</span>
-<span class="linenos">39</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;blob send&quot;</span><span class="p">);</span>
-<span class="linenos">40</span>
-<span class="linenos">41</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">42</span><span class="cm">    Print some eCAL version information.</span>
-<span class="linenos">43</span><span class="cm">  */</span>
-<span class="linenos">44</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;eCAL &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">GetVersionString</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">GetVersionDateString</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">45</span>
-<span class="linenos">46</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">47</span><span class="cm">    Set the state for the program.</span>
-<span class="linenos">48</span><span class="cm">    You can vary between different states like healthy, warning, critical ...</span>
-<span class="linenos">49</span><span class="cm">    This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
-<span class="linenos">50</span><span class="cm">  */</span>
-<span class="linenos">51</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="o">::</span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="o">::</span><span class="n">level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
-<span class="linenos">52</span>
-<span class="linenos">53</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">54</span><span class="cm">    Now we create a new publisher that will publish the topic &quot;blob&quot;.</span>
-<span class="linenos">55</span><span class="cm">  */</span>
-<span class="linenos">56</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">CPublisher</span><span class="w"> </span><span class="n">pub</span><span class="p">(</span><span class="s">&quot;blob&quot;</span><span class="p">);</span>
-<span class="linenos">57</span>
-<span class="linenos">58</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">59</span><span class="cm">    Construct a message. As we are sending binary data, we just create a buffer of unsigned characters.</span>
-<span class="linenos">60</span><span class="cm">  */</span>
-<span class="linenos">61</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">;</span>
-<span class="linenos">62</span>
-<span class="linenos">63</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">64</span><span class="cm">    Creating an infinite publish-loop.</span>
-<span class="linenos">65</span><span class="cm">    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.</span>
-<span class="linenos">66</span><span class="cm">  */</span>
-<span class="linenos">67</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
-<span class="linenos">68</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos">69</span><span class="w">    </span><span class="cm">/*</span>
-<span class="linenos">70</span><span class="cm">      Fill the buffer with the character that is defined by the counter variable.</span>
-<span class="linenos">71</span><span class="cm">    */</span>
-<span class="linenos">72</span><span class="w">    </span><span class="n">fillBinaryBuffer</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">);</span>
-<span class="linenos">73</span>
-<span class="linenos">74</span><span class="w">    </span><span class="cm">/*</span>
-<span class="linenos">75</span><span class="cm">      Send the message. The message is sent to all subscribers that are currently connected to the topic &quot;blob&quot;.</span>
-<span class="linenos">76</span><span class="cm">      For binary data you need to set a buffer pointer and the size of the buffer.</span>
-<span class="linenos">77</span><span class="cm">    */</span>
-<span class="linenos">78</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pub</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">size</span><span class="p">()))</span>
-<span class="linenos">79</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sent binary data in C++: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">80</span><span class="w">    </span><span class="k">else</span>
-<span class="linenos">81</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sending binary data in C++ failed!&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="linenos">82</span>
-<span class="linenos">83</span><span class="w">    </span><span class="cm">/*</span>
-<span class="linenos">84</span><span class="cm">      Sleep for 500ms to send in a frequency of 2 hz.</span>
-<span class="linenos">85</span><span class="cm">    */</span>
-<span class="linenos">86</span><span class="w">    </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SleepMS</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
-<span class="linenos">87</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos">88</span>
-<span class="linenos">89</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">90</span><span class="cm">    Finalize eCAL. This will stop all eCAL processes and free all resources.</span>
-<span class="linenos">91</span><span class="cm">    You should always finalize eCAL when you are done using it.</span>
-<span class="linenos">92</span><span class="cm">  */</span>
-<span class="linenos">93</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
-<span class="linenos">94</span>
-<span class="linenos">95</span><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="linenos">96</span><span class="p">}</span>
+<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="cm">/*</span>
+<span class="linenos">10</span><span class="cm">  Some helper function to generate binary data into a buffer.</span>
+<span class="linenos">11</span><span class="cm">  Clears the vector, resizes it to a specified size and fills it with random printable ascii characters.</span>
+<span class="linenos">12</span><span class="cm">*/</span>
+<span class="linenos">13</span><span class="kt">void</span><span class="w"> </span><span class="nf">fillBinaryBuffer</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="linenos">14</span><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">buffer_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">random_device</span><span class="w"> </span><span class="n">random_device</span><span class="p">;</span>
+<span class="linenos">17</span><span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="w"> </span><span class="n">generator</span><span class="p">(</span><span class="n">random_device</span><span class="p">());</span>
+<span class="linenos">18</span><span class="w">  </span><span class="c1">// Useful random characters are in the range [32, 126]</span>
+<span class="linenos">19</span><span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">uniform_int_distribution</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">printable_ascii_char</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">126</span><span class="p">);</span>
+<span class="linenos">20</span><span class="w">  </span>
+<span class="linenos">21</span><span class="w">  </span><span class="n">buffer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">buffer</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">);</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">buffer_size</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">25</span><span class="w">    </span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span><span class="p">(</span><span class="n">printable_ascii_char</span><span class="p">(</span><span class="n">generator</span><span class="p">));</span>
+<span class="linenos">26</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">27</span><span class="p">}</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos">30</span><span class="p">{</span>
+<span class="linenos">31</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;-------------------&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">32</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; C++: BLOB SENDER&quot;</span><span class="w">   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">33</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;-------------------&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">36</span><span class="cm">    Initialize eCAL. You always have to initialize eCAL before using its API.</span>
+<span class="linenos">37</span><span class="cm">    The name of our eCAL Process will be &quot;blob send&quot;. </span>
+<span class="linenos">38</span><span class="cm">    This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">39</span><span class="cm">  */</span>
+<span class="linenos">40</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;blob send&quot;</span><span class="p">);</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">43</span><span class="cm">    Print some eCAL version information.</span>
+<span class="linenos">44</span><span class="cm">  */</span>
+<span class="linenos">45</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;eCAL &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">GetVersionString</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">GetVersionDateString</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">48</span><span class="cm">    Set the state for the program.</span>
+<span class="linenos">49</span><span class="cm">    You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">50</span><span class="cm">    This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">51</span><span class="cm">  */</span>
+<span class="linenos">52</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="o">::</span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="o">::</span><span class="n">level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">55</span><span class="cm">    Now we create a new publisher that will publish the topic &quot;blob&quot;.</span>
+<span class="linenos">56</span><span class="cm">  */</span>
+<span class="linenos">57</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">CPublisher</span><span class="w"> </span><span class="n">pub</span><span class="p">(</span><span class="s">&quot;blob&quot;</span><span class="p">);</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">60</span><span class="cm">    Construct a message. As we are sending binary data, we just create a buffer of unsigned characters.</span>
+<span class="linenos">61</span><span class="cm">  */</span>
+<span class="linenos">62</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">;</span>
+<span class="linenos">63</span>
+<span class="linenos">64</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">65</span><span class="cm">    Creating an infinite publish-loop.</span>
+<span class="linenos">66</span><span class="cm">    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.</span>
+<span class="linenos">67</span><span class="cm">  */</span>
+<span class="linenos">68</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+<span class="linenos">69</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">70</span><span class="w">    </span><span class="cm">/*</span>
+<span class="linenos">71</span><span class="cm">      Fill the buffer with the character that is defined by the counter variable.</span>
+<span class="linenos">72</span><span class="cm">    */</span>
+<span class="linenos">73</span><span class="w">    </span><span class="n">fillBinaryBuffer</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">);</span>
+<span class="linenos">74</span>
+<span class="linenos">75</span><span class="w">    </span><span class="cm">/*</span>
+<span class="linenos">76</span><span class="cm">      Send the message. The message is sent to all subscribers that are currently connected to the topic &quot;blob&quot;.</span>
+<span class="linenos">77</span><span class="cm">      For binary data you need to set a buffer pointer and the size of the buffer.</span>
+<span class="linenos">78</span><span class="cm">    */</span>
+<span class="linenos">79</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pub</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">size</span><span class="p">()))</span>
+<span class="linenos">80</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sent binary data in C++: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">binary_buffer</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">81</span><span class="w">    </span><span class="k">else</span>
+<span class="linenos">82</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Sending binary data in C++ failed!&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">83</span>
+<span class="linenos">84</span><span class="w">    </span><span class="cm">/*</span>
+<span class="linenos">85</span><span class="cm">      Sleep for 500ms to send in a frequency of 2 hz.</span>
+<span class="linenos">86</span><span class="cm">    */</span>
+<span class="linenos">87</span><span class="w">    </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SleepMS</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="linenos">88</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">89</span>
+<span class="linenos">90</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">91</span><span class="cm">    Finalize eCAL. This will stop all eCAL processes and free all resources.</span>
+<span class="linenos">92</span><span class="cm">    You should always finalize eCAL when you are done using it.</span>
+<span class="linenos">93</span><span class="cm">  */</span>
+<span class="linenos">94</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">95</span>
+<span class="linenos">96</span><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">97</span><span class="p">}</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">// Include the basic eCAL header</span>
