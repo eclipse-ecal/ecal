@@ -181,4 +181,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'File system'
-        path: *
+        path: ${{ github.workspace }}
