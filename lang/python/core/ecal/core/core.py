@@ -25,14 +25,28 @@
 
 import ecal._ecal_core_py as _ecal
 
-def initialize(unit_name):
+INIT_PUBLISHER  = 0x001
+INIT_SUBSCRIBER = 0x002
+INIT_SERVICE    = 0x004
+INIT_MONITORING = 0x008
+INIT_LOGGING    = 0x010
+INIT_TIMESYNC   = 0x020
+INIT_ALL        = INIT_PUBLISHER | INIT_SUBSCRIBER | INIT_SERVICE | INIT_MONITORING | INIT_LOGGING | INIT_TIMESYNC;
+INIT_DEFAULT    = INIT_PUBLISHER | INIT_SUBSCRIBER | INIT_SERVICE | INIT_LOGGING | INIT_TIMESYNC;
+
+def initialize(unit_name, components = None):
   """ initialize eCAL API
 
   :param unit_name: instance unit name
   :type unit_name:  string
+  :param components: components to initialize
+  :type components: int
 
   """
-  return _ecal.initialize(unit_name)
+  if (components is not None):
+    return _ecal.initialize_components(unit_name, components)
+  else:
+    return _ecal.initialize(unit_name)
 
 
 def finalize():

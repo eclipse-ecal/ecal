@@ -34,6 +34,8 @@
 #include <unordered_map>
 #include <atomic>
 
+#include <iostream>
+
 
 /****************************************/
 /*      types                           */
@@ -91,6 +93,26 @@ PyObject* initialize(PyObject* /*self*/, PyObject* args)
   int init{ 0 };
   Py_BEGIN_ALLOW_THREADS
     init = ecal_initialize(unit_name);
+  Py_END_ALLOW_THREADS
+
+  return(Py_BuildValue("i", init));
+}
+
+/****************************************/
+/*      initialize components           */
+/****************************************/
+PyObject* initialize_components(PyObject* /*self*/, PyObject* args)
+{
+  char* unit_name = nullptr;
+  unsigned int components = eCAL::Init::Default;
+
+  if (!PyArg_ParseTuple(args, "si", &unit_name, &components))
+    return nullptr;
+
+  /* pass argument to the initialize function */
+  int init{ 0 };
+  Py_BEGIN_ALLOW_THREADS
+    init = ecal_initialize_components(unit_name, components);
   Py_END_ALLOW_THREADS
 
   return(Py_BuildValue("i", init));
@@ -919,7 +941,8 @@ PyObject* client_rem_response_callback(PyObject* /*self*/, PyObject* args)   // 
 /****************************************/
 PyObject* mon_initialize(PyObject* /*self*/, PyObject* /*args*/)
 {
-  return(Py_BuildValue("i", mon_initialize()));
+  std::cout << "calling mon_initialize is deprecated and does not have any effect.\n";
+  return(Py_BuildValue("i", 0));
 }
 
 /****************************************/
@@ -927,7 +950,8 @@ PyObject* mon_initialize(PyObject* /*self*/, PyObject* /*args*/)
 /****************************************/
 PyObject* mon_finalize(PyObject* /*self*/, PyObject* /*args*/)
 {
-  return(Py_BuildValue("i", mon_finalize()));
+  std::cout << "calling mon_finalize is deprecated and does not have any effect.\n";
+  return(Py_BuildValue("i", 0));
 }
 
 /****************************************/
@@ -1304,6 +1328,7 @@ PyObject* mon_logging(PyObject* /*self*/, PyObject* /*args*/)
 static PyMethodDef _ecal_methods[] = 
 {
   {"initialize",                    initialize,                    METH_VARARGS,  "initialize(unit_name)"},
+  {"initialize_components",         initialize_components,         METH_VARARGS,  "initialize(unit_name, components)"},
   {"finalize",                      finalize,                      METH_NOARGS,   "finalize()"},
   {"is_initialized",                is_initialized,                METH_NOARGS,   "is_initialized()"},
 
