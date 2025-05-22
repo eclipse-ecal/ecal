@@ -25,6 +25,8 @@
 #include "tui/view/component/decorator.hpp"
 #include "tui/view/message_visualization/factory.hpp"
 
+#include "tui/ftxui_version_compatibility.hpp"
+
 #include "tui/viewmodel/topics.hpp"
 
 class TopicDetailsView : public View
@@ -95,7 +97,7 @@ public:
     return *view_model;
   }
 
-  ftxui::Element Render() override
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     using namespace ftxui;
 
