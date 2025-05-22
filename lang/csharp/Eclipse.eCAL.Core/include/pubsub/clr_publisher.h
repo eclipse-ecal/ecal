@@ -26,6 +26,7 @@
  * This class provides methods to send messages over eCAL and query information about the publisher.
  */
 
+#include "config/clr_publisher.h"
 #include "pubsub/clr_types.h"
 
 #include <ecal/pubsub/publisher.h>
@@ -51,7 +52,7 @@ namespace Eclipse {
          *
          * @param topicName Unique topic name.
          */
-        Publisher(System::String^ topicName) : Publisher(topicName, nullptr, nullptr) {}
+        Publisher(System::String^ topicName) : Publisher(topicName, nullptr, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name and data type information.
@@ -59,7 +60,7 @@ namespace Eclipse {
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr) {}
+        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo) : Publisher(topicName, dataTypeInfo, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Publisher with the given topic name, data type information, and an event callback.
@@ -68,7 +69,18 @@ namespace Eclipse {
          * @param dataTypeInfo Topic data type information.
          * @param eventCallback Optional publisher event callback.
          */
-        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback);
+        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback) : Publisher(topicName, dataTypeInfo, eventCallback, nullptr) {}
+
+        /**
+         * @brief Constructs a Publisher with the given topic name, data type information and configuration.
+         *
+         * @param topicName Unique topic name.
+         * @param dataTypeInfo Topic data type information.
+         * @param eventCallback Optional publisher event callback.
+         * @param config Configuration parameters.
+         */
+        Publisher(System::String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback, Config::PublisherConfiguration^ config);
+
 
         /**
          * @brief Destructor.

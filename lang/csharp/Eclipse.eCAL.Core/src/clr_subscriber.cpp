@@ -130,30 +130,43 @@ namespace
 }
 
 // Constructor
-Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback)
+Subscriber::Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback, Config::SubscriberConfiguration^ config)
 {
   std::string nativeTopic = StringToStlString(topicName);
 
   // Use a default DataTypeInformation if none is provided.
   if (dataTypeInfo == nullptr)
-  {
     dataTypeInfo = gcnew DataTypeInformation("", "", gcnew array<Byte>(0));
-  }
 
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
 
+  ::eCAL::Subscriber::Configuration* nativeConfig = nullptr;
+  ::eCAL::Subscriber::Configuration tempConfig;
+  if (config != nullptr)
+  {
+    tempConfig = config->ToNative();
+    nativeConfig = &tempConfig;
+  }
+
   if (eventCallback != nullptr)
   {
     gcroot<SubscriberEventCallbackDelegate^> managedCallback(eventCallback);
     auto nativeCallback = CreateNativeSubscriberEventCallback(managedCallback);
-    m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nativeCallback);
+
+    if (nativeConfig)
+      m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nativeCallback, *nativeConfig);
+    else
+      m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nativeCallback);
   }
   else
   {
-    m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo);
+    if (nativeConfig)
+      m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo, nullptr, *nativeConfig);
+    else
+      m_native_subscriber = new ::eCAL::CSubscriber(nativeTopic, nativeDataTypeInfo);
   }
 }
 

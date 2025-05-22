@@ -72,30 +72,49 @@ namespace
 }
 
 // Constructor
-Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback)
+Publisher::Publisher(String^ topicName, DataTypeInformation^ dataTypeInfo, PublisherEventCallbackDelegate^ eventCallback, Config::PublisherConfiguration^ config)
 {
   std::string nativeTopic = StringToStlString(topicName);
 
   // Use a default DataTypeInformation if none is provided.
   if (dataTypeInfo == nullptr)
-  {
     dataTypeInfo = gcnew DataTypeInformation("", "", gcnew array<Byte>(0));
-  }
 
   ::eCAL::SDataTypeInformation nativeDataTypeInfo;
   nativeDataTypeInfo.name       = StringToStlString(dataTypeInfo->Name);
   nativeDataTypeInfo.encoding   = StringToStlString(dataTypeInfo->Encoding);
   nativeDataTypeInfo.descriptor = ByteArrayToStlString(dataTypeInfo->Descriptor);
 
+  ::eCAL::Publisher::Configuration* nativeConfig = nullptr;
+  ::eCAL::Publisher::Configuration tempConfig;
+  if (config != nullptr)
+  {
+    tempConfig = config->ToNative();
+    nativeConfig = &tempConfig;
+  }
+
+  gcroot<PublisherEventCallbackDelegate^> managedCallback = nullptr;
+  std::function<void(const ::eCAL::STopicId&, const ::eCAL::SPubEventCallbackData&)> nativeCallback;
+
   if (eventCallback != nullptr)
   {
-    gcroot<PublisherEventCallbackDelegate^> managedCallback(eventCallback);
-    auto nativeCallback = CreatePublisherEventCallback(managedCallback);
-    m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nativeCallback);
+    managedCallback = eventCallback;
+    nativeCallback = CreatePublisherEventCallback(managedCallback);
+  }
+
+  if (nativeCallback)
+  {
+    if (nativeConfig)
+      m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nativeCallback, *nativeConfig);
+    else
+      m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nativeCallback);
   }
   else
   {
-    m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo);
+    if (nativeConfig)
+      m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo, nullptr, *nativeConfig);
+    else
+      m_native_publisher = new ::eCAL::CPublisher(nativeTopic, nativeDataTypeInfo);
   }
 }
 
