@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Eclipse.eCAL.Core;
 using Eclipse.eCAL.Core.Config;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,17 +34,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public class ConfigTest
 {
-  [TestInitialize]
-  public void Initialize()
-  {
-    Core.Initialize("ConfigTest");
-  }
-
-  [TestCleanup]
-  public void Cleanup()
-  {
-    Core.Terminate();
-  }
+  private const int TcsWaitTime = 2500;
 
   [TestMethod]
   public void TestConfigPassing()
@@ -125,10 +116,10 @@ public class ConfigTest
     Core.Initialize(config, "TestConfigPassing", Init.Default);
 
     var ecalConfig = ConfigWrapper.GetConfiguration();
-    
+
     // Communication mode
     Assert.AreEqual(config.CommunicationMode, ecalConfig.CommunicationMode, "CommunicationMode mismatch");
-    
+
     // Registration
     Assert.AreEqual(config.Registration.RegistrationRefresh, ecalConfig.Registration.RegistrationRefresh, "RegistrationRefresh mismatch");
     Assert.AreEqual(config.Registration.RegistrationTimeout, ecalConfig.Registration.RegistrationTimeout, "RegistrationTimeout mismatch");
@@ -140,7 +131,7 @@ public class ConfigTest
     Assert.AreEqual(config.Registration.Local.UDP.Port, ecalConfig.Registration.Local.UDP.Port, "Local.UDP.Port mismatch");
     Assert.AreEqual(config.Registration.Network.TransportType, ecalConfig.Registration.Network.TransportType, "Network.TransportType mismatch");
     Assert.AreEqual(config.Registration.Network.UDP.Port, ecalConfig.Registration.Network.UDP.Port, "Network.UDP.Port mismatch");
-    
+
     // Transport Layer
     Assert.AreEqual(config.TransportLayer.Udp.ConfigVersion, ecalConfig.TransportLayer.Udp.ConfigVersion, "Udp.ConfigVersion mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.Port, ecalConfig.TransportLayer.Udp.Port, "Udp.Port mismatch");
@@ -156,7 +147,7 @@ public class ConfigTest
     Assert.AreEqual(config.TransportLayer.Tcp.NumberExecutorReader, ecalConfig.TransportLayer.Tcp.NumberExecutorReader, "Tcp.NumberExecutorReader mismatch");
     Assert.AreEqual(config.TransportLayer.Tcp.NumberExecutorWriter, ecalConfig.TransportLayer.Tcp.NumberExecutorWriter, "Tcp.NumberExecutorWriter mismatch");
     Assert.AreEqual(config.TransportLayer.Tcp.MaxReconnections, ecalConfig.TransportLayer.Tcp.MaxReconnections, "Tcp.MaxReconnections mismatch");
-    
+
     // Publisher
     Assert.AreEqual(config.Publisher.Layer.SHM.Enable, ecalConfig.Publisher.Layer.SHM.Enable, "Publisher.Layer.SHM.Enable mismatch");
     Assert.AreEqual(config.Publisher.Layer.SHM.ZeroCopyMode, ecalConfig.Publisher.Layer.SHM.ZeroCopyMode, "Publisher.Layer.SHM.ZeroCopyMode mismatch");
@@ -168,21 +159,21 @@ public class ConfigTest
     Assert.AreEqual(config.Publisher.Layer.TCP.Enable, ecalConfig.Publisher.Layer.TCP.Enable, "Publisher.Layer.TCP.Enable mismatch");
     CollectionAssert.AreEqual(config.Publisher.LayerPriorityLocal, ecalConfig.Publisher.LayerPriorityLocal, "Publisher.LayerPriorityLocal mismatch");
     CollectionAssert.AreEqual(config.Publisher.LayerPriorityRemote, ecalConfig.Publisher.LayerPriorityRemote, "Publisher.LayerPriorityRemote mismatch");
-    
+
     // Subscriber
     Assert.AreEqual(config.Subscriber.Layer.SHM.Enable, ecalConfig.Subscriber.Layer.SHM.Enable, "Subscriber.Layer.SHM.Enable mismatch");
     Assert.AreEqual(config.Subscriber.Layer.UDP.Enable, ecalConfig.Subscriber.Layer.UDP.Enable, "Subscriber.Layer.UDP.Enable mismatch");
     Assert.AreEqual(config.Subscriber.Layer.TCP.Enable, ecalConfig.Subscriber.Layer.TCP.Enable, "Subscriber.Layer.TCP.Enable mismatch");
     Assert.AreEqual(config.Subscriber.DropOutOfOrderMessages, ecalConfig.Subscriber.DropOutOfOrderMessages, "Subscriber.DropOutOfOrderMessages mismatch");
-    
+
     // TimeSync
     Assert.AreEqual(config.TimeSync.TimeSyncModuleReplay, ecalConfig.TimeSync.TimeSyncModuleReplay, "TimeSync.TimeSyncModuleReplay mismatch");
     Assert.AreEqual(config.TimeSync.TimeSyncModuleRT, ecalConfig.TimeSync.TimeSyncModuleRT, "TimeSync.TimeSyncModuleRT mismatch");
-    
+
     // Application
     Assert.AreEqual(config.Application.Startup.TerminalEmulator, ecalConfig.Application.Startup.TerminalEmulator, "Application.Startup.TerminalEmulator mismatch");
     Assert.AreEqual(config.Application.Sys.FilterExcl, ecalConfig.Application.Sys.FilterExcl, "Application.Sys.FilterExcl mismatch");
-    
+
     // Logging
     Assert.AreEqual(config.Logging.Provider.Console.Enable, ecalConfig.Logging.Provider.Console.Enable, "Logging.Provider.Console.Enable mismatch");
     Assert.AreEqual(config.Logging.Provider.Console.LogLevel, ecalConfig.Logging.Provider.Console.LogLevel, "Logging.Provider.Console.LogLevel mismatch");
@@ -194,5 +185,125 @@ public class ConfigTest
     Assert.AreEqual(config.Logging.Provider.UDPConfig.Port, ecalConfig.Logging.Provider.UDPConfig.Port, "Logging.Provider.UDPConfig.Port mismatch");
     Assert.AreEqual(config.Logging.Receiver.Enable, ecalConfig.Logging.Receiver.Enable, "Logging.Receiver.Enable mismatch");
     Assert.AreEqual(config.Logging.Receiver.UDPConfig.Port, ecalConfig.Logging.Receiver.UDPConfig.Port, "Logging.Receiver.UDPConfig.Port mismatch");
+
+    Core.Terminate();
+  }
+
+  [TestMethod]
+  public void TestPubSubConfig()
+  {
+    Core.Initialize("TestPubSubConfig");
+
+    // Setting up SHM publisher and subscriber
+    var publisherConfiguration = ConfigWrapper.GetPublisherConfiguration();
+    publisherConfiguration.Layer.SHM.Enable = true;
+    publisherConfiguration.Layer.UDP.Enable = false;
+    publisherConfiguration.Layer.TCP.Enable = false;
+
+    var subscriberConfiguration = ConfigWrapper.GetSubscriberConfiguration();
+    subscriberConfiguration.Layer.SHM.Enable = true;
+    subscriberConfiguration.Layer.UDP.Enable = false;
+    subscriberConfiguration.Layer.TCP.Enable = false;
+
+    Publisher publisherSHM = new Publisher("PubSubConfig", null, null, publisherConfiguration);
+    Subscriber subscriberSHM = new Subscriber("PubSubConfig", null, null, subscriberConfiguration);
+
+    var tcsSHM = new TaskCompletionSource<(string message, long timestamp)>();
+
+    subscriberSHM.SetReceiveCallback((publisherId, dtInfo, data) =>
+    {
+      string received = Encoding.UTF8.GetString(data.Buffer);
+      tcsSHM.TrySetResult((received, data.SendTimestamp));
+    });
+
+    // Setting up UDP publisher and subscriber
+    publisherConfiguration.Layer.SHM.Enable = false;
+    publisherConfiguration.Layer.UDP.Enable = true;
+    publisherConfiguration.Layer.TCP.Enable = false;
+
+    subscriberConfiguration.Layer.SHM.Enable = false;
+    subscriberConfiguration.Layer.UDP.Enable = true;
+    subscriberConfiguration.Layer.TCP.Enable = false;
+
+    Publisher publisherUDP = new Publisher("PubSubConfig", null, null, publisherConfiguration);
+    Subscriber subscriberUDP = new Subscriber("PubSubConfig", null, null, subscriberConfiguration);
+
+    var tcsUDP = new TaskCompletionSource<(string message, long timestamp)>();
+
+    subscriberUDP.SetReceiveCallback((publisherId, dtInfo, data) =>
+    {
+      string received = Encoding.UTF8.GetString(data.Buffer);
+      tcsUDP.TrySetResult((received, data.SendTimestamp));
+    });
+
+    // Setting up TCP publisher and subscriber
+    publisherConfiguration.Layer.SHM.Enable = false;
+    publisherConfiguration.Layer.UDP.Enable = false;
+    publisherConfiguration.Layer.TCP.Enable = true;
+
+    subscriberConfiguration.Layer.SHM.Enable = false;
+    subscriberConfiguration.Layer.UDP.Enable = false;
+    subscriberConfiguration.Layer.TCP.Enable = true;
+
+    Publisher publisherTCP = new Publisher("PubSubConfig", null, null, publisherConfiguration);
+    Subscriber subscriberTCP = new Subscriber("PubSubConfig", null, null, subscriberConfiguration);
+
+    var tcsTCP = new TaskCompletionSource<(string message, long timestamp)>();
+
+    subscriberTCP.SetReceiveCallback((publisherId, dtInfo, data) =>
+    {
+      string received = Encoding.UTF8.GetString(data.Buffer);
+      tcsTCP.TrySetResult((received, data.SendTimestamp));
+    });
+
+    string messageSHM = "Sending via SHM";
+    string messageUDP = "Sending via UDP";
+    string messageTCP = "Sending via TCP";
+
+    // Sleep a moment for connections to be established
+    Thread.Sleep(2000);
+
+    publisherSHM.Send(Encoding.UTF8.GetBytes(messageSHM));
+
+    if (!tcsSHM.Task.Wait(TcsWaitTime))
+    {
+      Assert.Fail("Timeout waiting for SHM message.");
+    }
+    
+    var resultSHM = tcsSHM.Task.Result;
+
+    Assert.IsTrue(tcsSHM.Task.IsCompleted, "SHM Task not completed.");
+    Assert.AreEqual(messageSHM, resultSHM.message, "SHM Received message mismatch");
+
+    // Check that UDP and TCP was not called
+    Assert.IsFalse(tcsUDP.Task.IsCompleted, "UDP callback should not have been called.");
+    Assert.IsFalse(tcsTCP.Task.IsCompleted, "TCP callback should not have been called.");
+
+    publisherUDP.Send(Encoding.UTF8.GetBytes(messageUDP));
+
+    if (!tcsUDP.Task.Wait(TcsWaitTime))
+    {
+      Assert.Fail("Timeout waiting for UDP message.");
+    }
+
+    var resultUDP = tcsUDP.Task.Result;
+    Assert.IsTrue(tcsUDP.Task.IsCompleted, "UDP Task not completed.");
+    Assert.AreEqual(messageUDP, resultUDP.message, "UDP received message mismatch.");
+
+    // Check that TCP was not called
+    Assert.IsFalse(tcsTCP.Task.IsCompleted, "TCP callback should not have been called.");
+
+    publisherTCP.Send(Encoding.UTF8.GetBytes(messageTCP));
+
+    if (!tcsTCP.Task.Wait(TcsWaitTime))
+    {
+      Assert.Fail("Timeout waiting for TCP message.");
+    }
+
+    var resultTCP = tcsTCP.Task.Result;
+    Assert.IsTrue(tcsTCP.Task.IsCompleted, "TCP Task not completed.");
+    Assert.AreEqual(messageTCP, resultTCP.message, "TCP received message mismatch.");
+
+    Core.Terminate();
   }
 }
