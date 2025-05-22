@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,11 +26,8 @@ def main():
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
   
-  # initialize eCAL API
-  ecal_core.initialize("monitoring")
-  
-  # initialize eCAL monitoring API
-  ecal_core.mon_initialize()
+  # initialize eCAL API, including monitoring
+  ecal_core.initialize("monitoring", ecal_core.INIT_ALL)
   time.sleep(2)
   
   # print eCAL entities

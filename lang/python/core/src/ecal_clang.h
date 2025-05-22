@@ -57,13 +57,21 @@ const char* ecal_getdate();
 /**
  * @brief Initialize eCAL API.
  *
- * @param argc_        Number of command line arguments.
- * @param argv_        Array of command line arguments.
  * @param unit_name_   Defines the name of the eCAL unit.
  *
  * @return Zero if succeeded.
 **/
 int ecal_initialize(const char* unit_name_);
+
+/**
+ * @brief Initialize eCAL API.
+ *
+ * @param unit_name_   Defines the name of the eCAL unit.
+ * @param unit_name_   Defines the components to initialize.
+ *
+ * @return Zero if succeeded.
+**/
+int ecal_initialize_components(const char* unit_name_, unsigned int components);
 
 /**
  * @brief Finalize eCAL API.
@@ -489,20 +497,3 @@ bool client_call_method(ECAL_HANDLE handle_, const char* method_name_, const cha
  * @return  True if succeeded.
 **/
 bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, const char* request_, int request_len_, int timeout_);
-
-/*************************************************************************/
-/*  monitoring                                                           */
-/*************************************************************************/
-/**
- * @brief Initialize eCAL monitoring API.
- *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
-**/
-int mon_initialize();
-
-/**
- * @brief Finalize eCAL monitoring API.
- *
- * @return Zero if succeeded, 1 if already initialized, -1 if failed.
-**/
-int mon_finalize();
