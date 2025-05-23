@@ -17,7 +17,7 @@ namespace Eclipse {
         /**
          * @brief Managed enumeration for eCAL initialization flags.
          */
-        [Flags]
+        [System::Flags]
         enum class InitFlags : unsigned int {
           None       = ::eCAL::Init::None,
           Publisher  = ::eCAL::Init::Publisher,

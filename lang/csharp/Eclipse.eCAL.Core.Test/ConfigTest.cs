@@ -115,7 +115,7 @@ public class ConfigTest
 
     Core.Initialize(config, "TestConfigPassing", Init.Default);
 
-    var ecalConfig = ConfigWrapper.GetConfiguration();
+    var ecalConfig = Config.GetConfiguration();
 
     // Communication mode
     Assert.AreEqual(config.CommunicationMode, ecalConfig.CommunicationMode, "CommunicationMode mismatch");
@@ -195,12 +195,12 @@ public class ConfigTest
     Core.Initialize("TestPubSubConfig");
 
     // Setting up SHM publisher and subscriber
-    var publisherConfiguration = ConfigWrapper.GetPublisherConfiguration();
+    var publisherConfiguration = Config.GetPublisherConfiguration();
     publisherConfiguration.Layer.SHM.Enable = true;
     publisherConfiguration.Layer.UDP.Enable = false;
     publisherConfiguration.Layer.TCP.Enable = false;
 
-    var subscriberConfiguration = ConfigWrapper.GetSubscriberConfiguration();
+    var subscriberConfiguration = Config.GetSubscriberConfiguration();
     subscriberConfiguration.Layer.SHM.Enable = true;
     subscriberConfiguration.Layer.UDP.Enable = false;
     subscriberConfiguration.Layer.TCP.Enable = false;

@@ -3,9 +3,7 @@
 #include <string>
 #include <vector>
 #include <ecal/config/publisher.h>
-#include <msclr/marshal_cppstd.h>
 
-using namespace System;
 using namespace System::Collections::Generic;
 
 namespace Eclipse {
