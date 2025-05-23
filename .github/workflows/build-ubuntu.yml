@@ -177,8 +177,21 @@ jobs:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
         
-    - name: Upload file system
+    - name: Run Publisher/Subscriber Benchmark
+      run: |
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub ^
+        --benchmark_out=ecal_benchmark_pubsub_log.json ^
+        --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin/
+
+    - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
       with:
-        name: 'File system'
-        path: ${{ github.workspace }}
+        name: 'benchmark-logs_${{ env.DEB_VERSION }}-${{runner.arch}}'
+        path: ${{ github.workspace }}/_build/bin/*.json
+
+    - name: Upload Benchmarks
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'benchmarks_${{ env.DEB_VERSION }}-${{runner.arch}}'
+        path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
