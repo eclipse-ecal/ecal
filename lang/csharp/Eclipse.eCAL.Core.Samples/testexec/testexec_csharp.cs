@@ -27,7 +27,7 @@ public class TestExec
   {
     var testCases = new Dictionary<string, List<string>>
     {
-      { "ConfigTest", new List<string> { "TestConfigPassing", "TestPubSubConfig" } },
+      { "ConfigTest", new List<string> { "TestConfigPassing", "TestPubSubConfig", "TestConfigConvenienceGetter" } },
       // Add more test classes and methods here
       // { "AnotherTestClass", new List<string> { "Test1", "Test2" } }
     };

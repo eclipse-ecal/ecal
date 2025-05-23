@@ -24,14 +24,14 @@ namespace Eclipse {
         }
 
         String^ Config::GetLoadedEcalIniPath() {
-          return gcnew String(::eCAL::Config::GetLoadedEcalIniPath().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetLoadedEcalIniPath());
         }
 
-        int Config::GetRegistrationTimeoutMs() {
+        unsigned int Config::GetRegistrationTimeoutMs() {
           return ::eCAL::Config::GetRegistrationTimeoutMs();
         }
 
-        int Config::GetRegistrationRefreshMs() {
+        unsigned int Config::GetRegistrationRefreshMs() {
           return ::eCAL::Config::GetRegistrationRefreshMs();
         }
 
@@ -40,19 +40,19 @@ namespace Eclipse {
         }
 
         String^ Config::GetTimesyncModuleName() {
-          return gcnew String(::eCAL::Config::GetTimesyncModuleName().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetTimesyncModuleName());
         }
 
         String^ Config::GetTimesyncModuleReplay() {
-          return gcnew String(::eCAL::Config::GetTimesyncModuleReplay().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetTimesyncModuleReplay());
         }
 
         String^ Config::GetTerminalEmulatorCommand() {
-          return gcnew String(::eCAL::Config::GetTerminalEmulatorCommand().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetTerminalEmulatorCommand());
         }
 
         String^ Config::GetEcalSysFilterExcludeList() {
-          return gcnew String(::eCAL::Config::GetEcalSysFilterExcludeList().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetEcalSysFilterExcludeList());
         }
 
         bool Config::GetDropOutOfOrderMessages() {
@@ -64,7 +64,75 @@ namespace Eclipse {
         }
 
         String^ Config::GetShmMonitoringDomain() {
-          return gcnew String(::eCAL::Config::GetShmMonitoringDomain().c_str());
+          return Internal::StlStringToString(::eCAL::Config::GetShmMonitoringDomain());
+        }
+
+        bool Config::IsShmRegistrationEnabled() {
+          return ::eCAL::Config::IsShmRegistrationEnabled();
+        }
+
+        int Config::GetUdpMulticastConfigVersion() {
+          return static_cast<int>(::eCAL::Config::GetUdpMulticastConfigVersion());
+        }
+
+        String^ Config::GetUdpMulticastGroup() {
+          return Internal::StlStringToString(::eCAL::Config::GetUdpMulticastGroup());
+        }
+
+        String^ Config::GetUdpMulticastMask() {
+          return Internal::StlStringToString(::eCAL::Config::GetUdpMulticastMask());
+        }
+
+        unsigned int Config::GetUdpMulticastPort() {
+          return ::eCAL::Config::GetUdpMulticastPort();
+        }
+
+        unsigned int Config::GetUdpMulticastTtl() {
+          return ::eCAL::Config::GetUdpMulticastTtl();
+        }
+
+        unsigned int Config::GetUdpMulticastSndBufSizeBytes() {
+          return ::eCAL::Config::GetUdpMulticastSndBufSizeBytes();
+        }
+
+        unsigned int Config::GetUdpMulticastRcvBufSizeBytes() {
+          return ::eCAL::Config::GetUdpMulticastRcvBufSizeBytes();
+        }
+
+        bool Config::IsUdpMulticastJoinAllIfEnabled() {
+          return ::eCAL::Config::IsUdpMulticastJoinAllIfEnabled();
+        }
+
+        bool Config::IsUdpMulticastRecEnabled() {
+          return ::eCAL::Config::IsUdpMulticastRecEnabled();
+        }
+
+        bool Config::IsShmRecEnabled() {
+          return ::eCAL::Config::IsShmRecEnabled();
+        }
+
+        bool Config::IsTcpRecEnabled() {
+          return ::eCAL::Config::IsTcpRecEnabled();
+        }
+
+        bool Config::IsNpcapEnabled() {
+          return ::eCAL::Config::IsNpcapEnabled();
+        }
+
+        size_t Config::GetTcpPubsubReaderThreadpoolSize() {
+          return ::eCAL::Config::GetTcpPubsubReaderThreadpoolSize();
+        }
+
+        size_t Config::GetTcpPubsubWriterThreadpoolSize() {
+          return ::eCAL::Config::GetTcpPubsubWriterThreadpoolSize();
+        }
+
+        int Config::GetTcpPubsubMaxReconnectionAttemps() {
+          return ::eCAL::Config::GetTcpPubsubMaxReconnectionAttemps();
+        }
+
+        String^ Config::GetShmTransportDomain() {
+          return Internal::StlStringToString(::eCAL::Config::GetShmTransportDomain());
         }
 
       } // namespace Config
