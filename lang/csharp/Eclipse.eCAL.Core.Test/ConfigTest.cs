@@ -113,7 +113,7 @@ public class ConfigTest
     config.Logging.Receiver.Enable = true;
     config.Logging.Receiver.UDPConfig.Port = 19000;
 
-    Core.Initialize(config, "TestConfigPassing", Init.Default);
+    Core.Initialize(config, "TestConfigPassing", Init.Flags.Default);
 
     var ecalConfig = Config.GetConfiguration();
 

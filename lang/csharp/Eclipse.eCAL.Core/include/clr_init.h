@@ -12,13 +12,13 @@ namespace Eclipse {
       /**
        * @brief Managed wrapper for the eCAL initialization functionality.
        */
-      public ref class InitWrapper {
+      public ref class Init {
       public:
         /**
          * @brief Managed enumeration for eCAL initialization flags.
          */
         [System::Flags]
-        enum class InitFlags : unsigned int {
+        enum class Flags : unsigned int {
           None       = ::eCAL::Init::None,
           Publisher  = ::eCAL::Init::Publisher,
           Subscriber = ::eCAL::Init::Subscriber,
