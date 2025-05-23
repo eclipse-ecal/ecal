@@ -17,23 +17,24 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_common.h"
+#include "clr_common.h"
 
+#include <msclr/marshal_cppstd.h>
+
+using namespace System;
 using namespace System::Runtime::InteropServices;
 
 namespace Internal
 {
   System::String^ StlStringToString(const std::string& ss_)
   {
-    String^ s = gcnew String(ss_.c_str(), 0, static_cast<int>(ss_.length()));
-    return s;
+    return msclr::interop::marshal_as<System::String^>(ss_);;
   }
 
   std::string StringToStlString(System::String^ s_)
   {
     if (s_ == nullptr) return std::string();
-    std::string s = std::string((const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(s_).ToPointer(), s_->Length);
-    return s;
+    return msclr::interop::marshal_as<std::string>(s_);
   }
 
   std::string ByteArrayToStlString(array<Byte>^ a_)

@@ -17,15 +17,16 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_server.h"
+#include "service/clr_server.h"
 
-#include "ecal_clr_common.h"
-#include "ecal_clr_types.h"
+#include "clr_common.h"
+#include "clr_types.h"
 
 #include <sstream>
 
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
+using namespace System;
 using namespace System::Collections::Generic;
 
 ServiceServer::ServiceServer(String^ serverName)

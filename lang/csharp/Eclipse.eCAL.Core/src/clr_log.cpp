@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,21 +17,28 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+#include "clr_log.h"
+#include "clr_common.h"
 
-/**
- * @file  ecal_clr_common.h
-**/
-
-#include <string>
+#include <ecal/log.h>
 
 using namespace System;
+using namespace Eclipse::eCAL::Core;
+using namespace Internal;
 
-namespace Internal
+void Logging::Log(LogLevel level, System::String^ message)
 {
-  System::String^ StlStringToString(const std::string& ss_);
-  std::string     StringToStlString(System::String^ s_);
+  // Convert the managed string to a native std::string
+  std::string nativeMsg = StringToStlString(message);
+  
+  // Cast the managed LogLevel to the native eCAL::Logging::eLogLevel.
+  // The values match, so a static_cast is sufficient.
+  ::eCAL::Logging::Log(static_cast<::eCAL::Logging::eLogLevel>(level), nativeMsg);
+}
 
-  std::string  ByteArrayToStlString(array<Byte>^ a_);
-  array<Byte>^ StlStringToByteArray(const std::string& ss_);
+array<Byte>^ Logging::GetLogging()
+{
+  std::string logging;
+  ::eCAL::Logging::GetLogging(logging);
+  return StlStringToByteArray(logging);
 }

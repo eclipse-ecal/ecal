@@ -17,11 +17,12 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_time.h"
-#include "ecal_clr_common.h"
+#include "clr_time.h"
+#include "clr_common.h"
 
 #include <ecal/time.h>
 
+using namespace System;
 using namespace Eclipse::eCAL::Time;
 using namespace Internal;
 

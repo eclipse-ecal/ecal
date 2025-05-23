@@ -19,13 +19,14 @@
 
 #include <msclr/marshal_cppstd.h>
 
-#include "ecal_clr_client.h"
+#include "service/clr_client.h"
+#include "service/clr_types.h"
 
-#include "ecal_clr_common.h"
-#include "ecal_clr_types_service.h"
+#include "clr_common.h"
 
 #include <vector>
 
+using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
