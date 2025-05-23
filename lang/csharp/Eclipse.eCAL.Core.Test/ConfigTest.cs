@@ -269,7 +269,7 @@ public class ConfigTest
     {
       Assert.Fail("Timeout waiting for SHM message.");
     }
-    
+
     var resultSHM = tcsSHM.Task.Result;
 
     Assert.IsTrue(tcsSHM.Task.IsCompleted, "SHM Task not completed.");
@@ -305,5 +305,40 @@ public class ConfigTest
     Assert.AreEqual(messageTCP, resultTCP.message, "TCP received message mismatch.");
 
     Core.Terminate();
+  }
+
+  [TestMethod]
+  public void TestConfigConvenienceGetter()
+  {
+    var ecalConfig = Config.GetConfiguration();
+
+    // Now check all convenience getters against the configuration object
+    Assert.AreEqual(ecalConfig.Registration.RegistrationTimeout, Config.GetRegistrationTimeoutMs(), "RegistrationTimeout");
+    Assert.AreEqual(ecalConfig.Registration.RegistrationRefresh, Config.GetRegistrationRefreshMs(), "RegistrationRefresh");
+    Assert.AreEqual(ecalConfig.CommunicationMode == 1, Config.IsNetworkEnabled(), "IsNetworkEnabled");
+    Assert.AreEqual(ecalConfig.TimeSync.TimeSyncModuleRT, Config.GetTimesyncModuleName(), "TimeSyncModuleRT");
+    Assert.AreEqual(ecalConfig.TimeSync.TimeSyncModuleReplay, Config.GetTimesyncModuleReplay(), "TimeSyncModuleReplay");
+    Assert.AreEqual(ecalConfig.Application.Startup.TerminalEmulator, Config.GetTerminalEmulatorCommand(), "TerminalEmulator");
+    Assert.AreEqual(ecalConfig.Application.Sys.FilterExcl, Config.GetEcalSysFilterExcludeList(), "FilterExcl");
+    Assert.AreEqual(ecalConfig.Subscriber.DropOutOfOrderMessages, Config.GetDropOutOfOrderMessages(), "DropOutOfOrderMessages");
+    Assert.AreEqual(ecalConfig.Registration.Local.SHM.QueueSize, Config.GetShmMonitoringQueueSize(), "ShmMonitoringQueueSize");
+    Assert.AreEqual(ecalConfig.Registration.Local.SHM.Domain, Config.GetShmMonitoringDomain(), "ShmMonitoringDomain");
+    Assert.AreEqual(ecalConfig.Registration.Local.TransportType == 0 && ecalConfig.CommunicationMode == 0, Config.IsShmRegistrationEnabled(), "IsShmRegistrationEnabled");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.ConfigVersion, Config.GetUdpMulticastConfigVersion(), "UdpMulticastConfigVersion");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.Network.Group, Config.GetUdpMulticastGroup(), "UdpMulticastGroup");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.Mask, Config.GetUdpMulticastMask(), "UdpMulticastMask");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.Port, Config.GetUdpMulticastPort(), "UdpMulticastPort");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.Network.Ttl, Config.GetUdpMulticastTtl(), "UdpMulticastTtl");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.SendBuffer, Config.GetUdpMulticastSndBufSizeBytes(), "UdpMulticastSndBufSizeBytes");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.ReceiveBuffer, Config.GetUdpMulticastRcvBufSizeBytes(), "UdpMulticastRcvBufSizeBytes");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.JoinAllInterfaces, Config.IsUdpMulticastJoinAllIfEnabled(), "IsUdpMulticastJoinAllIfEnabled");
+    Assert.AreEqual(ecalConfig.Subscriber.Layer.UDP.Enable, Config.IsUdpMulticastRecEnabled(), "IsUdpMulticastRecEnabled");
+    Assert.AreEqual(ecalConfig.Subscriber.Layer.SHM.Enable, Config.IsShmRecEnabled(), "IsShmRecEnabled");
+    Assert.AreEqual(ecalConfig.Subscriber.Layer.TCP.Enable, Config.IsTcpRecEnabled(), "IsTcpRecEnabled");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.NpcapEnabled, Config.IsNpcapEnabled(), "IsNpcapEnabled");
+    Assert.AreEqual(ecalConfig.TransportLayer.Tcp.NumberExecutorReader, Config.GetTcpPubsubReaderThreadpoolSize(), "GetTcpPubsubReaderThreadpoolSize");
+    Assert.AreEqual(ecalConfig.TransportLayer.Tcp.NumberExecutorWriter, Config.GetTcpPubsubWriterThreadpoolSize(), "GetTcpPubsubWriterThreadpoolSize");
+    Assert.AreEqual(ecalConfig.TransportLayer.Tcp.MaxReconnections, Config.GetTcpPubsubMaxReconnectionAttemps(), "GetTcpPubsubMaxReconnectionAttemps");
+    Assert.AreEqual(ecalConfig.Registration.ShmTransportDomain, Config.GetShmTransportDomain(), "GetShmTransportDomain");
   }
 }

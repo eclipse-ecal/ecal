@@ -42,13 +42,13 @@ namespace Eclipse {
            * @brief Gets the registration timeout in milliseconds.
            * @return Registration timeout in milliseconds.
            */
-          static int GetRegistrationTimeoutMs();
+          static unsigned int GetRegistrationTimeoutMs();
 
           /**
            * @brief Gets the registration refresh interval in milliseconds.
            * @return Registration refresh interval in milliseconds.
            */
-          static int GetRegistrationRefreshMs();
+          static unsigned int GetRegistrationRefreshMs();
 
           /**
            * @brief Checks if the network is enabled.
@@ -97,6 +97,108 @@ namespace Eclipse {
            * @return Shared memory monitoring domain as string.
            */
           static System::String^ GetShmMonitoringDomain();
+
+          /**
+           * @brief Checks if shared memory registration is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsShmRegistrationEnabled();
+
+          /**
+           * @brief Gets the UDP multicast config version.
+           * @return UDP multicast config version.
+           */
+          static int GetUdpMulticastConfigVersion();
+
+          /**
+           * @brief Gets the UDP multicast group.
+           * @return UDP multicast group as string.
+           */
+          static System::String^ GetUdpMulticastGroup();
+
+          /**
+           * @brief Gets the UDP multicast mask.
+           * @return UDP multicast mask as string.
+           */
+          static System::String^ GetUdpMulticastMask();
+
+          /**
+           * @brief Gets the UDP multicast port.
+           * @return UDP multicast port.
+           */
+          static unsigned int GetUdpMulticastPort();
+
+          /**
+           * @brief Gets the UDP multicast TTL.
+           * @return UDP multicast TTL.
+           */
+          static unsigned int GetUdpMulticastTtl();
+
+          /**
+           * @brief Gets the UDP multicast send buffer size in bytes.
+           * @return Send buffer size in bytes.
+           */
+          static unsigned int GetUdpMulticastSndBufSizeBytes();
+
+          /**
+           * @brief Gets the UDP multicast receive buffer size in bytes.
+           * @return Receive buffer size in bytes.
+           */
+          static unsigned int GetUdpMulticastRcvBufSizeBytes();
+
+          /**
+           * @brief Checks if UDP multicast join-all-interfaces is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsUdpMulticastJoinAllIfEnabled();
+
+          /**
+           * @brief Checks if UDP multicast receive is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsUdpMulticastRecEnabled();
+
+          /**
+           * @brief Checks if shared memory receive is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsShmRecEnabled();
+
+          /**
+           * @brief Checks if TCP receive is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsTcpRecEnabled();
+
+          /**
+           * @brief Checks if NPCAP is enabled.
+           * @return True if enabled, otherwise false.
+           */
+          static bool IsNpcapEnabled();
+
+          /**
+           * @brief Gets the TCP pubsub reader threadpool size.
+           * @return Threadpool size.
+           */
+          static size_t GetTcpPubsubReaderThreadpoolSize();
+
+          /**
+           * @brief Gets the TCP pubsub writer threadpool size.
+           * @return Threadpool size.
+           */
+          static size_t GetTcpPubsubWriterThreadpoolSize();
+
+          /**
+           * @brief Gets the TCP pubsub max reconnection attempts.
+           * @return Max reconnection attempts.
+           */
+          static int GetTcpPubsubMaxReconnectionAttemps();
+
+          /**
+           * @brief Gets the shared memory transport domain.
+           * @return Shared memory transport domain as string.
+           */
+          static System::String^ GetShmTransportDomain();
         };
 
       } // namespace Config
