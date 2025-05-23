@@ -54,7 +54,7 @@ namespace Send {
     // Create receiver in a different thread
     std::thread receiver_thread([]() { 
       eCAL::CSubscriber subscriber("benchmark_topic");
-      while(eCAL::Ok()) {__nop();}
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
     } );
     
     // Wait for eCAL synchronization
@@ -106,7 +106,7 @@ namespace Send_and_Receive {
     std::thread receiver_thread([](){ 
       eCAL::CSubscriber subscriber("benchmark_topic");
       subscriber.SetReceiveCallback(std::bind(&callback));
-      while(eCAL::Ok()) {__nop();}
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
     });
 
     // Wait for eCAL synchronization
