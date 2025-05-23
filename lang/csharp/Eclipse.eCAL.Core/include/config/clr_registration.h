@@ -2,8 +2,8 @@
 
 #include <string>
 #include <ecal/config/registration.h>
-#include <msclr/marshal_cppstd.h>
 
+#include "clr_common.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -20,19 +20,19 @@ namespace Eclipse {
 
           RegistrationLocalSHMConfiguration() {
             ::eCAL::Registration::Local::SHM::Configuration native_config;
-            Domain = gcnew System::String(native_config.domain.c_str());
+            Domain = Internal::StlStringToString(native_config.domain);
             QueueSize = native_config.queue_size;
           }
 
           // Native struct constructor
           RegistrationLocalSHMConfiguration(const ::eCAL::Registration::Local::SHM::Configuration& native_config) {
-            Domain = gcnew System::String(native_config.domain.c_str());
+            Domain = Internal::StlStringToString(native_config.domain);
             QueueSize = native_config.queue_size;
           }
 
           ::eCAL::Registration::Local::SHM::Configuration ToNative() {
             ::eCAL::Registration::Local::SHM::Configuration native_config;
-            native_config.domain = msclr::interop::marshal_as<std::string>(Domain);
+            native_config.domain = Internal::StringToStlString(Domain);
             native_config.queue_size = QueueSize;
             return native_config;
           }
@@ -163,7 +163,7 @@ namespace Eclipse {
             RegistrationTimeout = native_config.registration_timeout;
             RegistrationRefresh = native_config.registration_refresh;
             Loopback = native_config.loopback;
-            ShmTransportDomain = gcnew System::String(native_config.shm_transport_domain.c_str());
+            ShmTransportDomain = Internal::StlStringToString(native_config.shm_transport_domain);
             Local = gcnew RegistrationLocalConfiguration();
             Network = gcnew RegistrationNetworkConfiguration();
           }
@@ -173,7 +173,7 @@ namespace Eclipse {
             RegistrationTimeout = native_config.registration_timeout;
             RegistrationRefresh = native_config.registration_refresh;
             Loopback = native_config.loopback;
-            ShmTransportDomain = gcnew System::String(native_config.shm_transport_domain.c_str());
+            ShmTransportDomain = Internal::StlStringToString(native_config.shm_transport_domain);
             Local = gcnew RegistrationLocalConfiguration(native_config.local);
             Network = gcnew RegistrationNetworkConfiguration(native_config.network);
           }
@@ -183,7 +183,7 @@ namespace Eclipse {
             native_config.registration_timeout = RegistrationTimeout;
             native_config.registration_refresh = RegistrationRefresh;
             native_config.loopback = Loopback;
-            native_config.shm_transport_domain = msclr::interop::marshal_as<std::string>(ShmTransportDomain);
+            native_config.shm_transport_domain = Internal::StringToStlString(ShmTransportDomain);
             native_config.local = Local->ToNative();
             native_config.network = Network->ToNative();
             return native_config;

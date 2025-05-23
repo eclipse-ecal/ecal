@@ -2,8 +2,9 @@
 
 #include <string>
 #include <ecal/config/configuration.h>
-#include <msclr/marshal_cppstd.h>
+
 #include "clr_application.h"
+#include "clr_common.h"
 #include "clr_registration.h"
 #include "clr_logging.h"
 #include "clr_publisher.h"
@@ -116,7 +117,7 @@ namespace Eclipse {
            * @param yamlPath Path to the YAML configuration file.
            */
           void InitFromFile(System::String^ yamlPath) {
-            std::string native_yaml_path = msclr::interop::marshal_as<std::string>(yamlPath);
+            std::string native_yaml_path = Internal::StringToStlString(yamlPath);
             native_config->InitFromFile(native_yaml_path);
             UpdateManagedProperties();
           }
@@ -126,7 +127,7 @@ namespace Eclipse {
            * @return Path to the configuration file.
            */
           System::String^ GetConfigurationFilePath() {
-            return gcnew System::String(native_config->GetConfigurationFilePath().c_str());
+            return Internal::StlStringToString(native_config->GetConfigurationFilePath());
           }
 
           /**

@@ -2,8 +2,8 @@
 
 #include <string>
 #include <ecal/config/logging.h>
-#include <msclr/marshal_cppstd.h>
 
+#include "clr_common.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -72,7 +72,7 @@ namespace Eclipse {
           LoggingProviderFileConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Logging::Provider::File::Configuration native_file_config;
-            Path = gcnew System::String(native_file_config.path.c_str());
+            Path = Internal::StlStringToString(native_file_config.path);
           }
 
           /**
@@ -80,7 +80,7 @@ namespace Eclipse {
            * @param native_file_config Native File::Configuration structure.
            */
           LoggingProviderFileConfiguration(const ::eCAL::Logging::Provider::File::Configuration& native_file_config) {
-            Path = gcnew System::String(native_file_config.path.c_str());
+            Path = Internal::StlStringToString(native_file_config.path);
           }
 
           /**
@@ -89,7 +89,7 @@ namespace Eclipse {
            */
           ::eCAL::Logging::Provider::File::Configuration ToNative() {
             ::eCAL::Logging::Provider::File::Configuration native_file_config;
-            native_file_config.path = msclr::interop::marshal_as<std::string>(Path);
+            native_file_config.path = Internal::StringToStlString(Path);
             return native_file_config;
           }
         };

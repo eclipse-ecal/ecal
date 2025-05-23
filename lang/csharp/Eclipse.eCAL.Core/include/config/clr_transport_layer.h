@@ -2,8 +2,8 @@
 
 #include <string>
 #include <ecal/config/transport_layer.h>
-#include <msclr/marshal_cppstd.h>
 
+#include "clr_common.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -20,19 +20,19 @@ namespace Eclipse {
 
           TransportLayerUdpMulticastConfiguration() {
             ::eCAL::TransportLayer::UDP::MulticastConfiguration native_config;
-            Group = gcnew System::String(native_config.group.Get().c_str());
+            Group = Internal::StlStringToString(native_config.group.Get());
             Ttl = native_config.ttl;
           }
 
           // Native struct constructor
           TransportLayerUdpMulticastConfiguration(const ::eCAL::TransportLayer::UDP::MulticastConfiguration& native_config) {
-            Group = gcnew System::String(native_config.group.Get().c_str());
+            Group = Internal::StlStringToString(native_config.group.Get());
             Ttl = native_config.ttl;
           }
 
           ::eCAL::TransportLayer::UDP::MulticastConfiguration ToNative() {
             ::eCAL::TransportLayer::UDP::MulticastConfiguration native_config;
-            native_config.group = msclr::interop::marshal_as<std::string>(Group);
+            native_config.group = Internal::StringToStlString(Group);
             native_config.ttl = Ttl;
             return native_config;
           }
@@ -57,7 +57,7 @@ namespace Eclipse {
             ::eCAL::TransportLayer::UDP::Configuration native_config;
             ConfigVersion = static_cast<int>(native_config.config_version);
             Port = native_config.port;
-            Mask = gcnew System::String(native_config.mask.Get().c_str());
+            Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
             ReceiveBuffer = native_config.receive_buffer;
             JoinAllInterfaces = native_config.join_all_interfaces;
@@ -70,7 +70,7 @@ namespace Eclipse {
           TransportLayerUdpConfiguration(const ::eCAL::TransportLayer::UDP::Configuration& native_config) {
             ConfigVersion = static_cast<int>(native_config.config_version);
             Port = native_config.port;
-            Mask = gcnew System::String(native_config.mask.Get().c_str());
+            Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
             ReceiveBuffer = native_config.receive_buffer;
             JoinAllInterfaces = native_config.join_all_interfaces;
@@ -83,7 +83,7 @@ namespace Eclipse {
             ::eCAL::TransportLayer::UDP::Configuration native_config;
             native_config.config_version = static_cast<::eCAL::Types::UdpConfigVersion>(ConfigVersion);
             native_config.port = Port;
-            native_config.mask = msclr::interop::marshal_as<std::string>(Mask);
+            native_config.mask = Internal::StringToStlString(Mask);
             native_config.send_buffer = SendBuffer;
             native_config.receive_buffer = ReceiveBuffer;
             native_config.join_all_interfaces = JoinAllInterfaces;

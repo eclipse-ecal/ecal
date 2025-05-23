@@ -12,7 +12,7 @@ namespace Eclipse {
     namespace Core {
       namespace Config {
 
-        public ref class ConfigWrapper {
+        public ref class Config {
         public:
           /**
            * @brief Gets the global eCAL configuration.
@@ -75,8 +75,8 @@ namespace Eclipse {
           static System::String^ GetTerminalEmulatorCommand();
 
           /**
-           * @brief Gets the eCAL system filter exclusion list.
-           * @return System filter exclusion list.
+           * @brief Gets the eCAL sys filter exclusion list.
+           * @return Sysfilter exclusion list as String.
            */
           static System::String^ GetEcalSysFilterExcludeList();
 
@@ -94,7 +94,7 @@ namespace Eclipse {
 
           /**
            * @brief Gets the shared memory monitoring domain.
-           * @return Shared memory monitoring domain.
+           * @return Shared memory monitoring domain as string.
            */
           static System::String^ GetShmMonitoringDomain();
         };

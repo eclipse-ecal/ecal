@@ -2,9 +2,8 @@
 
 #include <string>
 #include <ecal/config/subscriber.h>
-#include <msclr/marshal_cppstd.h>
 
-using namespace System;
+#include "clr_common.h"
 
 namespace Eclipse {
   namespace eCAL {

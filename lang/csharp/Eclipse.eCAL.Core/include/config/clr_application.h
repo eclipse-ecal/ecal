@@ -19,9 +19,10 @@
 
 #pragma once
 
+#include "clr_common.h"
+
 #include <string>
 #include <ecal/config/application.h>
-#include <msclr/marshal_cppstd.h>
 
 namespace Eclipse {
   namespace eCAL {
@@ -44,7 +45,7 @@ namespace Eclipse {
           SysConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Application::Sys::Configuration native_config;
-            FilterExcl = gcnew System::String(native_config.filter_excl.c_str());
+            FilterExcl = Internal::StlStringToString(native_config.filter_excl);
           }
 
           /**
@@ -52,7 +53,7 @@ namespace Eclipse {
            * @param native_config Native Sys::Configuration structure.
            */
           SysConfiguration(const ::eCAL::Application::Sys::Configuration& native_config) {
-            FilterExcl = gcnew System::String(native_config.filter_excl.c_str());
+            FilterExcl = Internal::StlStringToString(native_config.filter_excl);
           }
 
           /**
@@ -61,7 +62,7 @@ namespace Eclipse {
            */
           ::eCAL::Application::Sys::Configuration ToNative() {
             ::eCAL::Application::Sys::Configuration native_config;
-            native_config.filter_excl = msclr::interop::marshal_as<std::string>(FilterExcl);
+            native_config.filter_excl = Internal::StringToStlString(FilterExcl);
             return native_config;
           }
         };
@@ -82,7 +83,7 @@ namespace Eclipse {
           StartupConfiguration() {
             // Use the default values from the native structure
             ::eCAL::Application::Startup::Configuration native_config;
-            TerminalEmulator = gcnew System::String(native_config.terminal_emulator.c_str());
+            TerminalEmulator = Internal::StlStringToString(native_config.terminal_emulator);
           }
 
           /**
@@ -90,7 +91,7 @@ namespace Eclipse {
            * @param native_config Native Startup::Configuration structure.
            */
           StartupConfiguration(const ::eCAL::Application::Startup::Configuration& native_config) {
-            TerminalEmulator = gcnew System::String(native_config.terminal_emulator.c_str());
+            TerminalEmulator = Internal::StlStringToString(native_config.terminal_emulator);
           }
 
           /**
@@ -99,7 +100,7 @@ namespace Eclipse {
            */
           ::eCAL::Application::Startup::Configuration ToNative() {
             ::eCAL::Application::Startup::Configuration native_config;
-            native_config.terminal_emulator = msclr::interop::marshal_as<std::string>(TerminalEmulator);
+            native_config.terminal_emulator = Internal::StringToStlString(TerminalEmulator);
             return native_config;
           }
         };
