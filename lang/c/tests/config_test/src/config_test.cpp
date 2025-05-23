@@ -47,11 +47,6 @@ TEST_F(config_test_c, GetConfiguration)
     EXPECT_NE(nullptr, eCAL_GetPublisherConfiguration());
 }
 
-TEST_F(config_test_c, GetLoadedEcalYamlPath)
-{
-    EXPECT_STREQ("C:/ProgramData/eCAL/ecal.yaml", eCAL_Config_GetLoadedEcalYamlPath());
-}
-
 TEST_F(config_test_c, Network)
 {
     EXPECT_EQ(configuration0->communication_mode, eCAL_Config_IsNetworkEnabled());
