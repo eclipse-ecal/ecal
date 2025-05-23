@@ -159,6 +159,15 @@ int ecal_initialize(const char* unit_name_)
 }
 
 /****************************************/
+/*      ecal_initialize                 */
+/****************************************/
+int ecal_initialize_components(const char* unit_name_, unsigned int components)
+{
+  std::string unit_name = (unit_name_ != nullptr) ? std::string(unit_name_) : std::string("");
+  return static_cast<int>(!eCAL::Initialize(unit_name, components));
+}
+
+/****************************************/
 /*      ecal_finalize                   */
 /****************************************/
 int ecal_finalize()
@@ -752,20 +761,4 @@ bool client_call_method_async(ECAL_HANDLE handle_, const char* method_name_, con
   {
     return(false);
   }
-}
-
-/****************************************/
-/*      mon_initialize                  */
-/****************************************/
-int mon_initialize()
-{
-  return(eCAL::Initialize("", eCAL::Init::Monitoring));
-}
-
-/****************************************/
-/*      mon_finalize                    */
-/****************************************/
-int mon_finalize()
-{
-  return(ecal_finalize());
 }
