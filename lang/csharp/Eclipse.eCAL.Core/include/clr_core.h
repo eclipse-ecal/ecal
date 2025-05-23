@@ -23,6 +23,7 @@
  * @file  clr_core.h
 **/
 
+#include "clr_init.h"
 #include "clr_types.h"
 #include "config/clr_configuration.h"
 
@@ -63,7 +64,7 @@ namespace Eclipse {
         * @param unitName The instance unit (node) name.
         * @param componentFlags The components to initialize.
         **/
-        static void Initialize(System::String^ unitName, Init componentFlags);
+        static void Initialize(System::String^ unitName, Init::Flags componentFlags);
         
         /**
         * @brief Initialize eCAL API.
@@ -72,7 +73,7 @@ namespace Eclipse {
         * @param unitName The instance unit (node) name.
         * @param componentFlags The components to initialize.
         **/
-        static void Initialize(Config::Configuration^ config, System::String^ unitName, Init componentFlags);
+        static void Initialize(Config::Configuration^ config, System::String^ unitName, Init::Flags componentFlags);
 
         /**
         * @brief Finalize eCAL API.

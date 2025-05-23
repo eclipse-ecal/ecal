@@ -3,7 +3,7 @@
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-        Config::Configuration^ InitWrapper::InitConfiguration() {
+        Config::Configuration^ Init::InitConfiguration() {
             ::eCAL::Configuration native_config = ::eCAL::Init::Configuration();
             Config::Configuration^ managed_config = gcnew Config::Configuration();
             managed_config->TransportLayer = gcnew Config::TransportLayerConfiguration();

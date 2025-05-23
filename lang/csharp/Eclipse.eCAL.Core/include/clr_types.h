@@ -72,24 +72,6 @@ namespace Eclipse {
       };
 
       /**
-       * @brief Managed enumeration for eCAL initialization flags.
-       *
-       * This enumeration mirrors the native eCAL::Init constants.
-       */
-      [System::Flags]
-      public enum class Init : unsigned int {
-        None       = 0x000,
-        Publisher  = 0x001,
-        Subscriber = 0x002,
-        Service    = 0x004,
-        Monitoring = 0x008,
-        Logging    = 0x010,
-        TimeSync   = 0x020,
-        Default    = Publisher | Subscriber | Service | Logging | TimeSync,
-        All        = Publisher | Subscriber | Service | Monitoring | Logging | TimeSync
-      };
-
-      /**
        * @brief Managed wrapper for the native SDataTypeInformation structure.
        *
        * Contains information about a topic's data type, including its name, encoding, and descriptor.
