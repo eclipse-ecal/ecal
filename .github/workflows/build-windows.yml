@@ -255,6 +255,18 @@ jobs:
         ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
       working-directory: ${{ runner.workspace }}/_build/complete/bin/
       shell: cmd
+      
+    - name: Run Service Benchmark
+      run: |
+        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_service.exe --benchmark_out=ecal_benchmark_service_log.json --benchmark_out_format=json
+      working-directory: ${{ runner.workspace }}/_build/complete/bin/
+      shell: cmd
+      
+    - name: Run Setup Benchmark
+      run: |
+        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_setup.exe --benchmark_out=ecal_benchmark_setup_log.json --benchmark_out_format=json
+      working-directory: ${{ runner.workspace }}/_build/complete/bin/
+      shell: cmd
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4

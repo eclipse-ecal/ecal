@@ -181,6 +181,16 @@ jobs:
       run: |
         ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin/
+      
+    - name: Run Service Benchmark
+      run: |
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_service --benchmark_out=ecal_benchmark_service_log.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin/
+      
+    - name: Run Setup Benchmark
+      run: |
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_setup --benchmark_out=ecal_benchmark_setup_log.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin/
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4

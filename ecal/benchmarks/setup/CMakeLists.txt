@@ -18,6 +18,23 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-add_subdirectory(pubsub)
-add_subdirectory(service)
-add_subdirectory(setup)
+project(ecal_benchmark_setup)
+
+set(benchmark_DIR D:/Google_Benchmark/benchmark/build)
+find_package(benchmark REQUIRED)
+
+find_package(eCAL REQUIRED)
+
+set(source_files
+  benchmark_setup.cpp
+)
+
+add_executable(${PROJECT_NAME} ${source_files})
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    eCAL::core
+    benchmark::benchmark
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
