@@ -249,9 +249,7 @@ elseif(WIN32)
     qt_add_windeployqt_postbuild(--no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --pdb "$<TARGET_FILE:${PROJECT_NAME}>")
 
     get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
-    
     string(CONFIGURE "$<TARGET_FILE:${PROJECT_NAME}>" _target_file_path)
-
     get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
     install(CODE
