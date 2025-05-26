@@ -217,7 +217,7 @@ elseif(WIN32)
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
     install(CODE
         "
-        set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ecal_mon_gui.exe)
+        set(_file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/ecal_play_gui.exe)
         execute_process(
                 COMMAND \"${CMAKE_COMMAND}\" -E
                     env PATH=\"${_qt_bin_dir}\" \"${WINDEPLOYQT_EXECUTABLE}\"
