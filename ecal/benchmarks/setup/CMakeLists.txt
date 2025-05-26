@@ -20,11 +20,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(ecal_benchmark_setup)
 
-set(benchmark_DIR D:/Google_Benchmark/benchmark/build)
-find_package(benchmark REQUIRED)
-
-find_package(eCAL REQUIRED)
-
 set(source_files
   benchmark_setup.cpp
 )

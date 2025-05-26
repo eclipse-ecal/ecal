@@ -20,8 +20,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(ecal_benchmark_pubsub)
 
-find_package(benchmark REQUIRED)
-
 set(source_files
   benchmark_pubsub.cpp
 )
