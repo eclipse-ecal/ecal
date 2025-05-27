@@ -110,9 +110,9 @@ namespace std
   public:
     size_t operator()(const eCAL::SDataTypeInformation& datatype_info) const
     {
-      std::size_t h1 = std::hash<std::string>{}(datatype_info.name);
-      std::size_t h2 = std::hash<std::string>{}(datatype_info.encoding);
-      std::size_t h3 = std::hash<std::string>{}(datatype_info.descriptor);
+      const std::size_t h1 = std::hash<std::string>{}(datatype_info.name);
+      const std::size_t h2 = std::hash<std::string>{}(datatype_info.encoding);
+      const std::size_t h3 = std::hash<std::string>{}(datatype_info.descriptor);
       return h1 ^ (h2 << 1) ^ (h3 << 2); // basic combination
     }
   };

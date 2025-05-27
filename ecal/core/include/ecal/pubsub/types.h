@@ -167,8 +167,8 @@ namespace std
   public:
     size_t operator()(const eCAL::STopicId& id) const
     {
-      std::size_t h1 = std::hash<std::string>{}(id.topic_name);
-      std::size_t h2 = std::hash<uint64_t>{}(id.topic_id.entity_id);
+      const std::size_t h1 = std::hash<std::string>{}(id.topic_name);
+      const std::size_t h2 = std::hash<uint64_t>{}(id.topic_id.entity_id);
       return h1 ^ (h2 << 1); // basic combination
     }
   };

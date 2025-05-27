@@ -214,8 +214,8 @@ namespace std
   public:
     size_t operator()(const eCAL::SServiceId& id) const
     {
-      std::size_t h1 = std::hash<std::string>{}(id.service_name);
-      std::size_t h2 = std::hash<uint64_t>{}(id.service_id.entity_id);
+      const std::size_t h1 = std::hash<std::string>{}(id.service_name);
+      const std::size_t h2 = std::hash<uint64_t>{}(id.service_id.entity_id);
       return h1 ^ (h2 << 1); // basic combination
     }
   };
@@ -225,9 +225,9 @@ namespace std
   public:
     size_t operator()(const eCAL::SServiceMethodInformation& info) const
     {
-      std::size_t h1 = std::hash<std::string>{}(info.method_name);
-      std::size_t h2 = std::hash<eCAL::SDataTypeInformation>{}(info.request_type);
-      std::size_t h3 = std::hash<eCAL::SDataTypeInformation>{}(info.response_type);
+      const std::size_t h1 = std::hash<std::string>{}(info.method_name);
+      const std::size_t h2 = std::hash<eCAL::SDataTypeInformation>{}(info.request_type);
+      const std::size_t h3 = std::hash<eCAL::SDataTypeInformation>{}(info.response_type);
       return h1 ^ (h2 << 1) ^ (h3 << 2);
     }
   };
