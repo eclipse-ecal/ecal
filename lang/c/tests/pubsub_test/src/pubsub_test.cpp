@@ -28,7 +28,7 @@ class pubsub_test_c : public ::testing::Test {
     eCAL_Subscriber* subscriber;
     eCAL_Publisher* publisher;
     struct eCAL_SDataTypeInformation data_type_information;
-    const char *topic_name = "hello";
+    const char *topic_name = "C-Binding-Test";
 
     void SetUp() override {
       // initialize eCAL API
@@ -59,9 +59,6 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
   (void)user_argument_;
   int* cnt = (int*)user_argument_;
   (*cnt)++;
-
-  printf("Received topic \"%s\" with ", topic_id_->topic_name);
-  printf("\"%.*s\"\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
 }
 
 int DummyWriteFull(void* buffer, size_t size) 
@@ -114,7 +111,7 @@ TEST_F(pubsub_test_c, publisher)
 
 TEST_F(pubsub_test_c, pubsub) 
 {
-  char snd_s[256];
+  const char* snd_s = "HELLO WORLD FROM C";
   int cnt = 0;
   int callback_count = 0;
 
@@ -127,17 +124,12 @@ TEST_F(pubsub_test_c, pubsub)
   // send messages
   for(int i = 0; i < 10; i++) 
   {
-    // create message
-    snprintf(snd_s, sizeof(snd_s), "HELLO WORLD FROM C (%d)", ++cnt);
-
     // send content
-    if(!eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s), NULL))
-      printf("Published topic \"Hello\" with \"%s\"\n", snd_s);
-    else
-      printf("Sending topic \"Hello\" failed !\n");
+    EXPECT_EQ(0, eCAL_Publisher_Send(publisher, snd_s, strlen(snd_s), NULL));
+    cnt++;
 
     // sleep 500 ms
-    eCAL_Process_SleepMS(500);
+    eCAL_Process_SleepMS(10);
   }
 
   // checking amout of send messages and called callbacks

@@ -64,12 +64,6 @@ int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, 
   // In this example the entire request buffer will be copied over to the response buffer.
   memcpy(*response_, request_, request_length_);
 
-
-  printf("Method   : %s called\n", method_info_->method_name);
-  printf("Request  : %s\n",        (char*)request_);
-  printf("Response : %s\n",        (char*)(*response_));
-  printf("\n");
-
   // Zero can be returned here as the callback has been successfully proceeded.
   return 0;
 }
