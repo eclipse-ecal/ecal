@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
+# 
 #      http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,31 @@
 #
 # ========================= eCAL LICENSE =================================
 
-# --------------------------------------------------------
-# c tests
-# --------------------------------------------------------
-add_subdirectory(config_test)
-add_subdirectory(core_test)
-add_subdirectory(pubsub_test)
-add_subdirectory(services_test)
+project(services_test_c)
+
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+
+set(services_test_c_src
+  src/services_test.cpp
+)
+
+ecal_add_gtest(${PROJECT_NAME} ${services_test_c_src})
+
+target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE 
+    eCAL::core_c
+    eCAL::ecal-utils
+    Threads::Threads)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
+
+ecal_install_gtest(${PROJECT_NAME})
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/c/services)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${${PROJECT_NAME}_src}
+)
