@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 project(eCAL_samples VERSION "${ECAL_VERSION_STRING}")
 
