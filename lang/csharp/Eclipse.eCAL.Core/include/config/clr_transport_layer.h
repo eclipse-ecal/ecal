@@ -23,11 +23,40 @@
 #include <ecal/config/transport_layer.h>
 
 #include "clr_common.h"
+#include "clr_types.h"
 
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
       namespace Config {
+
+        /**
+         * @brief Managed enum for eCAL transport layer types, matching native eCAL::TransportLayer::eType.
+         */
+        public enum class eTransportLayerType
+        {
+          None = ::eCAL::TransportLayer::eType::none,
+          UdpMc = ::eCAL::TransportLayer::eType::udp_mc,
+          Shm = ::eCAL::TransportLayer::eType::shm,
+          Tcp = ::eCAL::TransportLayer::eType::tcp
+        };
+
+        /**
+         * @brief Helper class for converting between managed TransportLayereType and native eCAL::TransportLayer::eType.
+         */
+        public ref class TransportLayerTypeHelper abstract sealed
+        {
+        public:
+          static eTransportLayerType FromNative(::eCAL::TransportLayer::eType nativeType)
+          {
+            return static_cast<eTransportLayerType>(nativeType);
+          }
+
+          static ::eCAL::TransportLayer::eType ToNative(eTransportLayerType managedType)
+          {
+            return static_cast<::eCAL::TransportLayer::eType>(managedType);
+          }
+        };
 
         /**
          * @brief Managed wrapper for the native ::eCAL::TransportLayer::UDP::MulticastConfiguration structure.
@@ -62,7 +91,7 @@ namespace Eclipse {
          */
         public ref class TransportLayerUdpConfiguration {
         public:
-          property int ConfigVersion;
+          property TypesUdpConfigVersion ConfigVersion;
           property unsigned int Port;
           property System::String^ Mask;
           property unsigned int SendBuffer;
@@ -74,7 +103,7 @@ namespace Eclipse {
 
           TransportLayerUdpConfiguration() {
             ::eCAL::TransportLayer::UDP::Configuration native_config;
-            ConfigVersion = static_cast<int>(native_config.config_version);
+            ConfigVersion = TypesUdpConfigVersionHelper::FromNative(native_config.config_version);
             Port = native_config.port;
             Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
@@ -87,7 +116,7 @@ namespace Eclipse {
 
           // Native struct constructor
           TransportLayerUdpConfiguration(const ::eCAL::TransportLayer::UDP::Configuration& native_config) {
-            ConfigVersion = static_cast<int>(native_config.config_version);
+            ConfigVersion = TypesUdpConfigVersionHelper::FromNative(native_config.config_version);
             Port = native_config.port;
             Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
@@ -100,7 +129,7 @@ namespace Eclipse {
 
           ::eCAL::TransportLayer::UDP::Configuration ToNative() {
             ::eCAL::TransportLayer::UDP::Configuration native_config;
-            native_config.config_version = static_cast<::eCAL::Types::UdpConfigVersion>(ConfigVersion);
+            native_config.config_version = TypesUdpConfigVersionHelper::ToNative(ConfigVersion);
             native_config.port = Port;
             native_config.mask = Internal::StringToStlString(Mask);
             native_config.send_buffer = SendBuffer;

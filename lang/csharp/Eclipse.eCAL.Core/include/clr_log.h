@@ -23,23 +23,11 @@
  * @file  clr_log.h
 **/
 
+#include "clr_log_level.h"
 
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-
-      // Expose a managed log level enum with values matching the native API.
-      [System::Flags]
-      public enum class LogLevel : unsigned char
-      {
-        None    = 0,
-        Info    = 1,    // native: log_level_info
-        Warning = 2,    // native: log_level_warning
-        Error   = 4,    // native: log_level_error
-        Fatal   = 8,    // native: log_level_fatal
-        All     = 255   // native: log_level_all
-      };
-
       /**
        * @brief eCAL logging class.
       **/
@@ -52,7 +40,7 @@ namespace Eclipse {
          * @param level    The log level.
          * @param message  The message string to log.
         **/
-        static void Log(LogLevel level, System::String^ message);
+        static void Log(eLoggingLogLevel level, System::String^ message);
 
         /**
          * @brief Get global log message as raw message bytes.

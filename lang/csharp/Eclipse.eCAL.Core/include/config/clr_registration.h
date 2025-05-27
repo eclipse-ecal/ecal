@@ -30,6 +30,57 @@ namespace Eclipse {
       namespace Config {
 
         /**
+         * @brief Specifies the local transport types available for registration.
+         */
+        public enum class eRegistrationLocalTransportType
+        {
+          Shm = ::eCAL::Registration::Local::eTransportType::shm,
+          Udp = ::eCAL::Registration::Local::eTransportType::udp
+        };
+
+        /**
+         * @brief Helper class for converting between native and managed local transport types.
+         */
+        public ref class RegistrationLocalTransportTypeHelper abstract sealed
+        {
+          public:
+            static eRegistrationLocalTransportType FromNative(::eCAL::Registration::Local::eTransportType nativeType)
+            {
+              return static_cast<eRegistrationLocalTransportType>(nativeType);
+            }
+
+            static ::eCAL::Registration::Local::eTransportType ToNative(eRegistrationLocalTransportType managedType)
+            {
+              return static_cast<::eCAL::Registration::Local::eTransportType>(managedType);
+            }
+        };
+
+        /**
+         * @brief Specifies the network transport types available for registration.
+         */
+        public enum class eRegistrationNetworkTransportType
+        {
+          Udp = ::eCAL::Registration::Network::eTransportType::udp
+        };
+
+        /**
+         * @brief Helper class for converting between native and managed network transport types.
+         */
+        public ref class RegistrationNetworkTransportTypeHelper abstract sealed
+        {
+          public:
+            static eRegistrationNetworkTransportType FromNative(::eCAL::Registration::Network::eTransportType nativeType)
+            {
+              return static_cast<eRegistrationNetworkTransportType>(nativeType);
+            }
+
+            static ::eCAL::Registration::Network::eTransportType ToNative(eRegistrationNetworkTransportType managedType)
+            {
+              return static_cast<::eCAL::Registration::Network::eTransportType>(managedType);
+            }
+        };
+
+        /**
          * @brief Managed wrapper for the native ::eCAL::Registration::Local::SHM::Configuration structure.
          */
         public ref class RegistrationLocalSHMConfiguration {
@@ -86,27 +137,27 @@ namespace Eclipse {
          */
         public ref class RegistrationLocalConfiguration {
         public:
-          property int TransportType;
+          property eRegistrationLocalTransportType TransportType;
           property RegistrationLocalSHMConfiguration^ SHM;
           property RegistrationLocalUDPConfiguration^ UDP;
 
           RegistrationLocalConfiguration() {
             ::eCAL::Registration::Local::Configuration native_config;
-            TransportType = static_cast<int>(native_config.transport_type);
+            TransportType = RegistrationLocalTransportTypeHelper::FromNative(native_config.transport_type);
             SHM = gcnew RegistrationLocalSHMConfiguration(native_config.shm);
             UDP = gcnew RegistrationLocalUDPConfiguration(native_config.udp);
           }
 
           // Native struct constructor
           RegistrationLocalConfiguration(const ::eCAL::Registration::Local::Configuration& native_config) {
-            TransportType = static_cast<int>(native_config.transport_type);
+            TransportType = RegistrationLocalTransportTypeHelper::FromNative(native_config.transport_type);
             SHM = gcnew RegistrationLocalSHMConfiguration(native_config.shm);
             UDP = gcnew RegistrationLocalUDPConfiguration(native_config.udp);
           }
 
           ::eCAL::Registration::Local::Configuration ToNative() {
             ::eCAL::Registration::Local::Configuration native_config;
-            native_config.transport_type = static_cast<::eCAL::Registration::Local::eTransportType>(TransportType);
+            native_config.transport_type = RegistrationLocalTransportTypeHelper::ToNative(TransportType);
             native_config.shm = SHM->ToNative();
             native_config.udp = UDP->ToNative();
             return native_config;
@@ -142,24 +193,24 @@ namespace Eclipse {
          */
         public ref class RegistrationNetworkConfiguration {
         public:
-          property int TransportType;
+          property eRegistrationNetworkTransportType TransportType;
           property RegistrationNetworkUDPConfiguration^ UDP;
 
           RegistrationNetworkConfiguration() {
             ::eCAL::Registration::Network::Configuration native_config;
-            TransportType = static_cast<int>(native_config.transport_type);
+            TransportType = RegistrationNetworkTransportTypeHelper::FromNative(native_config.transport_type);
             UDP = gcnew RegistrationNetworkUDPConfiguration(native_config.udp);
           }
 
           // Native struct constructor
           RegistrationNetworkConfiguration(const ::eCAL::Registration::Network::Configuration& native_config) {
-            TransportType = static_cast<int>(native_config.transport_type);
+            TransportType = RegistrationNetworkTransportTypeHelper::FromNative(native_config.transport_type);
             UDP = gcnew RegistrationNetworkUDPConfiguration(native_config.udp);
           }
 
           ::eCAL::Registration::Network::Configuration ToNative() {
             ::eCAL::Registration::Network::Configuration native_config;
-            native_config.transport_type = static_cast<::eCAL::Registration::Network::eTransportType>(TransportType);
+            native_config.transport_type = RegistrationNetworkTransportTypeHelper::ToNative(TransportType);
             native_config.udp = UDP->ToNative();
             return native_config;
           }

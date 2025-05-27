@@ -26,14 +26,14 @@ using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
-void Logging::Log(LogLevel level, System::String^ message)
+void Logging::Log(eLoggingLogLevel level, System::String^ message)
 {
   // Convert the managed string to a native std::string
   std::string nativeMsg = StringToStlString(message);
   
   // Cast the managed LogLevel to the native eCAL::Logging::eLogLevel.
   // The values match, so a static_cast is sufficient.
-  ::eCAL::Logging::Log(static_cast<::eCAL::Logging::eLogLevel>(level), nativeMsg);
+  ::eCAL::Logging::Log(eLoggingLogLevelHelper::ToNative(level), nativeMsg);
 }
 
 array<Byte>^ Logging::GetLogging()

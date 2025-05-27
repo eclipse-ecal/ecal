@@ -28,6 +28,7 @@
  * with topics (e.g. version information, datatype information, and entity IDs).
  */
 
+ #include "ecal/types/custom_data_types.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -146,6 +147,37 @@ namespace Eclipse {
           Id = id;
           ProcessId = processId;
           HostName = hostName;
+        }
+      };
+
+      
+      /**
+       * @brief Managed enum for UDP configuration version, matching native eCAL::Types::UdpConfigVersion.
+       *
+       * Represents the version of the UDP configuration structure used in eCAL.
+       */
+      public enum class TypesUdpConfigVersion
+      {
+        V1 = ::eCAL::Types::UdpConfigVersion::V1,
+        V2 = ::eCAL::Types::UdpConfigVersion::V2
+      };
+
+      /**
+       * @brief Helper class for converting between managed TypesUdpConfigVersion and native eCAL::Types::UdpConfigVersion.
+       *
+       * Provides static methods to convert UDP configuration version values between managed and native representations.
+       */
+      public ref class TypesUdpConfigVersionHelper abstract sealed
+      {
+      public:
+        static TypesUdpConfigVersion FromNative(::eCAL::Types::UdpConfigVersion nativeVersion)
+        {
+          return static_cast<TypesUdpConfigVersion>(nativeVersion);
+        }
+
+        static ::eCAL::Types::UdpConfigVersion ToNative(TypesUdpConfigVersion managedVersion)
+        {
+          return static_cast<::eCAL::Types::UdpConfigVersion>(managedVersion);
         }
       };
 

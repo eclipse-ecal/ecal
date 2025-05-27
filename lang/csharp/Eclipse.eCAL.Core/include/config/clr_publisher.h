@@ -23,6 +23,8 @@
 #include <vector>
 #include <ecal/config/publisher.h>
 
+#include "config/clr_transport_layer.h"
+
 using namespace System::Collections::Generic;
 
 namespace Eclipse {
@@ -160,21 +162,21 @@ namespace Eclipse {
         public ref class PublisherConfiguration {
         public:
           property PublisherLayerConfiguration^ Layer;
-          property List<int>^ LayerPriorityLocal;
-          property List<int>^ LayerPriorityRemote;
+          property List<eTransportLayerType>^ LayerPriorityLocal;
+          property List<eTransportLayerType>^ LayerPriorityRemote;
 
           PublisherConfiguration() {
             ::eCAL::Publisher::Configuration native_config;
             Layer = gcnew PublisherLayerConfiguration(native_config.layer);
 
-            LayerPriorityLocal = gcnew List<int>();
+            LayerPriorityLocal = gcnew List<eTransportLayerType>();
             for (auto layer : native_config.layer_priority_local) {
-              LayerPriorityLocal->Add(static_cast<int>(layer));
+              LayerPriorityLocal->Add(TransportLayerTypeHelper::FromNative(layer));
             }
 
-            LayerPriorityRemote = gcnew List<int>();
+            LayerPriorityRemote = gcnew List<eTransportLayerType>();
             for (auto layer : native_config.layer_priority_remote) {
-              LayerPriorityRemote->Add(static_cast<int>(layer));
+              LayerPriorityRemote->Add(TransportLayerTypeHelper::FromNative(layer));
             }
           }
 
@@ -182,14 +184,14 @@ namespace Eclipse {
           PublisherConfiguration(const ::eCAL::Publisher::Configuration& native_config) {
             Layer = gcnew PublisherLayerConfiguration(native_config.layer);
 
-            LayerPriorityLocal = gcnew List<int>();
+            LayerPriorityLocal = gcnew List<eTransportLayerType>();
             for (auto layer : native_config.layer_priority_local) {
-              LayerPriorityLocal->Add(static_cast<int>(layer));
+              LayerPriorityLocal->Add(TransportLayerTypeHelper::FromNative(layer));
             }
 
-            LayerPriorityRemote = gcnew List<int>();
+            LayerPriorityRemote = gcnew List<eTransportLayerType>();
             for (auto layer : native_config.layer_priority_remote) {
-              LayerPriorityRemote->Add(static_cast<int>(layer));
+              LayerPriorityRemote->Add(TransportLayerTypeHelper::FromNative(layer));
             }
           }
 
@@ -198,13 +200,13 @@ namespace Eclipse {
             native_config.layer = Layer->ToNative();
 
             native_config.layer_priority_local.clear();
-            for each (int layer in LayerPriorityLocal) {
-              native_config.layer_priority_local.push_back(static_cast<::eCAL::TransportLayer::eType>(layer));
+            for each (eTransportLayerType layer in LayerPriorityLocal) {
+              native_config.layer_priority_local.push_back(TransportLayerTypeHelper::ToNative(layer));
             }
 
             native_config.layer_priority_remote.clear();
-            for each (int layer in LayerPriorityRemote) {
-              native_config.layer_priority_remote.push_back(static_cast<::eCAL::TransportLayer::eType>(layer));
+            for each (eTransportLayerType layer in LayerPriorityRemote) {
+              native_config.layer_priority_remote.push_back(TransportLayerTypeHelper::ToNative(layer));
             }
 
             return native_config;

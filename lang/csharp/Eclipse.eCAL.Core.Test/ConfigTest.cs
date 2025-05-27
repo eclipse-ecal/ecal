@@ -43,7 +43,7 @@ public class ConfigTest
     var config = new Eclipse.eCAL.Core.Config.Configuration();
 
     // Communication mode
-    config.CommunicationMode = 1; // eCAL::eCommunicationMode::network
+    config.CommunicationMode = eCommunicationMode.Network;
 
     // Registration
     config.Registration.RegistrationRefresh = 500;
@@ -58,7 +58,7 @@ public class ConfigTest
     config.Registration.Network.UDP.Port = 16000;
 
     // Transport Layer
-    config.TransportLayer.Udp.ConfigVersion = 1; // eCAL::Types::UdpConfigVersion::V1
+    config.TransportLayer.Udp.ConfigVersion = TypesUdpConfigVersion.V1;
     config.TransportLayer.Udp.Port = 17000;
     config.TransportLayer.Udp.Mask = "255.254.254.242";
     config.TransportLayer.Udp.SendBuffer = 6242880;
@@ -83,9 +83,9 @@ public class ConfigTest
     config.Publisher.Layer.UDP.Enable = false;
     config.Publisher.Layer.TCP.Enable = false;
     config.Publisher.LayerPriorityLocal.Clear();
-    config.Publisher.LayerPriorityLocal.AddRange(new int[] { 2, 0, 1 }); // tcp, shm, udp_mc
+    config.Publisher.LayerPriorityLocal.AddRange(new eTransportLayerType[] { eTransportLayerType.Tcp, eTransportLayerType.Shm, eTransportLayerType.UdpMc });
     config.Publisher.LayerPriorityRemote.Clear();
-    config.Publisher.LayerPriorityRemote.AddRange(new int[] { 2, 1 }); // tcp, udp_mc
+    config.Publisher.LayerPriorityRemote.AddRange(new eTransportLayerType[] { eTransportLayerType.Tcp, eTransportLayerType.UdpMc });
 
     // Subscriber
     config.Subscriber.Layer.SHM.Enable = false;
@@ -315,7 +315,7 @@ public class ConfigTest
     // Now check all convenience getters against the configuration object
     Assert.AreEqual(ecalConfig.Registration.RegistrationTimeout, Config.GetRegistrationTimeoutMs(), "RegistrationTimeout");
     Assert.AreEqual(ecalConfig.Registration.RegistrationRefresh, Config.GetRegistrationRefreshMs(), "RegistrationRefresh");
-    Assert.AreEqual(ecalConfig.CommunicationMode == 1, Config.IsNetworkEnabled(), "IsNetworkEnabled");
+    Assert.AreEqual(ecalConfig.CommunicationMode == eCommunicationMode.Local, Config.IsNetworkEnabled(), "IsNetworkEnabled");
     Assert.AreEqual(ecalConfig.TimeSync.TimeSyncModuleRT, Config.GetTimesyncModuleName(), "TimeSyncModuleRT");
     Assert.AreEqual(ecalConfig.TimeSync.TimeSyncModuleReplay, Config.GetTimesyncModuleReplay(), "TimeSyncModuleReplay");
     Assert.AreEqual(ecalConfig.Application.Startup.TerminalEmulator, Config.GetTerminalEmulatorCommand(), "TerminalEmulator");

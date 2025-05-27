@@ -25,7 +25,7 @@ namespace Eclipse {
         Config::Configuration^ Init::InitConfiguration() {
             ::eCAL::Configuration native_config = ::eCAL::Init::Configuration();
             Config::Configuration^ managed_config = gcnew Config::Configuration(native_config);
-            managed_config->CommunicationMode = static_cast<int>(native_config.communication_mode);
+            managed_config->CommunicationMode = Config::CommunicationModeHelper::FromNative(native_config.communication_mode);
             return managed_config;
           }
     } // namespace Core

@@ -36,6 +36,36 @@ namespace Eclipse {
   namespace eCAL {
     namespace Core {
       namespace Config {
+        
+        /**
+         * @brief Specifies the communication modes available in eCAL.
+         *
+         * This enumeration maps the managed communication modes to their corresponding native eCAL communication modes.
+         */
+        public enum class eCommunicationMode
+        {
+          Network = ::eCAL::eCommunicationMode::network,
+          Local  = ::eCAL::eCommunicationMode::local
+        };
+
+        /**
+         * @brief Provides helper methods for converting between managed and native eCommunicationMode values.
+         *
+         * This static class offers utility functions to convert eCommunicationMode values between the managed (.NET) and native (C++) representations.
+         */
+        public ref class CommunicationModeHelper abstract sealed
+        {
+        public:
+          static eCommunicationMode FromNative(::eCAL::eCommunicationMode nativeMode)
+          {
+            return static_cast<eCommunicationMode>(nativeMode);
+          }
+
+          static ::eCAL::eCommunicationMode ToNative(eCommunicationMode managedMode)
+          {
+            return static_cast<::eCAL::eCommunicationMode>(managedMode);
+          }
+        };
 
         /**
          * @brief Managed wrapper for the native ::eCAL::Configuration structure.
@@ -80,7 +110,7 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the communication mode.
            */
-          property int CommunicationMode;
+          property eCommunicationMode CommunicationMode;
 
           /**
            * @brief Default constructor.
@@ -94,7 +124,7 @@ namespace Eclipse {
             TimeSync       = gcnew TimeConfiguration(config.timesync);
             Application    = gcnew ApplicationConfiguration(config.application);
             Logging        = gcnew LoggingConfiguration(config.logging);
-            CommunicationMode = static_cast<int>(config.communication_mode);
+            CommunicationMode = CommunicationModeHelper::FromNative(config.communication_mode);
 
             this->native_config = new ::eCAL::Configuration(config);
           }
@@ -112,7 +142,7 @@ namespace Eclipse {
             TimeSync       = gcnew TimeConfiguration(native_config.timesync);
             Application    = gcnew ApplicationConfiguration(native_config.application);
             Logging        = gcnew LoggingConfiguration(native_config.logging);
-            CommunicationMode = static_cast<int>(native_config.communication_mode);
+            CommunicationMode = CommunicationModeHelper::FromNative(native_config.communication_mode);
 
             this->native_config = new ::eCAL::Configuration(native_config);
           }
@@ -163,7 +193,7 @@ namespace Eclipse {
             native_config_copy.timesync = TimeSync->ToNative();
             native_config_copy.application = Application->ToNative();
             native_config_copy.logging = Logging->ToNative();
-            native_config_copy.communication_mode = static_cast<::eCAL::eCommunicationMode>(CommunicationMode);
+            native_config_copy.communication_mode = CommunicationModeHelper::ToNative(CommunicationMode);
             return native_config_copy;
           }
 
@@ -174,14 +204,14 @@ namespace Eclipse {
            * @brief Updates the managed properties from the native configuration.
            */
           void UpdateManagedProperties() {
-            TransportLayer = gcnew TransportLayerConfiguration();
-            Registration = gcnew RegistrationConfiguration();
-            Subscriber = gcnew SubscriberConfiguration();
-            Publisher = gcnew PublisherConfiguration();
-            TimeSync = gcnew TimeConfiguration();
-            Application = gcnew ApplicationConfiguration();
-            Logging = gcnew LoggingConfiguration();
-            CommunicationMode = static_cast<int>(native_config->communication_mode);
+            TransportLayer = gcnew TransportLayerConfiguration(native_config->transport_layer);
+            Registration = gcnew RegistrationConfiguration(native_config->registration);
+            Subscriber = gcnew SubscriberConfiguration(native_config->subscriber);
+            Publisher = gcnew PublisherConfiguration(native_config->publisher);
+            TimeSync = gcnew TimeConfiguration(native_config->timesync);
+            Application = gcnew ApplicationConfiguration(native_config->application);
+            Logging = gcnew LoggingConfiguration(native_config->logging);
+            CommunicationMode = CommunicationModeHelper::FromNative(native_config->communication_mode);
           }
         };
 

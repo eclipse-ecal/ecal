@@ -23,6 +23,7 @@
 #include <ecal/config/logging.h>
 
 #include "clr_common.h"
+#include "clr_log_level.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -42,7 +43,7 @@ namespace Eclipse {
           /**
            * @brief Gets or sets the log level.
            */
-          property int LogLevel;
+          property LoggingFilter LogLevel;
 
           /**
            * @brief Default constructor.
@@ -51,7 +52,7 @@ namespace Eclipse {
             // Use the default values from the native structure
             ::eCAL::Logging::Provider::Sink native_sink{};
             Enable = native_sink.enable;
-            LogLevel = static_cast<int>(native_sink.log_level);
+            LogLevel = eLoggingLogLevelHelper::FromNative(native_sink.log_level);
           }
 
           /**
@@ -60,7 +61,7 @@ namespace Eclipse {
            */
           LoggingProviderSink(const ::eCAL::Logging::Provider::Sink& native_sink) {
             Enable = native_sink.enable;
-            LogLevel = static_cast<int>(native_sink.log_level);
+            LogLevel = eLoggingLogLevelHelper::FromNative(native_sink.log_level);
           }
 
           /**
@@ -70,7 +71,7 @@ namespace Eclipse {
           ::eCAL::Logging::Provider::Sink ToNative() {
             ::eCAL::Logging::Provider::Sink native_sink;
             native_sink.enable = Enable;
-            native_sink.log_level = static_cast<::eCAL::Logging::Filter>(LogLevel);
+            native_sink.log_level = eLoggingLogLevelHelper::ToNative(LogLevel);
             return native_sink;
           }
         };

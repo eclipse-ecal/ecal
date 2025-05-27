@@ -35,6 +35,7 @@ set(ecal_clr_src
     include/clr_core.h
     include/clr_init.h
     include/clr_log.h
+    include/clr_log_level.h
     include/clr_monitoring.h
     include/clr_time.h
     include/clr_types.h
