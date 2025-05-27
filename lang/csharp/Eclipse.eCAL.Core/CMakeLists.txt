@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,32 +22,48 @@ find_package(eCAL REQUIRED)
 
 set(ecal_clr_src
     AssemblyInfo.cpp
-    ecal_clr_client.cpp
-    ecal_clr_client.h
-    ecal_clr_common.cpp
-    ecal_clr_common.h
-    ecal_clr_core.cpp
-    ecal_clr_core.h
-    ecal_clr_log.cpp
-    ecal_clr_log.h
-    ecal_clr_monitoring.cpp
-    ecal_clr_monitoring.h
-    ecal_clr_publisher.cpp
-    ecal_clr_publisher.h
-    ecal_clr_server.cpp
-    ecal_clr_server.h
-    ecal_clr_subscriber.cpp
-    ecal_clr_subscriber.h
-    ecal_clr_time.cpp
-    ecal_clr_time.h
-    ecal_clr_types.h
-    ecal_clr_types_pubsub.h
-    ecal_clr_types_service.h
+    include/config/clr_application.h
+    include/config/clr_configuration.h
+    include/config/clr_logging.h
+    include/config/clr_publisher.h
+    include/config/clr_registration.h
+    include/config/clr_subscriber.h
+    include/config/clr_time.h
+    include/config/clr_transport_layer.h
+    include/clr_common.h
+    include/clr_config.h
+    include/clr_core.h
+    include/clr_init.h
+    include/clr_log.h
+    include/clr_log_level.h
+    include/clr_monitoring.h
+    include/clr_time.h
+    include/clr_types.h
+    include/pubsub/clr_publisher.h
+    include/pubsub/clr_subscriber.h
+    include/pubsub/clr_types.h
+    include/service/clr_client.h
+    include/service/clr_server.h
+    include/service/clr_types.h
+    src/clr_client.cpp
+    src/clr_common.cpp
+    src/clr_config.cpp
+    src/clr_core.cpp
+    src/clr_init.cpp
+    src/clr_log.cpp
+    src/clr_monitoring.cpp
+    src/clr_publisher.cpp
+    src/clr_server.cpp
+    src/clr_subscriber.cpp
+    src/clr_time.cpp
+
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/include
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     COMMON_LANGUAGE_RUNTIME ""

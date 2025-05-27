@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file ecal_clr_types_service.h
+ * @file clr_types_service.h
  *
  * @brief Managed type definitions for eCAL services.
  *
@@ -28,9 +28,8 @@
  * eCAL service types. They can be used by the C++/CLI client and server APIs.
  */
 
-#include "ecal_clr_types.h"
+#include "../clr_types.h"
 
-using namespace System;
 using namespace System::Collections::Generic;
 
 namespace Eclipse {
@@ -81,7 +80,7 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the service name.
          */
-        property String^ ServiceName;
+        property System::String^ ServiceName;
 
         /**
          * @brief Default constructor.
@@ -93,7 +92,7 @@ namespace Eclipse {
          * @param entityID Unique service entity ID.
          * @param serviceName Service name.
          */
-        ServiceId(EntityId^ entityID, String^ serviceName) {
+        ServiceId(EntityId^ entityID, System::String^ serviceName) {
           EntityID = entityID;
           ServiceName = serviceName;
         }
@@ -109,7 +108,7 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the service method name.
          */
-        property String^ MethodName;
+        property System::String^ MethodName;
 
         /**
          * @brief Gets or sets the request type information.
@@ -132,7 +131,7 @@ namespace Eclipse {
          * @param requestType The request type information.
          * @param responseType The response type information.
          */
-        ServiceMethodInformation(String^ methodName, DataTypeInformation^ requestType, DataTypeInformation^ responseType) {
+        ServiceMethodInformation(System::String^ methodName, DataTypeInformation^ requestType, DataTypeInformation^ responseType) {
           MethodName = methodName;
           RequestType = requestType;
           ResponseType = responseType;
@@ -167,14 +166,14 @@ namespace Eclipse {
         property int RetState;
 
         /**
-         * @brief Gets or sets the response data as a byte array.
+         * @brief Gets or sets the response data as a System::Byte array.
          */
-        property array<Byte>^ Response;
+        property array<System::Byte>^ Response;
 
         /**
          * @brief Gets or sets the error message.
          */
-        property String^ ErrorMessage;
+        property System::String^ ErrorMessage;
       };
 
       /**
@@ -182,7 +181,7 @@ namespace Eclipse {
        *
        * @param response The service response.
        */
-      public delegate void ResponseCallback([Runtime::InteropServices::Out] ServiceResponse^ response);
+      public delegate void ResponseCallback([System::Runtime::InteropServices::Out] ServiceResponse^ response);
 
       /**
        * @brief Managed wrapper for the native SClientEventCallbackData structure.

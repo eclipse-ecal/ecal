@@ -20,14 +20,13 @@
 #pragma once
 
 /**
- * @file  ecal_clr_server.h
+ * @file  clr_server.h
 **/
 
-#include "ecal_clr_types_service.h"
+#include "service/clr_types.h"
 
 #include <ecal/service/server.h>
 
-using namespace System;
 using namespace System::Runtime::InteropServices;
 using namespace System::Collections::Generic;
 
@@ -48,7 +47,7 @@ namespace Eclipse {
          *
          * @param serverName Unique server name.
          */
-        ServiceServer(String^ serverName);
+        ServiceServer(System::String^ serverName);
 
         /**
          * @brief Destructor.
@@ -68,7 +67,7 @@ namespace Eclipse {
          * 
          * @return The response data as a byte array.
          */
-        delegate array<Byte>^ MethodCallback(ServiceMethodInformation^ methodInfo, array<Byte>^ request);
+        delegate array<System::Byte>^ MethodCallback(ServiceMethodInformation^ methodInfo, array<System::Byte>^ request);
 
         /**
          * @brief Add a callback function for an incoming service method call.
@@ -87,7 +86,7 @@ namespace Eclipse {
          * 
          * @return True if succeeded, false otherwise.
          */
-        bool RemoveMethodCallback(String^ methodName);
+        bool RemoveMethodCallback(System::String^ methodName);
 
       private:
         /**
@@ -98,7 +97,7 @@ namespace Eclipse {
         /**
          * @brief Dictionary mapping method name to the managed method callback.
          */
-        Dictionary<String^, MethodCallback^>^ m_managed_callbacks;
+        Dictionary<System::String^, MethodCallback^>^ m_managed_callbacks;
 
         /**
          * @brief Internal native callback delegate definition.
@@ -110,12 +109,12 @@ namespace Eclipse {
         /**
          * @brief Dictionary mapping method name to the native callback delegate.
          */
-        Dictionary<String^, servCallback^>^ m_native_callbacks;
+        Dictionary<System::String^, servCallback^>^ m_native_callbacks;
 
         /**
          * @brief Dictionary mapping method name to the GCHandle for the native callback delegate.
          */
-        Dictionary<String^, GCHandle>^ m_native_callbacks_handles;
+        Dictionary<System::String^, GCHandle>^ m_native_callbacks_handles;
 
         /**
          * @brief Internal method callback invoked by the native code.
