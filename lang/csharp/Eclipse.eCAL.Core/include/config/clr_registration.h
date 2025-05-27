@@ -1,3 +1,22 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
 #pragma once
 
 #include <string>
@@ -74,8 +93,8 @@ namespace Eclipse {
           RegistrationLocalConfiguration() {
             ::eCAL::Registration::Local::Configuration native_config;
             TransportType = static_cast<int>(native_config.transport_type);
-            SHM = gcnew RegistrationLocalSHMConfiguration();
-            UDP = gcnew RegistrationLocalUDPConfiguration();
+            SHM = gcnew RegistrationLocalSHMConfiguration(native_config.shm);
+            UDP = gcnew RegistrationLocalUDPConfiguration(native_config.udp);
           }
 
           // Native struct constructor
@@ -129,7 +148,7 @@ namespace Eclipse {
           RegistrationNetworkConfiguration() {
             ::eCAL::Registration::Network::Configuration native_config;
             TransportType = static_cast<int>(native_config.transport_type);
-            UDP = gcnew RegistrationNetworkUDPConfiguration();
+            UDP = gcnew RegistrationNetworkUDPConfiguration(native_config.udp);
           }
 
           // Native struct constructor
@@ -164,8 +183,8 @@ namespace Eclipse {
             RegistrationRefresh = native_config.registration_refresh;
             Loopback = native_config.loopback;
             ShmTransportDomain = Internal::StlStringToString(native_config.shm_transport_domain);
-            Local = gcnew RegistrationLocalConfiguration();
-            Network = gcnew RegistrationNetworkConfiguration();
+            Local = gcnew RegistrationLocalConfiguration(native_config.local);
+            Network = gcnew RegistrationNetworkConfiguration(native_config.network);
           }
 
           // Native struct constructor

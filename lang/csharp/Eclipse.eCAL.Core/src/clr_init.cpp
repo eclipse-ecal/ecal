@@ -1,3 +1,22 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
 #include "clr_init.h"
 
 namespace Eclipse {
@@ -5,14 +24,7 @@ namespace Eclipse {
     namespace Core {
         Config::Configuration^ Init::InitConfiguration() {
             ::eCAL::Configuration native_config = ::eCAL::Init::Configuration();
-            Config::Configuration^ managed_config = gcnew Config::Configuration();
-            managed_config->TransportLayer = gcnew Config::TransportLayerConfiguration();
-            managed_config->Registration = gcnew Config::RegistrationConfiguration();
-            managed_config->Subscriber = gcnew Config::SubscriberConfiguration();
-            managed_config->Publisher = gcnew Config::PublisherConfiguration();
-            managed_config->TimeSync = gcnew Config::TimeConfiguration();
-            managed_config->Application = gcnew Config::ApplicationConfiguration();
-            managed_config->Logging = gcnew Config::LoggingConfiguration();
+            Config::Configuration^ managed_config = gcnew Config::Configuration(native_config);
             managed_config->CommunicationMode = static_cast<int>(native_config.communication_mode);
             return managed_config;
           }

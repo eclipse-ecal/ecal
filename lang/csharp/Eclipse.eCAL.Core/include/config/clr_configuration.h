@@ -1,3 +1,22 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
 #pragma once
 
 #include <string>
@@ -67,15 +86,17 @@ namespace Eclipse {
            * @brief Default constructor.
            */
           Configuration() {
-            native_config = new ::eCAL::Configuration();
-            TransportLayer = gcnew TransportLayerConfiguration();
-            Registration = gcnew RegistrationConfiguration();
-            Subscriber = gcnew SubscriberConfiguration();
-            Publisher = gcnew PublisherConfiguration();
-            TimeSync = gcnew TimeConfiguration();
-            Application = gcnew ApplicationConfiguration();
-            Logging = gcnew LoggingConfiguration();
-            CommunicationMode = static_cast<int>(native_config->communication_mode);
+            auto config = ::eCAL::Configuration();
+            TransportLayer = gcnew TransportLayerConfiguration(config.transport_layer);
+            Registration   = gcnew RegistrationConfiguration(config.registration);
+            Subscriber     = gcnew SubscriberConfiguration(config.subscriber);
+            Publisher      = gcnew PublisherConfiguration(config.publisher);
+            TimeSync       = gcnew TimeConfiguration(config.timesync);
+            Application    = gcnew ApplicationConfiguration(config.application);
+            Logging        = gcnew LoggingConfiguration(config.logging);
+            CommunicationMode = static_cast<int>(config.communication_mode);
+
+            this->native_config = new ::eCAL::Configuration(config);
           }
 
           /**
@@ -93,7 +114,6 @@ namespace Eclipse {
             Logging        = gcnew LoggingConfiguration(native_config.logging);
             CommunicationMode = static_cast<int>(native_config.communication_mode);
 
-            // Optionally, you can also initialize the native_config pointer if needed:
             this->native_config = new ::eCAL::Configuration(native_config);
           }
 

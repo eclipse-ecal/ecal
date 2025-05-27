@@ -1,3 +1,22 @@
+/* ========================= eCAL LICENSE =================================
+ *
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================= eCAL LICENSE =================================
+*/
+
 #pragma once
 
 #include <string>
@@ -114,9 +133,9 @@ namespace Eclipse {
 
           PublisherLayerConfiguration() {
             ::eCAL::Publisher::Layer::Configuration native_config;
-            SHM = gcnew PublisherLayerSHMConfiguration();
-            UDP = gcnew PublisherLayerUDPConfiguration();
-            TCP = gcnew PublisherLayerTCPConfiguration();
+            SHM = gcnew PublisherLayerSHMConfiguration(native_config.shm);
+            UDP = gcnew PublisherLayerUDPConfiguration(native_config.udp);
+            TCP = gcnew PublisherLayerTCPConfiguration(native_config.tcp);
           }
 
           // Native struct constructor
@@ -146,7 +165,7 @@ namespace Eclipse {
 
           PublisherConfiguration() {
             ::eCAL::Publisher::Configuration native_config;
-            Layer = gcnew PublisherLayerConfiguration();
+            Layer = gcnew PublisherLayerConfiguration(native_config.layer);
 
             LayerPriorityLocal = gcnew List<int>();
             for (auto layer : native_config.layer_priority_local) {
