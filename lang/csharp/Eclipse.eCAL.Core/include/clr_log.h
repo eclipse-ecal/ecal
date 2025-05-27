@@ -20,43 +20,34 @@
 #pragma once
 
 /**
- * @file  ecal_clr_monitoring.h
+ * @file  clr_log.h
 **/
 
-using namespace System;
+#include "clr_log_level.h"
 
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-
-      // Managed representation of the native monitoring entities bitmask.
-      [Flags]
-      public enum class MonitoringEntity : unsigned int
-      {
-        None       = 0x000,
-        Publisher  = 0x001,
-        Subscriber = 0x002,
-        Server     = 0x004,
-        Client     = 0x008,
-        Process    = 0x010,
-        Host       = 0x020,
-        All        = Publisher | Subscriber | Server | Client | Process | Host
-      };
-
       /**
-       * @brief eCAL monitoring class.
-       **/
-      public ref class Monitoring
+       * @brief eCAL logging class.
+      **/
+      public ref class Logging
       {
       public:
         /**
-         * @brief Get host, process and topic monitoring as raw message bytes.
+         * @brief Log a message with a specified log level.
          *
-         * @param entities Specifies which entities to include (default is All).
-         * 
-         * @return The monitoring message as a byte array.
+         * @param level    The log level.
+         * @param message  The message string to log.
+        **/
+        static void Log(eLoggingLogLevel level, System::String^ message);
+
+        /**
+         * @brief Get global log message as raw message bytes.
+         *
+         * @return The logging message as a byte array.
          **/
-        static array<Byte>^ GetMonitoring(MonitoringEntity entities);
+        static array<System::Byte>^ GetLogging();
       };
 
     } // namespace Core

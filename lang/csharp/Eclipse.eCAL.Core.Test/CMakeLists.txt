@@ -25,6 +25,7 @@ target_sources(${PROJECT_NAME}
   PRIVATE
     PubSubReceiveTest.cs
     PubSubEventHandlingTest.cs
+    ConfigTest.cs
 )
 
 target_link_libraries(${PROJECT_NAME} Eclipse.eCAL.Core)

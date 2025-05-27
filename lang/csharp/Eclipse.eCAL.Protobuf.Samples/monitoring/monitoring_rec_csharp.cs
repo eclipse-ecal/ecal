@@ -33,7 +33,7 @@ public class MonitoringReceive
   public static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("monitoring receive csharp", Init.Monitoring);
+    Core.Initialize("monitoring receive csharp", Init.Flags.Monitoring);
 
     // Print version info.
     Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));

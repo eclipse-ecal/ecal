@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,19 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecal_clr_monitoring.h"
-#include "ecal_clr_common.h"
+#include "clr_init.h"
 
-#include <ecal/core.h>
-#include <ecal/log.h>
-#include <ecal/monitoring.h>
-
-using namespace Eclipse::eCAL::Core;
-using namespace Internal;
-
-array<Byte>^ Monitoring::GetMonitoring(MonitoringEntity entities)
-{
-  std::string monitoring;
-  ::eCAL::Monitoring::GetMonitoring(monitoring, static_cast<unsigned int>(entities));
-  return StlStringToByteArray(monitoring);
-}
+namespace Eclipse {
+  namespace eCAL {
+    namespace Core {
+        Config::Configuration^ Init::InitConfiguration() {
+            ::eCAL::Configuration native_config = ::eCAL::Init::Configuration();
+            Config::Configuration^ managed_config = gcnew Config::Configuration(native_config);
+            managed_config->CommunicationMode = Config::CommunicationModeHelper::FromNative(native_config.communication_mode);
+            return managed_config;
+          }
+    } // namespace Core
+  } // namespace eCAL
+} // namespace Eclipse

@@ -20,7 +20,7 @@
 #pragma once
 
 /**
- * @file ecal_clr_types.h
+ * @file clr_types.h
  *
  * @brief Managed type definitions for eCAL topics.
  *
@@ -28,7 +28,7 @@
  * with topics (e.g. version information, datatype information, and entity IDs).
  */
 
-using namespace System;
+ #include "ecal/types/custom_data_types.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -73,24 +73,6 @@ namespace Eclipse {
       };
 
       /**
-       * @brief Managed enumeration for eCAL initialization flags.
-       *
-       * This enumeration mirrors the native eCAL::Init constants.
-       */
-      [Flags]
-      public enum class Init : unsigned int {
-        None       = 0x000,
-        Publisher  = 0x001,
-        Subscriber = 0x002,
-        Service    = 0x004,
-        Monitoring = 0x008,
-        Logging    = 0x010,
-        TimeSync   = 0x020,
-        Default    = Publisher | Subscriber | Service | Logging | TimeSync,
-        All        = Publisher | Subscriber | Service | Monitoring | Logging | TimeSync
-      };
-
-      /**
        * @brief Managed wrapper for the native SDataTypeInformation structure.
        *
        * Contains information about a topic's data type, including its name, encoding, and descriptor.
@@ -100,15 +82,15 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the data type name.
          */
-        property String^ Name;
+        property System::String^ Name;
         /**
          * @brief Gets or sets the encoding of the data type (e.g. protobuf, flatbuffers).
          */
-        property String^ Encoding;
+        property System::String^ Encoding;
         /**
          * @brief Gets or sets the descriptor information of the data type.
          */
-        property array<Byte>^ Descriptor;
+        property array<System::Byte>^ Descriptor;
 
         /**
          * @brief Default constructor.
@@ -121,7 +103,7 @@ namespace Eclipse {
          * @param encoding Encoding of the data type.
          * @param descriptor Descriptor information.
          */
-        DataTypeInformation(String^ name, String^ encoding, array<Byte>^ descriptor)
+        DataTypeInformation(System::String^ name, System::String^ encoding, array<System::Byte>^ descriptor)
         {
           Name = name;
           Encoding = encoding;
@@ -139,7 +121,7 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the unique entity ID.
          */
-        property UInt64 Id;
+        property System::UInt64 Id;
         /**
          * @brief Gets or sets the process ID that produced the sample.
          */
@@ -147,7 +129,7 @@ namespace Eclipse {
         /**
          * @brief Gets or sets the host name that produced the sample.
          */
-        property String^ HostName;
+        property System::String^ HostName;
 
         /**
          * @brief Default constructor.
@@ -160,11 +142,42 @@ namespace Eclipse {
          * @param processId Process ID.
          * @param hostName Host name.
          */
-        EntityId(UInt64 id, int processId, String^ hostName)
+        EntityId(System::UInt64 id, int processId, System::String^ hostName)
         {
           Id = id;
           ProcessId = processId;
           HostName = hostName;
+        }
+      };
+
+      
+      /**
+       * @brief Managed enum for UDP configuration version, matching native eCAL::Types::UdpConfigVersion.
+       *
+       * Represents the version of the UDP configuration structure used in eCAL.
+       */
+      public enum class TypesUdpConfigVersion
+      {
+        V1 = ::eCAL::Types::UdpConfigVersion::V1,
+        V2 = ::eCAL::Types::UdpConfigVersion::V2
+      };
+
+      /**
+       * @brief Helper class for converting between managed TypesUdpConfigVersion and native eCAL::Types::UdpConfigVersion.
+       *
+       * Provides static methods to convert UDP configuration version values between managed and native representations.
+       */
+      public ref class TypesUdpConfigVersionHelper abstract sealed
+      {
+      public:
+        static TypesUdpConfigVersion FromNative(::eCAL::Types::UdpConfigVersion nativeVersion)
+        {
+          return static_cast<TypesUdpConfigVersion>(nativeVersion);
+        }
+
+        static ::eCAL::Types::UdpConfigVersion ToNative(TypesUdpConfigVersion managedVersion)
+        {
+          return static_cast<::eCAL::Types::UdpConfigVersion>(managedVersion);
         }
       };
 
