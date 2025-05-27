@@ -20,14 +20,14 @@
 #pragma once
 
 /**
- * @file  ecal_clr_subscriber.h
+ * @file  clr_subscriber.h
 **/
 
-#include "ecal_clr_types_pubsub.h"
+#include "config/clr_subscriber.h"
+#include "pubsub/clr_types.h"
 
 #include <ecal/pubsub/subscriber.h>
 
-using namespace System;
 
 namespace Eclipse {
   namespace eCAL {
@@ -46,7 +46,7 @@ namespace Eclipse {
          *
          * @param topicName Unique topic name.
          */
-        Subscriber(String^ topicName) : Subscriber(topicName, nullptr, nullptr) {}
+        Subscriber(System::String^ topicName) : Subscriber(topicName, nullptr, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Subscriber with the given topic name and data type information.
@@ -54,7 +54,7 @@ namespace Eclipse {
          * @param topicName Unique topic name.
          * @param dataTypeInfo Topic data type information.
          */
-        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo) : Subscriber(topicName, dataTypeInfo, nullptr) {}
+        Subscriber(System::String^ topicName, DataTypeInformation^ dataTypeInfo) : Subscriber(topicName, dataTypeInfo, nullptr, nullptr) {}
 
         /**
          * @brief Constructs a Subscriber with the given topic name, data type information, and an event callback.
@@ -63,7 +63,17 @@ namespace Eclipse {
          * @param dataTypeInfo Topic data type information.
          * @param eventCallback Optional subscriber event callback.
          */
-        Subscriber(String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback);
+        Subscriber(System::String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback) : Subscriber(topicName, dataTypeInfo, eventCallback, nullptr) {};
+        
+        /**
+         * @brief Constructs a Subscriber with the given topic name, data type information, event callback and config.
+         *
+         * @param topicName Unique topic name.
+         * @param dataTypeInfo Topic data type information.
+         * @param eventCallback Optional subscriber event callback.
+         * @param config Optional subscriber configuration
+         */
+        Subscriber(System::String^ topicName, DataTypeInformation^ dataTypeInfo, SubscriberEventCallbackDelegate^ eventCallback, Config::SubscriberConfiguration^ config);
 
         /**
          * @brief Destructor.
@@ -101,9 +111,9 @@ namespace Eclipse {
         /**
          * @brief Retrieves the topic name.
          *
-         * @return The topic name as a System::String^.
+         * @return The topic name as a System::System::String^.
          */
-        String^ GetTopicName();
+        System::String^ GetTopicName();
 
         /**
          * @brief Retrieves the topic identifier.
