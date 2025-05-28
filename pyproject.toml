@@ -32,13 +32,13 @@ dependencies = [
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "lang/python/core/ecal/_version.py"
+version-file = "lang/python/src/core/ecal/_version.py"
 
 [tool.hatch.build.targets]
 # Directory structure to copy as Python package, last path component is
 # the package name
 # wheel.packages = ["lang/python/package/ecal"]
-wheel.packages = ["lang/python/core/ecal", "lang/python/ecalhdf5/ecal"]
+wheel.packages = ["lang/python/src/core/ecal", "lang/python/src/ecalhdf5/ecal"]
 
 # Files to include in the source archive to build from
 sdist.only-include = [
