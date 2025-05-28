@@ -51,7 +51,7 @@ namespace Eclipse {
          *
          * @param serviceName Unique service name.
          */
-        ServiceClient(String^ serviceName);
+        ServiceClient(System::String^ serviceName);
 
         /**
          * @brief Constructor.
@@ -59,7 +59,7 @@ namespace Eclipse {
          * @param serviceName           Unique service name.
          * @param methodInformationList List of service method information.
          */
-        ServiceClient(String^ serviceName, ServiceMethodInformationList^ methodInformationList);
+        ServiceClient(System::String^ serviceName, ServiceMethodInformationList^ methodInformationList);
 
         /**
          * @brief Destructor.
@@ -80,8 +80,8 @@ namespace Eclipse {
          *
          * @return List of service responses.
          */
-        List<ServiceResponse^>^ CallWithResponse(String^ methodName,
-                                                 array<Byte>^ request,
+        List<ServiceResponse^>^ CallWithResponse(System::String^ methodName,
+                                                 array<System::Byte>^ request,
                                                  int timeoutMs);
 
         /**
@@ -90,22 +90,22 @@ namespace Eclipse {
          * Calls the service and invokes `callback` for each response.
          *
          * @param methodName The method name.
-         * @param request    The request payload as a byte array.
+         * @param request    The request payload as a System::Byte array.
          * @param callback   Managed callback for each response.
          * @param timeoutMs  Maximum time before returning (ms, use DefaultTimeArgument for infinite).
          *
          * @return True if the call succeeded.
          */
 
-        bool CallWithCallback(String^ methodName,
-                              array<Byte>^ request,
+        bool CallWithCallback(System::String^ methodName,
+                              array<System::Byte>^ request,
                               ResponseCallback^ callback,
                               int timeoutMs);
 
         /**
          * @brief Retrieve the service name.
          *
-         * @return The service name as a System::System::String^.
+         * @return The service name as a System::String^.
          */
         System::String^ GetServiceName();
 
