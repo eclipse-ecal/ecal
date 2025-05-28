@@ -22,6 +22,8 @@
 #include <core/config/py_registration.h>
 #include <ecal/config/registration.h>
 
+#include <nanobind/stl/string.h>
+
 namespace nb = nanobind;
 
 void AddConfigRegistration(nanobind::module_& module)
