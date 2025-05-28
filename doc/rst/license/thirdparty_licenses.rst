@@ -149,6 +149,11 @@ They are used by Eclipse eCAL, but not associated to it in any way.
      - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
        - |fa-windows| Binary distributions for Windows (Installer only)
 
+   * - `nanobind <https://github.com/wjakob/nanobind>`_
+     - :ref:`bsd_3`
+     - 2022, Wenzel Jakob
+     - - |fa-github| Git submodule ``/tirdparty/nanobind/nanobind``
+
    * - `nanopb <https://github.com/nanopb/nanopb>`_
      - :ref:`zlib_license`
      - 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>
@@ -186,6 +191,11 @@ They are used by Eclipse eCAL, but not associated to it in any way.
      - - |fa-github| Git submodule ``/tirdparty/recycle/recycle``
        - |fa-windows| Binary distributions for Windows
        - |fa-ubuntu| Binary distributions for Linux
+       
+   * - `robin-map <https://github.com/Tessil/robin-map>`_
+     - :ref:`mit_license`
+     - 2017, Thibaut Goetghebuer-Planchon
+     - - |fa-github| Git submodule ``/tirdparty/tsl-robin-map/tsl-robin-map``
 
    * - `spdlog <https://github.com/gabime/spdlog>`_
      - :ref:`mit_license`

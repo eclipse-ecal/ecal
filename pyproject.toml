@@ -1,7 +1,7 @@
 [project] # Project metadata
 name = "eclipse-ecal"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = { "file" = "LICENSE.txt" }
 authors = [
   { "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" },
@@ -23,17 +23,22 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel.hooks.scikit-build]
 experimental = true
 
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest"
+]
+
 [tool.hatch.version]
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "lang/python/core/ecal/_version.py"
+version-file = "lang/python/src/core/ecal/_version.py"
 
 [tool.hatch.build.targets]
 # Directory structure to copy as Python package, last path component is
 # the package name
 # wheel.packages = ["lang/python/package/ecal"]
-wheel.packages = ["lang/python/core/ecal", "lang/python/ecalhdf5/ecal"]
+wheel.packages = ["lang/python/src/core/ecal", "lang/python/src/ecalhdf5/ecal"]
 
 # Files to include in the source archive to build from
 sdist.only-include = [
@@ -76,6 +81,13 @@ sdist.only-include = [
   "!/thirdparty/hdf5/hdf5/java/",
   "!/thirdparty/hdf5/hdf5/fortran/",
 ]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "lang/python/tests/",
+]
+python_files = "*_test.py"
+
 
 [tool.scikit-build]
 # Will be installed from PyPI if system version is too old/missing
