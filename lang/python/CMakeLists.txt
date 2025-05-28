@@ -28,6 +28,11 @@ option(ECAL_PYTHON_BUILD_SAMPLES "Includes the python samples"                  
 option(ECAL_PYTHON_BUILD_TESTS   "Includes the python tests"                    ON)
 option(ECAL_PYTHON_USE_HDF5      "Enables eCAL application cmd line interfaces" ON)
 
+if (NOT ECAL_PYTHON_USE_HDF5)
+  message(FATAL_ERROR "Building python bindings without hdf5 is not supported.")
+endif()
+
+
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 # Try to make modules loadable by debug python version
@@ -134,18 +139,14 @@ set(CMAKE_INSTALL_RPATH "\$ORIGIN")
 # for build tree use.
 set(CMAKE_BUILD_WITH_INSTALL_RPATH "ON")
 
-add_subdirectory(core)
+add_subdirectory(src/core)
 add_dependencies(${PROJECT_NAME} _ecal_core_py)
 
-add_subdirectory(nanobind_core/src)
+add_subdirectory(src/nanobind_core/src)
 add_dependencies(${PROJECT_NAME} nanobind_core)
 
-if(ECAL_USE_HDF5)
-  add_subdirectory(ecalhdf5)
-  add_dependencies(${PROJECT_NAME} _ecal_hdf5_py)
-else()
-  message(WARNING "Building Python bindings without HDF5 support")
-endif()
+add_subdirectory(src/ecalhdf5)
+add_dependencies(${PROJECT_NAME} _ecal_hdf5_py)
 
 if (ECAL_PYTHON_BUILD_SAMPLES)
   add_subdirectory(samples)

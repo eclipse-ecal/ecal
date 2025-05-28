@@ -99,7 +99,9 @@ target_link_libraries(nanobind_core PRIVATE eCAL::core)
 # target_link_directories(nanobind_core PRIVATE ${Python_LIBRARY_DIRS})
 
 # Install directive for scikit-build-core
-install(TARGETS nanobind_core LIBRARY DESTINATION nanobind_core)
+install(TARGETS nanobind_core
+  DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
+)
 
 if(WIN32)
   set_property(TARGET nanobind_core PROPERTY FOLDER lang/python/core)
