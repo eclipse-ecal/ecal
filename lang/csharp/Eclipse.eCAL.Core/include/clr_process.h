@@ -41,79 +41,11 @@ namespace Eclipse {
       {
       public:
         /**
-         * @brief  Dump configuration to console. 
-         */
-        static void DumpConfig();
-
-        /**
-         * @brief  Dump configuration to string.
-         *
-         * @return  String containing the configuration dump.
-         */
-        static System::String^ DumpConfigToString();
-
-        /**
-         * @brief  Get current host name. 
-         *
-         * @return  Host name or empty string if failed. 
-         */
-        static System::String^ GetHostName();
-
-        /**
-         * @brief  Get current SHM transport domain.
-         *
-         * @return  SHM transport domain or empty string if failed.
-         */
-        static System::String^ GetShmTransportDomain();
-
-        /**
          * @brief  Get current unit name (defined via eCAL::Initialize). 
          *
          * @return  Unit name or empty string if failed. 
          */
         static System::String^ GetUnitName();
-
-        /**
-         * @brief  Sleep current thread.
-         *
-         * @param time_ms  Time in milliseconds to sleep.
-         */
-        static void SleepMS(long time_ms);
-
-        /**
-         * @brief  Sleep current thread.
-         *
-         * @param time_ns  Time in nanoseconds to sleep.
-         */
-        static void SleepNS(long long time_ns);
-
-        /**
-         * @brief  Get current process id. 
-         *
-         * @return  The process id. 
-         */
-        static int GetProcessID();
-
-        /**
-         * @brief  Get current process id as string.
-         *
-         * @return  The process id as a string.
-         */
-        static System::String^ GetProcessIDAsString();
-
-        /**
-         * @brief  Get current process name. 
-         *
-         * @return  Process name or empty string if failed. 
-         */
-        static System::String^ GetProcessName();
-
-        /**
-         * @brief  Get current process parameter. 
-         *
-         * @return  Process parameter or empty string if failed. 
-         */
-        static System::String^ GetProcessParameter();
 
         /**
          * @brief  Set process state info. 

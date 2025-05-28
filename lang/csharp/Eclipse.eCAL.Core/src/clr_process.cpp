@@ -26,62 +26,9 @@ using namespace msclr::interop;
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-
-      void Process::DumpConfig()
-      {
-        ::eCAL::Process::DumpConfig();
-      }
-
-      String^ Process::DumpConfigToString()
-      {
-        std::string cfg;
-        ::eCAL::Process::DumpConfig(cfg);
-        return Internal::StlStringToString(cfg);
-      }
-
-      String^ Process::GetHostName()
-      {
-        return Internal::StlStringToString(::eCAL::Process::GetHostName());
-      }
-
-      String^ Process::GetShmTransportDomain()
-      {
-        return Internal::StlStringToString(::eCAL::Process::GetShmTransportDomain());
-      }
-
       String^ Process::GetUnitName()
       {
         return Internal::StlStringToString(::eCAL::Process::GetUnitName());
-      }
-
-      void Process::SleepMS(long time_ms)
-      {
-        ::eCAL::Process::SleepMS(time_ms);
-      }
-
-      void Process::SleepNS(long long time_ns)
-      {
-        ::eCAL::Process::SleepNS(time_ns);
-      }
-
-      int Process::GetProcessID()
-      {
-        return ::eCAL::Process::GetProcessID();
-      }
-
-      String^ Process::GetProcessIDAsString()
-      {
-        return Internal::StlStringToString(::eCAL::Process::GetProcessIDAsString());
-      }
-
-      String^ Process::GetProcessName()
-      {
-        return Internal::StlStringToString(::eCAL::Process::GetProcessName());
-      }
-
-      String^ Process::GetProcessParameter()
-      {
-        return Internal::StlStringToString(::eCAL::Process::GetProcessParameter());
       }
 
       void Process::SetState(eProcessSeverity severity, eProcessSeverityLevel level, String^ info)
