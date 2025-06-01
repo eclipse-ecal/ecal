@@ -7,6 +7,7 @@
 
 std::atomic<int> count_42(0);
 std::atomic<int> count_43(0);
+std::atomic<int> count_44(0);
 
 void OnReceive(const eCAL::STopicId&, const eCAL::SDataTypeInformation&, const eCAL::SReceiveCallbackData& data_)
 {
@@ -15,6 +16,7 @@ void OnReceive(const eCAL::STopicId&, const eCAL::SDataTypeInformation&, const e
     int value = static_cast<int>(static_cast<const unsigned char*>(data_.buffer)[0]);
     if (value == 42) ++count_42; // 42 = Local UDP
     if (value == 43) ++count_43; // 43 = Network UDP
+    if (value == 44) ++count_44; // 44 = Local UDP 2 after network crash
 
     std::cout << "[Subscriber] Received: " << value << std::endl;
   }
@@ -28,7 +30,7 @@ int main(int argc, char* argv[])
 
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
     TCLAP::ValueArg<std::string> name_arg("n", "name", "Node name", false, "udp_subscriber", "string");
-    TCLAP::ValueArg<int> wait_arg("w", "wait", "Total wait duration (s)", false, 35, "int");
+    TCLAP::ValueArg<int> wait_arg("w", "wait", "Total wait duration (s)", false, 30, "int");
 
     cmd.add(topic_arg);
     cmd.add(name_arg);
@@ -53,40 +55,26 @@ int main(int argc, char* argv[])
 
     eCAL::Finalize();
 
-    std::cout << "\n=== Summary ===\n";
-    std::cout << "Messages with value 42 (local): " << count_42.load() << "\n";
-    std::cout << "Messages with value 43 (network): " << count_43.load() << "\n";
+    std::cout << "\n=== Message Summary ===\n\n";
+    std::cout << "Local UDP PUB1 messages (42):--------------> " << count_42.load() << "/25\n";
+    std::cout << "Network UDP PUB2 messages (43):-------------> " << count_43.load() << "/25\n";
+    std::cout << "Local UDP PUB3 messages after crash (44):--> " << count_44.load() << "/15\n\n";
 
-    if (count_42 >= 30 && count_43 > 2 && count_43 < 25)
+    bool enough_42 = count_42 = 25;
+    bool enough_43 = count_43 > 2 && count_43 < 10;
+    bool enough_44 = count_44 = 15;
+
+    if (enough_42 && enough_43 && enough_44)
     {
-      std::cout << "[✓] Messages received as expected.\n";
-      return 0;
-    }
-    else if (count_42 >= 30 && count_43 >= 30)
-    {
-      std::cout << "[✓] All messages received from local and network sources.\n";
-      return 0;
-    }
-    else if (count_42 >= 30 && count_43 == 0)
-    {
-      std::cout << "[✓] Only local messages received.\n";
-      return 0;
-    }
-    else if (count_42 == 0 && count_43 >= 30)
-    {
-      std::cout << "[✓] Only network messages received.\n";
-      return 0;
-    }
-    else if (count_42 == 0 && count_43 == 0)
-    {
-      std::cout << "[✓] Messages from both local and network sources received.\n";
+      std::cout << "\n[✓] All expected messages received: local before and after crash, and network.\n";
       return 0;
     }
     else
     {
-      std::cerr << "[✗] Missing expected messages.\n";
+      std::cerr << "\n[✗] Missing expected messages from one or more sources.\n";
       return 1;
     }
+
   }
   catch (const TCLAP::ArgException& e)
   {

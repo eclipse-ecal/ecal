@@ -1,37 +1,33 @@
 *** Comments ***
 Test Objective:
-    Verify that a local UDP-based communication path remains functional even if a separate network UDP publisher is interrupted—
-    simulating a real-world scenario such as a cable unplug or network failure.
+    Verify that local UDP-based communication remains functional even if a separate network UDP publisher is disconnected —
+    simulating a network failure scenario such as a cable unplug.
 
 Test Context:
-    This test validates the robustness of the eCAL UDP transport layer under fault conditions by checking that 
-    local communication is not affected by failures in network-based communication.
+    This test validates the robustness of eCAL's UDP transport layer under fault conditions by ensuring that 
+    local communication is not affected by network-layer interruptions.
 
 Test Scenario:
-    1. A local UDP publisher and subscriber run within the **same container** using eCAL's local mode.
-       - The publisher sends payloads with value 42.
-       - The subscriber listens on the same topic and tracks received message values.
-       
-    2. A second publisher (network UDP publisher) runs in a **separate container** using network mode.
-       - It sends payloads with value 43.
-       - This simulates a system component publishing over the network.
+    1. A local UDP subscriber and two local UDP publishers run in the **same container** using eCAL's local mode.
+       - Publisher 1 sends payloads with value 42 from the beginning.
+       - Publisher 2 sends value 44, but only **after the network publisher is disconnected** (simulated delay).
 
-    3. Both publishers operate concurrently for 7 seconds to ensure simultaneous communication.
+    2. A network UDP publisher runs in a **separate container**, using eCAL network mode and sends value 43.
 
-    4. After 7 seconds, the test **disconnects the network UDP publisher from the Docker network**, simulating a network cable being unplugged.
+    3. All publishers run in parallel for a defined period (publisher 2 starts delayed after ~7s).
 
-    5. The subscriber continues running and should:
-       - Stop receiving value 43 (as the network publisher is gone).
-       - Still receive value 42 from the local publisher.
+    4. The test then **disconnects** the network UDP publisher from the Docker network.
 
 Success Criteria:
-    - The subscriber container exits cleanly (exit code 0).
-    - The subscriber reports all messages with value 42 received **after** the network publisher is disconnected.
-    - At least two messages with value 43 should appear before disconnection; this is required for pass.
+    - The subscriber receives:
+      • Messages with value 42 throughout the test.
+      • Messages with value 43 only **before** the disconnection.
+      • Messages with value 44 after the network crash (i.e., from local UDP Publisher 2).
+    - The subscriber container exits with code 0.
+    - The log confirms all expected messages have been received.
 
 Note:
-    This test focuses on **functional separation between local and network communication** in eCAL.
-    It is useful to validate system reliability when components fail independently.
+    This test ensures **fault isolation** between local and network layers in eCAL middleware.
 
 *** Settings ***
 Library           OperatingSystem
@@ -46,7 +42,7 @@ ${BUILD_SCRIPT}   ${EMPTY}
 ${BASE_IMAGE}     network_crash
 
 *** Test Cases ***
-Local UDP survives Network UDP Publisher crash
+Local communication survives Network crash
     [Tags]    network_crash_test
     Run Network Crash Survival Test
 
@@ -78,24 +74,23 @@ Run Network Crash Survival Test
     ${NET_PUB}=     Set Variable    udp_network_pub
     ${LOCAL_ALL}=   Set Variable    udp_local_all
 
-    Log To Console    \n[INFO] Starting LOCAL UDP PUB+SUB in one container and NETWORK UDP publisher separately...
+    Log To Console    \n\n[INFO] Starting "LOCAL UDP (PUB1 + SUB + PUB3)" in one container and "NETWORK UDP (PUB2)" separately...
 
     Start Container    ${LOCAL_ALL}    ${IMAGE}    udp_local_all     ${TOPIC}    ${LOCAL_ALL}    network=${NETWORK}
     Start Container    ${NET_PUB}      ${IMAGE}    udp_network_pub   ${TOPIC}    ${NET_PUB}      network=${NETWORK}
 
-    Log To Console    \n[INFO] Letting both publishers run in parallel for 7s...
+    Log To Console    \n[INFO] Letting PUB1 and PUB2 run in parallel for 7s...
     Sleep    7s
 
-    Log To Console    \n[SIMULATION] Stopping Network UDP Publisher...
-    ${log_net}=    Get Container Logs    ${NET_PUB}
-    Log To Console    \n[LOG: NETWORK UDP PUB CONTAINER]\n${log_net}
-    # Stop Container    ${NET_PUB}
+    Log To Console    \n[SIMULATION] Disconnecting NETWORK UDP Publisher...
+    #${log_net}=    Get Container Logs    ${NET_PUB}
+    #Log To Console    \n[LOG: NETWORK UDP PUB2 CONTAINER]\n${log_net}
     Disconnect Container From Network    ${NET_PUB}    ${NETWORK}
 
     Wait For Container Exit    ${LOCAL_ALL}
     ${log_local}=    Get Container Logs    ${LOCAL_ALL}
-    Log To Console    \n[LOG: LOCAL UDP PUB+SUB CONTAINER]\n${log_local}
+    Log To Console    \n[LOG: LOCAL UDP PUB + SUB + PUB3 CONTAINER]\n${log_local}
 
     ${exit_code}=    Wait For Container Exit    ${LOCAL_ALL}
-    Should Be Equal As Integers    ${exit_code}    0    LOCAL PUB+SUB container failed unexpectedly!
-    Log Test Summary    Network Crash Test (UDP Local survives)    ${True}
+    Should Be Equal As Integers    ${exit_code}    0    LOCAL container (PUB + SUB + PUB3) failed unexpectedly!
+    Log Test Summary    Network Crash Test with Local Recovery Publisher    ${True}

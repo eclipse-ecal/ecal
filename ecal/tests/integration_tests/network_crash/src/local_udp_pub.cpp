@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     TCLAP::ValueArg<std::string> topic_arg("t", "topic", "Topic name", false, "test_topic", "string");
     TCLAP::ValueArg<std::string> name_arg("n", "name", "Node name", false, "local_udp_pub", "string");
-    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages", false, 30, "int");
+    TCLAP::ValueArg<int> count_arg("c", "count", "Number of messages", false, 25, "int");
     TCLAP::ValueArg<int> delay_arg("d", "delay", "Delay between sends (ms)", false, 1000, "int");
 
     cmd.add(topic_arg);
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < count_arg.getValue() && eCAL::Ok(); ++i)
     {
       pub.Send(buffer.data(), buffer.size());
-      std::cout << "[Local UDP Publisher] Sent message 42 (" << i + 1 << ")\n";
+      //std::cout << "[Local UDP Publisher] Sent message 42 (" << i + 1 << ")\n";
       std::this_thread::sleep_for(std::chrono::milliseconds(delay_arg.getValue()));
     }
 

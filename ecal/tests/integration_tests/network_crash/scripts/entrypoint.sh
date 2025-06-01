@@ -24,6 +24,10 @@ if [ "$ROLE" = "udp_local_all" ]; then
   ./local_udp_pub --topic "$TOPIC" --name local_udp_pub_${NAME} $EXTRA &
   PUB_PID=$!
 
+  sleep 11
+  echo "[Entrypoint] Starting delayed LOCAL UDP Publisher 2 after network failure..."
+  ./local_udp_pub2 --topic "$TOPIC" --name local_udp_pub_2_${NAME} $EXTRA &
+
   wait $SUB_PID
   EXIT_CODE=$?
   echo "[Entrypoint] Subscriber exited with code $EXIT_CODE"
