@@ -30,7 +30,7 @@ def main():
         
         print("There are {} publishers and {} subscribers in the system".format(len(monitoring.publishers), len(monitoring.subscribers)))
 
-        serialized_monitoring = ecal_core.get_serialized_monitoring()
+        serialized_monitoring = ecal_core.monitoring.get_serialized_monitoring()
         print("Length of serialized monitoring: {}".format(len(serialized_monitoring)))
         # You could now use protobuf to deserialize the monitoring string
         # We recommend to use the `get_monitoring` instead.
