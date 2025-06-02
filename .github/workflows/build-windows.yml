@@ -252,6 +252,7 @@ jobs:
 
     - uses: bencherdev/bencher@main
     - name: Run Publisher/Subscriber Benchmark with Bencher
+      shell: cmd
       run: |
         bencher run ^
         --project ecal ^
