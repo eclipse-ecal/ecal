@@ -250,36 +250,14 @@ jobs:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
-    - name: Run Publisher/Subscriber Benchmark
+    - uses: bencherdev/bencher@main
+    - name: Run Publisher/Subscriber Benchmark with Bencher
       run: |
-        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
-      working-directory: ${{ runner.workspace }}/_build/complete/bin/
-      shell: cmd
-      
-    - name: Run Service Benchmark
-      run: |
-        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_service.exe --benchmark_out=ecal_benchmark_service_log.json --benchmark_out_format=json
-      working-directory: ${{ runner.workspace }}/_build/complete/bin/
-      shell: cmd
-      
-    - name: Run Setup Benchmark
-      run: |
-        ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_setup.exe --benchmark_out=ecal_benchmark_setup_log.json --benchmark_out_format=json
-      working-directory: ${{ runner.workspace }}/_build/complete/bin/
-      shell: cmd
-
-    - name: Upload Benchmark Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: benchmark-logs_${{ env.VERSION }}-win64
-        path: ${{ runner.workspace }}/_build/complete/bin/*.json
-
-    - name: Upload Benchmarks
-      uses: actions/upload-artifact@v4
-      with:
-        name: benchmarks_${{ env.VERSION }}-win64
-        path: ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark*.exe
- 
+        bencher run ^
+        --project ecal ^
+        --token '${{secrets.BENCHER_API_TOKEN}}' ^
+        --adapter cpp_google ^
+        "${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_format=json"
     # --------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
