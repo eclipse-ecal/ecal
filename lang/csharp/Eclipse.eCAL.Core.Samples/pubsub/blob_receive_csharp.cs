@@ -58,7 +58,7 @@ public class BlobReceive
       You can vary between different states like healthy, warning, critical ...
       This can be used to communicate the application state to applications like eCAL Monitor/Sys.
     */
-    // This function is not wrapped yet.
+    Process.SetState(eProcessSeverity.Healthy, eProcessSeverityLevel.Level1, "I feel good!");
 
     /*
       Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
