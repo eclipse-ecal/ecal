@@ -944,7 +944,7 @@ As this is simple string message, we will use the eCAL string publisher to send.
 <span class="linenos">28</span><span class="cm">      You can vary between different states like healthy, warning, critical ...</span>
 <span class="linenos">29</span><span class="cm">      This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
 <span class="linenos">30</span><span class="cm">    */</span>
-<span class="linenos">31</span><span class="w">    </span><span class="c1">// This function is not wrapped yet.</span>
+<span class="linenos">31</span><span class="w">    </span><span class="n">Process</span><span class="p">.</span><span class="n">SetState</span><span class="p">(</span><span class="n">eProcessSeverity</span><span class="p">.</span><span class="n">Healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eProcessSeverityLevel</span><span class="p">.</span><span class="n">Level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
 <span class="linenos">32</span>
 <span class="linenos">33</span><span class="w">    </span><span class="cm">/*</span>
 <span class="linenos">34</span><span class="cm">      Now we create a new publisher that will publish the topic &quot;hello&quot;.      </span>
@@ -1306,7 +1306,7 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos">27</span><span class="cm">      You can vary between different states like healthy, warning, critical ...</span>
 <span class="linenos">28</span><span class="cm">      This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
 <span class="linenos">29</span><span class="cm">    */</span>
-<span class="linenos">30</span><span class="w">    </span><span class="c1">// This function is not wrapped yet.</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">Process</span><span class="p">.</span><span class="n">SetState</span><span class="p">(</span><span class="n">eProcessSeverity</span><span class="p">.</span><span class="n">Healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eProcessSeverityLevel</span><span class="p">.</span><span class="n">Level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
 <span class="linenos">31</span>
 <span class="linenos">32</span><span class="w">    </span><span class="cm">/*</span>
 <span class="linenos">33</span><span class="cm">      Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).</span>
