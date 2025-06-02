@@ -55,6 +55,8 @@ Namespaces
 
 - :ref:`namespace_eCAL`
 
+- :ref:`namespace_std`
+
 
 Classes
 -------
@@ -65,4 +67,6 @@ Classes
 - :ref:`exhale_struct_structeCAL_1_1SEntityId`
 
 - :ref:`exhale_struct_structeCAL_1_1SVersion`
+
+- :ref:`exhale_class_classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4`
 
