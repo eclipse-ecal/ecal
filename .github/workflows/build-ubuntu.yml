@@ -84,8 +84,10 @@ jobs:
           thirdparty/ecaludp/ecaludp \
           thirdparty/fineftp/fineftp-server \
           thirdparty/ftxui/ftxui \
+          thirdparty/nanobind/nanobind \
           thirdparty/qwt/qwt \
           thirdparty/recycle/recycle \
+          thirdparty/tsl-robin-map/tsl-robin-map \
           thirdparty/tcp_pubsub/tcp_pubsub \
           thirdparty/termcolor/termcolor
 

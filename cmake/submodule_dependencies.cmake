@@ -13,6 +13,7 @@ set(ecal_submodule_dependencies
   GTest
   HDF5
   #libssh2
+  nanobind
   Protobuf
   qwt
   recycle
@@ -20,6 +21,7 @@ set(ecal_submodule_dependencies
   tclap
   tcp_pubsub
   termcolor
+  tsl-robin-map
   tinyxml2
   udpcap
   yaml-cpp
