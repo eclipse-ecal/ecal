@@ -258,13 +258,9 @@ jobs:
 
     - uses: bencherdev/bencher@main
     - name: Run Publisher/Subscriber Benchmark with Bencher
-      shell: cmd
+      shell: pwsh
       run: |
-        bencher run ^
-        --project ecal ^
-        --token '${{secrets.BENCHER_API_TOKEN}}' ^
-        --adapter cpp_google ^
-        "${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_format=json"
+        bencher run --project ecal --token '${{secrets.BENCHER_API_TOKEN}}' --adapter cpp_google "${{ runner.workspace }}/_build/complete/bin/ecal_benchmark_pubsub.exe --benchmark_format=json"
     # --------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
