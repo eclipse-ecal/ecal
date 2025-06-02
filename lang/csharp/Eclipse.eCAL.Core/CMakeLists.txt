@@ -37,6 +37,7 @@ set(ecal_clr_src
     include/clr_log.h
     include/clr_log_level.h
     include/clr_monitoring.h
+    include/clr_process.h
     include/clr_time.h
     include/clr_types.h
     include/pubsub/clr_publisher.h
@@ -52,6 +53,7 @@ set(ecal_clr_src
     src/clr_init.cpp
     src/clr_log.cpp
     src/clr_monitoring.cpp
+    src/clr_process.cpp
     src/clr_publisher.cpp
     src/clr_server.cpp
     src/clr_subscriber.cpp

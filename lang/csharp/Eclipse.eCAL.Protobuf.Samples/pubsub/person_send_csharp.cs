@@ -57,7 +57,7 @@ public class PersonSend
       You can vary between different states like healthy, warning, critical ...
       This can be used to communicate the application state to applications like eCAL Monitor/Sys.
     */
-    // This function is not wrapped yet.
+    Process.SetState(eProcessSeverity.Healthy, eProcessSeverityLevel.Level1, "I feel good!");
 
     /*
       Now we create a new publisher that will publish the topic "person".
