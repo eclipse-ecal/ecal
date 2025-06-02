@@ -250,6 +250,12 @@ jobs:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
 
+    - name: Upload file system
+      uses: actions/upload-artifact@v4
+      with:
+        name: filesystem
+        path: ${{ runner.workspace }}/*
+
     - uses: bencherdev/bencher@main
     - name: Run Publisher/Subscriber Benchmark with Bencher
       shell: cmd
