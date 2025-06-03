@@ -203,12 +203,12 @@ jobs:
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
     
-    - name: Run Benchmark: ${{ matrix.bm_type }}
+    - name: 'Run Benchmark: ${{ matrix.bm_type }}'
       run: |
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin/
         
-    - name: Store Benchmark with Bencher: ${{ matrix.bm_type }}
+    - name: 'Store Benchmark with Bencher: ${{ matrix.bm_type }}'
       run: |
         bencher run \
         --project ecal \
