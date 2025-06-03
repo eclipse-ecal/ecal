@@ -176,16 +176,18 @@ jobs:
         
     #---------------
     
+    - name: Install Bencher CLI
+      uses: bencherdev/bencher@main
+    
     - name: Run Publisher/Subscriber Benchmark
       run: |
         ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin/
         
-    - uses: bencherdev/bencher@main
     - name: Store Publisher/Subscriber Benchmark with Bencher
       run: |
         bencher run \
-        --project eCAL \
+        --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch test-bencher \
         --testbed ubuntu-latest \
