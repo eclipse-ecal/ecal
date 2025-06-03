@@ -180,6 +180,12 @@ jobs:
         name: 'benchmark-executables_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
         
+    - name: Upload eCAL Core DLL
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'ecal-core-dll_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin/ecal_core.dll
+        
     #---------------
     
   run-benchmarks:
@@ -194,6 +200,12 @@ jobs:
           bm_type: [pubsub, service, setup]
 
     steps:
+    - name: Download eCAL Core DLL
+      uses: actions/download-artifact@v4
+      with:
+        name: 'ecal-core-dll_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin
+    
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
@@ -203,13 +215,13 @@ jobs:
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
     
-    - name: 'Run Benchmark: ${{ matrix.bm_type }}'
+    - name: Run Benchmark
       run: |
         chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin/
         
-    - name: 'Store Benchmark with Bencher: ${{ matrix.bm_type }}'
+    - name: Log Benchmark Results with Bencher
       run: |
         bencher run \
         --project ecal \
