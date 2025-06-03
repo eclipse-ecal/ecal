@@ -180,11 +180,11 @@ jobs:
         name: 'benchmark-executables_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
         
-    - name: Upload eCAL Core DLL
+    - name: Upload eCAL Core Library
       uses: actions/upload-artifact@v4
       with:
-        name: 'ecal-core-dll_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build/bin/ecal_core.dll
+        name: 'lib-ecal-core_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin/libecal_core.so.6
         
     #---------------
     
@@ -200,10 +200,10 @@ jobs:
           bm_type: [pubsub, service, setup]
 
     steps:
-    - name: Download eCAL Core DLL
+    - name: Download eCAL Core Library
       uses: actions/download-artifact@v4
       with:
-        name: 'ecal-core-dll_${{ matrix.os }}'
+        name: 'lib-ecal-core_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/bin
     
     - name: Download Benchmark Executables
