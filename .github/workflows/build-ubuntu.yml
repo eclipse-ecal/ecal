@@ -189,11 +189,10 @@ jobs:
         bencher run \
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
-        --branch test-bencher \
-        --testbed ubuntu-latest \
+        --branch '${{ github.ref_name }}' \
+        --testbed '${{ matrix.os }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub_log.json
-        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub"
         
     #---------------
       
