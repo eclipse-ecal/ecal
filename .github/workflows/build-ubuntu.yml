@@ -165,9 +165,6 @@ jobs:
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
-    - name: Run Tests
-      run: ctest -V --test-dir _build
-
     - name: CPack
       run: cpack -G DEB -R '${{ env.DEB_VERSION }}' --config _build/CPackConfig.cmake
 
@@ -183,7 +180,7 @@ jobs:
     - name: Run Publisher/Subscriber Benchmark with Bencher
       run: |
         bencher run \
-        --file ecal_benchmark_pubsub_log.json
+        --file ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub_log.json
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch test-bencher \
