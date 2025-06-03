@@ -185,12 +185,13 @@ jobs:
     - name: Store Publisher/Subscriber Benchmark with Bencher
       run: |
         bencher run \
-        --project ecal \
+        --project eCAL \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch test-bencher \
         --testbed ubuntu-latest \
-        --adapter json \
+        --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub_log.json
+        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub"
         
     #---------------
       
