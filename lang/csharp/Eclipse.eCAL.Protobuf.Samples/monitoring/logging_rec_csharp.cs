@@ -36,7 +36,7 @@ public class LoggingReceive
     Core.Initialize("logging receive csharp");
 
     // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     // Idle main thread.
     while (Core.Ok())

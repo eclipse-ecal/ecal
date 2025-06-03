@@ -46,6 +46,7 @@ set(ecal_clr_src
     include/service/clr_client.h
     include/service/clr_server.h
     include/service/clr_types.h
+    include/types/clr_monitoring.h
     src/clr_client.cpp
     src/clr_common.cpp
     src/clr_config.cpp

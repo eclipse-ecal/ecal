@@ -23,6 +23,8 @@
  * @file  clr_monitoring.h
 **/
 
+#include "types/clr_monitoring.h"
+
 
 namespace Eclipse {
   namespace eCAL {
@@ -55,7 +57,9 @@ namespace Eclipse {
          * 
          * @return The monitoring message as a System::Byte array.
          **/
-        static array<System::Byte>^ GetMonitoring(MonitoringEntity entities);
+        static array<System::Byte>^ GetSerializedMonitoring(MonitoringEntity entities);
+
+        static SMonitoring^ GetMonitoring(MonitoringEntity entities);
       };
 
     } // namespace Core
