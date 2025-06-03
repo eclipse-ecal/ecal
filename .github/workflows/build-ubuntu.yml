@@ -185,8 +185,8 @@ jobs:
         bencher run \
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
-        --branch test-bencher
-        --testbed ubuntu-latest
+        --branch test-bencher \
+        --testbed ubuntu-latest \
         --adapter cpp_google \
         "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_format=json"
         
