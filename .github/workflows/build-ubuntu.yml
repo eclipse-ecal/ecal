@@ -183,12 +183,13 @@ jobs:
     - name: Run Publisher/Subscriber Benchmark with Bencher
       run: |
         bencher run \
+        --file ecal_benchmark_pubsub_log.json
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch test-bencher \
         --testbed ubuntu-latest \
-        --adapter cpp_google \
-        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_format=json"
+        --adapter json \
+        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json"
         
     #---------------
         
