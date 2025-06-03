@@ -205,6 +205,7 @@ jobs:
     
     - name: 'Run Benchmark: ${{ matrix.bm_type }}'
       run: |
+        chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin/
         
