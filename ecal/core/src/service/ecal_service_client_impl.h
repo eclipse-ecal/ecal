@@ -46,11 +46,11 @@ namespace eCAL
     public:
       // Factory method to create an instance of the client implementation
       static std::shared_ptr<CServiceClientImpl> CreateInstance(
-        const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
+        const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT& event_callback_);
 
     private:
       // Private constructor to enforce creation through factory method
-      CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_map_, const ClientEventCallbackT& event_callback_);
+      CServiceClientImpl(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT& event_callback_);
 
     public:
       ~CServiceClientImpl();
@@ -155,9 +155,9 @@ namespace eCAL
       std::mutex                   m_client_session_map_mutex;
       ClientSessionsMapT           m_client_session_map;
 
-      // Method information map (tracks method attributes like data type and description)
+      // Method information set (tracks method attributes like data type and description)
       std::mutex                   m_method_information_set_mutex;
-      ServiceMethodInformationSetT        m_method_information_set;
+      ServiceMethodInformationSetT m_method_information_set;
 
       // Method call count map (tracks number of calls for each method)
       using MethodCallCountMapT = std::map<std::string, uint64_t>;
@@ -165,6 +165,6 @@ namespace eCAL
 
       // Event callback map and synchronization
       std::mutex                   m_event_callback_mutex;
-      ClientEventCallbackT       m_event_callback;
+      ClientEventCallbackT         m_event_callback;
     };
 }
