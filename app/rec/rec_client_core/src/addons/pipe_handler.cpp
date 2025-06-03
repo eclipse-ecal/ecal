@@ -25,7 +25,6 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>
-#include <atlconv.h>
 
 #include <iostream>
 #include <vector>
@@ -33,6 +32,7 @@
 #include <iterator>
 #include <sstream>
 #include <locale>
+#include <ecal_utils/str_convert.h>
 
 PipeHandler::PipeHandler(): child_stdin_rd_(nullptr)
   , child_stdin_wr_(nullptr)
@@ -49,16 +49,7 @@ PipeHandler::~PipeHandler()
 
 bool PipeHandler::StartProcess(const std::string& executable_path)
 {
-  std::wstring w_executable_path;
-  w_executable_path.reserve(executable_path.size());
-
-  auto& f2 = std::use_facet<std::ctype<wchar_t>>(std::locale());
-
-  for (const char c : executable_path)
-  {
-    w_executable_path.push_back(f2.widen(c));
-  }
-
+  std::wstring w_executable_path = EcalUtils::StrConvert::Utf8ToWide(executable_path);
   return StartProcess(w_executable_path);
 }
 
@@ -102,30 +93,27 @@ bool PipeHandler::StartProcess(const std::wstring& executable_path)
   // Create the child process
   TCHAR*              command_line;
   PROCESS_INFORMATION process_info;
-  STARTUPINFO         startup_info;
+  _STARTUPINFOW       startup_info;
 
   ZeroMemory(&process_info, sizeof(PROCESS_INFORMATION));
-  ZeroMemory(&startup_info, sizeof(STARTUPINFO));
-
-  USES_CONVERSION;
-  command_line = W2T(const_cast<wchar_t*>(executable_path.c_str()));
+  ZeroMemory(&startup_info, sizeof(_STARTUPINFOW));
 
   // Specify stdin and stdout handles for redirection
-  startup_info.cb         = sizeof(STARTUPINFO);
+  startup_info.cb         = sizeof(_STARTUPINFOW);
   startup_info.hStdOutput = child_stdout_wr_;
   startup_info.hStdInput  = child_stdin_rd_;
   startup_info.dwFlags   |= STARTF_USESTDHANDLES;
 
-  auto success = CreateProcess(NULL,              // application name
-                               command_line,     // command line 
-                               NULL,             // process security attributes 
-                               NULL,             // primary thread security attributes 
-                               true,             // handles are inherited 
-                               CREATE_NO_WINDOW, // creation flags 
-                               NULL,             // use parent's environment 
-                               NULL,             // use parent's current directory 
-                               &startup_info,    // STARTUPINFO pointer 
-                               &process_info);   // receives PROCESS_INFORMATION
+  auto success = CreateProcessW(NULL,                                             // application name
+                               const_cast<wchar_t*>(executable_path.c_str()),     // command line 
+                               NULL,                                              // process security attributes 
+                               NULL,                                              // primary thread security attributes 
+                               true,                                              // handles are inherited 
+                               CREATE_NO_WINDOW,                                  // creation flags 
+                               NULL,                                              // use parent's environment 
+                               NULL,                                              // use parent's current directory 
+                               &startup_info,                                     // _STARTUPINFOW pointer 
+                               &process_info);                                    // receives PROCESS_INFORMATION
 
   if (!success)
   {
