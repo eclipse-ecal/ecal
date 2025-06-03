@@ -175,9 +175,14 @@ jobs:
         path: _deploy/*.deb
         
     #---------------
+    
+    - name: Run Publisher/Subscriber Benchmark
+      run: |
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin/
         
     - uses: bencherdev/bencher@main
-    - name: Run Publisher/Subscriber Benchmark with Bencher
+    - name: Store Publisher/Subscriber Benchmark with Bencher
       run: |
         bencher run \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub_log.json
@@ -185,15 +190,10 @@ jobs:
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch test-bencher \
         --testbed ubuntu-latest \
-        --adapter json \
-        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json"
+        --adapter json
+        "ecal_benchmark_pubsub"
         
     #---------------
-        
-    - name: Run Publisher/Subscriber Benchmark
-      run: |
-        ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
-      working-directory: ${{ github.workspace }}/_build/bin/
       
     - name: Run Service Benchmark
       run: |
