@@ -177,6 +177,21 @@ jobs:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
         
+    #---------------
+        
+    - uses: bencherdev/bencher@main
+    - name: Run Publisher/Subscriber Benchmark with Bencher
+      run: |
+        bencher run \
+        --project ecal \
+        --token '${{secrets.BENCHER_API_TOKEN}}' \
+        --branch test-bencher
+        --testbed ubuntu-latest
+        --adapter cpp_google \
+        "${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_format=json"
+        
+    #---------------
+        
     - name: Run Publisher/Subscriber Benchmark
       run: |
         ${{ github.workspace }}/_build/bin/ecal_benchmark_pubsub --benchmark_out=ecal_benchmark_pubsub_log.json --benchmark_out_format=json
