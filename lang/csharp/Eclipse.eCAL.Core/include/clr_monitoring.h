@@ -29,21 +29,6 @@
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-
-      // Managed representation of the native monitoring entities bitmask.
-      [System::Flags]
-      public enum class MonitoringEntity : unsigned int
-      {
-        None       = 0x000,
-        Publisher  = 0x001,
-        Subscriber = 0x002,
-        Server     = 0x004,
-        Client     = 0x008,
-        Process    = 0x010,
-        Host       = 0x020,
-        All        = Publisher | Subscriber | Server | Client | Process | Host
-      };
-
       /**
        * @brief eCAL monitoring class.
        **/

@@ -29,6 +29,19 @@ using namespace Eclipse::eCAL::Core;
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
+      // Managed representation of the native monitoring entities bitmask.
+      [System::Flags]
+      public enum class MonitoringEntity : unsigned int
+      {
+        None       = ::eCAL::Monitoring::Entity::None,
+        Publisher  = ::eCAL::Monitoring::Entity::Publisher,
+        Subscriber = ::eCAL::Monitoring::Entity::Subscriber,
+        Server     = ::eCAL::Monitoring::Entity::Server,
+        Client     = ::eCAL::Monitoring::Entity::Client,
+        Process    = ::eCAL::Monitoring::Entity::Process,
+        Host       = ::eCAL::Monitoring::Entity::Host,
+        All        = ::eCAL::Monitoring::Entity::All
+      };
 
       /**
        * @brief Managed wrapper for the native eCAL::Monitoring::eTransportLayerType enum.
