@@ -40,10 +40,19 @@ namespace Eclipse {
          *
          * @param entities Specifies which entities to include (default is All).
          * 
-         * @return The monitoring message as a System::Byte array.
+         * @return The monitoring message as a System::Byte array. 
+         *         If call was not successful, returns a nullptr.
          **/
         static array<System::Byte>^ GetSerializedMonitoring(MonitoringEntity entities);
 
+        /**
+         * @brief Get host, process and topic monitoring as SMonitoring class.
+         *
+         * @param entities Specifies which entities to include (default is All).
+         * 
+         * @return The monitoring message as a SMonitoring class. 
+         *         Returns nullptr if the call was not successful.
+         **/
         static SMonitoring^ GetMonitoring(MonitoringEntity entities);
       };
 

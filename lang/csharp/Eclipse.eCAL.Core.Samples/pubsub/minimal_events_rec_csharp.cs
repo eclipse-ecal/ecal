@@ -48,7 +48,7 @@ public class MinimalSendWithEvents
         new DataTypeInformation("string", "utf-8", new byte[0]),
         new SubscriberEventCallbackDelegate((topicId, eventData) =>
         {
-          Console.WriteLine("Subscriber Event: {0} on topic {1} at {2} �s",
+          Console.WriteLine("Subscriber Event: {0} on topic {1} at {2} µs",
                                   eventData.EventType, topicId.TopicName, eventData.EventTime);
         })
     );

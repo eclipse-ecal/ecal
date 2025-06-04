@@ -47,6 +47,7 @@ namespace Eclipse {
          * @brief Get global log message as raw message bytes.
          *
          * @return The logging message as a byte array.
+         *         Can return nullptr if the call was not successful.
          **/
         static array<System::Byte>^ GetSerializedLogging();
 
@@ -54,6 +55,7 @@ namespace Eclipse {
          * @brief Get a list of Log messages.
          *
          * @return The logging message as SLogging struct.
+         *         Can return nullptr if the call was not successful.
          **/
         static SLogging^ GetLogging();
       };
