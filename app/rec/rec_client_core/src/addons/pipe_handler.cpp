@@ -93,13 +93,13 @@ bool PipeHandler::StartProcess(const std::wstring& executable_path)
   // Create the child process
   TCHAR*              command_line;
   PROCESS_INFORMATION process_info;
-  _STARTUPINFOW       startup_info;
+  STARTUPINFOW        startup_info;
 
   ZeroMemory(&process_info, sizeof(PROCESS_INFORMATION));
-  ZeroMemory(&startup_info, sizeof(_STARTUPINFOW));
+  ZeroMemory(&startup_info, sizeof(STARTUPINFOW));
 
   // Specify stdin and stdout handles for redirection
-  startup_info.cb         = sizeof(_STARTUPINFOW);
+  startup_info.cb         = sizeof(STARTUPINFOW);
   startup_info.hStdOutput = child_stdout_wr_;
   startup_info.hStdInput  = child_stdin_rd_;
   startup_info.dwFlags   |= STARTF_USESTDHANDLES;
@@ -112,7 +112,7 @@ bool PipeHandler::StartProcess(const std::wstring& executable_path)
                                CREATE_NO_WINDOW,                                  // creation flags 
                                NULL,                                              // use parent's environment 
                                NULL,                                              // use parent's current directory 
-                               &startup_info,                                     // _STARTUPINFOW pointer 
+                               &startup_info,                                     // STARTUPINFOW pointer 
                                &process_info);                                    // receives PROCESS_INFORMATION
 
   if (!success)
