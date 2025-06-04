@@ -36,9 +36,19 @@ void Logging::Log(eLoggingLogLevel level, System::String^ message)
   ::eCAL::Logging::Log(eLoggingLogLevelHelper::ToNative(level), nativeMsg);
 }
 
-array<Byte>^ Logging::GetLogging()
+array<Byte>^ Logging::GetSerializedLogging()
 {
   std::string logging;
   ::eCAL::Logging::GetLogging(logging);
   return StlStringToByteArray(logging);
+}
+
+SLogging^ Logging::GetLogging()
+{
+  ::eCAL::Logging::SLogging logging;;
+  ::eCAL::Logging::GetLogging(logging);
+  SLogging^ managedLogging = gcnew SLogging();
+  managedLogging->FromNative(logging);
+
+  return managedLogging;
 }

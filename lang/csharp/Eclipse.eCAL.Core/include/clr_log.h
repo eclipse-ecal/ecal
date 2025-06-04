@@ -24,6 +24,7 @@
 **/
 
 #include "clr_log_level.h"
+#include "types/clr_logging.h"
 
 namespace Eclipse {
   namespace eCAL {
@@ -47,7 +48,14 @@ namespace Eclipse {
          *
          * @return The logging message as a byte array.
          **/
-        static array<System::Byte>^ GetLogging();
+        static array<System::Byte>^ GetSerializedLogging();
+
+        /**
+         * @brief Get a list of Log messages.
+         *
+         * @return The logging message as SLogging struct.
+         **/
+        static SLogging^ GetLogging();
       };
 
     } // namespace Core

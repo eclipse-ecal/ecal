@@ -42,7 +42,7 @@ public class LoggingReceive
     while (Core.Ok())
     {
       // Get logging data.
-      var logging_bytes = Logging.GetLogging();
+      var logging_bytes = Logging.GetSerializedLogging();
 
       // Parse logging data.
       var logging = ECAL.Pb.LogMessageList.Parser.ParseFrom(logging_bytes);
