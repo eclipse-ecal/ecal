@@ -10,13 +10,18 @@ env:
 
 jobs:
   build-windows:
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     env:
       # enable starting Qt GUI Applications
       QT_QPA_PLATFORM: offscreen
 
     steps:
+    - name: Show MSVC include paths
+      run: |
+        cl /nologo /E /showIncludes /TC NUL.cpp
+      shell: cmd
+    
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
