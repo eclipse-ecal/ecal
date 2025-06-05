@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +17,99 @@
  * ========================= eCAL LICENSE =================================
 */
 
+// Include the eCAL convenience header
 #include <ecal/ecal.h>
 
 #include <algorithm>
 #include <iostream>
+#include <chrono>
+#include <random>
+
+/*
+  Some helper function to generate binary data into a buffer.
+  Clears the vector, resizes it to a specified size and fills it with random printable ascii characters.
+*/
+void fillBinaryBuffer(std::vector<unsigned char>& buffer) { 
+  constexpr unsigned int buffer_size = 16;
+
+  static std::random_device random_device;
+  static std::mt19937 generator(random_device());
+  // Useful random characters are in the range [32, 126]
+  static std::uniform_int_distribution<> printable_ascii_char(32, 126);
+  
+  buffer.clear();
+  buffer.resize(buffer_size);
+
+  for (unsigned int i = 0; i < buffer_size; ++i) {
+    buffer[i] = static_cast<char>(printable_ascii_char(generator));
+  }
+}
 
 int main()
 {
-  // initialize eCAL API
-  eCAL::Initialize("blob send c++");
+  std::cout << "-------------------" << "\n";
+  std::cout << " C++: BLOB SENDER"   << "\n";
+  std::cout << "-------------------" << "\n";
 
-  // publisher for topic "blob"
+  /*
+    Initialize eCAL. You always have to initialize eCAL before using its API.
+    The name of our eCAL Process will be "blob send". 
+    This name will be visible in the eCAL Monitor, once the process is running.
+  */
+  eCAL::Initialize("blob send");
+
+  /*
+    Print some eCAL version information.
+  */
+  std::cout << "eCAL " << eCAL::GetVersionString() << " (" << eCAL::GetVersionDateString() << ")" << "\n";
+
+  /*
+    Set the state for the program.
+    You can vary between different states like healthy, warning, critical ...
+    This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  */
+  eCAL::Process::SetState(eCAL::Process::eSeverity::healthy, eCAL::Process::eSeverityLevel::level1, "I feel good!");
+
+  /*
+    Now we create a new publisher that will publish the topic "blob".
+  */
   eCAL::CPublisher pub("blob");
 
-  // create binary buffer
-  std::vector<unsigned char> bin_buffer(1024);
+  /*
+    Construct a message. As we are sending binary data, we just create a buffer of unsigned characters.
+  */
+  std::vector<unsigned char> binary_buffer;
 
-  // send updates
-  unsigned char cnt = 0;
+  /*
+    Creating an infinite publish-loop.
+    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.
+  */
   while (eCAL::Ok())
   {
-    // fill buffer
-    std::fill(bin_buffer.begin(), bin_buffer.end(), cnt++);
+    /*
+      Fill the buffer with the character that is defined by the counter variable.
+    */
+    fillBinaryBuffer(binary_buffer);
 
-    // send buffer
-    pub.Send(bin_buffer.data(), bin_buffer.size());
-    std::cout << "Sent buffer filled with " << static_cast<int>(cnt) << std::endl;
+    /*
+      Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".
+      For binary data you need to set a buffer pointer and the size of the buffer.
+    */
+    if (pub.Send(binary_buffer.data(), binary_buffer.size()))
+      std::cout << "Sent binary data in C++: " << std::string(binary_buffer.begin(), binary_buffer.end()) << "\n";
+    else
+      std::cout << "Sending binary data in C++ failed!" << "\n";
 
-    // sleep 100 ms
-    eCAL::Process::SleepMS(100);
+    /*
+      Sleep for 500ms to send in a frequency of 2 hz.
+    */
+    eCAL::Process::SleepMS(500);
   }
 
-  // finalize eCAL API
+  /*
+    Finalize eCAL. This will stop all eCAL processes and free all resources.
+    You should always finalize eCAL when you are done using it.
+  */
   eCAL::Finalize();
 
   return(0);

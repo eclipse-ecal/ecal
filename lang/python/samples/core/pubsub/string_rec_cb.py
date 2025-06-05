@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
 
 # eCAL receive callback
-def callback(topic_name, msg, time):
+def onReceive(topic_name, msg, time):
   print("Received:  {} ms   {}".format(time, msg))
 
 def main():  
@@ -37,8 +37,8 @@ def main():
   ecal_core.set_process_state(1, 1, "I feel good")
 
   # create subscriber and connect callback
-  sub = StringSubscriber("hello")
-  sub.set_callback(callback)
+  sub = StringSubscriber("Hello")
+  sub.set_callback(onReceive)
   
   # idle main thread
   while ecal_core.ok():

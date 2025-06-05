@@ -1,0 +1,41 @@
+name: 'Prepare for ccache use'
+description: 'Sets up ccache environment variables and GitHub actions cache'
+
+inputs:
+  key-root:
+    description: 'Root of the cache key to use'
+    required: true
+  cache-dir:
+    description: 'Directory to store the compilation cache in'
+    default: ${GITHUB_WORKSPACE}/.ccache
+    required: false
+outputs:
+  cache-primary-key:
+    description: 'A resolved cache key for which cache match was attempted'
+    value: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        _ccache_settings="
+        CCACHE_BASE_DIR=${GITHUB_WORKSPACE}
+        CCACHE_DIR=${{ inputs.cache-dir }}
+        CCACHE_COMPRESS=true
+        CCACHE_COMPRESSLEVEL=6
+        CCACHE_MAXSIZE=100M
+        CMAKE_C_COMPILER_LAUNCHER=ccache
+        CMAKE_CXX_COMPILER_LAUNCHER=ccache
+        "
+        echo "Using ccache variables: ${_ccache_settings}"
+        echo "${_ccache_settings}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Restore ccache cache
+      id: cache-restore
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ inputs.cache-dir }}
+        key: ${{ inputs.key-root }}-ccache-${{ github.run_id }}
+        restore-keys: |
+          ${{ inputs.key-root }}-ccache-

@@ -4,6 +4,8 @@ pushd %~dp0\..
 
 call build_win\win_make_cmake.bat
 call build_win\win_make_build.bat
+call build_win\win_make_install.bat
+call build_win\win_make_csharp.bat
 call build_win\win_make_setup.bat
 
 popd

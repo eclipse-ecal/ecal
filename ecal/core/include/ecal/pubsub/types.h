@@ -159,3 +159,17 @@ namespace eCAL
   using SubEventCallbackT = std::function<void(const STopicId& topic_id_, const SSubEventCallbackData& data_)>;
 }
 
+
+namespace std
+{
+  template<>
+  class hash<eCAL::STopicId> {
+  public:
+    size_t operator()(const eCAL::STopicId& id) const
+    {
+      const std::size_t h1 = std::hash<std::string>{}(id.topic_name);
+      const std::size_t h2 = std::hash<uint64_t>{}(id.topic_id.entity_id);
+      return h1 ^ (h2 << 1); // basic combination
+    }
+  };
+}

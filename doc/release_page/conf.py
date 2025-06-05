@@ -27,7 +27,7 @@ else:
 # -- Project information -----------------------------------------------------
 
 project = u'Eclipse eCAL™'
-copyright = u'2023, Continental'
+copyright = u'2025, Continental'
 #author = u'Continental'
 
 # The short X.Y version

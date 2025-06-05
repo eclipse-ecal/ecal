@@ -16,11 +16,23 @@ set(python_samples_core
   core/pubsub/protobuf_rec.py
   core/pubsub/protobuf_rec_cb.py
   core/pubsub/protobuf_snd.py
-  core/pubsub/string_rec.py
+  core/pubsub/hello_receive.py
+  core/pubsub/hello_send.py
   core/pubsub/string_rec_cb.py
-  core/pubsub/string_snd.py
   core/service/minimal_service_client.py
   core/service/minimal_service_server.py
+)
+
+set(python_samples_nanobind_core
+  nanobind_core/pubsub/nb_binary_rec.py
+  nanobind_core/pubsub/nb_binary_rec_cb.py
+  nanobind_core/pubsub/nb_binary_snd.py
+  nanobind_core/service/nb_minimal_service_client.py
+  nanobind_core/service/nb_minimal_service_server.py
+  nanobind_core/nb_logging.py
+  nanobind_core/nb_monitoring.py
+  nanobind_core/nb_process.py
+  nanobind_core/nb_util.py  
 )
 
 function(add_sample_to_solution python_filenname)
@@ -40,7 +52,13 @@ if(ECAL_PYTHON_USE_HDF5)
   endforeach()
 endif()
 
+# Core samples
 foreach(python_sample ${python_samples_core})
+  add_sample_to_solution(${python_sample})
+endforeach()
+
+# Nanobind samples
+foreach(python_sample ${python_samples_nanobind_core})
   add_sample_to_solution(${python_sample})
 endforeach()
 endif()
