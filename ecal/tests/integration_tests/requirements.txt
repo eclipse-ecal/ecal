@@ -1,0 +1,8 @@
+# Robot Framework Core
+robotframework
+
+# Docker Support
+docker
+
+# Robot Framework Libraries
+robotframework-pythonlibcore

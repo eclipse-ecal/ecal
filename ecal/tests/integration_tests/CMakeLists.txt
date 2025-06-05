@@ -1,0 +1,2 @@
+add_subdirectory(message_validation/src)
+add_subdirectory(lib/EcalConfigHelper)

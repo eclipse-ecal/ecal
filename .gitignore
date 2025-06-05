@@ -68,3 +68,9 @@ CMakeUserPresets.json
 # Output of the scan-dependencies-with-dash.py script and the dash-licensing tool
 /dependencies.txt
 /summary.txt
+
+# robottest
+/results
+log.html
+output.xml
+report.html
