@@ -189,7 +189,7 @@ jobs:
         name: 'libraries_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/lib/*
         
-    #---------------
+    #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
     runs-on: ubuntu-24.04
@@ -246,4 +246,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'benchmark-log-${{ matrix.bm_type }}_${{ env.OS_VERSION }}'
-        path: ${{ github.workspace }}/_build/bin/*.json
+        path: ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
