@@ -165,6 +165,9 @@ jobs:
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
+    - name: Run Tests
+      run: ctest -V --test-dir _build
+
     - name: CPack
       run: cpack -G DEB -R '${{ env.DEB_VERSION }}' --config _build/CPackConfig.cmake
 
