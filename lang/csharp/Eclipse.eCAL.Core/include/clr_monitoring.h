@@ -23,25 +23,12 @@
  * @file  clr_monitoring.h
 **/
 
+#include "types/clr_monitoring.h"
+
 
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
-
-      // Managed representation of the native monitoring entities bitmask.
-      [System::Flags]
-      public enum class MonitoringEntity : unsigned int
-      {
-        None       = 0x000,
-        Publisher  = 0x001,
-        Subscriber = 0x002,
-        Server     = 0x004,
-        Client     = 0x008,
-        Process    = 0x010,
-        Host       = 0x020,
-        All        = Publisher | Subscriber | Server | Client | Process | Host
-      };
-
       /**
        * @brief eCAL monitoring class.
        **/
@@ -53,9 +40,20 @@ namespace Eclipse {
          *
          * @param entities Specifies which entities to include (default is All).
          * 
-         * @return The monitoring message as a System::Byte array.
+         * @return The monitoring message as a System::Byte array. 
+         *         If call was not successful, returns a nullptr.
          **/
-        static array<System::Byte>^ GetMonitoring(MonitoringEntity entities);
+        static array<System::Byte>^ GetSerializedMonitoring(MonitoringEntity entities);
+
+        /**
+         * @brief Get host, process and topic monitoring as SMonitoring class.
+         *
+         * @param entities Specifies which entities to include (default is All).
+         * 
+         * @return The monitoring message as a SMonitoring class. 
+         *         Returns nullptr if the call was not successful.
+         **/
+        static SMonitoring^ GetMonitoring(MonitoringEntity entities);
       };
 
     } // namespace Core

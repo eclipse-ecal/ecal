@@ -25,12 +25,12 @@
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
-System::String^ Core::GetVersion()
+System::String^ Core::GetVersionString()
 {
   return StlStringToString(::eCAL::GetVersionString());
 }
 
-System::String^ Core::GetDate()
+System::String^ Core::GetVersionDateString()
 {
   return StlStringToString(::eCAL::GetVersionDateString());
 }

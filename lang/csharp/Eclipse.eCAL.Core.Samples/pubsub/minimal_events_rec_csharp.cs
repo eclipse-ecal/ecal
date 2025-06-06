@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class MinimalSendWithEvents
     Core.Initialize("minimal subscriber csharp with events");
 
     // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     // Create a subscriber with a publisher event callback passed in the constructor.
     Subscriber subscriber = new Subscriber(
@@ -48,7 +48,7 @@ public class MinimalSendWithEvents
         new DataTypeInformation("string", "utf-8", new byte[0]),
         new SubscriberEventCallbackDelegate((topicId, eventData) =>
         {
-          Console.WriteLine("Subscriber Event: {0} on topic {1} at {2} µs",
+          Console.WriteLine("Subscriber Event: {0} on topic {1} at {2} Âµs",
                                   eventData.EventType, topicId.TopicName, eventData.EventTime);
         })
     );

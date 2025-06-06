@@ -36,9 +36,28 @@ void Logging::Log(eLoggingLogLevel level, System::String^ message)
   ::eCAL::Logging::Log(eLoggingLogLevelHelper::ToNative(level), nativeMsg);
 }
 
-array<Byte>^ Logging::GetLogging()
+array<Byte>^ Logging::GetSerializedLogging()
 {
   std::string logging;
-  ::eCAL::Logging::GetLogging(logging);
+  if (!::eCAL::Logging::GetLogging(logging))
+  {
+    // If the call failed, return nullptr
+    return nullptr;
+  }
+  
   return StlStringToByteArray(logging);
+}
+
+SLogging^ Logging::GetLogging()
+{
+  ::eCAL::Logging::SLogging logging;;
+  if (!::eCAL::Logging::GetLogging(logging))
+  {
+    // If the call failed, return nullptr
+    return nullptr;
+  }
+
+  // Create a managed SLogging instance and populate it with the native data
+  SLogging^ managedLogging = SLogging::FromNative(logging);
+  return managedLogging;
 }

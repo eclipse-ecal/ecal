@@ -50,7 +50,7 @@ public class PersonSend
     /*
       Print version info.
     */
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     /*
       Set the state for the program.
