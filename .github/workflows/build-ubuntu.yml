@@ -174,17 +174,11 @@ jobs:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
         
-    - name: Upload Benchmark Executables
+    - name: Upload Executables
       uses: actions/upload-artifact@v4
       with:
-        name: 'benchmark-executables_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
-        
-    - name: Upload eCAL Core Library
-      uses: actions/upload-artifact@v4
-      with:
-        name: 'lib-ecal-core_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build/bin/libecal_core.so.6
+        name: 'executables_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin/*
         
     #---------------
     
@@ -200,16 +194,11 @@ jobs:
           bm_type: [pubsub, service, setup]
 
     steps:
-    - name: Download eCAL Core Library
-      uses: actions/download-artifact@v4
-      with:
-        name: 'lib-ecal-core_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build/bin
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
-        name: 'benchmark-executables_${{ matrix.os }}'
+        name: 'executables_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
@@ -228,6 +217,7 @@ jobs:
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch '${{ github.ref_name }}' \
         --testbed '${{ matrix.os }}' \
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
 
