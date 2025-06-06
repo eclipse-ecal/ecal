@@ -89,17 +89,13 @@ namespace Eclipse {
          * @brief Sets or overwrites the receive callback.
          *
          * @param callback The callback function to set.
-         *
-         * @return True if the operation succeeded; otherwise false.
          */
-        bool SetReceiveCallback(ReceiveCallbackDelegate^ callback);
+        void SetReceiveCallback(ReceiveCallbackDelegate^ callback);
 
         /**
          * @brief Removes the receive callback.
-         *
-         * @return True if the operation succeeded; otherwise false.
          */
-        bool RemoveReceiveCallback();
+        void RemoveReceiveCallback();
 
         /**
          * @brief Queries the number of connected publishers.

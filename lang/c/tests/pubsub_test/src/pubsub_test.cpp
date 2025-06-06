@@ -78,7 +78,7 @@ TEST_F(pubsub_test_c, subscriber)
   EXPECT_NE(nullptr, subscriber);
 
   // test setting receivecallback
-  EXPECT_EQ(0, eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL));
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL);
 
   // test GetTopicId
   EXPECT_STREQ(topic_name, eCAL_Subscriber_GetTopicId(subscriber)->topic_name);
@@ -116,7 +116,7 @@ TEST_F(pubsub_test_c, pubsub)
   int callback_count = 0;
 
   // add callback
-  EXPECT_EQ(0, eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, &callback_count));
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, &callback_count);
 
   // sleep here because otherwise it takes to long to set the receive-callback
   eCAL_Process_SleepMS(2000);
@@ -139,10 +139,10 @@ TEST_F(pubsub_test_c, pubsub)
 TEST_F(pubsub_test_c, sub_RemoveReceiveCallback) 
 {
   // add callback
-  EXPECT_EQ(0, eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL));
+  eCAL_Subscriber_SetReceiveCallback(subscriber, OnReceive, NULL);
 
   // actual test to remove it again
-  EXPECT_EQ(0, eCAL_Subscriber_RemoveReceiveCallback(subscriber)); 
+  eCAL_Subscriber_RemoveReceiveCallback(subscriber); 
 }
 
 TEST_F(pubsub_test_c, sub_GetPublisherCount) 
