@@ -189,36 +189,34 @@ jobs:
     #---------------
     
   run-benchmarks:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04
     needs: build-ubuntu
     
+    env:
+      # Check that this version is also present in the job above and the one used for this job
+      OS_VERSION: ubuntu-24.04
+    
     strategy:
-        matrix:
-          # Check that the required ubuntu version actually has been built in the step above!
-          os: [ubuntu-24.04]
-          # List of all benchmark types. Again, check that these are actually built!
-          bm_type: [pubsub, service, setup]
+      matrix:
+        # List of all benchmark types
+        bm_type: [pubsub, service, setup]
 
     steps:
     - name: Install Dependencies
       run: |
-        packages=(
-          libyaml-cpp-dev
-        )
-        
         sudo apt-get update
-        sudo apt-get install --no-install-recommends "${packages[@]}"
+        sudo apt-get install --no-install-recommends "libyaml-cpp-dev"
     
     - name: Download eCAL Libraries
       uses: actions/download-artifact@v4
       with:
-        name: 'libraries_${{ matrix.os }}'
+        name: 'libraries_$OS_VERSION'
         path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
-        name: 'benchmarks_${{ matrix.os }}'
+        name: 'benchmarks_$OS_VERSION'
         path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
@@ -236,7 +234,7 @@ jobs:
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch '${{ github.ref_name }}' \
-        --testbed '${{ matrix.os }}' \
+        --testbed '$OS_VERSION' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
@@ -244,5 +242,5 @@ jobs:
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
       with:
-        name: 'benchmark-log_${{ matrix.bm_type }}_${{ matrix.os }}'
+        name: 'benchmark-log_${{ matrix.bm_type }}_$OS_VERSION'
         path: ${{ github.workspace }}/_build/bin/*.json
