@@ -70,7 +70,7 @@ namespace Send {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
 }
 
 
@@ -127,7 +127,7 @@ namespace Send_and_Receive {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
 }
 
 
@@ -195,7 +195,7 @@ namespace Receive_Latency {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseManualTime()->Unit(benchmark::kMicrosecond);
+  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseManualTime();
 }
 
 
