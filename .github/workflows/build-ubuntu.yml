@@ -195,6 +195,15 @@ jobs:
 
     steps:
     
+    - name: Install Dependencies
+      run: |
+        common_packages=(
+          libyaml-cpp-dev
+        )
+        
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends "${common_packages[@]}"
+    
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
