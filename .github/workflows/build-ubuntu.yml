@@ -174,11 +174,17 @@ jobs:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
         
-    - name: Upload Executables
+    - name: Upload Benchmark Executables
       uses: actions/upload-artifact@v4
       with:
-        name: 'executables_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build/*
+        name: 'benchmarks_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
+        
+    - name: Upload eCAL Libraries
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'libraries_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/lib/*
         
     #---------------
     
@@ -194,21 +200,26 @@ jobs:
           bm_type: [pubsub, service, setup]
 
     steps:
-    
     - name: Install Dependencies
       run: |
-        common_packages=(
+        packages=(
           libyaml-cpp-dev
         )
         
         sudo apt-get update
-        sudo apt-get install --no-install-recommends "${common_packages[@]}"
+        sudo apt-get install --no-install-recommends "${packages[@]}"
+    
+    - name: Download eCAL Libraries
+      uses: actions/download-artifact@v4
+      with:
+        name: 'libraries_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
-        name: 'executables_${{ matrix.os }}'
-        path: ${{ github.workspace }}/_build
+        name: 'benchmarks_${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
