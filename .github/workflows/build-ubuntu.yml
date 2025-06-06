@@ -210,13 +210,13 @@ jobs:
     - name: Download eCAL Libraries
       uses: actions/download-artifact@v4
       with:
-        name: 'libraries_$OS_VERSION'
+        name: 'libraries_${{ env.OS_VERSION }}'
         path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
-        name: 'benchmarks_$OS_VERSION'
+        name: 'benchmarks_${{ env.OS_VERSION }}'
         path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
@@ -234,7 +234,7 @@ jobs:
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch '${{ github.ref_name }}' \
-        --testbed '$OS_VERSION' \
+        --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
@@ -242,5 +242,5 @@ jobs:
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
       with:
-        name: 'benchmark-log_${{ matrix.bm_type }}_$OS_VERSION'
+        name: 'benchmark-log-${{ matrix.bm_type }}_${{ env.OS_VERSION }}'
         path: ${{ github.workspace }}/_build/bin/*.json
