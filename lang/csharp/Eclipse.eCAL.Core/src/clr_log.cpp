@@ -58,8 +58,6 @@ SLogging^ Logging::GetLogging()
   }
 
   // Create a managed SLogging instance and populate it with the native data
-  SLogging^ managedLogging = gcnew SLogging();
-  managedLogging->FromNative(logging);
-
+  SLogging^ managedLogging = SLogging::FromNative(logging);
   return managedLogging;
 }

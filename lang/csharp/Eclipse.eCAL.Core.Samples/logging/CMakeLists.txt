@@ -16,8 +16,15 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(logging)
-add_subdirectory(monitoring)
-add_subdirectory(pubsub)
-add_subdirectory(service)
-add_subdirectory(testexec)
+include(CSharpUtilities)
+project(Eclipse.eCAL.Core.Samples LANGUAGES CSharp)
+
+find_package(eCAL REQUIRED)
+
+macro(ecal_add_csharp_core_sample sample_name)
+  ecal_add_sample(${sample_name} ${sample_name}.cs)
+  target_link_libraries(${sample_name} PRIVATE Eclipse.eCAL.Core)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/binary/service)
+endmacro()
+
+ecal_add_csharp_core_sample(logging_class_rec_csharp)
