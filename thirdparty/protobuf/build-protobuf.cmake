@@ -2,10 +2,10 @@
 # had its fix backported.
 # https://github.com/protocolbuffers/protobuf/issues/14602
 set(Protobuf_PROTOC_EXECUTABLE protoc)
-set(Protobuf_VERSION 5.29.4)
+set(Protobuf_VERSION 5.29.5)
 set(Protobuf_VERSION_MAJOR 5)
 set(Protobuf_VERSION_MINOR 29)
-set(Protobuf_VERSION_PATCH 4)
+set(Protobuf_VERSION_PATCH 5)
 
 include_guard(GLOBAL)
 
