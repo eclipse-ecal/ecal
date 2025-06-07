@@ -115,7 +115,6 @@ Source: "{#ComponentStagingDir}\libprotobuf-lite\*";  DestDir: "{app}";         
 Source: "{#ComponentStagingDir}\libprotoc\*";         DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 Source: "{#ComponentStagingDir}\protobuf-export\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 Source: "{#ComponentStagingDir}\protobuf-headers\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
-Source: "{#ComponentStagingDir}\protobuf-protos\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 Source: "{#ComponentStagingDir}\protoc\*";            DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 
 Source: "{#DebugSdkStagingDir}\libprotobuf\*";        DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
@@ -123,7 +122,6 @@ Source: "{#DebugSdkStagingDir}\libprotobuf-lite\*";   DestDir: "{app}";         
 Source: "{#DebugSdkStagingDir}\libprotoc\*";          DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 Source: "{#DebugSdkStagingDir}\protobuf-export\*";    DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 ;Source: "{#DebugSdkStagingDir}\protobuf-headers\*";  DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
-;Source: "{#DebugSdkStagingDir}\protobuf-protos\*";   DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 ; Source: "{#DebugSdkStagingDir}\protoc\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: sdk\protobuf
 
 ; sdk\hdf5
