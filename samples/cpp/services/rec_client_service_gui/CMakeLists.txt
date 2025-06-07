@@ -16,7 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 # Allow the install command to use generator expressions
 if(POLICY CMP0087)

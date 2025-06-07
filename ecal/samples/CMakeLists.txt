@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 # --------------------------------------------------------
 # cpp samples
@@ -53,7 +53,8 @@ endif()
 # misc
 add_subdirectory(cpp/misc/process)
 add_subdirectory(cpp/misc/time)
-add_subdirectory(cpp/misc/config)
+add_subdirectory(cpp/misc/cake_send)
+add_subdirectory(cpp/misc/cake_receive)
 if(ECAL_CORE_PUBLISHER)
   add_subdirectory(cpp/misc/timer)
 endif()

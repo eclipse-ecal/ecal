@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 # --------------------------------------------------------
 # c samples
@@ -29,3 +29,7 @@ add_subdirectory(pubsub/binary/blob_receive)
 #service
 add_subdirectory(services/mirror_client_c)
 add_subdirectory(services/mirror_server_c)
+
+# misc
+add_subdirectory(misc/cake_send)
+add_subdirectory(misc/cake_receive)

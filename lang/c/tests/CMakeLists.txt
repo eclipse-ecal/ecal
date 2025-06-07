@@ -19,4 +19,7 @@
 # --------------------------------------------------------
 # c tests
 # --------------------------------------------------------
+add_subdirectory(config_test)
 add_subdirectory(core_test)
+add_subdirectory(pubsub_test)
+add_subdirectory(services_test)

@@ -36,7 +36,7 @@ jobs:
 
     - name: Update / download Submodules (selected ones)
       run: |
-        git submodule update --init --single-branch --depth 1 \
+        git submodule update --init \
           thirdparty/asio/asio \
           thirdparty/ecaludp/ecaludp \
           thirdparty/fineftp/fineftp-server \
@@ -79,7 +79,7 @@ jobs:
         -DECAL_BUILD_APPS=ON \
         -DECAL_BUILD_SAMPLES=ON \
         -DECAL_BUILD_TIMEPLUGINS=ON \
-        -DECAL_BUILD_PY_BINDING=ON \
+        -DECAL_BUILD_PY_BINDING=OFF \
         -DECAL_BUILD_CSHARP_BINDING=OFF \
         -DECAL_BUILD_TESTS=ON \
         -DECAL_INSTALL_SAMPLE_SOURCES=ON \
