@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.16)
 
 project(ecal_service)
 
@@ -61,6 +61,7 @@ target_link_libraries(${PROJECT_NAME}
         Threads::Threads
         $<$<BOOL:${WIN32}>:ws2_32>
         $<$<BOOL:${WIN32}>:wsock32>
+        _ecal_service_warnings
 
 )
 
@@ -71,12 +72,6 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-                           $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-                                -Wall -Wextra>
-                           $<$<CXX_COMPILER_ID:MSVC>:
-                                /W4>)
 
 # Add own public include directory
 target_include_directories(${PROJECT_NAME}
