@@ -63,16 +63,16 @@ namespace eCAL
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept = default;
 
-  bool CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
+  void CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
-    if (m_subscriber_impl == nullptr) return false;
-    return m_subscriber_impl->SetReceiveCallback(std::move(callback_));
+    if (m_subscriber_impl == nullptr) return;
+    static_cast<void>(m_subscriber_impl->SetReceiveCallback(std::move(callback_)));
   }
 
-  bool CSubscriber::RemoveReceiveCallback()
+  void CSubscriber::RemoveReceiveCallback()
   {
-    if (m_subscriber_impl == nullptr) return false;
-    return m_subscriber_impl->RemoveReceiveCallback();
+    if (m_subscriber_impl == nullptr) return;
+    static_cast<void>(m_subscriber_impl->RemoveReceiveCallback());
   }
 
   size_t CSubscriber::GetPublisherCount() const

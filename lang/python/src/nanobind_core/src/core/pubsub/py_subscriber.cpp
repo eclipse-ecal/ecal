@@ -79,15 +79,11 @@ void AddPubsubSubscriber(nanobind::module_& module)
         };
 
         nb::gil_scoped_release release;
-        static_cast<void>(self.SetReceiveCallback(wrapped_callback));
+        self.SetReceiveCallback(wrapped_callback);
       },
       nb::arg("callback"))
-    .def("remove_receive_callback",
-          [](CSubscriber &self) {
-              static_cast<void>(self.RemoveReceiveCallback());
-          },
-          "Remove a previously set receive callback."
-        )
+    .def("remove_receive_callback", &CSubscriber::RemoveReceiveCallback,
+      "Remove a previously set receive callback.")
     .def("get_publisher_count", &CSubscriber::GetPublisherCount,
       "Get the number of connected publishers.")
     .def("get_topic_name", &CSubscriber::GetTopicName,

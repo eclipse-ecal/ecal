@@ -116,13 +116,13 @@ extern "C"
       callback_(&publisher_id_c, &data_type_information_c, &receive_callback_data_c, callback_user_argument_);
     };
 
-    static_cast<void>(subscriber_->handle->SetReceiveCallback(callback));
+    subscriber_->handle->SetReceiveCallback(callback);
   }
 
   ECALC_API void eCAL_Subscriber_RemoveReceiveCallback(eCAL_Subscriber* subscriber_)
   {
     assert(subscriber_ != NULL);
-    static_cast<void>(!subscriber_->handle->RemoveReceiveCallback());
+    subscriber_->handle->RemoveReceiveCallback();
   }
 
   ECALC_API size_t eCAL_Subscriber_GetPublisherCount(eCAL_Subscriber* subscriber_)
