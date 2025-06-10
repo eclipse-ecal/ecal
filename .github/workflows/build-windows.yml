@@ -17,11 +17,6 @@ jobs:
       QT_QPA_PLATFORM: offscreen
 
     steps:
-    - name: Show MSVC include paths
-      run: |
-        cl /nologo /E /showIncludes /TC NUL.cpp
-      shell: cmd
-    
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -83,6 +78,11 @@ jobs:
       with:
         key-root: windows-2019
         cache-dir: ${{ github.workspace }}/.ccache
+
+    - name: Show MSVC include paths
+      run: |
+        cl /nologo /E /showIncludes /TC NUL.cpp
+      shell: cmd
 
     - name: CMake SDK
       run: |
