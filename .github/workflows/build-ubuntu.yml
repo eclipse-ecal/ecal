@@ -192,7 +192,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.event_name = 'push'
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     needs: build-ubuntu
     
