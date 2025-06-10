@@ -191,14 +191,14 @@ void Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
 {
   m_receiveCallback = callback;
   auto nativeCallback = CreateNativeReceiveCallback(callback);
-  static_cast<void>(m_native_subscriber->SetReceiveCallback(nativeCallback));
+  m_native_subscriber->SetReceiveCallback(nativeCallback);
 }
 
 // Remove the receive callback.
 void Subscriber::RemoveReceiveCallback()
 {
   m_receiveCallback = nullptr;
-  static_cast<void>(m_native_subscriber->RemoveReceiveCallback());
+  m_native_subscriber->RemoveReceiveCallback();
 }
 
 // Get the number of publishers.
