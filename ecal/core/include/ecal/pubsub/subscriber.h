@@ -101,7 +101,7 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool SetReceiveCallback(ReceiveCallbackT callback_);
+      void SetReceiveCallback(ReceiveCallbackT callback_);
 
     /**
      * @brief Remove callback function for incoming receives.
@@ -109,7 +109,7 @@ namespace eCAL
      * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
-      bool RemoveReceiveCallback();
+      void RemoveReceiveCallback();
 
     /**
      * @brief Query the number of connected publishers.

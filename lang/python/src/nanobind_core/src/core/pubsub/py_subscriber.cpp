@@ -79,7 +79,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
         };
 
         nb::gil_scoped_release release;
-        return self.SetReceiveCallback(wrapped_callback);
+        self.SetReceiveCallback(wrapped_callback);
       },
       nb::arg("callback"))
     .def("remove_receive_callback", &CSubscriber::RemoveReceiveCallback,
