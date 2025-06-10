@@ -38,5 +38,5 @@ macro(ecal_add_csharp_protobuf_monitoring_sample sample_name)
   )
 endmacro()
 
-ecal_add_csharp_protobuf_monitoring_sample(logging_receive_csharp)
-ecal_add_csharp_protobuf_monitoring_sample(monitoring_receive_csharp)
+ecal_add_csharp_protobuf_monitoring_sample(logging_rec_csharp)
+ecal_add_csharp_protobuf_monitoring_sample(monitoring_rec_csharp)
