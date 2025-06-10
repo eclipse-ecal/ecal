@@ -55,3 +55,6 @@
 [submodule "thirdparty/tsl-robin-map/tsl-robin-map"]
 	path = thirdparty/tsl-robin-map/tsl-robin-map
 	url = https://github.com/Tessil/robin-map.git
+[submodule "thirdparty/absl"]
+	path = thirdparty/absl/absl
+	url = https://github.com/abseil/abseil-cpp.git
