@@ -27,6 +27,5 @@ macro(ecal_add_csharp_core_sample sample_name)
   set_property(TARGET ${sample_name} PROPERTY FOLDER samples/csharp/binary/service)
 endmacro()
 
-ecal_add_csharp_core_sample(mirror_client_callback_csharp)
 ecal_add_csharp_core_sample(mirror_client_csharp)
 ecal_add_csharp_core_sample(mirror_server_csharp)
