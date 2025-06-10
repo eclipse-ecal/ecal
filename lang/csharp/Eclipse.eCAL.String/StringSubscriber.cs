@@ -71,9 +71,9 @@ namespace Eclipse.eCAL.Core
      *
      * @return True if the callback was successfully removed; otherwise, false.
      */
-    public bool RemoveReceiveCallback()
+    public void RemoveReceiveCallback()
     {
-      return binarySubscriber.RemoveReceiveCallback();
+      binarySubscriber.RemoveReceiveCallback();
     }
 
     /**
