@@ -116,7 +116,7 @@ public class MirrorClient
       }
       else
       {
-        Console.WriteLine("Method call with reponse failed.");
+        Console.WriteLine("Method call with response failed.");
       }
 
       /*
