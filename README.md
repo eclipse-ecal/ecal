@@ -132,7 +132,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [udpcap](https://github.com/eclipse-ecal/udpcap) - Npcap based UDP-socket emulation to increase the eCAL performance on MS Windows
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
-* [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [rustecal](https://github.com/eclipse-ecal/rustecal) - eCAL rust language binding
 * [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [ADMA2eCAL](https://github.com/GeneSysElektronik/ADMA2eCAL) - Software gateway for connection to ADMA hardware from GeneSys Elekronik GmbH 
