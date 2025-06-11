@@ -29,6 +29,7 @@ using namespace Eclipse::eCAL::Core;
 namespace Eclipse {
   namespace eCAL {
     namespace Core {
+
       // Managed representation of the native monitoring entities bitmask.
       [System::Flags]
       public enum class MonitoringEntity : unsigned int
@@ -60,15 +61,8 @@ namespace Eclipse {
       public ref class MonitoringTransportLayerTypeHelper abstract sealed
       {
       public:
-        static eMonitoringTransportLayerType FromNative(::eCAL::Monitoring::eTransportLayerType native)
-        {
-          return static_cast<eMonitoringTransportLayerType>(native);
-        }
-
-        static ::eCAL::Monitoring::eTransportLayerType ToNative(eMonitoringTransportLayerType managed)
-        {
-          return static_cast<::eCAL::Monitoring::eTransportLayerType>(managed);
-        }
+        static eMonitoringTransportLayerType FromNative(::eCAL::Monitoring::eTransportLayerType native);
+        static ::eCAL::Monitoring::eTransportLayerType ToNative(eMonitoringTransportLayerType managed);
       };
 
       /**
@@ -76,21 +70,19 @@ namespace Eclipse {
        *
        * Represents a transport layer used by a topic (e.g. UDP, SHM, TCP).
        */
-      public ref class MonitoringTransportLayer
+      public ref class MonitoringTransportLayer sealed
       {
       public:
-        property eMonitoringTransportLayerType Type;
-        property int Version;
-        property bool Active;
+        property eMonitoringTransportLayerType Type { eMonitoringTransportLayerType get(); }
+        property int Version { int get(); }
+        property bool Active { bool get(); }
 
-        MonitoringTransportLayer() {}
+        MonitoringTransportLayer(const ::eCAL::Monitoring::STransportLayer& native);
 
-        MonitoringTransportLayer(const ::eCAL::Monitoring::STransportLayer& native)
-        {
-          Type = MonitoringTransportLayerTypeHelper::FromNative(native.type);
-          Version = native.version;
-          Active = native.active;
-        }
+      private:
+        initonly eMonitoringTransportLayerType type_;
+        initonly int version_;
+        initonly bool active_;
       };
 
       /**
@@ -98,60 +90,49 @@ namespace Eclipse {
        *
        * Represents a monitored topic (publisher or subscriber).
        */
-      public ref class MonitoringTopic
+      public ref class MonitoringTopic sealed
       {
       public:
-        property int RegistrationClock;                           ///< Registration clock (heartbeat)
-        property System::String^ HostName;                        ///< Host name
-        property System::String^ ProcessName;                     ///< Process name
-        property System::String^ UnitName;                        ///< Unit name
-        property int ProcessId;                                   ///< Process ID
-        property System::UInt64 TopicId;                          ///< Topic ID
-        property System::String^ TopicName;                       ///< Topic name
-        property System::String^ ShmTransportDomain;              ///< SHM transport domain
-        property System::String^ Direction;                       ///< Direction (publisher, subscriber)
-        property DataTypeInformation^ DatatypeInformation;        ///< Topic datatype information (name, encoding, descriptor)
-        property List<MonitoringTransportLayer^>^ TransportLayer; ///< Transport layer details
-        property int TopicSize;                                   ///< Topic size
-        property int ConnectionsLocal;                            ///< Number of local connected entities
-        property int ConnectionsExternal;                         ///< Number of external connected entities
-        property int MessageDrops;                                ///< Dropped messages
-        property System::Int64 DataId;                            ///< Data send ID (publisher setid)
-        property System::Int64 DataClock;                         ///< Data clock (send/receive action)
-        property int DataFrequency;                               ///< Data frequency (send/receive samples per second) [mHz]
+        property int RegistrationClock { int get(); }                           ///< Registration clock (heartbeat)
+        property System::String^ HostName { System::String^ get(); }            ///< Host name
+        property System::String^ ProcessName { System::String^ get(); }         ///< Process name
+        property System::String^ UnitName { System::String^ get(); }            ///< Unit name
+        property int ProcessId { int get(); }                                   ///< Process ID
+        property System::UInt64 TopicId { System::UInt64 get(); }               ///< Topic ID
+        property System::String^ TopicName { System::String^ get(); }           ///< Topic name
+        property System::String^ ShmTransportDomain { System::String^ get(); }  ///< SHM transport domain
+        property System::String^ Direction { System::String^ get(); }           ///< Direction (publisher, subscriber)
+        property DataTypeInformation^ DatatypeInformation { DataTypeInformation^ get(); } ///< Topic datatype information (name, encoding, descriptor)
+        property IReadOnlyList<MonitoringTransportLayer^>^ TransportLayer { IReadOnlyList<MonitoringTransportLayer^>^ get(); } ///< Transport layer details
+        property int TopicSize { int get(); }                                   ///< Topic size
+        property int ConnectionsLocal { int get(); }                            ///< Number of local connected entities
+        property int ConnectionsExternal { int get(); }                         ///< Number of external connected entities
+        property int MessageDrops { int get(); }                                ///< Dropped messages
+        property System::Int64 DataId { System::Int64 get(); }                  ///< Data send ID (publisher setid)
+        property System::Int64 DataClock { System::Int64 get(); }               ///< Data clock (send/receive action)
+        property int DataFrequency { int get(); }                               ///< Data frequency (send/receive samples per second) [mHz]
 
-        MonitoringTopic()
-        {
-          TransportLayer = gcnew List<MonitoringTransportLayer^>();
-        }
+        MonitoringTopic(const ::eCAL::Monitoring::STopic& native);
 
-        MonitoringTopic(const ::eCAL::Monitoring::STopic& native)
-        {
-          RegistrationClock = native.registration_clock;
-          HostName = Internal::StlStringToString(native.host_name);
-          ProcessName = Internal::StlStringToString(native.process_name);
-          UnitName = Internal::StlStringToString(native.unit_name);
-          ProcessId = native.process_id;
-          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
-          TopicId = static_cast<System::UInt64>(native.topic_id);
-          TopicName = Internal::StlStringToString(native.topic_name);
-          Direction = Internal::StlStringToString(native.direction);
-          DatatypeInformation = gcnew DataTypeInformation(
-            Internal::StlStringToString(native.datatype_information.name),
-            Internal::StlStringToString(native.datatype_information.encoding),
-            Internal::StlStringToByteArray(native.datatype_information.descriptor)
-          );
-          TransportLayer = gcnew List<MonitoringTransportLayer^>();
-          for (const auto& tl : native.transport_layer)
-            TransportLayer->Add(gcnew MonitoringTransportLayer(tl));
-          TopicSize = native.topic_size;
-          ConnectionsLocal = native.connections_local;
-          ConnectionsExternal = native.connections_external;
-          MessageDrops = native.message_drops;
-          DataId = native.data_id;
-          DataClock = native.data_clock;
-          DataFrequency = native.data_frequency;
-        }
+      private:
+        initonly int registrationClock_;
+        initonly System::String^ hostName_;
+        initonly System::String^ processName_;
+        initonly System::String^ unitName_;
+        initonly int processId_;
+        initonly System::UInt64 topicId_;
+        initonly System::String^ topicName_;
+        initonly System::String^ shmTransportDomain_;
+        initonly System::String^ direction_;
+        initonly DataTypeInformation^ datatypeInformation_;
+        initonly IReadOnlyList<MonitoringTransportLayer^>^ transportLayer_;
+        initonly int topicSize_;
+        initonly int connectionsLocal_;
+        initonly int connectionsExternal_;
+        initonly int messageDrops_;
+        initonly System::Int64 dataId_;
+        initonly System::Int64 dataClock_;
+        initonly int dataFrequency_;
       };
 
       /**
@@ -159,47 +140,45 @@ namespace Eclipse {
        *
        * Represents a monitored process.
        */
-      public ref class MonitoringProcess
+      public ref class MonitoringProcess sealed
       {
       public:
-        property int RegistrationClock;              ///< Registration clock
-        property System::String^ HostName;           ///< Host name
-        property System::String^ ProcessName;        ///< Process name
-        property System::String^ UnitName;           ///< Unit name
-        property int ProcessId;                      ///< Process ID
-        property System::String^ ShmTransportDomain; ///< SHM transport domain
-        property System::String^ ProcessParameter;   ///< Process parameter
-        property int StateSeverity;                  ///< Process state info severity
-        property int StateSeverityLevel;             ///< Process state info severity level
-        property System::String^ StateInfo;          ///< Process state info as human readable string
-        property int TimeSyncState;                  ///< Time synchronization state
-        property System::String^ TimeSyncModuleName; ///< Time synchronization module name
-        property int ComponentInitState;             ///< eCAL component initialization state
-        property System::String^ ComponentInitInfo;  ///< Human readable component init info
-        property System::String^ EcalRuntimeVersion; ///< Loaded/runtime eCAL version of a component
-        property System::String^ ConfigFilePath;     ///< Filepath of the configuration file that was loaded
+        property int RegistrationClock { int get(); }              ///< Registration clock
+        property System::String^ HostName { System::String^ get(); }           ///< Host name
+        property System::String^ ProcessName { System::String^ get(); }        ///< Process name
+        property System::String^ UnitName { System::String^ get(); }           ///< Unit name
+        property int ProcessId { int get(); }                      ///< Process ID
+        property System::String^ ShmTransportDomain { System::String^ get(); } ///< SHM transport domain
+        property System::String^ ProcessParameter { System::String^ get(); }   ///< Process parameter
+        property int StateSeverity { int get(); }                  ///< Process state info severity
+        property int StateSeverityLevel { int get(); }             ///< Process state info severity level
+        property System::String^ StateInfo { System::String^ get(); }          ///< Process state info as human readable string
+        property int TimeSyncState { int get(); }                  ///< Time synchronization state
+        property System::String^ TimeSyncModuleName { System::String^ get(); } ///< Time synchronization module name
+        property int ComponentInitState { int get(); }             ///< eCAL component initialization state
+        property System::String^ ComponentInitInfo { System::String^ get(); }  ///< Human readable component init info
+        property System::String^ EcalRuntimeVersion { System::String^ get(); } ///< Loaded/runtime eCAL version of a component
+        property System::String^ ConfigFilePath { System::String^ get(); }     ///< Filepath of the configuration file that was loaded
 
-        MonitoringProcess() {}
+        MonitoringProcess(const ::eCAL::Monitoring::SProcess& native);
 
-        MonitoringProcess(const ::eCAL::Monitoring::SProcess& native)
-        {
-          RegistrationClock = native.registration_clock;
-          HostName = Internal::StlStringToString(native.host_name);
-          ProcessName = Internal::StlStringToString(native.process_name);
-          UnitName = Internal::StlStringToString(native.unit_name);
-          ProcessId = native.process_id;
-          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
-          ProcessParameter = Internal::StlStringToString(native.process_parameter);
-          StateSeverity = native.state_severity;
-          StateSeverityLevel = native.state_severity_level;
-          StateInfo = Internal::StlStringToString(native.state_info);
-          TimeSyncState = native.time_sync_state;
-          TimeSyncModuleName = Internal::StlStringToString(native.time_sync_module_name);
-          ComponentInitState = native.component_init_state;
-          ComponentInitInfo = Internal::StlStringToString(native.component_init_info);
-          EcalRuntimeVersion = Internal::StlStringToString(native.ecal_runtime_version);
-          ConfigFilePath = Internal::StlStringToString(native.config_file_path);
-        }
+      private:
+        initonly int registrationClock_;
+        initonly System::String^ hostName_;
+        initonly System::String^ processName_;
+        initonly System::String^ unitName_;
+        initonly int processId_;
+        initonly System::String^ shmTransportDomain_;
+        initonly System::String^ processParameter_;
+        initonly int stateSeverity_;
+        initonly int stateSeverityLevel_;
+        initonly System::String^ stateInfo_;
+        initonly int timeSyncState_;
+        initonly System::String^ timeSyncModuleName_;
+        initonly int componentInitState_;
+        initonly System::String^ componentInitInfo_;
+        initonly System::String^ ecalRuntimeVersion_;
+        initonly System::String^ configFilePath_;
       };
 
       /**
@@ -207,31 +186,21 @@ namespace Eclipse {
        *
        * Represents a monitored RPC method.
        */
-      public ref class MonitoringMethod
+      public ref class MonitoringMethod sealed
       {
       public:
-        property System::String^ MethodName;                       ///< Method name
-        property DataTypeInformation^ RequestDatatypeInformation;  ///< Request datatype information
-        property DataTypeInformation^ ResponseDatatypeInformation; ///< Response datatype information
-        property System::Int64 CallCount;                          ///< Call counter
+        property System::String^ MethodName { System::String^ get(); }                       ///< Method name
+        property DataTypeInformation^ RequestDatatypeInformation { DataTypeInformation^ get(); }  ///< Request datatype information
+        property DataTypeInformation^ ResponseDatatypeInformation { DataTypeInformation^ get(); } ///< Response datatype information
+        property System::Int64 CallCount { System::Int64 get(); }                          ///< Call counter
 
-        MonitoringMethod() {}
+        MonitoringMethod(const ::eCAL::Monitoring::SMethod& native);
 
-        MonitoringMethod(const ::eCAL::Monitoring::SMethod& native)
-        {
-          MethodName = Internal::StlStringToString(native.method_name);
-          RequestDatatypeInformation = gcnew DataTypeInformation(
-            Internal::StlStringToString(native.request_datatype_information.name),
-            Internal::StlStringToString(native.request_datatype_information.encoding),
-            Internal::StlStringToByteArray(native.request_datatype_information.descriptor)
-          );
-          ResponseDatatypeInformation = gcnew DataTypeInformation(
-            Internal::StlStringToString(native.response_datatype_information.name),
-            Internal::StlStringToString(native.response_datatype_information.encoding),
-            Internal::StlStringToByteArray(native.response_datatype_information.descriptor)
-          );
-          CallCount = native.call_count;
-        }
+      private:
+        initonly System::String^ methodName_;
+        initonly DataTypeInformation^ requestDatatypeInformation_;
+        initonly DataTypeInformation^ responseDatatypeInformation_;
+        initonly System::Int64 callCount_;
       };
 
       /**
@@ -239,42 +208,35 @@ namespace Eclipse {
        *
        * Represents a monitored server.
        */
-      public ref class MonitoringServer
+      public ref class MonitoringServer sealed
       {
       public:
-        property int RegistrationClock;            ///< Registration clock
-        property System::String^ HostName;         ///< Host name
-        property System::String^ ProcessName;      ///< Process name
-        property System::String^ UnitName;         ///< Unit name
-        property int ProcessId;                    ///< Process ID
-        property System::String^ ServiceName;      ///< Service name
-        property System::UInt64 ServiceId;         ///< Service ID
-        property System::UInt32 Version;           ///< Service protocol version
-        property System::UInt32 TcpPortV0;         ///< TCP port protocol version 0
-        property System::UInt32 TcpPortV1;         ///< TCP port protocol version 1
-        property List<MonitoringMethod^>^ Methods; ///< List of methods
+        property int RegistrationClock { int get(); }            ///< Registration clock
+        property System::String^ HostName { System::String^ get(); }         ///< Host name
+        property System::String^ ProcessName { System::String^ get(); }      ///< Process name
+        property System::String^ UnitName { System::String^ get(); }         ///< Unit name
+        property int ProcessId { int get(); }                    ///< Process ID
+        property System::String^ ServiceName { System::String^ get(); }      ///< Service name
+        property System::UInt64 ServiceId { System::UInt64 get(); }         ///< Service ID
+        property System::UInt32 Version { System::UInt32 get(); }           ///< Service protocol version
+        property System::UInt32 TcpPortV0 { System::UInt32 get(); }         ///< TCP port protocol version 0
+        property System::UInt32 TcpPortV1 { System::UInt32 get(); }         ///< TCP port protocol version 1
+        property IReadOnlyList<MonitoringMethod^>^ Methods { IReadOnlyList<MonitoringMethod^>^ get(); } ///< List of methods
 
-        MonitoringServer()
-        {
-          Methods = gcnew List<MonitoringMethod^>();
-        }
+        MonitoringServer(const ::eCAL::Monitoring::SServer& native);
 
-        MonitoringServer(const ::eCAL::Monitoring::SServer& native)
-        {
-          RegistrationClock = native.registration_clock;
-          HostName = Internal::StlStringToString(native.host_name);
-          ProcessName = Internal::StlStringToString(native.process_name);
-          UnitName = Internal::StlStringToString(native.unit_name);
-          ProcessId = native.process_id;
-          ServiceName = Internal::StlStringToString(native.service_name);
-          ServiceId = static_cast<System::UInt64>(native.service_id);
-          Version = native.version;
-          TcpPortV0 = native.tcp_port_v0;
-          TcpPortV1 = native.tcp_port_v1;
-          Methods = gcnew List<MonitoringMethod^>();
-          for (const auto& m : native.methods)
-            Methods->Add(gcnew MonitoringMethod(m));
-        }
+      private:
+        initonly int registrationClock_;
+        initonly System::String^ hostName_;
+        initonly System::String^ processName_;
+        initonly System::String^ unitName_;
+        initonly int processId_;
+        initonly System::String^ serviceName_;
+        initonly System::UInt64 serviceId_;
+        initonly System::UInt32 version_;
+        initonly System::UInt32 tcpPortV0_;
+        initonly System::UInt32 tcpPortV1_;
+        initonly IReadOnlyList<MonitoringMethod^>^ methods_;
       };
 
       /**
@@ -282,38 +244,31 @@ namespace Eclipse {
        *
        * Represents a monitored client.
        */
-      public ref class MonitoringClient
+      public ref class MonitoringClient sealed
       {
       public:
-        property int RegistrationClock;            ///< Registration clock
-        property System::String^ HostName;         ///< Host name
-        property System::String^ ProcessName;      ///< Process name
-        property System::String^ UnitName;         ///< Unit name
-        property int ProcessId;                    ///< Process ID
-        property System::String^ ServiceName;      ///< Service name
-        property System::UInt64 ServiceId;         ///< Service ID
-        property System::UInt32 Version;           ///< Client protocol version
-        property List<MonitoringMethod^>^ Methods; ///< List of methods
+        property int RegistrationClock { int get(); }            ///< Registration clock
+        property System::String^ HostName { System::String^ get(); }         ///< Host name
+        property System::String^ ProcessName { System::String^ get(); }      ///< Process name
+        property System::String^ UnitName { System::String^ get(); }         ///< Unit name
+        property int ProcessId { int get(); }                    ///< Process ID
+        property System::String^ ServiceName { System::String^ get(); }      ///< Service name
+        property System::UInt64 ServiceId { System::UInt64 get(); }         ///< Service ID
+        property System::UInt32 Version { System::UInt32 get(); }           ///< Client protocol version
+        property IReadOnlyList<MonitoringMethod^>^ Methods { IReadOnlyList<MonitoringMethod^>^ get(); } ///< List of methods
 
-        MonitoringClient()
-        {
-          Methods = gcnew List<MonitoringMethod^>();
-        }
+        MonitoringClient(const ::eCAL::Monitoring::SClient& native);
 
-        MonitoringClient(const ::eCAL::Monitoring::SClient& native)
-        {
-          RegistrationClock = native.registration_clock;
-          HostName = Internal::StlStringToString(native.host_name);
-          ProcessName = Internal::StlStringToString(native.process_name);
-          UnitName = Internal::StlStringToString(native.unit_name);
-          ProcessId = native.process_id;
-          ServiceName = Internal::StlStringToString(native.service_name);
-          ServiceId = static_cast<System::UInt64>(native.service_id);
-          Version = native.version;
-          Methods = gcnew List<MonitoringMethod^>();
-          for (const auto& m : native.methods)
-            Methods->Add(gcnew MonitoringMethod(m));
-        }
+      private:
+        initonly int registrationClock_;
+        initonly System::String^ hostName_;
+        initonly System::String^ processName_;
+        initonly System::String^ unitName_;
+        initonly int processId_;
+        initonly System::String^ serviceName_;
+        initonly System::UInt64 serviceId_;
+        initonly System::UInt32 version_;
+        initonly IReadOnlyList<MonitoringMethod^>^ methods_;
       };
 
       /**
@@ -321,42 +276,23 @@ namespace Eclipse {
        *
        * Represents the overall monitoring state (all processes, topics, servers, clients).
        */
-      public ref class SMonitoring
+      public ref class SMonitoring sealed
       {
       public:
-        property List<MonitoringProcess^>^ Processes; ///< List of monitored processes
-        property List<MonitoringTopic^>^ Publishers;  ///< List of monitored publishers
-        property List<MonitoringTopic^>^ Subscribers; ///< List of monitored subscribers
-        property List<MonitoringServer^>^ Servers;    ///< List of monitored servers
-        property List<MonitoringClient^>^ Clients;    ///< List of monitored clients
+        property IReadOnlyList<MonitoringProcess^>^ Processes { IReadOnlyList<MonitoringProcess^>^ get(); } ///< List of monitored processes
+        property IReadOnlyList<MonitoringTopic^>^ Publishers { IReadOnlyList<MonitoringTopic^>^ get(); }    ///< List of monitored publishers
+        property IReadOnlyList<MonitoringTopic^>^ Subscribers { IReadOnlyList<MonitoringTopic^>^ get(); }   ///< List of monitored subscribers
+        property IReadOnlyList<MonitoringServer^>^ Servers { IReadOnlyList<MonitoringServer^>^ get(); }     ///< List of monitored servers
+        property IReadOnlyList<MonitoringClient^>^ Clients { IReadOnlyList<MonitoringClient^>^ get(); }     ///< List of monitored clients
 
-        SMonitoring()
-        {
-          Processes = gcnew List<MonitoringProcess^>();
-          Publishers = gcnew List<MonitoringTopic^>();
-          Subscribers = gcnew List<MonitoringTopic^>();
-          Servers = gcnew List<MonitoringServer^>();
-          Clients = gcnew List<MonitoringClient^>();
-        }
+        SMonitoring(const ::eCAL::Monitoring::SMonitoring& native);
 
-        SMonitoring(const ::eCAL::Monitoring::SMonitoring& native)
-        {
-          Processes = gcnew List<MonitoringProcess^>();
-          for (const auto& p : native.processes)
-            Processes->Add(gcnew MonitoringProcess(p));
-          Publishers = gcnew List<MonitoringTopic^>();
-          for (const auto& t : native.publishers)
-            Publishers->Add(gcnew MonitoringTopic(t));
-          Subscribers = gcnew List<MonitoringTopic^>();
-          for (const auto& t : native.subscribers)
-            Subscribers->Add(gcnew MonitoringTopic(t));
-          Servers = gcnew List<MonitoringServer^>();
-          for (const auto& s : native.servers)
-            Servers->Add(gcnew MonitoringServer(s));
-          Clients = gcnew List<MonitoringClient^>();
-          for (const auto& c : native.clients)
-            Clients->Add(gcnew MonitoringClient(c));
-        }
+      private:
+        initonly IReadOnlyList<MonitoringProcess^>^ processes_;
+        initonly IReadOnlyList<MonitoringTopic^>^ publishers_;
+        initonly IReadOnlyList<MonitoringTopic^>^ subscribers_;
+        initonly IReadOnlyList<MonitoringServer^>^ servers_;
+        initonly IReadOnlyList<MonitoringClient^>^ clients_;
       };
 
     } // namespace Core

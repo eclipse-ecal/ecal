@@ -59,7 +59,7 @@ set(ecal_clr_src
     src/clr_server.cpp
     src/clr_subscriber.cpp
     src/clr_time.cpp
-
+    src/types/clr_monitoring.cpp
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})
