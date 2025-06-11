@@ -103,12 +103,12 @@ namespace Eclipse {
       public:
         property int RegistrationClock;                           ///< Registration clock (heartbeat)
         property System::String^ HostName;                        ///< Host name
-        property System::String^ ShmTransportDomain;              ///< SHM transport domain
-        property int ProcessId;                                   ///< Process ID
         property System::String^ ProcessName;                     ///< Process name
         property System::String^ UnitName;                        ///< Unit name
+        property int ProcessId;                                   ///< Process ID
         property System::UInt64 TopicId;                          ///< Topic ID
         property System::String^ TopicName;                       ///< Topic name
+        property System::String^ ShmTransportDomain;              ///< SHM transport domain
         property System::String^ Direction;                       ///< Direction (publisher, subscriber)
         property DataTypeInformation^ DatatypeInformation;        ///< Topic datatype information (name, encoding, descriptor)
         property List<MonitoringTransportLayer^>^ TransportLayer; ///< Transport layer details
@@ -129,10 +129,10 @@ namespace Eclipse {
         {
           RegistrationClock = native.registration_clock;
           HostName = Internal::StlStringToString(native.host_name);
-          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
-          ProcessId = native.process_id;
           ProcessName = Internal::StlStringToString(native.process_name);
           UnitName = Internal::StlStringToString(native.unit_name);
+          ProcessId = native.process_id;
+          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
           TopicId = static_cast<System::UInt64>(native.topic_id);
           TopicName = Internal::StlStringToString(native.topic_name);
           Direction = Internal::StlStringToString(native.direction);
@@ -164,10 +164,10 @@ namespace Eclipse {
       public:
         property int RegistrationClock;              ///< Registration clock
         property System::String^ HostName;           ///< Host name
-        property System::String^ ShmTransportDomain; ///< SHM transport domain
-        property int ProcessId;                      ///< Process ID
         property System::String^ ProcessName;        ///< Process name
         property System::String^ UnitName;           ///< Unit name
+        property int ProcessId;                      ///< Process ID
+        property System::String^ ShmTransportDomain; ///< SHM transport domain
         property System::String^ ProcessParameter;   ///< Process parameter
         property int StateSeverity;                  ///< Process state info severity
         property int StateSeverityLevel;             ///< Process state info severity level
@@ -185,10 +185,10 @@ namespace Eclipse {
         {
           RegistrationClock = native.registration_clock;
           HostName = Internal::StlStringToString(native.host_name);
-          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
-          ProcessId = native.process_id;
           ProcessName = Internal::StlStringToString(native.process_name);
           UnitName = Internal::StlStringToString(native.unit_name);
+          ProcessId = native.process_id;
+          ShmTransportDomain = Internal::StlStringToString(native.shm_transport_domain);
           ProcessParameter = Internal::StlStringToString(native.process_parameter);
           StateSeverity = native.state_severity;
           StateSeverityLevel = native.state_severity_level;
@@ -292,8 +292,8 @@ namespace Eclipse {
         property int ProcessId;                    ///< Process ID
         property System::String^ ServiceName;      ///< Service name
         property System::UInt64 ServiceId;         ///< Service ID
-        property List<MonitoringMethod^>^ Methods; ///< List of methods
         property System::UInt32 Version;           ///< Client protocol version
+        property List<MonitoringMethod^>^ Methods; ///< List of methods
 
         MonitoringClient()
         {
@@ -309,10 +309,10 @@ namespace Eclipse {
           ProcessId = native.process_id;
           ServiceName = Internal::StlStringToString(native.service_name);
           ServiceId = static_cast<System::UInt64>(native.service_id);
+          Version = native.version;
           Methods = gcnew List<MonitoringMethod^>();
           for (const auto& m : native.methods)
             Methods->Add(gcnew MonitoringMethod(m));
-          Version = native.version;
         }
       };
 
