@@ -1,0 +1,32 @@
+name: Trigger Integration Tests
+
+on:
+  push:
+    branches:
+      - master
+      - test
+
+  pull_request:
+    branches:
+      - master
+      - test
+
+  workflow_dispatch:
+
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Test-Framework via repository_dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.TEST_FRAMEWORK_TOKEN }}
+          repository: EmirTutar/ECAL_Test_Framework
+          event-type: run-tests
+          client-payload: |
+            {
+              "sha": "${{ github.sha }}",
+              "repo": "${{ github.repository }}",
+              "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
