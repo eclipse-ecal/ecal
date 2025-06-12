@@ -18,4 +18,3 @@
 
 add_subdirectory(pubsub)
 add_subdirectory(service)
-add_subdirectory(testexec)
