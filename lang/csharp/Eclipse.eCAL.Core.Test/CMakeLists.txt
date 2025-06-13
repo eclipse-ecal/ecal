@@ -49,3 +49,13 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/csharp)
+
+macro(ecal_add_test_executable sample_name)
+  ecal_add_sample(${sample_name} ${sample_name}.cs)
+  target_link_libraries(${sample_name} PRIVATE Eclipse.eCAL.Core)
+  set_property(TARGET ${sample_name} PROPERTY FOLDER tests/csharp)
+  add_dependencies(${sample_name} Eclipse.eCAL.Core.Test)
+endmacro()
+
+ecal_add_test_executable(testexec_csharp)
+

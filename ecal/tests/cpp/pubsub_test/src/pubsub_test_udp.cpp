@@ -68,7 +68,7 @@ TEST(core_cpp_pubsub, ZeroPayloadMessageUDP)
   eCAL::CPublisher pub("A", eCAL::SDataTypeInformation(), pub_config);
 
   // add callback
-  EXPECT_TRUE(sub.SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub.SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -119,7 +119,7 @@ TEST(core_cpp_pubsub, MultipleSendsUDP)
     last_received_msg = std::string{ (const char*)data_.buffer, (size_t)data_.buffer_size };
     last_received_timestamp = data_.send_timestamp;
   };
-  EXPECT_TRUE(sub.SetReceiveCallback(save_data));
+  sub.SetReceiveCallback(save_data);
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

@@ -187,18 +187,18 @@ Subscriber::!Subscriber()
 }
 
 // Set a receive callback.
-bool Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
+void Subscriber::SetReceiveCallback(ReceiveCallbackDelegate^ callback)
 {
   m_receiveCallback = callback;
   auto nativeCallback = CreateNativeReceiveCallback(callback);
-  return m_native_subscriber->SetReceiveCallback(nativeCallback);
+  m_native_subscriber->SetReceiveCallback(nativeCallback);
 }
 
 // Remove the receive callback.
-bool Subscriber::RemoveReceiveCallback()
+void Subscriber::RemoveReceiveCallback()
 {
   m_receiveCallback = nullptr;
-  return m_native_subscriber->RemoveReceiveCallback();
+  m_native_subscriber->RemoveReceiveCallback();
 }
 
 // Get the number of publishers.
