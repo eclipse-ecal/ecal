@@ -42,14 +42,14 @@ namespace Eclipse {
          *
          * @return  The version string.
         **/
-        static System::String^ GetVersion();
+        static System::String^ GetVersionString();
 
         /**
          * @brief Retrieve eCAL release date string.
          *
          * @return  The date string.
         **/
-        static System::String^ GetDate();
+        static System::String^ GetVersionDateString();
 
         /**
         * @brief Initialize eCAL API.

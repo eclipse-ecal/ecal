@@ -69,7 +69,7 @@ public class MirrorServer
     */
     Core.Initialize("mirror server c#");
 
-    Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(string.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     /*
       Now we create the mirror server and give it the name "mirror".
