@@ -79,14 +79,6 @@ jobs:
         key-root: windows-2019
         cache-dir: ${{ github.workspace }}/.ccache
 
-    - name: Show MSVC include paths
-      run: |
-        :: create an empty source file
-        echo // dummy source > dummy.cpp
-        :: preprocess it and show all include dirs
-        cl /nologo /E /showIncludes /TC dummy.cpp
-      shell: cmd
-
     - name: CMake SDK
       run: |
         mkdir "${{ runner.workspace }}\_build\sdk\"
