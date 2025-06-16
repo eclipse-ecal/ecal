@@ -217,6 +217,53 @@ namespace Send_Double_Buffer {
 
 /*
  *
+ * Benchmarking the eCAL send process in zero-copy mode with double-buffering
+ * 
+*/
+namespace Send_Zero_Copy_Double_Buffer {
+  // Benchmark function
+  static void BM_eCAL_Send_Zero_Copy_Double_Buffer(benchmark::State& state) {
+    // Create payload to send, size depends on second argument
+    size_t payload_size = state.range(0);
+    std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
+
+    // Initialize eCAL
+    eCAL::Initialize("Benchmark");
+
+    // Create publisher config
+    eCAL::Publisher::Configuration pub_config;
+    pub_config.layer.shm.zero_copy_mode = true;
+    pub_config.layer.shm.memfile_buffer_count = 2;
+
+    // Create publisher with config
+    eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
+
+    // Create receiver in a different thread
+    std::thread receiver_thread([]() { 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+    } );
+    
+    // Wait for eCAL synchronization
+    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+
+    // This is the benchmarked section: Sending the payload
+    for (auto _ : state) {
+      publisher.Send(content_addr, payload_size);
+    }
+
+    // Finalize eCAL and wait for receiver thread to finish
+    eCAL::Finalize();
+    receiver_thread.join();
+  }
+  // Register the benchmark function
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+}
+
+
+/*
+ *
  * Benchmarking the eCAL send and receive process
  * 
 */
