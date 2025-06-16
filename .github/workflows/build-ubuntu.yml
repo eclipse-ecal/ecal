@@ -203,7 +203,7 @@ jobs:
     strategy:
       matrix:
         # List of all benchmark types
-        bm_type: [pubsub, service, setup]
+        bm_type: [pubsub, pubsub_multi, service, setup]
 
     steps:
     - name: Install Dependencies
