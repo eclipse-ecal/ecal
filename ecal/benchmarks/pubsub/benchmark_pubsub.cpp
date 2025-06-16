@@ -28,9 +28,12 @@
 #include <condition_variable>
 
 #define REGISTRATION_DELAY_MS   2000
+#define ACK_TIMEOUT_MS          50
+
 #define RANGE_MULTIPLIER        1<<6
 #define RANGE_START             1
 #define RANGE_LIMIT             1<<24
+
 #define WARMUP_TIME_S           2
 
 
@@ -71,6 +74,144 @@ namespace Send {
   }
   // Register the benchmark function
   BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+}
+
+
+/*
+ *
+ * Benchmarking the eCAL send process in zero copy mode
+ * 
+*/
+namespace Send_Zero_Copy {
+  // Benchmark function
+  static void BM_eCAL_Send_Zero_Copy(benchmark::State& state) {
+    // Create payload to send, size depends on current argument
+    size_t payload_size = state.range(0);
+    std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
+
+    // Initialize eCAL
+    eCAL::Initialize("Benchmark");
+
+    // Create publisher config
+    eCAL::Publisher::Configuration pub_config;
+    pub_config.layer.shm.zero_copy_mode = true;
+
+    // Create publisher with config
+    eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
+
+    // Create receiver in a different thread
+    std::thread receiver_thread([]() { 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+    } );
+    
+    // Wait for eCAL synchronization
+    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+
+    // This is the benchmarked section: Sending the payload
+    for (auto _ : state) {
+      publisher.Send(content_addr, payload_size);
+    }
+
+    // Finalize eCAL and wait for receiver thread to finish
+    eCAL::Finalize();
+    receiver_thread.join();
+  }
+  // Register the benchmark function
+  BENCHMARK(BM_eCAL_Send_Zero_Copy)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+}
+
+
+/*
+ *
+ * Benchmarking the eCAL send process with handshake
+ * 
+*/
+namespace Send_Handshake {
+  // Benchmark function
+  static void BM_eCAL_Send_Handshake(benchmark::State& state) {
+    // Create payload to send, size depends on current argument
+    size_t payload_size = state.range(0);
+    std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
+
+    // Initialize eCAL
+    eCAL::Initialize("Benchmark");
+
+    // Create publisher config
+    eCAL::Publisher::Configuration pub_config;
+    pub_config.layer.shm.acknowledge_timeout_ms = ACK_TIMEOUT_MS;
+
+    // Create publisher with config
+    eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
+
+    // Create receiver in a different thread
+    std::thread receiver_thread([]() { 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+    } );
+    
+    // Wait for eCAL synchronization
+    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+
+    // This is the benchmarked section: Sending the payload
+    for (auto _ : state) {
+      publisher.Send(content_addr, payload_size);
+    }
+
+    // Finalize eCAL and wait for receiver thread to finish
+    eCAL::Finalize();
+    receiver_thread.join();
+  }
+  // Register the benchmark function
+  BENCHMARK(BM_eCAL_Send_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+}
+
+
+/*
+ *
+ * Benchmarking the eCAL send process with double-buffering
+ * 
+*/
+namespace Send_Double_Buffer {
+  // Benchmark function
+  static void BM_eCAL_Send_Double_Buffer(benchmark::State& state) {
+    // Create payload to send, size depends on second argument
+    size_t payload_size = state.range(0);
+    std::vector<char> content_vector(payload_size);
+    char* content_addr = content_vector.data();
+
+    // Initialize eCAL
+    eCAL::Initialize("Benchmark");
+
+    // Create publisher config
+    eCAL::Publisher::Configuration pub_config;
+    pub_config.layer.shm.memfile_buffer_count = 2;
+
+    // Create publisher with config
+    eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
+
+    // Create receiver in a different thread
+    std::thread receiver_thread([]() { 
+      eCAL::CSubscriber subscriber("benchmark_topic");
+      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+    } );
+    
+    // Wait for eCAL synchronization
+    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+
+    // This is the benchmarked section: Sending the payload
+    for (auto _ : state) {
+      publisher.Send(content_addr, payload_size);
+    }
+
+    // Finalize eCAL and wait for receiver thread to finish
+    eCAL::Finalize();
+    receiver_thread.join();
+  }
+  // Register the benchmark function
+  BENCHMARK(BM_eCAL_Send_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
 }
 
 
