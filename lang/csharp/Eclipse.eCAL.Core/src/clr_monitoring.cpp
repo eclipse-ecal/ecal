@@ -28,9 +28,24 @@ using namespace System;
 using namespace Eclipse::eCAL::Core;
 using namespace Internal;
 
-array<Byte>^ Monitoring::GetMonitoring(MonitoringEntity entities)
+array<System::Byte>^ Monitoring::GetSerializedMonitoring(MonitoringEntity entities)
 {
-  std::string monitoring;
-  ::eCAL::Monitoring::GetMonitoring(monitoring, static_cast<unsigned int>(entities));
-  return StlStringToByteArray(monitoring);
+  std::string monitoring_string;
+  if (!::eCAL::Monitoring::GetMonitoring(monitoring_string, static_cast<unsigned int>(entities)))
+  {
+    return nullptr;
+  }
+
+  return StlStringToByteArray(monitoring_string);
+}
+
+SMonitoring^ Monitoring::GetMonitoring(MonitoringEntity entities)
+{
+  ::eCAL::Monitoring::SMonitoring native_monitoring;
+  if (!::eCAL::Monitoring::GetMonitoring(native_monitoring, static_cast<unsigned int>(entities)))
+  {
+    return nullptr;
+  }
+
+  return gcnew SMonitoring(native_monitoring);
 }
