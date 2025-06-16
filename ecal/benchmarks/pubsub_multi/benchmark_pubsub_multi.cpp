@@ -25,6 +25,7 @@
 #include <thread>
 
 #define REGISTRATION_DELAY_MS   2000
+#define WARMUP_TIME_S           2
 
 #define RANGE_MULTIPLIER        1<<6
 #define RANGE_START             1
@@ -135,7 +136,8 @@ namespace Multi_Send {
     ->ArgsProduct({
       benchmark::CreateDenseRange(TOPIC_COUNT_MIN, TOPIC_COUNT_MAX, TOPIC_COUNT_STEP),
       benchmark::CreateRange(PER_TOPIC_RANGE_START, PER_TOPIC_RANGE_LIMIT, PER_TOPIC_RANGE_MULTIPLIER)})
-    ->UseRealTime();
+    ->UseRealTime()
+    ->MinWarmUpTime(WARMUP_TIME_S);
 }
 
 // Benchmark execution
