@@ -46,6 +46,7 @@ set(ecal_clr_src
     include/service/clr_client.h
     include/service/clr_server.h
     include/service/clr_types.h
+    include/types/clr_monitoring.h
     src/clr_client.cpp
     src/clr_common.cpp
     src/clr_config.cpp
@@ -58,7 +59,7 @@ set(ecal_clr_src
     src/clr_server.cpp
     src/clr_subscriber.cpp
     src/clr_time.cpp
-
+    src/types/clr_monitoring.cpp
 ) 
 
 add_library(${PROJECT_NAME} SHARED ${ecal_clr_src})
