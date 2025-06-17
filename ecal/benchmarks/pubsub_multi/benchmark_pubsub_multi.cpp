@@ -85,7 +85,6 @@ namespace Multi_Send {
       background_thread_vector.emplace_back([i, payload_size](){
         // Create own payload to send
         std::vector<char> content_vector(payload_size);
-        char* content_addr = content_vector.data();
 
         // Create publisher
         eCAL::CPublisher background_publisher("background_topic_" + std::to_string(i));
@@ -95,7 +94,7 @@ namespace Multi_Send {
 
         // Keep sending
         while (!atom_stop) {
-          background_publisher.Send(content_addr, payload_size);
+          background_publisher.Send(content_vector.data(), payload_size);
         }
       });
     }
