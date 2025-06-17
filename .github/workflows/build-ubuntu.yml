@@ -258,6 +258,7 @@ jobs:
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
         
     - name: Log Calculated Throughput with Bencher
+      if: matrix.bm_type == 'pubsub'
       run: |
         bencher run \
         --project ecal \
