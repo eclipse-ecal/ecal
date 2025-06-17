@@ -242,7 +242,7 @@ jobs:
     
     - name: Calculate Throughput
       run: |
-        python throughput_calculator.py -d ../_build/bin
+        python throughput_calculator.py -d ${{ github.workspace }}/_build/bin
       working-directory: ${{ github.workspace }}/throughput_calculator/ecal/benchmarks
         
     - name: Log Benchmark Results with Bencher
