@@ -222,6 +222,14 @@ jobs:
       with:
         name: 'benchmarks_${{ env.OS_VERSION }}'
         path: ${{ github.workspace }}/_build/bin
+        
+    - name: Fetch Throughput Calculator Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            ecal/benchmarks/throughput_calculator.py
+        sparse-checkout-cone-mode: false
+        path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
@@ -230,6 +238,11 @@ jobs:
       run: |
         chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin/
+      
+    - name: Calculate Throughput
+      run: |
+        throughput_calculator.py -d .
       working-directory: ${{ github.workspace }}/_build/bin/
         
     - name: Log Benchmark Results with Bencher
@@ -242,6 +255,17 @@ jobs:
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
+        
+    - name: Log Calculated Throughput with Bencher
+      run: |
+        bencher run \
+        --project ecal \
+        --token '${{secrets.BENCHER_API_TOKEN}}' \
+        --branch '${{ github.ref_name }}' \
+        --testbed '${{ env.OS_VERSION }}' \
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' \
+        --adapter json \
+        --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log_throughput_calculation.json
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
