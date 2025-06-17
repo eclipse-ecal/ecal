@@ -240,6 +240,12 @@ jobs:
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin
       
+    - name: Upload file system
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'files'
+        path: ${{ github.workspace }}/throughput_calculator/*
+    
     - name: Calculate Throughput
       run: |
         python throughput_calculator.py -d ../_build/bin
