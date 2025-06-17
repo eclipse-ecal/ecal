@@ -242,7 +242,7 @@ jobs:
       
     - name: Calculate Throughput
       run: |
-        throughput_calculator.py -d ../_build/bin
+        python throughput_calculator.py -d ../_build/bin
       working-directory: ${{ github.workspace }}/throughput_calculator
         
     - name: Log Benchmark Results with Bencher
