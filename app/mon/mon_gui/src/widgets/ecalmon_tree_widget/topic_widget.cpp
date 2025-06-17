@@ -21,8 +21,8 @@
 
 #include "widgets/models/item_data_roles.h"
 #include "widgets/models/tree_item_type.h"
-
 #include "widgets/visualisation_widget/visualisation_window.h"
+#include "custom_types/byte_size.h"
 
 #include "ecalmon.h"
 
@@ -163,6 +163,8 @@ TopicWidget::TopicWidget(QWidget *parent)
 
   // Set the initial Tree Group
   ui_.group_by_combobox->setCurrentIndex(1);
+
+  ui_.tree_view->setItemDelegateForColumn((int)TopicTreeModel::Columns::TOPIC_SIZE, new ByteSizeDelegate(ui_.tree_view));
 
   // Save the initial state for the resetLayout function
   saveInitialState();

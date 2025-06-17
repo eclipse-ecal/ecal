@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,18 @@
 #include <QUuid>
 #include <QUrl>
 
+#include <custom_types/byte_size.h>
+
 namespace QtUtil
 {
   inline QString variantToString(const QVariant& variant)
   {
+    // 1) handle your custom metatype first:
+    if (variant.userType() == qMetaTypeId<ByteSize>()) {
+      return variant.value<ByteSize>().toString();
+    }
+
+
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     switch (variant.typeId())
 #else

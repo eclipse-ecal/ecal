@@ -101,7 +101,7 @@ private:
     { Columns::TOPIC_TYPE,             "Topic Type" },
     { Columns::TOPIC_DESCRIPTOR,       "Descriptor" },
     { Columns::TRANSPORT_LAYER,        "Layer" },
-    { Columns::TOPIC_SIZE,             "Size [Byte]" },
+    { Columns::TOPIC_SIZE,             "Size" },
     { Columns::CONNECTIONS_LOCAL,      "Loc. Connections" },
     { Columns::CONNECTIONS_EXTERNAL,   "Ext. Connections" },
     { Columns::MESSAGE_DROPS,          "Drops" },
