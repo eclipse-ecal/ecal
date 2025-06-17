@@ -229,7 +229,7 @@ jobs:
         sparse-checkout: |
             ecal/benchmarks/throughput_calculator.py
         sparse-checkout-cone-mode: false
-        path: ${{ github.workspace }}
+        path: ${{ github.workspace }}/throughput_calculator
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
@@ -243,7 +243,7 @@ jobs:
     - name: Calculate Throughput
       run: |
         python throughput_calculator.py -d ../_build/bin
-      working-directory: ${{ github.workspace }}/ecal/benchmarks
+      working-directory: ${{ github.workspace }}/throughput_calculator/ecal/benchmarks
         
     - name: Log Benchmark Results with Bencher
       run: |
@@ -265,7 +265,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
-        --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log_throughput_calculation.json
+        --file ${{ github.workspace }}/throughput_calculator/ecal/benchmarks/ecal_benchmark_${{ matrix.bm_type }}_log_throughput_calculation.json
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
