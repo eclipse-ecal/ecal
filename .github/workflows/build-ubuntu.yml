@@ -241,6 +241,7 @@ jobs:
       working-directory: ${{ github.workspace }}/_build/bin
     
     - name: Calculate Throughput
+      if: matrix.bm_type == 'pubsub'
       run: |
         python throughput_calculator.py -d ${{ github.workspace }}/_build/bin
       working-directory: ${{ github.workspace }}/throughput_calculator/ecal/benchmarks
