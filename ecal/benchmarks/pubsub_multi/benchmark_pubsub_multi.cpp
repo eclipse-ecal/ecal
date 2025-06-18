@@ -73,7 +73,7 @@ namespace Multi_Send {
         background_subscriber_vector.emplace_back(eCAL::CSubscriber("background_topic_" + std::to_string(i)));
       }
       // Keep this thread alive
-      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+      while(!atom_stop) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
     });
 
     // Reset kill signal
@@ -107,7 +107,7 @@ namespace Multi_Send {
       // Create the subscribers
       eCAL::CSubscriber subscriber("benchmark_topic");
       // Keep this thread alive
-      while(eCAL::Ok()) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+      while(!atom_stop) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
     });
 
     // Wait for eCAL synchronization
@@ -118,16 +118,16 @@ namespace Multi_Send {
       publisher.Send(content_addr, payload_size);
     }
 
-    // Send kill signal to publisher threads
+    // Send kill signal to all threads
     atom_stop = true;
 
-    // Finalize eCAL and wait for threads to finish
-    eCAL::Finalize();
+    // Wait for threads to finish and finalize eCAL
     background_receiver_thread.join();
     main_receiver_thread.join();
     for (auto& t : background_thread_vector) {
       t.join();
     }
+    eCAL::Finalize();
   }
 
   // Register benchmark
