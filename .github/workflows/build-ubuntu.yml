@@ -201,6 +201,7 @@ jobs:
       OS_VERSION: ubuntu-24.04
     
     strategy:
+      fail-fast: false
       matrix:
         # List of all benchmark types
         bm_type: [pubsub, pubsub_multi, service, setup]
