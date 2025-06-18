@@ -258,7 +258,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
-        --file ${{ github.workspace }}/_build/bin/{{ env.LOG_FILE_NAME }}.json
+        --file ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
         
     - name: Log Calculated Throughput with Bencher
       if: matrix.bm_type == 'pubsub'
@@ -270,7 +270,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
-        --file ${{ github.workspace }}/throughput_calculator/{{ LOG_FILE_NAME }}_throughput-calculation.json
+        --file ${{ github.workspace }}/throughput_calculator/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
