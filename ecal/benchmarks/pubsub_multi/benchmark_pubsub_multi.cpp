@@ -27,10 +27,6 @@
 #define REGISTRATION_DELAY_MS   2000
 #define WARMUP_TIME_S           2
 
-#define RANGE_MULTIPLIER        1<<6
-#define RANGE_START             1
-#define RANGE_LIMIT             1<<24
-
 #define TOPIC_COUNT_MIN             1
 #define TOPIC_COUNT_MAX             8
 #define TOPIC_COUNT_STEP            1
@@ -104,7 +100,6 @@ namespace Multi_Send {
 
     // Create main subscriber in a new thread
     std::thread main_receiver_thread([](){
-      // Create the subscribers
       eCAL::CSubscriber subscriber("benchmark_topic");
       // Keep this thread alive
       while(!atom_stop) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
