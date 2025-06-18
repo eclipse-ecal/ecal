@@ -196,15 +196,17 @@ jobs:
     runs-on: ubuntu-24.04
     needs: build-ubuntu
     
-    env:
-      # Check that this version is also present in the job above and the one used for this job
-      OS_VERSION: ubuntu-24.04
-    
     strategy:
       fail-fast: false
       matrix:
         # List of all benchmark types
         bm_type: [pubsub, pubsub_multi, service, setup]
+    
+    env:
+      # Name of the benchmark log file without extension
+      LOG_FILE_NAME: ecal_benchmark_${{ matrix.bm_type }}_log
+      # Check that this version is also present in the job above and the one used for this job
+      OS_VERSION: ubuntu-24.04
 
     steps:
     - name: Install Dependencies
@@ -228,7 +230,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         sparse-checkout: |
-            ecal/benchmarks/throughput_calculator.py
+            throughput_calculator.py
         sparse-checkout-cone-mode: false
         path: ${{ github.workspace }}/throughput_calculator
     
@@ -238,14 +240,14 @@ jobs:
     - name: Run Benchmark
       run: |
         chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
-        ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=ecal_benchmark_${{ matrix.bm_type }}_log.json --benchmark_out_format=json
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}/_build/bin
     
     - name: Calculate Throughput
       if: matrix.bm_type == 'pubsub'
       run: |
-        python throughput_calculator.py -d ${{ github.workspace }}/_build/bin
-      working-directory: ${{ github.workspace }}/throughput_calculator/ecal/benchmarks
+        python throughput_calculator.py -f ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
+      working-directory: ${{ github.workspace }}/throughput_calculator
         
     - name: Log Benchmark Results with Bencher
       run: |
@@ -256,7 +258,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
-        --file ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
+        --file ${{ github.workspace }}/_build/bin/{{ env.LOG_FILE_NAME }}.json
         
     - name: Log Calculated Throughput with Bencher
       if: matrix.bm_type == 'pubsub'
@@ -268,7 +270,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
-        --file ${{ github.workspace }}/throughput_calculator/ecal/benchmarks/ecal_benchmark_${{ matrix.bm_type }}_log_throughput_calculation.json
+        --file ${{ github.workspace }}/throughput_calculator/{{ LOG_FILE_NAME }}_throughput-calculation.json
 
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
