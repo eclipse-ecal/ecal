@@ -17,26 +17,24 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecalmon.h"
-#include <QtWidgets/QApplication>
-#include <custom_types/byte_size.h>
-#include <ecal/ecal.h>
+#include "custom_types/byte_size.h"
 
-int main(int argc, char *argv[])
+QString ByteSize::toString(int precision) const
 {
-  QApplication a(argc, argv);
+  // Binary (IEC) units: B, KiB, MiB, GiB, …
+  static constexpr const char* units[] = { "B", "KiB", "MiB", "GiB", "TiB", "PiB" };
 
-  qRegisterMetaType<QVector<int>>("QVector<int>");
-  qRegisterMetaType<ByteSize>("ByteSize");
+  double value = double(m_bytes);
+  int    idx   = 0;
+  // divide by 1024 until we're under 1024 or out of units
+  while (value >= 1024.0 && idx < (int)(sizeof(units)/sizeof(*units)) - 1) {
+    value /= 1024.0;
+    ++idx;
+  }
+  // e.g. QString::number(1.23456, 'f', 2) -> "1.23"
+  return QString::number(value, 'f', precision) + ' ' + units[idx];
+}
 
-  a.setOrganizationName      ("Continental");
-  a.setOrganizationDomain    ("continental-corporation.com");
-  a.setApplicationName       ("ecalmongui");
-  a.setApplicationDisplayName("eCAL Monitor");
-
-  Ecalmon* w = new Ecalmon();
-  w->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);
-
-  w->show();
-  return a.exec();
+bool ByteSize::operator<(const ByteSize& other) const {
+  return m_bytes < other.m_bytes;
 }
