@@ -62,7 +62,7 @@ public class MirrorClient
     */
     Core.Initialize("mirror client c#");
 
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     /*
       Create a client that connects to a "mirror" server.
@@ -71,14 +71,18 @@ public class MirrorClient
     ServiceMethodInformationList methodInformationList = new ServiceMethodInformationList();
     methodInformationList.Methods.Add(new ServiceMethodInformation("echo", new DataTypeInformation(), new DataTypeInformation()));
     methodInformationList.Methods.Add(new ServiceMethodInformation("reverse", new DataTypeInformation(), new DataTypeInformation()));
-    
+
     ServiceClient mirrorClient = new ServiceClient("mirror", methodInformationList);
-    
+
     /*
       We wait until the client is connected to a server,
       so we don't call methods that are not available.
     */
-    // isConnected() function not implemented in C# yet
+    while (!mirrorClient.IsConnected())
+    {
+      Console.WriteLine("Waiting for a service ...");
+      System.Threading.Thread.Sleep(1000);
+    }
 
     /*
       Allow to alternate between the two methods "echo" and "reverse".
@@ -96,7 +100,7 @@ public class MirrorClient
       byte[] request = Encoding.UTF8.GetBytes("stressed");
 
       /*
-        Service call: blocking
+        Service call with response
       */
       List<ServiceResponse> responseList = mirrorClient.CallWithResponse(method, request, (int)Eclipse.eCAL.Core.ServiceClient.DefaultTimeArgument);
       
@@ -112,7 +116,20 @@ public class MirrorClient
       }
       else
       {
-        Console.WriteLine("Method blocking call failed.");
+        Console.WriteLine("Method call with response failed.");
+      }
+
+      /*
+        Service call with callback
+      */
+      if (!mirrorClient.CallWithCallback(
+        method,
+        request,
+        response => PrintServiceResponse(response),
+        (int)ServiceClient.DefaultTimeArgument)
+      )
+      {
+        Console.WriteLine("Method call with callback failed.");
       }
 
       System.Threading.Thread.Sleep(1000);

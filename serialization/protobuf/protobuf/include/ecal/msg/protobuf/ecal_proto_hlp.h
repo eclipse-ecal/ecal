@@ -140,7 +140,7 @@ namespace protobuf
 
   inline std::string GetProtoMessageTypeName(const google::protobuf::Message& msg_)
   {
-    return(std::string("proto:") + msg_.GetTypeName());
+    return msg_.GetTypeName();
   }
 
   inline std::vector<std::string> GetProtoMessageFieldNames(const std::vector<const google::protobuf::FieldDescriptor*>& fields_)

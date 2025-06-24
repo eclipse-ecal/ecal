@@ -176,7 +176,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   auto pub = std::make_shared<eCAL::CPublisher>("foo");
 
   // add callback
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -205,7 +205,7 @@ TEST(core_cpp_pubsub, SimpleMessageCB)
   EXPECT_EQ(0, g_callback_received_bytes);
 
   // add callback again
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // send content
   g_callback_received_bytes = 0;
@@ -249,7 +249,7 @@ TEST(core_cpp_pubsub, DynamicSizeCB)
   auto pub = std::make_shared<eCAL::CPublisher>("foo");
 
   // add callback
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -301,7 +301,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
   pub = new eCAL::CPublisher("foo");
 
   // add callback
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -324,7 +324,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
   sub = new eCAL::CSubscriber("foo");
 
   // add callback
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
@@ -346,7 +346,7 @@ TEST(core_cpp_pubsub, DynamicCreate)
   sub = new eCAL::CSubscriber("foo");
 
   // add callback
-  EXPECT_TRUE(sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3)));
+  sub->SetReceiveCallback(std::bind(OnReceive, std::placeholders::_3));
 
   // let's match them
   eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);

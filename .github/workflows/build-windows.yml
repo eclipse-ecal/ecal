@@ -10,7 +10,7 @@ env:
 
 jobs:
   build-windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     env:
       # enable starting Qt GUI Applications
@@ -186,7 +186,7 @@ jobs:
     - name: Configure C# bindings
       run: |
         cmake -S lang/csharp -B "${{ runner.workspace }}/_build/csharp" ^
-        -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        -G "Visual Studio 17 2022" -A x64 -T v142 ^
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/complete" ^
         -DCMAKE_BUILD_TYPE=Release ^
