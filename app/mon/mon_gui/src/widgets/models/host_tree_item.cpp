@@ -18,6 +18,7 @@
 */
 
 #include "host_tree_item.h"
+#include "custom_types/byte_size.h"
 
 #include <QColor>
 #include <QFont>
@@ -63,11 +64,11 @@ QVariant HostTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::SENT_DATA)
     {
-      return data_sent_bytes_;
+      return QVariant::fromValue(ByteSize(data_sent_bytes_));
     }
     else if (column == Columns::RECEIVED_DATA)
     {
-      return data_received_bytes_;
+      return QVariant::fromValue(ByteSize(data_received_bytes_));
     }
     else
     {
@@ -81,12 +82,6 @@ QVariant HostTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       QString raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
       return (!raw_data.isEmpty() ? raw_data : "- ? -");
-    }
-    else if ((column == Columns::SENT_DATA)
-         || (column  == Columns::RECEIVED_DATA))
-    {
-      long long raw_data = data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toLongLong(); //-V1016
-      return QString::number(raw_data / 1024.0, 'f', 2);
     }
     else
     {

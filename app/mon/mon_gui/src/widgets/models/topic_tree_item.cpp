@@ -18,6 +18,7 @@
 */
 
 #include "topic_tree_item.h"
+#include "custom_types/byte_size.h"
 
 #include <QFont>
 #include <QString>
@@ -104,7 +105,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TOPIC_SIZE)
     {
-      return topic_.topic_size();
+      return QVariant::fromValue(ByteSize(topic_.topic_size()));
     }
     else if (column == Columns::CONNECTIONS_LOCAL)
     {
@@ -226,6 +227,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       const std::string& raw_data = topic_.datatype_information().descriptor_information();
       return static_cast<int>(raw_data.size());
+    }
+    else if (column == Columns::TOPIC_SIZE)
+    {
+      return topic_.topic_size();
     }
 
     return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016

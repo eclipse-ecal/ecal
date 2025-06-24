@@ -17,26 +17,36 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "ecalmon.h"
-#include <QtWidgets/QApplication>
-#include <custom_types/byte_size.h>
-#include <ecal/ecal.h>
+#pragma once
 
-int main(int argc, char *argv[])
+#include <QtGlobal>
+#include <QString>
+#include <QMetaType>
+#include <cstdint>
+#include <QStyledItemDelegate>
+
+class ByteSize
 {
-  QApplication a(argc, argv);
+public:
+    explicit ByteSize(uint64_t bytes = 0) : m_bytes(bytes) {}
 
-  qRegisterMetaType<QVector<int>>("QVector<int>");
-  qRegisterMetaType<ByteSize>("ByteSize");
+    QString toString(int precision = 2) const;
 
-  a.setOrganizationName      ("Continental");
-  a.setOrganizationDomain    ("continental-corporation.com");
-  a.setApplicationName       ("ecalmongui");
-  a.setApplicationDisplayName("eCAL Monitor");
+    bool operator<(const ByteSize &other) const;
 
-  Ecalmon* w = new Ecalmon();
-  w->setAttribute(Qt::WidgetAttribute::WA_DeleteOnClose);
 
-  w->show();
-  return a.exec();
-}
+private:
+    uint64_t m_bytes;
+};
+
+Q_DECLARE_METATYPE(ByteSize)
+
+class ByteSizeDelegate : public QStyledItemDelegate {
+public:
+  using QStyledItemDelegate::QStyledItemDelegate;
+  QString displayText(const QVariant& v, const QLocale& /*loc*/) const override {
+    if (v.canConvert<ByteSize>())
+      return v.value<ByteSize>().toString();
+    return QStyledItemDelegate::displayText(v, {});
+  }
+};
