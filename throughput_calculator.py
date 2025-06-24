@@ -27,8 +27,6 @@ ap = argparse.ArgumentParser()
 ap.add_argument('-f', '--file', required=True, help="Path to the the log file. Can be relative to this python file.")
 args = ap.parse_args()
 file_in_path = args.file
-# Debug file path
-file_in_path = "C:/Users/uig33366\OneDrive - Continental AG/Praxisphase 2025 AM Software Platform/Benchmarks/pubsub/build/Release/results.json"
 
 # Check if file exists
 if not os.path.isfile(file_in_path):
