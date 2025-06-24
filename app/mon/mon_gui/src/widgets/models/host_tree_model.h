@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,8 +77,8 @@ private:
     { Columns::HOST_NAME,        "Host" },
     { Columns::PUBLISHER_COUNT,  "Publisher" },
     { Columns::SUBSCRIBER_COUNT, "Subscriber" },
-    { Columns::SENT_DATA,        "Pub. Traffic [KiB/s]" },
-    { Columns::RECEIVED_DATA,    "Sub. Traffic [KiB/s]" },
+    { Columns::SENT_DATA,        "Pub. Traffic [/s]" },
+    { Columns::RECEIVED_DATA,    "Sub. Traffic [/s]" },
     { Columns::PUBLISHER_COUNT,  "OS" },
   };
 
