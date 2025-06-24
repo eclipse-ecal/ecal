@@ -24,45 +24,69 @@ import re
 
 # Read log file path from argument
 ap = argparse.ArgumentParser()
-ap.add_argument('-f','--file',help='Path to the the log file. Can be relative to this python file.')
+ap.add_argument('-f', '--file', required=True, help="Path to the the log file. Can be relative to this python file.")
 args = ap.parse_args()
-file_path = args.file
+file_in_path = args.file
+# Debug file path
+file_in_path = "C:/Users/uig33366\OneDrive - Continental AG/Praxisphase 2025 AM Software Platform/Benchmarks/pubsub/build/Release/results.json"
 
-# Do the calculations
-with open(file_path, 'r') as f:
-   data = json.load(f)
+# Check if file exists
+if not os.path.isfile(file_in_path):
+   print(f"ERROR: File not found at path: {file_in_path}")
+   exit(1)
 
-# Extract context
-context = data["context"]
+# Decode JSON file
+try:
+   with open(file_in_path, 'r') as f:
+      data = json.load(f)
+except json.JSONDecodeError as e:
+   print(f"ERROR: Failed to parse JSON file: {e}")
+   exit(1)
+
+# Check if benchmark data exists
+if "benchmarks" not in data or not isinstance(data["benchmarks"], list):
+   print("ERROR: 'benchmarks' key missing or not a list in the JSON file.")
+   exit(1)
+
 # Extract benchmark data
 benchmarks = data["benchmarks"]
 # Create list for the results
 full_results = {}
 
 for itm in benchmarks:
-   # Get payload size (in byte) from benchmark name
-   payload_size = int(re.search(r'/(\d+)/', itm["name"]).group(1))
-   # Get time taken. Expecting time in nanoseconds
-   real_time_ns = float(itm["real_time"])
-   # Calculating send frequency in hertz (corresponds to throughput in ops/s)
-   frequency = 1 / (real_time_ns * 10**-9)
-   # Calculating speed in byte per second
-   speed = frequency * payload_size
-   # Create new dictionary for this datapoint
-   datapoint = {
-      "throughput" : {
-         "value" : frequency
-      },
-      "speed" : {
-         "value" : speed
+   try:
+      # Get payload size (in byte) from benchmark name
+      payload_size = int(re.search(r'/(\d+)/', itm["name"]).group(1))
+      # Get time taken. Expecting time in nanoseconds
+      real_time_ns = float(itm["real_time"])
+      # Calculating send frequency in hertz (corresponds to throughput in ops/s)
+      frequency = 1 / (real_time_ns * 10**-9)
+      # Calculating speed in bytes per second
+      speed = frequency * payload_size
+      # Output to console
+      print(f"Payload Size: {payload_size} Bytes  ||  Real Time: {real_time_ns} ns  ||  Frequency: {frequency} ops/s  ||  Datarate: {speed} Bytes/s")
+      # Create new dictionary for this datapoint
+      datapoint = {
+         "throughput" : {
+            "value" : frequency
+         },
+         "speed" : {
+            "value" : speed
+         }
       }
-   }
-   # Add dictionary to full results dictionary
-   full_results.update({itm["name"] : datapoint})
+      # Add dictionary to full results dictionary
+      full_results.update({itm["name"] : datapoint})
+   except (KeyError, ValueError, AttributeError) as e:
+      print(f"WARNING: Skipping invalid benchmark entry: {itm}. Reason: {e}")
 
 # Write full calculation results into a new json file
-filename_no_ext = re.sub(r'\.[^.]+$', "", os.path.basename(file_path))
-with open(f"{filename_no_ext}_throughput-calculation.json", "w") as file_out:
-   json.dump(full_results, file_out, indent=4)
+filename_no_ext = re.sub(r'\.[^.]+$', "", os.path.basename(file_in_path))
+file_out = f"{filename_no_ext}_throughput-calculation.json"
+try:
+   with open(file_out, "w") as f:
+      json.dump(full_results, f, indent=4)
+except IOError as e:
+   print(f"ERROR: Failed to write output file: {e}")
+   exit(1)
 
-print("SUCCESS")
+print(f"Results written to {os.path.abspath(file_out)}")
