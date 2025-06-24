@@ -828,12 +828,7 @@ namespace eCAL
             info_ = { false, "Error creating eCAL subsribers" };
             continue;
           }
-          if (!subscriber->SetReceiveCallback(std::bind(&EcalRecImpl::EcalMessageReceived, this, std::placeholders::_1, std::placeholders::_3)))
-          {
-            EcalRecLogger::Instance()->error("Error adding callback for subscriber on topic " + topic);
-            info_ = { false, "Error creating eCAL subsribers" };
-            continue;
-          }
+          subscriber->SetReceiveCallback(std::bind(&EcalRecImpl::EcalMessageReceived, this, std::placeholders::_1, std::placeholders::_3));
           subscriber_map_.emplace(topic, std::move(subscriber));
         }
       }

@@ -24,7 +24,7 @@ Visit the eCAL Documentation at 🌐 https://ecal.io for more information.
 * eCAL is fast (1 - 20 GB/s, depends on payload size. Check the measured performance [here](https://eclipse-ecal.github.io/ecal/advanced/performance.html))
 * eCAL provides both publish-subscribe and server-client patterns
 * eCAL is brokerless
-* eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/kopernikusai/ecal-rs))
+* eCAL provides a C++ and C interface for easy integration into other languages (like python, csharp or [rust](https://github.com/eclipse-ecal/rustecal))
 * eCAL can be used in conjunction with Matlab Simulink as [eCAL Simulink Toolbox](https://de.mathworks.com/matlabcentral/fileexchange/92825-ecal-toolbox) for simulation and prototyping
 * eCAL has powerful tools for [recording](https://eclipse-ecal.github.io/ecal/getting_started/recorder.html), [replay](https://eclipse-ecal.github.io/ecal/getting_started/player.html) and [monitoring](https://eclipse-ecal.github.io/ecal/getting_started/monitor.html) all your data flows - decentralized
 * eCAL is simple and zero-conf. No complex configuration for communication details and QOS settings are needed
@@ -132,7 +132,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [udpcap](https://github.com/eclipse-ecal/udpcap) - Npcap based UDP-socket emulation to increase the eCAL performance on MS Windows
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
 * [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
-* [ecal-rs](https://github.com/kopernikusai/ecal-rs) - eCAL rust language binding
+* [rustecal](https://github.com/eclipse-ecal/rustecal) - eCAL rust language binding
 * [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications
 * [ADMA2eCAL](https://github.com/GeneSysElektronik/ADMA2eCAL) - Software gateway for connection to ADMA hardware from GeneSys Elekronik GmbH 

@@ -33,22 +33,29 @@ public class MonitoringReceive
   public static void Main()
   {
     // Initialize eCAL API.
-    Core.Initialize("monitoring receive csharp", Init.Monitoring);
+    Core.Initialize("monitoring receive csharp", Init.Flags.Monitoring);
 
     // Print version info.
-    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersion(), Core.GetDate()));
+    Console.WriteLine(String.Format("eCAL {0} ({1})\n", Core.GetVersionString(), Core.GetVersionDateString()));
 
     // Idle main thread.
     while (Core.Ok())
     {
       // Get monitoring data.
-      var monitoring_bytes = Monitoring.GetMonitoring(MonitoringEntity.All);
+      var monitoring_bytes = Monitoring.GetSerializedMonitoring(MonitoringEntity.All);
 
-      // Parse monitoring data.
-      var monitoring = ECAL.Pb.Monitoring.Parser.ParseFrom(monitoring_bytes);
+      if (monitoring_bytes != null)
+      {
+        // Parse monitoring data.
+        var monitoring = ECAL.Pb.Monitoring.Parser.ParseFrom(monitoring_bytes);
 
-      // Print monitoring data.      
-      Console.WriteLine(String.Format("Receiving: {0}", monitoring.ToString()));
+        // Print monitoring data.      
+        Console.WriteLine(String.Format("Receiving: {0}", monitoring.ToString()));
+      }
+      else
+      {
+        Console.WriteLine("No monitoring data received.");
+      }
 
       // Sleep for a second.
       System.Threading.Thread.Sleep(1000);
