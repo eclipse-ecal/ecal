@@ -28,7 +28,9 @@ add_executable(${PROJECT_NAME} ${sources})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    ecal_service)
+    ecal_service
+    _ecal_service_warnings
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 

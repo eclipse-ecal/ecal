@@ -42,7 +42,7 @@ set(sources
     src/functions/username.h
 )
 
-# QEcalParser is an internal implementation detail for applications so it can
+# EcalParser is an internal implementation detail for applications so it can
 # always be static and not installed/exported
 ecal_add_static_library(${PROJECT_NAME}
     ${includes}
