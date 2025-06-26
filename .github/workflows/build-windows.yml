@@ -323,26 +323,26 @@ jobs:
         
     - name: Log Benchmark Results with Bencher
       run: |
-        bencher run \
-        --project ecal \
-        --token '${{secrets.BENCHER_API_TOKEN}}' \
-        --branch '${{ github.ref_name }}' \
-        --testbed '${{ env.OS_VERSION }}' \
-        --github-actions '${{ secrets.GITHUB_TOKEN }}' \
-        --adapter cpp_google \
+        bencher run `
+        --project ecal `
+        --token '${{secrets.BENCHER_API_TOKEN}}' `
+        --branch '${{ github.ref_name }}' `
+        --testbed '${{ env.OS_VERSION }}' `
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' `
+        --adapter cpp_google `
         --file ${{ github.workspace }}/_build/complete/bin/${{ env.LOG_FILE_NAME }}.json
       shell: pwsh
         
     - name: Log Calculated Throughput with Bencher
       if: matrix.bm_type == 'pubsub'
       run: |
-        bencher run \
-        --project ecal \
-        --token '${{secrets.BENCHER_API_TOKEN}}' \
-        --branch '${{ github.ref_name }}' \
-        --testbed '${{ env.OS_VERSION }}' \
-        --github-actions '${{ secrets.GITHUB_TOKEN }}' \
-        --adapter json \
+        bencher run `
+        --project ecal `
+        --token '${{secrets.BENCHER_API_TOKEN}}' `
+        --branch '${{ github.ref_name }}' `
+        --testbed '${{ env.OS_VERSION }}' `
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' `
+        --adapter json `
         --file ${{ github.workspace }}/throughput_calculator/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
       shell: pwsh
 
