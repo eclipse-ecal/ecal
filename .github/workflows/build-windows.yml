@@ -317,7 +317,7 @@ jobs:
       if: matrix.bm_type == 'pubsub'
       run: |
         python throughput_calculator.py -f ${{ runner.workspace }}/_build/complete/bin/${{ env.LOG_FILE_NAME }}.json
-      working-directory: ${{ runner.workspace }}
+      working-directory: ${{ runner.workspace }}/ecal
       shell: cmd
         
     - name: Log Benchmark Results with Bencher
