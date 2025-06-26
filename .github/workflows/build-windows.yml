@@ -342,7 +342,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' `
         --github-actions '${{ secrets.GITHUB_TOKEN }}' `
         --adapter json `
-        --file ${{ runner.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+        --file ${{ runner.workspace }}/ecal/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
       shell: pwsh
 
     - name: Upload Benchmark Results
