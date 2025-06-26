@@ -301,7 +301,6 @@ jobs:
         sparse-checkout: |
             throughput_calculator.py
         sparse-checkout-cone-mode: false
-        path: ${{ runner.workspace }}/throughput_calculator
     
     - name: Install Bencher CLI
       run: |
@@ -318,7 +317,7 @@ jobs:
       if: matrix.bm_type == 'pubsub'
       run: |
         python throughput_calculator.py -f ${{ runner.workspace }}/_build/complete/bin/${{ env.LOG_FILE_NAME }}.json
-      working-directory: ${{ runner.workspace }}/throughput_calculator
+      working-directory: ${{ runner.workspace }}
       shell: cmd
         
     - name: Log Benchmark Results with Bencher
@@ -343,7 +342,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' `
         --github-actions '${{ secrets.GITHUB_TOKEN }}' `
         --adapter json `
-        --file ${{ runner.workspace }}/throughput_calculator/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+        --file ${{ runner.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
       shell: pwsh
 
     - name: Upload Benchmark Results
