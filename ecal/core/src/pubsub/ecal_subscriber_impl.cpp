@@ -362,23 +362,18 @@ namespace eCAL
   void CSubscriberImpl::ApplyPublisherUnregistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     // remove key from connection map
-    bool last_connection_gone(false);
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mtx);
 
       m_connection_map.erase(publication_info_);
-      last_connection_gone = m_connection_map.empty();
 
       // update connection count
       m_connection_count = GetConnectionCount();
     }
 
-    if (last_connection_gone)
-    {
-      // fire disconnect event
-      FireDisconnectEvent(publication_info_, data_type_info_);
-    }
-
+    // fire disconnect event
+    FireDisconnectEvent(publication_info_, data_type_info_);
+    
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
 #endif
