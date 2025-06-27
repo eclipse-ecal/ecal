@@ -64,29 +64,33 @@ protected:
   }
 };
 
-TEST_F(PubSubEventTest, PublisherCallback_TopicIdsMatchSubscribers)
+using core_cpp_pubsub_event = PubSubEventTest;
+
+TEST_F(core_cpp_pubsub_event, PublisherCallback_TopicIdsMatchSubscribers)
 {
   std::vector<PubEvent> events;
   std::unordered_set<STopicId> expected_ids;
 
-  CPublisher pub(
-    "MyTopic",
-    SDataTypeInformation(),
-    [&events](const STopicId& tid, const SPubEventCallbackData& d)
-    {
-      events.push_back({ tid, d.event_type });
-    });
-  wait_disc();
-
   {
-    CSubscriber sub1("MyTopic");  expected_ids.insert(sub1.GetTopicId());
-    CSubscriber sub2("MyTopic");  expected_ids.insert(sub2.GetTopicId());
+    CPublisher pub(
+      "MyTopic",
+      SDataTypeInformation(),
+      [&events](const STopicId& tid, const SPubEventCallbackData& d)
+      {
+        events.push_back({ tid, d.event_type });
+      });
     wait_disc();
-    CSubscriber sub3("MyTopic");  expected_ids.insert(sub3.GetTopicId());
+
+    {
+      CSubscriber sub1("MyTopic");  expected_ids.insert(sub1.GetTopicId());
+      CSubscriber sub2("MyTopic");  expected_ids.insert(sub2.GetTopicId());
+      wait_disc();
+      CSubscriber sub3("MyTopic");  expected_ids.insert(sub3.GetTopicId());
+      wait_disc();
+      //wait_disc();
+    }
     wait_disc();
-    wait_disc();
-  }
-  wait_disc();
+  } // destroy also Publisher
 
   std::unordered_set<STopicId> conn_ids, disc_ids;
   for (auto& e : events)
@@ -99,29 +103,61 @@ TEST_F(PubSubEventTest, PublisherCallback_TopicIdsMatchSubscribers)
   EXPECT_EQ(disc_ids, expected_ids);
 }
 
-TEST_F(PubSubEventTest, SubscriberCallback_TopicIdsMatchPublishers)
+
+TEST_F(core_cpp_pubsub_event, PublisherCallback_LongSleepInCallback)
+{
+  bool disconnect_called = false;
+  {
+    CPublisher pub(
+      "MyTopic",
+      SDataTypeInformation(),
+      [&disconnect_called](const STopicId& tid, const SPubEventCallbackData& d)
+      {
+        if (d.event_type == ePublisherEvent::disconnected)
+        {
+          std::this_thread::sleep_for(1s);
+          disconnect_called = true;
+        }
+      });
+    wait_disc();
+
+    {
+      CSubscriber sub("MyTopic");
+      wait_disc();
+    }
+    wait_disc();
+  } // destroy also Publisher
+
+  EXPECT_TRUE(disconnect_called) << "Disconnect has not been called";
+}
+
+
+
+TEST_F(core_cpp_pubsub_event, SubscriberCallback_TopicIdsMatchPublishers)
 {
   std::vector<SubEvent> events;
   std::unordered_set<STopicId> expected_ids;
 
-  CSubscriber sub(
-    "MyTopic",
-    SDataTypeInformation(),
-    [&events](const STopicId& tid, const SSubEventCallbackData& d)
-    {
-      events.push_back({ tid, d.event_type });
-    });
-  wait_disc();
-
   {
-    CPublisher pub1("MyTopic");  expected_ids.insert(pub1.GetTopicId());
-    CPublisher pub2("MyTopic");  expected_ids.insert(pub2.GetTopicId());
+    CSubscriber sub(
+      "MyTopic",
+      SDataTypeInformation(),
+      [&events](const STopicId& tid, const SSubEventCallbackData& d)
+      {
+        events.push_back({ tid, d.event_type });
+      });
     wait_disc();
-    CPublisher pub3("MyTopic");  expected_ids.insert(pub3.GetTopicId());
-    wait_disc();
+
+    {
+      CPublisher pub1("MyTopic");  expected_ids.insert(pub1.GetTopicId());
+      CPublisher pub2("MyTopic");  expected_ids.insert(pub2.GetTopicId());
+      wait_disc();
+      CPublisher pub3("MyTopic");  expected_ids.insert(pub3.GetTopicId());
+      wait_disc();
+      wait_disc();
+    }
     wait_disc();
   }
-  wait_disc();
 
   std::unordered_set<STopicId> conn_ids, disc_ids;
   for (auto& e : events)
@@ -132,4 +168,31 @@ TEST_F(PubSubEventTest, SubscriberCallback_TopicIdsMatchPublishers)
 
   EXPECT_EQ(conn_ids, expected_ids);
   EXPECT_EQ(disc_ids, expected_ids);
+}
+
+TEST_F(core_cpp_pubsub_event, SubscriberCallback_LongSleepInCallback)
+{
+  bool disconnect_called = false;
+  {
+    CSubscriber sub(
+      "MyTopic",
+      SDataTypeInformation(),
+      [&disconnect_called](const STopicId& tid, const SSubEventCallbackData& d)
+      {
+        if (d.event_type == eSubscriberEvent::disconnected)
+        {
+          std::this_thread::sleep_for(1s);
+          disconnect_called = true;
+        }
+      });
+    wait_disc();
+
+    {
+      CPublisher pub("MyTopic");
+      wait_disc();
+    }
+    wait_disc();
+  } // destroy also Publisher
+
+  EXPECT_TRUE(disconnect_called) << "Disconnect has not been called";
 }
