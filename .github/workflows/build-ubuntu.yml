@@ -242,7 +242,6 @@ jobs:
       run: |
         chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
-      working-directory: ${{ github.workspace }}/_build/bin
     
     - name: Calculate Throughput
       if: matrix.bm_type == 'pubsub'
