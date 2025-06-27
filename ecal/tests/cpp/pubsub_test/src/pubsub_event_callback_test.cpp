@@ -48,7 +48,9 @@ class PubSubEventTest : public ::testing::Test
 protected:
   void SetUp() override
   {
-    eCAL::Initialize("PubSubEventTest");
+    eCAL::Configuration config;
+    config.registration.registration_refresh = 100;
+    eCAL::Initialize(config, "PubSubEventTest");
   }
 
   void TearDown() override
@@ -58,7 +60,7 @@ protected:
 
   void wait_disc() const
   {
-    std::this_thread::sleep_for(2s);
+    std::this_thread::sleep_for(200ms);
   }
 };
 
@@ -81,6 +83,7 @@ TEST_F(PubSubEventTest, PublisherCallback_TopicIdsMatchSubscribers)
     CSubscriber sub2("MyTopic");  expected_ids.insert(sub2.GetTopicId());
     wait_disc();
     CSubscriber sub3("MyTopic");  expected_ids.insert(sub3.GetTopicId());
+    wait_disc();
     wait_disc();
   }
   wait_disc();
@@ -115,6 +118,7 @@ TEST_F(PubSubEventTest, SubscriberCallback_TopicIdsMatchPublishers)
     CPublisher pub2("MyTopic");  expected_ids.insert(pub2.GetTopicId());
     wait_disc();
     CPublisher pub3("MyTopic");  expected_ids.insert(pub3.GetTopicId());
+    wait_disc();
     wait_disc();
   }
   wait_disc();
