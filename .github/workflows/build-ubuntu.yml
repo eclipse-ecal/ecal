@@ -211,6 +211,13 @@ jobs:
       OS_VERSION: ubuntu-24.04
 
     steps:
+    - name: Fetch Throughput Calculator Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            throughput_calculator.py
+        sparse-checkout-cone-mode: false
+        
     - name: Install Dependencies
       run: |
         sudo apt-get update
@@ -227,13 +234,6 @@ jobs:
       with:
         name: 'benchmarks_${{ env.OS_VERSION }}'
         path: ${{ github.workspace }}
-        
-    - name: Fetch Throughput Calculator Python Script
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: |
-            throughput_calculator.py
-        sparse-checkout-cone-mode: false
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main

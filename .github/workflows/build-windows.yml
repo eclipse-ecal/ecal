@@ -282,6 +282,12 @@ jobs:
       OS_VERSION: windows-2022
 
     steps:
+    - name: Fetch Throughput Calculator Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            throughput_calculator.py
+        sparse-checkout-cone-mode: false
     
     - name: Download eCAL Libraries
       uses: actions/download-artifact@v4
@@ -294,13 +300,6 @@ jobs:
       with:
         name: 'benchmarks'
         path: ${{ github.workspace }}
-        
-    - name: Fetch Throughput Calculator Python Script
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: |
-            throughput_calculator.py
-        sparse-checkout-cone-mode: false
     
     - name: Install Bencher CLI
       run: |
