@@ -227,26 +227,26 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: 'libraries_${{ env.OS_VERSION }}'
-        path: ${{ github.workspace }}/lib
+        path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
         name: 'benchmarks_${{ env.OS_VERSION }}'
-        path: ${{ github.workspace }}/bin
+        path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
     
     - name: Run Benchmark
       run: |
-        chmod +x '${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }}'
-        ${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+        chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
     
     - name: Calculate Throughput
       if: matrix.bm_type == 'pubsub'
       run: |
-        python throughput_calculator.py -f ${{ github.workspace }}/bin/${{ env.LOG_FILE_NAME }}.json
+        python throughput_calculator.py -f ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
         
     - name: Log Benchmark Results with Bencher
@@ -258,7 +258,7 @@ jobs:
         --testbed '${{ env.OS_VERSION }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
-        --file ${{ github.workspace }}/bin/${{ env.LOG_FILE_NAME }}.json
+        --file ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
         
     - name: Log Calculated Throughput with Bencher
       if: matrix.bm_type == 'pubsub'
@@ -276,4 +276,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'benchmark-log-${{ matrix.bm_type }}_${{ env.OS_VERSION }}'
-        path: ${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
+        path: ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
