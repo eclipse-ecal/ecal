@@ -330,6 +330,7 @@ jobs:
         --project ecal `
         --token '${{secrets.BENCHER_API_TOKEN}}' `
         --branch '${{ github.ref_name }}' `
+        --hash '${{ github.run_id }}-${{ github.run_attempt }}' `
         --testbed '${{ env.OS_VERSION }}' `
         --github-actions '${{ secrets.GITHUB_TOKEN }}' `
         --adapter cpp_google `
