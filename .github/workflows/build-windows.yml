@@ -254,7 +254,7 @@ jobs:
 
   sign-windows-installer:
     if: github.repository == 'eclipse-ecal/ecal'
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: build-windows
 
     steps:
