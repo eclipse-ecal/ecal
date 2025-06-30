@@ -318,7 +318,7 @@ jobs:
         path: ${{ github.workspace }}/ecal_benchmark_${{ matrix.bm_type }}_log.json
     
     - name: Calculate Throughput
-      if: matrix.bm_type == 'pubsub'
+      if: ${{ matrix.bm_type == 'pubsub' || matrix.bm_type == 'pubsub_multi' }}
       run: |
         python throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
@@ -337,7 +337,7 @@ jobs:
       shell: pwsh
         
     - name: Log Calculated Throughput with Bencher
-      if: matrix.bm_type == 'pubsub'
+      if: ${{ matrix.bm_type == 'pubsub' || matrix.bm_type == 'pubsub_multi' }}
       run: |
         bencher run `
         --project ecal `
