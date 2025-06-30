@@ -54,15 +54,21 @@ full_results = {}
 for itm in benchmarks:
    try:
       # Get payload size (in byte) from benchmark name
-      payload_size = int(re.search(r'/(\d+)/', itm["name"]).group(1))
+      payload_size = int(re.search(r'/(\d+)/[a-z]', itm["name"]).group(1))
+      # Get background thread count from benchmark name (if applicable)
+      thread_count = 1
+      multi = re.search(r'[a-z]/(\d+)/[0-9]', itm["name"])
+      if multi:
+         # Adding 1 to account for the main thread
+         thread_count += int(multi.group(1))
       # Get time taken. Expecting time in nanoseconds
       real_time_ns = float(itm["real_time"])
       # Calculating send frequency in hertz (corresponds to throughput in ops/s)
-      frequency = 1 / (real_time_ns * 10**-9)
+      frequency = 1 / (real_time_ns * 10**-9) * thread_count
       # Calculating speed in bytes per second
-      speed = frequency * payload_size
+      speed = frequency * payload_size * thread_count
       # Output to console
-      print(f"Payload Size: {payload_size} Bytes  ||  Real Time: {real_time_ns} ns  ||  Frequency: {frequency} ops/s  ||  Datarate: {speed} Bytes/s")
+      print(f"Payload Size: {payload_size} Bytes  ||  Real Time: {real_time_ns} ns  ||  Frequency: {frequency} ops/s  ||  Datarate: {speed} Bytes/s  ||  Thread count: {thread_count}")
       # Create new dictionary for this datapoint
       datapoint = {
          "throughput" : {

@@ -27,9 +27,9 @@
 #define REGISTRATION_DELAY_MS   2000
 #define WARMUP_TIME_S           2
 
-#define TOPIC_COUNT_MIN             1
-#define TOPIC_COUNT_MAX             32
-#define TOPIC_COUNT_MULTIPLIER      2
+#define BACKGROUND_TOPIC_COUNT_MIN            1
+#define BACKGROUND_TOPIC_COUNT_MAX            32
+#define BACKGROUND_TOPIC_COUNT_MULTIPLIER     2
 #define PER_TOPIC_RANGE_START       1
 #define PER_TOPIC_RANGE_LIMIT       1<<24
 #define PER_TOPIC_RANGE_MULTIPLIER  1<<12
@@ -128,7 +128,7 @@ namespace Multi_Send {
   // Register benchmark
   BENCHMARK(BM_eCAL_Multi_Send)
     ->ArgsProduct({
-      benchmark::CreateRange(TOPIC_COUNT_MIN, TOPIC_COUNT_MAX, TOPIC_COUNT_MULTIPLIER),
+      benchmark::CreateRange(BACKGROUND_TOPIC_COUNT_MIN, BACKGROUND_TOPIC_COUNT_MAX, BACKGROUND_TOPIC_COUNT_MULTIPLIER),
       benchmark::CreateRange(PER_TOPIC_RANGE_START, PER_TOPIC_RANGE_LIMIT, PER_TOPIC_RANGE_MULTIPLIER)})
     ->UseRealTime()
     ->MinWarmUpTime(WARMUP_TIME_S);
