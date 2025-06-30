@@ -47,6 +47,9 @@ set(source_files
     src/ecalmon_globals.h
     src/main.cpp
     src/util.h
+    
+    src/custom_types/byte_size.cpp
+    src/custom_types/byte_size.h
 
     src/plugin/plugin_manager.cpp
     src/plugin/plugin_manager.h

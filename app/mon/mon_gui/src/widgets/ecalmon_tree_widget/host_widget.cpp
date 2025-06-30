@@ -18,6 +18,7 @@
 */
 
 #include "host_widget.h"
+#include "custom_types/byte_size.h"
 
 HostWidget::HostWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
@@ -67,6 +68,8 @@ HostWidget::HostWidget(QWidget *parent)
 
   // Set the initial Tree Group
   ui_.group_by_combobox->setCurrentIndex(0);
+  ui_.tree_view->setItemDelegateForColumn((int)HostTreeModel::Columns::SENT_DATA, new ByteSizeDelegate(ui_.tree_view));
+  ui_.tree_view->setItemDelegateForColumn((int)HostTreeModel::Columns::RECEIVED_DATA, new ByteSizeDelegate(ui_.tree_view));
 
   // Save the initial state for the resetLayout function
   saveInitialState();
