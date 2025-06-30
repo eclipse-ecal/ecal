@@ -240,8 +240,9 @@ jobs:
     
     - name: Run Benchmark
       run: |
-        chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
-        ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+        chmod +x 'ecal_benchmark_${{ matrix.bm_type }}'
+        ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}/_build/bin
         
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
