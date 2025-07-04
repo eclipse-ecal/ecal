@@ -48,6 +48,7 @@ class services_test_c : public ::testing::Test
 
 int OnMethodCallback(const struct eCAL_SServiceMethodInformation* method_info_, const void* request_, size_t request_length_, void** response_, size_t* response_length_, void* user_argument_)
 {
+  (void)method_info_;
   (void)user_argument_;
 
   // In order pass the server response properly to the callback API, the underlying memory needs to be allocated 

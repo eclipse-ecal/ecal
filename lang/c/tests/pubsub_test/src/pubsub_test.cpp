@@ -55,8 +55,9 @@ class pubsub_test_c : public ::testing::Test {
 void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_)
 {
   // unused arguments
+  (void)topic_id_;
   (void)data_type_information_;
-  (void)user_argument_;
+  (void)callback_data_;
   int* cnt = (int*)user_argument_;
   (*cnt)++;
 }
