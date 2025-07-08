@@ -102,6 +102,10 @@ if (${ECAL_LINK_HDF5_SHARED})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       hdf5::hdf5-shared
     )
+  if (MSVC)
+    get_target_property(HDF5_DLL_PATH hdf5::hdf5-shared LOCATION)
+    install(FILES ${HDF5_DLL_PATH} DESTINATION bin)
+  endif()
   # conan target names are different
   elseif (TARGET HDF5::C)
     target_link_libraries(${PROJECT_NAME} PRIVATE
