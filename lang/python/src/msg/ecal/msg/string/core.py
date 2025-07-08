@@ -19,8 +19,8 @@
 import typing
 
 import ecal.nanobind_core
-from ecal.msg.common.core import MessagePublisher, MessageSubscriber
-from ecal.msg.string.serializer import Serializer as StringSerializer
+from ..common.core import MessagePublisher, MessageSubscriber
+from .serializer import Serializer as StringSerializer
 
 class Publisher(MessagePublisher[str]):
   
@@ -30,7 +30,7 @@ class Publisher(MessagePublisher[str]):
       config: ecal.nanobind_core.PublisherConfiguration = ecal.nanobind_core.get_publisher_configuration(), 
       event_callback: typing.Optional[object] = None) -> None:  
     super().__init__(
-      StringSerializer(),
+      StringSerializer(ecal.nanobind_core.DataTypeInformation),
       topic_name,
       config,
       event_callback
@@ -44,7 +44,7 @@ class Subscriber(MessageSubscriber[str]):
         config: ecal.nanobind_core.PublisherConfiguration = ecal.nanobind_core.get_publisher_configuration(), 
         event_callback: typing.Optional[object] = None) -> None:  
       super().__init__(
-        StringSerializer(),
+        StringSerializer(ecal.nanobind_core.DataTypeInformation),
         topic_name,
         config,
         event_callback

@@ -19,9 +19,9 @@
 ######
 # build
 ######
-add_library(pure_python INTERFACE)
+add_library(python_msg INTERFACE)
 
-set(pure_python_files
+set(python_msg_files
   ecal/msg/__init__.py
   ecal/msg/common/core.py
   ecal/msg/common/serializer.py
@@ -36,22 +36,20 @@ set(pure_python_files
   ecal/msg/string/__init__.py
 )
 
-target_sources(pure_python
+target_sources(python_msg
   PUBLIC    
-    FILE_SET ecal_pure_python_files
+    FILE_SET python_msg_files
     TYPE HEADERS
     BASE_DIRS .
     FILES
       ${pure_python_files}
 )
 
-#should we have dependencies to nb core?
-
 #should we install the filesets or this this done via setup.toml
 
 ##########
 # IDE Debugging / Runtime
 ###########
-copy_python_code(TARGET pure_python PYTHON_FILES ${pure_python_files} PYTHON_CODE_ROOT .)
+copy_python_code(TARGET python_msg PYTHON_FILES ${pure_python_files} PYTHON_CODE_ROOT .)
 
 ecal_python_set_output_directory(${PROJECT_NAME})

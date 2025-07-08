@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
   
 import typing
-from ecal.msg.common.serializer import SerializationError, DataTypeInfo
+from ..common.serializer import SerializationError, DataTypeInfo
 
 class Serializer:
     def __init__(self, data_type_type : typing.Type[DataTypeInfo]):

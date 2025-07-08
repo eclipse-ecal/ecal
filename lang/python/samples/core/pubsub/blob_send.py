@@ -32,9 +32,9 @@ def generate_binary_message(buffer_size=16):
 
 
 def main():
-  print("---------------------")
-  print(" Python: BLOB SENDER")
-  print("---------------------")
+  print("-------------------------------")
+  print(" Python (legacy): BLOB SENDER")
+  print("-------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
   # The name of our eCAL Process will be "blob send python".
