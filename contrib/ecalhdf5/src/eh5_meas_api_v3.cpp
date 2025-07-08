@@ -224,7 +224,7 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::v3::HDF5Meas::GetChannels() const
     auto escaped_channels = hdf_meas_impl_->GetChannels();
     for (const auto& escaped_channel : escaped_channels)
     {
-      ret_val.emplace(GetUnescapedString(escaped_channel.name), escaped_channel.id);
+      ret_val.emplace(escaped_channel.toSChannel());
     }
   }
 

@@ -41,6 +41,11 @@ namespace eCAL
         return SEscapedChannel{ GetEscapedTopicname(input.name), input.id };
       }
 
+      SChannel toSChannel() const
+      {
+        return SChannel(GetUnescapedString(name), id);
+      }
+
       bool operator==(const SEscapedChannel& other) const
       {
         return std::tie(id, name) == std::tie(other.id, other.name);
