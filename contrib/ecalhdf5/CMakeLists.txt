@@ -102,21 +102,28 @@ if (${ECAL_LINK_HDF5_SHARED})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       hdf5::hdf5-shared
     )
-  if (MSVC)
-    #get_target_property(HDF5_DLL_PATH hdf5 LOCATION)
-    #install(FILES ${HDF5_DLL_PATH} DESTINATION bin)
-    install(FILES $<TARGET_FILE:hdf5::hdf5-shared> DESTINATION bin)
-  endif()
+    if (MSVC AND ECAL_DEPLOY_DEPENDENCIES)
+      install(FILES $<TARGET_FILE:hdf5::hdf5-shared> DESTINATION bin)
+    endif()
   # conan target names are different
   elseif (TARGET HDF5::C)
     target_link_libraries(${PROJECT_NAME} PRIVATE
       HDF5::C
     )
+    if (MSVC AND ECAL_DEPLOY_DEPENDENCIES)
+      install(FILES $<TARGET_FILE:HDF5::C> DESTINATION bin)
+    endif()
   else()
     target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       ${HDF5_LIBRARIES}
     )
+    if (MSVC AND ECAL_DEPLOY_DEPENDENCIES)
+      install(FILES ${HDF5_LIBRARIES} DESTINATION bin)
+    endif()
+  endif()
+  if (MSVC AND ECAL_DEPLOY_DEPENDENCIES)
+    install(FILES $<TARGET_FILE:hdf5::hdf5-shared> DESTINATION bin)
   endif()
 else()
   if (TARGET hdf5::hdf5-static)
