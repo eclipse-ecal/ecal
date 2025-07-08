@@ -22,16 +22,16 @@ find_package(eCAL REQUIRED)
 find_package(GTest REQUIRED)
 
 
-ecal_add_sample(repeated_init_finalize repeated_init_finalize.cpp)
+ecal_add_sample(fast_init_loop fast_init_loop.cpp)
 
-target_link_libraries(repeated_init_finalize PRIVATE
+target_link_libraries(fast_init_loop PRIVATE
   eCAL::core
   GTest::gtest
   GTest::gtest_main
 )
 
-target_compile_features(repeated_init_finalize PRIVATE cxx_std_14)
+target_compile_features(fast_init_loop PRIVATE cxx_std_14)
 
-ecal_install_sample(repeated_init_finalize)
+ecal_install_sample(fast_init_loop)
 
-set_property(TARGET repeated_init_finalize PROPERTY FOLDER samples/cpp/benchmarks/repeated_init_finalize)
+set_property(TARGET fast_init_loop PROPERTY FOLDER samples/cpp/benchmarks/fast_init_loop)

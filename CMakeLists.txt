@@ -607,6 +607,10 @@ if(ECAL_INSTALL_SAMPLE_SOURCES)
   )
 endif()
 
+# Not sure why the test was not added when adding it in the test folders
+# CMakeLists.txt
+add_subdirectory(ecal/tests/cpp/fast_init_loop)
+
 # --------------------------------------------------------
 # create package
 # --------------------------------------------------------
