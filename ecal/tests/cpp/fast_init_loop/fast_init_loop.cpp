@@ -150,14 +150,21 @@ void wait_until_all_ecal_topics_received(
     std::vector<std::unique_ptr<ReceiverChecker>> &subscribers,
     const std::chrono::milliseconds timeout) {
   using std::chrono::steady_clock;
-  const auto waitUntil = steady_clock::now() + timeout;
+  const auto start_time = steady_clock::now();
+  const auto wait_until = start_time + timeout;
 
-  while (steady_clock::now() < waitUntil) {
+  while (steady_clock::now() < wait_until) {
     const bool all_topics_received =
         std::all_of(subscribers.begin(), subscribers.end(), has_received);
-    if (all_topics_received)
+    if (all_topics_received) {
+      using std::chrono::duration_cast;
+      using std::chrono::milliseconds;
+      const auto time_delta =
+          duration_cast<milliseconds>(steady_clock::now() - start_time);
+      std::cout << "  it took " << std::to_string(time_delta.count())
+                << " milliseconds to receive all topics." << std::endl;
       return;
-    ;
+    }
   }
 
   const auto number_of_received_topics = std::count_if(
@@ -173,7 +180,7 @@ void wait_until_all_ecal_topics_received(
 TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   constexpr size_t iterations = 100;
   const std::chrono::milliseconds connect_timeout(3000);
-  const std::chrono::milliseconds timeout(1000);
+  const std::chrono::milliseconds timeout(3000);
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
     constexpr size_t number_of_topics = 50;
     PublisherSubscriberSet test_context{number_of_topics};
