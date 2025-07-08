@@ -120,7 +120,7 @@ public:
     std::vector<std::string> topic_names;
     std::generate_n(std::back_inserter(topic_names), number_of_topics,
                     create_topic_name);
-    const std::chrono::seconds wait_until_ecal_is_ready(2);
+    const std::chrono::seconds wait_until_ecal_is_ready(1);
     publishers = std::make_unique<EcalLoopPublisher<Message>>(
         topic_names, wait_until_ecal_is_ready);
     publishers->start_publishing();
