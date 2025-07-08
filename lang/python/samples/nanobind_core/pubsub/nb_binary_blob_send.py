@@ -15,19 +15,13 @@
 # limitations under the License.
 #
 # ========================= eCAL LICENSE =================================
-
 import random
 import time
 
+# import the eCAL core API
 import ecal.nanobind_core as ecal_core
 
 DATA_SIZE = 16
-
-# This function will be called when a subscriber is connected / disconnected to the publisher
-def subscriber_event_callback(subscriber_id : ecal_core.TopicId, callback_data : ecal_core.PubEventCallbackData):
-  print("Event callback invoked")
-  entity = subscriber_id.topic_id
-  print("A subscriber with id {} from host {} with PID {} has been {}".format(entity.entity_id, entity.host_name, entity.process_id, callback_data.event_type))
 
 def random_printable_bytes(length: int) -> bytes:
     """
@@ -40,35 +34,41 @@ def random_printable_bytes(length: int) -> bytes:
     return bytes(random.randint(32, 126) for _ in range(length))
 
 def main():
-  # print eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
+  print("----------------------")
+  print(" Python: BLOB SENDER  ")
+  print("----------------------")
   
-  # initialize eCAL API
+  # Initialize eCAL. You always have to initialize eCAL before using it.
+  # The name of our eCAL Process will be "hello send python".
+  # This name will be visible in the eCAL Monitor, once the process is running.
   ecal_core.initialize("blob send python")
 
-  # create publisher
-  config = ecal_core.get_publisher_configuration()
+  # Print used eCAL version and date
+  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
+ 
+  # Set the state for the program.
+  # You can vary between different states like healthy, warning, critical ...
+  # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
+  ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I feel good!")
 
-  # We can assign a encoding, name or descriptor to the datatype_info.
-  # However, we don't have to provide any information here
-  # Specialized message publishers will set these fields
-  datatype_info = ecal_core.DataTypeInformation()
-  # We can additionally register an event_callback, which will be called when another entity
-  # has been connected to this process
-  pub = ecal_core.Publisher("blob", datatype_info, config, event_callback = subscriber_event_callback)
+  # Now we create a new publisher that will publish the topic "blob".
+  pub = ecal_core.Publisher("blob")
   
-  # Let's sleep before we start sending data, so other processes can connect
-  time.sleep(2)
-
-  print(pub.get_data_type_information())
-  
-  # send messages
+  # Creating an infinite publish-loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.
   while ecal_core.ok():
+    # Generate a random message of DATA_SIZE bytes
+    # Each byte is a randomly chosen printable ASCII character (code points 32–126).    
     byte_data = random_printable_bytes(DATA_SIZE)
+
+    # Send the message. The message is sent to all subscribers that are currently connected to the topic "blob".  
     pub.send(byte_data)
+
+    # Sleep for 500 ms so we send with a frequency of 2 Hz.
     time.sleep(0.5)
   
-  # finalize eCAL API
+  # Finalize eCAL.
+  # You should always do that before your application exits.
   ecal_core.finalize()
 
 if __name__ == "__main__":

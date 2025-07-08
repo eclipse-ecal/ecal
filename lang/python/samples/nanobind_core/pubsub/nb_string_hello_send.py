@@ -16,9 +16,7 @@
 #
 # ========================= eCAL LICENSE =================================
 
-import sys
 import time
-print("PYTHONPATH=", sys.path)
 # import the eCAL core API
 import ecal.nanobind_core as ecal_core
 # import the eCAL publisher AP
@@ -40,7 +38,7 @@ def main():
   # Set the state for the program.
   # You can vary between different states like healthy, warning, critical ...
   # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
-  ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I am doing fine")
+  ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I feel good!")
   
   # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
   # The topic we are going to publish is called "hello".
@@ -50,8 +48,8 @@ def main():
   msg = "HELLO WORLD FROM PYTHON"
   
   loop_count = 0
-  # Creating an inifite publish-loop.
-  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  # Creating an infinite publish-loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.
   while ecal_core.ok():
     # Prepare the string to send
     loop_count = loop_count + 1
@@ -59,6 +57,7 @@ def main():
     
     # Send the content to other eCAL Processes that have subscribed to the topic "hello".
     pub.send(current_message)
+    
     print("Sending: {}".format(current_message))
     
     # Sleep for 500 ms so we send with a frequency of 2 Hz.

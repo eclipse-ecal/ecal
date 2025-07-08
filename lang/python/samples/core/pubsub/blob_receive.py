@@ -37,9 +37,9 @@ def callback(topic_name, msg, time):
   print("")
 
 def main():
-  print("-----------------------")
-  print(" Python: BLOB RECEIVER")
-  print("-----------------------")
+  print("---------------------------------")
+  print(" Python (legacy): BLOB RECEIVER")
+  print("---------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
   # The name of our eCAL Process will be "blob receive python".

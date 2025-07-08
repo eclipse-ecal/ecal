@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
 
 import typing
-from ecal.msg.common.serializer import Serializer, Deserializer, SerializationError
+from .serializer import Serializer, Deserializer, SerializationError
 import ecal.nanobind_core
 
 T = typing.TypeVar("T")
