@@ -120,7 +120,7 @@ public:
     std::vector<std::string> topic_names;
     std::generate_n(std::back_inserter(topic_names), number_of_topics,
                     create_topic_name);
-    const std::chrono::seconds wait_until_ecal_is_ready(1);
+    const std::chrono::seconds wait_until_ecal_is_ready(2);
     publishers = std::make_unique<EcalLoopPublisher<Message>>(
         topic_names, wait_until_ecal_is_ready);
     publishers->start_publishing();
@@ -196,7 +196,7 @@ TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   const std::chrono::milliseconds connect_timeout(3000);
   const std::chrono::milliseconds timeout(1000);
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
-    constexpr size_t number_of_topics = 50;
+    constexpr size_t number_of_topics = 500;
     PublisherSubscriberSet test_context{number_of_topics};
     wait_until_one_ecal_topic_received(test_context.subscribers,
                                        connect_timeout);
