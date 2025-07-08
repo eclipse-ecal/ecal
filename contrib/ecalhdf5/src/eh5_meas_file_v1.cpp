@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,27 +144,27 @@ void eCAL::eh5::HDF5MeasFileV1::SetOneFilePerChannelEnabled(bool /*enabled*/)
   ReportUnsupportedAction();
 }
 
-std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasFileV1::GetChannels() const
+std::set<eCAL::eh5::SEscapedChannel> eCAL::eh5::HDF5MeasFileV1::GetChannels() const
 {
-  std::set<eCAL::eh5::SChannel> channels;
+  std::set<eCAL::eh5::SEscapedChannel> channels;
 
   std::string channel_name;
   GetAttributeValue(file_id_, kChnNameAttribTitle, channel_name);
 
   if (!channel_name.empty())
-    channels.insert(eCAL::experimental::measurement::base::CreateChannel(channel_name));
+    channels.insert({ channel_name, 0 });
 
   return channels;
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const eCAL::eh5::SChannel& channel) const
+bool eCAL::eh5::HDF5MeasFileV1::HasChannel(const eCAL::eh5::SEscapedChannel& channel) const
 {
   auto channels = GetChannels();
 
   return std::find(channels.cbegin(), channels.cend(), channel) != channels.end();
 }
 
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const SChannel& channel) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInformation(const SEscapedChannel& channel) const
 {
   std::string type;
 
@@ -179,12 +179,12 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV1::GetChannelDataTypeInfo
   return CreateInfo(type, description);
 }
 
-void eCAL::eh5::HDF5MeasFileV1::SetChannelDataTypeInformation(const SChannel& /*channel*/, const eCAL::eh5::DataTypeInformation& /*info*/)
+void eCAL::eh5::HDF5MeasFileV1::SetChannelDataTypeInformation(const SEscapedChannel& /*channel*/, const eCAL::eh5::DataTypeInformation& /*info*/)
 {
   ReportUnsupportedAction();
 }
 
-long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const SChannel& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const SEscapedChannel& /*channel_name*/) const
 {
   long long ret_val = 0;
 
@@ -196,7 +196,7 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMinTimestamp(const SChannel& /*channel_n
   return ret_val;
 }
 
-long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const SChannel& /*channel_name*/) const
+long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const SEscapedChannel& /*channel_name*/) const
 {
   long long ret_val = 0;
 
@@ -208,7 +208,7 @@ long long eCAL::eh5::HDF5MeasFileV1::GetMaxTimestamp(const SChannel& /*channel_n
   return ret_val;
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const SEscapedChannel& channel, EntryInfoSet& entries) const
 {
   entries.clear();
 
@@ -244,7 +244,7 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfo(const SChannel& channel, EntryInf
   return (status >= 0);
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const SChannel& /*channel_name*/, long long begin, long long end, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasFileV1::GetEntriesInfoRange(const SEscapedChannel& /*channel_name*/, long long begin, long long end, EntryInfoSet& entries) const
 {
   bool ret_val = false;
 
@@ -305,7 +305,7 @@ void eCAL::eh5::HDF5MeasFileV1::SetFileBaseName(const std::string& /*base_name*/
   ReportUnsupportedAction();
 }
 
-bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const SWriteEntry& /*entry*/)
+bool eCAL::eh5::HDF5MeasFileV1::AddEntryToFile(const SEscapedWriteEntry& /*entry*/)
 {
   ReportUnsupportedAction();
   return false;

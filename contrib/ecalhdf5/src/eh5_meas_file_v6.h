@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 #include <string>
 
 #include "eh5_meas_file_v5.h"
+#include "escape.h"
 
 namespace eCAL
 {
@@ -56,7 +57,7 @@ namespace eCAL
        *
        * @return       channel names & ids
       **/
-      std::set<eCAL::eh5::SChannel> GetChannels() const override;
+      std::set<eCAL::eh5::SEscapedChannel> GetChannels() const override;
 
       /**
        * @brief Check if channel exists in measurement
@@ -65,11 +66,11 @@ namespace eCAL
        *
        * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const eCAL::eh5::SChannel& channel) const override;
+      bool HasChannel(const eCAL::eh5::SEscapedChannel& channel) const override;
 
-      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
+      DataTypeInformation GetChannelDataTypeInformation(const SEscapedChannel& channel) const override;
 
-      bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
+      bool GetEntriesInfo(const SEscapedChannel& channel, EntryInfoSet& entries) const override;
     };
   }  //  namespace eh5
 }  //  namespace eCAL

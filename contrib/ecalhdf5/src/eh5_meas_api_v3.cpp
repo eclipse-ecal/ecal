@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,7 +236,7 @@ bool eCAL::eh5::v3::HDF5Meas::HasChannel(const eCAL::eh5::SChannel& channel) con
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->HasChannel(GetEscapedTopicname(channel));
+    ret_val = hdf_meas_impl_->HasChannel(SEscapedChannel::fromSChannel(channel));
   }
 
   return ret_val;
@@ -247,7 +247,7 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::v3::HDF5Meas::GetChannelDataTypeInform
   eCAL::eh5::DataTypeInformation ret_val;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetChannelDataTypeInformation(GetEscapedTopicname(channel));
+    ret_val = hdf_meas_impl_->GetChannelDataTypeInformation(SEscapedChannel::fromSChannel(channel));
   }
 
   return ret_val;
@@ -257,7 +257,7 @@ void eCAL::eh5::v3::HDF5Meas::SetChannelDataTypeInformation(const SChannel& chan
 {
   if (hdf_meas_impl_)
   {
-    hdf_meas_impl_->SetChannelDataTypeInformation(GetEscapedTopicname(channel), info);
+    hdf_meas_impl_->SetChannelDataTypeInformation(SEscapedChannel::fromSChannel(channel), info);
   }
 }
 
@@ -266,7 +266,7 @@ long long eCAL::eh5::v3::HDF5Meas::GetMinTimestamp(const SChannel& channel) cons
   long long ret_val = 0;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetMinTimestamp(GetEscapedTopicname(channel));
+    ret_val = hdf_meas_impl_->GetMinTimestamp(SEscapedChannel::fromSChannel(channel));
   }
 
   return ret_val;
@@ -277,7 +277,7 @@ long long eCAL::eh5::v3::HDF5Meas::GetMaxTimestamp(const SChannel& channel) cons
   long long ret_val = 0;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetMaxTimestamp(GetEscapedTopicname(channel));
+    ret_val = hdf_meas_impl_->GetMaxTimestamp(SEscapedChannel::fromSChannel(channel));
   }
 
   return ret_val;
@@ -288,7 +288,7 @@ bool eCAL::eh5::v3::HDF5Meas::GetEntriesInfo(const SChannel& channel, EntryInfoS
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    ret_val = hdf_meas_impl_->GetEntriesInfo(GetEscapedTopicname(channel), entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfo(SEscapedChannel::fromSChannel(channel), entries);
   }
 
   return ret_val;
@@ -299,7 +299,7 @@ bool eCAL::eh5::v3::HDF5Meas::GetEntriesInfoRange(const SChannel& channel, long 
   bool ret_val = false;
   if (hdf_meas_impl_ && begin < end)
   {
-    ret_val = hdf_meas_impl_->GetEntriesInfoRange(GetEscapedTopicname(channel), begin, end, entries);
+    ret_val = hdf_meas_impl_->GetEntriesInfoRange(SEscapedChannel::fromSChannel(channel), begin, end, entries);
   }
 
   return ret_val;
@@ -340,7 +340,7 @@ bool eCAL::eh5::v3::HDF5Meas::AddEntryToFile(const SWriteEntry& entry)
   bool ret_val = false;
   if (hdf_meas_impl_)
   {
-    return hdf_meas_impl_->AddEntryToFile(GetEscapedEntry(entry));
+    return hdf_meas_impl_->AddEntryToFile(SEscapedWriteEntry::fromSWriteEntry(entry));
   }
 
   return ret_val;
