@@ -180,7 +180,7 @@ void wait_until_all_ecal_topics_received(
 TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   constexpr size_t iterations = 100;
   const std::chrono::milliseconds connect_timeout(3000);
-  const std::chrono::milliseconds timeout(3000);
+  const std::chrono::milliseconds timeout(1000);
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
     constexpr size_t number_of_topics = 50;
     PublisherSubscriberSet test_context{number_of_topics};
