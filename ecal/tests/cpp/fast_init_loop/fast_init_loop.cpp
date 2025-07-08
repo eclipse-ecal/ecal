@@ -1,6 +1,3 @@
-// COMPANY:   Continental Automotive
-// COMPONENT: Eco
-
 #include <gtest/gtest.h>
 
 #include "ecal/ecal.h"
