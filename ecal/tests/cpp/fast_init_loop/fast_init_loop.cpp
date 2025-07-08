@@ -7,11 +7,17 @@
 #include <chrono>
 #include <future>
 
+namespace {
 struct ECALRaiiInitializer {
   ECALRaiiInitializer() {
     if (!eCAL::Initialize())
       throw std::runtime_error("failed to initialize eCAL");
   }
+
+  ECALRaiiInitializer(const ECALRaiiInitializer &) = delete;
+  ECALRaiiInitializer &operator=(const ECALRaiiInitializer &) = delete;
+  ECALRaiiInitializer(ECALRaiiInitializer &&) = delete;
+  ECALRaiiInitializer &operator=(ECALRaiiInitializer &&) = delete;
 
   ~ECALRaiiInitializer() {
     if (!eCAL::Finalize()) {
@@ -57,8 +63,9 @@ std::string create_topic_name() {
 
 template <typename Message> class EcalLoopPublisher {
 public:
-  explicit EcalLoopPublisher(const std::vector<std::string> &topic_names,
-                             std::chrono::milliseconds wait_until_ecal_is_ready)
+  explicit EcalLoopPublisher(
+      const std::vector<std::string> &topic_names,
+      const std::chrono::milliseconds wait_until_ecal_is_ready)
       : wait_until_ecal_is_ready_(wait_until_ecal_is_ready) {
     std::transform(
         topic_names.begin(), topic_names.end(), std::back_inserter(publishers_),
@@ -182,6 +189,7 @@ void wait_until_all_ecal_topics_received(
       "Timeout: " + std::to_string(number_of_missing_topics) +
       " topic did not receive data within the specified duration.");
 }
+} // namespace
 
 TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   constexpr size_t iterations = 100;
