@@ -1,14 +1,16 @@
 #include <gtest/gtest.h>
 
 #include "ecal/ecal.h"
-#include <random>
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <future>
+#include <random>
 
 namespace {
-struct ECALRaiiInitializer {
+class ECALRaiiInitializer {
+public:
   ECALRaiiInitializer() {
     if (!eCAL::Initialize())
       throw std::runtime_error("failed to initialize eCAL");
@@ -116,11 +118,12 @@ private:
 
 class PublisherSubscriberSet {
 public:
-  explicit PublisherSubscriberSet(const size_t number_of_topics) {
+  explicit PublisherSubscriberSet(
+      const size_t number_of_topics,
+      const std::chrono::milliseconds &wait_until_ecal_is_ready) {
     std::vector<std::string> topic_names;
     std::generate_n(std::back_inserter(topic_names), number_of_topics,
                     create_topic_name);
-    const std::chrono::seconds wait_until_ecal_is_ready(2);
     publishers = std::make_unique<EcalLoopPublisher<Message>>(
         topic_names, wait_until_ecal_is_ready);
     publishers->start_publishing();
@@ -132,7 +135,7 @@ public:
                    });
   }
 
-  ECALRaiiInitializer ecal_context_{};
+  ECALRaiiInitializer ecal_context_;
   using Message = std::array<char, 1000>;
 
   std::vector<std::unique_ptr<ReceiverChecker>> subscribers;
@@ -193,11 +196,16 @@ void wait_until_all_ecal_topics_received(
 
 TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   constexpr size_t iterations = 100;
-  const std::chrono::milliseconds connect_timeout(3000);
-  const std::chrono::milliseconds timeout(1000);
+
+  using std::chrono::milliseconds;
+  const milliseconds wait_until_ecal_is_ready(2000);
+  const milliseconds connect_timeout(3000);
+  const milliseconds timeout(1000);
+
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
     constexpr size_t number_of_topics = 500;
-    PublisherSubscriberSet test_context{number_of_topics};
+    PublisherSubscriberSet test_context{number_of_topics,
+                                        wait_until_ecal_is_ready};
     wait_until_one_ecal_topic_received(test_context.subscribers,
                                        connect_timeout);
     EXPECT_NO_THROW(
