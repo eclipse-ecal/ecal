@@ -22,12 +22,10 @@ find_package(eCAL REQUIRED)
 find_package(GTest REQUIRED)
 
 
-ecal_add_sample(fast_init_loop fast_init_loop.cpp)
+ecal_add_gtest(fast_init_loop fast_init_loop.cpp)
 
 target_link_libraries(fast_init_loop PRIVATE
   eCAL::core
-  GTest::gtest
-  GTest::gtest_main
 )
 
 target_compile_features(fast_init_loop PRIVATE cxx_std_14)
