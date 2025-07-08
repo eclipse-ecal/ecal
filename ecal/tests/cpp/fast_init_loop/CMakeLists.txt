@@ -19,8 +19,6 @@
 cmake_minimum_required(VERSION 3.15)
 
 find_package(eCAL REQUIRED)
-find_package(GTest REQUIRED)
-
 
 ecal_add_gtest(fast_init_loop fast_init_loop.cpp)
 
