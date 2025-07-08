@@ -121,12 +121,12 @@ public:
     std::generate_n(std::back_inserter(topic_names), number_of_topics,
                     create_topic_name);
     const std::chrono::seconds wait_until_ecal_is_ready(2);
-    publishers_ = std::make_unique<EcalLoopPublisher<Message>>(
+    publishers = std::make_unique<EcalLoopPublisher<Message>>(
         topic_names, wait_until_ecal_is_ready);
-    publishers_->start_publishing();
+    publishers->start_publishing();
 
     std::transform(topic_names.begin(), topic_names.end(),
-                   std::back_inserter(subscribers_),
+                   std::back_inserter(subscribers),
                    [](const std::string &topic) {
                      return std::make_unique<ReceiverChecker>(topic);
                    });
@@ -135,8 +135,8 @@ public:
   ECALRaiiInitializer ecal_context_{};
   using Message = std::array<char, 1000>;
 
-  std::vector<std::unique_ptr<ReceiverChecker>> subscribers_;
-  std::unique_ptr<EcalLoopPublisher<Message>> publishers_;
+  std::vector<std::unique_ptr<ReceiverChecker>> subscribers;
+  std::unique_ptr<EcalLoopPublisher<Message>> publishers;
 };
 
 bool has_received(const std::unique_ptr<ReceiverChecker> &subscriber) {
@@ -198,10 +198,10 @@ TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
     constexpr size_t number_of_topics = 50;
     PublisherSubscriberSet test_context{number_of_topics};
-    wait_until_one_ecal_topic_received(test_context.subscribers_,
+    wait_until_one_ecal_topic_received(test_context.subscribers,
                                        connect_timeout);
     EXPECT_NO_THROW(
-        wait_until_all_ecal_topics_received(test_context.subscribers_, timeout))
+        wait_until_all_ecal_topics_received(test_context.subscribers, timeout))
         << "Not all topics received data in loop " << iteration << ".";
   }
 }
