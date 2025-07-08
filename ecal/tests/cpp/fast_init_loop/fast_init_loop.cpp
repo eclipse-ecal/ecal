@@ -57,7 +57,9 @@ std::string create_topic_name() {
 
 template <typename Message> class EcalLoopPublisher {
 public:
-  explicit EcalLoopPublisher(const std::vector<std::string> &topic_names) {
+  explicit EcalLoopPublisher(const std::vector<std::string> &topic_names,
+                             std::chrono::milliseconds wait_until_ecal_is_ready)
+      : wait_until_ecal_is_ready_(wait_until_ecal_is_ready) {
     std::transform(
         topic_names.begin(), topic_names.end(), std::back_inserter(publishers_),
         [](const std::string &topic) { return eCAL::CPublisher(topic); });
@@ -88,6 +90,7 @@ private:
   void send_messages_in_a_loop() {
     char value = 0;
     Message data{};
+    std::this_thread::sleep_for(wait_until_ecal_is_ready_);
     while (is_publishing_) {
       std::fill(data.begin(), data.end(), value);
       std::for_each(publishers_.begin(), publishers_.end(),
@@ -101,6 +104,7 @@ private:
   std::atomic<bool> is_publishing_{false};
   std::vector<eCAL::CPublisher> publishers_;
   std::future<void> publisher_future_;
+  std::chrono::milliseconds wait_until_ecal_is_ready_{0};
 };
 
 class PublisherSubscriberSet {
@@ -109,7 +113,9 @@ public:
     std::vector<std::string> topic_names;
     std::generate_n(std::back_inserter(topic_names), number_of_topics,
                     create_topic_name);
-    publishers_ = std::make_unique<EcalLoopPublisher<Message>>(topic_names);
+    const std::chrono::seconds wait_until_ecal_is_ready(2);
+    publishers_ = std::make_unique<EcalLoopPublisher<Message>>(
+        topic_names, wait_until_ecal_is_ready);
     publishers_->start_publishing();
 
     std::transform(topic_names.begin(), topic_names.end(),
