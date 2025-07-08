@@ -103,8 +103,9 @@ if (${ECAL_LINK_HDF5_SHARED})
       hdf5::hdf5-shared
     )
   if (MSVC)
-    get_target_property(HDF5_DLL_PATH hdf5 LOCATION)
-    install(FILES ${HDF5_DLL_PATH} DESTINATION bin)
+    #get_target_property(HDF5_DLL_PATH hdf5 LOCATION)
+    #install(FILES ${HDF5_DLL_PATH} DESTINATION bin)
+    install(FILES $<TARGET_FILE:hdf5::hdf5-shared> DESTINATION bin)
   endif()
   # conan target names are different
   elseif (TARGET HDF5::C)
