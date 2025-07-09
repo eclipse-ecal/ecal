@@ -33,8 +33,8 @@ namespace eCAL
 
     struct SEscapedChannel
     {
-      std::string name;
-      SChannel::id_t id;
+      std::string name{ "" };
+      SChannel::id_t id{ 0 };
 
       static SEscapedChannel fromSChannel(const SChannel& input)
       {
@@ -98,8 +98,8 @@ namespace std {
   struct hash<eCAL::eh5::SEscapedChannel> {
     std::size_t operator()(const eCAL::eh5::SEscapedChannel& data) const {
       // Combine the hash of the string and the integer
-      std::size_t h1 = std::hash<std::string>{}(data.name);
-      std::size_t h2 = std::hash<eCAL::experimental::measurement::base::Channel::id_t>{}(data.id);
+      const std::size_t h1 = std::hash<std::string>{}(data.name);
+      const std::size_t h2 = std::hash<eCAL::experimental::measurement::base::Channel::id_t>{}(data.id);
 
       // Combine the two hashes (this is a common technique)
       return h1 ^ (h2 << 1); // XOR and shift
