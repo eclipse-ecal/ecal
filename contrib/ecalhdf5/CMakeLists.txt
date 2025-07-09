@@ -103,7 +103,7 @@ if (${ECAL_LINK_HDF5_SHARED})
       hdf5::hdf5-shared
     )
     #if (ECAL_DEPLOY_DEPENDENCIES)
-      install(IMPORTED_RUNTIME_ARTIFACTS hdf5::hdf5-shared RUNTIME DESTINATION ${eCAL_install_bin_dir})
+      install(IMPORTED_RUNTIME_ARTIFACTS hdf5-shared RUNTIME DESTINATION ${eCAL_install_bin_dir})
     #endif()
   # conan target names are different
   elseif (TARGET HDF5::C)
