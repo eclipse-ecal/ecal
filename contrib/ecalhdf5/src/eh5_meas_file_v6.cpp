@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ namespace eCAL
 
     // Channels have to be obtained differently, the names themselves are written in the header
     // for channel, id, we need to traverse the file format and get them.
-    std::set<eCAL::eh5::SChannel> HDF5MeasFileV6::GetChannels() const
+    std::set<eCAL::eh5::SEscapedChannel> HDF5MeasFileV6::GetChannels() const
     {
-      std::set<eCAL::eh5::SChannel> channels;
+      std::set<eCAL::eh5::SEscapedChannel> channels;
       // V2 Channel function will return (channel_name, 0)
       // so we will take those channel_names
       const auto channels_v2 = HDF5MeasFileV2::GetChannels();
@@ -69,7 +69,7 @@ namespace eCAL
       return channels;
     }
 
-    bool HDF5MeasFileV6::HasChannel(const eCAL::eh5::SChannel& channel) const
+    bool HDF5MeasFileV6::HasChannel(const eCAL::eh5::SEscapedChannel& channel) const
     {
       bool has_channel_name = HasGroup(file_id_, channel.name);
       if (!has_channel_name)
@@ -83,7 +83,7 @@ namespace eCAL
       return has_channel_id;
     }
 
-    eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV6::GetChannelDataTypeInformation(const SChannel& channel) const
+    eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasFileV6::GetChannelDataTypeInformation(const SEscapedChannel& channel) const
     {
       std::string type_name;
       std::string type_encoding;
@@ -113,7 +113,7 @@ namespace eCAL
       return eCAL::eh5::DataTypeInformation{ type_name, type_encoding, type_descriptor };
     }
 
-    bool eCAL::eh5::HDF5MeasFileV6::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
+    bool eCAL::eh5::HDF5MeasFileV6::GetEntriesInfo(const SEscapedChannel& channel, EntryInfoSet& entries) const
      {
       if (!this->IsOk()) return false;
 

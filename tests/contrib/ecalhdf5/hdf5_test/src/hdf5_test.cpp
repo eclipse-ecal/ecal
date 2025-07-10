@@ -556,8 +556,12 @@ TEST(contrib, HDF5_EscapeFilenamesForOneFilePerChannel)
 TEST(contrib, HDF5_WriteReadTopicTypeInformation)
 {
   // Define data that will be written to the file
-  TestingMeasEntry entry;
-  const auto& channel = entry.channel;
+  TestingMeasEntry regular_entry;
+  const auto& regular_channel = regular_entry.channel;
+
+  TestingMeasEntry escaped_entry;
+  escaped_entry.channel.name = "topic/with/slash";
+  const auto& escaped_channel = escaped_entry.channel;
   DataTypeInformation info{ "mytype", "myencoding", "mydescriptor" };
 
   std::string base_name = "datatypeinformation_meas";
@@ -568,8 +572,11 @@ TEST(contrib, HDF5_WriteReadTopicTypeInformation)
     MeasAPI hdf5_writer;
     CreateMeasurement<MeasAPI, MeasAPIAccess>(hdf5_writer, meas_root_dir, base_name);
 
-    hdf5_writer.SetChannelDataTypeInformation(channel, info);
-    EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+    hdf5_writer.SetChannelDataTypeInformation(regular_channel, info);
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, regular_entry));
+
+    hdf5_writer.SetChannelDataTypeInformation(escaped_channel, info);
+    EXPECT_TRUE(WriteToHDF(hdf5_writer, escaped_entry));
 
     EXPECT_TRUE(hdf5_writer.Close());
   }
@@ -578,7 +585,16 @@ TEST(contrib, HDF5_WriteReadTopicTypeInformation)
   {
     MeasAPI hdf5_reader;
     EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
-    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(channel), info);
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(regular_channel), info);
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(escaped_channel), info);
+  }
+
+  // Read entries with HDF5 file API
+  {
+    MeasAPI hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir + "/" + base_name + ".hdf5"));
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(regular_channel), info);
+    EXPECT_EQ(hdf5_reader.GetChannelDataTypeInformation(escaped_channel), info);
   }
 }
 

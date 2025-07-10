@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,9 +187,9 @@ void eCAL::eh5::HDF5MeasDir::SetOneFilePerChannelEnabled(bool enabled)
   one_file_per_channel_ = enabled;
 }
 
-std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
+std::set<eCAL::eh5::SEscapedChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
 {
-  std::set<eCAL::eh5::SChannel> channels;
+  std::set<eCAL::eh5::SEscapedChannel> channels;
 
   for (const auto& chn : channels_info_)
     channels.insert(chn.first);
@@ -197,12 +197,12 @@ std::set<eCAL::eh5::SChannel> eCAL::eh5::HDF5MeasDir::GetChannels() const
   return channels;
 }
 
-bool eCAL::eh5::HDF5MeasDir::HasChannel(const eCAL::eh5::SChannel& channel) const
+bool eCAL::eh5::HDF5MeasDir::HasChannel(const eCAL::eh5::SEscapedChannel& channel) const
 {
   return channels_info_.find(channel) != channels_info_.end();
 }
 
-eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInformation(const SChannel& channel) const
+eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInformation(const SEscapedChannel& channel) const
 {
   eCAL::eh5::DataTypeInformation ret_val;
 
@@ -215,7 +215,7 @@ eCAL::eh5::DataTypeInformation eCAL::eh5::HDF5MeasDir::GetChannelDataTypeInforma
 }
 
 // TODO: this seems fishy. Do we need to escape?
-void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& channel, const eCAL::eh5::DataTypeInformation& info)
+void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SEscapedChannel& channel, const eCAL::eh5::DataTypeInformation& info)
 {
   // Get an existing writer or create a new one
   auto file_writer_it = GetWriter(channel);
@@ -225,7 +225,7 @@ void eCAL::eh5::HDF5MeasDir::SetChannelDataTypeInformation(const SChannel& chann
   channels_info_[channel] = ChannelInfo(info);
 }
 
-long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SChannel& channel) const
+long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SEscapedChannel& channel) const
 {
   long long min_timestamp = std::numeric_limits<long long>::max();
   const auto& channel_entries = entries_by_chn_.find(channel);
@@ -241,7 +241,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMinTimestamp(const SChannel& channel) const
   return min_timestamp;
 }
 
-long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const SChannel& channel) const
+long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const SEscapedChannel& channel) const
 {
   long long max_timestamp = std::numeric_limits<long long>::min();
   const auto& channel_entries = entries_by_chn_.find(channel);
@@ -257,7 +257,7 @@ long long eCAL::eh5::HDF5MeasDir::GetMaxTimestamp(const SChannel& channel) const
   return max_timestamp;
 }
 
-bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const SEscapedChannel& channel, EntryInfoSet& entries) const
 {
   entries.clear();
 
@@ -272,7 +272,7 @@ bool eCAL::eh5::HDF5MeasDir::GetEntriesInfo(const SChannel& channel, EntryInfoSe
   return !entries.empty();
 }
 
-bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const SChannel& channel, long long begin, long long end, EntryInfoSet& entries) const
+bool eCAL::eh5::HDF5MeasDir::GetEntriesInfoRange(const SEscapedChannel& channel, long long begin, long long end, EntryInfoSet& entries) const
 {
   entries.clear();
 
@@ -319,7 +319,7 @@ void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
   base_name_ = base_name;
 }
 
-bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const SWriteEntry& entry)
+bool eCAL::eh5::HDF5MeasDir::AddEntryToFile(const SEscapedWriteEntry& entry)
 {
   if ((access_ == v3::eAccessType::RDONLY)
     || (output_dir_.empty())
@@ -441,8 +441,8 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
       auto channels = reader->GetChannels();
       for (const auto& channel : channels)
       {
-        auto escaped_channel = GetEscapedTopicname(channel);
-        auto info = reader->GetChannelDataTypeInformation(escaped_channel);
+        auto info = reader->GetChannelDataTypeInformation(channel);
+        auto escaped_channel = SEscapedChannel::fromSChannel(channel);
 
         auto& channel_info = channels_info_[escaped_channel];
         channel_info.info = info;
@@ -472,7 +472,7 @@ bool eCAL::eh5::HDF5MeasDir::OpenRX(const std::string& path, v3::eAccessType acc
   return !file_readers_.empty();
 }
 
-::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const SChannel& channel)
+::eCAL::eh5::HDF5MeasDir::FileWriterMap::iterator eCAL::eh5::HDF5MeasDir::GetWriter(const SEscapedChannel& channel)
 {
   const auto& channel_name{ channel.name };
   // Look for an existing writer. When creating 1 file per channel, the channel
