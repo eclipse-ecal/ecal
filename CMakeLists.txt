@@ -197,6 +197,8 @@ option(ECAL_BUILD_CSHARP_BINDING                    "Build eCAL C# binding"     
 option(ECAL_BUILD_PY_BINDING                        "Build eCAL Python binding"                                        OFF)
 option(ECAL_BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
 
+option(ECAL_DEPLOY_DEPENDENCIES                     "Deploy shared libaries in cmake install step"                     OFF)
+
 option(ECAL_INSTALL_SAMPLE_SOURCES                  "Install the sources of eCAL samples"                               ON)
 
 option(ECAL_USE_NPCAP                               "Enable the eCAL Npcap Receiver (i.e. the Win10 performance fix)"  OFF)
@@ -632,6 +634,7 @@ message(STATUS "ECAL_BUILD_C_BINDING                                : ${ECAL_BUI
 message(STATUS "ECAL_BUILD_CSHARP_BINDING                           : ${ECAL_BUILD_CSHARP_BINDING}")
 message(STATUS "ECAL_BUILD_PY_BINDING                               : ${ECAL_BUILD_PY_BINDING}")
 message(STATUS "ECAL_BUILD_TESTS                                    : ${ECAL_BUILD_TESTS}")
+message(STATUS "ECAL_DEPLOY_DEPENDENCIES                            : ${ECAL_DEPLOY_DEPENDENCIES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                         : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_USE_NPCAP                                      : ${ECAL_USE_NPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                          : ${ECAL_THIRDPARTY_BUILD_ASIO}")

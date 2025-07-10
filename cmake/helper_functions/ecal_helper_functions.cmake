@@ -48,6 +48,16 @@ function(ecal_set_subsystem_console TARGET_NAME)
   endif()
 endfunction()
 
+# This function resolves a alias target to the real target 
+function(ecal_resolve_alias_target TARGET_NAME OUT_VAR)
+  get_target_property(_real "${TARGET_NAME}" ALIASED_TARGET)
+  if(_real)
+    set(${OUT_VAR} "${_real}" PARENT_SCOPE)
+  else()
+    set(${OUT_VAR} "${TARGET_NAME}" PARENT_SCOPE)
+  endif()
+endfunction()
+
 
 macro(ecal_disable_all_warnings)
   if(MSVC)
