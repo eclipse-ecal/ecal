@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 #include <ecalhdf5/eh5_types.h>
 
 namespace eCAL
@@ -27,9 +28,81 @@ namespace eCAL
   namespace eh5
   {
     std::string GetEscapedTopicname(const std::string& input);
-    SChannel    GetEscapedTopicname(const SChannel& input);
-    SWriteEntry GetEscapedEntry(const SWriteEntry& input);
     std::string GetEscapedFilename(const std::string& input);
     std::string GetUnescapedString(const std::string& input);
+
+    struct SEscapedChannel
+    {
+      std::string name{ "" };
+      SChannel::id_t id{ 0 };
+
+      static SEscapedChannel fromSChannel(const SChannel& input)
+      {
+        return SEscapedChannel{ GetEscapedTopicname(input.name), input.id };
+      }
+
+      SChannel toSChannel() const
+      {
+        return SChannel(GetUnescapedString(name), id);
+      }
+
+      bool operator==(const SEscapedChannel& other) const
+      {
+        return std::tie(id, name) == std::tie(other.id, other.name);
+      }
+
+      bool operator!=(const SEscapedChannel& other) const
+      {
+        return !(*this == other);
+      }
+
+      bool operator<(const SEscapedChannel& other) const
+      {
+        return std::tie(id, name) < std::tie(other.id, other.name);
+      }
+    };
+
+    struct SEscapedWriteEntry
+    {
+      // channel
+      SEscapedChannel channel;
+
+      // data
+      const void* data = nullptr;
+      unsigned long long size = 0;
+
+      // metadata
+      long long snd_timestamp = 0;
+      long long rcv_timestamp = 0;
+      long long sender_id = 0; // Unique ID which may be set by sender
+      long long clock = 0;
+
+      static SEscapedWriteEntry fromSWriteEntry(const SWriteEntry& input)
+      {
+        SEscapedWriteEntry escaped_entry;
+        escaped_entry.channel = SEscapedChannel::fromSChannel(input.channel);
+        escaped_entry.data = input.data;
+        escaped_entry.size = input.size;
+        escaped_entry.snd_timestamp = input.snd_timestamp;
+        escaped_entry.rcv_timestamp = input.rcv_timestamp;
+        escaped_entry.sender_id = input.sender_id;
+        escaped_entry.clock = input.clock;
+        return escaped_entry;
+      }
+    };
   }
+}
+
+namespace std {
+  template <>
+  struct hash<eCAL::eh5::SEscapedChannel> {
+    std::size_t operator()(const eCAL::eh5::SEscapedChannel& data) const {
+      // Combine the hash of the string and the integer
+      const std::size_t h1 = std::hash<std::string>{}(data.name);
+      const std::size_t h2 = std::hash<eCAL::experimental::measurement::base::Channel::id_t>{}(data.id);
+
+      // Combine the two hashes (this is a common technique)
+      return h1 ^ (h2 << 1); // XOR and shift
+    }
+  };
 }
