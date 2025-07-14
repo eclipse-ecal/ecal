@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
 #include "eh5_meas_impl.h"
 
 #include "hdf5.h"
+#include "escape.h"
 
 namespace eCAL
 {
@@ -129,7 +130,7 @@ namespace eCAL
        *
        * @return       channel names & ids
       **/
-      std::set<eCAL::eh5::SChannel> GetChannels() const override;
+      std::set<eCAL::eh5::SEscapedChannel> GetChannels() const override;
 
       /**
        * @brief Check if channel exists in measurement
@@ -138,7 +139,7 @@ namespace eCAL
        *
        * @return       true if exists, false otherwise
       **/
-      bool HasChannel(const eCAL::eh5::SChannel & channel) const override;
+      bool HasChannel(const eCAL::eh5::SEscapedChannel & channel) const override;
 
       /**
        * @brief Get data type information of the given channel
@@ -147,7 +148,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      DataTypeInformation GetChannelDataTypeInformation(const SChannel& channel) const override;
+      DataTypeInformation GetChannelDataTypeInformation(const SEscapedChannel& channel) const override;
 
       /**
        * @brief Set data type information of the given channel
@@ -157,7 +158,7 @@ namespace eCAL
        *
        * @return              channel type
       **/
-      void SetChannelDataTypeInformation(const SChannel& channel, const DataTypeInformation & info) override;
+      void SetChannelDataTypeInformation(const SEscapedChannel& channel, const DataTypeInformation & info) override;
 
       /**
       * @brief Gets minimum timestamp for specified channel
@@ -166,7 +167,7 @@ namespace eCAL
       *
       * @return                minimum timestamp value
       **/
-      long long GetMinTimestamp(const SChannel& channel) const override;
+      long long GetMinTimestamp(const SEscapedChannel& channel) const override;
 
       /**
       * @brief Gets maximum timestamp for specified channel
@@ -175,7 +176,7 @@ namespace eCAL
       *
       * @return                maximum timestamp value
       **/
-      long long GetMaxTimestamp(const SChannel& channel) const override;
+      long long GetMaxTimestamp(const SEscapedChannel& channel) const override;
 
       /**
       * @brief Gets the header info for all data entries for the given channel
@@ -186,7 +187,7 @@ namespace eCAL
       *
       * @return                    true if succeeds, false if it fails
       **/
-      bool GetEntriesInfo(const SChannel& channel, EntryInfoSet& entries) const override;
+      bool GetEntriesInfo(const SEscapedChannel& channel, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets the header info for data entries for the given channel included in given time range (begin->end)
@@ -199,7 +200,7 @@ namespace eCAL
       *
       * @return                   true if succeeds, false if it fails
       **/
-      bool GetEntriesInfoRange(const SChannel& channel, long long begin, long long end, EntryInfoSet& entries) const override;
+      bool GetEntriesInfoRange(const SEscapedChannel& channel, long long begin, long long end, EntryInfoSet& entries) const override;
 
       /**
       * @brief Gets data size of a specific entry
@@ -241,7 +242,7 @@ namespace eCAL
       *
       * @return               true if succeeds, false if it fails
       **/
-      bool AddEntryToFile(const SWriteEntry& entry) override;
+      bool AddEntryToFile(const SEscapedWriteEntry& entry) override;
 
       using CallbackFunction = std::function<void ()>;
       /**
