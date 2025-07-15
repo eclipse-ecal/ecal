@@ -66,7 +66,7 @@ extern "C"
    *
    * @return Handle to configuration instance if succeeded, NULL otherwise. The handle needs to be released by eCAL_Coniguration_Delete().
   **/
-  inline eCAL_Configuration* eCAL_Init_Configuration()
+  static inline eCAL_Configuration* eCAL_Init_Configuration()
   {
     eCAL_Configuration* config;
     config = eCAL_Configuration_New();
