@@ -110,6 +110,10 @@ if(ECAL_USE_CURL)
       PRIVATE
         CURL::libcurl
     )
+    if (ECAL_DEPLOY_DEPENDENCIES)
+      ecal_resolve_alias_target(CURL::libcurl REAL_TARGET)
+      install(IMPORTED_RUNTIME_ARTIFACTS ${REAL_TARGET} RUNTIME DESTINATION ${eCAL_install_bin_dir})
+    endif()
 endif()
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
