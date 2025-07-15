@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,8 +22,11 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 set(util_test_src
-  src/util_test.cpp
+  src/counter_cache_test.cpp
   src/expanding_vector_test.cpp
+  src/message_drop_calculator_test.cpp
+  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/message_drop_calculator.cpp
+  src/util_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${util_test_src})

@@ -29,6 +29,8 @@
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
+#include "util/message_drop_calculator.h"
+#include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
 #include <atomic>
@@ -172,7 +174,8 @@ namespace eCAL
 
     std::mutex                                m_frequency_calculator_mutex;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
-
+    //MessageDropCalculatorMap<uint64_t>        m_message_drop_manager;
+    
     std::set<long long>                       m_id_set;
 
     using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
