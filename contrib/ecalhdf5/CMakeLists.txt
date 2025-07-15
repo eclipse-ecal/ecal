@@ -102,16 +102,27 @@ if (${ECAL_LINK_HDF5_SHARED})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       hdf5::hdf5-shared
     )
+    if (ECAL_DEPLOY_DEPENDENCIES)
+      ecal_resolve_alias_target(hdf5::hdf5-shared REAL_TARGET)
+      install(IMPORTED_RUNTIME_ARTIFACTS ${REAL_TARGET} RUNTIME DESTINATION ${eCAL_install_bin_dir})
+    endif()
   # conan target names are different
   elseif (TARGET HDF5::C)
     target_link_libraries(${PROJECT_NAME} PRIVATE
       HDF5::C
     )
+    if (ECAL_DEPLOY_DEPENDENCIES)
+      ecal_resolve_alias_target(HDF5::C REAL_TARGET)
+      install(IMPORTED_RUNTIME_ARTIFACTS HDF5::C RUNTIME DESTINATION ${eCAL_install_bin_dir})
+    endif()
   else()
     target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PRIVATE
       ${HDF5_LIBRARIES}
     )
+    if (ECAL_DEPLOY_DEPENDENCIES)
+      install(FILES ${HDF5_LIBRARIES} DESTINATION ${eCAL_install_bin_dir})
+    endif()
   endif()
 else()
   if (TARGET hdf5::hdf5-static)
