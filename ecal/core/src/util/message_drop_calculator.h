@@ -44,36 +44,28 @@ public:
     uint64_t totalDrops;
   };
 
-  MessageDropCalculator() = default;
-
   /// \brief Notify arrival of a real subscriber message.
   /// \param seq The sequence number received.
-  void registerReceivedMessage(uint64_t seq);
+  void RegisterReceivedMessage(uint64_t seq);
 
   /// \brief Notify arrival of a publisher heartbeat.
   /// \param seq The latest publisher sequence number.
-  void applyReceivedPublisherUpdate(uint64_t seq);
+  void ApplyReceivedPublisherUpdate(uint64_t seq);
 
   /// \brief Retrieve and reset the “newDrops” counter.
   /// \return A Summary of drops since last call and since construction.
-  Summary getSummary();
+  Summary GetSummary();
 
-private:
-  /// \brief Compute forward distance modulo 2^64, ignoring backwards/duplicates.
-  static uint64_t forwardDistance(uint64_t seq, uint64_t last) {
-    uint64_t diff = seq - last;
-    // diff==0 ⇒ duplicate; diff>2^63 ⇒ backward wrap/huge jump ⇒ ignore
-    if (diff == 0 || diff > (UINT64_C(1) << 63))
-      return 0;
-    return diff;
-  }
-
-  bool     have_received_message{ false };     ///< True once any registerReceivedMessage has ever run
-  uint64_t last_received_message_counter{0};   ///< Last seen sequence
+  bool     have_received_message{ false };      ///< True once any registerReceivedMessage has ever run
+  uint64_t first_received_message_counter{0};   ///<
+  uint64_t last_received_message_counter{0};    ///< Last seen sequence
+  uint64_t total_messages_received{ 0 };        /// 
 
   bool     have_received_message_since_publisher_update{ false };
-  uint64_t received_publisher_updates{ 0 };    ///< We need to skip the first few updates, before counting as drops
-  uint64_t last_publisher_message_counter{0};  ///< Last external update
+
+  uint64_t have_received_publisher_message_counter{ 0 }; ///< We need to skip the first few updates, before counting as drops
+  uint64_t first_publisher_message_counter{0};           ///< 
+  uint64_t last_publisher_message_counter{0};            ///< Last external update
 
   uint64_t verified_drops{0};               ///< Accumulated drop count
   uint64_t potential_drops{0};              ///< verified_drops at last getSummary()
@@ -92,16 +84,16 @@ public:
   using Summary    = typename Calculator::Summary;
 
   /// \brief Register a message counter that was received for a specific key
-  void registerReceivedMessage(const Key& k, uint64_t message_counter);
+  void RegisterReceivedMessage(const Key& k, uint64_t message_counter);
 
   /// \brief External-heartbeat update for a given key
-  void applyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter);
+  void ApplyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter);
 
   /// \brief Fetch summary for a specific key
-  Summary getSummary(const Key& k);
+  Summary GetSummary(const Key& k);
 
   /// \brief Fetch summary for a specific key aggregated over ALL keys
-  Summary getSummary();
+  std::map<Key, Summary> GetSummary();
 
 private:
   std::unordered_map<Key, Calculator> calculator_map_;
@@ -109,24 +101,24 @@ private:
 
 // Implementation of templated methods
 template<typename Key>
-void MessageDropCalculatorMap<Key>::registerReceivedMessage(const Key& k, uint64_t message_counter) {
-  calculator_map_[k].registerReceivedMessage(message_counter);
+void MessageDropCalculatorMap<Key>::RegisterReceivedMessage(const Key& k, uint64_t message_counter) {
+  calculator_map_[k].RegisterReceivedMessage(message_counter);
 }
 
 template<typename Key>
-void MessageDropCalculatorMap<Key>::applyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter) {
-  calculator_map_[k].applyReceivedPublisherUpdate(expected_message_counter);
-}
-
-template<typename Key>
-typename MessageDropCalculatorMap<Key>::Summary
-MessageDropCalculatorMap<Key>::getSummary(const Key& k) {
-  calculator_map_[k].getSummary();
+void MessageDropCalculatorMap<Key>::ApplyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter) {
+  calculator_map_[k].ApplyReceivedPublisherUpdate(expected_message_counter);
 }
 
 template<typename Key>
 typename MessageDropCalculatorMap<Key>::Summary
-MessageDropCalculatorMap<Key>::getSummary() {
+MessageDropCalculatorMap<Key>::GetSummary(const Key& k) {
+  calculator_map_[k].GetSummary();
+}
+
+template<typename Key>
+typename MessageDropCalculatorMap<Key>::Summary
+MessageDropCalculatorMap<Key>::GetSummary() {
   Summary aggregated_summary{0,0};
   for (auto &calculator : calculator_map_) {
     auto s = calculator.second.getSummary();

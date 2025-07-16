@@ -20,51 +20,39 @@
 
 using namespace ecal;
 
-void MessageDropCalculator::registerReceivedMessage(uint64_t received_message_counter) {
+void MessageDropCalculator::RegisterReceivedMessage(uint64_t received_message_counter) {
   if (!have_received_message) {
     // First-ever message or external → just initialize
     have_received_message = true;
-    last_received_message_counter = received_message_counter;
+    first_received_message_counter = received_message_counter;
   }
-  else
-  {
-    // Message counters should be sequential. If the counter increased by more than one, those are message drops.
-    uint64_t diff = forwardDistance(received_message_counter, last_received_message_counter);
-    if (diff > 0)
-    {
-      verified_drops += diff - 1;
-    }
-  }
+
+  last_received_message_counter = received_message_counter;
+  ++total_messages_received;
+
   have_received_message_since_publisher_update = true;
 }
 
-void MessageDropCalculator::applyReceivedPublisherUpdate(uint64_t counter) {
-  if (received_publisher_updates >= 2)
+void MessageDropCalculator::ApplyReceivedPublisherUpdate(uint64_t counter) {
+
+  if (!have_received_publisher_message_counter)
   {
-    uint64_t diff = [&]() {
-      if (have_received_message)
-      {
-        return forwardDistance(counter, last_received_message_counter);
-      }
-      else
-      {
-        return counter;
-      }
-
-    }();
-
-    if (diff > 0 && have_received_message_since_publisher_update) {
-      // Count full diff when no real messages intervened
-      potential_drops = diff;
-    }
+    have_received_publisher_message_counter = true;
+    first_publisher_message_counter = counter;
   }
 
   last_publisher_message_counter = counter;
-  ++received_publisher_updates;
+
   have_received_message_since_publisher_update = false;
 }
 
-MessageDropCalculator::Summary MessageDropCalculator::getSummary() {
-  uint64_t all    = verified_drops + potential_drops;
-  return { false, all };
+MessageDropCalculator::Summary MessageDropCalculator::GetSummary() {
+  auto current_verified_drops = last_received_message_counter - first_received_message_counter - total_messages_received + 1;
+  auto current_potential_drops = last_publisher_message_counter - first_publisher_message_counter - total_messages_received + 1;
+
+  auto verified_drop_difference = current_verified_drops - verified_drops;
+  auto potential_drop_difference = current_potential_drops - potential_drops;
+
+
+
 }

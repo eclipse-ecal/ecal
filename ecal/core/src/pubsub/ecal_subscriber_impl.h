@@ -131,9 +131,12 @@ namespace eCAL
 
     size_t GetConnectionCount();
 
-    bool CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_);
+    bool ShouldApplySampleBasedOnClock(const Payload::TopicInfo& topic_info_, long long clock_);
+    bool ShouldApplySampleBasedOnLayer(eTLayerType layer_);
+    bool ShouldApplySampleBasedOnId(long long id_);
 
     int32_t GetFrequency();
+    int32_t GetMessageDrops();
 
     EntityIdT                                 m_subscriber_id;
     SDataTypeInformation                      m_topic_info;
@@ -158,7 +161,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    ReceiveCallbackT                      m_receive_callback;
+    ReceiveCallbackT                          m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
@@ -168,19 +171,21 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    SubEventCallbackT                     m_event_id_callback;
+    SubEventCallbackT                         m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
     std::mutex                                m_frequency_calculator_mutex;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
-    //MessageDropCalculatorMap<uint64_t>        m_message_drop_manager;
+
+    std::mutex                                m_message_drop_map_mutex;
+    using MessageDropMapT = MessageDropCalculatorMap<uint64_t>;
+    MessageDropMapT<uint64_t>                 m_message_drop_map;
+    
+    using CounterCacheMapT = CounterCacheMap<uint64_t>;
+    CounterCacheMapT                          m_publisher_message_counter_map;
     
     std::set<long long>                       m_id_set;
-
-    using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
-    WriterCounterMapT                         m_writer_counter_map;
-    long long                                 m_message_drops = 0;
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;

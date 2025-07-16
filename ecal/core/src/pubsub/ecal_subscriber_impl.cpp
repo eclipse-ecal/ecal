@@ -438,20 +438,23 @@ namespace eCAL
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
     if (!m_created) return(0);
 
-    // check receive layer configuration
-    switch (layer_)
+    // We don't want to apply samples which are received on layers which are not activated for this subscriber
+    if (!ShouldApplySampleBasedOnLayer(layer_))
     {
-    case tl_ecal_udp:
-      if (!m_attributes.udp.enable) return 0;
-      break;
-    case tl_ecal_shm:
-      if (!m_attributes.shm.enable) return 0;
-      break;
-    case tl_ecal_tcp:
-      if (!m_attributes.tcp.enable) return 0;
-      break;
-    default:
-      break;
+      return 0;
+    }
+
+    // We do not want to apply duplicate / old samples
+    if (!ShouldApplySampleBasedOnClock(topic_info_, clock_))
+    {
+      // not clear why we are returning the size_ if we are not applying the sample, but why not...
+      return size_;
+    }
+
+    // We might not want to apply samples sent with a given ID (deprecated!)
+    if (!ShouldApplySampleBasedOnId(id_))
+    {
+      return 0;
     }
 
     // store receive layer
@@ -459,38 +462,8 @@ namespace eCAL
     m_layers.shm.active |= layer_ == tl_ecal_shm;
     m_layers.tcp.active |= layer_ == tl_ecal_tcp;
 
-    // number of hash values to track for duplicates
-    constexpr int hash_queue_size(64);
-
-    // use hash to discard multiple receives of the same payload
-    //   if a hash is in the queue we received this message recently (on another transport layer ?)
-    //   so we return and do not process this sample again
-    if(std::find(m_sample_hash_queue.begin(), m_sample_hash_queue.end(), hash_) != m_sample_hash_queue.end())
-    {
-#ifndef NDEBUG
-      // log it
-      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
-#endif
-      return(size_);
-    }
-    //   this is a new sample -> store its hash
-    m_sample_hash_queue.push_back(hash_);
-
-    // limit size of hash queue to the last 64 messages
-    while (m_sample_hash_queue.size() > hash_queue_size) m_sample_hash_queue.pop_front();
-
-    // check id
-    // TODO: not sure if this is needed / necessary.
-    if (!m_id_set.empty())
-    {
-      if (m_id_set.find(id_) == m_id_set.end()) return(0);
-    }
-
-    // check the current message clock
-    // if the function returns false we detected
-    //  - a dropped message
-    //  - an out-of-order message
-    //  - a multiple sent message
+    // check for message drops
+    // 
     SPublicationInfo publication_info;
     publication_info.entity_id  = topic_info_.topic_id;
     publication_info.host_name  = topic_info_.host_name;
@@ -683,7 +656,7 @@ namespace eCAL
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
     ecal_reg_sample_topic.data_clock     = m_clock;
     ecal_reg_sample_topic.data_frequency = GetFrequency();
-    ecal_reg_sample_topic.message_drops  = static_cast<int32_t>(m_message_drops);
+    ecal_reg_sample_topic.message_drops  = GetMessageDrops();
 
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_local = 0;
@@ -847,115 +820,75 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_)
+  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const Payload::TopicInfo& topic_info_, long long clock_)
   {
-    auto iter = m_writer_counter_map.find(publication_info_.entity_id);
-    
-    // initial entry
-    if (iter == m_writer_counter_map.end())
+    // If counter is already present (duplicate), or unsure if it was present, the sample is not applied
+    if (m_publisher_message_counter_map.HasCounter(topic_info_.topic_id, clock_) != CounterCacheMapT::CounterInCache::False)
     {
-      m_writer_counter_map[publication_info_.entity_id] = current_clock_;
-      return true;
-    }
-    // clock entry exists
-    else
-    {
-      // calculate difference
-      const long long last_clock = iter->second;
-      const long long clock_difference = current_clock_ - last_clock;
-
-      // this is perfect, the next message arrived
-      if (clock_difference == 1)
-      {
-        // update the internal clock counter
-        iter->second = current_clock_;
-
-        // process it
-        return true;
-      }
-
-      // that should never happen, maybe there is a publisher
-      // sending parallel on multiple layers ?
-      // we ignore this message duplicate
-      if (clock_difference == 0)
-      {
-        // do not update the internal clock counter
-
-        // do not process it
-        return false;
-      }
-
-      // that means we miss at least one message
-      // -> we have a "message drop"
-      if (clock_difference > 1)
-      {
-#if 0
-        // we log this
-        std::string msg = std::to_string(counter_ - counter_last) + " Messages lost ! ";
-        msg += "(Unit: \'";
-        msg += m_attributes.unit_name;
-        msg += "@";
-        msg += m_attributes.host_name;
-        msg += "\' | Subscriber: \'";
-        msg += m_attributes.topic_name;
-        msg += "\')";
-        Logging::Log(log_level_warning, msg);
+#ifndef NDEBUG
+      // log it
+      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
 #endif
 
-        // fire dropped event
-        // we do not know the data type of the dropped message here
-        // so we use an empty data type information
-        FireDroppedEvent(publication_info_, SDataTypeInformation());
+      return false;
+    }
 
-        // increase the drop counter
-        m_message_drops += clock_difference;
+    // The sample counter is strictly monotonically increasing. If not so, we received an old message.
+    // If it is applied or not depends on the configuration. Anyways, a message at low debug level is logged.
+    if (!m_publisher_message_counter_map.IsMonotonic(topic_info_.topic_id, clock_))
+    {
+#ifndef NDEBUG
+      std::string msg = "Subscriber: \'";
+      msg += m_attributes.topic_name;
+      msg += "\'";
+      msg += " received a message in the wrong order";
+      Logging::Log(Logging::log_level_warning, msg);
+#endif
 
-        // update the internal clock counter
-        iter->second = current_clock_;
-
-        // process it
-        return true;
-      }
-
-      // a negative clock difference may happen if a publisher
-      // is using a shm ringbuffer and messages arrive in the wrong order
-      if (clock_difference < 0)
+      // @TODO: We should not have a global config call here. This should be an attribute of the subscriber!
+      if (Config::GetDropOutOfOrderMessages())
       {
-        // -----------------------------------
-        // drop messages in the wrong order
-        // -----------------------------------
-        if (Config::GetDropOutOfOrderMessages())
-        {
-          // do not update the internal clock counter
-
-          // there is no need to fire the drop event, because
-          // this event has been fired with the message before
-
-          // do not process it
-          return false;
-        }
-        // -----------------------------------
-        // process messages in the wrong order
-        // -----------------------------------
-        else
-        {
-          // do not update the internal clock counter
-
-          // but we log this
-          std::string msg = "Subscriber: \'";
-          msg += m_attributes.topic_name;
-          msg += "\'";
-          msg += " received a message in the wrong order";
-          Logging::Log(Logging::log_level_warning, msg);
-
-          // process it
-          return true;
-        }
+        return false;
+      }
+      else
+      {
+        return true;
       }
     }
 
-    // should never be reached
-    return false;
+    return true;
+  }
+
+  bool CSubscriberImpl::ShouldApplySampleBasedOnId(long long id_)
+  {
+    // 
+    if (!m_id_set.empty() && (m_id_set.find(id_) == m_id_set.end()))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_)
+  {
+    // check receive layer configuration
+    switch (layer_)
+    {
+    case tl_ecal_udp:
+      if (!m_attributes.udp.enable) return false;
+      break;
+    case tl_ecal_shm:
+      if (!m_attributes.shm.enable) return false;
+      break;
+    case tl_ecal_tcp:
+      if (!m_attributes.tcp.enable) return false;
+      break;
+    default:
+      break;
+    }
+
+    return true;
   }
 
   int32_t CSubscriberImpl::GetFrequency()
@@ -972,5 +905,10 @@ namespace eCAL
       return std::numeric_limits<int32_t>::min();
     }
     return static_cast<int32_t>(frequency_in_mhz);
+  }
+
+  long long CSubscriberImpl::GetMessageDrops()
+  {
+    return 0;
   }
 }

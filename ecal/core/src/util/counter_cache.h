@@ -38,7 +38,14 @@ namespace eCAL
     {}
 
     bool Contains(std::size_t value) const {
-      return value >= base && value < base + WINDOW_SIZE;
+      return Compare(value) == 0;
+    }
+
+    int Compare(std::size_t value) const
+    {
+      if (value < base) return -1;
+      if (value >= base + WINDOW_SIZE) return 1;
+      return 0;
     }
 
     void Clear(std::size_t new_base) {
@@ -54,7 +61,7 @@ namespace eCAL
     void Set(std::size_t value) {
       // Should we throw exceptions, if the values are not in range?
       if (Contains(value)) {
-        bits.Set(GetOffset(value));
+        bits.set(GetOffset(value));
       }
     }
 
@@ -66,12 +73,12 @@ namespace eCAL
 
   template <std::size_t WINDOW_SIZE>
   bool operator<(std::size_t value, const BitsetWindow<WINDOW_SIZE>& window) {
-    return value < window.base;
+    return window.Compare(value) < 0;
   }
 
   template <std::size_t WINDOW_SIZE>
   bool operator>(std::size_t value, const BitsetWindow<WINDOW_SIZE>& window) {
-    return value >= window.base + WINDOW_SIZE;
+    return window.Compare(value) > 0;
   }
 
   /*
@@ -82,12 +89,12 @@ namespace eCAL
   template <std::size_t WINDOW_SIZE = 1024>
   class CounterCache {
   private:
-    std::size_t current_base = 0;
-    BitsetWindow<WINDOW_SIZE> current_window;
-    BitsetWindow<WINDOW_SIZE> previous;
-    BitsetWindow<WINDOW_SIZE> next;
+    std::size_t current_base = WINDOW_SIZE;
+    BitsetWindow<WINDOW_SIZE> current_window{ current_base };
+    BitsetWindow<WINDOW_SIZE> previous{ current_base - WINDOW_SIZE };
+    BitsetWindow<WINDOW_SIZE> next{ current_base + WINDOW_SIZE };
     std::size_t max_seen = 0;
-    bool initialized;
+    bool registered_any_value = false;
 
   public:
     enum class CounterInCache
@@ -97,16 +104,22 @@ namespace eCAL
       Unsure // It's unsure if the counter has been set, because it is outside of the tracked windows
     };
 
+    /*
     CounterCache()
       : current_base{ 0 }
       , current_window{ current_base }
       , previous{ current_base - WINDOW_SIZE }
-      , next{ current_base + WINDOW_SIZE }
-    {}
+      , next{ current_base - WINDOW_SIZE }
+    {}*/
 
     // Returns true if the counter value has already been registered
     CounterInCache HasCounter(std::size_t counter_value_) const
     {
+      if (!registered_any_value)
+      {
+        return CounterInCache::False;
+      }
+
       if (counter_value_ > max_seen)
       {
         return CounterInCache::False;
@@ -125,6 +138,11 @@ namespace eCAL
     // Returns true if value is greater than all previously set values
     bool IsMonotonic(std::size_t counter_value_) const
     {
+      // The first value is always monotonic
+      if (!registered_any_value)
+      {
+        return true;
+      }
       return counter_value_ > max_seen;
     }
 
@@ -136,6 +154,8 @@ namespace eCAL
     // Or we completely reset
     void SetCounter(std::size_t counter_value_)
     {
+      registered_any_value = true;
+
       max_seen = std::max(max_seen, counter_value_);
 
       if (counter_value_ < previous)
@@ -158,6 +178,7 @@ namespace eCAL
       // Shift by one
       if (next.Contains(counter_value_)) {
         ShiftOne(counter_value_);
+        return;
       }
 
       Reset(counter_value_);

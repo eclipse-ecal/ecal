@@ -26,61 +26,74 @@
 
 using namespace eCAL;
 
+using CounterCache64 = CounterCache<64>;
+
 TEST(CounterCacheTest, InitialStateHasCounter) {
-  CounterCache<64> cache;
+  CounterCache64 cache;
   for (std::size_t i = 0; i < 100; ++i) {
-    EXPECT_NE(cache.HasCounter(i), CounterCache<>::CounterInCache::True);
+    EXPECT_NE(cache.HasCounter(i), CounterCache64::CounterInCache::True);
     EXPECT_TRUE(cache.IsMonotonic(i));
   }
 }
 
 TEST(CounterCacheTest, BasicRegisterAndQuery) {
-  CounterCache<64> cache;
+  CounterCache64 cache;
 
-  cache.SetCounter(10);
-  EXPECT_EQ(cache.HasCounter(10), CounterCache<>::CounterInCache::True);
-  EXPECT_TRUE(cache.IsMonotonic(20));
-  EXPECT_FALSE(cache.IsMonotonic(5));
-  EXPECT_EQ(cache.HasCounter(9), CounterCache<>::CounterInCache::False);
+  cache.SetCounter(0);
+  EXPECT_EQ(cache.HasCounter(0), CounterCache64::CounterInCache::True);
+  EXPECT_TRUE(cache.IsMonotonic(1));
+  cache.SetCounter(1);
+  EXPECT_FALSE(cache.IsMonotonic(0));
+  EXPECT_FALSE(cache.IsMonotonic(1));
+  cache.SetCounter(4);
+  EXPECT_TRUE(cache.IsMonotonic(5));
+  EXPECT_EQ(cache.HasCounter(6), CounterCache64::CounterInCache::False);
+  EXPECT_EQ(cache.HasCounter(5), CounterCache64::CounterInCache::False);
+  EXPECT_EQ(cache.HasCounter(4), CounterCache64::CounterInCache::True);
+  EXPECT_EQ(cache.HasCounter(3), CounterCache64::CounterInCache::False);
+  EXPECT_EQ(cache.HasCounter(2), CounterCache64::CounterInCache::False);
+  EXPECT_EQ(cache.HasCounter(1), CounterCache64::CounterInCache::True);
+  EXPECT_EQ(cache.HasCounter(0), CounterCache64::CounterInCache::True);
 }
 
 TEST(CounterCacheTest, SlidingOneWindow) {
   constexpr std::size_t window_size = 64;
   CounterCache<window_size> cache;
 
-  std::size_t base = 100;
-  for (std::size_t i = base; i < base + window_size; ++i) {
+  std::size_t base = window_size;
+  std::size_t next_window = base + window_size;
+  for (std::size_t i = base; i < next_window ; ++i) {
+
     cache.SetCounter(i);
-    EXPECT_EQ(cache.HasCounter(i), CounterCache<>::CounterInCache::True);
+    EXPECT_EQ(cache.HasCounter(i), CounterCache64::CounterInCache::True);
   }
 
   // Trigger one-window slide
-  std::size_t next = base + window_size;
-  cache.SetCounter(next);
-  EXPECT_EQ(cache.HasCounter(next), CounterCache<>::CounterInCache::True);
+  cache.SetCounter(next_window);
+  EXPECT_EQ(cache.HasCounter(next_window), CounterCache64::CounterInCache::True);
 
   // Values in old (previous) window still available
-  EXPECT_EQ(cache.HasCounter(base), CounterCache<>::CounterInCache::True);
+  EXPECT_EQ(cache.HasCounter(base), CounterCache64::CounterInCache::True);
 
   // Value before both windows
-  EXPECT_EQ(cache.HasCounter(base - 1), CounterCache<>::CounterInCache::Unsure);
+  EXPECT_EQ(cache.HasCounter(base - 1), CounterCache64::CounterInCache::Unsure);
 }
 
 TEST(CounterCacheTest, ResetAfterLargeJump) {
-  CounterCache<64> cache;
+  CounterCache64 cache;
 
   cache.SetCounter(10);
-  EXPECT_EQ(cache.HasCounter(10), CounterCache<>::CounterInCache::True);
+  EXPECT_EQ(cache.HasCounter(10), CounterCache64::CounterInCache::True);
 
   // Far jump → full reset
   cache.SetCounter(1000);
 
-  EXPECT_EQ(cache.HasCounter(10), CounterCache<>::CounterInCache::Unsure);
-  EXPECT_EQ(cache.HasCounter(1000), CounterCache<>::CounterInCache::True);
+  EXPECT_EQ(cache.HasCounter(10), CounterCache64::CounterInCache::Unsure);
+  EXPECT_EQ(cache.HasCounter(1000), CounterCache64::CounterInCache::True);
 }
 
 TEST(CounterCacheTest, MonotonicityChecks) {
-  CounterCache<64> cache;
+  CounterCache64 cache;
 
   EXPECT_TRUE(cache.IsMonotonic(5));
   cache.SetCounter(5);
