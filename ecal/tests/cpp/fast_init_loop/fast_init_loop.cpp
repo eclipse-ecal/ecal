@@ -198,8 +198,8 @@ TEST(FastInitLoop, fifty_topics_one_hundret_iterations) {
   constexpr size_t iterations = 100;
 
   using std::chrono::milliseconds;
-  const milliseconds wait_until_ecal_is_ready(2000);
-  const milliseconds connect_timeout(3000);
+  const milliseconds wait_until_ecal_is_ready(0);
+  const milliseconds connect_timeout(2000);
   const milliseconds timeout(1000);
 
   for (size_t iteration = 0; iteration < iterations; ++iteration) {
