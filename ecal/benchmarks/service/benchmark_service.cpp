@@ -62,7 +62,7 @@ namespace Ping {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Ping)->Unit(benchmark::kMicrosecond);
+   BENCHMARK(BM_eCAL_Ping)->Repetitions(10);
 }
 
 // Benchmark execution
