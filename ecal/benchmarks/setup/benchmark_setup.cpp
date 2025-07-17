@@ -24,6 +24,9 @@
 #include <benchmark/benchmark.h>
 
 
+#define REPETITIONS       10
+
+
 /*
  *
  * Benchmarking the eCAL initialization
@@ -40,7 +43,7 @@ namespace Initialize {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Initialize)->Unit(benchmark::kMicrosecond);
+   BENCHMARK(BM_eCAL_Initialize)->Repetitions(REPETITIONS);
 }
 
 
@@ -58,7 +61,7 @@ namespace Initialize_and_Finalize {
       }
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Initialize_and_Finalize)->Unit(benchmark::kMicrosecond);
+   BENCHMARK(BM_eCAL_Initialize_and_Finalize)->Repetitions(REPETITIONS);
 }
 
 
@@ -81,7 +84,7 @@ namespace Publisher_Registration {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Publisher_Registration)->Unit(benchmark::kMicrosecond);
+   BENCHMARK(BM_eCAL_Publisher_Registration)->Repetitions(REPETITIONS);
 }
 
 
@@ -104,7 +107,7 @@ namespace Subscriber_Registration {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Subscriber_Registration)->Unit(benchmark::kMicrosecond);
+   BENCHMARK(BM_eCAL_Subscriber_Registration)->Repetitions(REPETITIONS);
 }
 
 

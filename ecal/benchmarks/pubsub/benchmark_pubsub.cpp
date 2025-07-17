@@ -35,6 +35,7 @@
 #define RANGE_LIMIT             1<<24
 
 #define WARMUP_TIME_S           2
+#define REPETITIONS             10
 
 
 /*
@@ -73,7 +74,7 @@ namespace Send {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -119,7 +120,7 @@ namespace Send_Zero_Copy {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -165,7 +166,7 @@ namespace Send_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -211,7 +212,7 @@ namespace Send_Double_Buffer {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -258,7 +259,7 @@ namespace Send_Zero_Copy_Double_Buffer {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -315,7 +316,7 @@ namespace Send_and_Receive {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime()->Repetitions(REPETITIONS);
 }
 
 
@@ -383,17 +384,9 @@ namespace Receive_Latency {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseManualTime();
+  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseManualTime()->Repetitions(REPETITIONS);
 }
 
 
 // Benchmark execution
 BENCHMARK_MAIN();
-
-
-/*
- * Options to reduce variance:
- * ->MinWarmUpTime(WARMUP_TIME_S)
- * ->Repetitions()
- * ->ComputeStatistics("min", [](const std::vector<double>& v) -> double {return *(std::min_element(std::begin(v), std::end(v)));})
-*/
