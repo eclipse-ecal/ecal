@@ -28,7 +28,6 @@
 
 
 #define REGISTRATION_DELAY_MS    2000
-#define REPETITIONS              10
 
 
 /*
@@ -64,7 +63,7 @@ namespace Ping {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Ping)->Repetitions(REPETITIONS);
+   BENCHMARK(BM_eCAL_Ping);
 }
 
 // Benchmark execution

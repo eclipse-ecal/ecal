@@ -26,7 +26,6 @@
 
 #define REGISTRATION_DELAY_MS   2000
 #define WARMUP_TIME_S           2
-#define REPETITIONS             10
 
 #define BACKGROUND_TOPIC_COUNT_MIN            1
 #define BACKGROUND_TOPIC_COUNT_MAX            32
@@ -132,8 +131,7 @@ namespace Multi_Send {
       benchmark::CreateRange(BACKGROUND_TOPIC_COUNT_MIN, BACKGROUND_TOPIC_COUNT_MAX, BACKGROUND_TOPIC_COUNT_MULTIPLIER),
       benchmark::CreateRange(PER_TOPIC_RANGE_START, PER_TOPIC_RANGE_LIMIT, PER_TOPIC_RANGE_MULTIPLIER)})
     ->UseRealTime()
-    ->MinWarmUpTime(WARMUP_TIME_S)
-    ->Repetitions(REPETITIONS);
+    ->MinWarmUpTime(WARMUP_TIME_S);
 }
 
 // Benchmark execution
