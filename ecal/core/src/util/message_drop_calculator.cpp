@@ -18,7 +18,7 @@
 */
 #include "message_drop_calculator.h"
 
-using namespace ecal;
+using namespace eCAL;
 
 void MessageDropCalculator::RegisterReceivedMessage(uint64_t received_message_counter) {
   if (!have_received_message) {
@@ -29,30 +29,17 @@ void MessageDropCalculator::RegisterReceivedMessage(uint64_t received_message_co
 
   last_received_message_counter = received_message_counter;
   ++total_messages_received;
-
-  have_received_message_since_publisher_update = true;
-}
-
-void MessageDropCalculator::ApplyReceivedPublisherUpdate(uint64_t counter) {
-
-  if (!have_received_publisher_message_counter)
-  {
-    have_received_publisher_message_counter = true;
-    first_publisher_message_counter = counter;
-  }
-
-  last_publisher_message_counter = counter;
-
-  have_received_message_since_publisher_update = false;
 }
 
 MessageDropCalculator::Summary MessageDropCalculator::GetSummary() {
-  auto current_verified_drops = last_received_message_counter - first_received_message_counter - total_messages_received + 1;
-  auto current_potential_drops = last_publisher_message_counter - first_publisher_message_counter - total_messages_received + 1;
+  Summary summary;
 
-  auto verified_drop_difference = current_verified_drops - verified_drops;
-  auto potential_drop_difference = current_potential_drops - potential_drops;
+  if (have_received_message)
+  {
+    summary.drops = 1 + last_received_message_counter - first_received_message_counter - total_messages_received;
+    summary.new_drops = (summary.drops > previous_number_of_drops);
+    previous_number_of_drops = summary.drops;
+  }
 
-
-
+  return summary;
 }

@@ -22,11 +22,14 @@
 #include <algorithm>
 #include <bitset>
 #include <cstddef>
-#include <unordered_map>
+#include <map>
 
 namespace eCAL
 {
-
+  /*
+  * This class can track a fixed size number of counters
+  * They are stored as a bitset + a base offset
+  */
   template <std::size_t WINDOW_SIZE = 1024>
   class BitsetWindow {
     std::bitset<WINDOW_SIZE> bits;
@@ -37,10 +40,16 @@ namespace eCAL
       base{ base_ }
     {}
 
+    // Can this class track the given value?
     bool Contains(std::size_t value) const {
       return Compare(value) == 0;
     }
 
+    // Can this class track the given value?
+    // If it can -> 0
+    // If the value is smaller -> -1
+    // If the value is greater -> 1
+    // Behaves like <=> for C++20
     int Compare(std::size_t value) const
     {
       if (value < base) return -1;
@@ -48,16 +57,19 @@ namespace eCAL
       return 0;
     }
 
+    // Reinitializes the class with a new base
     void Clear(std::size_t new_base) {
       bits.reset();
       base = new_base;
     }
 
+    // Is the give value set?
     bool Has(std::size_t value) const {
       // Should we throw exceptions, if the values are not in range?
       return Contains(value) && bits.test(GetOffset(value));
     }
 
+    // Set the given value.
     void Set(std::size_t value) {
       // Should we throw exceptions, if the values are not in range?
       if (Contains(value)) {
@@ -99,18 +111,10 @@ namespace eCAL
   public:
     enum class CounterInCache
     {
-      True, // The counter has been set
+      True,  // The counter has been set
       False, // The counter has not been set
       Unsure // It's unsure if the counter has been set, because it is outside of the tracked windows
     };
-
-    /*
-    CounterCache()
-      : current_base{ 0 }
-      , current_window{ current_base }
-      , previous{ current_base - WINDOW_SIZE }
-      , next{ current_base - WINDOW_SIZE }
-    {}*/
 
     // Returns true if the counter value has already been registered
     CounterInCache HasCounter(std::size_t counter_value_) const
@@ -124,14 +128,17 @@ namespace eCAL
       {
         return CounterInCache::False;
       }
+
       if (counter_value_ < previous)
       {
         return CounterInCache::Unsure;
       }
+
       if (current_window.Has(counter_value_) || previous.Has(counter_value_)) // next never has any values
       {
         return CounterInCache::True;
       }
+
       return CounterInCache::False;
     }
 
@@ -175,7 +182,6 @@ namespace eCAL
         return;
       }
 
-      // Shift by one
       if (next.Contains(counter_value_)) {
         ShiftOne(counter_value_);
         return;
@@ -208,24 +214,32 @@ namespace eCAL
   template<typename Key, std::size_t WINDOW_SIZE = 1024>
   class CounterCacheMap {
   public:
-    using CounterInCache = CounterCache::CounterInCache;
+    using CounterInCache = typename CounterCache<WINDOW_SIZE>::CounterInCache;
 
     CounterInCache HasCounter(const Key& k, std::size_t counter_value_) const
     {
-      return cache_map_[k].HasCounter(counter_value_);
+      if (cache_map_.find(k) == cache_map_.end())
+      {
+        return CounterInCache::False;
+      }
+      return cache_map_.at(k).HasCounter(counter_value_);
     }
 
     bool IsMonotonic(const Key& k, std::size_t counter_value_) const
     {
-      return cache_map_[k].IsMonotonic(counter_value_);
+      if (cache_map_.find(k) == cache_map_.end())
+      {
+        return true;
+      }
+      return cache_map_.at(k).IsMonotonic(counter_value_);
     }
 
     void SetCounter(const Key& k, std::size_t counter_value_)
     {
-      return cache_map_[k].Update(counter_value_);
+      return cache_map_[k].SetCounter(counter_value_);
     }
 
   private:
-    std::unordered_map<Key, CounterCache<WINDOW_SIZE>> cache_map_;
+    std::map<Key, CounterCache<WINDOW_SIZE>> cache_map_;
   };
 }

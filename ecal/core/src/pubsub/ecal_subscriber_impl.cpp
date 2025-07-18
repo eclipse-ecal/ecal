@@ -432,7 +432,7 @@ namespace eCAL
 #endif
   }
 
-  size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
@@ -444,8 +444,10 @@ namespace eCAL
       return 0;
     }
 
+    auto publication_info = PublicationInfoFromTopicInfo(topic_info_);
+
     // We do not want to apply duplicate / old samples
-    if (!ShouldApplySampleBasedOnClock(topic_info_, clock_))
+    if (!ShouldApplySampleBasedOnClock(publication_info, clock_))
     {
       // not clear why we are returning the size_ if we are not applying the sample, but why not...
       return size_;
@@ -462,18 +464,6 @@ namespace eCAL
     m_layers.shm.active |= layer_ == tl_ecal_shm;
     m_layers.tcp.active |= layer_ == tl_ecal_tcp;
 
-    // check for message drops
-    // 
-    SPublicationInfo publication_info;
-    publication_info.entity_id  = topic_info_.topic_id;
-    publication_info.host_name  = topic_info_.host_name;
-    publication_info.process_id = topic_info_.process_id;
-    if (!CheckMessageClock(publication_info, clock_))
-    {
-      // we will not process that message
-      return(0);
-    }
-
 #ifndef NDEBUG
     // log it
     Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
@@ -482,12 +472,8 @@ namespace eCAL
     // increase read clock
     m_clock++;
 
-    // Update frequency calculation
-    {
-      const auto receive_time = std::chrono::steady_clock::now();
-      const std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
-      m_frequency_calculator.addTick(receive_time);
-    }
+    TriggerMessageDropUdate(publication_info, clock_);
+    TriggerFrequencyUpdate();
 
     // reset timeout
     m_receive_time = 0;
@@ -656,7 +642,7 @@ namespace eCAL
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
     ecal_reg_sample_topic.data_clock     = m_clock;
     ecal_reg_sample_topic.data_frequency = GetFrequency();
-    ecal_reg_sample_topic.message_drops  = GetMessageDrops();
+    ecal_reg_sample_topic.message_drops  = GetMessageDropsAndFireDroppedEvents();
 
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_local = 0;
@@ -806,6 +792,15 @@ namespace eCAL
     FireEvent(eSubscriberEvent::dropped, publication_info_, data_type_info_);
   }
 
+  CSubscriberImpl::SPublicationInfo CSubscriberImpl::PublicationInfoFromTopicInfo(const Payload::TopicInfo& topic_info_)
+  {
+    SPublicationInfo publication_info;
+    publication_info.entity_id = topic_info_.topic_id;
+    publication_info.host_name = topic_info_.host_name;
+    publication_info.process_id = topic_info_.process_id;
+    return publication_info;
+  }
+
   size_t CSubscriberImpl::GetConnectionCount()
   {
     // no need to lock map here for now, map locked by caller
@@ -820,10 +815,10 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const Payload::TopicInfo& topic_info_, long long clock_)
+  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_)
   {
     // If counter is already present (duplicate), or unsure if it was present, the sample is not applied
-    if (m_publisher_message_counter_map.HasCounter(topic_info_.topic_id, clock_) != CounterCacheMapT::CounterInCache::False)
+    if (m_publisher_message_counter_map.HasCounter(publication_info_, clock_) != CounterCacheMapT::CounterInCache::False)
     {
 #ifndef NDEBUG
       // log it
@@ -835,7 +830,7 @@ namespace eCAL
 
     // The sample counter is strictly monotonically increasing. If not so, we received an old message.
     // If it is applied or not depends on the configuration. Anyways, a message at low debug level is logged.
-    if (!m_publisher_message_counter_map.IsMonotonic(topic_info_.topic_id, clock_))
+    if (!m_publisher_message_counter_map.IsMonotonic(publication_info_, clock_))
     {
 #ifndef NDEBUG
       std::string msg = "Subscriber: \'";
@@ -868,6 +863,19 @@ namespace eCAL
     }
 
     return true;
+  }
+
+  void CSubscriberImpl::TriggerFrequencyUpdate()
+  {
+    const auto receive_time = std::chrono::steady_clock::now();
+    const std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
+    m_frequency_calculator.addTick(receive_time);
+  }
+
+  void CSubscriberImpl::TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter)
+  {
+    const std::lock_guard<std::mutex> lock(m_message_drop_map_mutex);
+    m_message_drop_map.RegisterReceivedMessage(publication_info_, message_counter);
   }
 
   bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_)
@@ -907,8 +915,28 @@ namespace eCAL
     return static_cast<int32_t>(frequency_in_mhz);
   }
 
-  long long CSubscriberImpl::GetMessageDrops()
+  int32_t CSubscriberImpl::GetMessageDropsAndFireDroppedEvents()
   {
-    return 0;
+    const std::lock_guard<std::mutex> lock_drops(m_message_drop_map_mutex);
+    const std::lock_guard<std::mutex> lock_connections(m_connection_map_mtx);
+
+    auto message_drop_summary_map = m_message_drop_map.GetSummary();
+    int32_t accumulated_message_drops = 0;
+
+    for (const auto& message_drop_summary_pair : message_drop_summary_map)
+    {
+      const auto& publisher_info = message_drop_summary_pair.first;
+      const auto& message_drop_summary = message_drop_summary_pair.second;
+
+      if (message_drop_summary.new_drops)
+      {
+        // @TODO: Firing dropped events should happen from a different thread, we should queue this somehow...
+        FireDroppedEvent(publisher_info, m_connection_map[publisher_info].data_type_info);
+      }
+
+      accumulated_message_drops += message_drop_summary.new_drops;
+    }
+
+    return accumulated_message_drops;
   }
 }

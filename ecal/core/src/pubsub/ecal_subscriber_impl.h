@@ -129,14 +129,19 @@ namespace eCAL
     void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     void FireDroppedEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
+    static SPublicationInfo PublicationInfoFromTopicInfo(const Payload::TopicInfo& topic_info_);
+
     size_t GetConnectionCount();
 
-    bool ShouldApplySampleBasedOnClock(const Payload::TopicInfo& topic_info_, long long clock_);
+    bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_);
     bool ShouldApplySampleBasedOnLayer(eTLayerType layer_);
     bool ShouldApplySampleBasedOnId(long long id_);
 
+    void TriggerFrequencyUpdate();
+    void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
+
     int32_t GetFrequency();
-    int32_t GetMessageDrops();
+    int32_t GetMessageDropsAndFireDroppedEvents();
 
     EntityIdT                                 m_subscriber_id;
     SDataTypeInformation                      m_topic_info;
@@ -179,10 +184,10 @@ namespace eCAL
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
     std::mutex                                m_message_drop_map_mutex;
-    using MessageDropMapT = MessageDropCalculatorMap<uint64_t>;
-    MessageDropMapT<uint64_t>                 m_message_drop_map;
+    using MessageDropMapT = MessageDropCalculatorMap<SPublicationInfo>;
+    MessageDropMapT                           m_message_drop_map;
     
-    using CounterCacheMapT = CounterCacheMap<uint64_t>;
+    using CounterCacheMapT = CounterCacheMap<SPublicationInfo>;
     CounterCacheMapT                          m_publisher_message_counter_map;
     
     std::set<long long>                       m_id_set;

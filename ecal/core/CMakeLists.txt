@@ -455,7 +455,6 @@ set(ecal_util_src
     src/util/message_drop_calculator.cpp
     src/util/message_drop_calculator.h
     src/util/getenvvar.h
-    src/util/counter_cache.cpp
     src/util/counter_cache.h
 )
 if (ECAL_CORE_COMMAND_LINE)

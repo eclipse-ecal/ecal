@@ -21,10 +21,10 @@
 
 #include <cstdint>
 #include <mutex>
-#include <unordered_map>
+#include <map>
 #include <bitset>
 
-namespace ecal
+namespace eCAL
 {
   /// \brief Calculates if any messages were not received by a subscriber (e.g. dropped)
 ///
@@ -40,54 +40,39 @@ public:
   /// \c newDrops is the count since the last getSummary() call;
   /// \c totalDrops is the count since construction.
   struct Summary {
-    bool newDrops;
-    uint64_t totalDrops;
+    bool     new_drops = false; // new confirmed message drops since the last update
+    uint64_t drops = 0;         // confirmed message drops
   };
 
   /// \brief Notify arrival of a real subscriber message.
   /// \param seq The sequence number received.
   void RegisterReceivedMessage(uint64_t seq);
 
-  /// \brief Notify arrival of a publisher heartbeat.
-  /// \param seq The latest publisher sequence number.
-  void ApplyReceivedPublisherUpdate(uint64_t seq);
-
   /// \brief Retrieve and reset the “newDrops” counter.
   /// \return A Summary of drops since last call and since construction.
   Summary GetSummary();
 
+private:
   bool     have_received_message{ false };      ///< True once any registerReceivedMessage has ever run
-  uint64_t first_received_message_counter{0};   ///<
-  uint64_t last_received_message_counter{0};    ///< Last seen sequence
-  uint64_t total_messages_received{ 0 };        /// 
+  
+  uint64_t first_received_message_counter{0};   ///< The counter of the first message that arrived
+  uint64_t last_received_message_counter{0};    ///< The counter of the most recently received message
+  uint64_t total_messages_received{ 0 };        ///< The total number of messages that have been received
 
-  bool     have_received_message_since_publisher_update{ false };
-
-  uint64_t have_received_publisher_message_counter{ 0 }; ///< We need to skip the first few updates, before counting as drops
-  uint64_t first_publisher_message_counter{0};           ///< 
-  uint64_t last_publisher_message_counter{0};            ///< Last external update
-
-  uint64_t verified_drops{0};               ///< Accumulated drop count
-  uint64_t potential_drops{0};              ///< verified_drops at last getSummary()
+  uint64_t previous_number_of_drops{ 0 };        ///< The number of detected drops, the last time that GetSummary was called
 };
-
-
 
 /// \brief Routes updates & summaries to per-key MessageDropCalculator instances,
 ///        and can also provide a cumulative summary over all keys.
 ///
-/// Thread-safe for concurrent calls.
+/// Not thread-safe
 template<typename Key>
 class MessageDropCalculatorMap {
 public:
-  using Calculator = MessageDropCalculator;
-  using Summary    = typename Calculator::Summary;
+  using Summary    = typename MessageDropCalculator::Summary;
 
   /// \brief Register a message counter that was received for a specific key
   void RegisterReceivedMessage(const Key& k, uint64_t message_counter);
-
-  /// \brief External-heartbeat update for a given key
-  void ApplyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter);
 
   /// \brief Fetch summary for a specific key
   Summary GetSummary(const Key& k);
@@ -96,7 +81,7 @@ public:
   std::map<Key, Summary> GetSummary();
 
 private:
-  std::unordered_map<Key, Calculator> calculator_map_;
+  std::map<Key, MessageDropCalculator> calculator_map_;
 };
 
 // Implementation of templated methods
@@ -106,26 +91,19 @@ void MessageDropCalculatorMap<Key>::RegisterReceivedMessage(const Key& k, uint64
 }
 
 template<typename Key>
-void MessageDropCalculatorMap<Key>::ApplyReceivedPublisherUpdate(const Key& k, uint64_t expected_message_counter) {
-  calculator_map_[k].ApplyReceivedPublisherUpdate(expected_message_counter);
-}
-
-template<typename Key>
 typename MessageDropCalculatorMap<Key>::Summary
 MessageDropCalculatorMap<Key>::GetSummary(const Key& k) {
-  calculator_map_[k].GetSummary();
+  return calculator_map_[k].GetSummary();
 }
 
 template<typename Key>
-typename MessageDropCalculatorMap<Key>::Summary
+std::map<Key, typename MessageDropCalculatorMap<Key>::Summary>
 MessageDropCalculatorMap<Key>::GetSummary() {
-  Summary aggregated_summary{0,0};
-  for (auto &calculator : calculator_map_) {
-    auto s = calculator.second.getSummary();
-    aggregated_summary.newDrops   != s.newDrops;
-    aggregated_summary.totalDrops += s.totalDrops;
+  std::map<Key, typename MessageDropCalculatorMap<Key>::Summary> summary_map;
+  for (auto& calculator : calculator_map_) {
+    summary_map[calculator.first] = calculator.second.GetSummary();
   }
-  return aggregated_summary;
+  return summary_map;
 }
 
 }
