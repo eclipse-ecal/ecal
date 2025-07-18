@@ -70,7 +70,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
-        toolset: 14.29 # v141 / vs2019
+        toolset: 14.29 # v142 / vs2019
 
     - name: Prepare ccache and restore cache
       id: ccache_cache-restore
