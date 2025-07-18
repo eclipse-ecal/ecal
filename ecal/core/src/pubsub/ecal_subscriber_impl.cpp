@@ -815,7 +815,7 @@ namespace eCAL
     return count;
   }
 
-  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_)
+  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const
   {
     // If counter is already present (duplicate), or unsure if it was present, the sample is not applied
     if (m_publisher_message_counter_map.HasCounter(publication_info_, clock_) != CounterCacheMapT::CounterInCache::False)
@@ -854,7 +854,7 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::ShouldApplySampleBasedOnId(long long id_)
+  bool CSubscriberImpl::ShouldApplySampleBasedOnId(long long id_) const
   {
     // 
     if (!m_id_set.empty() && (m_id_set.find(id_) == m_id_set.end()))
@@ -878,7 +878,7 @@ namespace eCAL
     m_message_drop_map.RegisterReceivedMessage(publication_info_, message_counter);
   }
 
-  bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_)
+  bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_) const
   {
     // check receive layer configuration
     switch (layer_)
@@ -934,7 +934,7 @@ namespace eCAL
         FireDroppedEvent(publisher_info, m_connection_map[publisher_info].data_type_info);
       }
 
-      accumulated_message_drops += message_drop_summary.new_drops;
+      accumulated_message_drops += message_drop_summary.drops;
     }
 
     return accumulated_message_drops;

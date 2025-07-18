@@ -60,8 +60,8 @@ TEST(CounterCacheTest, SlidingOneWindow) {
   constexpr std::size_t window_size = 64;
   CounterCache<window_size> cache;
 
-  std::size_t base = window_size;
-  std::size_t next_window = base + window_size;
+  const std::size_t base = window_size;
+  const std::size_t next_window = base + window_size;
   for (std::size_t i = base; i < next_window ; ++i) {
 
     cache.SetCounter(i);

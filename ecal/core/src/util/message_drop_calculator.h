@@ -46,7 +46,7 @@ public:
 
   /// \brief Notify arrival of a real subscriber message.
   /// \param seq The sequence number received.
-  void RegisterReceivedMessage(uint64_t seq);
+  void RegisterReceivedMessage(uint64_t received_message_counter);
 
   /// \brief Retrieve and reset the “newDrops” counter.
   /// \return A Summary of drops since last call and since construction.

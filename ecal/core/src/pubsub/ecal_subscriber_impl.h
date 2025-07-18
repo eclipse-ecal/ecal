@@ -133,9 +133,9 @@ namespace eCAL
 
     size_t GetConnectionCount();
 
-    bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_);
-    bool ShouldApplySampleBasedOnLayer(eTLayerType layer_);
-    bool ShouldApplySampleBasedOnId(long long id_);
+    bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const;
+    bool ShouldApplySampleBasedOnLayer(eTLayerType layer_) const;
+    bool ShouldApplySampleBasedOnId(long long id_) const;
 
     void TriggerFrequencyUpdate();
     void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
