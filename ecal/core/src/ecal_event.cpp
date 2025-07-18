@@ -331,6 +331,11 @@ namespace eCAL
       {
         m_event = named_event_create(m_name.c_str());
       }
+
+      if (m_event == nullptr)
+      {
+        m_event = named_event_open(m_name.c_str());
+      }
     }
 
     ~CNamedEvent()
