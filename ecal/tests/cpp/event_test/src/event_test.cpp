@@ -83,14 +83,14 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
 
   Barrier barrier(2);
   
-  auto event_worker = [&barrier, &event_name, runs](bool has_ownership)
+  auto event_worker = [&barrier, &event_name, &stop, runs](bool has_ownership)
   {
       for (int i = 0; i < runs; ++i)
       {
         eCAL::EventHandleT event_handle;
         barrier.wait();
         eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership);
-        EXPECT_NE(nullptr, eCAL::gGetNativeEventHandle(event_handle));
+        ASSERT_NE(eCAL::gGetNativeEventHandle(event_handle), nullptr);
         barrier.wait();
         eCAL::gCloseEvent(event_handle);
       }
