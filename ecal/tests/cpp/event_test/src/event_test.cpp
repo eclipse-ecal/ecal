@@ -79,7 +79,7 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
 {
   // parameter
   const std::string event_name = "my_parallel_event";
-  const int runs = 100;
+  const int runs = 10000;
 
   Barrier barrier(2);
   
@@ -89,7 +89,7 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
       {
         eCAL::EventHandleT event_handle;
         barrier.wait();
-        EXPECT_EQ(true, eCAL::gOpenNamedEvent(&event_handle, event_name, true));
+        EXPECT_EQ(true, eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership));
         barrier.wait();
         eCAL::gCloseEvent(event_handle);
       }
