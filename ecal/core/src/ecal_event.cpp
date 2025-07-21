@@ -538,7 +538,7 @@ namespace eCAL
 
   const void* gGetNativeEventHandle(const EventHandleT& event_)
   {
-    if (!event_->handle) return nullptr;
+    if (!event_.handle) return nullptr;
     if (!event_.name.empty())
     {
       return reinterpret_cast<const void*>((static_cast<CNamedEvent*>(event_.handle))->native_handle());
