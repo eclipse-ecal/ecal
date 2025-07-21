@@ -41,7 +41,7 @@ class Subscriber(MessageSubscriber[str]):
     def __init__(
         self,
         topic_name: str,
-        config: ecal.nanobind_core.PublisherConfiguration = ecal.nanobind_core.get_publisher_configuration(), 
+        config: ecal.nanobind_core.SubscriberConfiguration = ecal.nanobind_core.get_subscriber_configuration(), 
         event_callback: typing.Optional[object] = None) -> None:  
       super().__init__(
         StringSerializer(ecal.nanobind_core.DataTypeInformation),
