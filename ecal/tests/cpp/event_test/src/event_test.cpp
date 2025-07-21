@@ -24,6 +24,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <thread>
 
 class Barrier 
 {
@@ -81,8 +82,7 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
   const int runs = 100;
 
   Barrier barrier(2);
-
-      
+  
   auto event_worker = [&barrier, &event_name, runs](bool has_ownership)
   {
       for (int i = 0; i < runs; ++i)
