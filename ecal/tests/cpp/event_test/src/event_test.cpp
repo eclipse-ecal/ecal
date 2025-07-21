@@ -89,7 +89,8 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
       {
         eCAL::EventHandleT event_handle;
         barrier.wait();
-        EXPECT_EQ(true, eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership));
+        eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership);
+        EXPECT_NE(nullptr, eCAL::gGetNativeEventHandle(event_handle));
         barrier.wait();
         eCAL::gCloseEvent(event_handle);
       }

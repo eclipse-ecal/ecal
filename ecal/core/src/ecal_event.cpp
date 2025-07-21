@@ -106,6 +106,11 @@ namespace eCAL
   {
     return(event_.handle != nullptr);
   }
+
+  const void* gGetNativeEventHandle(const EventHandleT& event_)
+  {
+    return reinterpret_cast<const void*>(event_.handle);
+  }
 }
 #endif /* ECAL_OS_WINDOWS */
 
@@ -392,6 +397,11 @@ namespace eCAL
       }
     }
 
+    const named_event_t* native_handle() const 
+    {
+      return m_event;
+    }
+
   private:
     CNamedEvent(const CNamedEvent&);             // prevent copy-construction
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
@@ -524,6 +534,16 @@ namespace eCAL
   bool gEventIsValid(const EventHandleT& event_)
   {
     return(event_.handle != nullptr);
+  }
+
+  const void* gGetNativeEventHandle(const EventHandleT& event_)
+  {
+    if (!event_->handle) return nullptr;
+    if (!event_.name.empty())
+    {
+      return reinterpret_cast<const void*>((static_cast<CNamedEvent*>(event_.handle))->native_handle());
+    }
+    return nullptr;
   }
 }
 
