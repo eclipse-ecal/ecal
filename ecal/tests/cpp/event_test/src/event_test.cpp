@@ -83,7 +83,7 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
 
   Barrier barrier(2);
   
-  auto event_worker = [&barrier, &event_name, &stop, runs](bool has_ownership)
+  auto event_worker = [&barrier, &event_name, runs](bool has_ownership)
   {
       for (int i = 0; i < runs; ++i)
       {
