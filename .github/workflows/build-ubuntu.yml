@@ -216,7 +216,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         sparse-checkout: |
-            throughput_calculator.py
+            ecal/benchmarks/util/throughput_calculator.py
         sparse-checkout-cone-mode: false
         
     - name: Install Dependencies
@@ -254,7 +254,7 @@ jobs:
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python throughput_calculator.py -f ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
         
     - name: Log Benchmark Results with Bencher
@@ -278,4 +278,4 @@ jobs:
         --testbed '${{ matrix.os_version }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
-        --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+        --file ${{ github.workspace }}/ecal/benchmarks/util/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
