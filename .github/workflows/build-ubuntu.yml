@@ -278,4 +278,4 @@ jobs:
         --testbed '${{ matrix.os_version }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
-        --file ${{ github.workspace }}/ecal/benchmarks/util/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+        --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json

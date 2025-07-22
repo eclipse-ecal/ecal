@@ -287,7 +287,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         sparse-checkout: |
-            throughput_calculator.py
+            ecal/benchmarks/util/throughput_calculator.py
         sparse-checkout-cone-mode: false
     
     - name: Download eCAL Libraries
@@ -321,7 +321,7 @@ jobs:
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
+        python throughput_calculator.py -f ${{ github.workspace }}/ecal/benchmarks/util/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
       shell: cmd
         
