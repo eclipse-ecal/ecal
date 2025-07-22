@@ -19,6 +19,7 @@
 
 #include <core/config/py_publisher.h>
 #include <ecal/config/publisher.h>
+#include <nanobind/stl/vector.h>
 
 namespace nb = nanobind;
 using namespace eCAL::Publisher;

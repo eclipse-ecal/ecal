@@ -21,6 +21,7 @@
 
 #include <core/config/py_application.h>
 #include <ecal/config/application.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 
