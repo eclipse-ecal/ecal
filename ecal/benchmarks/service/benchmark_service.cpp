@@ -18,13 +18,9 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/service/client.h>
-#include <ecal/service/server.h>
-#include <ecal/service/types.h>
 #include <benchmark/benchmark.h>
 
 #include <thread>
-#include <iostream>
 
 
 #define REGISTRATION_DELAY_MS    2000

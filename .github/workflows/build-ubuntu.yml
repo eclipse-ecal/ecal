@@ -202,7 +202,7 @@ jobs:
       fail-fast: false
       matrix:
         # List of all benchmark types
-        bm_type: [pubsub, pubsub_multi, service, setup]
+        bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
     
     env:
       # Name of the benchmark log file without extension
@@ -251,7 +251,7 @@ jobs:
         path: ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
     
     - name: Calculate Throughput
-      if: ${{ matrix.bm_type == 'pubsub' || matrix.bm_type == 'pubsub_multi' }}
+      if: startsWith(matrix.bm_type, 'pubsub')
       run: |
         python throughput_calculator.py -f ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
@@ -268,7 +268,7 @@ jobs:
         --file ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
         
     - name: Log Calculated Throughput with Bencher
-      if: ${{ matrix.bm_type == 'pubsub' || matrix.bm_type == 'pubsub_multi' }}
+      if: startsWith(matrix.bm_type, 'pubsub')
       run: |
         bencher run \
         --project ecal \

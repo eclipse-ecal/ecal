@@ -18,11 +18,10 @@
 */
 
 #include <ecal/ecal.h>
-#include <ecal/pubsub/publisher.h>
-#include <ecal/pubsub/subscriber.h>
 #include <benchmark/benchmark.h>
 
 #include <thread>
+
 
 #define REGISTRATION_DELAY_MS   2000
 #define WARMUP_TIME_S           2
@@ -30,6 +29,7 @@
 #define BACKGROUND_TOPIC_COUNT_MIN            1
 #define BACKGROUND_TOPIC_COUNT_MAX            32
 #define BACKGROUND_TOPIC_COUNT_MULTIPLIER     2
+
 #define PER_TOPIC_RANGE_START       1
 #define PER_TOPIC_RANGE_LIMIT       1<<24
 #define PER_TOPIC_RANGE_MULTIPLIER  1<<12
