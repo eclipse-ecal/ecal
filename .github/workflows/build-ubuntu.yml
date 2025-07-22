@@ -195,20 +195,19 @@ jobs:
     
   run-benchmarks:
     if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
+    runs-on: {{ matrix.os_version }}
     needs: build-ubuntu
     
     strategy:
       fail-fast: false
       matrix:
+        os_version: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
         # List of all benchmark types
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
     
     env:
       # Name of the benchmark log file without extension
       LOG_FILE_NAME: ecal_benchmark_${{ matrix.bm_type }}_log
-      # Check that this version is also present in the job above and the one used for this job
-      OS_VERSION: ubuntu-24.04
 
     steps:
     - name: Fetch Throughput Calculator Python Script
@@ -226,13 +225,13 @@ jobs:
     - name: Download eCAL Libraries
       uses: actions/download-artifact@v4
       with:
-        name: 'libraries_${{ env.OS_VERSION }}'
+        name: 'libraries_${{ matrix.os_version }}'
         path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
-        name: 'benchmarks_${{ env.OS_VERSION }}'
+        name: 'benchmarks_${{ matrix.os_version }}'
         path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
@@ -247,7 +246,7 @@ jobs:
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
       with:
-        name: 'benchmark-log-${{ matrix.bm_type }}_${{ env.OS_VERSION }}'
+        name: 'benchmark-log-${{ matrix.bm_type }}_${{ matrix.os_version }}'
         path: ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}_log.json
     
     - name: Calculate Throughput
@@ -262,7 +261,7 @@ jobs:
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch '${{ github.ref_name }}' \
-        --testbed '${{ env.OS_VERSION }}' \
+        --testbed '${{ matrix.os_version }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
         --file ${{ github.workspace }}/_build/bin/${{ env.LOG_FILE_NAME }}.json
@@ -274,7 +273,7 @@ jobs:
         --project ecal \
         --token '${{secrets.BENCHER_API_TOKEN}}' \
         --branch '${{ github.ref_name }}' \
-        --testbed '${{ env.OS_VERSION }}' \
+        --testbed '${{ matrix.os_version }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
         --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
