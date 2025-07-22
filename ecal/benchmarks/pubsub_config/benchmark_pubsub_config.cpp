@@ -315,9 +315,9 @@ namespace Send_Double_Buffer_Handshake {
  * Benchmarking the eCAL send process in zero-copy mode with double-buffering and handshake
  * 
 */
-namespace Send_Double_Buffer_Handshake {
+namespace Send_Zero_Copy_Double_Buffer_Handshake {
   // Benchmark function
-  static void BM_eCAL_Send_Double_Buffer_Handshake(benchmark::State& state) {
+  static void BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -354,5 +354,5 @@ namespace Send_Double_Buffer_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Double_Buffer_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
 }
