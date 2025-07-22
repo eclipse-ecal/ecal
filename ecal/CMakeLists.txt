@@ -61,4 +61,6 @@ endif()
 # --------------------------------------------------------
 # benchmarks
 # --------------------------------------------------------
-add_subdirectory(benchmarks)
+if (ECAL_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
+endif()

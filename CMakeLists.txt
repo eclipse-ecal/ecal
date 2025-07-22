@@ -196,6 +196,7 @@ option(ECAL_BUILD_C_BINDING                         "Build eCAL C binding"      
 option(ECAL_BUILD_CSHARP_BINDING                    "Build eCAL C# binding"                                            OFF)
 option(ECAL_BUILD_PY_BINDING                        "Build eCAL Python binding"                                        OFF)
 option(ECAL_BUILD_TESTS                             "Build the eCAL google tests"                                      OFF)
+option(ECAL_BUILD_BENCHMARKS                        "Build the eCAL benchmarks"                                        OFF)
 
 option(ECAL_DEPLOY_DEPENDENCIES                     "Deploy shared libaries in cmake install step"                     OFF)
 
