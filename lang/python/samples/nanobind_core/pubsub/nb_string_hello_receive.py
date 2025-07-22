@@ -37,7 +37,7 @@ def data_callback(publisher_id : ecal_core.TopicId, data : ecal_core.ReceiveCall
 
 def main():
   print("-----------------------------")
-  print(" Python: HELLO WORLD SENDER  ")
+  print(" Python: HELLO WORLD RECEIVE ")
   print("-----------------------------")
 
   # Initialize eCAL. You always have to initialize eCAL before using its API.

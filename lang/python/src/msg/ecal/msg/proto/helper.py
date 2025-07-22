@@ -44,7 +44,7 @@ def add_proto_desc(file_desc_set, file_desc, inserted_files):
     file_desc.CopyToProto(desc_proto)
 
 # define get function for protobuf message descriptor
-def get_descriptor_from_type(type_):
+def get_descriptor_from_type(type_) -> bytes:
   """ Returns a file descriptor set which contains all dependencies of a protobuf type that 
   can be used for reflection purposes in eCAL.
 
@@ -58,8 +58,8 @@ def get_descriptor_from_type(type_):
   return file_desc_set.SerializeToString()
   
 # define get function for protobuf message descriptor
-def get_type_from_descriptor(typename, descriptor):
-  """ Returns a file descriptor set which contains all dependencies of a protobuf type that 
+def get_type_from_descriptor(typename : str, descriptor : bytes):
+  """ Returns a file descriptor set which contains all dependencies of a protobuf type that
   can be used for reflection purposes in eCAL.
 
   :param typename:   name of the type of the protobuf message

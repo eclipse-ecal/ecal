@@ -22,8 +22,7 @@ import ecal.nanobind_core
 from ..common.core import MessagePublisher, MessageSubscriber
 from .serializer import Serializer as StringSerializer
 
-class Publisher(MessagePublisher[str]):
-  
+class Publisher(MessagePublisher[str]):  
   def __init__(
       self,
       topic_name: str,
@@ -36,8 +35,7 @@ class Publisher(MessagePublisher[str]):
       event_callback
     )
 
-class Subscriber(MessageSubscriber[str]):
-    
+class Subscriber(MessageSubscriber[str]):  
     def __init__(
         self,
         topic_name: str,
