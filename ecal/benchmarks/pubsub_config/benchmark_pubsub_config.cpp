@@ -356,3 +356,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
   // Register the benchmark function
   BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
 }
+
+
+// Benchmark execution
+BENCHMARK_MAIN();
