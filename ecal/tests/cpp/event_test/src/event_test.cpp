@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,21 +83,34 @@ TEST(core_cpp_core, Event_OpenEventInParallel)
 
   Barrier barrier(2);
   
-  auto event_worker = [&barrier, &event_name, runs](bool has_ownership)
+  auto signaller = [&barrier, &event_name, runs](bool has_ownership)
   {
       for (int i = 0; i < runs; ++i)
       {
         eCAL::EventHandleT event_handle;
         barrier.wait();
         eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership);
-        EXPECT_NE(eCAL::gGetNativeEventHandle(event_handle), nullptr);
+        EXPECT_EQ(true, gSetEvent(event_handle));
         barrier.wait();
         eCAL::gCloseEvent(event_handle);
       }
   };
 
-  std::thread event_worker_thread_1(event_worker, true);
-  std::thread event_worker_thread_2(event_worker, false);
+  auto waiter = [&barrier, &event_name, runs](bool has_ownership)
+  {
+      for (int i = 0; i < runs; ++i)
+      {
+          eCAL::EventHandleT event_handle;
+          barrier.wait();
+          eCAL::gOpenNamedEvent(&event_handle, event_name, has_ownership);
+          EXPECT_EQ(true, gWaitForEvent(event_handle, 100)) << "at iteration " << i;
+          barrier.wait();
+          eCAL::gCloseEvent(event_handle);
+      }
+  };
+
+  std::thread event_worker_thread_1(signaller, true);
+  std::thread event_worker_thread_2(waiter, false);
   event_worker_thread_1.join();
   event_worker_thread_2.join();
 }
