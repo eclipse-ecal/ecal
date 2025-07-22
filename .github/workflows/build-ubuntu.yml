@@ -194,16 +194,16 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.event_name == 'push'
-    runs-on: {{ matrix.os_version }}
-    needs: build-ubuntu
-    
     strategy:
       fail-fast: false
       matrix:
         os_version: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
         # List of all benchmark types
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
+  
+    if: github.event_name == 'push'
+    runs-on: {{ matrix.os_version }}
+    needs: build-ubuntu
     
     env:
       # Name of the benchmark log file without extension
