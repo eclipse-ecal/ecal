@@ -204,7 +204,7 @@ jobs:
         # List of all benchmark types
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
     
-    runs-on: {{ matrix.os_version }}
+    runs-on: ${{ matrix.os_version }}
     
     env:
       # Name of the benchmark log file without extension
