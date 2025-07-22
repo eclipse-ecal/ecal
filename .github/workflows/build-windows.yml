@@ -266,7 +266,7 @@ jobs:
     # --------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.event_name == 'push'
+    if: github.ref_name == 'dev-benchmark'
     runs-on: windows-2022
     needs: build-windows
     

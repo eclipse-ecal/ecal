@@ -195,7 +195,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.event_name == 'push'
+    if: github.ref_name == 'dev_benchmark'
     needs: build-ubuntu
     
     strategy:
