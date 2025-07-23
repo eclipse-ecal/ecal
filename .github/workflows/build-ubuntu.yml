@@ -228,33 +228,33 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: 'libraries_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}/lib
+        path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
         name: 'benchmarks_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}/bin
+        path: ${{ github.workspace }}/_build/bin
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
     
     - name: Run Benchmark
       run: |
-        chmod +x '${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }}'
-        ${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
-      working-directory: ${{ github.workspace }}/bin
+        chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
+        ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+      working-directory: ${{ github.workspace }}
         
     - name: Upload Benchmark Results
       uses: actions/upload-artifact@v4
       with:
         name: 'benchmark-log-${{ matrix.bm_type }}_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}/bin/${{ env.LOG_FILE_NAME }}.json
+        path: ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
     
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/bin/${{ env.LOG_FILE_NAME }}.json
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
       working-directory: ${{ github.workspace }}
         
     - name: Log Benchmark Results with Bencher
@@ -266,7 +266,7 @@ jobs:
         --testbed '${{ matrix.os_version }}' \
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter cpp_google \
-        --file ${{ github.workspace }}/bin/${{ env.LOG_FILE_NAME }}.json
+        --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
         
     - name: Log Calculated Throughput with Bencher
       if: startsWith(matrix.bm_type, 'pubsub')
