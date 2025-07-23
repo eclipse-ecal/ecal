@@ -228,21 +228,21 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: 'libraries_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}
+        path: ${{ github.workspace }}/lib
     
     - name: Download Benchmark Executables
       uses: actions/download-artifact@v4
       with:
         name: 'benchmarks_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}
+        path: ${{ github.workspace }}/bin
     
     - name: Install Bencher CLI
       uses: bencherdev/bencher@main
     
     - name: Run Benchmark
       run: |
-        chmod +x '${{ github.workspace }}/ecal_benchmark_${{ matrix.bm_type }}'
-        ${{ github.workspace }}/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+        chmod +x '${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }}'
+        ${{ github.workspace }}/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}
         
     - name: Upload Benchmark Results
