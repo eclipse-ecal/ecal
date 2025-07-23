@@ -30,14 +30,14 @@ sys.path.insert(1, os.path.join(sys.path[0], '../_protobuf'))
 import person_pb2
 
 def main():
-  print("-----------------------")
-  print(" Python: PERSON SENDER")
-  print("-----------------------")
-  
+  print("--------------------------------")
+  print(" Python (legacy): PERSON SENDER ")
+  print("--------------------------------")
+
   # Initialize eCAL. You always have to initialize eCAL before using it.
   # The name of our eCAL Process will be "person send python".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("person send python")
+  ecal_core.initialize("person send python (legacy)")
   
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
