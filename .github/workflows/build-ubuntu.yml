@@ -244,12 +244,6 @@ jobs:
         chmod +x '${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }}'
         ${{ github.workspace }}/_build/bin/ecal_benchmark_${{ matrix.bm_type }} --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
       working-directory: ${{ github.workspace }}
-        
-    - name: Upload Benchmark Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: 'benchmark-log-${{ matrix.bm_type }}_${{ matrix.os_version }}'
-        path: ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
     
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
