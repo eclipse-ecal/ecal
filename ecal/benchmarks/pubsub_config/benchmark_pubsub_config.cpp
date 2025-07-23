@@ -38,7 +38,7 @@ constexpr int range_limit = 1 << 24;
 */
 namespace Send_Zero_Copy {
   // Benchmark function
-  static void BM_eCAL_Send_Zero_Copy(benchmark::State& state) {
+  void BM_eCAL_Send_Zero_Copy(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -84,7 +84,7 @@ namespace Send_Zero_Copy {
 */
 namespace Send_Handshake {
   // Benchmark function
-  static void BM_eCAL_Send_Handshake(benchmark::State& state) {
+  void BM_eCAL_Send_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -130,7 +130,7 @@ namespace Send_Handshake {
 */
 namespace Send_Double_Buffer {
   // Benchmark function
-  static void BM_eCAL_Send_Double_Buffer(benchmark::State& state) {
+  void BM_eCAL_Send_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -176,7 +176,7 @@ namespace Send_Double_Buffer {
 */
 namespace Send_Zero_Copy_Handshake {
   // Benchmark function
-  static void BM_eCAL_Send_Zero_Copy_Handshake(benchmark::State& state) {
+  void BM_eCAL_Send_Zero_Copy_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -223,7 +223,7 @@ namespace Send_Zero_Copy_Handshake {
 */
 namespace Send_Zero_Copy_Double_Buffer {
   // Benchmark function
-  static void BM_eCAL_Send_Zero_Copy_Double_Buffer(benchmark::State& state) {
+  void BM_eCAL_Send_Zero_Copy_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -270,7 +270,7 @@ namespace Send_Zero_Copy_Double_Buffer {
 */
 namespace Send_Double_Buffer_Handshake {
   // Benchmark function
-  static void BM_eCAL_Send_Double_Buffer_Handshake(benchmark::State& state) {
+  void BM_eCAL_Send_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -317,7 +317,7 @@ namespace Send_Double_Buffer_Handshake {
 */
 namespace Send_Zero_Copy_Double_Buffer_Handshake {
   // Benchmark function
-  static void BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake(benchmark::State& state) {
+  void BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);

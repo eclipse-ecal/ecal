@@ -39,7 +39,7 @@ constexpr int range_limit = 1 << 24;
 */
 namespace Send {
   // Benchmark function
-  static void BM_eCAL_Send(benchmark::State& state) {
+  void BM_eCAL_Send(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -92,7 +92,7 @@ namespace Send_and_Receive {
   };
 
   // Benchmark function
-  static void BM_eCAL_Send_and_Receive(benchmark::State& state) {
+  void BM_eCAL_Send_and_Receive(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
@@ -155,7 +155,7 @@ namespace Receive_Latency {
   };
 
   // Benchmark function
-  static void BM_eCAL_Receive_Latency(benchmark::State& state) {
+  void BM_eCAL_Receive_Latency(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);

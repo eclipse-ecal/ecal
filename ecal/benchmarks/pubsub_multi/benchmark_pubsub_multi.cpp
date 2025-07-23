@@ -45,7 +45,7 @@ namespace Multi_Send {
   std::atomic_bool atom_stop = false;
 
   // Benchmark function
-  static void BM_eCAL_Multi_Send(benchmark::State& state) {
+  void BM_eCAL_Multi_Send(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     size_t payload_size = state.range(1);
     std::vector<char> content_vector(payload_size);

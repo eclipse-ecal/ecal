@@ -38,7 +38,7 @@ namespace Ping {
       return 0;
    }
 
-   static void BM_eCAL_Ping(benchmark::State& state) {
+   void BM_eCAL_Ping(benchmark::State& state) {
       // Initialize eCAL and create a server and a client
       eCAL::Initialize("Benchmark");
       eCAL::CServiceServer server("Server");

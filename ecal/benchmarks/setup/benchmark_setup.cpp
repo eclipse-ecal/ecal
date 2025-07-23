@@ -30,7 +30,7 @@
  * 
 */
 namespace Initialize {
-   static void BM_eCAL_Initialize(benchmark::State& state) { 
+   void BM_eCAL_Initialize(benchmark::State& state) { 
       // This is the benchmarked section: Initializing eCAL
       for (auto _ : state) {
          eCAL::Initialize("Benchmark");
@@ -50,7 +50,7 @@ namespace Initialize {
  * 
 */
 namespace Initialize_and_Finalize {
-   static void BM_eCAL_Initialize_and_Finalize(benchmark::State& state) {
+   void BM_eCAL_Initialize_and_Finalize(benchmark::State& state) {
       // This is the benchmarked section: Initializing and Finalizing eCAL
       for (auto _ : state) {
          eCAL::Initialize("Benchmark");
@@ -68,7 +68,7 @@ namespace Initialize_and_Finalize {
  * 
 */
 namespace Publisher_Registration {
-   static void BM_eCAL_Publisher_Registration(benchmark::State& state) {
+   void BM_eCAL_Publisher_Registration(benchmark::State& state) {
       // Initialize eCAL
       eCAL::Initialize("Benchmark");
 
@@ -91,7 +91,7 @@ namespace Publisher_Registration {
  * 
 */
 namespace Subscriber_Registration {
-   static void BM_eCAL_Subscriber_Registration(benchmark::State& state) {
+   void BM_eCAL_Subscriber_Registration(benchmark::State& state) {
       // Initialize eCAL
       eCAL::Initialize("Benchmark");
 
