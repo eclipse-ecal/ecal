@@ -88,7 +88,6 @@ namespace Send_and_Receive {
     std::lock_guard<std::mutex> lock(mtx);
     msg_received = true;
     convar.notify_one();
-    return;
   };
 
   // Benchmark function
@@ -151,7 +150,6 @@ namespace Receive_Latency {
     std::lock_guard<std::mutex> lock(mtx);
     msg_received = true;
     convar.notify_one();
-    return;
   };
 
   // Benchmark function
