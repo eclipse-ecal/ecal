@@ -25,11 +25,11 @@
 #include <condition_variable>
 
 
-#define REGISTRATION_DELAY_MS   2000
+constexpr int registration_delay_ms = 2000;
 
-#define RANGE_MULTIPLIER        1<<6
-#define RANGE_START             1
-#define RANGE_LIMIT             1<<24
+constexpr int range_multiplier = 1 << 6;
+constexpr int range_start = 1;
+constexpr int range_limit = 1 << 24;
 
 
 /*
@@ -56,7 +56,7 @@ namespace Send {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -68,7 +68,7 @@ namespace Send {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -110,7 +110,7 @@ namespace Send_and_Receive {
     });
 
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload and waiting for the receive callback
     for (auto _ : state) {
@@ -125,7 +125,7 @@ namespace Send_and_Receive {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_and_Receive)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -172,7 +172,7 @@ namespace Receive_Latency {
     });
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload (untimed) and waiting for the receive callback
     for (auto _ : state) {
@@ -193,7 +193,7 @@ namespace Receive_Latency {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseManualTime();
+  BENCHMARK(BM_eCAL_Receive_Latency)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseManualTime();
 }
 
 

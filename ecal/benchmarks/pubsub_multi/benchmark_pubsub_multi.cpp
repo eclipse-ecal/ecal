@@ -23,16 +23,16 @@
 #include <thread>
 
 
-#define REGISTRATION_DELAY_MS   2000
-#define WARMUP_TIME_S           2
+constexpr int registration_delay_ms = 2000;
+constexpr int warmup_time_s = 2;
 
-#define BACKGROUND_TOPIC_COUNT_MIN            1
-#define BACKGROUND_TOPIC_COUNT_MAX            32
-#define BACKGROUND_TOPIC_COUNT_MULTIPLIER     2
+constexpr int background_topic_count_min = 1;
+constexpr int background_topic_count_max = 32;
+constexpr int background_topic_count_multiplier = 2;
 
-#define PER_TOPIC_RANGE_START       1
-#define PER_TOPIC_RANGE_LIMIT       1<<24
-#define PER_TOPIC_RANGE_MULTIPLIER  1<<12
+constexpr int per_topic_range_start = 1;
+constexpr int per_topic_range_limit = 1 << 24;
+constexpr int per_topic_range_multiplier = 1 << 12;
 
 
 /*
@@ -86,7 +86,7 @@ namespace Multi_Send {
         eCAL::CPublisher background_publisher("background_topic_" + std::to_string(i));
 
         // Wait for eCAL synchronization
-        std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+        std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
         // Keep sending
         while (!atom_stop) {
@@ -106,7 +106,7 @@ namespace Multi_Send {
     });
 
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload in the main thread
     for (auto _ : state) {
@@ -128,10 +128,10 @@ namespace Multi_Send {
   // Register benchmark
   BENCHMARK(BM_eCAL_Multi_Send)
     ->ArgsProduct({
-      benchmark::CreateRange(BACKGROUND_TOPIC_COUNT_MIN, BACKGROUND_TOPIC_COUNT_MAX, BACKGROUND_TOPIC_COUNT_MULTIPLIER),
-      benchmark::CreateRange(PER_TOPIC_RANGE_START, PER_TOPIC_RANGE_LIMIT, PER_TOPIC_RANGE_MULTIPLIER)})
+      benchmark::CreateRange(background_topic_count_min, background_topic_count_max, background_topic_count_multiplier),
+      benchmark::CreateRange(per_topic_range_start, per_topic_range_limit, per_topic_range_multiplier)})
     ->UseRealTime()
-    ->MinWarmUpTime(WARMUP_TIME_S);
+    ->MinWarmUpTime(warmup_time_s);
 }
 
 // Benchmark execution

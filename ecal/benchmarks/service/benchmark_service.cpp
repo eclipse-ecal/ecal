@@ -23,7 +23,7 @@
 #include <thread>
 
 
-#define REGISTRATION_DELAY_MS    2000
+constexpr int registration_delay_ms = 2000;
 
 
 /*
@@ -48,7 +48,7 @@ namespace Ping {
       server.SetMethodCallback({ "ping", {}, {} }, callback_ping);
 
       // Wait for connection
-      std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+      std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
  
       // This is the benchmarked section: Getting a response from the server
       for (auto _ : state) {

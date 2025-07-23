@@ -23,12 +23,12 @@
 #include <thread>
 
 
-#define REGISTRATION_DELAY_MS   2000
-#define ACK_TIMEOUT_MS          50
+constexpr int registration_delay_ms = 2000;
+constexpr int ack_timeout_ms = 50;
 
-#define RANGE_MULTIPLIER        1<<6
-#define RANGE_START             1
-#define RANGE_LIMIT             1<<24
+constexpr int range_multiplier = 1 << 6;
+constexpr int range_start = 1;
+constexpr int range_limit = 1 << 24;
 
 
 /*
@@ -61,7 +61,7 @@ namespace Send_Zero_Copy {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -73,7 +73,7 @@ namespace Send_Zero_Copy {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -95,7 +95,7 @@ namespace Send_Handshake {
 
     // Create publisher config
     eCAL::Publisher::Configuration pub_config;
-    pub_config.layer.shm.acknowledge_timeout_ms = ACK_TIMEOUT_MS;
+    pub_config.layer.shm.acknowledge_timeout_ms = ack_timeout_ms;
 
     // Create publisher with config
     eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
@@ -107,7 +107,7 @@ namespace Send_Handshake {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -119,7 +119,7 @@ namespace Send_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Handshake)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -153,7 +153,7 @@ namespace Send_Double_Buffer {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -165,7 +165,7 @@ namespace Send_Double_Buffer {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Double_Buffer)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -188,7 +188,7 @@ namespace Send_Zero_Copy_Handshake {
     // Create publisher config
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.zero_copy_mode = true;
-    pub_config.layer.shm.acknowledge_timeout_ms = ACK_TIMEOUT_MS;
+    pub_config.layer.shm.acknowledge_timeout_ms = ack_timeout_ms;
 
     // Create publisher with config
     eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
@@ -200,7 +200,7 @@ namespace Send_Zero_Copy_Handshake {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -212,7 +212,7 @@ namespace Send_Zero_Copy_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Handshake)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -247,7 +247,7 @@ namespace Send_Zero_Copy_Double_Buffer {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -259,7 +259,7 @@ namespace Send_Zero_Copy_Double_Buffer {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -282,7 +282,7 @@ namespace Send_Double_Buffer_Handshake {
     // Create publisher config
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.memfile_buffer_count = 2;
-    pub_config.layer.shm.acknowledge_timeout_ms = ACK_TIMEOUT_MS;
+    pub_config.layer.shm.acknowledge_timeout_ms = ack_timeout_ms;
 
     // Create publisher with config
     eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
@@ -294,7 +294,7 @@ namespace Send_Double_Buffer_Handshake {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -306,7 +306,7 @@ namespace Send_Double_Buffer_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Double_Buffer_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Double_Buffer_Handshake)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
@@ -330,7 +330,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
     eCAL::Publisher::Configuration pub_config;
     pub_config.layer.shm.zero_copy_mode = true;
     pub_config.layer.shm.memfile_buffer_count = 2;
-    pub_config.layer.shm.acknowledge_timeout_ms = ACK_TIMEOUT_MS;
+    pub_config.layer.shm.acknowledge_timeout_ms = ack_timeout_ms;
 
     // Create publisher with config
     eCAL::CPublisher publisher("benchmark_topic", eCAL::SDataTypeInformation(), pub_config);
@@ -342,7 +342,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
     } );
     
     // Wait for eCAL synchronization
-    std::this_thread::sleep_for(std::chrono::milliseconds(REGISTRATION_DELAY_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
     // This is the benchmarked section: Sending the payload
     for (auto _ : state) {
@@ -354,7 +354,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
     receiver_thread.join();
   }
   // Register the benchmark function
-  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake)->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_LIMIT)->UseRealTime();
+  BENCHMARK(BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake)->RangeMultiplier(range_multiplier)->Range(range_start, range_limit)->UseRealTime();
 }
 
 
