@@ -44,7 +44,15 @@ The main differences to serialization publishers are:
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/binary/blob/blob_send.py
+        .. literalinclude:: /source_code_samples/python/binary/blob/nb_binary_blob_send.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/binary/blob/blob_send.py
             :language: python
             :linenos:
             :lines: 19-
@@ -65,8 +73,11 @@ Blob Publisher Files
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`blob_send.cs </source_code_samples/csharp/binary/blob/blob_send_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python/binary/blob/blob_send.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python/binary/blob/nb_bindary_blob_send.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python_legacy/binary/blob/blob_send.py>`
    
 
 Blob Subscriber
@@ -99,10 +110,17 @@ For the subscriber the same changes apply as for the publisher. In addition you 
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/binary/blob/blob_receive.py
+        .. literalinclude:: /source_code_samples/python/binary/blob/nb_binary_blob_receive.py
             :language: python
             :linenos:
             :lines: 19-
+            
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/binary/blob/blob_receive.py
+            :language: python
+            :linenos:
+            :lines: 19-            
 
 
 Blob Subscriber Files
@@ -120,5 +138,8 @@ Blob Subscriber Files
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`blob_receive.cs </source_code_samples/csharp/binary/blob/blob_receive_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`blob_receive.py </source_code_samples/python/binary/blob/blob_receive.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`blob_receive.py </source_code_samples/python/binary/blob/nb_binary_blob_receive.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`blob_receive.py </source_code_samples/python_legacy/binary/blob/blob_receive.py>`
