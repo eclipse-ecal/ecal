@@ -15,7 +15,7 @@ Our recommended way is to use Google protobuf to do that, because:
 * It solves the problem of how to serialize and de-serialize data for you
 * You get downward compatibility out of the box (if you follow the guidelines)
 * It is maintained by Google and the API is stable
-* The eCAL Monitor can display a nice reflection view of the data
+* The eCAL Monitor can display a reflection view of the data
 
 .. important::
    It is important to remember, that all your applications must agree on the data format.
@@ -67,9 +67,9 @@ Person Publisher
 ================
 
 The main differences to the string publisher are:
-  - we need to include the protobuf publisher from ``ecal/msg/protobuf/publisher.h``
-  - also we need the compiled protobuf message header file ``person.pb.h`` and include it
-  - we need to utilize the protobuf message class ``Person`` instead of the string class ``std::string``
+  - we need to include / import the protobuf specific publishers
+  - also we need to include / import the compiled protobuf message definitions for the specific programming language
+  - we need to utilize the protobuf message class ``Person`` instead of the string class
 
 .. tabs::
 
@@ -89,7 +89,14 @@ The main differences to the string publisher are:
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/protobuf/person/person_send.py
+        .. literalinclude:: /source_code_samples/python/protobuf/person/nb_protobuf_person_send.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/protobuf/person/person_send.py
             :language: python
             :linenos:
             :lines: 19-
@@ -107,9 +114,12 @@ Person Publisher Files
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`person_send_csharp.cs </source_code_samples/csharp/protobuf/person/person_send_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`person_send.py </source_code_samples/python/protobuf/person/person_send.py>`
-   
+   ├─ |fa-folder-open| Python
+   |  └─ |fa-file-alt| :download:`person_send.py </source_code_samples/python/protobuf/person/nb_protobuf_person_send.py>`
+   |
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`person_send.py </source_code_samples/python_legacy/protobuf/person/person_send.py>`
+
 
 Person Subscriber
 =================
@@ -134,7 +144,14 @@ For the subscriber the same changes apply as for the publisher.
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/protobuf/person/person_receive.py
+        .. literalinclude:: /source_code_samples/python/protobuf/person/nb_protobuf_person_receive.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/protobuf/person/person_receive.py
             :language: python
             :linenos:
             :lines: 19-
@@ -152,5 +169,8 @@ Person Subscriber Files
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`person_receive_csharp.cs </source_code_samples/csharp/protobuf/person/person_receive_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/person_receive.py>`
+   ├─ |fa-folder-open| Python
+   |  └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/nb_protobuf_person_receive.py>`
+   |
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python_legacy/protobuf/person/person_receive.py>`

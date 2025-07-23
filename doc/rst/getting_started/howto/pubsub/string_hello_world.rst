@@ -62,6 +62,13 @@ As this is simple string message, we will use the eCAL string publisher to send.
             :linenos:
             :lines: 19-
 
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/string/hello/hello_send.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
 
 Hello World Publisher Files
 ===========================
@@ -76,10 +83,13 @@ Hello World Publisher Files
    │  └─ |fa-file-alt| :download:`hello_send.c </source_code_samples/c/string/hello/hello_send/src/hello_send.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_send_csharp.cs </source_code_samples/csharp/string/hello/hello_send_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`hello_send.cs </source_code_samples/csharp/string/hello/hello_send_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python/string/hello/hello_send.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python/string/hello/nb_string_hello_send.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`hello_send.py </source_code_samples/python_legacy/string/hello/hello_send.py>`
    
 
 Hello World Subscriber
@@ -120,7 +130,14 @@ The only difference is that you need to assign a callback function to the subscr
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/string/hello/hello_receive.py
+        .. literalinclude:: /source_code_samples/python/string/hello/nb_string_hello_receive.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+    .. group-tab:: Python (legacy)
+
+        .. literalinclude:: /source_code_samples/python_legacy/string/hello/hello_receive.py
             :language: python
             :linenos:
             :lines: 19-
@@ -139,7 +156,10 @@ Hello World Subscriber Files
    │  └─ |fa-file-alt| :download:`hello_receive.c </source_code_samples/c/string/hello/hello_receive/src/hello_receive.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`hello_receive_csharp.cs </source_code_samples/csharp/string/hello/hello_receive_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`hello_receive.cs </source_code_samples/csharp/string/hello/hello_receive_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python/string/hello/hello_receive.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python/string/hello/nb_string_hello_receive.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`hello_receive.py </source_code_samples/python_legacy/string/hello/hello_receive.py>`
