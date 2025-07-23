@@ -273,7 +273,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # List of all benchmark types
+        # List of all benchmark types, corresponding to an executable
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
     
     env:
