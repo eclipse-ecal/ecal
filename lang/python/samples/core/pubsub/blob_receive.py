@@ -37,14 +37,14 @@ def callback(topic_name, msg, time):
   print("")
 
 def main():
-  print("-----------------------")
-  print(" Python: BLOB RECEIVER")
-  print("-----------------------")
+  print("--------------------------------")
+  print(" Python (legacy): BLOB RECEIVER ")
+  print("--------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "blob receive python".
+  # The name of our eCAL Process will be "blob receive python (legacy)".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("blob receive python")
+  ecal_core.initialize("blob receive python (legacy)")
   
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
