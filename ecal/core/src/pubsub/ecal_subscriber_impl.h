@@ -29,6 +29,8 @@
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
+#include "util/message_drop_calculator.h"
+#include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
 #include <atomic>
@@ -127,11 +129,19 @@ namespace eCAL
     void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
     void FireDroppedEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
+    static SPublicationInfo PublicationInfoFromTopicInfo(const Payload::TopicInfo& topic_info_);
+
     size_t GetConnectionCount();
 
-    bool CheckMessageClock(const SPublicationInfo& publication_info_, long long current_clock_);
+    bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const;
+    bool ShouldApplySampleBasedOnLayer(eTLayerType layer_) const;
+    bool ShouldApplySampleBasedOnId(long long id_) const;
+
+    void TriggerFrequencyUpdate();
+    void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
 
     int32_t GetFrequency();
+    int32_t GetMessageDropsAndFireDroppedEvents();
 
     EntityIdT                                 m_subscriber_id;
     SDataTypeInformation                      m_topic_info;
@@ -156,7 +166,7 @@ namespace eCAL
     long long                                 m_read_time = 0;
 
     std::mutex                                m_receive_callback_mutex;
-    ReceiveCallbackT                      m_receive_callback;
+    ReceiveCallbackT                          m_receive_callback;
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
@@ -166,18 +176,21 @@ namespace eCAL
     EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
-    SubEventCallbackT                     m_event_id_callback;
+    SubEventCallbackT                         m_event_id_callback;
 
     std::atomic<long long>                    m_clock;
 
     std::mutex                                m_frequency_calculator_mutex;
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
+    std::mutex                                m_message_drop_map_mutex;
+    using MessageDropMapT = MessageDropCalculatorMap<SPublicationInfo>;
+    MessageDropMapT                           m_message_drop_map;
+    
+    using CounterCacheMapT = CounterCacheMap<SPublicationInfo>;
+    CounterCacheMapT                          m_publisher_message_counter_map;
+    
     std::set<long long>                       m_id_set;
-
-    using WriterCounterMapT = std::unordered_map<EntityIdT, long long>;
-    WriterCounterMapT                         m_writer_counter_map;
-    long long                                 m_message_drops = 0;
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;
