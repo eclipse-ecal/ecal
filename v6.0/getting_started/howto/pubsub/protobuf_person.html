@@ -1028,14 +1028,14 @@ So we need them as well. The definitions are straight forward. For more informat
 <span class="linenos">12</span><span class="kn">import</span><span class="w"> </span><span class="nn">person_pb2</span>
 <span class="linenos">13</span>
 <span class="linenos">14</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">15</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------&quot;</span><span class="p">)</span>
-<span class="linenos">16</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: PERSON SENDER&quot;</span><span class="p">)</span>
-<span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------&quot;</span><span class="p">)</span>
-<span class="linenos">18</span>  
+<span class="linenos">15</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">16</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python (legacy): PERSON SENDER &quot;</span><span class="p">)</span>
+<span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">18</span>
 <span class="linenos">19</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
 <span class="linenos">20</span>  <span class="c1"># The name of our eCAL Process will be &quot;person send python&quot;.</span>
 <span class="linenos">21</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">22</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person send python&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person send python (legacy)&quot;</span><span class="p">)</span>
 <span class="linenos">23</span>  
 <span class="linenos">24</span>  <span class="c1"># Print used eCAL version and date</span>
 <span class="linenos">25</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">getversion</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">getdate</span><span class="p">()))</span>
@@ -1305,14 +1305,14 @@ So we need them as well. The definitions are straight forward. For more informat
 <span class="linenos">22</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;house.rooms  : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">rooms</span><span class="p">))</span>
 <span class="linenos">23</span>
 <span class="linenos">24</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">25</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">26</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: PERSON RECEIVER&quot;</span><span class="p">)</span>
-<span class="linenos">27</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">28</span>  
+<span class="linenos">25</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">26</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python (legacy): PERSON RECEIVER &quot;</span><span class="p">)</span>
+<span class="linenos">27</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>
 <span class="linenos">29</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
-<span class="linenos">30</span>  <span class="c1"># The name of our eCAL Process will be &quot;person receive python&quot;.</span>
+<span class="linenos">30</span>  <span class="c1"># The name of our eCAL Process will be &quot;person receive python (legacy)&quot;.</span>
 <span class="linenos">31</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">32</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person receive python&quot;</span><span class="p">)</span>
+<span class="linenos">32</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person receive python (legacy)&quot;</span><span class="p">)</span>
 <span class="linenos">33</span>
 <span class="linenos">34</span>  <span class="c1"># Print used eCAL version and date</span>
 <span class="linenos">35</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">getversion</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">getdate</span><span class="p">()))</span>

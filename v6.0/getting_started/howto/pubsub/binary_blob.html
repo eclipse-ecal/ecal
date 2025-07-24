@@ -1044,9 +1044,9 @@ But be aware that you also need to handle the binary interpretation across multi
 <span class="linenos">14</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------&quot;</span><span class="p">)</span>
-<span class="linenos">18</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: BLOB SENDER&quot;</span><span class="p">)</span>
-<span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------&quot;</span><span class="p">)</span>
+<span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">18</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python (legacy): BLOB SENDER&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
 <span class="linenos">20</span>  
 <span class="linenos">21</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
 <span class="linenos">22</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob send python&quot;.</span>
@@ -1404,14 +1404,14 @@ But be aware that you also need to handle the binary interpretation across multi
 <span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="linenos">20</span>
 <span class="linenos">21</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">22</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------&quot;</span><span class="p">)</span>
-<span class="linenos">23</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: BLOB RECEIVER&quot;</span><span class="p">)</span>
-<span class="linenos">24</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python (legacy): BLOB RECEIVER &quot;</span><span class="p">)</span>
+<span class="linenos">24</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
 <span class="linenos">25</span>  
 <span class="linenos">26</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
-<span class="linenos">27</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob receive python&quot;.</span>
+<span class="linenos">27</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob receive python (legacy)&quot;.</span>
 <span class="linenos">28</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">29</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob receive python&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob receive python (legacy)&quot;</span><span class="p">)</span>
 <span class="linenos">30</span>  
 <span class="linenos">31</span>  <span class="c1"># Print used eCAL version and date</span>
 <span class="linenos">32</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">getversion</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">getdate</span><span class="p">()))</span>
