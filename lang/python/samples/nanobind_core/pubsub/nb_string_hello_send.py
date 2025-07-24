@@ -16,55 +16,49 @@
 #
 # ========================= eCAL LICENSE =================================
 
-import sys
 import time
-import random
-
-# Import the eCAL core API
-import ecal.core.core as ecal_core
-# Import the eCAL binary publisher API
-from ecal.core.publisher import BinaryPublisher
-
-
-def generate_binary_message(buffer_size=16):
-  random.seed(time.time())
-  return ''.join(chr(random.randint(32, 126)) for _ in range(buffer_size))
-
+# import the eCAL core API
+import ecal.nanobind_core as ecal_core
+# import the eCAL publisher AP
+from ecal.msg.string.core import Publisher as StringPublisher
 
 def main():
   print("-------------------------------")
-  print(" Python (legacy): BLOB SENDER")
+  print(" Python: HELLO WORLD SENDER")
   print("-------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "blob send python".
+  # The name of our eCAL Process will be "hello send python".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("blob send python")
-  
+  ecal_core.initialize("hello send python")
+
   # Print used eCAL version and date
-  print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
-  
+  print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
+ 
   # Set the state for the program.
   # You can vary between different states like healthy, warning, critical ...
   # This can be used to communicate the application state to applications like eCAL Monitor/Sys.
-  ecal_core.set_process_state(1, 1, "I feel good!")
-
+  ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I feel good!")
+  
   # Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).
-  # The topic we are going to publish is called "blob".
-  pub = BinaryPublisher("blob")
-   
+  # The topic we are going to publish is called "hello".
+  pub = StringPublisher("hello")
+  
+  # We create a message to send that will be altered later to notice different messages.
+  msg = "HELLO WORLD FROM PYTHON"
+  
   loop_count = 0
-  # Creating an inifite publish-loop.
-  # eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.
+  # Creating an infinite publish-loop.
+  # eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.
   while ecal_core.ok():
-    # Generate a random message of 16 bytes
-    msg = generate_binary_message(16)
+    # Prepare the string to send
+    loop_count = loop_count + 1
+    current_message = "{} {:6d}".format(msg, loop_count)
     
-    # Send the content to other eCAL Processes that have subscribed to the topic "blob".
-    pub.send(msg)
-    print("Sent: ", msg)
+    # Send the content to other eCAL Processes that have subscribed to the topic "hello".
+    pub.send(current_message)
     
-    loop_count += 1
+    print("Sending: {}".format(current_message))
     
     # Sleep for 500 ms so we send with a frequency of 2 Hz.
     time.sleep(0.5)

@@ -24,14 +24,15 @@ import ecal.core.core as ecal_core
 from ecal.core.publisher import StringPublisher
 
 def main():
-  print("-------------------------------")
-  print(" Python: HELLO WORLD SENDER")
-  print("-------------------------------")
+  print("---------------------------------------")
+  print(" Python (legacy): HELLO WORLD SENDER   ")
+  print("---------------------------------------")
+  
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "hello send python".
+  # The name of our eCAL Process will be "hello send python (legacy)".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("hello send python")
+  ecal_core.initialize("hello send python (legacy)")
 
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))
