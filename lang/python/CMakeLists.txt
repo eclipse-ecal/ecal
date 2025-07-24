@@ -33,6 +33,7 @@ if (NOT ECAL_PYTHON_USE_HDF5)
 endif()
 
 
+
 set(ECAL_PYTHON_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 # Try to make modules loadable by debug python version
@@ -147,6 +148,9 @@ add_dependencies(${PROJECT_NAME} nanobind_core)
 
 add_subdirectory(src/ecalhdf5)
 add_dependencies(${PROJECT_NAME} _ecal_hdf5_py)
+
+add_subdirectory(src/msg)
+add_dependencies(${PROJECT_NAME} python_msg)
 
 if (ECAL_PYTHON_BUILD_SAMPLES)
   add_subdirectory(samples)
