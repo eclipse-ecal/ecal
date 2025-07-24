@@ -106,11 +106,6 @@ namespace eCAL
   {
     return(event_.handle != nullptr);
   }
-
-  const void* gGetNativeEventHandle(const EventHandleT& event_)
-  {
-    return reinterpret_cast<const void*>(event_.handle);
-  }
 }
 #endif /* ECAL_OS_WINDOWS */
 
@@ -423,12 +418,6 @@ namespace eCAL
         return(named_event_wait(m_event, &abstime));
       }
     }
-
-    const named_event_t* native_handle() const 
-    {
-      return m_event;
-    }
-
   private:
     CNamedEvent(const CNamedEvent&);             // prevent copy-construction
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment

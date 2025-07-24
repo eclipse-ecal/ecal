@@ -30,19 +30,22 @@ class Barrier
 {
 public:
   Barrier(int count) : thread_count(count), waiting(0), step(0) 
-  {}
+  {
+  }
 
   void wait() 
   {
     std::unique_lock<std::mutex> lock(mtx);
     int current_step = step;
 
-    if (++waiting == thread_count) {
+    if (++waiting == thread_count) 
+    {
       waiting = 0;       // Reset for the next use
       ++step;            // Increment the step to release all threads
       cv.notify_all();   // Release all waiting threads
     }
-    else {
+    else 
+    {
       cv.wait(lock, [this, current_step] { return current_step != step; });
     }
   }

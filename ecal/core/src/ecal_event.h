@@ -102,11 +102,4 @@ namespace eCAL
    * @return  True if event is valid.
   **/
   bool gEventIsValid(const EventHandleT& event_);
-
-  /**
-   * @brief Retrieves the pointer to underlying os specific event handle.
-   *
-   * @return Pointer to the underlying event handle.
-  **/
-  const void* gGetNativeEventHandle(const EventHandleT& event_);
 }
