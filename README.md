@@ -131,7 +131,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [tcp_pubsub](https://github.com/eclipse-ecal/tcp_pubsub) - Additional TCP transport layer for higher reliability for publication/subscription over network
 * [udpcap](https://github.com/eclipse-ecal/udpcap) - Npcap based UDP-socket emulation to increase the eCAL performance on MS Windows
 * [docker-ecal](https://github.com/Blutkoete/docker-ecal) - Inoffical dockerfiles for eCAL
-* [golang-ecal](https://github.com/Blutkoete/golang-ecal) - eCAL go language binding
+* [ecal-go](https://github.com/DownerCase/ecal-go) - eCAL go language binding
 * [rustecal](https://github.com/eclipse-ecal/rustecal) - eCAL rust language binding
 * [nodejs-ecal](https://www.npmjs.com/package/nodejs-ecal) - eCAL wrapped for Nodejs
 * [trellis](https://github.com/agtonomy/trellis) - General purpose middleware framework for distributed applications

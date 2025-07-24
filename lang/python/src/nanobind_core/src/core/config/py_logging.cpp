@@ -19,6 +19,7 @@
 
 #include <core/config/py_logging.h>
 #include <ecal/config/logging.h>
+#include <nanobind/stl/string.h>
 
 namespace nb = nanobind;
 
