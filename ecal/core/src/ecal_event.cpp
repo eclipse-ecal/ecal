@@ -551,16 +551,6 @@ namespace eCAL
   {
     return(event_.handle != nullptr);
   }
-
-  const void* gGetNativeEventHandle(const EventHandleT& event_)
-  {
-    if (!event_.handle) return nullptr;
-    if (!event_.name.empty())
-    {
-      return reinterpret_cast<const void*>((static_cast<CNamedEvent*>(event_.handle))->native_handle());
-    }
-    return nullptr;
-  }
 }
 
 #endif /* ECAL_OS_LINUX */
