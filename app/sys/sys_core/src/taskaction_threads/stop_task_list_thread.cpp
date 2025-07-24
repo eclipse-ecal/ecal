@@ -27,6 +27,8 @@
 
 #include <map>
 
+#include <EcalParser/EcalParser.h>
+
 StopTaskListThread::StopTaskListThread(const std::list<std::shared_ptr<EcalSysTask>>& task_list, const std::shared_ptr<eCAL::sys::ConnectionManager>& connection_manager, bool request_shutdown, bool kill_process, bool by_name, std::chrono::nanoseconds wait_for_shutdown)
   : TaskListThread     (task_list, connection_manager)
   , m_request_shutdown (request_shutdown)
@@ -53,7 +55,7 @@ void StopTaskListThread::Run()
     // If the host that the task has been started on is unknown we try to stop it on the configured target
     std::string host_to_stop_on = task->GetHostStartedOn();
     if (host_to_stop_on == "")
-      host_to_stop_on = task->GetTarget();
+      host_to_stop_on = EcalParser::Evaluate(task->GetTarget(), false);
 
 
     // Create primitive StopTaskParameters struct for ecal_sys_client API

@@ -35,7 +35,7 @@
 #include <ecal_utils/ecal_utils.h>
 #include <ecal_utils/filesystem.h>
 
-
+#include <EcalParser/EcalParser.h>
 
 EcalSysMonitor::EcalSysMonitor(EcalSys& ecalsys_instance, std::chrono::nanoseconds loop_time)
   : InterruptibleLoopThread(loop_time)
@@ -210,7 +210,7 @@ void EcalSysMonitor::RestartBySeverity()
 
     std::lock_guard<std::recursive_mutex> task_lock(task->mutex);
     // tasks on other hosts than local won't be restarted if the flag local_tasks_only is set
-    if ((m_ecalsys_instance.GetOptions().local_tasks_only == true) && (task->GetTarget() != eCAL::Process::GetHostName()))
+    if ((m_ecalsys_instance.GetOptions().local_tasks_only == true) && (EcalParser::Evaluate(task->GetTarget(), false) != eCAL::Process::GetHostName()))
     {
       continue;
     }

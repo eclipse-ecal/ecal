@@ -26,6 +26,7 @@
 #include <map>
 #include <future>
 
+#include <EcalParser/EcalParser.h>
 
 UpdateFromCloudTaskListThread::UpdateFromCloudTaskListThread(const std::list<std::shared_ptr<EcalSysTask>>& task_list_to_update, const std::list<std::shared_ptr<EcalSysTask>>& all_tasks, const std::shared_ptr<eCAL::sys::ConnectionManager>& connection_manager, bool use_localhost_for_all_tasks)
   : TaskListThread               (task_list_to_update, connection_manager)
@@ -62,8 +63,8 @@ void UpdateFromCloudTaskListThread::Run()
     }
     else
     {
-      host_tasklist_map        [ecalsys_task->GetTarget()].push_back(task);
-      host_originaltasklist_map[ecalsys_task->GetTarget()].push_back(ecalsys_task);
+      host_tasklist_map        [EcalParser::Evaluate(ecalsys_task->GetTarget(), false)].push_back(task);
+      host_originaltasklist_map[EcalParser::Evaluate(ecalsys_task->GetTarget(), false)].push_back(ecalsys_task);
     }
   }
 
@@ -72,7 +73,7 @@ void UpdateFromCloudTaskListThread::Run()
     if (m_use_localhost_for_all_tasks)
       host_all_original_tasks_map[eCAL::Process::GetHostName()].push_back(ecalsys_task);
     else
-      host_all_original_tasks_map[ecalsys_task->GetTarget()].push_back(ecalsys_task);
+      host_all_original_tasks_map[EcalParser::Evaluate(ecalsys_task->GetTarget(), false)].push_back(ecalsys_task);
   }
 
   // Match the tasks!!!

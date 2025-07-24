@@ -24,6 +24,8 @@
 #include <map>
 #include <future>
 
+#include <EcalParser/EcalParser.h>
+
 StartTaskListThread::StartTaskListThread(const std::list<std::shared_ptr<EcalSysTask>>& task_list, const std::shared_ptr<eCAL::sys::ConnectionManager>& connection_manager, const std::string& target_override)
   : TaskListThread(task_list, connection_manager)
   , m_target_override(target_override)
@@ -79,8 +81,9 @@ void StartTaskListThread::Run()
       // Create primitive StartTaskParameters struct for ecal_sys_client API
       if (m_target_override.empty())
       {
-        start_tasks_param_map[task->GetTarget()].push_back(eCAL::sys::task_helpers::ToSysClientStartParameters_NoLock(task));
-        original_task_ptr_map[task->GetTarget()].push_back(task);
+        auto evaluated_target = EcalParser::Evaluate(task->GetTarget(), false);
+        start_tasks_param_map[evaluated_target].push_back(eCAL::sys::task_helpers::ToSysClientStartParameters_NoLock(task));
+        original_task_ptr_map[evaluated_target].push_back(task);
       }
       else
       {

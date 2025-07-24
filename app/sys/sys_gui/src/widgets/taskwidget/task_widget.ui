@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>830</width>
-    <height>591</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -609,7 +609,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="target_lineedit">
+            <widget class="QEcalParserLineEdit" name="target_lineedit">
              <property name="minimumSize">
               <size>
                <width>20</width>
