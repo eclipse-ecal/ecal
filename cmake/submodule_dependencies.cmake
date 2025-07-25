@@ -10,6 +10,7 @@ set(ecal_submodule_dependencies
   ecaludp
   fineftp
   ftxui
+  benchmark
   GTest
   HDF5
   #libssh2
