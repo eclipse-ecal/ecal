@@ -16,33 +16,42 @@
 #
 # ========================= eCAL LICENSE =================================
 
+import os
 import sys
 import time
+import typing
 # import the eCAL core API
 import ecal.nanobind_core as ecal_core
+# import the eCAL subscriber API
+from ecal.msg.proto.core import Subscriber as ProtobufSubscriber
+from ecal.msg.common.core import ReceiveCallbackData
+
+sys.path.insert(1, os.path.join(sys.path[0], './_protobuf'))
+# import the compiled protobuf message classes
+import person_pb2
 
 # eCAL receive callback
-def data_callback(publisher_id : ecal_core.TopicId, datatype_info : ecal_core.DataTypeInformation, data : ecal_core.ReceiveCallbackData):
+def data_callback(publisher_id : ecal_core.TopicId, data : ReceiveCallbackData[person_pb2.Person]) -> None:
   output = f"""
   ----------------------------------------------
-   Received binary buffer from topic {publisher_id.topic_name} in Python
+   Received person message from topic {publisher_id.topic_name} in Python
   ----------------------------------------------
-  Size         : {len(data.buffer)}
   Time         : {data.send_timestamp}
   Clock        : {data.send_clock}
-  Content      : {data.buffer}
+  Message      : 
+    {data.message}
   """
   print(output)
 
 def main():
-  print("------------------------")
-  print(" Python: BLOB Receiver  ")
-  print("------------------------")
+  print("--------------------------------")
+  print(" Python:  PERSON RECEIVE        ")
+  print("--------------------------------")
 
   # Initialize eCAL. You always have to initialize eCAL before using its API.
-  # The name of our eCAL Process will be "blob receive python". 
+  # The name of our eCAL Process will be "hello receive python". 
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("blob receive python")
+  ecal_core.initialize("person receive python")
 
   # print eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.get_version_string(), ecal_core.get_version_date_string()))
@@ -53,8 +62,8 @@ def main():
   ecal_core.process.set_state(ecal_core.process.Severity.HEALTHY, ecal_core.process.SeverityLevel.LEVEL1, "I feel good!")
 
   # Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).
-  # The topic we are going to receive is called "blob".
-  sub = ecal_core.Subscriber("blob")
+  # The topic we are going to receive is called "person".
+  sub = ProtobufSubscriber[person_pb2.Person](person_pb2.Person, "person")
   sub.set_receive_callback(data_callback)
   
   # Creating an infinite loop.

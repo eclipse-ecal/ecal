@@ -452,7 +452,10 @@ set(ecal_util_src
     src/util/ecal_thread.h
     src/util/expanding_vector.h
     src/util/frequency_calculator.h
+    src/util/message_drop_calculator.cpp
+    src/util/message_drop_calculator.h
     src/util/getenvvar.h
+    src/util/counter_cache.h
 )
 if (ECAL_CORE_COMMAND_LINE)
   list(APPEND ecal_util_src
