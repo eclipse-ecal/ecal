@@ -116,6 +116,7 @@ namespace eCAL
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <sys/file.h>
 #include <fcntl.h>
 #include <semaphore.h>
 #include <pthread.h>
@@ -134,42 +135,90 @@ namespace
   };
   typedef struct named_event named_event_t;
 
-  named_event_t* named_event_create(const char* event_name_)
+  named_event_t* named_event_open(const char* event_name_)
   {
     // create shared memory file
-    int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
+    const int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
     int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     umask(previous_umask);            // reset umask to previous permissions
-    if (fd < 0) return nullptr;
 
-    // set size to size of named mutex struct 
-    if(ftruncate(fd, sizeof(named_event_t)) == -1)
+    // in case of creation failed, open the existing file
+    if (fd == -1)
+      fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+
+    // if this still fails, return a nullptr
+    if (fd == -1)
     {
+      ::perror("shm_open");
+      return nullptr;
+    }
+
+    // flock the file
+    if(flock(fd, LOCK_EX) == -1)
+    {
+      perror("flock()");
+      ::close(fd);
+      return nullptr;
+    }
+    struct stat st;
+    if(fstat(fd, &st) == -1)
+    {
+      perror("fstat()");
       ::close(fd);
       return nullptr;
     }
 
-    // create mutex
-    pthread_mutexattr_t shmtx;
-    pthread_mutexattr_init(&shmtx);
-    pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
+    named_event_t *evt = nullptr;
+    if(st.st_size == 0) // initialize shared memory file
+    {
+      // set size to size of named mutex struct
+      if (ftruncate(fd, sizeof(named_event_t)) == -1)
+      {
+        perror("ftruncate()");
+        ::close(fd);
+        return nullptr;
+      }
 
-    // create condition variable
-    pthread_condattr_t  shattr;
-    pthread_condattr_init(&shattr);
-    pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+      // create mutex
+      pthread_mutexattr_t shmtx;
+      pthread_mutexattr_init(&shmtx);
+      pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
+
+      // create condition variable
+      pthread_condattr_t shattr;
+      pthread_condattr_init(&shattr);
+      pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
 #ifndef ECAL_OS_MACOS
-    pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
+      pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
 #endif // ECAL_OS_MACOS
-    named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+      evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+      if(reinterpret_cast<void*>(evt) == MAP_FAILED)
+      {
+        perror("mmap()");
+        ::close(fd);
+        return nullptr;
+      }
+
+      // map them into shared memory
+      pthread_mutex_init(&evt->mtx, &shmtx);
+      pthread_cond_init(&evt->cvar, &shattr);
+
+      // start with unset state
+      evt->set = 0;
+    }
+    else // only mmap() the shared memory file
+    {
+      evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
+      if(reinterpret_cast<void*>(evt) == MAP_FAILED)
+      {
+        perror("mmap()");
+        ::close(fd);
+        return nullptr;
+      }
+    }
+
+    flock(fd, LOCK_UN);
     ::close(fd);
-
-    // map them into shared memory
-    pthread_mutex_init(&evt->mtx, &shmtx);
-    pthread_cond_init(&evt->cvar, &shattr);
-
-    // start with unset state
-    evt->set = 0;
 
     return evt;
   }
@@ -178,19 +227,6 @@ namespace
   {
     // destroy (unlink) shared memory file
     return(::shm_unlink(event_name_));
-  }
-
-  named_event_t* named_event_open(const char* event_name_)
-  {
-    // try to open existing shared memory file
-    int fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    if (fd < 0) return nullptr;
-
-    // map file content to mutex
-    named_event_t* evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-    ::close(fd);
-
-    return evt;
   }
 
   void named_event_close(named_event_t* evt_)
@@ -327,15 +363,6 @@ namespace eCAL
     {
       m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
       m_event = named_event_open(m_name.c_str());
-      if(m_event == nullptr)
-      {
-        m_event = named_event_create(m_name.c_str());
-      }
-
-      if (m_event == nullptr)
-      {
-        m_event = named_event_open(m_name.c_str());
-      }
     }
 
     ~CNamedEvent()
@@ -391,7 +418,6 @@ namespace eCAL
         return(named_event_wait(m_event, &abstime));
       }
     }
-
   private:
     CNamedEvent(const CNamedEvent&);             // prevent copy-construction
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
