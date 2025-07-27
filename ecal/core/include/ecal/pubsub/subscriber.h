@@ -97,16 +97,12 @@ namespace eCAL
      * @brief Set/overwrite callback function for incoming receives.
      *
      * @param callback_  The callback function to set.
-     *
-     * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
       void SetReceiveCallback(ReceiveCallbackT callback_);
 
     /**
      * @brief Remove callback function for incoming receives.
-     *
-     * @return  True if succeeded, false if not.
     **/
     ECAL_API_EXPORTED_MEMBER
       void RemoveReceiveCallback();
