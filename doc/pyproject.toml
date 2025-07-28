@@ -1,0 +1,15 @@
+[project]
+name = "ecal-docs"
+requires-python = ">=3.10"
+dependencies = [
+  "sphinx",
+  "sphinx-book-theme",
+  "sphinx-tabs",
+  "PyGithub",
+  "autodoc",
+  "semantic-version", 
+  "exhale",
+  "Jinja2",
+  "sphinxcontrib-apidoc",
+  "sphinxcontrib-youtube"
+]
