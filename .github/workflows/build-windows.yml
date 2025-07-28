@@ -50,8 +50,7 @@ jobs:
       run: |
         mkdir "${{ runner.workspace }}\_build\complete\.venv\"
 
-        # At the moment (2021-10-27) there is no official Python 3.10 lxml package available on pypi. Thus we use python 3.9.
-        py -3.9 -m venv "${{ runner.workspace }}\.venv"
+        py -3.11 -m venv "${{ runner.workspace }}\.venv"
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
 
         echo Upgrading pip
