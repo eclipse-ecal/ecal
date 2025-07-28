@@ -1,7 +1,7 @@
 wheel
-sphinx<7.3
-sphinx-book-theme==1.1.2
-sphinx-tabs==3.4.5
+sphinx
+sphinx-book-theme
+sphinx-tabs
 PyGithub
 autodoc
 semantic-version 

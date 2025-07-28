@@ -56,7 +56,7 @@ jobs:
     #
     # - name: Install Python requirements
     #   run: |
-    #     sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.txt" --break-system-packages
+    #     sudo pip3 install -r "$GITHUB_WORKSPACE/doc/requirements.lock" --break-system-packages
 
     - name: Prepare ccache and restore cache
       id: ccache_cache-restore
