@@ -61,8 +61,6 @@ extern "C"
    * @param subscriber_      Subscriber handle.
    * @param callback_        The callback function to set.
    * @param user_argument_   User argument that is forwarded to the callback. Optional, can be NULL.
-   *
-   * @return Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API void eCAL_Subscriber_SetReceiveCallback(eCAL_Subscriber* subscriber_, eCAL_ReceiveCallbackT callback_, void* callback_user_argument_);
 
@@ -70,8 +68,6 @@ extern "C"
    * @brief Remove callback function for incoming receives.
    *
    * @param subscriber_  Subscriber handle.
-   * 
-   * @return Zero if succeeded, non-zero otherwise.
   **/
   ECALC_API void eCAL_Subscriber_RemoveReceiveCallback(eCAL_Subscriber* subscriber_);
 
