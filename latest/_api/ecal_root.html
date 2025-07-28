@@ -16,47 +16,42 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
-    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
     <link rel="stylesheet" type="text/css" href="../_static/css/bignums.css?v=9f114507" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sphinx-book-theme-1.1.2-ecaladdon.css?v=cdea9536" />
     <link rel="stylesheet" type="text/css" href="../_static/css/tabs-3.4.5-ecaladdon.css?v=558f29d2" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=a401138a"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_api/ecal_root';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'v999.0';
-        DOCUMENTATION_OPTIONS.show_version_warning_banner =
-            true;
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
         </script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -65,7 +60,6 @@
     <link rel="prev" title="eCAL API" href="../ecal_api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -81,8 +75,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -90,6 +95,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -97,8 +103,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -114,8 +120,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -145,29 +150,33 @@
     
     
     <img src="../_static/ecal-logo.svg" class="logo__image only-light" alt="Eclipse eCAL™ - Home"/>
-    <img src="../_static/ecal-logo.svg" class="logo__image only-dark pst-js-only" alt="Eclipse eCAL™ - Home"/>
+    <script>document.write(`<img src="../_static/ecal-logo.svg" class="logo__image only-dark" alt="Eclipse eCAL™ - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
-<div class="version-switcher__container dropdown pst-js-only">
-  <button id="pst-version-switcher-button-2"
-    type="button"
-    class="version-switcher__button btn btn-sm dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-haspopup="listbox"
-    aria-controls="pst-version-switcher-list-2"
-    aria-label="Version switcher list"
-  >
-    Choose version  <!-- this text may get changed later by javascript -->
-    <span class="caret"></span>
-  </button>
-  <div id="pst-version-switcher-list-2"
-    class="version-switcher__menu dropdown-menu list-group-flush py-0"
-    role="listbox" aria-labelledby="pst-version-switcher-button-2">
-    <!-- dropdown will be populated by javascript on page load -->
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
   </div>
-</div></div>
+`);
+</script></div>
         <div class="sidebar-primary-item">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
@@ -176,6 +185,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -494,14 +504,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -520,9 +525,9 @@
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -662,19 +667,27 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -1162,10 +1175,12 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html">Struct SServiceMethod</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#struct-documentation">Struct Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethodE"><code class="docutils literal notranslate"><span class="pre">eCAL::Registration::SServiceMethod</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4NK4eCAL12Registration14SServiceMethodltERK14SServiceMethod"><code class="docutils literal notranslate"><span class="pre">operator&lt;()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethod12service_nameE"><code class="docutils literal notranslate"><span class="pre">service_name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethod11method_nameE"><code class="docutils literal notranslate"><span class="pre">method_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethodE"><code class="docutils literal notranslate"><span class="pre">eCAL::Registration::SServiceMethod</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4NK4eCAL12Registration14SServiceMethodltERK14SServiceMethod"><code class="docutils literal notranslate"><span class="pre">operator&lt;()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethod12service_nameE"><code class="docutils literal notranslate"><span class="pre">service_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethod11method_nameE"><code class="docutils literal notranslate"><span class="pre">method_name</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1176,10 +1191,12 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html">Struct SDataTypeInformation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#struct-documentation">Struct Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformationE"><code class="docutils literal notranslate"><span class="pre">eCAL::SDataTypeInformation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation4nameE"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation8encodingE"><code class="docutils literal notranslate"><span class="pre">encoding</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation10descriptorE"><code class="docutils literal notranslate"><span class="pre">descriptor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformationE"><code class="docutils literal notranslate"><span class="pre">eCAL::SDataTypeInformation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation4nameE"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation8encodingE"><code class="docutils literal notranslate"><span class="pre">encoding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SDataTypeInformation.html#_CPPv4N4eCAL20SDataTypeInformation10descriptorE"><code class="docutils literal notranslate"><span class="pre">descriptor</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1190,12 +1207,14 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="structeCAL_1_1SEntityId.html">Struct SEntityId</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="structeCAL_1_1SEntityId.html#struct-documentation">Struct Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">eCAL::SEntityId</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">operator==()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4NK4eCAL9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">operator&lt;()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">entity_id</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">process_id</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">host_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityIdE"><code class="docutils literal notranslate"><span class="pre">eCAL::SEntityId</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4NK4eCAL9SEntityIdeqERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">operator==()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4NK4eCAL9SEntityIdltERK9SEntityId"><code class="docutils literal notranslate"><span class="pre">operator&lt;()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId9entity_idE"><code class="docutils literal notranslate"><span class="pre">entity_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId10process_idE"><code class="docutils literal notranslate"><span class="pre">process_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SEntityId.html#_CPPv4N4eCAL9SEntityId9host_nameE"><code class="docutils literal notranslate"><span class="pre">host_name</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1206,10 +1225,12 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="structeCAL_1_1SVersion.html">Struct SVersion</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="structeCAL_1_1SVersion.html#struct-documentation">Struct Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersionE"><code class="docutils literal notranslate"><span class="pre">eCAL::SVersion</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5majorE"><code class="docutils literal notranslate"><span class="pre">major</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5minorE"><code class="docutils literal notranslate"><span class="pre">minor</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5patchE"><code class="docutils literal notranslate"><span class="pre">patch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersionE"><code class="docutils literal notranslate"><span class="pre">eCAL::SVersion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5majorE"><code class="docutils literal notranslate"><span class="pre">major</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5minorE"><code class="docutils literal notranslate"><span class="pre">minor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="structeCAL_1_1SVersion.html#_CPPv4N4eCAL8SVersion5patchE"><code class="docutils literal notranslate"><span class="pre">patch</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1220,15 +1241,17 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classCDynamicSleeper.html">Class CDynamicSleeper</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classCDynamicSleeper.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv415CDynamicSleeper"><code class="docutils literal notranslate"><span class="pre">CDynamicSleeper</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper15CDynamicSleeperEv"><code class="docutils literal notranslate"><span class="pre">CDynamicSleeper()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper8sleepForEx"><code class="docutils literal notranslate"><span class="pre">sleepFor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper10sleepUntilEx"><code class="docutils literal notranslate"><span class="pre">sleepUntil()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper7setRateEd"><code class="docutils literal notranslate"><span class="pre">setRate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper7setTimeEx"><code class="docutils literal notranslate"><span class="pre">setTime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper14setTimeAndRateExd"><code class="docutils literal notranslate"><span class="pre">setTimeAndRate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv"><code class="docutils literal notranslate"><span class="pre">getCurrentInternalSimTime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeperD0Ev"><code class="docutils literal notranslate"><span class="pre">~CDynamicSleeper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv415CDynamicSleeper"><code class="docutils literal notranslate"><span class="pre">CDynamicSleeper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper15CDynamicSleeperEv"><code class="docutils literal notranslate"><span class="pre">CDynamicSleeper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper8sleepForEx"><code class="docutils literal notranslate"><span class="pre">sleepFor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper10sleepUntilEx"><code class="docutils literal notranslate"><span class="pre">sleepUntil()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper7setRateEd"><code class="docutils literal notranslate"><span class="pre">setRate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper7setTimeEx"><code class="docutils literal notranslate"><span class="pre">setTime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper14setTimeAndRateExd"><code class="docutils literal notranslate"><span class="pre">setTimeAndRate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeper25getCurrentInternalSimTimeEv"><code class="docutils literal notranslate"><span class="pre">getCurrentInternalSimTime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classCDynamicSleeper.html#_CPPv4N15CDynamicSleeperD0Ev"><code class="docutils literal notranslate"><span class="pre">~CDynamicSleeper()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1239,16 +1262,18 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classeCAL_1_1CTimer.html">Class CTimer</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classeCAL_1_1CTimer.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimerE"><code class="docutils literal notranslate"><span class="pre">eCAL::CTimer</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerEv"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerEiRK14TimerCallbackTi"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimerD0Ev"><code class="docutils literal notranslate"><span class="pre">~CTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerERK6CTimer"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimeraSERK6CTimer"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerERR6CTimer"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimeraSERR6CTimer"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer5StartEiRK14TimerCallbackTi"><code class="docutils literal notranslate"><span class="pre">Start()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer4StopEv"><code class="docutils literal notranslate"><span class="pre">Stop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimerE"><code class="docutils literal notranslate"><span class="pre">eCAL::CTimer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerEv"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerEiRK14TimerCallbackTi"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimerD0Ev"><code class="docutils literal notranslate"><span class="pre">~CTimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerERK6CTimer"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimeraSERK6CTimer"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer6CTimerERR6CTimer"><code class="docutils literal notranslate"><span class="pre">CTimer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimeraSERR6CTimer"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer5StartEiRK14TimerCallbackTi"><code class="docutils literal notranslate"><span class="pre">Start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1CTimer.html#_CPPv4N4eCAL6CTimer4StopEv"><code class="docutils literal notranslate"><span class="pre">Stop()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1259,37 +1284,39 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html">Class HDF5Meas</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v3::HDF5Meas</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas4OpenERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas11GetChannelsEv"><code class="docutils literal notranslate"><span class="pre">GetChannels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas10HasChannelERKN4eCAL3eh58SChannelE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas29GetChannelDataTypeInformationERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas29SetChannelDataTypeInformationERK8SChannelRK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMinTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMaxTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetEntriesInfoERK8SChannelR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas19GetEntriesInfoRangeERK8SChannelxxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas14AddEntryToFileERK11SWriteEntry"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v3::HDF5Meas</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas4OpenERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas11GetChannelsEv"><code class="docutils literal notranslate"><span class="pre">GetChannels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas10HasChannelERKN4eCAL3eh58SChannelE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas29GetChannelDataTypeInformationERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas29SetChannelDataTypeInformationERK8SChannelRK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMinTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMaxTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetEntriesInfoERK8SChannelR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas19GetEntriesInfoRangeERK8SChannelxxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas14AddEntryToFileERK11SWriteEntry"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1300,41 +1327,43 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html">Class HDF5Meas</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v2::HDF5Meas</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas4OpenERKNSt6stringE11eAccessType"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetChannelNamesEv"><code class="docutils literal notranslate"><span class="pre">GetChannelNames()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas10HasChannelERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas21GetChannelDescriptionERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelDescription()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetChannelDescription()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetChannelTypeERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelType()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetChannelType()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas29GetChannelDataTypeInformationERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas29SetChannelDataTypeInformationERKNSt6stringERK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetMinTimestampERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetMaxTimestampERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v2::HDF5Meas</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERKNSt6stringE11eAccessType"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas4OpenERKNSt6stringE11eAccessType"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetChannelNamesEv"><code class="docutils literal notranslate"><span class="pre">GetChannelNames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas10HasChannelERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas21GetChannelDescriptionERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelDescription()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas21SetChannelDescriptionERKNSt6stringERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetChannelDescription()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetChannelTypeERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas14SetChannelTypeERKNSt6stringERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetChannelType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas29GetChannelDataTypeInformationERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas29SetChannelDataTypeInformationERKNSt6stringERK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetMinTimestampERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas15GetMaxTimestampERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas14GetEntriesInfoERKNSt6stringER12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v28HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v28HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1345,37 +1374,39 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html">Class HDF5Meas</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v3::HDF5Meas</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas4OpenERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas11GetChannelsEv"><code class="docutils literal notranslate"><span class="pre">GetChannels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas10HasChannelERKN4eCAL3eh58SChannelE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas29GetChannelDataTypeInformationERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas29SetChannelDataTypeInformationERK8SChannelRK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMinTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMaxTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetEntriesInfoERK8SChannelR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas19GetEntriesInfoRangeERK8SChannelxxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas14AddEntryToFileERK11SWriteEntry"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasE"><code class="docutils literal notranslate"><span class="pre">eCAL::eh5::v3::HDF5Meas</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas16CallbackFunctionE"><code class="docutils literal notranslate"><span class="pre">CallbackFunction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasEv"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasD0Ev"><code class="docutils literal notranslate"><span class="pre">~HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERK8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas8HDF5MeasERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">HDF5Meas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5MeasaSERR8HDF5Meas"><code class="docutils literal notranslate"><span class="pre">operator=()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas4OpenERKNSt6stringEN2v311eAccessTypeE"><code class="docutils literal notranslate"><span class="pre">Open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas5CloseEv"><code class="docutils literal notranslate"><span class="pre">Close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas4IsOkEv"><code class="docutils literal notranslate"><span class="pre">IsOk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetFileVersionEv"><code class="docutils literal notranslate"><span class="pre">GetFileVersion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas17GetMaxSizePerFileEv"><code class="docutils literal notranslate"><span class="pre">GetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas17SetMaxSizePerFileE6size_t"><code class="docutils literal notranslate"><span class="pre">SetMaxSizePerFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas26IsOneFilePerChannelEnabledEv"><code class="docutils literal notranslate"><span class="pre">IsOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas27SetOneFilePerChannelEnabledEb"><code class="docutils literal notranslate"><span class="pre">SetOneFilePerChannelEnabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas11GetChannelsEv"><code class="docutils literal notranslate"><span class="pre">GetChannels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas10HasChannelERKN4eCAL3eh58SChannelE"><code class="docutils literal notranslate"><span class="pre">HasChannel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas29GetChannelDataTypeInformationERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas29SetChannelDataTypeInformationERK8SChannelRK19DataTypeInformation"><code class="docutils literal notranslate"><span class="pre">SetChannelDataTypeInformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMinTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMinTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas15GetMaxTimestampERK8SChannel"><code class="docutils literal notranslate"><span class="pre">GetMaxTimestamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas14GetEntriesInfoERK8SChannelR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas19GetEntriesInfoRangeERK8SChannelxxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4NK4eCAL3eh52v38HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas14AddEntryToFileERK11SWriteEntry"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html#_CPPv4N4eCAL3eh52v38HDF5Meas26DisconnectPreSplitCallbackEv"><code class="docutils literal notranslate"><span class="pre">DisconnectPreSplitCallback()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1386,8 +1417,10 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html">Template Class hash&lt; eCAL::SDataTypeInformation &gt;</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html#class-documentation">Class Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html#_CPPv4IENSt4hashIN4eCAL20SDataTypeInformationEEE"><code class="docutils literal notranslate"><span class="pre">std::hash&lt;</span> <span class="pre">eCAL::SDataTypeInformation</span> <span class="pre">&gt;</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html#_CPPv4NKSt4hashIN4eCAL20SDataTypeInformationEEclERKN4eCAL20SDataTypeInformationE"><code class="docutils literal notranslate"><span class="pre">operator()()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html#_CPPv4IENSt4hashIN4eCAL20SDataTypeInformationEEE"><code class="docutils literal notranslate"><span class="pre">std::hash&lt;</span> <span class="pre">eCAL::SDataTypeInformation</span> <span class="pre">&gt;</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html#_CPPv4NKSt4hashIN4eCAL20SDataTypeInformationEEclERKN4eCAL20SDataTypeInformationE"><code class="docutils literal notranslate"><span class="pre">operator()()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1401,17 +1434,19 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html">Enum eLogLevel</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#enum-documentation">Enum Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevelE"><code class="docutils literal notranslate"><span class="pre">eLogLevel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_noneE"><code class="docutils literal notranslate"><span class="pre">log_level_none</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel13log_level_allE"><code class="docutils literal notranslate"><span class="pre">log_level_all</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_infoE"><code class="docutils literal notranslate"><span class="pre">log_level_info</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel17log_level_warningE"><code class="docutils literal notranslate"><span class="pre">log_level_warning</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_errorE"><code class="docutils literal notranslate"><span class="pre">log_level_error</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_fatalE"><code class="docutils literal notranslate"><span class="pre">log_level_fatal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug1E"><code class="docutils literal notranslate"><span class="pre">log_level_debug1</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug2E"><code class="docutils literal notranslate"><span class="pre">log_level_debug2</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug3E"><code class="docutils literal notranslate"><span class="pre">log_level_debug3</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug4E"><code class="docutils literal notranslate"><span class="pre">log_level_debug4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevelE"><code class="docutils literal notranslate"><span class="pre">eLogLevel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_noneE"><code class="docutils literal notranslate"><span class="pre">log_level_none</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel13log_level_allE"><code class="docutils literal notranslate"><span class="pre">log_level_all</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel14log_level_infoE"><code class="docutils literal notranslate"><span class="pre">log_level_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel17log_level_warningE"><code class="docutils literal notranslate"><span class="pre">log_level_warning</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_errorE"><code class="docutils literal notranslate"><span class="pre">log_level_error</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel15log_level_fatalE"><code class="docutils literal notranslate"><span class="pre">log_level_fatal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug1E"><code class="docutils literal notranslate"><span class="pre">log_level_debug1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug2E"><code class="docutils literal notranslate"><span class="pre">log_level_debug2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug3E"><code class="docutils literal notranslate"><span class="pre">log_level_debug3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html#_CPPv4N4eCAL7Logging9eLogLevel16log_level_debug4E"><code class="docutils literal notranslate"><span class="pre">log_level_debug4</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1422,12 +1457,14 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html">Enum eSeverity</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#enum-documentation">Enum Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverityE"><code class="docutils literal notranslate"><span class="pre">eSeverity</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7unknownE"><code class="docutils literal notranslate"><span class="pre">unknown</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7healthyE"><code class="docutils literal notranslate"><span class="pre">healthy</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7warningE"><code class="docutils literal notranslate"><span class="pre">warning</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity8criticalE"><code class="docutils literal notranslate"><span class="pre">critical</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity6failedE"><code class="docutils literal notranslate"><span class="pre">failed</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverityE"><code class="docutils literal notranslate"><span class="pre">eSeverity</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7unknownE"><code class="docutils literal notranslate"><span class="pre">unknown</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7healthyE"><code class="docutils literal notranslate"><span class="pre">healthy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity7warningE"><code class="docutils literal notranslate"><span class="pre">warning</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity8criticalE"><code class="docutils literal notranslate"><span class="pre">critical</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html#_CPPv4N4eCAL7Process9eSeverity6failedE"><code class="docutils literal notranslate"><span class="pre">failed</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1438,12 +1475,14 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html">Enum eSeverityLevel</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#enum-documentation">Enum Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevelE"><code class="docutils literal notranslate"><span class="pre">eSeverityLevel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level1E"><code class="docutils literal notranslate"><span class="pre">level1</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level2E"><code class="docutils literal notranslate"><span class="pre">level2</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level3E"><code class="docutils literal notranslate"><span class="pre">level3</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level4E"><code class="docutils literal notranslate"><span class="pre">level4</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level5E"><code class="docutils literal notranslate"><span class="pre">level5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevelE"><code class="docutils literal notranslate"><span class="pre">eSeverityLevel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level1E"><code class="docutils literal notranslate"><span class="pre">level1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level2E"><code class="docutils literal notranslate"><span class="pre">level2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level3E"><code class="docutils literal notranslate"><span class="pre">level3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level4E"><code class="docutils literal notranslate"><span class="pre">level4</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html#_CPPv4N4eCAL7Process14eSeverityLevel6level5E"><code class="docutils literal notranslate"><span class="pre">level5</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1454,11 +1493,13 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html">Enum eStartMode</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#enum-documentation">Enum Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartModeE"><code class="docutils literal notranslate"><span class="pre">eStartMode</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6normalE"><code class="docutils literal notranslate"><span class="pre">normal</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6hiddenE"><code class="docutils literal notranslate"><span class="pre">hidden</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9minimizedE"><code class="docutils literal notranslate"><span class="pre">minimized</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9maximizedE"><code class="docutils literal notranslate"><span class="pre">maximized</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartModeE"><code class="docutils literal notranslate"><span class="pre">eStartMode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6normalE"><code class="docutils literal notranslate"><span class="pre">normal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode6hiddenE"><code class="docutils literal notranslate"><span class="pre">hidden</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9minimizedE"><code class="docutils literal notranslate"><span class="pre">minimized</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html#_CPPv4N4eCAL7Process10eStartMode9maximizedE"><code class="docutils literal notranslate"><span class="pre">maximized</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1469,9 +1510,11 @@ eCAL is simplifying the data transport as much as possible, It uses different me
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html">Enum RegistrationEventType</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#enum-documentation">Enum Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventTypeE"><code class="docutils literal notranslate"><span class="pre">RegistrationEventType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventType10new_entityE"><code class="docutils literal notranslate"><span class="pre">new_entity</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventType14deleted_entityE"><code class="docutils literal notranslate"><span class="pre">deleted_entity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventTypeE"><code class="docutils literal notranslate"><span class="pre">RegistrationEventType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventType10new_entityE"><code class="docutils literal notranslate"><span class="pre">new_entity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html#_CPPv4N4eCAL12Registration21RegistrationEventType14deleted_entityE"><code class="docutils literal notranslate"><span class="pre">deleted_entity</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -2983,8 +3026,7 @@ eCAL is simplifying the data transport as much as possible, It uses different me
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -3036,6 +3078,10 @@ eCAL is simplifying the data transport as much as possible, It uses different me
   
   <div class="footer-item">
     
+<p class="component-author">
+By Author name not set
+</p>
+
   </div>
   
   <div class="footer-item">
@@ -3067,8 +3113,8 @@ eCAL is simplifying the data transport as much as possible, It uses different me
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
