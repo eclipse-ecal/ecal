@@ -24,6 +24,9 @@
 #include <benchmark/benchmark.h>
 
 
+constexpr int minimum_time_s = 5;
+
+
 /*
  *
  * Benchmarking the eCAL initialization
@@ -64,15 +67,15 @@ namespace Initialize_and_Finalize {
 
 /*
  *
- * Benchmarking the eCAL publisher registration process
+ * Benchmarking the eCAL publisher creation process
  * 
 */
-namespace Publisher_Registration {
-   void BM_eCAL_Publisher_Registration(benchmark::State& state) {
+namespace Publisher_Creation {
+   void BM_eCAL_Publisher_Creation(benchmark::State& state) {
       // Initialize eCAL
       eCAL::Initialize("Benchmark");
 
-      // This is the benchmarked section: Registering a publisher
+      // This is the benchmarked section: Creating a publisher
       for (auto _ : state) {
          eCAL::CPublisher publisher("benchmark_topic");
       }
@@ -81,21 +84,21 @@ namespace Publisher_Registration {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Publisher_Registration);
+   BENCHMARK(BM_eCAL_Publisher_Creation);
 }
 
 
 /*
  *
- * Benchmarking the eCAL subscriber registration process
+ * Benchmarking the eCAL subscriber creation process
  * 
 */
-namespace Subscriber_Registration {
-   void BM_eCAL_Subscriber_Registration(benchmark::State& state) {
+namespace Subscriber_Creation {
+   void BM_eCAL_Subscriber_Creation(benchmark::State& state) {
       // Initialize eCAL
       eCAL::Initialize("Benchmark");
 
-      // This is the benchmarked section: Registering a subscriber
+      // This is the benchmarked section: Creating a subscriber
       for (auto _ : state) {
          eCAL::CSubscriber subscriber("benchmark_topic");
       }
@@ -104,7 +107,34 @@ namespace Subscriber_Registration {
       eCAL::Finalize();
    }
    // Register the benchmark function
-   BENCHMARK(BM_eCAL_Subscriber_Registration);
+   BENCHMARK(BM_eCAL_Subscriber_Creation);
+}
+
+
+/*
+ *
+ * Benchmarking the eCAL registration delay
+ * 
+*/
+namespace Registration_Delay {
+   void BM_eCAL_Registration_Delay(benchmark::State& state) {
+      // Initialize eCAL
+      eCAL::Initialize("Benchmark");     
+
+      // This is the benchmarked section: Creating publisher and subscriber (untimed) and waiting until the publisher is subscribed
+      for (auto _ : state) {
+         state.PauseTiming();
+         eCAL::CPublisher publisher("benchmark_topic");
+         eCAL::CSubscriber subscriber("benchmark_topic");
+         state.ResumeTiming();
+
+         while (publisher.GetSubscriberCount() == 0) { ; }
+      }
+
+      // Finalize eCAL
+      eCAL::Finalize();
+   }
+   BENCHMARK(BM_eCAL_Registration_Delay)->MinTime(minimum_time_s);
 }
 
 
