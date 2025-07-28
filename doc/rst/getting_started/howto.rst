@@ -8,6 +8,7 @@ You have learned a lot about basic eCAL communication and the eCAL Tools that it
 Now it is time to write your own eCAL program!
 
 .. toctree::
+   :hidden:
    
    howto/pubsub
    howto/clientserver

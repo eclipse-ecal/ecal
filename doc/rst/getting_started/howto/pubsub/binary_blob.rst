@@ -74,7 +74,7 @@ Blob Publisher Files
    │  └─ |fa-file-alt| :download:`blob_send.cs </source_code_samples/csharp/binary/blob/blob_send_csharp.cs>`
    │
    ├─ |fa-folder-open| Python
-   │  └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python/binary/blob/nb_bindary_blob_send.py>`
+   │  └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python/binary/blob/nb_binary_blob_send.py>`
    │
    └─ |fa-folder-open| Python (legacy)
       └─ |fa-file-alt| :download:`blob_send.py </source_code_samples/python_legacy/binary/blob/blob_send.py>`

@@ -10,6 +10,7 @@ In this section you will learn how to use the eCAL ClientServer API for RPC call
 You will find examples in C++, C, C# and Python that will help you understand the basic principles of setting up a client/server based communication..
 
 .. toctree::
+   :hidden:
 
     clientserver/binary_mirror
     clientserver/protobuf_math

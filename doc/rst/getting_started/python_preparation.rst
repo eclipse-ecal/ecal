@@ -9,28 +9,15 @@ Python preparation
 While eCAL is written in C++, it also offers a great python integration.
 In this chapter we show how to setup python for eCAL, so you can start using the samples from :ref:`_getting_started_howto_pubsub_string_hello_world`.
 
-.. important::
-
-   The eCAL Python integration is called ``python3-ecal5``.
-   With the ``5`` at the end.
-   The other name has already been taken by another package.
-
 Dependencies
 ============
 
-First, you have to install some more development dependencies:
+First, make sure that you have a Python installation on your system.
+We'd recommend making use of Python virtual environments to then install the eCAL Python integration.
 
 * |fa-windows| Windows:
 
   * Python 3 64-bit (https://www.python.org/downloads/)
-
-  * The eCAL python integration.
-    Choose the appropiate version from the :ref:`download_archive` and download the :file:`.whl` file.
-    Open a command prompt in your donwload directory and install the python whl with:
-
-    .. code-block:: batch
-
-       pip install ecal5-****-win_amd64.whl
 
 * |fa-ubuntu| Ubuntu:
 
@@ -40,18 +27,16 @@ First, you have to install some more development dependencies:
 
        sudo apt install python3 python3-pip
 
-  * The eCAL Python integration.
 
-    * If you have installed eCAL from a :ref:`PPA<getting_started_setup_ubuntu_ppa>`:
-      
-      .. code-block:: bash
+* The eCAL python integration.
+  Choose the appropiate version from the :ref:`download_archive` and download the :file:`.whl` file.
+  Open a command prompt in your download directory and install the python whl with:
 
-         sudo apt install python3-ecal5
+    .. code-block:: batch
 
-    * If you are not using a PPA, choose the appropiate version from the :ref:`download_archive` and download the :file:`.whl` file.
-      Open a terminal in your donwload directory and install the python whl with:
-
+       pip install eclipse_ecal-<version>-<python-version>-<architecture>.whl
   
-      .. code-block:: bash
+  ``architecture`` is one of the following: ``win_amd64``, ``manylinux_2_17_x86_64`` and ``manylinux_2_17_aarch64``.
+  We currently upload wheels for Python 3.8 - 3.13.
 
-         sudo pip3 install ecal5-*-linux_x86_64.whl
+  We will soon upload eCAL packages to PyPi for better integration with pip.

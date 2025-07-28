@@ -57,7 +57,7 @@ As this is simple string message, we will use the eCAL string publisher to send.
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/string/hello/hello_send.py
+        .. literalinclude:: /source_code_samples/python/string/hello/nb_string_hello_send.py
             :language: python
             :linenos:
             :lines: 19-
