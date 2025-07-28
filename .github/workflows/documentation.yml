@@ -63,7 +63,7 @@ jobs:
         source ".venv_build/bin/activate"
         pip install --upgrade pip
         pip install wheel setuptools
-        pip install -r "$GITHUB_WORKSPACE/doc/requirements.lock"
+        pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: CMake
       run: |

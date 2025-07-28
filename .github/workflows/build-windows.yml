@@ -60,7 +60,7 @@ jobs:
         pip install wheel
 
         echo Installing python requirements
-        pip install -r "%GITHUB_WORKSPACE%\doc\requirements.lock"
+        pip install -r "%GITHUB_WORKSPACE%\doc\requirements.txt"
 
       shell: cmd
 
