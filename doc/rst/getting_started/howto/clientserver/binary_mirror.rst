@@ -79,7 +79,7 @@ Mirror Server Files
    ├─ |fa-folder-open| Python
    │  └─ |fa-file-alt| :download:`mirror_server.py </source_code_samples/python/binary/mirror/nb_binary_mirror_server.py>`
    │
-   └─ |fa-folder-open| Python
+   └─ |fa-folder-open| Python (legacy)
       └─ |fa-file-alt| :download:`mirror_server.py </source_code_samples/python_legacy/binary/mirror/minimal_service_server.py>`
 
 Mirror Client
