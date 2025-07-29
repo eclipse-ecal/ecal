@@ -23,8 +23,8 @@ Let's start a sample that creates and calls a service!
 
 * |fa-ubuntu| On Ubuntu start:
 
-  * :file:`ecal_sample_minimal_server_c`
-  * and :file:`ecal_sample_minimal_client_c`
+  * :file:`ecal_sample_mirror_server_c`
+  * and :file:`ecal_sample_mirror_client_c`
 
 .. image:: img/samples_service.png
    :alt: eCAL Service communication
@@ -79,7 +79,7 @@ After the setup, please verify that all of your machines can ping each other.
 Service Sample over network
 ===========================
 
-Now start one :file:`ecal_sample_minimal_server_c` and one :file:`ecal_sample_minimal_client_c`, just as above.
+Now start one :file:`ecal_sample_mirror_server_c` and one :file:`ecal_sample_mirror_client_c`, just as above.
 But on different machines!
 If you configured everything correctly, the client will now call the service on a different machine.
 
