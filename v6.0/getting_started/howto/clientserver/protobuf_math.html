@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.2.2. Protobuf: Math &#8212; Eclipse eCAL™</title>
+    <title>7.3.2. Protobuf: Math &#8212; Eclipse eCAL™</title>
   
   
   
@@ -58,8 +58,8 @@
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="7.3. Runtime Configuration" href="../configuration.html" />
-    <link rel="prev" title="7.2.1. Binary: Mirror" href="binary_mirror.html" />
+    <link rel="next" title="7.4. Runtime Configuration" href="../configuration.html" />
+    <link rel="prev" title="7.3.1. Binary: Mirror" href="binary_mirror.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,21 +212,26 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How to use eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../clientserver.html">7.2. ClientServer</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="binary_mirror.html">7.2.1. Binary: Mirror</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.2.2. Protobuf: Math</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../pubsub/binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pubsub/string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pubsub/protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pubsub/capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pubsub/flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.3. Runtime Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cmake_integration.html">7.4. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../python_preparation.html">7.5. Python preparation</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../clientserver.html">7.3. Service: Client &amp; Server</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -710,11 +715,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-file">7.2.2.1. Protobuf file</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server">7.2.2.2. Math Server</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server-files">7.2.2.3. Math Server Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client">7.2.2.4. Math Client</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client-files">7.2.2.5. Math Client Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-file">7.3.2.1. Protobuf file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server">7.3.2.2. Math Server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client">7.3.2.3. Math Client</a></li>
 </ul>
             </nav>
         </div>
@@ -727,16 +730,14 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="protobuf-math">
-<span id="getting-started-howto-clientserver-protobuf-math"></span><h1><span class="section-number">7.2.2. </span>Protobuf: Math<a class="headerlink" href="#protobuf-math" title="Link to this heading">#</a></h1>
+<span id="getting-started-howto-clientserver-protobuf-math"></span><h1><span class="section-number">7.3.2. </span>Protobuf: Math<a class="headerlink" href="#protobuf-math" title="Link to this heading">#</a></h1>
 <p>In C++ eCAL also supports the protobuf serialization format for the client/server API.</p>
 <p>That means that for the request and response, an interface can be defined as a protobuf message in order to make it easier to handle requests.</p>
 <section id="protobuf-file">
-<h2><span class="section-number">7.2.2.1. </span>Protobuf file<a class="headerlink" href="#protobuf-file" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.3.2.1. </span>Protobuf file<a class="headerlink" href="#protobuf-file" title="Link to this heading">#</a></h2>
 <p>We use the special protobuf service definitions in order to implement it in our server/client applications.
 The “message” format is already known by you from the publisher/subscriber examples.
 The “service” format and the <code class="docutils literal notranslate"><span class="pre">rpc</span> <span class="pre">xyz</span> <span class="pre">(type)</span> <span class="pre">returns</span> <span class="pre">(type)</span></code> is now added. You will see, which effect this addition has on our example.</p>
-<pre class="literal-block"><i class="far fa-folder-open"></i> Math Protobuf File
-└─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/d9940080e8e46d46412a1c4c4056d4d5/math.proto"><code class="xref download docutils literal notranslate"><span class="pre">math.proto</span></code></a></pre>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto3&quot;</span><span class="p">;</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="k">option</span><span class="w"> </span><span class="na">cc_generic_services</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
@@ -763,9 +764,11 @@ The “service” format and the <code class="docutils literal notranslate"><spa
 <span class="linenos">24</span><span class="p">}</span>
 </pre></div>
 </div>
+<pre class="literal-block"><i class="far fa-folder-open"></i> Math Protobuf File
+└─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/d9940080e8e46d46412a1c4c4056d4d5/math.proto"><code class="xref download docutils literal notranslate"><span class="pre">math.proto</span></code></a></pre>
 </section>
 <section id="math-server">
-<h2><span class="section-number">7.2.2.2. </span>Math Server<a class="headerlink" href="#math-server" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.3.2.2. </span>Math Server<a class="headerlink" href="#math-server" title="Link to this heading">#</a></h2>
 <p>In the server we need to implement the service interface defined by the protobuf file.
 For that we derive from the generated class <code class="docutils literal notranslate"><span class="pre">MathService</span></code> and implement the methods.</p>
 <p>For the data exchange the server reads the input messages from the protobuf message and writes directly to the output message.</p>
@@ -885,14 +888,11 @@ For that we derive from the generated class <code class="docutils literal notran
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="math-server-files">
-<h2><span class="section-number">7.2.2.3. </span>Math Server Files<a class="headerlink" href="#math-server-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i> C++
    └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/b251edf889732f3a5fd5c6fbfbad933e/math_server.cpp"><code class="xref download docutils literal notranslate"><span class="pre">math_server.cpp</span></code></a></pre>
 </section>
 <section id="math-client">
-<h2><span class="section-number">7.2.2.4. </span>Math Client<a class="headerlink" href="#math-client" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.3.2.3. </span>Math Client<a class="headerlink" href="#math-client" title="Link to this heading">#</a></h2>
 <p>The client handling is similiar to the binary example. The main difference is that our request is now a protobuf message which will be the input for the server.
 In the response we can read out the results and print them to the console.</p>
 <div class="sphinx-tabs docutils container">
@@ -1078,9 +1078,6 @@ In the response we can read out the results and print them to the console.</p>
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="math-client-files">
-<h2><span class="section-number">7.2.2.5. </span>Math Client Files<a class="headerlink" href="#math-client-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i> C++
    └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/8766269117a14acc027a8c7f423cc190/math_client.cpp"><code class="xref download docutils literal notranslate"><span class="pre">math_client.cpp</span></code></a></pre>
 </section>
@@ -1103,7 +1100,7 @@ In the response we can read out the results and print them to the console.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.2.1. </span>Binary: Mirror</p>
+        <p class="prev-next-title"><span class="section-number">7.3.1. </span>Binary: Mirror</p>
       </div>
     </a>
     <a class="right-next"
@@ -1111,7 +1108,7 @@ In the response we can read out the results and print them to the console.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.3. </span>Runtime Configuration</p>
+        <p class="prev-next-title"><span class="section-number">7.4. </span>Runtime Configuration</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1131,11 +1128,9 @@ In the response we can read out the results and print them to the console.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-file">7.2.2.1. Protobuf file</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server">7.2.2.2. Math Server</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server-files">7.2.2.3. Math Server Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client">7.2.2.4. Math Client</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client-files">7.2.2.5. Math Client Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protobuf-file">7.3.2.1. Protobuf file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-server">7.3.2.2. Math Server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#math-client">7.3.2.3. Math Client</a></li>
 </ul>
   </nav></div>
 

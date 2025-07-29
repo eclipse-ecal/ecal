@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.1.3. Binary: Blob &#8212; Eclipse eCAL™</title>
+    <title>7.2.1. Binary: Blob &#8212; Eclipse eCAL™</title>
   
   
   
@@ -58,8 +58,8 @@
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="7.2. ClientServer" href="../clientserver.html" />
-    <link rel="prev" title="7.1.2. Protobuf: Person" href="protobuf_person.html" />
+    <link rel="next" title="7.2.2. String: Hello World" href="string_hello_world.html" />
+    <link rel="prev" title="7.2. Pubsub: Publisher &amp; Subscriber" href="../pubsub.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,21 +212,26 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How to use eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../pubsub.html">7.1. PublisherSubscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="string_hello_world.html">7.1.1. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="protobuf_person.html">7.1.2. Protobuf: Person</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.1.3. Binary: Blob</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.3. Runtime Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cmake_integration.html">7.4. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../python_preparation.html">7.5. Python preparation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -710,10 +715,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher">7.1.3.1. Blob Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher-files">7.1.3.2. Blob Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber">7.1.3.3. Blob Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber-files">7.1.3.4. Blob Subscriber Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher">7.2.1.1. Blob Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber">7.2.1.2. Blob Subscriber</a></li>
 </ul>
             </nav>
         </div>
@@ -726,22 +729,29 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="binary-blob">
-<span id="getting-started-howto-pubsub-binary-blob"></span><h1><span class="section-number">7.1.3. </span>Binary: Blob<a class="headerlink" href="#binary-blob" title="Link to this heading">#</a></h1>
-<p>Last but not least we want to show how you can send binary data with eCAL.
-When you read through the previous chapters, you will see that you are already familiar with most of the code.</p>
-<p>The biggest difference is that you basically can send any kind of data.
-But be aware that you also need to handle the binary interpretation across multiple platforms, which is handled before simply through a serialization protocol.</p>
+<span id="getting-started-howto-pubsub-binary-blob"></span><h1><span class="section-number">7.2.1. </span>Binary: Blob<a class="headerlink" href="#binary-blob" title="Link to this heading">#</a></h1>
+<p>After you have learned a lot about the pre-compiled applications that come with eCAL, let’s create our own!
+We will see how to create publisher and subscriber applications that send and receive binary data.
+We will provide samples for all supported programming languages: C++, C, C# and Python.</p>
+<p>The most low level publisher and subscriber objects are the binary ones.
+We will focus on them in this section.
+As we are just sending an arbitrary “blob” of data (filled with random printable characters), the applications are called “blob sender” and “blob receiver”.
+For sending structured / typed data, please refer to the following sections.</p>
 <section id="blob-publisher">
-<h2><span class="section-number">7.1.3.1. </span>Blob Publisher<a class="headerlink" href="#blob-publisher" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>The main differences to serialization publishers are:</dt><dd><ul class="simple">
-<li><p>you don’t need to include any serialization header file in addition to the convenience header</p></li>
-<li><p>you send a binary buffer with a buffer size</p></li>
-</ul>
-</dd>
-</dl>
+<h2><span class="section-number">7.2.1.1. </span>Blob Publisher<a class="headerlink" href="#blob-publisher" title="Link to this heading">#</a></h2>
+<p>Let’s begin with the publisher side of our “Blob” application.</p>
+<p>The base initialization of the eCAL publisher is the same in all languages:</p>
+<ol class="arabic simple">
+<li><p>Before you do anything else, you need to initialize eCAL with <code class="docutils literal notranslate"><span class="pre">Initialize(..)</span></code>.</p></li>
+<li><p>Then you create the publisher and send a message in the frequency you want.
+In our example we will send the message every 500 ms in an infinite loop.
+You can add a stop condition to the loop, if you want to send just a limited amount of messages.</p></li>
+<li><p>After you are done with publishing data and you don’t need eCAL anymore, you can call the <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>
+function to clean up the resources and unregister the process.</p></li>
+</ol>
+<p>For simplicity, we will use the same message type in all languages.</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-0-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-0-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the eCAL convenience header</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-0-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-0-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button><button aria-controls="panel-0-UHl0aG9uIChsZWdhY3kp" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tab" tabindex="-1">Python (legacy)</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the eCAL convenience header</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
@@ -1042,7 +1052,66 @@ But be aware that you also need to handle the binary interpretation across multi
 <span class="linenos">90</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</div><div aria-labelledby="tab-0-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1"># import the eCAL core API</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.nanobind_core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">DATA_SIZE</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">def</span><span class="w"> </span><span class="nf">random_printable_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">10</span><span class="sd">    Generate a bytes object of the given length, where each byte is</span>
+<span class="linenos">11</span><span class="sd">    a randomly chosen printable ASCII character (code points 32–126).</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="sd">    :param length: Number of bytes in the resulting bytes object.</span>
+<span class="linenos">14</span><span class="sd">    :return: bytes of size `length`, with each element in [32,126].</span>
+<span class="linenos">15</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">16</span>    <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">126</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: BLOB SENDER  &quot;</span><span class="p">)</span>
+<span class="linenos">21</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  
+<span class="linenos">23</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
+<span class="linenos">24</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello send python&quot;.</span>
+<span class="linenos">25</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">26</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob send python&quot;</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>  <span class="c1"># Print used eCAL version and date</span>
+<span class="linenos">29</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">30</span> 
+<span class="linenos">31</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">32</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">33</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">34</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>  <span class="c1"># Now we create a new publisher that will publish the topic &quot;blob&quot;.</span>
+<span class="linenos">37</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">Publisher</span><span class="p">(</span><span class="s2">&quot;blob&quot;</span><span class="p">)</span>
+<span class="linenos">38</span>  
+<span class="linenos">39</span>  <span class="c1"># Creating an infinite publish-loop.</span>
+<span class="linenos">40</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.</span>
+<span class="linenos">41</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">42</span>    <span class="c1"># Generate a random message of DATA_SIZE bytes</span>
+<span class="linenos">43</span>    <span class="c1"># Each byte is a randomly chosen printable ASCII character (code points 32–126).    </span>
+<span class="linenos">44</span>    <span class="n">byte_data</span> <span class="o">=</span> <span class="n">random_printable_bytes</span><span class="p">(</span><span class="n">DATA_SIZE</span><span class="p">)</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span>    <span class="c1"># Send the message. The message is sent to all subscribers that are currently connected to the topic &quot;blob&quot;.  </span>
+<span class="linenos">47</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">byte_data</span><span class="p">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="c1"># Sleep for 500 ms so we send with a frequency of 2 Hz.</span>
+<span class="linenos">50</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">51</span>  
+<span class="linenos">52</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">53</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">54</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">57</span>  <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="linenos"> 4</span>
@@ -1063,9 +1132,9 @@ But be aware that you also need to handle the binary interpretation across multi
 <span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
 <span class="linenos">20</span>  
 <span class="linenos">21</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
-<span class="linenos">22</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob send python&quot;.</span>
+<span class="linenos">22</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob send python (legacy)&quot;.</span>
 <span class="linenos">23</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">24</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob send python&quot;</span><span class="p">)</span>
+<span class="linenos">24</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob send python (legacy)&quot;</span><span class="p">)</span>
 <span class="linenos">25</span>  
 <span class="linenos">26</span>  <span class="c1"># Print used eCAL version and date</span>
 <span class="linenos">27</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">getversion</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">getdate</span><span class="p">()))</span>
@@ -1104,9 +1173,6 @@ But be aware that you also need to handle the binary interpretation across multi
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="blob-publisher-files">
-<h2><span class="section-number">7.1.3.2. </span>Blob Publisher Files<a class="headerlink" href="#blob-publisher-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/4079ca550ca355b58ba9ccf95aef03ac/blob_send.cpp"><code class="xref download docutils literal notranslate"><span class="pre">blob_send.cpp</span></code></a>
@@ -1117,14 +1183,27 @@ But be aware that you also need to handle the binary interpretation across multi
 ├─ <i class="far fa-folder-open"></i> C#
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/4235d418723c3ade5548c2141bda0466/blob_send_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">blob_send.cs</span></code></a>
 │
-└─ <i class="far fa-folder-open"></i> Python
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/ae25e6b51fb190dd016612e9bc98ebf4/blob_send.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_send.py</span></code></a></pre>
+├─ <i class="far fa-folder-open"></i> Python
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/3f4966e5c350b609dcf29b79e8c42fcd/nb_binary_blob_send.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_send.py</span></code></a>
+│
+└─ <i class="far fa-folder-open"></i> Python (legacy)
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/629e50d9f406a934e36497976a499f65/blob_send.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_send.py</span></code></a></pre>
 </section>
 <section id="blob-subscriber">
-<h2><span class="section-number">7.1.3.3. </span>Blob Subscriber<a class="headerlink" href="#blob-subscriber" title="Link to this heading">#</a></h2>
-<p>For the subscriber the same changes apply as for the publisher. In addition you need to take care of the blob handling yourself.</p>
+<h2><span class="section-number">7.2.1.2. </span>Blob Subscriber<a class="headerlink" href="#blob-subscriber" title="Link to this heading">#</a></h2>
+<p>Now let’s have a look at the subscriber side.
+Basically, the initialization is the same as for the publisher.
+Instead of sending data, a callback function is assigned to the subscriber, which will be called every time a new message arrives.</p>
+<ol class="arabic simple">
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> to initialize eCAL.</p></li>
+<li><p>Create the subscriber.</p></li>
+<li><p>Assign a callback function to the subscriber with <code class="docutils literal notranslate"><span class="pre">SetReceiveCallback</span></code>.</p></li>
+<li><p>Do something to keep the process alive. In our example we will use a simple infinite loop. Process the incoming messages as you wish.</p></li>
+<li><p>After you are done with receiving data and you don’t need eCAL anymore, you can call the <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>
+function to clean up the resources and unregister the process.</p></li>
+</ol>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-1-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-1-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the eCAL convenience header</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-1-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-1-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button><button aria-controls="panel-1-UHl0aG9uIChsZWdhY3kp" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tab" tabindex="-1">Python (legacy)</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the eCAL convenience header</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
@@ -1399,6 +1478,61 @@ But be aware that you also need to handle the binary interpretation across multi
 </div>
 </div><div aria-labelledby="tab-1-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos"> 3</span><span class="c1"># import the eCAL core API</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.nanobind_core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># eCAL receive callback</span>
+<span class="linenos"> 7</span><span class="k">def</span><span class="w"> </span><span class="nf">data_callback</span><span class="p">(</span><span class="n">publisher_id</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">TopicId</span><span class="p">,</span> <span class="n">datatype_info</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">DataTypeInformation</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ReceiveCallbackData</span><span class="p">):</span>
+<span class="linenos"> 8</span>  <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos"> 9</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">10</span><span class="s2">   Received binary buffer from topic </span><span class="si">{</span><span class="n">publisher_id</span><span class="o">.</span><span class="n">topic_name</span><span class="si">}</span><span class="s2"> in Python</span>
+<span class="linenos">11</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">12</span><span class="s2">  Size         : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span><span class="si">}</span>
+<span class="linenos">13</span><span class="s2">  Time         : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_timestamp</span><span class="si">}</span>
+<span class="linenos">14</span><span class="s2">  Clock        : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_clock</span><span class="si">}</span>
+<span class="linenos">15</span><span class="s2">  Content      : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">buffer</span><span class="si">}</span>
+<span class="linenos">16</span><span class="s2">  &quot;&quot;&quot;</span>
+<span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">20</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">21</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: BLOB Receiver  &quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using its API.</span>
+<span class="linenos">25</span>  <span class="c1"># The name of our eCAL Process will be &quot;blob receive python&quot;. </span>
+<span class="linenos">26</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">27</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;blob receive python&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>  <span class="c1"># print eCAL version and date</span>
+<span class="linenos">30</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">33</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">34</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">35</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span>  <span class="c1"># Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).</span>
+<span class="linenos">38</span>  <span class="c1"># The topic we are going to receive is called &quot;blob&quot;.</span>
+<span class="linenos">39</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">Subscriber</span><span class="p">(</span><span class="s2">&quot;blob&quot;</span><span class="p">)</span>
+<span class="linenos">40</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_receive_callback</span><span class="p">(</span><span class="n">data_callback</span><span class="p">)</span>
+<span class="linenos">41</span>  
+<span class="linenos">42</span>  <span class="c1"># Creating an infinite loop.</span>
+<span class="linenos">43</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.</span>
+<span class="linenos">44</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">45</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Sleep for 500ms to reduce CPU usage.</span>
+<span class="linenos">46</span>  
+<span class="linenos">47</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">48</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">49</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">50</span>  
+<span class="linenos">51</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">52</span>  <span class="n">main</span><span class="p">()</span>
+<span class="linenos">53</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span><span class="c1"># Import the eCAL core API</span>
 <span class="linenos"> 5</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
@@ -1460,9 +1594,6 @@ But be aware that you also need to handle the binary interpretation across multi
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="blob-subscriber-files">
-<h2><span class="section-number">7.1.3.4. </span>Blob Subscriber Files<a class="headerlink" href="#blob-subscriber-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/97e4f3dfcf5442571e6e94049035c511/blob_receive.cpp"><code class="xref download docutils literal notranslate"><span class="pre">blob_receive.cpp</span></code></a>
@@ -1473,8 +1604,11 @@ But be aware that you also need to handle the binary interpretation across multi
 ├─ <i class="far fa-folder-open"></i> C#
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/6b18797be781e5c85eaf65e178ef4b76/blob_receive_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">blob_receive.cs</span></code></a>
 │
-└─ <i class="far fa-folder-open"></i> Python
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/68dab9f844b189589373a49beb0debca/blob_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_receive.py</span></code></a></pre>
+├─ <i class="far fa-folder-open"></i> Python
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/3cff0b84ad50c7f1b30e860a35726407/nb_binary_blob_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_receive.py</span></code></a>
+│
+└─ <i class="far fa-folder-open"></i> Python (legacy)
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/3506286cfd388a8362e3f4f82d495d20/blob_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">blob_receive.py</span></code></a></pre>
 </section>
 </section>
 
@@ -1490,20 +1624,20 @@ But be aware that you also need to handle the binary interpretation across multi
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="protobuf_person.html"
+       href="../pubsub.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.1.2. </span>Protobuf: Person</p>
+        <p class="prev-next-title"><span class="section-number">7.2. </span>Pubsub: Publisher &amp; Subscriber</p>
       </div>
     </a>
     <a class="right-next"
-       href="../clientserver.html"
+       href="string_hello_world.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.2. </span>ClientServer</p>
+        <p class="prev-next-title"><span class="section-number">7.2.2. </span>String: Hello World</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1523,10 +1657,8 @@ But be aware that you also need to handle the binary interpretation across multi
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher">7.1.3.1. Blob Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher-files">7.1.3.2. Blob Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber">7.1.3.3. Blob Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber-files">7.1.3.4. Blob Subscriber Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-publisher">7.2.1.1. Blob Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blob-subscriber">7.2.1.2. Blob Subscriber</a></li>
 </ul>
   </nav></div>
 

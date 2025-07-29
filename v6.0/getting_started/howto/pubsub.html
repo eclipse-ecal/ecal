@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.1. PublisherSubscriber &#8212; Eclipse eCAL™</title>
+    <title>7.2. Pubsub: Publisher &amp; Subscriber &#8212; Eclipse eCAL™</title>
   
   
   
@@ -56,8 +56,8 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.1.1. String: Hello World" href="pubsub/string_hello_world.html" />
-    <link rel="prev" title="7. How to use eCAL" href="../howto.html" />
+    <link rel="next" title="7.2.1. Binary: Blob" href="pubsub/binary_blob.html" />
+    <link rel="prev" title="7.1.2. Python Setup" href="setup/python.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -210,21 +210,26 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. How to use eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">7.1. PublisherSubscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">7.2. Pubsub: Publisher &amp; Subscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration.html">7.3. Runtime Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cmake_integration.html">7.4. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../python_preparation.html">7.5. Python preparation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -696,7 +701,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>PublisherSubscriber</h1>
+    <h1>Pubsub: Publisher & Subscriber</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -710,36 +715,27 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="publishersubscriber">
-<span id="getting-started-howto-pubsub"></span><h1><span class="section-number">7.1. </span>PublisherSubscriber<a class="headerlink" href="#publishersubscriber" title="Link to this heading">#</a></h1>
-<p>In this section you will learn how to utilize the eCAL Publisher and Subscriber classes to send and receive data.
-You will find examples for C++, C, C# and Python that will help you understand the basic principles of setting up a publisher/subscriber based communication.</p>
-<p>Furthermore, you can discover different formats in which the data can be exchanged.</p>
+  <section id="pubsub-publisher-subscriber">
+<span id="getting-started-howto-pubsub"></span><h1><span class="section-number">7.2. </span>Pubsub: Publisher &amp; Subscriber<a class="headerlink" href="#pubsub-publisher-subscriber" title="Link to this heading">#</a></h1>
+<p>Exchanging data between different processes is one of the main use cases of eCAL.
+The most frequently used communication pattern for eCAL is the Publisher-Subscriber pattern.
+In this section you will learn how to utilize the eCAL Publisher and Subscriber classes to send and receive data.
+You will find examples for all supported language APIs that will help you understand the basic principles of setting up a publisher/subscriber based communication.</p>
+<p>All samples written for this chapter can be used across language boundaries.
+This means that a C# binary blob receiver can receive data from C binary blob sender.
+Likewise a Python Protobuf subscriber can receive data from a C# Protobuf publisher (and vice versa).</p>
+<p>At eCAL level, all publishers and subscribers send and receive binary data.
+This basic form of sending data is explained in the section <a class="reference internal" href="pubsub/binary_blob.html"><span class="doc">Binary: Blob</span></a>.</p>
+<p>On top of those binary publishers and subscribers, eCAL has implemented (de-)serialization for popular serialization formats for</p>
+<ul class="simple">
+<li><p>Native Strings <a class="reference internal" href="pubsub/string_hello_world.html"><span class="doc">String: Hello World</span></a></p></li>
+<li><p>Google Protobuf <a class="reference internal" href="pubsub/protobuf_person.html"><span class="doc">Protobuf: Person</span></a></p></li>
+<li><p>Cap’n Proto <a class="reference internal" href="pubsub/capnproto_addressbook.html"><span class="doc">Cap’n Proto: AddressBook</span></a></p></li>
+<li><p>FlatBuffers <a class="reference internal" href="pubsub/flatbuffers_monster.html"><span class="doc">FlatBuffers: Monster</span></a></p></li>
+</ul>
+<p>This allows the user to conveniently send structured data, as eCAL takes care of the serialization and deserialization.</p>
+<p>Users can easily extend eCAL by providing custom (de-)serialization implementations for their own data structures.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pubsub/string_hello_world.html">7.1.1. String: Hello World</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/string_hello_world.html#hello-world-publisher">7.1.1.1. Hello World Publisher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/string_hello_world.html#hello-world-publisher-files">7.1.1.2. Hello World Publisher Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/string_hello_world.html#hello-world-subscriber">7.1.1.3. Hello World Subscriber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/string_hello_world.html#hello-world-subscriber-files">7.1.1.4. Hello World Subscriber Files</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/protobuf_person.html#person-protobuf">7.1.2.1. Person Protobuf</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/protobuf_person.html#person-publisher">7.1.2.2. Person Publisher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/protobuf_person.html#person-publisher-files">7.1.2.3. Person Publisher Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/protobuf_person.html#person-subscriber">7.1.2.4. Person Subscriber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/protobuf_person.html#person-subscriber-files">7.1.2.5. Person Subscriber Files</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pubsub/binary_blob.html">7.1.3. Binary: Blob</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/binary_blob.html#blob-publisher">7.1.3.1. Blob Publisher</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/binary_blob.html#blob-publisher-files">7.1.3.2. Blob Publisher Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/binary_blob.html#blob-subscriber">7.1.3.3. Blob Subscriber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pubsub/binary_blob.html#blob-subscriber-files">7.1.3.4. Blob Subscriber Files</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 
@@ -755,20 +751,20 @@ You will find examples for C++, C, C# and Python that will help you understand t
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../howto.html"
+       href="setup/python.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7. </span>How to use eCAL</p>
+        <p class="prev-next-title"><span class="section-number">7.1.2. </span>Python Setup</p>
       </div>
     </a>
     <a class="right-next"
-       href="pubsub/string_hello_world.html"
+       href="pubsub/binary_blob.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.1.1. </span>String: Hello World</p>
+        <p class="prev-next-title"><span class="section-number">7.2.1. </span>Binary: Blob</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
