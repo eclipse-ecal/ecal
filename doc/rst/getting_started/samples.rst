@@ -26,12 +26,12 @@ Basic communication
 
 The sample we are going to use to try out the "normal" eCAL communication is `ecal_sample_person_snd`. Start it!
 
-* |fa-windows| On Windows start |person_snd-path-windows|
+* |fa-windows| On Windows start |person_send-path-windows|
 * |fa-ubuntu| On Ubuntu call :file:`ecal_sample_person_snd` from a terminal (it should be in your PATH)
 
 You now have a console-based application that periodically prints some text to the terminal. In the background the application created a topic `person` and sends data to it. So, let's add a subscriber that receives the data!
 
-* |fa-windows| On Windows start :file:|person_rec-path-windows|
+* |fa-windows| On Windows start :file:|person_receive-path-windows|
 * |fa-ubuntu| On Ubuntu call :file:`ecal_sample_person_rec` from a terminal
 
 Congratulations! You are looking at your first local eCAL communication! The subscriber subscribed to the topic `person` and prints all data it receives to the terminal.
