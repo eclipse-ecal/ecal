@@ -101,10 +101,6 @@ The main differences to the string publisher are:
             :linenos:
             :lines: 19-
 
-
-Person Publisher Files
-======================
-
 .. parsed-literal::
 
    |fa-folder-open|
@@ -122,7 +118,7 @@ Person Publisher Files
 
 
 Person Subscriber
-=================
+===================
 
 For the subscriber the same changes apply as for the publisher.
 
@@ -157,9 +153,6 @@ For the subscriber the same changes apply as for the publisher.
             :lines: 19-
 
 
-Person Subscriber Files
-=======================
-
 .. parsed-literal::
 
    |fa-folder-open|
@@ -174,3 +167,41 @@ Person Subscriber Files
    |
    └─ |fa-folder-open| Python (legacy)
       └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python_legacy/protobuf/person/person_receive.py>`
+
+
+Person Dynamic Subscriber
+==========================
+
+Using eCAL and Protobuf, it is possible to receive data without knowing the structure of the incoming data in advance.
+Hence you can use a dynamic subscriber to receive Protobuf data, even if you do not have access to the corresponding :file:`.proto` file.
+This is useful for generic applications, such as the eCAL Monitor, which can display all data types without knowing them in advance.
+
+The dynamic Protobuf API is unfortunately only available for C++ and Python at the moment.
+C# does not have the capabilities for dynamic message support in Protocol Buffers at this time.
+Progress on this feature can be tracked in the following `GitHub issue <https://github.com/protocolbuffers/protobuf/issues/658>`_.
+
+.. tabs::
+
+    .. group-tab:: C++
+
+        .. literalinclude:: /source_code_samples/cpp/protobuf/person/proto_dyn_rec/src/proto_dyn_rec.cpp
+            :language: cpp
+            :linenos:
+            :lines: 20-
+
+    .. group-tab:: Python
+
+        .. literalinclude:: /source_code_samples/python/protobuf/person/nb_protobuf_dynamic_person_receive.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
+
+.. parsed-literal::
+
+   |fa-folder-open|
+   ├─ |fa-folder-open| C++
+   │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/proto_dyn_rec/src/proto_dyn_rec.cpp>`
+   │
+   └─ |fa-folder-open| Python
+      └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/nb_protobuf_dynamic_person_receive.py>`      

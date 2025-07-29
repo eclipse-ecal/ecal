@@ -1,8 +1,8 @@
 .. _getting_started_howto:
 
-===============
-How to use eCAL
-===============
+========================================
+HowTo: Writing eCAL Sample Applications
+========================================
 
 You have learned a lot about basic eCAL communication and the eCAL Tools that come with it. 
 Now it is time to write your own eCAL program! This section provides practical guides to help you get started with various aspects of eCAL programming.

@@ -1,42 +1,40 @@
 .. include:: /include.txt
 
-.. _getting_started_python_preparation:
+.. _getting_started_howto_setup_python:
 
 ==================
-Python preparation
+Python Setup
 ==================
 
-While eCAL is written in C++, it also offers a great python integration.
-In this chapter we show how to setup python for eCAL, so you can start using the samples from :ref:`_getting_started_howto_pubsub_string_hello_world`.
-
-Dependencies
-============
+While eCAL is written in C++, it also offers a great Python integration.
+In this chapter we show how to setup Python for eCAL.
 
 First, make sure that you have a Python installation on your system.
 We'd recommend making use of Python virtual environments to then install the eCAL Python integration.
 
-* |fa-windows| Windows:
 
-  * Python 3 64-bit (https://www.python.org/downloads/)
+* Install Python 3 on your system.
 
-* |fa-ubuntu| Ubuntu:
+  * |fa-windows| Windows:
 
-  * Python 3: 
+    Download and install Python 3 64-bit (https://www.python.org/downloads/)
 
+  * |fa-ubuntu| Ubuntu:
+      
     .. code-block:: bash
-
+  
        sudo apt install python3 python3-pip
 
+* Install the eCAL Python integration.
 
-* The eCAL python integration.
   Choose the appropiate version from the :ref:`download_archive` and download the :file:`.whl` file.
-  Open a command prompt in your download directory and install the python whl with:
+  Open a command prompt in your download directory and install the Python wheel with:
 
-    .. code-block:: batch
+  .. code-block:: batch
 
-       pip install eclipse_ecal-<version>-<python-version>-<architecture>.whl
+     pip install eclipse_ecal-<version>-<python-version>-<architecture>.whl
   
   ``architecture`` is one of the following: ``win_amd64``, ``manylinux_2_17_x86_64`` and ``manylinux_2_17_aarch64``.
   We currently upload wheels for Python 3.8 - 3.13.
 
-  We will soon upload eCAL packages to PyPi for better integration with pip.
+We will soon upload eCAL packages to PyPi for better integration with pip.

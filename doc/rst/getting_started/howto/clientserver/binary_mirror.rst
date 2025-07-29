@@ -61,9 +61,6 @@ The main process is:
             :lines: 19-
 
 
-Mirror Server Files
-===================
-
 .. parsed-literal::
 
    |fa-folder-open|
@@ -134,9 +131,6 @@ As a little extra we also added a little bit more eCAL state handling as in the 
             :linenos:
             :lines: 19-
 
-
-Mirror Client Files
-===================
 
 .. parsed-literal::
 

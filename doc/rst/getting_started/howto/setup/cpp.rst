@@ -24,7 +24,7 @@ This means that ``find_package(eCAL REQUIRED)`` should work out of the box, and 
 
 Furthermore, the ``eCAL::core`` target needs to be linked in order to be able to create binary publishers and subscribers.
 
-The CMakeLists.txt looks as follows:
+The :file:`CMakeLists.txt` looks as follows:
 
 .. literalinclude:: /source_code_samples/cmake/binary/CMakeLists.txt
     :language: cmake

@@ -70,10 +70,6 @@ For simplicity, we will use the same message type in all languages.
             :linenos:
             :lines: 19-
 
-
-Blob Publisher Files
-====================
-
 .. parsed-literal::
 
    |fa-folder-open|
@@ -144,9 +140,6 @@ Instead of sending data, a callback function is assigned to the subscriber, whic
             :linenos:
             :lines: 19-            
 
-
-Blob Subscriber Files
-=====================
 
 .. parsed-literal::
 

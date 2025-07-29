@@ -1,6 +1,6 @@
 .. include:: /include.txt
 
-.. _getting_started_howto_pubsub_flatbuffers_monster:
+.. _getting_started_howto_pubsub:
 
 ===============================
 Pubsub: Publisher & Subscriber
@@ -16,14 +16,14 @@ This means that a C# binary blob receiver can receive data from C binary blob se
 Likewise a Python Protobuf subscriber can receive data from a C# Protobuf publisher (and vice versa).
 
 At eCAL level, all publishers and subscribers send and receive binary data.
-This basic form of sending data is explained in the section ":ref:`_getting_started_howto_pubsub_binary_blob`".
+This basic form of sending data is explained in the section :doc:`pubsub/binary_blob`.
 
 On top of those binary publishers and subscribers, eCAL has implemented (de-)serialization for popular serialization formats for 
 
-* Native Strings ":ref:`_getting_started_howto_pubsub_string_hello_world`".
-* Google Protobuf ":ref:`_getting_started_howto_pubsub_protobuf_person`".
-* FlatBuffers ":ref:`_getting_started_howto_pubsub_flatbuffers`".
-* Cap'n Proto ":ref:`_getting_started_howto_pubsub_capnproto_addressbook`".
+* Native Strings :doc:`pubsub/string_hello_world`
+* Google Protobuf :doc:`pubsub/protobuf_person`
+* Cap'n Proto :doc:`pubsub/capnproto_addressbook`
+* FlatBuffers :doc:`pubsub/flatbuffers_monster`
 
 This allows the user to conveniently send structured data, as eCAL takes care of the serialization and deserialization.
 

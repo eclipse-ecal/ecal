@@ -85,7 +85,7 @@ add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/nanobind_core/pubsub             ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person
 
   # pubsub capnproto samples
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/capnproto/samples/pubsub               ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/samples/addressbook
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/capnproto/samples/pubsub               ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/capnproto/addressbook
 
   # pubsub flatbuffers samples
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/flatbuffers/samples/pubsub             ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/flatbuffers/monster
