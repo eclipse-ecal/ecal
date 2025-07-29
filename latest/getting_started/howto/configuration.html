@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.3. Runtime Configuration &#8212; Eclipse eCAL™</title>
+    <title>7.4. Runtime Configuration &#8212; Eclipse eCAL™</title>
   
   
   
@@ -58,8 +58,8 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.4. CMake Integration" href="../cmake_integration.html" />
-    <link rel="prev" title="7.2.2. Protobuf: Math" href="clientserver/protobuf_math.html" />
+    <link rel="next" title="Building eCAL" href="../../development/build_ecal.html" />
+    <link rel="prev" title="7.3.2. Protobuf: Math" href="clientserver/protobuf_math.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,21 +212,26 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. How to use eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="pubsub.html">7.1. PublisherSubscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/string_hello_world.html">7.1.1. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/protobuf_person.html">7.1.2. Protobuf: Person</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pubsub/binary_blob.html">7.1.3. Binary: Blob</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pubsub/flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.3. Runtime Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cmake_integration.html">7.4. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../python_preparation.html">7.5. Python preparation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -710,10 +715,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher">7.3.1. Cake Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher-files">7.3.2. Cake Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver">7.3.3. Cake Receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver-files">7.3.4. Cake Receiver Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher">7.4.1. Cake Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver">7.4.2. Cake Receiver</a></li>
 </ul>
             </nav>
         </div>
@@ -726,7 +729,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="runtime-configuration">
-<span id="getting-started-configuration"></span><h1><span class="section-number">7.3. </span>Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Link to this heading">#</a></h1>
+<span id="getting-started-configuration"></span><h1><span class="section-number">7.4. </span>Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Link to this heading">#</a></h1>
 <p>In eCAL it is also possible to configure the environment at runtime.
 The eCAL API provides a set of structures that reflect the yaml configuration file (<a class="reference internal" href="../../configuration/options.html#configuration-options"><span class="std std-ref">ecal.yaml</span></a>).</p>
 <p>You can pass this configuration structure to <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize()</span></code>.</p>
@@ -741,7 +744,7 @@ So it is has no effect to modify the configuration object without passing it to 
 <p>In our example we will create multiple publishers and subscribers.
 They will communicate on different layers and will not interfere with each other, besides the same topic name.</p>
 <section id="cake-publisher">
-<h2><span class="section-number">7.3.1. </span>Cake Publisher<a class="headerlink" href="#cake-publisher" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4.1. </span>Cake Publisher<a class="headerlink" href="#cake-publisher" title="Link to this heading">#</a></h2>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Qw==" name="Qw==" role="tab" tabindex="-1">C</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/*</span>
 <span class="linenos"> 2</span><span class="cm">  Include the eCAL main header.</span>
@@ -959,9 +962,6 @@ They will communicate on different layers and will not interfere with each other
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="cake-publisher-files">
-<h2><span class="section-number">7.3.2. </span>Cake Publisher Files<a class="headerlink" href="#cake-publisher-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../_downloads/684ae1a717ee30bdceccfcf0a93a4320/cake_send.cpp"><code class="xref download docutils literal notranslate"><span class="pre">cake_send.cpp</span></code></a>
@@ -970,7 +970,7 @@ They will communicate on different layers and will not interfere with each other
    └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../_downloads/b9ee194335a5a2a724dd7745da79714a/cake_send_c.c"><code class="xref download docutils literal notranslate"><span class="pre">cake_send_c.c</span></code></a></pre>
 </section>
 <section id="cake-receiver">
-<h2><span class="section-number">7.3.3. </span>Cake Receiver<a class="headerlink" href="#cake-receiver" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4.2. </span>Cake Receiver<a class="headerlink" href="#cake-receiver" title="Link to this heading">#</a></h2>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Qw==" name="Qw==" role="tab" tabindex="-1">C</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cm">/*</span>
 <span class="linenos">  2</span><span class="cm">  Include the eCAL main header.</span>
@@ -1195,9 +1195,6 @@ They will communicate on different layers and will not interfere with each other
 </pre></div>
 </div>
 </div></div>
-</section>
-<section id="cake-receiver-files">
-<h2><span class="section-number">7.3.4. </span>Cake Receiver Files<a class="headerlink" href="#cake-receiver-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i>
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../_downloads/30a5035f7f84307058eaa4cd2054e8bc/cake_receive.cpp"><code class="xref download docutils literal notranslate"><span class="pre">cake_receive.cpp</span></code></a>
@@ -1224,15 +1221,15 @@ They will communicate on different layers and will not interfere with each other
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.2.2. </span>Protobuf: Math</p>
+        <p class="prev-next-title"><span class="section-number">7.3.2. </span>Protobuf: Math</p>
       </div>
     </a>
     <a class="right-next"
-       href="../cmake_integration.html"
+       href="../../development/build_ecal.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.4. </span>CMake Integration</p>
+        <p class="prev-next-title">Building eCAL</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1252,10 +1249,8 @@ They will communicate on different layers and will not interfere with each other
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher">7.3.1. Cake Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher-files">7.3.2. Cake Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver">7.3.3. Cake Receiver</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver-files">7.3.4. Cake Receiver Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-publisher">7.4.1. Cake Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cake-receiver">7.4.2. Cake Receiver</a></li>
 </ul>
   </nav></div>
 

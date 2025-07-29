@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7.1.1. String: Hello World &#8212; Eclipse eCAL™</title>
+    <title>7.2.2. String: Hello World &#8212; Eclipse eCAL™</title>
   
   
   
@@ -58,8 +58,8 @@
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="7.1.2. Protobuf: Person" href="protobuf_person.html" />
-    <link rel="prev" title="7.1. PublisherSubscriber" href="../pubsub.html" />
+    <link rel="next" title="7.2.3. Protobuf: Person" href="protobuf_person.html" />
+    <link rel="prev" title="7.2.1. Binary: Blob" href="binary_blob.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -212,21 +212,26 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How to use eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../pubsub.html">7.1. PublisherSubscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.1.1. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="protobuf_person.html">7.1.2. Protobuf: Person</a></li>
-<li class="toctree-l3"><a class="reference internal" href="binary_blob.html">7.1.3. Binary: Blob</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.2. ClientServer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.2.1. Binary: Mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.2.2. Protobuf: Math</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.3. Runtime Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cmake_integration.html">7.4. CMake Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../python_preparation.html">7.5. Python preparation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -710,10 +715,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.1.1.1. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher-files">7.1.1.2. Hello World Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.1.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber-files">7.1.1.4. Hello World Subscriber Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.2.2.1. Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher-files">7.2.2.2. Hello World Publisher Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.2.2.3. Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber-files">7.2.2.4. Hello World Subscriber Files</a></li>
 </ul>
             </nav>
         </div>
@@ -726,28 +731,17 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="string-hello-world">
-<span id="getting-started-howto-pubsub-string-hello-world"></span><h1><span class="section-number">7.1.1. </span>String: Hello World<a class="headerlink" href="#string-hello-world" title="Link to this heading">#</a></h1>
-<p>After you have learned a lot about the pre-compiled applications that come with eCAL, let’s create our own!
-In the good habit of every tutorial, we will write a Hello World Application, that sends the string “Hello World” to an eCAL topic.
+<span id="getting-started-howto-pubsub-string-hello-world"></span><h1><span class="section-number">7.2.2. </span>String: Hello World<a class="headerlink" href="#string-hello-world" title="Link to this heading">#</a></h1>
+<p>In the good habit of every tutorial, we will write a Hello World application, that sends the string “Hello World” to an eCAL topic.
+It will utilize the eCAL string publisher to send the message, which is a really thin layer on top of the binary.
 The second part will be all about the subscriber, which will receive the message and print it to the console.</p>
-<p>You will see how it is done in the major programming languages we support: C++, C, C# and Python.</p>
-<p>For CMake usage tips, please refer to the CMake section of this documentation.</p>
+<p>Basically, by using eCAL’s message API, we no longer send raw binary data, but utf-8 encoded strings.
+Hence, depending on the native string handling in the programming language, the serialization is “just” an utf-8 encoding / decoding of a string.</p>
+<p>All other available methods for binary publishers and subscribers are also available for message publishers and subscribers.</p>
 <section id="hello-world-publisher">
-<h2><span class="section-number">7.1.1.1. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
-<p>Let’s begin with the publisher side of our “Hello World” application.</p>
-<p>The base initialization of the eCAL publisher is the same in all languages:</p>
-<ol class="arabic simple">
-<li><p>Before you do anything else, you need to initialize eCAL with <code class="docutils literal notranslate"><span class="pre">Initialize(..)</span></code>.</p></li>
-<li><p>Then you create the publisher and send a message in the frequency you want.
-In our example we will send the message every 500 ms in an infinite loop.
-You can add a stop condition to the loop, if you want to send just a limited amount of messages.</p></li>
-<li><p>After you are done with publishing data and you don’t need eCAL anymore, you can call the <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>
-function to clean up the resources and unregister the process.</p></li>
-</ol>
-<p>For simplicity, we will use the same message type in all languages.
-As this is simple string message, we will use the eCAL string publisher to send.</p>
+<h2><span class="section-number">7.2.2.1. </span>Hello World Publisher<a class="headerlink" href="#hello-world-publisher" title="Link to this heading">#</a></h2>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-0-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-0-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the basic eCAL header</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-0-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-0-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-0-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button><button aria-controls="panel-0-UHl0aG9uIChsZWdhY3kp" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tab" tabindex="-1">Python (legacy)</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the basic eCAL header</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 3</span><span class="cm">/* </span>
 <span class="linenos"> 4</span><span class="cm">  We want to publish raw strings, so wie include the string publisher header.</span>
@@ -1007,7 +1001,62 @@ As this is simple string message, we will use the eCAL string publisher to send.
 <span class="linenos">75</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</div><div aria-labelledby="tab-0-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos"> 2</span><span class="c1"># import the eCAL core API</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.nanobind_core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
+<span class="linenos"> 4</span><span class="c1"># import the eCAL publisher AP</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.msg.string.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Publisher</span> <span class="k">as</span> <span class="n">StringPublisher</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos"> 8</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: HELLO WORLD SENDER&quot;</span><span class="p">)</span>
+<span class="linenos">10</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">11</span>  
+<span class="linenos">12</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
+<span class="linenos">13</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello send python&quot;.</span>
+<span class="linenos">14</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">15</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;hello send python&quot;</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>  <span class="c1"># Print used eCAL version and date</span>
+<span class="linenos">18</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">19</span> 
+<span class="linenos">20</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">21</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">22</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">23</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">24</span>  
+<span class="linenos">25</span>  <span class="c1"># Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).</span>
+<span class="linenos">26</span>  <span class="c1"># The topic we are going to publish is called &quot;hello&quot;.</span>
+<span class="linenos">27</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">StringPublisher</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>  
+<span class="linenos">29</span>  <span class="c1"># We create a message to send that will be altered later to notice different messages.</span>
+<span class="linenos">30</span>  <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;HELLO WORLD FROM PYTHON&quot;</span>
+<span class="linenos">31</span>  
+<span class="linenos">32</span>  <span class="n">loop_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">33</span>  <span class="c1"># Creating an infinite publish-loop.</span>
+<span class="linenos">34</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.</span>
+<span class="linenos">35</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">36</span>    <span class="c1"># Prepare the string to send</span>
+<span class="linenos">37</span>    <span class="n">loop_count</span> <span class="o">=</span> <span class="n">loop_count</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos">38</span>    <span class="n">current_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{:6d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">loop_count</span><span class="p">)</span>
+<span class="linenos">39</span>    
+<span class="linenos">40</span>    <span class="c1"># Send the content to other eCAL Processes that have subscribed to the topic &quot;hello&quot;.</span>
+<span class="linenos">41</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">current_message</span><span class="p">)</span>
+<span class="linenos">42</span>    
+<span class="linenos">43</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sending: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_message</span><span class="p">))</span>
+<span class="linenos">44</span>    
+<span class="linenos">45</span>    <span class="c1"># Sleep for 500 ms so we send with a frequency of 2 Hz.</span>
+<span class="linenos">46</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">47</span>  
+<span class="linenos">48</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">49</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">50</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">51</span>
+<span class="linenos">52</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">53</span>  <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos"> 3</span><span class="c1"># import the eCAL core API</span>
 <span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
@@ -1066,7 +1115,7 @@ As this is simple string message, we will use the eCAL string publisher to send.
 </div></div>
 </section>
 <section id="hello-world-publisher-files">
-<h2><span class="section-number">7.1.1.2. </span>Hello World Publisher Files<a class="headerlink" href="#hello-world-publisher-files" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.2.2.2. </span>Hello World Publisher Files<a class="headerlink" href="#hello-world-publisher-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i> Publisher samples
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/c4778e5827de9ccdb70594c4e2ac81af/hello_send.cpp"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.cpp</span></code></a>
@@ -1075,25 +1124,18 @@ As this is simple string message, we will use the eCAL string publisher to send.
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/6902306eab974a72d1ccf7ac2fc499bd/hello_send.c"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.c</span></code></a>
 │
 ├─ <i class="far fa-folder-open"></i> C#
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/d9f170f91e69c05622b741beacee2710/hello_send_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">hello_send_csharp.cs</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/d9f170f91e69c05622b741beacee2710/hello_send_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.cs</span></code></a>
 │
-└─ <i class="far fa-folder-open"></i> Python
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/27201ab54746b1a5a174f7ceb8b8f99d/hello_send.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.py</span></code></a></pre>
+├─ <i class="far fa-folder-open"></i> Python
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/c71b682bf6eb3777c1769112cb227890/nb_string_hello_send.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.py</span></code></a>
+│
+└─ <i class="far fa-folder-open"></i> Python (legacy)
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/692546d649b0a5f2c4784911e22a761a/hello_send.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_send.py</span></code></a></pre>
 </section>
 <section id="hello-world-subscriber">
-<h2><span class="section-number">7.1.1.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
-<p>Now let’s have a look at the subscriber side. Basically, the initialization is the same as for the publisher.
-The only difference is that you need to assign a callback function to the subscriber:</p>
-<ol class="arabic simple">
-<li><p>Call <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> to initialize eCAL.</p></li>
-<li><p>Create the subscriber.</p></li>
-<li><p>Assign a callback function to the subscriber with <code class="docutils literal notranslate"><span class="pre">SetReceiveCallback</span></code>.</p></li>
-<li><p>Do something to keep the process alive. In our example we will use a simple infinite loop. Process the incoming messages as you wish.</p></li>
-<li><p>After you are done with receiving data and you don’t need eCAL anymore, you can call the <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>
-function to clean up the resources and unregister the process.</p></li>
-</ol>
+<h2><span class="section-number">7.2.2.3. </span>Hello World Subscriber<a class="headerlink" href="#hello-world-subscriber" title="Link to this heading">#</a></h2>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-1-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-1-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the basic eCAL header</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button><button aria-controls="panel-1-Qw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Qw==" name="Qw==" role="tab" tabindex="-1">C</button><button aria-controls="panel-1-QyM=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-QyM=" name="QyM=" role="tab" tabindex="-1">C#</button><button aria-controls="panel-1-UHl0aG9u" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9u" name="UHl0aG9u" role="tab" tabindex="-1">Python</button><button aria-controls="panel-1-UHl0aG9uIChsZWdhY3kp" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tab" tabindex="-1">Python (legacy)</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// Include the basic eCAL header</span>
 <span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
 <span class="linenos"> 3</span><span class="cm">/* </span>
 <span class="linenos"> 4</span><span class="cm">  We want to receive raw strings, so wie include the string subscriber header.</span>
@@ -1375,6 +1417,62 @@ function to clean up the resources and unregister the process.</p></li>
 </div><div aria-labelledby="tab-1-UHl0aG9u" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9u" name="UHl0aG9u" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos"> 3</span><span class="c1"># import the eCAL core API</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.nanobind_core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
+<span class="linenos"> 5</span><span class="c1"># import the eCAL subscriber API</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.msg.string.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscriber</span> <span class="k">as</span> <span class="n">StringSubscriber</span>
+<span class="linenos"> 7</span><span class="c1"># eCAL receive callback</span>
+<span class="linenos"> 8</span><span class="k">def</span><span class="w"> </span><span class="nf">data_callback</span><span class="p">(</span><span class="n">publisher_id</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">TopicId</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ReceiveCallbackData</span><span class="p">):</span>
+<span class="linenos"> 9</span>  <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">10</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">11</span><span class="s2">   Received string message from topic </span><span class="si">{</span><span class="n">publisher_id</span><span class="o">.</span><span class="n">topic_name</span><span class="si">}</span><span class="s2"> in Python</span>
+<span class="linenos">12</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">13</span><span class="s2">  Size         : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">message</span><span class="p">)</span><span class="si">}</span>
+<span class="linenos">14</span><span class="s2">  Time         : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_timestamp</span><span class="si">}</span>
+<span class="linenos">15</span><span class="s2">  Clock        : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_clock</span><span class="si">}</span>
+<span class="linenos">16</span><span class="s2">  Message      : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">message</span><span class="si">}</span>
+<span class="linenos">17</span><span class="s2">  &quot;&quot;&quot;</span>
+<span class="linenos">18</span>  <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">21</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: HELLO WORLD RECEIVE &quot;</span><span class="p">)</span>
+<span class="linenos">23</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using its API.</span>
+<span class="linenos">26</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello receive python&quot;. </span>
+<span class="linenos">27</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">28</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;hello receive python&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>  <span class="c1"># print eCAL version and date</span>
+<span class="linenos">31</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">34</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">35</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">36</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>  <span class="c1"># Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).</span>
+<span class="linenos">39</span>  <span class="c1"># The topic we are going to receive is called &quot;hello&quot;.</span>
+<span class="linenos">40</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">StringSubscriber</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="linenos">41</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_receive_callback</span><span class="p">(</span><span class="n">data_callback</span><span class="p">)</span>
+<span class="linenos">42</span>  
+<span class="linenos">43</span>  <span class="c1"># Creating an infinite loop.</span>
+<span class="linenos">44</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.</span>
+<span class="linenos">45</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">46</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Sleep for 500ms to reduce CPU usage.</span>
+<span class="linenos">47</span>  
+<span class="linenos">48</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">49</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">50</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">51</span>  
+<span class="linenos">52</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">53</span>  <span class="n">main</span><span class="p">()</span>
+<span class="linenos">54</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos"> 3</span><span class="c1"># import the eCAL core API</span>
 <span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">ecal.core.core</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecal_core</span>
 <span class="linenos"> 5</span><span class="c1"># import the eCAL subscriber API</span>
 <span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.core.subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringSubscriber</span>
@@ -1385,14 +1483,14 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos">11</span>
 <span class="linenos">12</span>
 <span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">14</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">15</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: HELLO WORLD RECEIVER&quot;</span><span class="p">)</span>
-<span class="linenos">16</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">14</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">15</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python (legacy): HELLO WORLD RECEIVER &quot;</span><span class="p">)</span>
+<span class="linenos">16</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------------------------&quot;</span><span class="p">)</span>
 <span class="linenos">17</span>  
 <span class="linenos">18</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
-<span class="linenos">19</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello receive python&quot;.</span>
+<span class="linenos">19</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello receive python (legacy)&quot;.</span>
 <span class="linenos">20</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">21</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;hello receive python&quot;</span><span class="p">)</span>
+<span class="linenos">21</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;hello receive python (legacy)&quot;</span><span class="p">)</span>
 <span class="linenos">22</span>  
 <span class="linenos">23</span>  <span class="c1"># Print used eCAL version and date</span>
 <span class="linenos">24</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">getversion</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">getdate</span><span class="p">()))</span>
@@ -1428,7 +1526,7 @@ function to clean up the resources and unregister the process.</p></li>
 </div></div>
 </section>
 <section id="hello-world-subscriber-files">
-<h2><span class="section-number">7.1.1.4. </span>Hello World Subscriber Files<a class="headerlink" href="#hello-world-subscriber-files" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.2.2.4. </span>Hello World Subscriber Files<a class="headerlink" href="#hello-world-subscriber-files" title="Link to this heading">#</a></h2>
 <pre class="literal-block"><i class="far fa-folder-open"></i> Subscriber samples
 ├─ <i class="far fa-folder-open"></i> C++
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/8dd58f27837e0823958fba538eebaad0/hello_receive.cpp"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.cpp</span></code></a>
@@ -1437,10 +1535,13 @@ function to clean up the resources and unregister the process.</p></li>
 │  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/c4cd75507c1ebf323e96a5bcc62a9e10/hello_receive.c"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.c</span></code></a>
 │
 ├─ <i class="far fa-folder-open"></i> C#
-│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/e71e67f0d125689d9e822eeca8a0ec82/hello_receive_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive_csharp.cs</span></code></a>
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/e71e67f0d125689d9e822eeca8a0ec82/hello_receive_csharp.cs"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.cs</span></code></a>
 │
-└─ <i class="far fa-folder-open"></i> Python
-   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/789b21f8ee64e404fbaa34a1e7928154/hello_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.py</span></code></a></pre>
+├─ <i class="far fa-folder-open"></i> Python
+│  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/c86866bec6a1a4716c590493bae3c2d1/nb_string_hello_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.py</span></code></a>
+│
+└─ <i class="far fa-folder-open"></i> Python (legacy)
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/c10dbee7efabea02c1fa98afc088386d/hello_receive.py"><code class="xref download docutils literal notranslate"><span class="pre">hello_receive.py</span></code></a></pre>
 </section>
 </section>
 
@@ -1456,12 +1557,12 @@ function to clean up the resources and unregister the process.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../pubsub.html"
+       href="binary_blob.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7.1. </span>PublisherSubscriber</p>
+        <p class="prev-next-title"><span class="section-number">7.2.1. </span>Binary: Blob</p>
       </div>
     </a>
     <a class="right-next"
@@ -1469,7 +1570,7 @@ function to clean up the resources and unregister the process.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">7.1.2. </span>Protobuf: Person</p>
+        <p class="prev-next-title"><span class="section-number">7.2.3. </span>Protobuf: Person</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1489,10 +1590,10 @@ function to clean up the resources and unregister the process.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.1.1.1. Hello World Publisher</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher-files">7.1.1.2. Hello World Publisher Files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.1.1.3. Hello World Subscriber</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber-files">7.1.1.4. Hello World Subscriber Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher">7.2.2.1. Hello World Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-publisher-files">7.2.2.2. Hello World Publisher Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber">7.2.2.3. Hello World Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world-subscriber-files">7.2.2.4. Hello World Subscriber Files</a></li>
 </ul>
   </nav></div>
 

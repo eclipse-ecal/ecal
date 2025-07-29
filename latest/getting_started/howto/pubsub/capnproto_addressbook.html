@@ -1,0 +1,1248 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>7.2.4. Cap’n Proto: AddressBook &#8212; Eclipse eCAL™</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/bignums.css?v=9f114507" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/sphinx-book-theme-1.1.2-ecaladdon.css?v=cdea9536" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/tabs-3.4.5-ecaladdon.css?v=558f29d2" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=a401138a"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+    <script src="../../../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../../../_static/tabs.js?v=3030b3cb"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started/howto/pubsub/capnproto_addressbook';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'v999.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <link rel="icon" href="../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="7.2.5. FlatBuffers: Monster" href="flatbuffers_monster.html" />
+    <link rel="prev" title="7.2.3. Protobuf: Person" href="protobuf_person.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/ecal-logo.svg" class="logo__image only-light" alt="Eclipse eCAL™ - Home"/>
+    <script>document.write(`<img src="../../../_static/ecal-logo.svg" class="logo__image only-dark" alt="Eclipse eCAL™ - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">2. Installing eCAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples.html">3. eCAL Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../network.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services.html">5. eCAL Services</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../monitor.html">6.1.  Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recorder.html">6.2.  Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../player.html">6.3.  Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration.html">7.4. Runtime Configuration</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../development/build_ecal.html">Building eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/ecal_cmake_options.html">CMake options</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ecal_api.html">eCAL API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ecal_root.html">C++</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL.html">Namespace eCAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Config.html">Namespace eCAL::Config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__eh5.html">Namespace eCAL::eh5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__eh5__v2.html">Namespace eCAL::eh5::v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__eh5__v3.html">Namespace eCAL::eh5::v3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Init.html">Namespace eCAL::Init</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Logging.html">Namespace eCAL::Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Monitoring.html">Namespace eCAL::Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Process.html">Namespace eCAL::Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Registration.html">Namespace eCAL::Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Time.html">Namespace eCAL::Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_eCAL__Util.html">Namespace eCAL::Util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/namespace_std.html">Namespace std</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/structeCAL_1_1Registration_1_1SServiceMethod.html">Struct SServiceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/structeCAL_1_1SDataTypeInformation.html">Struct SDataTypeInformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/structeCAL_1_1SEntityId.html">Struct SEntityId</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/structeCAL_1_1SVersion.html">Struct SVersion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classCDynamicSleeper.html">Class CDynamicSleeper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classeCAL_1_1CTimer.html">Class CTimer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html">Class HDF5Meas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classeCAL_1_1eh5_1_1v2_1_1HDF5Meas.html">Class HDF5Meas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classeCAL_1_1eh5_1_1v3_1_1HDF5Meas.html">Class HDF5Meas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/classstd_1_1hash_3_01eCAL_1_1SDataTypeInformation_01_4.html">Template Class hash&lt; eCAL::SDataTypeInformation &gt;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/enum_log__level_8h_1a26836a3eb06b0d47712353cc3afa320e.html">Enum eLogLevel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/enum_process__severity_8h_1adfbf566f466697438dd0f26d66c4f1f0.html">Enum eSeverity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/enum_process__severity_8h_1a917a843b57411c9ab3bbe4a16e517685.html">Enum eSeverityLevel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/enum_process__mode_8h_1a1b07cc8c396021bf85eedc7f95ac91f6.html">Enum eStartMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/enum_registration_8h_1ab47a7f2404314ea349d4c14d261c969c.html">Enum RegistrationEventType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1ab602f6c8307b53fe6826d7618ac9f465.html">Function eCAL::Config::GetDropOutOfOrderMessages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a00f593fbed5a932d13d95e5d670fa27d.html">Function eCAL::Config::GetEcalSysFilterExcludeList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1af5b58da0cab93d96828ae51f56da08c2.html">Function eCAL::Config::GetLoadedEcalIniPath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html">Function eCAL::Config::GetRegistrationRefreshMs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a313807e5364233c84ae52d3a2ab10211.html">Function eCAL::Config::GetRegistrationTimeoutMs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a3253931786d5bbb82c458c56d9b2a767.html">Function eCAL::Config::GetShmMonitoringDomain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1ad65c848628fc2d115f4e056b873ade5c.html">Function eCAL::Config::GetShmMonitoringQueueSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a3547edc9480cee6d3609de3f34c96d6e.html">Function eCAL::Config::GetShmTransportDomain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a9e6cb0ba42fa6e1e34e206db76ed3a7c.html">Function eCAL::Config::GetTcpPubsubMaxReconnectionAttemps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a28dc0ed11f2d0d590e814564149ccbc7.html">Function eCAL::Config::GetTcpPubsubReaderThreadpoolSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a2e3b5b06cd934db1bfac0d8ac6a42766.html">Function eCAL::Config::GetTcpPubsubWriterThreadpoolSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a17f9beaa8ba91d129ff79a54d000aac3.html">Function eCAL::Config::GetTerminalEmulatorCommand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a7875526efc52849923edea4bef3e8bd7.html">Function eCAL::Config::GetTimesyncModuleName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a34788e9a78694a85db014b235b24e22f.html">Function eCAL::Config::GetTimesyncModuleReplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1aded02ac11bd3e730dc73364201cd3763.html">Function eCAL::Config::GetUdpMulticastConfigVersion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1ad7c6f9ae2980c91c846a4b3de2de0497.html">Function eCAL::Config::GetUdpMulticastGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1aeba95f86d1e601f1cb58487a5318c616.html">Function eCAL::Config::GetUdpMulticastMask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a150fae520c5ad7d7ba814fde8527946f.html">Function eCAL::Config::GetUdpMulticastPort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1aefc58fe7084b3912745ab0e9d77a3f91.html">Function eCAL::Config::GetUdpMulticastRcvBufSizeBytes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1aa30495547ba254caba3e6ed57a164fde.html">Function eCAL::Config::GetUdpMulticastSndBufSizeBytes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1aed3e5a8a68ac9c231951b80aabdbedf7.html">Function eCAL::Config::GetUdpMulticastTtl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a082ee8766ff051566a4fc4eeb0ca4a70.html">Function eCAL::Config::IsNetworkEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1af4eb2b0687288b44e2e363ab8b15a80b.html">Function eCAL::Config::IsNpcapEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a22e6a81fbd3e1a5bb0c32e5f0bfa69aa.html">Function eCAL::Config::IsShmRecEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1abc29e28d23c50389f7eea6e111385197.html">Function eCAL::Config::IsShmRegistrationEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a5163d960ca5891f6cca4303709565265.html">Function eCAL::Config::IsTcpRecEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1abda92e1cc50e7f3c3b65acf8765e344d.html">Function eCAL::Config::IsUdpMulticastJoinAllIfEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_config_8h_1a159d41c9cf64a883becf2b2c5a8a099e.html">Function eCAL::Config::IsUdpMulticastRecEnabled</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a6342e514137136747e6339844b25e432.html">Function eCAL::Finalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a169429eab7f48217f42788539dcefc50.html">Function eCAL::GetConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a9d09c60252170dc4f76642b3614601a4.html">Function eCAL::GetPublisherConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a10ea0c3e7fa5782486a856c4dca4fac8.html">Function eCAL::GetSubscriberConfiguration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a023307ac7027db8288093a3fc11d15e9.html">Function eCAL::GetVersion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1ad027f42b3111e3da85cb106f32fc9002.html">Function eCAL::GetVersionDateString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1ad1aee2f354dcb72366f8cb6754c8b8ea.html">Function eCAL::GetVersionString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_init_8h_1ad66464b016b00e2a1f42854b02128185.html">Function eCAL::Init::Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39.html">Function eCAL::Initialize(const std::string&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a30834f2dd3dbab8e0734c79b2aaf9bb4.html">Function eCAL::Initialize(eCAL::Configuration&amp;, const std::string&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a439b87d67679bce153704bc95d4b30de.html">Function eCAL::IsInitialized()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a043fea4cd0b2793a63c1de5830bf382c.html">Function eCAL::IsInitialized(unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_log_8h_1a29c44b3b7bd43c2bf19db99d21e91887.html">Function eCAL::Logging::GetLogging(std::string&amp;)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_log_8h_1a4933524c4a46c77a8a3a6c19a005897b.html">Function eCAL::Logging::GetLogging(Logging::SLogging&amp;)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_log_8h_1ac41d3c193623d4ad374f71172adf8333.html">Function eCAL::Logging::Log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_monitoring_8h_1a8fc01a83c0f83d744ed293860ecf618c.html">Function eCAL::Monitoring::GetMonitoring(std::string&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_monitoring_8h_1ae47a3d85663687e7089d60c5b57e4816.html">Function eCAL::Monitoring::GetMonitoring(SMonitoring&amp;, unsigned int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1a600033b0736069b66b026b5bc39cab35.html">Function eCAL::Ok</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_namespaceeCAL_1ad71540560ae36e358ab43699cd7f4c31.html">Function eCAL::operator&lt;&lt;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a024a270c580d40fe8e59455226ddbf75.html">Function eCAL::Process::DumpConfig()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a6ea34958542106657a76e88ce57f02a3.html">Function eCAL::Process::DumpConfig(std::string&amp;)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a95b9db2927425fbebf3806848aa5569d.html">Function eCAL::Process::GetHostName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1adf71bf1cf68bc4e60e99c8239b84a3b4.html">Function eCAL::Process::GetProcessID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ad68fe00ed0f44db2eabfbc66d83ac8c0.html">Function eCAL::Process::GetProcessIDAsString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a1bd6f1de7741b587e38a0b0901515c66.html">Function eCAL::Process::GetProcessName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1af6171b04474f055c5107345b49486d0d.html">Function eCAL::Process::GetProcessParameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ad2ed2f1d43d5affe5e1c90a416076885.html">Function eCAL::Process::GetShmTransportDomain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1afc61c90f8cbc35b0ffc7d77590d945c3.html">Function eCAL::Process::GetUnitName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ab71cb241a071ecd87bb2a3c56fa98972.html">Function eCAL::Process::SetState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ab768762f3d5bc844ce0b025ad19c4c4a.html">Template Function eCAL::Process::SleepFor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1aaca4e4230ea147783192e7f2aa9dddfd.html">Function eCAL::Process::SleepMS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a9db72d7191ea478d8b0e87e3169af959.html">Function eCAL::Process::SleepNS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ab7cede90a9849704a5eeb78a55996409.html">Function eCAL::Process::StartProcess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1ae10fb357ad61ec8a60e43ff60d62f385.html">Function eCAL::Process::StopProcess(const char *)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_process_8h_1a4a018d810e332159ef33990e9203fc6b.html">Function eCAL::Process::StopProcess(int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a52830559ad50e4300339e50e837e9111.html">Function eCAL::Registration::AddPublisherEventCallback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a4deeeb38b0b23b0180fda68eb7c631ee.html">Function eCAL::Registration::AddSubscriberEventCallback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1af3ad589704c0e97b0739c30cf29eb86b.html">Function eCAL::Registration::GetClientIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a92cc9006d02ed7c62a83e9be25c215a9.html">Function eCAL::Registration::GetClientInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a6997c1fa88c40f4774eeb3574654be41.html">Function eCAL::Registration::GetClientMethodNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a0781dfa082b2096e8ff5f681ace31f80.html">Function eCAL::Registration::GetPublishedTopicNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a8161755d913fa1ae385e1c6787f032b0.html">Function eCAL::Registration::GetPublisherIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a17035589529f59e0d6fdc17186b6fc26.html">Function eCAL::Registration::GetPublisherInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1aa9efa915f51aa256cdaac21a977e2338.html">Function eCAL::Registration::GetServerIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc.html">Function eCAL::Registration::GetServerInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc.html">Function eCAL::Registration::GetServerMethodNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1add69a1577f5702987d9843ffe794d370.html">Function eCAL::Registration::GetSubscribedTopicNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1ade1ad2a10de5483ff0893e34006f1303.html">Function eCAL::Registration::GetSubscriberIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1ad63e05588b1f6436b92cbb34d817ecbf.html">Function eCAL::Registration::GetSubscriberInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1a32d0524e5d48924312037910dcf646c9.html">Function eCAL::Registration::RemPublisherEventCallback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_registration_8h_1ae1ae721b779dbc76a0a6f3ce7e3a9f80.html">Function eCAL::Registration::RemSubscriberEventCallback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1ab6d9d1b4bef72c120b3dc9935047ffda.html">Function eCAL::Time::GetMicroSeconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1a4b28a0713a0d421c95328a1bc0d56498.html">Function eCAL::Time::GetName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1a58d1b5790d3a79c5cc664449af9569c8.html">Function eCAL::Time::GetNanoSeconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1ab49ab0c0adb1c27325e3cd9c07f06c3d.html">Function eCAL::Time::GetStatus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1ac8f3ede210605457aa8239cb578a1157.html">Function eCAL::Time::IsMaster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1a5d8e04b1b940df2739fbf78d34306fd4.html">Function eCAL::Time::IsSynchronized</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1a9757b9a8a143a99d9e23fb1a9728ab84.html">Function eCAL::Time::SetNanoSeconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1a189586f0e0772f9562da20e7e449a898.html">Template Function eCAL::Time::sleep_for</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_time_8h_1ada92c9fde160e167be93706d38dc39ef.html">Function eCAL::Time::SleepForNanoseconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1ac9378c61f24c4ecc9b9b6bb9407bcc73.html">Function eCAL::Util::CombinedTopicEncodingAndType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1aabef4cb2047f923399ec627c608b67d9.html">Function eCAL::Util::GeteCALDataDir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1a9b7923317d18713517480ecda7955a04.html">Function eCAL::Util::GeteCALLogDir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1a26640bb79b62d9caf0c99352aa7105e0.html">Function eCAL::Util::ShutdownProcess(const std::string&amp;)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1ad1b49f4aa10627b97ef9ab8db2e3c5e9.html">Function eCAL::Util::ShutdownProcess(int)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1a2c04e3730ba3cf15dcd0da57e785aa1d.html">Function eCAL::Util::ShutdownProcesses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_util_8h_1a3e46bbf1cd07e6a70d315488f71ddb11.html">Function eCAL::Util::SplitCombinedTopicType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1a0f8a78bd198d73f1151f062be5c49ac2.html">Function etime_finalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1a87b9ce1ab9a3b2efedfee904d0724411.html">Function etime_get_nanoseconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1a306e7ee7378f7047c680293c8c0b8052.html">Function etime_get_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1a38cbc3be2b54d74505358388e1098863.html">Function etime_initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1a02bcea8ff347dd681136e83de3fcd3f7.html">Function etime_is_master</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1ac72f625e34980b0c4181390cbcb6fb29.html">Function etime_is_synchronized</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1ac833665286a425fe84565538fcdf2e68.html">Function etime_set_nanoseconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/function_ecaltime_8h_1aa5a87891aab403cda09159c98dc8d967.html">Function etime_sleep_for_nanoseconds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a5dfdf37b132f8995de0992d5c30c2e39.html">Variable eCAL::Init::All</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1ab82498a1e66de8562868e50a2cad2f3d.html">Variable eCAL::Init::Default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a22080445d470b45111073af0b9462e65.html">Variable eCAL::Init::Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1aa32d3dce6b6237764db6f9547331f2f2.html">Variable eCAL::Init::Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a1c65619950fd101e27ae92d79221968a.html">Variable eCAL::Init::None</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a96226489a8c78215b97cac83986e8c51.html">Variable eCAL::Init::Publisher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a9b44961cef266f679dee2331899a6f83.html">Variable eCAL::Init::Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1ad5f6f7138a1c19b5c5176fe6e77ddd73.html">Variable eCAL::Init::Subscriber</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/variable_init_8h_1a6ff1105112b06ca8e533846703cb51fe.html">Variable eCAL::Init::TimeSync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_os_8h_1af6e423394b69677025cd7997c3566d77.html">Define ECAL_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7.html">Define ECAL_API_CLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7.html">Define ECAL_API_CLASS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_os_8h_1a546b32f89f9cf15da312d39f6252f29e.html">Define ECAL_API_EXPORTED_MEMBER</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_namespace_8h_1a3bf2369bd0acf345358aace636fce2c3.html">Define ECAL_CORE_NAMESPACE_V5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_namespace_8h_1a242e58e407887ec1a8e2aaeaf57a9a16.html">Define ECAL_CORE_NAMESPACE_V6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_deprecate_8h_1ad0fce642e420a9f9d32b34cb1814ea2a.html">Define ECAL_DEPRECATE_SINCE_6_0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__meas_8h_1ae803c5567ff361b9f9ac4c52ddb59869.html">Define ECAL_EH5_DEPRECATE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">Define ECAL_HDF5_DATE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1a5fe10ba3f1fa8832219784c6edc73f0d.html">Define ECAL_HDF5_NAME</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1a86e5a64f658d9f84dcd42b5a30ed8bfd.html">Define ECAL_HDF5_VERSION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1a1e3b049958f67461359ecf9d9876e461.html">Define ECAL_HDF5_VERSION_MAJOR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1a578e5b65d53b5a537f7d90b9d64c0106.html">Define ECAL_HDF5_VERSION_MINOR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_eh5__defs_8h_1a2b1361eb83e2597c992f296441ac20e2.html">Define ECAL_HDF5_VERSION_PATCH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/define_ecaltime_8h_1a7fbc67f7baf03488d730190a9b7df7e5.html">Define ECALTIME_API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583.html">Typedef eCAL::EntityIdT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/typedef_log__level_8h_1a6c687d0056bbcffcc8adc3ca3ad803da.html">Typedef eCAL::Logging::Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/typedef_registration_8h_1a31559467ff34c4fda47503952f0bf8c6.html">Typedef eCAL::Registration::CallbackToken</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/typedef_registration_8h_1a409078e35c152905f1e2300b8a0e6b20.html">Typedef eCAL::Registration::TopicEventCallbackT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/typedef_namespaceeCAL_1a4807caba9c43983d8989737912a00bd7.html">Typedef eCAL::TimerCallbackT</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Using eCAL</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../configuration.html">Configuration</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/network.html">Network Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/local.html">Local configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/npcap.html"><i class="fab fa-windows"></i> Npcap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/player.html"><i class="fab fa-ubuntu"></i> Player - Max open files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration/options.html">ecal.yaml</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../applications.html">Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../applications/rec/recorder.html"> eCAL Rec</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/rec/recorder_architecture.html"> eCAL Rec Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/rec/recorder_gui.html"> eCAL Rec GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/rec/recorder_cli.html"> eCAL Rec CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/rec/recorder_client.html"> eCAL Rec Client</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../applications/sys/sys.html"> eCAL Sys</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/sys/sys_architecture.html"> eCAL Sys Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/sys/sys_gui.html"> eCAL Sys GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/sys/sys_cli.html"> eCAL Sys CLI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../applications/sys/sys_client.html"> eCAL Sys Client</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../applications/meas_cutter/meas_cutter.html">eCAL Measurement Cutter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../versions/ecal_versions.html">eCAL Versions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/compatibility.html">eCAL Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/6.0/whats_new.html">eCAL 6.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.13/whats_new.html">eCAL 5.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.12/whats_new.html">eCAL 5.12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.11/whats_new.html">eCAL 5.11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.10/whats_new.html">eCAL 5.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.9/whats_new.html">eCAL 5.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../versions/5.8/whats_new.html">eCAL 5.8</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions/6.0/migration_guide.html">eCAL 6 Migration Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../advanced/tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/documentation.html">Edit the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/ecal_in_docker.html">eCAL in Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../development/building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/rec_distributed_recordings.html">Distributed Recordings with eCAL Rec</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../advanced/ecal_internals.html">eCAL internals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/performance.html">Performance measurements</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../advanced/transport_layers.html">Transport Layers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../advanced/layers/shm.html">eCAL SHM Layer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../advanced/layers/shm_zerocopy.html">eCAL Zero Copy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../advanced/layers/udp_mc.html">eCAL UDP Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../advanced/layers/tcp.html">eCAL TCP Layer</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/message_drops.html">Message Drops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/threading_model.html">Threading model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced/measurement_format.html">eCAL Measurement Format</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced/ros_comparison.html">How eCAL relates to ROS</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../license.html">License</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../license/ecal_license.html">eCAL License</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../license/thirdparty_licenses.html">External components</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/apache-2.0.html">Apache 2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/boost-1.0.html">Boost Software License 1.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/bsd-3.html">BSD 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/convert-utf.html">Convert UTF License</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/creative-commons-3.0.html">Creative Commons 3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/findqwt-bsd-2.html">Findqwt-style BSD2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/fontawesome-free.html">Fontawesome Free License</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/gpl-2.0.html">GPL 2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/gpl-3.0.html">GPL 3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/hdf5-bsd-3.html">HDF5 BSD-3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/lgpl-2.1.html">LGPL 2.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/lgpl-3.0.html">LGPL 3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/mit.html">MIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/npcap.html">Npcap license</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/qwt.html">qwt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/unlicense.html">Unlicense</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../license/thirdparty_licenses/zlib.html">zlib</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../license/icon_license.html">Icon License</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/eclipse-ecal/ecal" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/getting_started/howto/pubsub/capnproto_addressbook.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fgetting_started/howto/pubsub/capnproto_addressbook.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/getting_started/howto/pubsub/capnproto_addressbook.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Cap’n Proto: AddressBook</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-cap-n-proto">7.2.4.1. AddressBook Cap’n Proto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-publisher">7.2.4.2. AddressBook Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-subscriber">7.2.4.3. AddressBook Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-dynamic-subscriber">7.2.4.4. AddressBook Dynamic Subscriber</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cap-n-proto-addressbook">
+<span id="getting-started-howto-pubsub-capnproto-addressbook"></span><h1><span class="section-number">7.2.4. </span>Cap’n Proto: AddressBook<a class="headerlink" href="#cap-n-proto-addressbook" title="Link to this heading">#</a></h1>
+<p>“<a class="reference external" href="https://capnproto.org/">Cap’n Proto</a> is an insanely fast data interchange format and capability-based RPC system.”
+eCAL has implemented Cap’n Proto serialization on top of the binary publisher and subscriber API, such that users can conveniently send Cap’n Proto objects.
+Currently, the eCAL Capnproto Message API is only available for C++.</p>
+<p>In the Cap’n Proto example, we will use their default serialization example and send an address book with multiple entries.</p>
+<section id="addressbook-cap-n-proto">
+<h2><span class="section-number">7.2.4.1. </span>AddressBook Cap’n Proto<a class="headerlink" href="#addressbook-cap-n-proto" title="Link to this heading">#</a></h2>
+<p>Cap’n Proto uses its own schema definition language to define the data structures, which is not unlike the Protobuf schema definition language.</p>
+<p>As the sender and receiver need the same .capnp files, we place them in a separate directory next to the source directories for the sender and the receiver.</p>
+<p>Let’s start with the <code class="file docutils literal notranslate"><span class="pre">capnp/addressbook.capnp</span></code> file!</p>
+<div class="highlight-capnp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nd">@0x9eb32e19f86ee174</span>;
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1"># using Cxx = import &quot;/capnp/c++.capnp&quot;;</span>
+<span class="linenos"> 4</span><span class="c1"># $Cxx.namespace(&quot;addressbook&quot;);</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">struct</span><span class="w"> </span><span class="n">Person</span><span class="w"> </span>{
+<span class="linenos"> 7</span><span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nd">@0</span><span class="w"> </span><span class="nc">:UInt32</span>;
+<span class="linenos"> 8</span><span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nd">@1</span><span class="w"> </span><span class="nc">:Text</span>;
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">email</span><span class="w"> </span><span class="nd">@2</span><span class="w"> </span><span class="nc">:Text</span>;
+<span class="linenos">10</span><span class="w">  </span><span class="n">phones</span><span class="w"> </span><span class="nd">@3</span><span class="w"> </span><span class="nc">:List(PhoneNumber)</span>;
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="n">PhoneNumber</span><span class="w"> </span>{
+<span class="linenos">13</span><span class="w">    </span><span class="n">number</span><span class="w"> </span><span class="nd">@0</span><span class="w"> </span><span class="nc">:Text</span>;
+<span class="linenos">14</span><span class="w">    </span><span class="n">type</span><span class="w"> </span><span class="nd">@1</span><span class="w"> </span><span class="nc">:Type</span>;
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span>{
+<span class="linenos">17</span><span class="w">      </span><span class="n">mobile</span><span class="w"> </span><span class="nd">@0</span>;
+<span class="linenos">18</span><span class="w">      </span><span class="n">home</span><span class="w"> </span><span class="nd">@1</span>;
+<span class="linenos">19</span><span class="w">      </span><span class="n">work</span><span class="w"> </span><span class="nd">@2</span>;
+<span class="linenos">20</span><span class="w">    </span>}
+<span class="linenos">21</span><span class="w">  </span>}
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="w">  </span><span class="n">employment</span><span class="w"> </span><span class="nc">:union </span>{
+<span class="linenos">24</span><span class="w">    </span><span class="n">unemployed</span><span class="w"> </span><span class="nd">@4</span><span class="w"> </span><span class="nc">:Void</span>;
+<span class="linenos">25</span><span class="w">    </span><span class="n">employer</span><span class="w"> </span><span class="nd">@5</span><span class="w"> </span><span class="nc">:Text</span>;
+<span class="linenos">26</span><span class="w">    </span><span class="n">school</span><span class="w"> </span><span class="nd">@6</span><span class="w"> </span><span class="nc">:Text</span>;
+<span class="linenos">27</span><span class="w">    </span><span class="n">selfEmployed</span><span class="w"> </span><span class="nd">@7</span><span class="w"> </span><span class="nc">:Void</span>;
+<span class="linenos">28</span><span class="w">    </span><span class="c1"># We assume that a person is only one of these.</span>
+<span class="linenos">29</span><span class="w">  </span>}
+<span class="linenos">30</span><span class="w">  </span>
+<span class="linenos">31</span><span class="w">  </span><span class="n">weight</span><span class="w"> </span><span class="nd">@8</span><span class="w"> </span><span class="nc">:Float32</span>;
+<span class="linenos">32</span><span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="nd">@9</span><span class="w"> </span><span class="nc">:Data</span>;<span class="w">  </span>
+<span class="linenos">33</span>}
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="k">struct</span><span class="w"> </span><span class="n">AddressBook</span><span class="w"> </span>{
+<span class="linenos">36</span><span class="w">  </span><span class="n">people</span><span class="w"> </span><span class="nd">@0</span><span class="w"> </span><span class="nc">:List(Person)</span>;
+<span class="linenos">37</span>}
+</pre></div>
+</div>
+<pre class="literal-block"><i class="far fa-folder-open"></i> AddressBook Cap'n Proto File
+└─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/a8c3574037d4d33b9f4f2da8eaea2990/addressbook.capnp"><code class="xref download docutils literal notranslate"><span class="pre">addressbook.capnp</span></code></a></pre>
+</section>
+<section id="addressbook-publisher">
+<h2><span class="section-number">7.2.4.2. </span>AddressBook Publisher<a class="headerlink" href="#addressbook-publisher" title="Link to this heading">#</a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-Qysr" name="Qysr" role="tab" tabindex="0">C++</button></div><div aria-labelledby="tab-0-Qysr" class="sphinx-tabs-panel group-tab" id="panel-0-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
+<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/capnproto/publisher.h&gt;</span>
+<span class="linenos"> 3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/capnproto/helper.h&gt;</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos"> 6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iterator&gt;</span>
+<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
+<span class="linenos"> 8</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1">// capnp includes</span>
+<span class="linenos">11</span><span class="cp">#ifdef _MSC_VER</span>
+<span class="linenos">12</span><span class="cp">#pragma warning(push, 0)</span>
+<span class="linenos">13</span><span class="cp">#endif </span><span class="cm">/*_MSC_VER*/</span>
+<span class="linenos">14</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;addressbook.capnp.h&quot;</span><span class="c1"> </span>
+<span class="linenos">15</span><span class="cp">#ifdef _MSC_VER</span>
+<span class="linenos">16</span><span class="cp">#pragma warning(pop)</span>
+<span class="linenos">17</span><span class="cp">#endif</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="kt">void</span><span class="w"> </span><span class="nf">printAddressBook</span><span class="p">(</span><span class="n">AddressBook</span><span class="o">::</span><span class="n">Builder</span><span class="w"> </span><span class="n">addressBook</span><span class="p">)</span>
+<span class="linenos">20</span><span class="p">{</span>
+<span class="linenos">21</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">m_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addressBook</span><span class="p">.</span><span class="n">toString</span><span class="p">().</span><span class="n">flatten</span><span class="p">();</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;our string: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">m_string</span><span class="p">.</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">23</span><span class="p">}</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos">26</span><span class="p">{</span>
+<span class="linenos">27</span><span class="w">  </span><span class="c1">// initialize eCAL API</span>
+<span class="linenos">28</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;addressbook_send&quot;</span><span class="p">);</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="w">  </span><span class="c1">// set process state</span>
+<span class="linenos">31</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="o">::</span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="o">::</span><span class="n">level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good !&quot;</span><span class="p">);</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="w">  </span><span class="c1">// create a publisher (topic name &quot;addressbook&quot;)</span>
+<span class="linenos">34</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">capnproto</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">AddressBook</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pub</span><span class="p">(</span><span class="s">&quot;addressbook&quot;</span><span class="p">);</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="w">  </span><span class="n">capnp</span><span class="o">::</span><span class="n">MallocMessageBuilder</span><span class="w"> </span><span class="n">message</span><span class="p">;</span>
+<span class="linenos">37</span><span class="w">  </span><span class="n">AddressBook</span><span class="o">::</span><span class="n">Builder</span><span class="w"> </span><span class="n">addressBook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">message</span><span class="p">.</span><span class="n">initRoot</span><span class="o">&lt;</span><span class="n">AddressBook</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos">38</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">people</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addressBook</span><span class="p">.</span><span class="n">initPeople</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">alice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">people</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">41</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="mi">123</span><span class="p">);</span>
+<span class="linenos">42</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="linenos">43</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">setEmail</span><span class="p">(</span><span class="s">&quot;alice@example.com&quot;</span><span class="p">);</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">alicePhones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alice</span><span class="p">.</span><span class="n">initPhones</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">46</span><span class="w">  </span><span class="n">alicePhones</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">setNumber</span><span class="p">(</span><span class="s">&quot;555-1212&quot;</span><span class="p">);</span>
+<span class="linenos">47</span><span class="w">  </span><span class="n">alicePhones</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">setType</span><span class="p">(</span><span class="n">Person</span><span class="o">::</span><span class="n">PhoneNumber</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">MOBILE</span><span class="p">);</span>
+<span class="linenos">48</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">getEmployment</span><span class="p">().</span><span class="n">setSchool</span><span class="p">(</span><span class="s">&quot;MIT&quot;</span><span class="p">);</span>
+<span class="linenos">49</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">setWeight</span><span class="p">(</span><span class="mf">60.4f</span><span class="p">);</span>
+<span class="linenos">50</span><span class="w">  </span>
+<span class="linenos">51</span><span class="w">  </span><span class="n">kj</span><span class="o">::</span><span class="n">byte</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kj</span><span class="o">::</span><span class="n">byte</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+<span class="linenos">52</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1F</span><span class="p">;</span>
+<span class="linenos">53</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00</span><span class="p">;</span>
+<span class="linenos">54</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xA1</span><span class="p">;</span>
+<span class="linenos">55</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xB4</span><span class="p">;</span>
+<span class="linenos">56</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x14</span><span class="p">;</span>
+<span class="linenos">57</span><span class="w">  </span><span class="n">data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x54</span><span class="p">;</span>
+<span class="linenos">58</span><span class="w">  </span><span class="n">capnp</span><span class="o">::</span><span class="n">Data</span><span class="o">::</span><span class="n">Builder</span><span class="w"> </span><span class="n">aliceData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">);</span>
+<span class="linenos">59</span><span class="w">  </span><span class="n">alice</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="n">aliceData</span><span class="p">);</span>
+<span class="linenos">60</span>
+<span class="linenos">61</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">bob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">people</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="linenos">62</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">bobid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">456</span><span class="p">;</span>
+<span class="linenos">63</span><span class="w">  </span><span class="n">bob</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">);</span>
+<span class="linenos">64</span><span class="w">  </span><span class="n">bob</span><span class="p">.</span><span class="n">setEmail</span><span class="p">(</span><span class="s">&quot;bob@example.com&quot;</span><span class="p">);</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">bobPhones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bob</span><span class="p">.</span><span class="n">initPhones</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">67</span><span class="w">  </span><span class="n">bobPhones</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">setNumber</span><span class="p">(</span><span class="s">&quot;555-4567&quot;</span><span class="p">);</span>
+<span class="linenos">68</span><span class="w">  </span><span class="n">bobPhones</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">setType</span><span class="p">(</span><span class="n">Person</span><span class="o">::</span><span class="n">PhoneNumber</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">HOME</span><span class="p">);</span>
+<span class="linenos">69</span><span class="w">  </span><span class="n">bobPhones</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">setNumber</span><span class="p">(</span><span class="s">&quot;555-7654&quot;</span><span class="p">);</span>
+<span class="linenos">70</span><span class="w">  </span><span class="n">bobPhones</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">setType</span><span class="p">(</span><span class="n">Person</span><span class="o">::</span><span class="n">PhoneNumber</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">WORK</span><span class="p">);</span>
+<span class="linenos">71</span><span class="w">  </span><span class="n">bob</span><span class="p">.</span><span class="n">getEmployment</span><span class="p">().</span><span class="n">setUnemployed</span><span class="p">();</span>
+<span class="linenos">72</span><span class="w">  </span><span class="n">bob</span><span class="p">.</span><span class="n">setWeight</span><span class="p">(</span><span class="mf">80.8f</span><span class="p">);</span>
+<span class="linenos">73</span>
+<span class="linenos">74</span><span class="w">  </span><span class="c1">// enter main loop</span>
+<span class="linenos">75</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+<span class="linenos">76</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">77</span><span class="w">    </span><span class="n">bob</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="o">++</span><span class="n">bobid</span><span class="p">);</span>
+<span class="linenos">78</span><span class="w">    </span><span class="c1">// send content</span>
+<span class="linenos">79</span><span class="w">    </span><span class="n">pub</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+<span class="linenos">80</span>
+<span class="linenos">81</span><span class="w">    </span><span class="c1">// print content</span>
+<span class="linenos">82</span><span class="w">    </span><span class="n">printAddressBook</span><span class="p">(</span><span class="n">addressBook</span><span class="p">);</span>
+<span class="linenos">83</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">84</span>
+<span class="linenos">85</span><span class="w">    </span><span class="c1">// sleep 500 ms</span>
+<span class="linenos">86</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="linenos">87</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">88</span>
+<span class="linenos">89</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
+<span class="linenos">90</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">91</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></div>
+<pre class="literal-block"><i class="far fa-folder-open"></i>
+└─ <i class="far fa-folder-open"></i> C++
+  └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/286b32624238fd02e12733bd5286a6d2/addressbook_send.cpp"><code class="xref download docutils literal notranslate"><span class="pre">addressbook_send.cpp</span></code></a></pre>
+</section>
+<section id="addressbook-subscriber">
+<h2><span class="section-number">7.2.4.3. </span>AddressBook Subscriber<a class="headerlink" href="#addressbook-subscriber" title="Link to this heading">#</a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-Qysr" name="Qysr" role="tab" tabindex="0">C++</button></div><div aria-labelledby="tab-1-Qysr" class="sphinx-tabs-panel group-tab" id="panel-1-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
+<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/capnproto/subscriber.h&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos"> 5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
+<span class="linenos"> 6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="kt">void</span><span class="w"> </span><span class="nf">printAddressBook</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">AddressBook</span><span class="o">::</span><span class="n">Reader</span><span class="o">&amp;</span><span class="w"> </span><span class="n">addressBook</span><span class="p">)</span>
+<span class="linenos">11</span><span class="p">{</span>
+<span class="linenos">12</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Person</span><span class="o">::</span><span class="n">Reader</span><span class="w"> </span><span class="n">person</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">addressBook</span><span class="p">.</span><span class="n">getPeople</span><span class="p">())</span>
+<span class="linenos">13</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">14</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">person</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">person</span><span class="p">.</span><span class="n">getEmail</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Person</span><span class="o">::</span><span class="n">PhoneNumber</span><span class="o">::</span><span class="n">Reader</span><span class="w"> </span><span class="n">phone</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">person</span><span class="p">.</span><span class="n">getPhones</span><span class="p">())</span>
+<span class="linenos">16</span><span class="w">    </span><span class="p">{</span>
+<span class="linenos">17</span><span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;UNKNOWN&quot;</span><span class="p">;</span>
+<span class="linenos">18</span><span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">phone</span><span class="p">.</span><span class="n">getType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">19</span><span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">PhoneNumber</span><span class="o">::</span><span class="no">Type</span><span class="o">::</span><span class="no">MOBILE</span><span class="p">:</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mobile&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">20</span><span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">PhoneNumber</span><span class="o">::</span><span class="no">Type</span><span class="o">::</span><span class="no">HOME</span><span class="p">:</span><span class="w">   </span><span class="n">typeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;home&quot;</span><span class="p">;</span><span class="w">   </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">PhoneNumber</span><span class="o">::</span><span class="no">Type</span><span class="o">::</span><span class="no">WORK</span><span class="p">:</span><span class="w">   </span><span class="n">typeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;work&quot;</span><span class="p">;</span><span class="w">   </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">22</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">23</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; phone: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">phone</span><span class="p">.</span><span class="n">getNumber</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">24</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">25</span><span class="w">    </span><span class="n">Person</span><span class="o">::</span><span class="n">Employment</span><span class="o">::</span><span class="n">Reader</span><span class="w"> </span><span class="n">employment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">person</span><span class="p">.</span><span class="n">getEmployment</span><span class="p">();</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">employment</span><span class="p">.</span><span class="n">which</span><span class="p">())</span>
+<span class="linenos">28</span><span class="w">    </span><span class="p">{</span>
+<span class="linenos">29</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">Employment</span><span class="o">::</span><span class="no">UNEMPLOYED</span><span class="p">:</span>
+<span class="linenos">30</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  unemployed&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">32</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">Employment</span><span class="o">::</span><span class="no">EMPLOYER</span><span class="p">:</span>
+<span class="linenos">33</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  employer: &quot;</span>
+<span class="linenos">34</span><span class="w">        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">employment</span><span class="p">.</span><span class="n">getEmployer</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">35</span><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">36</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">Employment</span><span class="o">::</span><span class="no">SCHOOL</span><span class="p">:</span>
+<span class="linenos">37</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  student at: &quot;</span>
+<span class="linenos">38</span><span class="w">        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">employment</span><span class="p">.</span><span class="n">getSchool</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">39</span><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">40</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">Person</span><span class="o">::</span><span class="no">Employment</span><span class="o">::</span><span class="no">SELF_EMPLOYED</span><span class="p">:</span>
+<span class="linenos">41</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  self-employed&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">42</span><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">43</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">44</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">45</span><span class="p">}</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span><span class="kt">void</span><span class="w"> </span><span class="nf">OnAddressbook</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">STopicId</span><span class="o">&amp;</span><span class="w"> </span><span class="n">topic_id_</span><span class="p">,</span><span class="w"> </span><span class="n">AddressBook</span><span class="o">::</span><span class="n">Reader</span><span class="w"> </span><span class="n">msg_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">time_</span><span class="p">)</span>
+<span class="linenos">48</span><span class="p">{</span>
+<span class="linenos">49</span><span class="w">  </span><span class="c1">// print content</span>
+<span class="linenos">50</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;topic name : &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">topic_id_</span><span class="p">.</span><span class="n">topic_name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">51</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;time       : &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">time_</span><span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">52</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">53</span><span class="w">  </span><span class="n">printAddressBook</span><span class="p">(</span><span class="n">msg_</span><span class="p">);</span>
+<span class="linenos">54</span><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">55</span><span class="p">}</span>
+<span class="linenos">56</span><span class="w">  </span>
+<span class="linenos">57</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos">58</span><span class="p">{</span>
+<span class="linenos">59</span><span class="w">  </span><span class="c1">// initialize eCAL API</span>
+<span class="linenos">60</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;addressbook_receive&quot;</span><span class="p">);</span>
+<span class="linenos">61</span>
+<span class="linenos">62</span><span class="w">  </span><span class="c1">// set process state</span>
+<span class="linenos">63</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="o">::</span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="o">::</span><span class="n">level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good !&quot;</span><span class="p">);</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span><span class="w">  </span><span class="c1">// create a subscriber (topic name &quot;addressbook&quot;)</span>
+<span class="linenos">66</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">capnproto</span><span class="o">::</span><span class="n">CSubscriber</span><span class="o">&lt;</span><span class="n">AddressBook</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="s">&quot;addressbook&quot;</span><span class="p">);</span>
+<span class="linenos">67</span>
+<span class="linenos">68</span><span class="w">  </span><span class="c1">// add receive callback function (_1 = topic_id, _2 = msg, _3 = time)</span>
+<span class="linenos">69</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">OnAddressbook</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_3</span><span class="p">);</span>
+<span class="linenos">70</span><span class="w">  </span><span class="n">sub</span><span class="p">.</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
+<span class="linenos">71</span>
+<span class="linenos">72</span><span class="w">  </span><span class="c1">// enter main loop</span>
+<span class="linenos">73</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+<span class="linenos">74</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">75</span><span class="w">    </span><span class="c1">// sleep 500 ms</span>
+<span class="linenos">76</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="linenos">77</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">78</span>
+<span class="linenos">79</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
+<span class="linenos">80</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">81</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></div>
+<pre class="literal-block"><i class="far fa-folder-open"></i>
+└─ <i class="far fa-folder-open"></i> C++
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/098ce90ff7588f0902d71a687c788baf/addressbook_receive.cpp"><code class="xref download docutils literal notranslate"><span class="pre">addressbook_receive.cpp</span></code></a></pre>
+</section>
+<section id="addressbook-dynamic-subscriber">
+<h2><span class="section-number">7.2.4.4. </span>AddressBook Dynamic Subscriber<a class="headerlink" href="#addressbook-dynamic-subscriber" title="Link to this heading">#</a></h2>
+<p>Using Capnproto, it is possible to receive data without knowing the structure of the data in advance.
+Hence you can use a dynamic subscriber to receive capnproto data, even if you do not have access to the corresponding <code class="file docutils literal notranslate"><span class="pre">.capnp</span></code> file.
+This is useful for generic applications, such as the eCAL Monitor, which can display all data types without knowing them in advance.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-Qysr" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-Qysr" name="Qysr" role="tab" tabindex="0">C++</button></div><div aria-labelledby="tab-2-Qysr" class="sphinx-tabs-panel group-tab" id="panel-2-Qysr" name="Qysr" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos">  2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;chrono&gt;</span>
+<span class="linenos">  3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;thread&gt;</span>
+<span class="linenos">  4</span>
+<span class="linenos">  5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/ecal.h&gt;</span>
+<span class="linenos">  6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/msg/capnproto/dynamic.h&gt;</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span><span class="kt">void</span><span class="w"> </span><span class="nf">dynamicPrintValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">capnp</span><span class="o">::</span><span class="n">DynamicValue</span><span class="o">::</span><span class="n">Reader</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="linenos"> 10</span><span class="p">{</span>
+<span class="linenos"> 11</span><span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">capnp</span><span class="p">;</span>
+<span class="linenos"> 12</span><span class="w">  </span><span class="c1">// Print an arbitrary message via the dynamic API by</span>
+<span class="linenos"> 13</span><span class="w">  </span><span class="c1">// iterating over the schema.  Look at the handling</span>
+<span class="linenos"> 14</span><span class="w">  </span><span class="c1">// of STRUCT in particular.</span>
+<span class="linenos"> 15</span>
+<span class="linenos"> 16</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">getType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 17</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">VOID</span><span class="p">:</span>
+<span class="linenos"> 18</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="linenos"> 19</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 20</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">BOOL</span><span class="p">:</span>
+<span class="linenos"> 21</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<span class="linenos"> 22</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 23</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">INT</span><span class="p">:</span>
+<span class="linenos"> 24</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos"> 25</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 26</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">UINT</span><span class="p">:</span>
+<span class="linenos"> 27</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos"> 28</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">FLOAT</span><span class="p">:</span>
+<span class="linenos"> 30</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos"> 31</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 32</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">TEXT</span><span class="p">:</span>
+<span class="linenos"> 33</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\&quot;&#39;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\&quot;&#39;</span><span class="p">;</span>
+<span class="linenos"> 34</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 35</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">LIST</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 36</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[&quot;</span><span class="p">;</span>
+<span class="linenos"> 37</span><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos"> 38</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="n">DynamicList</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 39</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 40</span><span class="w">        </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 41</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos"> 42</span><span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 43</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="p">;</span>
+<span class="linenos"> 44</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos"> 45</span><span class="w">      </span><span class="n">dynamicPrintValue</span><span class="p">(</span><span class="n">element</span><span class="p">);</span>
+<span class="linenos"> 46</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 47</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;]&quot;</span><span class="p">;</span>
+<span class="linenos"> 48</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 49</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 50</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">ENUM</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 51</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">enumValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="n">DynamicEnum</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos"> 52</span><span class="w">    </span><span class="n">KJ_IF_MAYBE</span><span class="p">(</span><span class="n">enumerant</span><span class="p">,</span><span class="w"> </span><span class="n">enumValue</span><span class="p">.</span><span class="n">getEnumerant</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 53</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span>
+<span class="linenos"> 54</span><span class="w">        </span><span class="n">enumerant</span><span class="o">-&gt;</span><span class="n">getProto</span><span class="p">().</span><span class="n">getName</span><span class="p">().</span><span class="n">cStr</span><span class="p">();</span>
+<span class="linenos"> 55</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 56</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 57</span><span class="w">   </span><span class="c1">// Unknown enum value; output raw number.</span>
+<span class="linenos"> 58</span><span class="w">   </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumValue</span><span class="p">.</span><span class="n">getRaw</span><span class="p">();</span>
+<span class="linenos"> 59</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos"> 60</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 61</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 62</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">DynamicValue</span><span class="o">::</span><span class="no">STRUCT</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 63</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="p">;</span>
+<span class="linenos"> 64</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">structValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="n">DynamicStruct</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos"> 65</span><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos"> 66</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">structValue</span><span class="p">.</span><span class="n">getSchema</span><span class="p">().</span><span class="n">getFields</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 67</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">structValue</span><span class="p">.</span><span class="n">has</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="linenos"> 68</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 69</span><span class="w">        </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 70</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos"> 71</span><span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 72</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="p">;</span>
+<span class="linenos"> 73</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos"> 74</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">field</span><span class="p">.</span><span class="n">getProto</span><span class="p">().</span><span class="n">getName</span><span class="p">().</span><span class="n">cStr</span><span class="p">()</span>
+<span class="linenos"> 75</span><span class="w">        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="p">;</span>
+<span class="linenos"> 76</span><span class="w">      </span><span class="n">dynamicPrintValue</span><span class="p">(</span><span class="n">structValue</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">));</span>
+<span class="linenos"> 77</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 78</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="p">;</span>
+<span class="linenos"> 79</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 80</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 81</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 82</span><span class="w">  </span><span class="k">default</span><span class="o">:</span>
+<span class="linenos"> 83</span><span class="w">    </span><span class="c1">// There are other types, we aren&#39;t handling them.</span>
+<span class="linenos"> 84</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;?&quot;</span><span class="p">;</span>
+<span class="linenos"> 85</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 86</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 87</span><span class="p">}</span>
+<span class="linenos"> 88</span>
+<span class="linenos"> 89</span><span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="linenos"> 90</span><span class="p">{</span>
+<span class="linenos"> 91</span><span class="w">  </span><span class="c1">// initialize eCAL API</span>
+<span class="linenos"> 92</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="s">&quot;addressbook_receive_dynamic&quot;</span><span class="p">);</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">SetState</span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverity</span><span class="o">::</span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Process</span><span class="o">::</span><span class="n">eSeverityLevel</span><span class="o">::</span><span class="n">level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good !&quot;</span><span class="p">);</span>
+<span class="linenos"> 95</span>
+<span class="linenos"> 96</span><span class="w">  </span><span class="c1">// create a subscriber (topic name &quot;addressbook&quot;)</span>
+<span class="linenos"> 97</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">capnproto</span><span class="o">::</span><span class="n">CDynamicSubscriber</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="s">&quot;addressbook&quot;</span><span class="p">);</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">lambda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">eCAL</span><span class="o">::</span><span class="n">STopicId</span><span class="o">&amp;</span><span class="w"> </span><span class="cm">/*topic_id_*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">capnp</span><span class="o">::</span><span class="n">DynamicValue</span><span class="o">::</span><span class="n">Reader</span><span class="o">&amp;</span><span class="w"> </span><span class="n">msg_</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="cm">/*time_*/</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="cm">/*clock_*/</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">100</span><span class="w">    </span><span class="n">dynamicPrintValue</span><span class="p">(</span><span class="n">msg_</span><span class="p">);</span>
+<span class="linenos">101</span><span class="w">  </span><span class="p">};</span>
+<span class="linenos">102</span><span class="w">  </span><span class="n">sub</span><span class="p">.</span><span class="n">SetReceiveCallback</span><span class="p">(</span><span class="n">lambda</span><span class="p">);</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="w">  </span><span class="c1">// enter main loop</span>
+<span class="linenos">105</span><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">eCAL</span><span class="o">::</span><span class="n">Ok</span><span class="p">())</span>
+<span class="linenos">106</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">107</span><span class="w">    </span><span class="c1">// sleep 500 ms</span>
+<span class="linenos">108</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="linenos">109</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">110</span>
+<span class="linenos">111</span><span class="w">  </span><span class="c1">// finalize eCAL API</span>
+<span class="linenos">112</span><span class="w">  </span><span class="n">eCAL</span><span class="o">::</span><span class="n">Finalize</span><span class="p">();</span>
+<span class="linenos">113</span><span class="w">  </span>
+<span class="linenos">114</span><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">115</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></div>
+<pre class="literal-block"><i class="far fa-folder-open"></i>
+└─ <i class="far fa-folder-open"></i> C++
+   └─ <i class="far fa-file-alt"></i> <a class="reference download internal" download="" href="../../../_downloads/339d629b1e837a22784ea211681c5244/addressbook_receive_dynamic.cpp"><code class="xref download docutils literal notranslate"><span class="pre">addressbook_receive_dynamic.cpp</span></code></a></pre>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="protobuf_person.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">7.2.3. </span>Protobuf: Person</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="flatbuffers_monster.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">7.2.5. </span>FlatBuffers: Monster</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-cap-n-proto">7.2.4.1. AddressBook Cap’n Proto</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-publisher">7.2.4.2. AddressBook Publisher</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-subscriber">7.2.4.3. AddressBook Subscriber</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#addressbook-dynamic-subscriber">7.2.4.4. AddressBook Dynamic Subscriber</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Author name not set
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Continental.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+<style>
+    .links-container ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .links-container ul li {
+        display: inline;
+        margin-right: 10px;
+    }
+
+    .links-container ul li:last-child {
+        margin-right: 0;
+    }
+</style>
+<div class="links-container">
+    <h5>Eclipse Foundation</h5>
+    <ul>
+        <li><a href="http://www.eclipse.org">Website</a></li>
+        <li><a href="http://www.eclipse.org/legal/privacy.php">Privacy policy</a></li>
+        <li><a href="http://www.eclipse.org/legal/termsofuse.php">Terms of Use</a></li>
+        <li><a href="http://www.eclipse.org/legal/copyright.php">Copyright agent</a></li>
+        <li><a href="http://www.eclipse.org/legal">Legal</a></li>
+    </ul>
+</div></div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+  </body>
+</html>
