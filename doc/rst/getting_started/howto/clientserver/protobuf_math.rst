@@ -18,16 +18,15 @@ We use the special protobuf service definitions in order to implement it in our 
 The "message" format is already known by you from the publisher/subscriber examples.
 The "service" format and the ``rpc xyz (type) returns (type)`` is now added. You will see, which effect this addition has on our example.
 
-.. parsed-literal::
-   
-   |fa-folder-open| Math Protobuf File
-   └─ |fa-file-alt| :download:`math.proto </source_code_samples/cpp/protobuf/math/math_client/src/protobuf/math.proto>`
-
-
 .. literalinclude:: /source_code_samples/cpp/protobuf/math/math_client/src/protobuf/math.proto
    :language: protobuf
    :linenos:
    :lines: 20-
+
+.. parsed-literal::
+   
+   |fa-folder-open| Math Protobuf File
+   └─ |fa-file-alt| :download:`math.proto </source_code_samples/cpp/protobuf/math/math_client/src/protobuf/math.proto>`
 
 
 Math Server
@@ -46,10 +45,6 @@ For the data exchange the server reads the input messages from the protobuf mess
             :language: cpp
             :linenos:
             :lines: 20-
-
-
-Math Server Files
-=================
 
 .. parsed-literal::
 
@@ -71,10 +66,6 @@ In the response we can read out the results and print them to the console.
             :language: cpp
             :linenos:
             :lines: 20-
-
-
-Math Client Files
-=================
 
 .. parsed-literal::
 
