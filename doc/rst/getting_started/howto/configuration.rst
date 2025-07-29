@@ -42,10 +42,6 @@ Cake Publisher
             :linenos:
             :lines: 20-
 
-
-Cake Publisher Files
-====================
-
 .. parsed-literal::
 
    |fa-folder-open|
@@ -74,10 +70,6 @@ Cake Receiver
             :language: c
             :linenos:
             :lines: 20-
-
-
-Cake Receiver Files
-===================
 
 .. parsed-literal::
 

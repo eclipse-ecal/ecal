@@ -29,14 +29,14 @@ def callback(topic_name, msg, time):
 
 
 def main():
-  print("-------------------------------")
-  print(" Python: HELLO WORLD RECEIVER")
-  print("-------------------------------")
+  print("---------------------------------------")
+  print(" Python (legacy): HELLO WORLD RECEIVER ")
+  print("---------------------------------------")
   
   # Initialize eCAL. You always have to initialize eCAL before using it.
-  # The name of our eCAL Process will be "hello receive python".
+  # The name of our eCAL Process will be "hello receive python (legacy)".
   # This name will be visible in the eCAL Monitor, once the process is running.
-  ecal_core.initialize("hello receive python")
+  ecal_core.initialize("hello receive python (legacy)")
   
   # Print used eCAL version and date
   print("eCAL {} ({})\n".format(ecal_core.getversion(), ecal_core.getdate()))

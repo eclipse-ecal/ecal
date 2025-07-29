@@ -48,14 +48,18 @@ The main process is:
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/binary/mirror/minimal_service_server.py
+        .. literalinclude:: /source_code_samples/python/binary/mirror/nb_binary_mirror_server.py
             :language: python
             :linenos:
             :lines: 19-
 
+    .. group-tab:: Python (legacy)
 
-Mirror Server Files
-===================
+        .. literalinclude:: /source_code_samples/python_legacy/binary/mirror/minimal_service_server.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
 
 .. parsed-literal::
 
@@ -64,13 +68,16 @@ Mirror Server Files
    │  └─ |fa-file-alt| :download:`mirror_server.cpp </source_code_samples/cpp/binary/mirror/mirror_server/src/mirror_server.cpp>`
    │
    ├─ |fa-folder-open| C
-   │  └─ |fa-file-alt| :download:`mirror_server_c.c </source_code_samples/c/binary/mirror/mirror_server_c/src/mirror_server_c.c>`
+   │  └─ |fa-file-alt| :download:`mirror_server.c </source_code_samples/c/binary/mirror/mirror_server_c/src/mirror_server_c.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`mirror_server_csharp.cs </source_code_samples/csharp/binary/mirror/mirror_server_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`mirror_server.cs </source_code_samples/csharp/binary/mirror/mirror_server_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`minimal_service_server.py </source_code_samples/python/binary/mirror/minimal_service_server.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`mirror_server.py </source_code_samples/python/binary/mirror/nb_binary_mirror_server.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`mirror_server.py </source_code_samples/python_legacy/binary/mirror/minimal_service_server.py>`
 
 Mirror Client
 =============
@@ -112,14 +119,18 @@ As a little extra we also added a little bit more eCAL state handling as in the 
 
     .. group-tab:: Python
 
-        .. literalinclude:: /source_code_samples/python/binary/mirror/minimal_service_client.py
+        .. literalinclude:: /source_code_samples/python/binary/mirror/nb_binary_mirror_client.py
             :language: python
             :linenos:
             :lines: 19-
 
+    .. group-tab:: Python (legacy)
 
-Mirror Client Files
-===================
+        .. literalinclude:: /source_code_samples/python_legacy/binary/mirror/minimal_service_client.py
+            :language: python
+            :linenos:
+            :lines: 19-
+
 
 .. parsed-literal::
 
@@ -131,7 +142,10 @@ Mirror Client Files
    │  └─ |fa-file-alt| :download:`mirror_client.c </source_code_samples/c/binary/mirror/mirror_client_c/src/mirror_client_c.c>`
    │
    ├─ |fa-folder-open| C#
-   │  └─ |fa-file-alt| :download:`mirror_client_csharp.cs </source_code_samples/csharp/binary/mirror/mirror_client_csharp.cs>`
+   │  └─ |fa-file-alt| :download:`mirror_client.cs </source_code_samples/csharp/binary/mirror/mirror_client_csharp.cs>`
    │
-   └─ |fa-folder-open| Python
-      └─ |fa-file-alt| :download:`minimal_service_client.py </source_code_samples/python/binary/mirror/minimal_service_client.py>`
+   ├─ |fa-folder-open| Python
+   │  └─ |fa-file-alt| :download:`mirror_client.py </source_code_samples/python/binary/mirror/nb_binary_mirror_client.py>`
+   │
+   └─ |fa-folder-open| Python (legacy)
+      └─ |fa-file-alt| :download:`mirror_client.py </source_code_samples/python_legacy/binary/mirror/minimal_service_client.py>`
