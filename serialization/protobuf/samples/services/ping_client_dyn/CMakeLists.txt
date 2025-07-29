@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(ping_client_dyn)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(ping_client_dyn_src
     src/ping_client_dyn.cpp

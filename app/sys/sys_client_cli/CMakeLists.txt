@@ -20,7 +20,7 @@ set(PROJECT_NAME sys_client)
 
 find_package(spdlog REQUIRED)
 find_package(tclap REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(source_files
   src/ecal_sys_client_cli.cpp

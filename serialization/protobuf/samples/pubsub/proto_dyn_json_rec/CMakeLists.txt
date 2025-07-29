@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(proto_dyn_json_rec)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(proto_dyn_json_rec_src
     src/proto_dyn_json_rec.cpp

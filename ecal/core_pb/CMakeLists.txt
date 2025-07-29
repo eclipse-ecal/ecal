@@ -18,7 +18,7 @@
 
 project(core_pb)
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(ProtoFiles
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ecal/core/pb/datatype.proto

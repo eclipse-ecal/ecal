@@ -25,7 +25,7 @@ The CMakeLists.txt looks as follows:
 Protobuf entity integration
 ===========================
 
-In addtition to the previous example, you will need to call ``find_package(Protobuf REQUIRED)``.
+In addtition to the previous example, you will need to call ``find_package(Protobuf CONFIG REQUIRED)``.
 Furthermore you want to handle the generation of the protobuf headers for your language.
 
 .. literalinclude:: files/CMakeLists/protobuf/CMakeLists.txt

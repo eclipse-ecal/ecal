@@ -17,7 +17,7 @@
 # ========================= eCAL LICENSE =================================
 
 find_package(Threads REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 find_package(spdlog REQUIRED)
 
 set(PROJECT_NAME sys_client_core)

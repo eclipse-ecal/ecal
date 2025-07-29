@@ -20,7 +20,7 @@
 # Protobuf base functionality
 ##########################
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 ecal_add_library(protobuf_base)
 add_library(eCAL::protobuf_base ALIAS protobuf_base)
 

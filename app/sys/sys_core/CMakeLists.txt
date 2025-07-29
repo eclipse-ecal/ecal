@@ -19,7 +19,7 @@
 project(sys_core)
 
 find_package(Threads REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(tinyxml2 REQUIRED)
 

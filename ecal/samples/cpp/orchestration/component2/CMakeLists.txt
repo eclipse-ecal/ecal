@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(component2)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(component2_src
     src/component2.cpp

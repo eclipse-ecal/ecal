@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(person_events_rec)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(person_events_rec_src
     src/person_events_rec.cpp

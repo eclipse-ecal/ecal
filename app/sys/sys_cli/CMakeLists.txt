@@ -19,7 +19,7 @@
 project(sys)
 
 find_package(tclap REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 find_package(termcolor REQUIRED)
 
 set(source_files

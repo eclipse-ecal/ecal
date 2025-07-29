@@ -30,7 +30,7 @@ project(mon_gui)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 if(ECAL_USE_NPCAP)
   find_package(udpcap REQUIRED)

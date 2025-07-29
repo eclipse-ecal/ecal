@@ -20,7 +20,7 @@ project(test_ecal_proto)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 create_targets_protobuf()
 

@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(person_loopback)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(person_loopback_src
     src/person_loopback.cpp

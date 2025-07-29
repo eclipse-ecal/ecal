@@ -43,7 +43,7 @@ if (WIN32 AND (${QT_VERSION_MAJOR} EQUAL 5))
 endif()
 
 find_package(tclap REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC OFF) # Reason for being turned off: AutoUIC will prevent VS from detecting changes in .ui files

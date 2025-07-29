@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(math_server)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(math_server_src
     src/math_server.cpp

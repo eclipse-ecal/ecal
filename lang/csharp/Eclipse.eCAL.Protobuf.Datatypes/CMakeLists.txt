@@ -21,7 +21,7 @@ include(CSharpUtilities)
 # We need this for protoc. It's a bit stupid, because we don't really need a C++ package here
 # let's check if we can do something with nuget instead maybe
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 include(protobuf_csharp_helper.cmake)
 
 project(Eclipse.eCAL.Protobuf.Datatypes LANGUAGES CSharp)

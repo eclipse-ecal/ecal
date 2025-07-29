@@ -32,7 +32,7 @@ include(GNUInstallDirs)
 # We should do this differently, but then we need to install protoc via nuget or similar...
 # Because the Prototbuf Version used for C# bindings is independent from the one we get from the submodules / conan
 macro(get_csharp_protobuf_version)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 if (${Protobuf_VERSION} VERSION_GREATER_EQUAL 4)
   if(NOT DEFINED Protobuf_VERSION_MINOR OR NOT DEFINED Protobuf_VERSION_PATCH)
     string(REPLACE "." ";" _ecal_protobuf_version "${Protobuf_VERSION}")

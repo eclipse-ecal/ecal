@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 3.15)
 project(person_receive)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(person_receive_src
     src/person_receive.cpp

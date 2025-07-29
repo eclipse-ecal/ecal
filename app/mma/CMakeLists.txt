@@ -19,7 +19,7 @@
 project(mma)
 
 find_package(Threads REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 set(mma_src
   include/interruptable_timer.h

@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Tell CMake to find the eCAL installation and the protobuf library.
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
 
 # Set a list all source files for the project.
 # In our case it is only one file, but can be simply extended to multiple files.
