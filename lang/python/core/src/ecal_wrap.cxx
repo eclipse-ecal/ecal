@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +105,7 @@ PyObject* initialize(PyObject* /*self*/, PyObject* args)
     /* make it a string */
     PyObject* arg_ustr = PyUnicode_AsUTF8String(arg_str);
     std::string arg = PyBytes_AsString(arg_ustr);
+    Py_DECREF(arg_ustr);
 
     /* and put it into the <char*> argument vector */
 #ifdef _WIN32
@@ -947,6 +948,8 @@ static int c_server_method_callback(const std::string& method_name_, const std::
     {
       // parse error !!
     }
+
+    Py_DECREF(result);
   }
 
   Py_DECREF(args);
