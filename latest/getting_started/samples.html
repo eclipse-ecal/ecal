@@ -738,12 +738,12 @@ If you are using some third-party firewall, you may have to turn that off.</p>
 </div>
 <p>The sample we are going to use to try out the “normal” eCAL communication is <cite>ecal_sample_person_snd</cite>. Start it!</p>
 <ul class="simple">
-<li><p><i class="fab fa-windows"></i> On Windows start <code class="file docutils literal notranslate"><span class="pre">C:\eCAL\samples\bin\ecal_sample_person_snd.exe</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> On Windows start <code class="file docutils literal notranslate"><span class="pre">C:\eCAL\samples\bin\ecal_sample_person_send.exe</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> On Ubuntu call <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_snd</span></code> from a terminal (it should be in your PATH)</p></li>
 </ul>
 <p>You now have a console-based application that periodically prints some text to the terminal. In the background the application created a topic <cite>person</cite> and sends data to it. So, let’s add a subscriber that receives the data!</p>
 <ul class="simple">
-<li><p><i class="fab fa-windows"></i> On Windows start :file:<code class="file docutils literal notranslate"><span class="pre">C:\eCAL\samples\bin\ecal_sample_person_rec.exe</span></code></p></li>
+<li><p><i class="fab fa-windows"></i> On Windows start :file:<code class="file docutils literal notranslate"><span class="pre">C:\eCAL\samples\bin\ecal_sample_person_receive.exe</span></code></p></li>
 <li><p><i class="fab fa-ubuntu"></i> On Ubuntu call <code class="file docutils literal notranslate"><span class="pre">ecal_sample_person_rec</span></code> from a terminal</p></li>
 </ul>
 <p>Congratulations! You are looking at your first local eCAL communication! The subscriber subscribed to the topic <cite>person</cite> and prints all data it receives to the terminal.</p>

@@ -265,9 +265,9 @@ Check the result from a terminal. It should show routes for local and external c
 eCAL Samples over network
 =========================
 
-Now start one :file:`ecal_sample_person_snd` and one :file:`ecal_sample_person_rec`, just as in the :ref:`previous section<getting_started_samples>`.
+Now start one :file:`ecal_sample_person_send` and one :file:`ecal_sample_person_receive`, just as in the :ref:`previous section<getting_started_samples>`.
 But on different machines!
 If you configured everything correctly, publisher and subscriber should connect almost immediately and exchange data.
 
 .. image:: img/cloud_person_combined.png
-   :alt: person_snd and person_rec sample over network
+   :alt: person_send and person_receive sample over network
