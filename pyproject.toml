@@ -57,15 +57,18 @@ sdist.only-include = [
   "lang/c/",
   "lang/python/",
 
-  "serialization/protobuf",
-  "serialization/string",
+  "serialization/protobuf/",
+  "serialization/string/",
+  "serialization/common/", 
 
   "thirdparty/cmakefunctions/",
   "thirdparty/ecaludp/",
+  "thirdparty/nanobind/",
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/tclap/",
   "thirdparty/tcp_pubsub/",
+  "thirdparty/tsl-robin-map/",  
   "thirdparty/yaml-cpp/",
 
   "thirdparty/asio/",

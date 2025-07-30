@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -275,13 +275,7 @@ namespace eCAL
       /**
        * @brief Add entry to file
        *
-       * @param data           data to be added
-       * @param size           size of the data
-       * @param snd_timestamp  send time stamp
-       * @param rcv_timestamp  receive time stamp
-       * @param channel        channel channel (name & id)
-       * @param id             message id
-       * @param clock          message clock
+       * @param entry         the entry to be added to the file
        *
        * @return              true if succeeds, false if it fails
       **/

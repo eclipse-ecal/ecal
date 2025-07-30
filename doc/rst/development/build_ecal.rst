@@ -26,8 +26,6 @@ This is the default behavior, except for some Linux builds, where fitting system
 The user can also choose to rather take care of making the dependency available to CMake by themselves.
 This can be done by building and installing the dependency, setting ``ECAL_THIRDPARTY_BUILD_<DEPENDENCY_NAME>`` to ``OFF`` and providing a ``CMAKE_PREFIX_PATH`` to CMake for the install location.
 
-It is also possible to provide dependencies for an eCAL build using Conan, see :ref:`development_building_ecal_with_conan_dependencies`.
-
 --------------------------------------
 Building eCAL Core as a static library
 --------------------------------------
@@ -40,9 +38,8 @@ Therefore, the build disallows the creation of a static library for eCAL Core.
 
 As there may still be use cases in which a static library would be beneficial, the eCAL build may reallow static library builds in the future.
 
-
 .. toctree::
-   :maxdepth: 1
+   :hidden:
    
    building_ecal_from_source
    ecal_cmake_options
