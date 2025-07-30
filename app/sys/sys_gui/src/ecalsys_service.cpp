@@ -25,6 +25,7 @@
 #include "ecalsys/ecal_sys_logger.h"
 
 #include <ecalsys/proto_helpers.h>
+#include <EcalParser/EcalParser.h>
 
 namespace
 {
@@ -39,7 +40,7 @@ namespace
       tasks.remove_if(
         [](std::shared_ptr<EcalSysTask> task)
       {
-        return QString::compare(task->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
+        return QString::compare(QString::fromStdString(EcalParser::Evaluate(task->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
       });
     }
     return tasks;
