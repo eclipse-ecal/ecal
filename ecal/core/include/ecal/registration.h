@@ -89,7 +89,7 @@ namespace eCAL
     /**
      * @brief Unregister the publisher callback using the provided token.
      *
-     * @param token  The token returned by AddPublisherCallback.
+     * @param token_  The token returned by AddPublisherCallback.
     */
     ECAL_API void RemPublisherEventCallback(CallbackToken token_);
 
@@ -121,7 +121,7 @@ namespace eCAL
     /**
      * @brief Unregister the subscriber callback using the provided token.
      *
-     * @param token  The token returned by AddSubscriberCallback.
+     * @param token_  The token returned by AddSubscriberCallback.
     */
     ECAL_API void RemSubscriberEventCallback(CallbackToken token_);
 
@@ -171,10 +171,10 @@ namespace eCAL
     **/
     ECAL_API bool GetSubscribedTopicNames(std::set<std::string>& topic_names_);
 
-        /**
+    /**
      * @brief Get the pairs of service name / method name of all eCAL Servers.
      *
-     * @param service_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).
+     * @param server_method_names_ Set to store the service/method names (Set { (ServiceName, MethodName) }).
     **/
     ECAL_API bool GetServerMethodNames(std::set<SServiceMethod>& server_method_names_);
 
