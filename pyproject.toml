@@ -2,7 +2,11 @@
 name = "eclipse-ecal"
 readme = "README.md"
 requires-python = ">=3.8"
-license = { "file" = "LICENSE.txt" }
+license = "Apache-2.0"
+license-files = [
+  "LICENSE.txt",
+  "NOTICE.md"
+]
 authors = [
   { "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" },
 ]
@@ -11,6 +15,7 @@ classifiers = ["Topic :: Scientific/Engineering"]
 dependencies = ["protobuf >= 3.8, == 3.*"]
 # setuptools-scm will grab the version from the latest git tag
 dynamic = ["version"]
+description = "High performance publish/subscribe middleware"
 
 [project.urls]
 "Documentation" = "https://eclipse-ecal.github.io/ecal"
