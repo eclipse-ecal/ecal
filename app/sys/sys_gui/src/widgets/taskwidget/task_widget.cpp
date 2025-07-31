@@ -965,7 +965,7 @@ void TaskWidget::startAllTasks(const std::string& target_override)
       tasks.remove_if(
         [](std::shared_ptr<EcalSysTask> task) 
         {
-          return QString::compare(task->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
+          return QString::compare(QString::fromStdString(EcalParser::Evaluate(task->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
         });
     }
     else if (!options.use_localhost_for_all_tasks && options.check_target_reachability)
@@ -999,7 +999,7 @@ void TaskWidget::stopAllTasks(bool shutdown_request, bool kill_tasks)
     tasks.remove_if(
       [](std::shared_ptr<EcalSysTask> task)
       {
-        return QString::compare(task->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
+        return QString::compare(QString::fromStdString(EcalParser::Evaluate(task->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
       });
   }
   Globals::EcalSysInstance()->StopTaskList(tasks, shutdown_request, kill_tasks);
@@ -1019,7 +1019,7 @@ void TaskWidget::restartAllTasks(bool shutdown_request, bool kill_tasks, const s
       tasks.remove_if(
         [](std::shared_ptr<EcalSysTask> task) 
         {
-          return QString::compare(task->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
+          return QString::compare(QString::fromStdString(EcalParser::Evaluate(task->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0;
         });
     }
     else if (!options.use_localhost_for_all_tasks && options.check_target_reachability)
@@ -2423,7 +2423,7 @@ bool TaskWidget::checkTargetsReachable(const std::list<std::shared_ptr<EcalSysTa
   std::set<std::string> target_set;
   for (auto& task : task_list)
   {
-    target_set.emplace(task->GetTarget());
+    target_set.emplace(EcalParser::Evaluate(task->GetTarget(), false));
   }
   return checkTargetsReachable(target_set);
 }

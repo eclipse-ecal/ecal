@@ -26,6 +26,8 @@
 #include "tree_item_types.h"
 #include "tree_data_roles.h"
 
+#include <EcalParser/EcalParser.h>
+
 TaskTreeItem::TaskTreeItem(std::shared_ptr<EcalSysTask> task)
   : QAbstractTreeItem()
   , task_(task)
@@ -176,14 +178,14 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
 
     // Strike out everything that is not on this host
     if (options.local_tasks_only
-      && (QString::compare(task_->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0))
+      && (QString::compare(QString::fromStdString(EcalParser::Evaluate(task_->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0))
     {
       font.setStrikeOut(true);
     }
     // Strike out the Hostnames of all Tasks that are not local
     else if ((options.use_localhost_for_all_tasks)
       && (column == Columns::TARGET_NAME)
-      && (QString::compare(task_->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0))
+      && (QString::compare(QString::fromStdString(EcalParser::Evaluate(task_->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0))
     {
       font.setStrikeOut(true);
     }
@@ -223,7 +225,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     if (options.local_tasks_only)
     {
       // Grey out everything that is not on this host
-      if (QString::compare(task_->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0)
+      if (QString::compare(QString::fromStdString(EcalParser::Evaluate(task_->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0)
       {
         return QColor(128, 128, 128);
       }
@@ -236,7 +238,7 @@ QVariant TaskTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       // Grey out the Hostnames of all Tasks that are not local
       if (column == Columns::TARGET_NAME
-        && QString::compare(task_->GetTarget().c_str(), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0)
+        && QString::compare(QString::fromStdString(EcalParser::Evaluate(task_->GetTarget(), false)), eCAL::Process::GetHostName().c_str(), Qt::CaseSensitivity::CaseInsensitive) != 0)
       {
         return QColor(128, 128, 128);
       }
