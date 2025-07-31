@@ -796,30 +796,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </div>
 <ol class="arabic">
 <li><p>Choose your desired eCAL Version from the <a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">Download Page</a>.</p></li>
-<li><p>Install the eCAL Dependencies:</p>
-<ul>
-<li><p>Ubuntu 18.04:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libc6<span class="w"> </span>libcurl4<span class="w"> </span>libgcc1<span class="w"> </span>libhdf5-100<span class="w"> </span>libprotobuf10<span class="w"> </span>libqt5core5a<span class="w"> </span>libqt5gui5<span class="w"> </span>libqt5widgets5<span class="w"> </span>libqt5svg5<span class="w"> </span>libstdc++6<span class="w"> </span>sysstat<span class="w"> </span>ifstat<span class="w"> </span>libqwt-qt5-6<span class="w"> </span>libyaml-cpp0.5v5
-</pre></div>
-</div>
-</li>
-<li><p>Ubuntu 20.04:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libc6<span class="w"> </span>libcurl4<span class="w"> </span>libgcc-s1<span class="w"> </span>libhdf5-103<span class="w"> </span>libprotobuf17<span class="w"> </span>libqt5core5a<span class="w"> </span>libqt5gui5<span class="w"> </span>libqt5widgets5<span class="w"> </span>libqt5svg5<span class="w"> </span>libstdc++6<span class="w"> </span>sysstat<span class="w"> </span>ifstat<span class="w"> </span>libqwt-qt5-6<span class="w"> </span>libyaml-cpp0.6
-</pre></div>
-</div>
-</li>
-<li><p>Ubuntu 22.04:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libc6<span class="w"> </span>libcurl4<span class="w"> </span>libgcc-s1<span class="w"> </span>libhdf5-103<span class="w"> </span>libprotobuf23<span class="w"> </span>libqt5core5a<span class="w"> </span>libqt5gui5<span class="w"> </span>libqt5widgets5<span class="w"> </span>libqt5svg5<span class="w"> </span>libstdc++6<span class="w"> </span>sysstat<span class="w"> </span>ifstat<span class="w"> </span>libqwt-qt5-6<span class="w"> </span>libyaml-cpp0.7
-</pre></div>
-</div>
-</li>
-</ul>
-</li>
-<li><p>Install the debian package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>ecal_*.deb
+<li><p>Install the debian package with aptitude:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>./ecal_*.deb
 </pre></div>
 </div>
 </li>
