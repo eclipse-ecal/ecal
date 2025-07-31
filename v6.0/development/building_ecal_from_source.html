@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Building eCAL from source &#8212; Eclipse eCAL™</title>
+    <title>Default Build from Source &#8212; Eclipse eCAL™</title>
   
   
   
@@ -238,7 +238,7 @@ document.write(`
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="build_ecal.html">Building eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Building eCAL from source</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Default Build from Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecal_cmake_options.html">CMake options</a></li>
 </ul>
 </details></li>
@@ -705,7 +705,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Building eCAL from source</h1>
+    <h1>Default Build from Source</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -715,17 +715,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-checkout">Repository checkout</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-checkout">Repository Checkout</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-building-ecal-on-windows"><i class="fab fa-windows"></i> Building eCAL on Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-dependencies"><i class="fab fa-windows"></i> Windows Dependencies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-dependencies"><i class="fab fa-windows"></i> Windows dependencies</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-build"><i class="fab fa-windows"></i> Windows build</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-building-ecal-on-ubuntu"><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-build-dependencies"><i class="fab fa-ubuntu"></i> Build dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-ubuntu-22-04-20-04-build"><i class="fab fa-ubuntu"></i> Ubuntu 22.04 / 20.04 build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-ubuntu-24-04-22-04-build"><i class="fab fa-ubuntu"></i> Ubuntu 24.04 / 22.04 build</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-python-extensions">Building Python extensions</a></li>
 </ul>
             </nav>
         </div>
@@ -737,8 +738,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="building-ecal-from-source">
-<span id="development-building-ecal-from-source"></span><h1>Building eCAL from source<a class="headerlink" href="#building-ecal-from-source" title="Link to this heading">#</a></h1>
+  <section id="default-build-from-source">
+<span id="development-building-ecal-from-source"></span><h1>Default Build from Source<a class="headerlink" href="#default-build-from-source" title="Link to this heading">#</a></h1>
 <p>If you want to build eCAL yourself, this tutorial may help you with that.</p>
 <p>To build eCAL, you will need:</p>
 <ul>
@@ -757,7 +758,7 @@ document.write(`
 <p>To learn more about the available CMake options, please check out the “<a class="reference internal" href="ecal_cmake_options.html#development-ecal-cmake-options"><span class="std std-ref">CMake options</span></a>” section!</p>
 </div>
 <section id="repository-checkout">
-<h2>Repository checkout<a class="headerlink" href="#repository-checkout" title="Link to this heading">#</a></h2>
+<h2>Repository Checkout<a class="headerlink" href="#repository-checkout" title="Link to this heading">#</a></h2>
 <p>First check out the eCAL repository and all of the submodules:</p>
 <div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/eclipse-ecal/ecal.git
 <span class="k">cd</span> ecal
@@ -769,7 +770,7 @@ git submodule update
 <section id="fa-windows-building-ecal-on-windows">
 <h2><i class="fab fa-windows"></i> Building eCAL on Windows<a class="headerlink" href="#fa-windows-building-ecal-on-windows" title="Link to this heading">#</a></h2>
 <section id="fa-windows-windows-dependencies">
-<h3><i class="fab fa-windows"></i> Windows Dependencies<a class="headerlink" href="#fa-windows-windows-dependencies" title="Link to this heading">#</a></h3>
+<h3><i class="fab fa-windows"></i> Windows dependencies<a class="headerlink" href="#fa-windows-windows-dependencies" title="Link to this heading">#</a></h3>
 <ol class="arabic">
 <li><p>Download and install the build-dependencies</p>
 <ul>
@@ -831,48 +832,35 @@ cmake --build . --parallel --config Release
 If your goal is to replicate the official build, you should apply the CMake Options exactly as we do.
 You can grab those from our GitHub Action build scripts:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-22.yml">Ubuntu 22.04</a></p></li>
-<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-20.yml">Ubuntu 20.04</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu.yml">Ubuntu</a></p></li>
 </ul>
 </div>
 <section id="fa-ubuntu-build-dependencies">
 <h3><i class="fab fa-ubuntu"></i> Build dependencies<a class="headerlink" href="#fa-ubuntu-build-dependencies" title="Link to this heading">#</a></h3>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 22.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 20.04</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
-<li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>doxygen<span class="w"> </span>graphviz<span class="w"> </span>build-essential<span class="w"> </span>zlib1g-dev<span class="w"> </span>qtbase5-dev<span class="w"> </span>libhdf5-dev<span class="w"> </span>libprotobuf-dev<span class="w"> </span>libprotoc-dev<span class="w"> </span>protobuf-compiler<span class="w"> </span>libcurl4-openssl-dev<span class="w"> </span>libqwt-qt5-dev<span class="w"> </span>libyaml-cpp-dev
-</pre></div>
-</div>
-</li>
-<li><p>If you plan to create the eCAL python language extension:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3.10-dev<span class="w"> </span>python3-pip
-python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>setuptools
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 24.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 22.04</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Install the dependencies from the ordinary Ubuntu 24.04 repositories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>doxygen<span class="w"> </span>graphviz<span class="w"> </span>build-essential<span class="w"> </span>zlib1g-dev<span class="w"> </span>qt6-base-dev<span class="w"> </span>qt6-svg-dev<span class="w"> </span>libhdf5-dev<span class="w"> </span>libprotobuf-dev<span class="w"> </span>libprotoc-dev<span class="w"> </span>protobuf-compiler<span class="w"> </span>libcurl4-openssl-dev<span class="w"> </span>libyaml-cpp-dev
 </pre></div>
 </div>
 </li>
 </ol>
 </div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><ol class="arabic">
-<li><p>Install the dependencies from the ordinary Ubuntu 20.04 repositories:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>doxygen<span class="w"> </span>graphviz<span class="w"> </span>build-essential<span class="w"> </span>zlib1g-dev<span class="w"> </span>qtbase5-dev<span class="w"> </span>libhdf5-dev<span class="w"> </span>libprotobuf-dev<span class="w"> </span>libprotoc-dev<span class="w"> </span>protobuf-compiler<span class="w"> </span>libcurl4-openssl-dev<span class="w"> </span>libqwt-qt5-dev<span class="w"> </span>libyaml-cpp-dev
-</pre></div>
-</div>
-</li>
-<li><p>If you plan to create the eCAL python language extension:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3.8-dev<span class="w"> </span>python3-pip
-python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>setuptools
+<li><p>Install the dependencies from the ordinary Ubuntu 22.04 repositories:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>doxygen<span class="w"> </span>graphviz<span class="w"> </span>build-essential<span class="w"> </span>zlib1g-dev<span class="w"> </span>qtbase5-dev<span class="w"> </span>libhdf5-dev<span class="w"> </span>libprotobuf-dev<span class="w"> </span>libprotoc-dev<span class="w"> </span>protobuf-compiler<span class="w"> </span>libcurl4-openssl-dev<span class="w"> </span>libyaml-cpp-dev
 </pre></div>
 </div>
 </li>
 </ol>
 </div></div>
 </section>
-<section id="fa-ubuntu-ubuntu-22-04-20-04-build">
-<h3><i class="fab fa-ubuntu"></i> Ubuntu 22.04 / 20.04 build<a class="headerlink" href="#fa-ubuntu-ubuntu-22-04-20-04-build" title="Link to this heading">#</a></h3>
+<section id="fa-ubuntu-ubuntu-24-04-22-04-build">
+<h3><i class="fab fa-ubuntu"></i> Ubuntu 24.04 / 22.04 build<a class="headerlink" href="#fa-ubuntu-ubuntu-24-04-22-04-build" title="Link to this heading">#</a></h3>
 <ol class="arabic">
-<li><p>Compile eCAL with the following options (additional set <cite>ECAL_BUILD_PY_BINDING</cite> to <cite>ON</cite> if plan to build the python extension):</p>
+<li><p>Compile eCAL with the following options:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>_build
 <span class="nb">cd</span><span class="w"> </span>_build
-cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES<span class="o">=</span>cmake/submodule_dependencies.cmake<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_PROTOBUF<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_CURL<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_HDF5<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_QWT<span class="o">=</span>OFF
+cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES<span class="o">=</span>cmake/submodule_dependencies.cmake<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_PROTOBUF<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_CURL<span class="o">=</span>OFF<span class="w"> </span>-DECAL_THIRDPARTY_BUILD_HDF5<span class="o">=</span>OFF
 make<span class="w"> </span>-j4
 </pre></div>
 </div>
@@ -884,17 +872,18 @@ sudo<span class="w"> </span>ldconfig
 </pre></div>
 </div>
 </li>
-<li><p>Optional: Create and install the eCAL python wheel (Only available if you enabled the <cite>ECAL_BUILD_PY_BINDING</cite> CMake option in step 1):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>wheel
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>../doc/requirements.txt
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>build
-python<span class="w"> </span>-m<span class="w"> </span>build<span class="w"> </span>..<span class="w"> </span>--outdir<span class="w"> </span>_deploy
-sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>_deploy/ecal5-*
-</pre></div>
-</div>
-</li>
 </ol>
 </section>
+</section>
+<section id="building-python-extensions">
+<h2>Building Python extensions<a class="headerlink" href="#building-python-extensions" title="Link to this heading">#</a></h2>
+<p>Please make sure to have a Python installation available on your system, e.g. Python 3.8 or newer, including pip.
+Building the python wheel is then pretty straightforward, from the main directory please execute:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>build<span class="w"> </span>setuptools<span class="w"> </span>wheel
+python<span class="w"> </span>-m<span class="w"> </span>build<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The produced python wheels will then work for the used Python version and architecture.</p>
 </section>
 </section>
 
@@ -943,17 +932,18 @@ sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> <
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-checkout">Repository checkout</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#repository-checkout">Repository Checkout</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-building-ecal-on-windows"><i class="fab fa-windows"></i> Building eCAL on Windows</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-dependencies"><i class="fab fa-windows"></i> Windows Dependencies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-dependencies"><i class="fab fa-windows"></i> Windows dependencies</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-windows-windows-build"><i class="fab fa-windows"></i> Windows build</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-building-ecal-on-ubuntu"><i class="fab fa-ubuntu"></i> Building eCAL on Ubuntu</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-build-dependencies"><i class="fab fa-ubuntu"></i> Build dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-ubuntu-22-04-20-04-build"><i class="fab fa-ubuntu"></i> Ubuntu 22.04 / 20.04 build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-ubuntu-ubuntu-24-04-22-04-build"><i class="fab fa-ubuntu"></i> Ubuntu 24.04 / 22.04 build</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-python-extensions">Building Python extensions</a></li>
 </ul>
   </nav></div>
 
