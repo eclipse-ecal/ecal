@@ -3,7 +3,7 @@
 .. _development_building_ecal_from_source:
 
 =========================
-Building eCAL from source
+Default Build from Source
 =========================
 
 If you want to build eCAL yourself, this tutorial may help you with that.
@@ -25,7 +25,7 @@ Currently, we support:
 
    To learn more about the available CMake options, please check out the ":ref:`development_ecal_cmake_options`" section!
 
-Repository checkout
+Repository Checkout
 ===================
 
 First check out the eCAL repository and all of the submodules:
@@ -40,7 +40,7 @@ First check out the eCAL repository and all of the submodules:
 |fa-windows| Building eCAL on Windows
 =====================================
 
-|fa-windows| Windows Dependencies
+|fa-windows| Windows dependencies
 ---------------------------------
 
 #. Download and install the build-dependencies
@@ -104,13 +104,20 @@ We support building on currently supported Ubuntu LTS releases.
    If your goal is to replicate the official build, you should apply the CMake Options exactly as we do.
    You can grab those from our GitHub Action build scripts:
 
-   - `Ubuntu 22.04 <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-22.yml>`_
-   - `Ubuntu 20.04 <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu-20.yml>`_
+   - `Ubuntu <https://github.com/eclipse-ecal/ecal/blob/master/.github/workflows/build-ubuntu.yml>`_
 
 |fa-ubuntu| Build dependencies
 ------------------------------
 
 .. tabs::
+
+   .. tab:: Ubuntu 24.04
+
+      #. Install the dependencies from the ordinary Ubuntu 24.04 repositories:
+
+         .. code-block:: bash
+
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qt6-base-dev qt6-svg-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libyaml-cpp-dev
 
    .. tab:: Ubuntu 22.04
 
@@ -118,40 +125,19 @@ We support building on currently supported Ubuntu LTS releases.
 
          .. code-block:: bash
 
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
+            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libyaml-cpp-dev
 
-      #. If you plan to create the eCAL python language extension:
 
-         .. code-block:: bash
+|fa-ubuntu| Ubuntu 24.04 / 22.04 build
+---------------------------------------
 
-            sudo apt-get install python3.10-dev python3-pip
-            python3 -m pip install setuptools
-
-   .. tab:: Ubuntu 20.04
-
-      #. Install the dependencies from the ordinary Ubuntu 20.04 repositories:
-
-         .. code-block:: bash
-
-            sudo apt-get install git cmake doxygen graphviz build-essential zlib1g-dev qtbase5-dev libhdf5-dev libprotobuf-dev libprotoc-dev protobuf-compiler libcurl4-openssl-dev libqwt-qt5-dev libyaml-cpp-dev
-
-      #. If you plan to create the eCAL python language extension:
-
-         .. code-block:: bash
-
-            sudo apt-get install python3.8-dev python3-pip
-            python3 -m pip install setuptools
-
-|fa-ubuntu| Ubuntu 22.04 / 20.04 build
---------------------------------------
-
-#. Compile eCAL with the following options (additional set `ECAL_BUILD_PY_BINDING` to `ON` if plan to build the python extension):
+#. Compile eCAL with the following options:
 
    .. code-block:: bash
 
       mkdir _build
       cd _build
-      cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF -DECAL_THIRDPARTY_BUILD_QWT=OFF
+      cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake -DECAL_THIRDPARTY_BUILD_PROTOBUF=OFF -DECAL_THIRDPARTY_BUILD_CURL=OFF -DECAL_THIRDPARTY_BUILD_HDF5=OFF
       make -j4
 
 #. Create a debian package and install it:
@@ -162,12 +148,16 @@ We support building on currently supported Ubuntu LTS releases.
       sudo dpkg -i _deploy/eCAL-*
       sudo ldconfig
 
-#. Optional: Create and install the eCAL python wheel (Only available if you enabled the `ECAL_BUILD_PY_BINDING` CMake option in step 1):
 
-   .. code-block:: bash
+Building Python extensions
+=====================================      
 
-      pip install wheel
-      pip install -r ../doc/requirements.txt
-      python -m pip install build
-      python -m build .. --outdir _deploy
-      sudo pip install _deploy/ecal5-*
+Please make sure to have a Python installation available on your system, e.g. Python 3.8 or newer, including pip.
+Building the python wheel is then pretty straightforward, from the main directory please execute:
+
+.. code-block:: bash
+
+   python -m pip install build setuptools wheel
+   python -m build .
+
+The produced python wheels will then work for the used Python version and architecture.   
