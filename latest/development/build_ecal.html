@@ -56,7 +56,7 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Building eCAL from source" href="building_ecal_from_source.html" />
+    <link rel="next" title="Default Build from Source" href="building_ecal_from_source.html" />
     <link rel="prev" title="7.4. Runtime Configuration" href="../getting_started/howto/configuration.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -236,7 +236,7 @@ document.write(`
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Building eCAL</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_ecal_from_source.html">Default Build from Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ecal_cmake_options.html">CMake options</a></li>
 </ul>
 </details></li>
@@ -735,13 +735,12 @@ The complete list of all configuration options can be found in <a class="referen
 <section id="providing-build-dependencies">
 <h2>Providing build dependencies<a class="headerlink" href="#providing-build-dependencies" title="Link to this heading">#</a></h2>
 <p>As there is no standard dependency management system for C++, the eCAL build tries to maintain maximum flexibility for the user wishing to build eCAL from sources and integrating eCAL into their own build system.
-At the same time, it tries to provide out of the box support for users not so experienced with the whole C++ ecosystem (reference <a class="reference internal" href="building_ecal_from_source.html#development-building-ecal-from-source"><span class="std std-ref">Building eCAL from source</span></a> for a quick guide how to get started).
+At the same time, it tries to provide out of the box support for users not so experienced with the whole C++ ecosystem (reference <a class="reference internal" href="building_ecal_from_source.html#development-building-ecal-from-source"><span class="std std-ref">Default Build from Source</span></a> for a quick guide how to get started).
 Therefore, the user can decide on a dependency-by-dependency basis if they want a dependency to be built as part of the eCAL build, or not.</p>
 <p>To build the dependency alongside eCAL (provided as a submodule), the CMake option <code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_&lt;DEPENDENCY_NAME&gt;</span></code> has to be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>.
 This is the default behavior, except for some Linux builds, where fitting system packages are available.</p>
 <p>The user can also choose to rather take care of making the dependency available to CMake by themselves.
 This can be done by building and installing the dependency, setting <code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_&lt;DEPENDENCY_NAME&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">OFF</span></code> and providing a <code class="docutils literal notranslate"><span class="pre">CMAKE_PREFIX_PATH</span></code> to CMake for the install location.</p>
-<p>It is also possible to provide dependencies for an eCAL build using Conan, see <a class="reference internal" href="building_ecal_with_conan_dependencies.html#development-building-ecal-with-conan-dependencies"><span class="std std-ref">Building eCAL with Conan dependencies</span></a>.</p>
 </section>
 <section id="building-ecal-core-as-a-static-library">
 <h2>Building eCAL Core as a static library<a class="headerlink" href="#building-ecal-core-as-a-static-library" title="Link to this heading">#</a></h2>
@@ -752,10 +751,6 @@ This will most certainly lead to communication problems due to eCAL’s internal
 Therefore, the build disallows the creation of a static library for eCAL Core.</p>
 <p>As there may still be use cases in which a static library would be beneficial, the eCAL build may reallow static library builds in the future.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="building_ecal_from_source.html">Building eCAL from source</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ecal_cmake_options.html">CMake options</a></li>
-</ul>
 </div>
 </section>
 </section>
@@ -785,7 +780,7 @@ Therefore, the build disallows the creation of a static library for eCAL Core.</
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Building eCAL from source</p>
+        <p class="prev-next-title">Default Build from Source</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

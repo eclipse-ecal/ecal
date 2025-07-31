@@ -236,7 +236,7 @@ document.write(`
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../development/build_ecal.html">Building eCAL</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_from_source.html">Building eCAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_from_source.html">Default Build from Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../development/ecal_cmake_options.html">CMake options</a></li>
 </ul>
 </details></li>
@@ -1115,15 +1115,7 @@ document.write(`
 <dd><p>Add entry to file. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – data to be added </p></li>
-<li><p><strong>size</strong> – size of the data </p></li>
-<li><p><strong>snd_timestamp</strong> – send time stamp </p></li>
-<li><p><strong>rcv_timestamp</strong> – receive time stamp </p></li>
-<li><p><strong>channel</strong> – channel channel (name &amp; id) </p></li>
-<li><p><strong>id</strong> – message id </p></li>
-<li><p><strong>clock</strong> – message clock</p></li>
-</ul>
+<dd class="field-odd"><p><strong>entry</strong> – the entry to be added to the file</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>true if succeeds, false if it fails </p>

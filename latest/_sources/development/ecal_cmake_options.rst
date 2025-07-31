@@ -94,7 +94,7 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 | ``ECAL_CPACK_PACK_WITH_INNOSETUP``        | ``ON``  | Create Innosetup installer for the Windows build                |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 
-To build the eCAL csharp extension you need to set the CMake option ``ECAL_BUILD_CSHARP_BINDING`` to ``ON``.
+To build the eCAL CSharp extension you need to set the CMake option ``ECAL_BUILD_CSHARP_BINDING`` to ``ON``.
 In order to make the CSharp Google::Protobuf extension work you need to install additionally the Microsoft package management tool `Nuget <https://www.nuget.org/downloads>`_.
 Please ensure that the installation path is part of your windows user or system PATH environment variable.
 Nuget will be used to download the .Net Google.Protobuf package automatically when building the extension.
