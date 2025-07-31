@@ -16,8 +16,6 @@ To switch eCAL to local mode, edit your :file:`ecal.yaml` and change the followi
 * |fa-windows| Windows: |ecalconfig-path-windows|
 * |fa-ubuntu| Ubuntu: |ecalconfig-path-ubuntu|
 
-.. code-block:: yaml
-
 .. literalinclude:: /configuration_files/ecal.yaml
    :language: yaml
    :linenos:
