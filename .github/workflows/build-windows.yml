@@ -255,7 +255,7 @@ jobs:
     # --------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: build-windows
 
     steps:
