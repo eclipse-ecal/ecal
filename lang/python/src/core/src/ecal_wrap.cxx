@@ -603,6 +603,8 @@ static int c_server_method_callback(const std::string& method_name_, const std::
     {
       // parse error !!
     }
+
+    Py_DECREF(result);
   }
 
   Py_DECREF(args);
