@@ -8,7 +8,7 @@ license-files = [
   "NOTICE.md"
 ]
 authors = [
-  { "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" },
+  { "name" = "Eclipse eCAL Team", "email" = "ecal-dev@eclipse.org" },
 ]
 keywords = ["IPC", "Middleware"]
 classifiers = ["Topic :: Scientific/Engineering"]
@@ -22,7 +22,7 @@ description = "High performance publish/subscribe middleware"
 "Source" = "https://github.com/eclipse-ecal/ecal"
 
 [build-system] # How pip and other frontends should build this project
-requires = ["hatchling", "hatch-vcs", "scikit-build-core~=0.10.6"]
+requires = ["hatchling", "hatch-vcs", "scikit-build-core~=0.11.5"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel.hooks.scikit-build]
