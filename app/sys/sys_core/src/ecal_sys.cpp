@@ -34,6 +34,8 @@
 #pragma warning(pop)
 #endif
 
+#include <EcalParser/EcalParser.h>
+
 #include <ecal_utils/string.h>
 
 #include "ecalsys/esys_defs.h"
@@ -597,7 +599,7 @@ void EcalSys::StartTasks()
   if (options.local_tasks_only)
   {
     auto task_list = GetTaskList();
-    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask>& t) -> bool { return EcalParser::Evaluate(t->GetTarget(), false) != eCAL::Process::GetHostName(); });
     StartTaskList(task_list);
   }
   else if (options.use_localhost_for_all_tasks)
@@ -617,7 +619,7 @@ void EcalSys::StopTasks()
   if (options.local_tasks_only)
   {
     auto task_list = GetTaskList();
-    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask>& t) -> bool { return EcalParser::Evaluate(t->GetTarget(), false) != eCAL::Process::GetHostName(); });
     StopTaskList(task_list, true, true);
   }
   else
@@ -633,7 +635,7 @@ void EcalSys::RestartTasks()
   if (options.local_tasks_only)
   {
     auto task_list = GetTaskList();
-    task_list.remove_if([](const std::shared_ptr<EcalSysTask> t) -> bool { return t->GetTarget() != eCAL::Process::GetHostName(); });
+    task_list.remove_if([](const std::shared_ptr<EcalSysTask>& t) -> bool { return EcalParser::Evaluate(t->GetTarget(), false) != eCAL::Process::GetHostName(); });
     RestartTaskList(GetTaskList(), true, true);
   }
   else if (options.use_localhost_for_all_tasks)

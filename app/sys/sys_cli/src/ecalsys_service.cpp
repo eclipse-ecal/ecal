@@ -26,6 +26,7 @@
 #include "ecalsys_service.h"
 
 #include <ecalsys/proto_helpers.h>
+#include <EcalParser/EcalParser.h>
 
 extern bool exit_command_received;
 
@@ -42,7 +43,7 @@ namespace
       tasks.remove_if(
         [](std::shared_ptr<EcalSysTask> task)
       {
-        return task->GetTarget() != eCAL::Process::GetHostName();
+        return EcalParser::Evaluate(task->GetTarget(), false) != eCAL::Process::GetHostName();
       });
     }
     return tasks;

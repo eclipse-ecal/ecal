@@ -24,6 +24,8 @@
 #include <QMenu>
 #include <QSettings>
 
+#include <EcalParser/EcalParser.h>
+
 #include "widgets/treemodels/tree_data_roles.h"
 #include "widgets/treemodels/tree_item_types.h"
 #include "CustomQt/QStableSortFilterProxyModel.h"
@@ -782,7 +784,7 @@ bool GroupWidget::checkTargetsReachable(const std::list<std::shared_ptr<EcalSysT
   std::set<std::string> target_set;
   for (auto& task : task_list)
   {
-    target_set.emplace(task->GetTarget());
+    target_set.emplace(EcalParser::Evaluate(task->GetTarget(), false));
   }
   return checkTargetsReachable(target_set);
 }

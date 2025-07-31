@@ -24,6 +24,8 @@
 #include "ecalsys_util.h"
 #include <iostream>
 
+#include <EcalParser/EcalParser.h>
+
 #ifdef ECAL_OS_WINDOWS
 #include <conio.h>
 #else
@@ -77,9 +79,9 @@ bool WaitForClients(std::shared_ptr<EcalSys> ecalsys_inst)
   std::string current_host = eCAL::Process::GetHostName();
   for (auto task : ecalsys_inst->GetTaskList())
   {
-    if (task->GetTarget() != current_host)
+    if (EcalParser::Evaluate(task->GetTarget(), false) != current_host)
     {
-      targets.emplace(task->GetTarget());
+      targets.emplace(EcalParser::Evaluate(task->GetTarget(), false));
     }
   }
 
