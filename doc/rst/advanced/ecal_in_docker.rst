@@ -8,12 +8,6 @@ eCAL in Docker
 
 Here we will show how to deploy eCAL into a docker container, and how to use its image from other containers.
 
-
-.. important::
-   
-   This will work with eCAL 5.10 and up.
-   Older eCAL versions will lack Shared Memory communication when being run in a docker container.
-
 Prerequisite
 ============
 
@@ -190,11 +184,6 @@ Run the docker containers
 
 Seamless IPC-Communication across host borders
 ----------------------------------------------
-
-.. important::
-   This will work with eCAL 5.12 and higher.
-   Older versions lack the ability to utilize the ``shm_transport_domain`` in the :file:`ecal.yaml` file, thus it won't work.
-
 
 In eCAL, you are able to set host belonging over network borders by utilizing the :file:`ecal.yaml` configuration file with the same ``shm_transport_domain`` - in the following steps, you will learn how to set this up.
 
