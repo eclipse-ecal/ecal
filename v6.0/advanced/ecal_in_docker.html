@@ -736,6 +736,11 @@ document.write(`
   <section id="ecal-in-docker">
 <span id="id1"></span><h1>eCAL in Docker<a class="headerlink" href="#ecal-in-docker" title="Link to this heading">#</a></h1>
 <p>Here we will show how to deploy eCAL into a docker container, and how to use its image from other containers.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This will work with eCAL 5.10 and up.
+Older eCAL versions will lack Shared Memory communication when being run in a docker container.</p>
+</div>
 <section id="prerequisite">
 <h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Link to this heading">#</a></h2>
 <ul>
@@ -933,6 +938,11 @@ sudo<span class="w"> </span>docker-compose<span class="w"> </span>up
 </section>
 <section id="seamless-ipc-communication-across-host-borders">
 <h3>Seamless IPC-Communication across host borders<a class="headerlink" href="#seamless-ipc-communication-across-host-borders" title="Link to this heading">#</a></h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This will work with eCAL 5.12 and higher.
+Older versions lack the ability to utilize the <code class="docutils literal notranslate"><span class="pre">shm_transport_domain</span></code> in the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> file, thus it won’t work.</p>
+</div>
 <p>In eCAL, you are able to set host belonging over network borders by utilizing the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> configuration file with the same <code class="docutils literal notranslate"><span class="pre">shm_transport_domain</span></code> - in the following steps, you will learn how to set this up.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

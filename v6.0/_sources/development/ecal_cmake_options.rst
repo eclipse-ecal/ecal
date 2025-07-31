@@ -43,7 +43,7 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_BUILD_PY_BINDING``                 | ``OFF`` | Build eCAL python binding                                       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``BUILD_STANDALONE_PY_WHEEL``             | ``OFF`` | Build eCAL python binding as standalone wheel                   |
+| ``BUILD_STANDAL``ON``E_PY_WHEEL``         | ``OFF`` | Build eCAL python binding as standalone wheel                   |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_BUILD_CSHARP_BINDING``             | ``OFF`` | Build eCAL C# binding                                           |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
