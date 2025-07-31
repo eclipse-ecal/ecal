@@ -1,4 +1,4 @@
-name: Build Windows Server 2019
+name: Build Windows Server 2022
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
 
 jobs:
   build-windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     env:
       # enable starting Qt GUI Applications
@@ -81,7 +81,7 @@ jobs:
         mkdir "${{ runner.workspace }}\_build\sdk\"
         cd "${{ runner.workspace }}/_build/sdk"
 
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=OFF ^
@@ -121,7 +121,7 @@ jobs:
       run: |
         CALL "${{ runner.workspace }}\.venv\Scripts\activate.bat"
         cd "${{ runner.workspace }}/_build/complete"
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 ^
         -DHAS_HDF5=ON ^
         -DHAS_QT=ON ^
         -DHAS_CURL=ON ^
@@ -255,7 +255,7 @@ jobs:
     # --------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: build-windows
 
     steps:
