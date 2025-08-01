@@ -1040,63 +1040,65 @@ So we need them as well. The definitions are straight forward. For more informat
 <span class="linenos"> 6</span><span class="c1"># import the eCAL publisher AP</span>
 <span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.msg.proto.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Publisher</span> <span class="k">as</span> <span class="n">ProtobufPublisher</span>
 <span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;./_protobuf&#39;</span><span class="p">))</span>
-<span class="linenos">10</span><span class="c1"># import the compiled protobuf message classes</span>
-<span class="linenos">11</span><span class="kn">import</span><span class="w"> </span><span class="nn">person_pb2</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">15</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">16</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: PERSON SENDER         &quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">google.protobuf</span>
+<span class="linenos">10</span><span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="linenos">11</span><span class="n">proto_version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;./_protobuf/v</span><span class="si">{</span><span class="n">proto_version</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="linenos">13</span><span class="c1"># import the compiled protobuf message classes</span>
+<span class="linenos">14</span><span class="kn">import</span><span class="w"> </span><span class="nn">person_pb2</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 <span class="linenos">17</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">18</span>  
-<span class="linenos">19</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
-<span class="linenos">20</span>  <span class="c1"># The name of our eCAL Process will be &quot;person send python&quot;.</span>
-<span class="linenos">21</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">22</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person send python&quot;</span><span class="p">)</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span>  <span class="c1"># Print used eCAL version and date</span>
-<span class="linenos">25</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
-<span class="linenos">26</span> 
-<span class="linenos">27</span>  <span class="c1"># Set the state for the program.</span>
-<span class="linenos">28</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
-<span class="linenos">29</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
-<span class="linenos">30</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
-<span class="linenos">31</span>  
-<span class="linenos">32</span>  <span class="c1"># Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).</span>
-<span class="linenos">33</span>  <span class="c1"># The topic we are going to publish is called &quot;person&quot;.</span>
-<span class="linenos">34</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">ProtobufPublisher</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">](</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">)</span>
-<span class="linenos">35</span>  
-<span class="linenos">36</span>  <span class="c1"># Create a new message object of type &quot;Person&quot; and fill it with some data.</span>
-<span class="linenos">37</span>  <span class="n">person</span> <span class="o">=</span> <span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">()</span>
-<span class="linenos">38</span>  <span class="n">person</span><span class="o">.</span><span class="n">name</span>        <span class="o">=</span> <span class="s2">&quot;Max&quot;</span>
-<span class="linenos">39</span>  <span class="n">person</span><span class="o">.</span><span class="n">stype</span>       <span class="o">=</span> <span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">MALE</span>
-<span class="linenos">40</span>  <span class="n">person</span><span class="o">.</span><span class="n">email</span>       <span class="o">=</span> <span class="s2">&quot;max@mail.net&quot;</span>
-<span class="linenos">41</span>  <span class="n">person</span><span class="o">.</span><span class="n">dog</span><span class="o">.</span><span class="n">name</span>    <span class="o">=</span> <span class="s2">&quot;Brandy&quot;</span>
-<span class="linenos">42</span>  <span class="n">person</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">rooms</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">43</span>  
-<span class="linenos">44</span>  <span class="n">loop_count</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">45</span>  <span class="c1"># Creating an infinite publish-loop.</span>
-<span class="linenos">46</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.</span>
-<span class="linenos">47</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">48</span>    <span class="c1"># Change something in the message so we can see that the message is changing, e.g. in eCAL Monitor.</span>
-<span class="linenos">49</span>    <span class="n">loop_count</span> <span class="o">=</span> <span class="n">loop_count</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="linenos">50</span>    <span class="n">person</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">loop_count</span>
-<span class="linenos">51</span>    
-<span class="linenos">52</span>    <span class="c1"># Send the content to other eCAL Processes that have subscribed to the topic &quot;hello&quot;.</span>
-<span class="linenos">53</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
-<span class="linenos">54</span>    
-<span class="linenos">55</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sending: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">person</span><span class="p">))</span>
+<span class="linenos">18</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python: PERSON SENDER         &quot;</span><span class="p">)</span>
+<span class="linenos">19</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>  
+<span class="linenos">21</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using it.</span>
+<span class="linenos">22</span>  <span class="c1"># The name of our eCAL Process will be &quot;person send python&quot;.</span>
+<span class="linenos">23</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">24</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person send python&quot;</span><span class="p">)</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>  <span class="c1"># Print used eCAL version and date</span>
+<span class="linenos">27</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">28</span> 
+<span class="linenos">29</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">30</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">31</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">32</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">33</span>  
+<span class="linenos">34</span>  <span class="c1"># Creating the eCAL Publisher. An eCAL Process can create multiple publishers (and subscribers).</span>
+<span class="linenos">35</span>  <span class="c1"># The topic we are going to publish is called &quot;person&quot;.</span>
+<span class="linenos">36</span>  <span class="n">pub</span> <span class="o">=</span> <span class="n">ProtobufPublisher</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">](</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">)</span>
+<span class="linenos">37</span>  
+<span class="linenos">38</span>  <span class="c1"># Create a new message object of type &quot;Person&quot; and fill it with some data.</span>
+<span class="linenos">39</span>  <span class="n">person</span> <span class="o">=</span> <span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">()</span>
+<span class="linenos">40</span>  <span class="n">person</span><span class="o">.</span><span class="n">name</span>        <span class="o">=</span> <span class="s2">&quot;Max&quot;</span>
+<span class="linenos">41</span>  <span class="n">person</span><span class="o">.</span><span class="n">stype</span>       <span class="o">=</span> <span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">MALE</span>
+<span class="linenos">42</span>  <span class="n">person</span><span class="o">.</span><span class="n">email</span>       <span class="o">=</span> <span class="s2">&quot;max@mail.net&quot;</span>
+<span class="linenos">43</span>  <span class="n">person</span><span class="o">.</span><span class="n">dog</span><span class="o">.</span><span class="n">name</span>    <span class="o">=</span> <span class="s2">&quot;Brandy&quot;</span>
+<span class="linenos">44</span>  <span class="n">person</span><span class="o">.</span><span class="n">house</span><span class="o">.</span><span class="n">rooms</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">45</span>  
+<span class="linenos">46</span>  <span class="n">loop_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">47</span>  <span class="c1"># Creating an infinite publish-loop.</span>
+<span class="linenos">48</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, ecal_core.ok() will return false.</span>
+<span class="linenos">49</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">50</span>    <span class="c1"># Change something in the message so we can see that the message is changing, e.g. in eCAL Monitor.</span>
+<span class="linenos">51</span>    <span class="n">loop_count</span> <span class="o">=</span> <span class="n">loop_count</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos">52</span>    <span class="n">person</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">loop_count</span>
+<span class="linenos">53</span>    
+<span class="linenos">54</span>    <span class="c1"># Send the content to other eCAL Processes that have subscribed to the topic &quot;hello&quot;.</span>
+<span class="linenos">55</span>    <span class="n">pub</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
 <span class="linenos">56</span>    
-<span class="linenos">57</span>    <span class="c1"># Sleep for 500 ms so we send with a frequency of 2 Hz.</span>
-<span class="linenos">58</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">59</span>  
-<span class="linenos">60</span>  <span class="c1"># Finalize eCAL.</span>
-<span class="linenos">61</span>  <span class="c1"># You should always do that before your application exits.</span>
-<span class="linenos">62</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-<span class="linenos">63</span>
-<span class="linenos">64</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos">65</span>  <span class="n">main</span><span class="p">()</span>
+<span class="linenos">57</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sending: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">person</span><span class="p">))</span>
+<span class="linenos">58</span>    
+<span class="linenos">59</span>    <span class="c1"># Sleep for 500 ms so we send with a frequency of 2 Hz.</span>
+<span class="linenos">60</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">61</span>  
+<span class="linenos">62</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">63</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">64</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">67</span>  <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -1376,58 +1378,61 @@ So we need them as well. The definitions are straight forward. For more informat
 <span class="linenos"> 8</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.msg.proto.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscriber</span> <span class="k">as</span> <span class="n">ProtobufSubscriber</span>
 <span class="linenos"> 9</span><span class="kn">from</span><span class="w"> </span><span class="nn">ecal.msg.common.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReceiveCallbackData</span>
 <span class="linenos">10</span>
-<span class="linenos">11</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;./_protobuf&#39;</span><span class="p">))</span>
-<span class="linenos">12</span><span class="c1"># import the compiled protobuf message classes</span>
-<span class="linenos">13</span><span class="kn">import</span><span class="w"> </span><span class="nn">person_pb2</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="c1"># eCAL receive callback</span>
-<span class="linenos">16</span><span class="k">def</span><span class="w"> </span><span class="nf">data_callback</span><span class="p">(</span><span class="n">publisher_id</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">TopicId</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="n">ReceiveCallbackData</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="linenos">17</span>  <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="linenos">18</span><span class="s2">  ----------------------------------------------</span>
-<span class="linenos">19</span><span class="s2">   Received person message from topic </span><span class="si">{</span><span class="n">publisher_id</span><span class="o">.</span><span class="n">topic_name</span><span class="si">}</span><span class="s2"> in Python</span>
-<span class="linenos">20</span><span class="s2">  ----------------------------------------------</span>
-<span class="linenos">21</span><span class="s2">  Time         : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_timestamp</span><span class="si">}</span>
-<span class="linenos">22</span><span class="s2">  Clock        : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_clock</span><span class="si">}</span>
-<span class="linenos">23</span><span class="s2">  Message      : </span>
-<span class="linenos">24</span><span class="s2">    </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">message</span><span class="si">}</span>
-<span class="linenos">25</span><span class="s2">  &quot;&quot;&quot;</span>
-<span class="linenos">26</span>  <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-<span class="linenos">27</span>
-<span class="linenos">28</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="linenos">29</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">30</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python:  PERSON RECEIVE        &quot;</span><span class="p">)</span>
-<span class="linenos">31</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">32</span>
-<span class="linenos">33</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using its API.</span>
-<span class="linenos">34</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello receive python&quot;. </span>
-<span class="linenos">35</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos">36</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person receive python&quot;</span><span class="p">)</span>
-<span class="linenos">37</span>
-<span class="linenos">38</span>  <span class="c1"># print eCAL version and date</span>
-<span class="linenos">39</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">11</span><span class="kn">import</span><span class="w"> </span><span class="nn">google.protobuf</span>
+<span class="linenos">12</span><span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="linenos">13</span><span class="n">proto_version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;./_protobuf/v</span><span class="si">{</span><span class="n">proto_version</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="linenos">15</span><span class="c1"># import the compiled protobuf message classes</span>
+<span class="linenos">16</span><span class="kn">import</span><span class="w"> </span><span class="nn">person_pb2</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># eCAL receive callback</span>
+<span class="linenos">19</span><span class="k">def</span><span class="w"> </span><span class="nf">data_callback</span><span class="p">(</span><span class="n">publisher_id</span> <span class="p">:</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">TopicId</span><span class="p">,</span> <span class="n">data</span> <span class="p">:</span> <span class="n">ReceiveCallbackData</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">20</span>  <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">21</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">22</span><span class="s2">   Received person message from topic </span><span class="si">{</span><span class="n">publisher_id</span><span class="o">.</span><span class="n">topic_name</span><span class="si">}</span><span class="s2"> in Python</span>
+<span class="linenos">23</span><span class="s2">  ----------------------------------------------</span>
+<span class="linenos">24</span><span class="s2">  Time         : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_timestamp</span><span class="si">}</span>
+<span class="linenos">25</span><span class="s2">  Clock        : </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">send_clock</span><span class="si">}</span>
+<span class="linenos">26</span><span class="s2">  Message      : </span>
+<span class="linenos">27</span><span class="s2">    </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">message</span><span class="si">}</span>
+<span class="linenos">28</span><span class="s2">  &quot;&quot;&quot;</span>
+<span class="linenos">29</span>  <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">32</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">33</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Python:  PERSON RECEIVE        &quot;</span><span class="p">)</span>
+<span class="linenos">34</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>  <span class="c1"># Initialize eCAL. You always have to initialize eCAL before using its API.</span>
+<span class="linenos">37</span>  <span class="c1"># The name of our eCAL Process will be &quot;hello receive python&quot;. </span>
+<span class="linenos">38</span>  <span class="c1"># This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos">39</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;person receive python&quot;</span><span class="p">)</span>
 <span class="linenos">40</span>
-<span class="linenos">41</span>  <span class="c1"># Set the state for the program.</span>
-<span class="linenos">42</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
-<span class="linenos">43</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
-<span class="linenos">44</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
-<span class="linenos">45</span>
-<span class="linenos">46</span>  <span class="c1"># Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).</span>
-<span class="linenos">47</span>  <span class="c1"># The topic we are going to receive is called &quot;person&quot;.</span>
-<span class="linenos">48</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">ProtobufSubscriber</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">](</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">)</span>
-<span class="linenos">49</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_receive_callback</span><span class="p">(</span><span class="n">data_callback</span><span class="p">)</span>
-<span class="linenos">50</span>  
-<span class="linenos">51</span>  <span class="c1"># Creating an infinite loop.</span>
-<span class="linenos">52</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.</span>
-<span class="linenos">53</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
-<span class="linenos">54</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Sleep for 500ms to reduce CPU usage.</span>
-<span class="linenos">55</span>  
-<span class="linenos">56</span>  <span class="c1"># Finalize eCAL.</span>
-<span class="linenos">57</span>  <span class="c1"># You should always do that before your application exits.</span>
-<span class="linenos">58</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-<span class="linenos">59</span>  
-<span class="linenos">60</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-<span class="linenos">61</span>  <span class="n">main</span><span class="p">()</span>
-<span class="linenos">62</span>
+<span class="linenos">41</span>  <span class="c1"># print eCAL version and date</span>
+<span class="linenos">42</span>  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eCAL </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_string</span><span class="p">(),</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">get_version_date_string</span><span class="p">()))</span>
+<span class="linenos">43</span>
+<span class="linenos">44</span>  <span class="c1"># Set the state for the program.</span>
+<span class="linenos">45</span>  <span class="c1"># You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos">46</span>  <span class="c1"># This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos">47</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">Severity</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">,</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">LEVEL1</span><span class="p">,</span> <span class="s2">&quot;I feel good!&quot;</span><span class="p">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>  <span class="c1"># Creating the eCAL Subscriber. An eCAL Process can create multiple subscribers (and publishers).</span>
+<span class="linenos">50</span>  <span class="c1"># The topic we are going to receive is called &quot;person&quot;.</span>
+<span class="linenos">51</span>  <span class="n">sub</span> <span class="o">=</span> <span class="n">ProtobufSubscriber</span><span class="p">[</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">](</span><span class="n">person_pb2</span><span class="o">.</span><span class="n">Person</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">)</span>
+<span class="linenos">52</span>  <span class="n">sub</span><span class="o">.</span><span class="n">set_receive_callback</span><span class="p">(</span><span class="n">data_callback</span><span class="p">)</span>
+<span class="linenos">53</span>  
+<span class="linenos">54</span>  <span class="c1"># Creating an infinite loop.</span>
+<span class="linenos">55</span>  <span class="c1"># eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL::Ok() will return false.</span>
+<span class="linenos">56</span>  <span class="k">while</span> <span class="n">ecal_core</span><span class="o">.</span><span class="n">ok</span><span class="p">():</span>
+<span class="linenos">57</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># Sleep for 500ms to reduce CPU usage.</span>
+<span class="linenos">58</span>  
+<span class="linenos">59</span>  <span class="c1"># Finalize eCAL.</span>
+<span class="linenos">60</span>  <span class="c1"># You should always do that before your application exits.</span>
+<span class="linenos">61</span>  <span class="n">ecal_core</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+<span class="linenos">62</span>  
+<span class="linenos">63</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">64</span>  <span class="n">main</span><span class="p">()</span>
+<span class="linenos">65</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-1-UHl0aG9uIChsZWdhY3kp" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UHl0aG9uIChsZWdhY3kp" name="UHl0aG9uIChsZWdhY3kp" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
