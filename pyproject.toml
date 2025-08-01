@@ -2,22 +2,27 @@
 name = "eclipse-ecal"
 readme = "README.md"
 requires-python = ">=3.8"
-license = { "file" = "LICENSE.txt" }
+license = "Apache-2.0"
+license-files = [
+  "LICENSE.txt",
+  "NOTICE.md"
+]
 authors = [
-  { "name" = "Kerstin Keller", "email" = "kerstin.keller@continental.com" },
+  { "name" = "Eclipse eCAL Team", "email" = "ecal-dev@eclipse.org" },
 ]
 keywords = ["IPC", "Middleware"]
 classifiers = ["Topic :: Scientific/Engineering"]
-dependencies = ["protobuf >= 3.8, == 3.*"]
+dependencies = ["protobuf > 3.8, < 7", "packaging"]
 # setuptools-scm will grab the version from the latest git tag
 dynamic = ["version"]
+description = "High performance publish/subscribe middleware"
 
 [project.urls]
 "Documentation" = "https://eclipse-ecal.github.io/ecal"
 "Source" = "https://github.com/eclipse-ecal/ecal"
 
 [build-system] # How pip and other frontends should build this project
-requires = ["hatchling", "hatch-vcs", "scikit-build-core~=0.10.6"]
+requires = ["hatchling", "hatch-vcs", "scikit-build-core~=0.11.5"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel.hooks.scikit-build]
