@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@
 #include "scroller.hpp"
 
 #include <ftxui/component/component.hpp>
+
+#include <tui/ftxui_version_compatibility.hpp>
 
 namespace ftxui
 {
@@ -820,7 +822,7 @@ public:
     return ComponentBase::OnEvent(event);
   }
 
-  Element Render() override
+  Element FTXUI_COMPATIBILITY_RENDER() override
   {
     std::lock_guard<std::mutex> lock{data_mutex};
     return vbox(
