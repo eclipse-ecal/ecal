@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@
 #include "tui/view/component/decorator.hpp"
 
 #include "tui/viewmodel/system_information.hpp"
+#include "tui/ftxui_version_compatibility.hpp"
 
 class SystemInformationView : public View
 {
@@ -58,7 +59,7 @@ public:
     return *view_model;
   }
 
-  ftxui::Element Render() override
+  ftxui::Element FTXUI_COMPATIBILITY_RENDER() override
   {
     return view->Render();
   }

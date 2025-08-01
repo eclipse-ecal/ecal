@@ -16,56 +16,16 @@
  *
  * ========================= eCAL LICENSE =================================
 */
+
 #pragma once
 
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/component/component.hpp>
-
-#include "tui/view/component/scroller.hpp"
-
-#include <tui/ftxui_version_compatibility.hpp>
-
-
-namespace ftxui
-{
-
-Element indent(Element child)
-{
-  return hbox({
-      text("  "),
-      child
-  });
-}
-
-Element indentRight(Element child)
-{
-  return hbox({
-      child,
-      text("  ")
-  });
-}
-
-class IndentBase : public ComponentBase
-{
-  Component child;
-public:
-  IndentBase(Component child_) : child{child_}
-  {
-    Add(child);
-  }
-
-  Element FTXUI_COMPATIBILITY_RENDER() override
-  {
-    return hbox({
-      text("  "),
-      child->Render()
-    });
-  }
-};
-
-Component Indent(Component child)
-{
-  return std::make_shared<IndentBase>(child);
-}
-
-}
+// Usage:
+// ftxui::Element FTXUI_COMPATIBILITY_RENDER() override {
+//   using namespace ftxui;
+//   return text("Hello, world!") | border;
+// }
+#if FTXUI_VERSION_MAJOR >= 6
+#define FTXUI_COMPATIBILITY_RENDER() OnRender()
+#else
+#define FTXUI_COMPATIBILITY_RENDER() Render()
+#endif
