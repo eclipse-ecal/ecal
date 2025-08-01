@@ -39,6 +39,8 @@ add_subdirectory(cpp/logging_test)
 add_subdirectory(cpp/serialization_test)
 add_subdirectory(cpp/topic2mcast_test)
 add_subdirectory(cpp/util_test)
+add_subdirectory(cpp/fast_init_loop)
+
 
 if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
   add_subdirectory(cpp/io_memfile_test)
@@ -53,3 +55,4 @@ endif()
 if(ECAL_CORE_SERVICE)
   add_subdirectory(cpp/clientserver_test)
 endif()
+
