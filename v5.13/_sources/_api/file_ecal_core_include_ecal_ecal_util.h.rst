@@ -114,9 +114,9 @@ Functions
 
 - :ref:`exhale_function_ecal__util_8h_1a8708664179148d49495a67bcde6f660c`
 
-- :ref:`exhale_function_ecal__util_8h_1ab218d683cae4d084dd46b745963f54be`
-
 - :ref:`exhale_function_ecal__util_8h_1af879a09d2c651e40b0a6d090abfcd891`
+
+- :ref:`exhale_function_ecal__util_8h_1ab218d683cae4d084dd46b745963f54be`
 
 - :ref:`exhale_function_ecal__util_8h_1a5a340cf6e811ea385d783c55ded800b2`
 
