@@ -12,7 +12,7 @@ authors = [
 ]
 keywords = ["IPC", "Middleware"]
 classifiers = ["Topic :: Scientific/Engineering"]
-dependencies = ["protobuf >= 3.8, == 3.*"]
+dependencies = ["protobuf > 3.8, < 7", "packaging"]
 # setuptools-scm will grab the version from the latest git tag
 dynamic = ["version"]
 description = "High performance publish/subscribe middleware"

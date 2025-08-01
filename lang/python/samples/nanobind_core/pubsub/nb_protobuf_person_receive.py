@@ -26,7 +26,10 @@ import ecal.nanobind_core as ecal_core
 from ecal.msg.proto.core import Subscriber as ProtobufSubscriber
 from ecal.msg.common.core import ReceiveCallbackData
 
-sys.path.insert(1, os.path.join(sys.path[0], './_protobuf'))
+import google.protobuf
+from packaging import version
+proto_version = version.parse(google.protobuf.__version__)
+sys.path.insert(1, os.path.join(sys.path[0], f"./_protobuf/v{proto_version.major}"))
 # import the compiled protobuf message classes
 import person_pb2
 
