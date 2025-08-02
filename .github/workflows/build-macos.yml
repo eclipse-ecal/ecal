@@ -38,6 +38,7 @@ jobs:
       run: |
         git submodule update --init \
           thirdparty/asio/asio \
+          thirdparty/benchmark/benchmark \
           thirdparty/ecaludp/ecaludp \
           thirdparty/fineftp/fineftp-server \
           thirdparty/ftxui/ftxui \
