@@ -1,0 +1,40 @@
+on:
+  push:
+    tags:
+      - v*
+concurrency:
+  group: "release-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+jobs:
+  quality_artifacts_job:
+    name: A job to collect quality artifacts
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        id: create_release
+      - name: Show release URL
+        run: |
+          echo ${{ steps.create_release.outputs.url }}
+      # Do the quality artifact collection thing
+      - name: Collect quality artifacts
+        uses: eclipse-dash/quevee@v1
+        id: quevee
+        with:
+          release_url: ${{ steps.create_release.outputs.url }}
+          artifacts_readme: README.md
+          artifacts_requirements:
+          artifacts_testing:
+          artifacts_documentation: https://eclipse-ecal.github.io/ecal/stable/index.html
+          artifacts_coding_guidelines:
+          artifacts_release_process: 
+      - name: Upload quality manifest to release
+        uses: svenstaro/upload-release-action@v2
+        id: upload_manifest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.quevee.outputs.manifest_file }}
+          tag: ${{ github.ref }}
