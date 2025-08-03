@@ -85,10 +85,14 @@ function(ecal_install_app TARGET_NAME)
                    COPYONLY)
 
    INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.png"
-           DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps/")
+           DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps/"
+           COMPONENT app
+   )
 
     INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/appmenu/ecal_${TARGET_NAME}.desktop"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/applications/"
+            COMPONENT app
+    )
   endif()
 ecal_install_pdbs(TARGET ${TARGET_NAME} DESTINATION "${eCAL_install_app_dir}" COMPONENT app)       
 endfunction()
