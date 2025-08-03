@@ -274,8 +274,12 @@ ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Player")
 # install files required for linux mimetypes and icon
 if (UNIX)
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/ecal-play.xml"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/"
+            COMPONENT app
+    )
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalmeas.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/"
+            COMPONENT app
+    )
 endif()

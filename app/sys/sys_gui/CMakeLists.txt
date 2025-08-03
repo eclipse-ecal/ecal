@@ -264,10 +264,14 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER app/sys)
 # install files required for linux mimetypes and icon
 if (UNIX)
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/ecal-sys.xml"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages/"
+            COMPONENT app
+    )
 
     INSTALL (FILES "${CMAKE_CURRENT_LIST_DIR}/mimetype/application-ecalsys.svg"
-            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/")
+            DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/Humanity/scalable/mimetypes/"
+            COMPONENT app
+    )
 endif()
 
 ecal_install_app(${PROJECT_NAME} START_MENU_NAME "eCAL Sys")
