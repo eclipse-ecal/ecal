@@ -10,6 +10,10 @@ eCAL 5.12.6
 ===============
 
 
+.. warning::
+   
+   eCAL 5.12 is not supported anymore. Please consider upgrading to a newer version.
+
 
 - Release Date: 2024-06-21
 - GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.12.6

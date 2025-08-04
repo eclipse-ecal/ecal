@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eCAL 5.12.5 &#8212; Eclipse eCAL™</title>
+    <title>eCAL 6.0.0 &#8212; Eclipse eCAL™</title>
   
   
   
@@ -43,7 +43,7 @@
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'ecal_5_12_5';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ecal_6_0_0';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -214,7 +214,7 @@
       
       
       
-      <li><a href="_sources/ecal_5_12_5.rst" target="_blank"
+      <li><a href="_sources/ecal_6_0_0.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -298,7 +298,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>eCAL 5.12.5</h1>
+    <h1>eCAL 6.0.0</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -312,7 +312,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
 </ul>
@@ -326,51 +325,22 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ecal-5-12-5">
-<span id="ecal-release-page-5-12-5"></span><h1>eCAL 5.12.5<a class="headerlink" href="#ecal-5-12-5" title="Link to this heading">#</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>eCAL 5.12 is not supported anymore. Please consider upgrading to a newer version.</p>
-</div>
+  <section id="ecal-6-0-0">
+<span id="ecal-release-page-6-0-0"></span><h1>eCAL 6.0.0<a class="headerlink" href="#ecal-6-0-0" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>Release Date: 2024-04-25</p></li>
-<li><p>GitHub Release Page: <a class="github reference external" href="https://github.com/eclipse-ecal/ecal/releases/tag/v5.12.5">eclipse-ecal/ecal</a></p></li>
+<li><p>Release Date: 2025-08-01</p></li>
+<li><p>GitHub Release Page: <a class="github reference external" href="https://github.com/eclipse-ecal/ecal/releases/tag/v6.0.0">eclipse-ecal/ecal</a></p></li>
 </ul>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Changelog
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## Welcome to eCAL v6 ! 
 
-## eCAL Core:
-- ecalc mutex protection corrected (#1402)
-- Changed descgate wrong mutex usage (std::shared_timed_mutex to std::mutex) (#1462)
-- Prevent possible data races by adaption of register/unregister logic (#1482)(#1527)(#1532) 
-
-## eCAL Player:
-- Fix crash when playing empty measurements (#1385)
-
-## eCAL Monitor:
-- Added service name to ServiceTreeItem identifier for save service handling on same process with same methods (#1555)
-
-## eCAL Launcher GUI:
-- Exchanged labels with SVGs
-
-## Dependencies:
-- Updated udpcap to 2.0.1 (fixes lost-datagram-issues(2.0) + deadlock fix)(#1396)
-- Added protobuf 3.26 support (#1535)
-
-## Build:
-- Install pdbs with eCAL (#1545)(#1549)
-
-_eCAL 5.12.5 is patch-level equivalent to eCAL 5.13.0_
+release notes will be available soon 🐌 
 </pre></div>
 </div>
 </section>
 <section id="downloads">
 <h2>Downloads<a class="headerlink" href="#downloads" title="Link to this heading">#</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A more recent version of eCAL 5.12 is available: <a class="reference internal" href="ecal_5_12_7.html#ecal-release-page-5-12-7"><span class="std std-ref">eCAL 5.12.7</span></a>.</p>
-</div>
 <section id="ecal-installer">
 <h3>eCAL Installer<a class="headerlink" href="#ecal-installer" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -388,15 +358,15 @@ _eCAL 5.12.5 is patch-level equivalent to eCAL 5.13.0_
 <tbody>
 <tr class="row-even"><td><p><i class="fab fa-windows"></i> Windows</p></td>
 <td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal_5.12.5-win64.exe">ecal_5.12.5-win64.exe</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-win64.exe">ecal_6.0.0-win64.exe</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
 <td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal_5.12.5-jammy_amd64.deb">ecal_5.12.5-jammy_amd64.deb</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_amd64.deb">ecal_6.0.0-noble_amd64.deb</a></p></td>
 </tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
 <td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal_5.12.5-focal_amd64.deb">ecal_5.12.5-focal_amd64.deb</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-jammy_amd64.deb">ecal_6.0.0-jammy_amd64.deb</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -419,38 +389,23 @@ _eCAL 5.12.5 is patch-level equivalent to eCAL 5.13.0_
 <tbody>
 <tr class="row-even"><td><p><i class="fab fa-windows"></i> Windows</p></td>
 <td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp312-cp312-win_amd64.whl">Python 3.12 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp311-cp311-win_amd64.whl">Python 3.11 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp310-cp310-win_amd64.whl">Python 3.10 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp39-cp39-win_amd64.whl">Python 3.9 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp38-cp38-win_amd64.whl">Python 3.8 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-cp37-cp37m-win_amd64.whl">Python 3.7 (.whl)</a></p>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp313-cp313-win_amd64.whl">Python 3.13 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp312-cp312-win_amd64.whl">Python 3.12 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp311-cp311-win_amd64.whl">Python 3.11 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp310-cp310-win_amd64.whl">Python 3.10 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp39-cp39-win_amd64.whl">Python 3.9 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp38-cp38-win_amd64.whl">Python 3.8 (.whl)</a></p>
 </td>
 </tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<tr class="row-odd"><td><p><i class="fab fa-linux"></i> Linux (All)</p></td>
 <td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-1jammy-cp311-cp311-linux_x86_64.whl">Python 3.11 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-1jammy-cp310-cp310-linux_x86_64.whl">Python 3.10 (.whl)</a>  (Default)</p>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.13 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.12 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.11 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.10 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.9 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">Python 3.8 (.whl)</a></p>
 </td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-1focal-cp39-cp39-linux_x86_64.whl">Python 3.9 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal5-5.12.5-1focal-cp38-cp38-linux_x86_64.whl">Python 3.8 (.whl)</a>  (Default)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fa-code-source">
-<h3><i class="fas fa-code"></i> Source<a class="headerlink" href="#fa-code-source" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<colgroup>
-<col style="width: 100.0%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.12.5/ecal-fat-source.tar.gz">ecal-fat-source.tar.gz</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -490,7 +445,6 @@ _eCAL 5.12.5 is patch-level equivalent to eCAL 5.13.0_
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
 </ul>
