@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,13 +23,16 @@ find_package(GTest REQUIRED)
 
 set(event_test_src
   src/event_test.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../ecal/core/src/ecal_event.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
 
+target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
+
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    eCAL::core
+    #eCAL::core
     Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

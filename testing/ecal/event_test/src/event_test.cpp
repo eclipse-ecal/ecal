@@ -19,6 +19,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/ecal_event.h>
+#include <ecal_event_internal.h>
 
 #include <gtest/gtest.h>
 #include <mutex>
