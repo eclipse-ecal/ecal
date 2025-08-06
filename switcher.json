@@ -5,14 +5,14 @@
         "url": "https://eclipse-ecal.github.io/ecal/latest/"
     },
     {
-        "name": "v6.0 (unstable)",
+        "name": "v6.0 (stable)",
         "version": "v6.0",
-        "url": "https://eclipse-ecal.github.io/ecal/v6.0/"
+        "url": "https://eclipse-ecal.github.io/ecal/stable/"
     },
     {
-        "name": "v5.13 (stable)",
+        "name": "v5.13",
         "version": "v5.13",
-        "url": "https://eclipse-ecal.github.io/ecal/stable/",
+        "url": "https://eclipse-ecal.github.io/ecal/v5.13/",
         "preferred": true
     },
     {
