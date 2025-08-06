@@ -7,6 +7,7 @@ import jinja2
 import semantic_version
 from collections import OrderedDict
 
+# This is used for eCAL 5 releases, that had distro-specific python wheels / eggs
 ubuntu_default_python_version_dict = \
 {
     semantic_version.Version("18.4.0"):  semantic_version.Version("3.6.0"),
@@ -15,6 +16,8 @@ ubuntu_default_python_version_dict = \
     semantic_version.Version("24.4.0"):   semantic_version.Version("3.12.0"),
 }
 
+# This is used to map Ubuntu codenames to their respective semantic versions.
+# eCAL installers only use the codename in the filename, so we need to map them to a semantic version.
 ubuntu_codename_dict = \
 {
     "noble":   semantic_version.Version("24.4.0"),
@@ -91,6 +94,40 @@ def get_releases_dict(gh_repo):
 
     return gh_release_branches_dict
 
+def get_cpu_architecture_from_filename_suffix(filename, default_architecture="unknown"):
+    """
+    Determines the CPU architecture from a filename
+
+    The possible cpu architectures are:
+        - amd64
+        - x86
+        - arm64
+
+    Args:
+        filename (str): The filename to analyze.
+
+    Returns:
+        str: The CPU architecture extracted from the filename, or "unknown" if it cannot be determined.
+
+    """
+    
+    filename_without_extension = os.path.splitext(filename)[0]
+    if filename_without_extension.endswith('amd64') \
+                or filename_without_extension.endswith('x86_64') \
+                or filename_without_extension.endswith('win64'):
+        return 'amd64'
+    elif filename_without_extension.endswith('x86') \
+                or filename_without_extension.endswith('i386') \
+                or filename_without_extension.endswith('win32'):
+        return 'x86'
+    elif filename_without_extension.endswith('arm64') \
+                or filename_without_extension.endswith('aarch64'):
+        return 'arm64'
+    else:
+        sys.stderr.write("Warning: Unable to determine CPU Architecture from installer filename: \"" + filename + "\"\n")
+        return default_architecture
+
+
 """
 Retrieves the properties of a given GitHub asset.
 
@@ -146,21 +183,32 @@ def get_asset_properties(ecal_version, gh_asset):
     elif asset_properties['filename'].endswith('.msi') or asset_properties['filename'].endswith('.exe'):
         asset_properties['type'] = 'ecal_installer'
         asset_properties['properties']['os'] = 'windows'
-        asset_properties['properties']['cpu'] = 'amd64'
+        asset_properties['properties']['cpu'] = get_cpu_architecture_from_filename_suffix(asset_properties['filename'], default_architecture='amd64')
 
     # eCAL installer for macOS
     elif asset_properties['filename'].endswith('.dmg'):
         asset_properties['type'] = 'ecal_installer'
         asset_properties['properties']['os'] = 'macos'
-        asset_properties['properties']['cpu'] = 'amd64'
+
+        # CPU Architecture
+        if ecal_version <= semantic_version.Version("5.7.3"):
+            asset_properties['properties']['cpu'] = 'amd64'  # Old eCAL 5.x releases only had amd64 installers without stating the architecture in the filename
+        else:
+            asset_properties['properties']['cpu'] = get_cpu_architecture_from_filename_suffix(asset_properties['filename'], default_architecture='amd64')
 
     # eCAL Installer for Linux
     elif asset_properties['filename'].endswith('.deb'):
         asset_properties['type'] = 'ecal_installer'
         asset_properties['properties']['os'] = 'ubuntu'
         asset_properties['properties']['os_version'] = semantic_version.Version('0.0.0')
-        asset_properties['properties']['cpu'] = 'amd64'
 
+        # CPU Architecture
+        if ecal_version <= semantic_version.Version("5.7.3"):
+            asset_properties['properties']['cpu'] = 'amd64'  # Old eCAL 5.x releases only had amd64 installers without stating the architecture in the filename
+        else:
+            asset_properties['properties']['cpu'] = get_cpu_architecture_from_filename_suffix(asset_properties['filename'], default_architecture='amd64')
+
+        # Operating system version
         if ecal_version <= semantic_version.Version("5.7.2"):
             # Special case for old releases. They only had Ubuntu 20.04 releases that were just named "linux".
             asset_properties['properties']['os_version'] = semantic_version.Version("20.4.0")
@@ -169,14 +217,11 @@ def get_asset_properties(ecal_version, gh_asset):
                 if codename in asset_properties['filename']:
                     asset_properties['properties']['os_version'] = version
                     break
-        
-        if ecal_version <= semantic_version.Version("5.7.2"):
-            # Special case for old releases. They only had Ubuntu 20.04 releases that were just named "linux".
-            asset_properties['properties']['os_version'] = semantic_version.Version("20.4.0")
 
     # Python binding (whl)
     elif asset_properties['filename'].endswith('.whl'):
         asset_properties['type'] = 'python_binding'
+        asset_properties['properties']['cpu'] = get_cpu_architecture_from_filename_suffix(asset_properties['filename'], default_architecture='amd64')
         
         # Get Operating system
         if 'manylinux' in asset_properties['filename']:
@@ -194,15 +239,6 @@ def get_asset_properties(ecal_version, gh_asset):
                         break
         else:
             sys.stderr.write("Warning: Unable to determine OS of python binding: \"" + asset_properties['filename'] + "\" (from eCAL " + str(ecal_version) + ")\n")
-
-        # Get Python CPU Architecture
-        filename_without_extension = os.path.splitext(asset_properties['filename'])[0]
-        if filename_without_extension.endswith('amd64') or filename_without_extension.endswith('x86_64') or filename_without_extension.endswith('win64'):
-            asset_properties['properties']['cpu'] = 'amd64'
-        elif filename_without_extension.endswith('arm64') or filename_without_extension.endswith('aarch64'):
-            asset_properties['properties']['cpu'] = 'arm64'
-        else:
-            sys.stderr.write("Warning: Unable to determine CPU Architecture of python binding: \"" + asset_properties['filename'] + "\" (from eCAL " + str(ecal_version) + ")\n")
 
         # Get Python version
         python_version        = semantic_version.Version("0.0.0")
@@ -459,8 +495,8 @@ def generate_ppa_instructions(gh_api_key, ecal_doc_version, output_rst_file_path
 if __name__=="__main__":
     gh_api_key = os.getenv("ECAL_GH_API_KEY")
     if gh_api_key:
-        # generate_release_documentation(gh_api_key, "index.rst", "release")
-        generate_ppa_instructions(gh_api_key, semantic_version.Version("5.13.0"), "ppa_instructions.rst.txt")
+        generate_release_documentation(gh_api_key, "index.rst", "release")
+        # generate_ppa_instructions(gh_api_key, semantic_version.Version("6.0.0"), "ppa_instructions.rst.txt")
     else:
         sys.stderr.write("ERROR: Environment variable ECAL_GH_API_KEY not set. Without an API key, GitHub will not provide enough API calls to generate the download tables.\n")
         exit(1)
