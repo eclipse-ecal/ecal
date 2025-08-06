@@ -118,6 +118,23 @@ eCAL Installer
        `Python 3.8 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl>`__ 
 
        
+   * - |fa-linux| Linux (All)
+
+     - ARM64
+
+     - `Python 3.13 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       `Python 3.11 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       `Python 3.10 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       `Python 3.9 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       `Python 3.8 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl>`__ 
+
+       
 |fa-code| Source
 ----------------
 
