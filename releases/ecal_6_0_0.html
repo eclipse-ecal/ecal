@@ -312,6 +312,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-pypy-binding"><i class="fab fa-python"></i> PyPy Binding</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
@@ -425,16 +426,16 @@ This milestone wouldn’t have been possible without your support—thank you fo
 <td><p>x64</p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_amd64.deb">ecal_6.0.0-noble_amd64.deb</a></p></td>
 </tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_arm64.deb">ecal_6.0.0-noble_arm64.deb</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
 <td><p>x64</p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-jammy_amd64.deb">ecal_6.0.0-jammy_amd64.deb</a></p></td>
 </tr>
+<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
+<td><p>ARM64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_arm64.deb">ecal_6.0.0-noble_arm64.deb</a></p></td>
+</tr>
 <tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
-<td><p>x64</p></td>
+<td><p>ARM64</p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-jammy_arm64.deb">ecal_6.0.0-jammy_arm64.deb</a></p></td>
 </tr>
 </tbody>
@@ -490,6 +491,53 @@ This milestone wouldn’t have been possible without your support—thank you fo
 </table>
 </div>
 </section>
+<section id="fa-python-pypy-binding">
+<h3><i class="fab fa-python"></i> PyPy Binding<a class="headerlink" href="#fa-python-pypy-binding" title="Link to this heading">#</a></h3>
+<p><em>PyPy bindings are not compatibly with the regular Python implementation.</em></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>OS</p></th>
+<th class="head"><p>Architecture</p></th>
+<th class="head"><p>Files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><i class="fab fa-windows"></i> Windows</p></td>
+<td><p>x64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp310-pypy310_pp73-win_amd64.whl">PyPy 3.10 (.whl)</a></p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp39-pypy39_pp73-win_amd64.whl">PyPy 3.9 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp38-pypy38_pp73-win_amd64.whl">PyPy 3.8 (.whl)</a></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p><i class="fab fa-linux"></i> Linux (All)</p></td>
+<td><p>x64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">PyPy 3.10 (.whl)</a></p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">PyPy 3.9 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl">PyPy 3.8 (.whl)</a></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-even"><td><p><i class="fab fa-linux"></i> Linux (All)</p></td>
+<td><p>ARM64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl">PyPy 3.10 (.whl)</a></p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl">PyPy 3.9 (.whl)</a></p>
+<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/eclipse_ecal-6.0.0-pp38-pypy38_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl">PyPy 3.8 (.whl)</a></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="fa-code-source">
 <h3><i class="fas fa-code"></i> Source<a class="headerlink" href="#fa-code-source" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -537,6 +585,7 @@ This milestone wouldn’t have been possible without your support—thank you fo
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-pypy-binding"><i class="fab fa-python"></i> PyPy Binding</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
