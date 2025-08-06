@@ -8,6 +8,7 @@ on:
       - released
       - unpublished
       - deleted
+      - edited
 
 jobs:
   documentation-release-page:
