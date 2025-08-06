@@ -312,6 +312,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
 </ul>
@@ -333,9 +334,69 @@ document.write(`
 </ul>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## Welcome to eCAL v6 ! 
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## Core :diamond_shape_with_a_dot_inside:
+- Reworked API (#1841, #1785, #1853, #1854, #1849, #1858, #1859, #1863, #2046, #2071)
+	- improved usability
+	- more meaningful function naming and return values
+	- diverse cleanups of unnecessary functions
+- Configuration management (#1604, #1891)
+	- runtime configuration easily possible with structures for Initializes process as well as for creating publisher and subscriber (#1505, #1561)
+	- new config file format: yaml (#1669)
+	- new config file path in userspace (appdata, ~/.ecal/) after generation or in install folder (win) (#1983)
+- Monitoring support for client entities (#1493)
+- Added event callbacks to publisher/subscriber for new entities  (#1717, #1982)
 
-release notes will be available soon 🐌 
+## Language Bindings :speaking_head:
+- Feature equivalent with C++ API 
+	- C (#2074, #2084, #2090)
+	- C# (#2056, #2075, #2186, #2188, #2204, #2214)
+	- Python (#2189, #2263)
+
+## Measurement :record_button:
+- New HDF5 format v6 that stores channel IDs which enables recording distinguished channels with same name (#1375)
+
+## Application :toolbox:
+- Support of Qt6 (#1315)
+- eCAL Sys now can handle hostname evaluation for target hostname (#2285)
+- Config file path can be seen in eCAL Monitor (and read out via monitoring information) (#1909)
+
+## Documentation :scroll:
+- Adaption for new API (#1690, #1985, #2137)
+- Cleanup to fit the current state of the repository (#2085, #2147, #2277, #2286)
+- Migration Guide to new API coming from eCAL 5 (#2104)
+- Documentation switch available to choose for different eCAL versions (#1901, #2019)
+
+## Build Process :gear:
+- Support of dependency provider (#1501)
+- Support of CMakePresets (#1380)
+- Renamed eCAL related CMake options with prefix &quot;ECAL_&quot; and &quot;HAS&quot; replaced with &quot;USE&quot; (#1968)
+
+## Miscellaneous :game_die:
+- Runtime optimization (#1742, #1744, #1746
+- Diverse internal cleanups
+- Submodule updates
+- Repository restructure (#1934, #1935, #2039)
+
+## Bugfixes :lady_beetle:
+- Player crashes when playing empty measurements fixed (#1385)
+- Service collision in eCAL Monitor fixed (#1554)
+- Frequency calculation bug that resets FPS to 0.0 fixed (#1650)
+- Datarace fixes (#1674, #1795, #2249
+- Processes might not unregister correctly fixed (#1764)
+- Topic resubscription bug fix for shm (#1943)
+
+## Thank you :handshake:
+We’re incredibly grateful to everyone who contributed to eCAL 6. Your time, expertise, and dedication helped shape this release into what it is today.
+This milestone wouldn’t have been possible without your support—thank you for being part of the journey!
+
+- :star: @DownerCase :star:
+- @LeonHosch
+- @ashariff-11
+- @albrechtdennis
+- @KaiKosch
+- @aaroon-5
+
+**Full Changelog**: https://github.com/eclipse-ecal/ecal/compare/v5.13.3...v6.0.0
 </pre></div>
 </div>
 </section>
@@ -364,9 +425,17 @@ release notes will be available soon 🐌
 <td><p>x64</p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_amd64.deb">ecal_6.0.0-noble_amd64.deb</a></p></td>
 </tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
+<td><p>x64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-noble_arm64.deb">ecal_6.0.0-noble_arm64.deb</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
 <td><p>x64</p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-jammy_amd64.deb">ecal_6.0.0-jammy_amd64.deb</a></p></td>
+</tr>
+<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
+<td><p>x64</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal_6.0.0-jammy_arm64.deb">ecal_6.0.0-jammy_arm64.deb</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -411,6 +480,19 @@ release notes will be available soon 🐌
 </table>
 </div>
 </section>
+<section id="fa-code-source">
+<h3><i class="fas fa-code"></i> Source<a class="headerlink" href="#fa-code-source" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 100.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v6.0.0/ecal-fat-source.tar.gz">ecal-fat-source.tar.gz</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 </section>
 
@@ -445,6 +527,7 @@ release notes will be available soon 🐌
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
 </ul>
 </li>
 </ul>
