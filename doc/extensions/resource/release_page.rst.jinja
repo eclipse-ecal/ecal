@@ -66,7 +66,7 @@ Downloads
 
 {# Get the ecal_installers from the list and remove them from the main list. -#}
 {% set ecal_installer_list = asset_list | selectattr('type', 'equalto', 'ecal_installer') | list -%}
-{% set asset_list          = asset_list | rejectattr('type', 'equalto', 'ecal_installer') | list -%}
+{% set asset_list          = asset_list | reject('in', ecal_installer_list) | list -%}
 
 {% if ecal_installer_list %}
 eCAL Installer
@@ -96,7 +96,8 @@ eCAL Installer
 
 {# Get the python bindings from the list -#}
 {% set python_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'cp') | list -%}
-{% set asset_list          = asset_list | rejectattr('type', 'equalto', 'python_binding') | list -%}
+{% set asset_list          = asset_list | reject('in', python_binding_list) | list -%}
+
 
 {% if python_binding_list %}
 |fa-python| Python Binding
@@ -133,7 +134,7 @@ eCAL Installer
 
 {# Get the PyPy bindings from the list -#}
 {% set pypy_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'pp') | list -%}
-{% set asset_list        = asset_list | rejectattr('type', 'equalto', 'python_binding') | list -%}
+{% set asset_list        = asset_list | reject('in', pypy_binding_list) | list -%}
 
 {% if pypy_binding_list %}
 |fa-python| PyPy Binding
@@ -169,7 +170,7 @@ eCAL Installer
 
 {# Get the source files from the list -#}
 {% set source_file_list = asset_list | selectattr('type', 'equalto', 'source') | list -%}
-{% set asset_list       = asset_list | rejectattr('type', 'equalto', 'source') | list -%}
+{% set asset_list       = asset_list | reject('in', source_file_list) | list -%}
 
 {% if source_file_list %}
 |fa-code| Source
