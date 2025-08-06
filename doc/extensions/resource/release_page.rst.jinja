@@ -162,7 +162,7 @@ eCAL Installer
       - {% for asset in value -%}
          `PyPy {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
 
-         {% endfor -%}
+        {% endfor -%}
 
     {% endfor -%}
 
