@@ -1,0 +1,47 @@
+import os
+import sys
+
+thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "thirdparty")
+
+# Add thirdparty directory to the system path
+sys.path.insert(0, thirdparty_dir)
+
+# Iterate over subdirs in thirdparty directory to import their get_sbom modules
+sbom_module_list = []
+for subdir in os.listdir(thirdparty_dir):
+    subdir_path = os.path.join(thirdparty_dir, subdir)
+    if os.path.isdir(subdir_path):
+        module_name = f"{subdir}.sbom"
+        try:
+            sbom_module_list.append(__import__(module_name, fromlist=['get_sbom']))
+        except ImportError as e:
+            print(f"Failed to import {module_name}: {e}")
+
+def copy_license_files_to(sbom_dict, target_dir):
+    """
+    Copies license files from the SBOM dictionary to the specified target directory. For each sbom entry, a subdirectory is created in the target directory, and the license files are copied there.
+    """
+    for component_name, component_info in sbom_dict.items():
+        if "license_files" in component_info:
+            # replace all characters that are not alphanumeric or underscore with an underscore
+            component_license_dir = ''.join(c if c.isalnum() or c == '_' else '_' for c in component_name)
+            # Create a subdirectory for the component in the target directory
+            target_component_dir = os.path.join(target_dir, component_license_dir)
+            os.makedirs(target_component_dir, exist_ok=True)
+            for license_file in component_info["license_files"]:
+                if os.path.exists(license_file):
+                    target_file_path = os.path.join(target_component_dir, os.path.basename(license_file))
+                    with open(license_file, 'rb') as src_file:
+                        with open(target_file_path, 'wb') as dst_file:
+                            dst_file.write(src_file.read())
+                else:
+                    print(f"License file {license_file} does not exist and cannot be copied.")
+
+if __name__ == "__main__":
+    sbom_dict = {}
+    for sbom_module in sbom_module_list:
+        # Apend the SBOM from each module to the dictionary
+        sbom = sbom_module.get_sbom()
+        sbom_dict.update(sbom)
+
+    copy_license_files_to(sbom_dict, "../licenses")
