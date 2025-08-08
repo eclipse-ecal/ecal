@@ -49,6 +49,9 @@ namespace Ping {
 
       // Wait for connection
       std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
+
+      // Check if client instance exists
+      while (client.GetClientInstances().size() == 0) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
  
       // This is the benchmarked section: Getting a response from the server
       for (auto _ : state) {
