@@ -18,7 +18,8 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(mirror_server)
+# The target name mirror_server is used by HDF5
+project(mirror_server_cpp)
 
 find_package(eCAL REQUIRED)
 

@@ -18,7 +18,7 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(mirror_client)
+project(mirror_client_cpp)
 
 find_package(eCAL REQUIRED)
 
