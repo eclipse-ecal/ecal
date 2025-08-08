@@ -41,9 +41,9 @@ namespace Send {
   // Benchmark function
   void BM_eCAL_Send(benchmark::State& state) {
     // Create payload to send, size depends on current argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL and create sender
     eCAL::Initialize("Benchmark");
@@ -93,9 +93,9 @@ namespace Send_and_Receive {
   // Benchmark function
   void BM_eCAL_Send_and_Receive(benchmark::State& state) {
     // Create payload to send, size depends on current argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender
     eCAL::Initialize("Benchmark");
@@ -155,8 +155,9 @@ namespace Receive_Latency {
   // Benchmark function
   void BM_eCAL_Receive_Latency(benchmark::State& state) {
     // Create payload to send, size depends on current argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender and receiver and register callback function
     eCAL::Initialize("Benchmark");
@@ -175,7 +176,7 @@ namespace Receive_Latency {
     // This is the benchmarked section: Sending the payload (untimed) and waiting for the receive callback
     for (auto _ : state) {
       msg_received = false;
-      publisher.Send(content_vector.data(), payload_size);
+      publisher.Send(content_addr, payload_size);
       std::unique_lock<std::mutex> lock(mtx);
 
       time_start = std::chrono::high_resolution_clock::now();

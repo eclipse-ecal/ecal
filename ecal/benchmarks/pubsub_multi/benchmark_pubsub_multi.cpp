@@ -47,15 +47,15 @@ namespace Multi_Send {
   // Benchmark function
   void BM_eCAL_Multi_Send(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(1);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(1);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
 
     // Create the background publishers, count depends on first argument
-    int topic_count = state.range(0);
+    const int topic_count = state.range(0);
     std::vector<eCAL::CPublisher> background_publisher_vector;
     for (int i=0; i<topic_count; i++) {
       background_publisher_vector.emplace_back(eCAL::CPublisher("background_topic_" + std::to_string(i)));

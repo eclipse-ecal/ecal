@@ -40,9 +40,9 @@ namespace Send_Zero_Copy {
   // Benchmark function
   void BM_eCAL_Send_Zero_Copy(benchmark::State& state) {
     // Create payload to send, size depends on current argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -86,9 +86,9 @@ namespace Send_Handshake {
   // Benchmark function
   void BM_eCAL_Send_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on current argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -132,9 +132,9 @@ namespace Send_Double_Buffer {
   // Benchmark function
   void BM_eCAL_Send_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -178,9 +178,9 @@ namespace Send_Zero_Copy_Handshake {
   // Benchmark function
   void BM_eCAL_Send_Zero_Copy_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -225,9 +225,9 @@ namespace Send_Zero_Copy_Double_Buffer {
   // Benchmark function
   void BM_eCAL_Send_Zero_Copy_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -272,9 +272,9 @@ namespace Send_Double_Buffer_Handshake {
   // Benchmark function
   void BM_eCAL_Send_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
@@ -319,9 +319,9 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
   // Benchmark function
   void BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
-    size_t payload_size = state.range(0);
-    std::vector<char> content_vector(payload_size);
-    char* content_addr = content_vector.data();
+    const size_t payload_size = state.range(0);
+    const std::vector<char> content_vector(payload_size);
+    const char* content_addr = content_vector.data();
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
