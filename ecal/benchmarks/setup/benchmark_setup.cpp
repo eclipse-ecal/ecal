@@ -23,6 +23,8 @@
 
 #include <benchmark/benchmark.h>
 
+#include <thread>
+
 
 constexpr int minimum_time_s = 5;
 
@@ -128,7 +130,7 @@ namespace Registration_Delay {
          eCAL::CSubscriber subscriber("benchmark_topic");
          state.ResumeTiming();
 
-         while (publisher.GetSubscriberCount() == 0) { ; }
+         while (publisher.GetSubscriberCount() == 0) { std::this_thread::yield(); }
       }
 
       // Finalize eCAL
