@@ -266,7 +266,7 @@ jobs:
     # --------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.ref_name == 'dev-benchmark'
+    if: github.ref_name == 'master'
     runs-on: windows-2022
     needs: build-windows
     

@@ -195,7 +195,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.ref_name == 'dev-benchmark'
+    if: github.ref_name == 'master'
     needs: build-ubuntu
     
     strategy:
