@@ -49,6 +49,7 @@ namespace Multi_Send {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(1);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL

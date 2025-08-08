@@ -43,6 +43,7 @@ namespace Send {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL and create sender
@@ -95,6 +96,7 @@ namespace Send_and_Receive {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender
@@ -157,6 +159,7 @@ namespace Receive_Latency {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender and receiver and register callback function

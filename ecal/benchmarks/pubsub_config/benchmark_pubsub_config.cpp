@@ -42,6 +42,7 @@ namespace Send_Zero_Copy {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -88,6 +89,7 @@ namespace Send_Handshake {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -134,6 +136,7 @@ namespace Send_Double_Buffer {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -180,6 +183,7 @@ namespace Send_Zero_Copy_Handshake {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -227,6 +231,7 @@ namespace Send_Zero_Copy_Double_Buffer {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -274,6 +279,7 @@ namespace Send_Double_Buffer_Handshake {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
@@ -321,6 +327,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
     const std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL
