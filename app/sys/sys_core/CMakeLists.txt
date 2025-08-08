@@ -74,7 +74,8 @@ set(ecalsyscore_src
   src/task/task_group.cpp
 )
 
-add_library(${PROJECT_NAME} ${ecalsyscore_src})
+# Internal helper library for eCAL applications
+add_library(${PROJECT_NAME} STATIC ${ecalsyscore_src})
 add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
