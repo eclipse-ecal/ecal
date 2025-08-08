@@ -42,7 +42,7 @@ namespace Send {
   void BM_eCAL_Send(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -95,7 +95,7 @@ namespace Send_and_Receive {
   void BM_eCAL_Send_and_Receive(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -158,7 +158,7 @@ namespace Receive_Latency {
   void BM_eCAL_Receive_Latency(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 

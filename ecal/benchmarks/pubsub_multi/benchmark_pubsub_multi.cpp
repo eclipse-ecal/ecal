@@ -48,7 +48,7 @@ namespace Multi_Send {
   void BM_eCAL_Multi_Send(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(1);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 

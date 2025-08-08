@@ -41,7 +41,7 @@ namespace Send_Zero_Copy {
   void BM_eCAL_Send_Zero_Copy(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -88,7 +88,7 @@ namespace Send_Handshake {
   void BM_eCAL_Send_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -135,7 +135,7 @@ namespace Send_Double_Buffer {
   void BM_eCAL_Send_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -182,7 +182,7 @@ namespace Send_Zero_Copy_Handshake {
   void BM_eCAL_Send_Zero_Copy_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -230,7 +230,7 @@ namespace Send_Zero_Copy_Double_Buffer {
   void BM_eCAL_Send_Zero_Copy_Double_Buffer(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -278,7 +278,7 @@ namespace Send_Double_Buffer_Handshake {
   void BM_eCAL_Send_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
@@ -326,7 +326,7 @@ namespace Send_Zero_Copy_Double_Buffer_Handshake {
   void BM_eCAL_Send_Zero_Copy_Double_Buffer_Handshake(benchmark::State& state) {
     // Create payload to send, size depends on second argument
     const size_t payload_size = state.range(0);
-    const std::vector<char> content_vector(payload_size);
+    std::vector<char> content_vector(payload_size);
     std::generate(content_vector.begin(), content_vector.end(), std::rand);
     const char* content_addr = content_vector.data();
 
