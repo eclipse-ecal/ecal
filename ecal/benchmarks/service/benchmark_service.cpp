@@ -51,7 +51,11 @@ namespace Ping {
       std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
 
       // Check if client instance exists
-      while (client.GetClientInstances().size() == 0) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
+      if (client.GetClientInstances().size() == 0) { 
+         std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
+         // Check again, exit if failed
+         if (client.GetClientInstances().size() == 0) { std::exit(1); }
+      }
  
       // This is the benchmarked section: Getting a response from the server
       for (auto _ : state) {
