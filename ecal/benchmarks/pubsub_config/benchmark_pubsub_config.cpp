@@ -35,8 +35,8 @@ constexpr int range_limit = 1 << 24;
 // Random byte generator
 std::random_device rd;
 std::mt19937 engine(rd());
-const std::uniform_int_distribution<> distrib(0,255);
-auto gen = [&]() {
+std::uniform_int_distribution<> distrib(0,255);
+auto gen = []() {
   return static_cast<char>(distrib(engine));
 };
 
