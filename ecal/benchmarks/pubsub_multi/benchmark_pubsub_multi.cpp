@@ -37,12 +37,12 @@ constexpr int per_topic_range_multiplier = 1 << 12;
 
 
 // Random byte generator
-std::random_device rd;
-std::mt19937 engine(rd());
-std::uniform_int_distribution<> distrib(0,255);
-auto gen = []() {
-  return static_cast<char>(distrib(engine));
-};
+char gen() {
+  static std::random_device rd;
+  static std::mt19937 engine(rd());
+  static std::uniform_int_distribution<> distr(0,255);
+  return static_cast<char>(distr(engine));
+}
 
 
 /*
