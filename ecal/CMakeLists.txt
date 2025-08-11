@@ -57,3 +57,10 @@ if(ECAL_CORE_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+# --------------------------------------------------------
+# benchmarks
+# --------------------------------------------------------
+if (ECAL_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
+endif()

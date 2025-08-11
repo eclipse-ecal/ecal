@@ -2,7 +2,7 @@
 # eCAL - enhanced Communication Abstraction Layer
 
 
-[![Windows](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml) [![Ubuntu](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml) [![macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
+[![Windows](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml) [![Ubuntu](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml) [![macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml) [![Benchmark Link](https://img.shields.io/badge/performance%20benchmarks-via%20bencher-orange)](https://bencher.dev/console/projects/ecal/plots)
 
 [![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
 
