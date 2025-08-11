@@ -20,6 +20,7 @@
 #include <ecal/ecal.h>
 #include <benchmark/benchmark.h>
 
+#include <random>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -30,6 +31,15 @@ constexpr int registration_delay_ms = 2000;
 constexpr int range_multiplier = 1 << 6;
 constexpr int range_start = 1;
 constexpr int range_limit = 1 << 24;
+
+
+// Random byte generator
+std::random_device rd;
+std::mt19937 engine(rd());
+const std::uniform_int_distribution<> distrib(0,255);
+auto gen = [&]() {
+  return static_cast<char>(distrib(engine));
+};
 
 
 /*
@@ -43,7 +53,7 @@ namespace Send {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
-    std::generate(content_vector.begin(), content_vector.end(), std::rand);
+    std::generate(content_vector.begin(), content_vector.end(), gen);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL and create sender
@@ -96,7 +106,7 @@ namespace Send_and_Receive {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
-    std::generate(content_vector.begin(), content_vector.end(), std::rand);
+    std::generate(content_vector.begin(), content_vector.end(), gen);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender
@@ -159,7 +169,7 @@ namespace Receive_Latency {
     // Create payload to send, size depends on current argument
     const size_t payload_size = state.range(0);
     std::vector<char> content_vector(payload_size);
-    std::generate(content_vector.begin(), content_vector.end(), std::rand);
+    std::generate(content_vector.begin(), content_vector.end(), gen);
     const char* content_addr = content_vector.data();
 
     // Initialize eCAL, create sender and receiver and register callback function
