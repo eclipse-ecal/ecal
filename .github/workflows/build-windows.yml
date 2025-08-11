@@ -178,8 +178,8 @@ jobs:
         py -3.12 -m venv ".venv_312"
         CALL ".venv_312\Scripts\activate.bat"
         pip install wheel  setuptools
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -190,8 +190,8 @@ jobs:
         py -3.11 -m venv ".venv_311"
         CALL ".venv_311\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -202,8 +202,8 @@ jobs:
         py -3.10 -m venv ".venv_310"
         CALL ".venv_310\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
@@ -214,8 +214,8 @@ jobs:
         py -3.9 -m venv ".venv_39"
         CALL ".venv_39\Scripts\activate.bat"
         pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 16 2019" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
+        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
         cmake --build . --target create_python_wheel --config Release
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
