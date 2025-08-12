@@ -6,6 +6,8 @@ thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..",
 # Add thirdparty directory to the system path
 sys.path.insert(0, thirdparty_dir)
 
+import ecal_license_utils
+
 # Iterate over subdirs in thirdparty directory to import their get_sbom modules
 sbom_module_list = []
 for subdir in os.listdir(thirdparty_dir):
@@ -58,3 +60,6 @@ if __name__ == "__main__":
         sbom_dict.update(sbom)
 
     copy_license_files_to(sbom_dict, "../licenses")
+
+    sbom_dict_python_only = dict(filter(lambda x: ecal_license_utils.include_type.PYTHON_BINDINGS in x[1]["include_type"], sbom_dict.items()))
+    copy_license_files_to(sbom_dict_python_only, "../licenses_python_bindings")
