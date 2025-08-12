@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "thirdparty")
 
@@ -53,13 +54,32 @@ def copy_license_files_to(sbom_dict, target_dir):
                         print(f"Third-party license file {thirdparty_license} does not exist and cannot be copied.")
 
 if __name__ == "__main__":
+    # Create a dictionary to hold License information from all modules
     sbom_dict = {}
     for sbom_module in sbom_module_list:
         # Apend the SBOM from each module to the dictionary
         sbom = sbom_module.get_sbom()
         sbom_dict.update(sbom)
 
-    copy_license_files_to(sbom_dict, "../licenses")
+    licenses_target_dir        = os.path.realpath(os.path.join(os.path.dirname(__file__), "../licenses"))
+    python_licenses_target_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), "../licenses_python_bindings"))
 
+    # Make sure that the target directories exist but is empty
+    os.makedirs(licenses_target_dir, exist_ok=True)
+    os.makedirs(python_licenses_target_dir, exist_ok=True)
+
+    # Clear the contents of the target directories
+    for target_dir in [licenses_target_dir, python_licenses_target_dir]:
+        for item in os.listdir(target_dir):
+            item_path = os.path.join(target_dir, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+            else:
+                os.remove(item_path)
+
+    # Copy license files from the SBOM dictionary to the target directories
+    copy_license_files_to(sbom_dict, licenses_target_dir)
+
+    # Filter the SBOM dictionary for Python bindings only
     sbom_dict_python_only = dict(filter(lambda x: ecal_license_utils.include_type.PYTHON_BINDINGS in x[1]["include_type"], sbom_dict.items()))
-    copy_license_files_to(sbom_dict_python_only, "../licenses_python_bindings")
+    copy_license_files_to(sbom_dict_python_only, python_licenses_target_dir)
