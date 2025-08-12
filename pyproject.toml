@@ -5,7 +5,9 @@ requires-python = ">=3.8"
 license = "Apache-2.0"
 license-files = [
   "LICENSE.txt",
-  "NOTICE.md"
+  "NOTICE.md",
+  "licenses_python_binding/**/*",       # Matches all "main" licenses in subdirs
+  "licenses_python_binding/**/**/*"     # Matches all licenses from "thirdparty" sub-subdirs (unfortunatelly, the ** is not recursive here)
 ]
 authors = [
   { "name" = "Eclipse eCAL Team", "email" = "ecal-dev@eclipse.org" },
@@ -58,7 +60,7 @@ sdist.only-include = [
   "/cpack/",
   "/ecal/",
   "/lib/",
-  "/licenses/",
+  "/licenses_python_binding/",
   "lang/c/",
   "lang/python/",
 
