@@ -140,6 +140,7 @@ jobs:
         -DECAL_BUILD_PY_BINDING=OFF ^
         -DECAL_BUILD_CSHARP_BINDING=OFF ^
         -DECAL_BUILD_TESTS=ON ^
+        -DECAL_BUILD_BENCHMARKS=ON ^
         -DECAL_INSTALL_SAMPLE_SOURCES=ON ^
         -DECAL_USE_NPCAP=ON ^
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON ^
@@ -248,8 +249,101 @@ jobs:
       with:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
+        
+    - name: Upload Benchmark Executables
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'benchmarks'
+        path: ${{ runner.workspace }}/_build/complete/bin/ecal_benchmark*
+        
+    - name: Upload eCAL Libraries
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'libraries'
+        path: ${{ runner.workspace }}/_build/complete/bin/*.dll
 
     # --------------------------------------------------------------------------------------------------
+    
+  run-benchmarks:
+    if: github.ref_name == 'master'
+    runs-on: windows-2022
+    needs: build-windows
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        # List of all benchmark types, corresponding to an executable
+        bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
+    
+    env:
+      # Name of the benchmark log file without extension
+      LOG_FILE_NAME: ecal_benchmark_${{ matrix.bm_type }}_log
+      # Check that this version is also present in the job above and the one used for this job
+      OS_VERSION: windows-2022
+
+    steps:
+    - name: Fetch Throughput Calculator Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            ecal/benchmarks/util/throughput_calculator.py
+        sparse-checkout-cone-mode: false
+    
+    - name: Download eCAL Libraries
+      uses: actions/download-artifact@v4
+      with:
+        name: 'libraries'
+        path: ${{ github.workspace }}
+    
+    - name: Download Benchmark Executables
+      uses: actions/download-artifact@v4
+      with:
+        name: 'benchmarks'
+        path: ${{ github.workspace }}
+    
+    - name: Install Bencher CLI
+      run: |
+        powershell -c "irm https://bencher.dev/download/install-cli.ps1 | iex"
+      shell: pwsh
+    
+    - name: Run Benchmark
+      run: |
+        ${{ github.workspace }}/ecal_benchmark_${{ matrix.bm_type }}.exe --benchmark_out=${{ env.LOG_FILE_NAME }}.json --benchmark_out_format=json
+      shell: cmd
+    
+    - name: Calculate Throughput
+      if: startsWith(matrix.bm_type, 'pubsub')
+      run: |
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
+      working-directory: ${{ github.workspace }}
+      shell: cmd
+        
+    - name: Log Benchmark Results with Bencher
+      run: |
+        bencher run `
+        --project ecal `
+        --token '${{secrets.BENCHER_API_TOKEN}}' `
+        --branch '${{ github.ref_name }}' `
+        --testbed '${{ env.OS_VERSION }}' `
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' `
+        --adapter cpp_google `
+        --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
+      shell: pwsh
+        
+    - name: Log Calculated Throughput with Bencher
+      if: startsWith(matrix.bm_type, 'pubsub')
+      run: |
+        bencher run `
+        --project ecal `
+        --token '${{secrets.BENCHER_API_TOKEN}}' `
+        --branch '${{ github.ref_name }}' `
+        --testbed '${{ env.OS_VERSION }}' `
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' `
+        --adapter json `
+        --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+      shell: pwsh
+        
+    #---------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
     if: github.repository == 'eclipse-ecal/ecal'

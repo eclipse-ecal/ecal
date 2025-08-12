@@ -34,7 +34,8 @@ set(source_files
   src/task.cpp
 ) 
 
-add_library (${PROJECT_NAME} ${source_files})
+# Internal helper library for eCAL applications
+add_library (${PROJECT_NAME} STATIC ${source_files})
 add_library (eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
