@@ -10,7 +10,7 @@ Thumbs.db
 # Python building and distribution
 /_python_build/
 /dist/
-/lang/python/core/ecal/_version.py
+/lang/python/src/core/ecal/_version.py
 /wheelhouse/
 
 # Binary libraries
