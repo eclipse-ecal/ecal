@@ -37,6 +37,19 @@ def copy_license_files_to(sbom_dict, target_dir):
                 else:
                     print(f"License file {license_file} does not exist and cannot be copied.")
 
+            # Copy thirdparty licenses if available
+            if component_info["thirdparty_license_files"]:
+                thirdparty_license_dir = os.path.join(target_component_dir, "thirdparty")
+                os.makedirs(thirdparty_license_dir, exist_ok=True)
+                for thirdparty_license in component_info["thirdparty_license_files"]:
+                    if os.path.exists(thirdparty_license):
+                        target_file_path = os.path.join(thirdparty_license_dir, os.path.basename(thirdparty_license))
+                        with open(thirdparty_license, 'rb') as src_file:
+                            with open(target_file_path, 'wb') as dst_file:
+                                dst_file.write(src_file.read())
+                    else:
+                        print(f"Third-party license file {thirdparty_license} does not exist and cannot be copied.")
+
 if __name__ == "__main__":
     sbom_dict = {}
     for sbom_module in sbom_module_list:

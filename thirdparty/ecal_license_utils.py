@@ -1,7 +1,4 @@
-import os
-import sys
 import subprocess
-import argparse
 
 from enum import Enum
 
@@ -51,6 +48,65 @@ def get_copyright_from_file(file_path, skip_lines=0):
     except Exception as e:
         print(f"Error reading file {file_path}: {e}")
         return None
+
+def extract_license_from_cpp_source_file(source_file_path):
+    """
+    Extract the license text from a source file.
+    This function assumes that the license is present in the first few lines of
+    the file as a C / C++ style comment. It will extract all consecutive lines
+    of comment until it finds a non-comment line or the end of the file.
+    """
+    license_text = []
+    with open(source_file_path, 'r', encoding='utf-8') as file:
+        first_comment_found    = False
+        non_comment_line_found = False
+        is_multiline_comment   = False
+
+        for line in file:
+            line = line.strip()
+
+            # Check for the start of a comment
+            if line.startswith("/*") or line.startswith("//"):
+                first_comment_found = True
+                is_multiline_comment = line.startswith("/*")
+
+            # Append the line to the license text if we are in a comment
+            if first_comment_found:
+                if is_multiline_comment:
+                    # Remove multiline comment markersa
+                    if line.startswith("/** "):
+                        line = line[4:].strip()
+                    elif line.startswith("/**"):
+                        line = line[3:].strip()
+                    elif line.startswith("/* "):
+                        line = line[3:].strip()
+                    elif line.endswith("*/"):
+                        line = line[:-2].strip()
+                        is_multiline_comment = False
+                    elif line.startswith("/*"):
+                        line = line[2:].strip()
+                    elif line.startswith("* "):
+                        line = line[2:].strip()
+                    elif line.startswith("*"):
+                        line = line[1:].strip()
+
+                else:
+                    # Remove single line comment markers
+                    if line.startswith("// "):
+                        line = line[3:].strip()
+                    elif line.startswith("//"):
+                        line = line[2:].strip()
+                    else:
+                        line = ""
+                        non_comment_line_found = True
+
+                # Append line to the license text
+                license_text.append(line)
+
+                if non_comment_line_found:
+                    break
+
+    return "\n".join(license_text) if license_text else None
 
 def get_git_version_from_submodule(submodule_path):
     # Get Git Tag (if it exists)
