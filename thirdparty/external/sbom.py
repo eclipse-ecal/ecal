@@ -15,12 +15,13 @@ def get_sbom_qt():
                                                 ]
     sbom[component_name]["path"] =              None
     sbom[component_name]["license"] =           "LGPL-3.0-only"
-    sbom[component_name]["license_files"] =     [
-                                                    os.path.join(license_dir, "lgpl-3.0.txt"),
-                                                    os.path.join(license_dir, "gpl-3.0.txt"),
-                                                    os.path.join(license_dir, "lgpl-2.1.txt"),
-                                                    os.path.join(license_dir, "gpl-2.0.txt"),
-                                                ]
+
+    # add all license files from the license directory
+    sbom[component_name]["license_files"] = []
+    for root, dirs, files in os.walk(license_dir):
+        for filename in files:
+            sbom[component_name]["license_files"].append(os.path.join(root, filename))
+            
     sbom[component_name]["copyright"] =         "The Qt Company Ltd."
     sbom[component_name]["homepage"] =          "https://www.qt.io/"
     sbom[component_name]["repo_url"] =          "https://github.com/qt/qtbase"
