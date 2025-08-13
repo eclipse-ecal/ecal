@@ -24,6 +24,10 @@ Downloads
 =========
 
 
+.. note::
+
+   A more recent version of eCAL 5.13 is available: :ref:`eCAL 5.13.4 <ecal_release_page_5_13_4>`.
+
 
 
 eCAL Installer

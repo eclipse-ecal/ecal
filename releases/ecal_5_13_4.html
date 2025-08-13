@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>eCAL 5.13.3 &#8212; Eclipse eCAL™</title>
+    <title>eCAL 5.13.4 &#8212; Eclipse eCAL™</title>
   
   
   
@@ -43,7 +43,7 @@
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'ecal_5_13_3';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ecal_5_13_4';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -214,7 +214,7 @@
       
       
       
-      <li><a href="_sources/ecal_5_13_3.rst" target="_blank"
+      <li><a href="_sources/ecal_5_13_4.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -298,7 +298,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>eCAL 5.13.3</h1>
+    <h1>eCAL 5.13.4</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -309,12 +309,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changelog">Changelog</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a></li>
 </ul>
             </nav>
         </div>
@@ -326,142 +321,31 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ecal-5-13-3">
-<span id="ecal-release-page-5-13-3"></span><h1>eCAL 5.13.3<a class="headerlink" href="#ecal-5-13-3" title="Link to this heading">#</a></h1>
+  <section id="ecal-5-13-4">
+<span id="ecal-release-page-5-13-4"></span><h1>eCAL 5.13.4<a class="headerlink" href="#ecal-5-13-4" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>Release Date: 2024-10-24</p></li>
-<li><p>GitHub Release Page: <a class="github reference external" href="https://github.com/eclipse-ecal/ecal/releases/tag/v5.13.3">eclipse-ecal/ecal</a></p></li>
+<li><p>Release Date: 2025-08-13</p></li>
+<li><p>GitHub Release Page: <a class="github reference external" href="https://github.com/eclipse-ecal/ecal/releases/tag/v5.13.4">eclipse-ecal/ecal</a></p></li>
 </ul>
 <section id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Changelog
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## What&#39;s Changed
 
+### Core
 
-## Core
-- Bugfix in frequency calculator that prevents reset to 0 fps when data is still incoming (#1650, #1652)
-- Zero length payload now gets transferred over shm in zero copy mode (#1688)
-- Protobuf Publisher Send now returns the actual send size (#1681)
+* Modified pipe_handler (#2191)
+* Fixed a critical race condition in eCAL&#39;s linux event implementation (#2247)
+* More robust linux ipc event handling with flock protection (#2251) 
 
-## Service
-- Remove callbacks before stopping tcp protocol layer now, as it lead before to a tcp error (#1696)
+### Python binding
+* fix memory leaks by adding missing Py_DECREF (#2278)
 
-## Protobuf
-- Reflection now also adds complete empty submessages (#1734, #1735)
-
-## Python
-- Fix iterating over measurement (#1748, #1750, #1751)
-- Fixed memory leaks in Python Wrapper (#1754, #1758)
-- Fixed deadlock in call_method function for service calls in same process (#1760)
-
-## Samples
-- Several shutdown conditions fixed (#1641, #1643)
-- Massive PubSub sample added (#1666)
-
-*Full changelog can be found here: https://github.com/eclipse-ecal/ecal/compare/v5.13.2...v5.13.3*
-
-*eCAL 5.13.3 is patch-level equivalent to eCAL 5.12.7*
+**Full Changelog**: https://github.com/eclipse-ecal/ecal/compare/v5.13.3...v5.13.4
 </pre></div>
 </div>
 </section>
 <section id="downloads">
 <h2>Downloads<a class="headerlink" href="#downloads" title="Link to this heading">#</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A more recent version of eCAL 5.13 is available: <a class="reference internal" href="ecal_5_13_4.html#ecal-release-page-5-13-4"><span class="std std-ref">eCAL 5.13.4</span></a>.</p>
-</div>
-<section id="ecal-installer">
-<h3>eCAL Installer<a class="headerlink" href="#ecal-installer" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 60.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>OS</p></th>
-<th class="head"><p>Architecture</p></th>
-<th class="head"><p>Files</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal_5.13.3-win64.exe">ecal_5.13.3-win64.exe</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal_5.13.3-noble_amd64.deb">ecal_5.13.3-noble_amd64.deb</a></p></td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal_5.13.3-jammy_amd64.deb">ecal_5.13.3-jammy_amd64.deb</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal_5.13.3-focal_amd64.deb">ecal_5.13.3-focal_amd64.deb</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fa-python-python-binding">
-<h3><i class="fab fa-python"></i> Python Binding<a class="headerlink" href="#fa-python-python-binding" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 60.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>OS</p></th>
-<th class="head"><p>Architecture</p></th>
-<th class="head"><p>Files</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><i class="fab fa-windows"></i> Windows</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp312-cp312-win_amd64.whl">Python 3.12 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp311-cp311-win_amd64.whl">Python 3.11 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp310-cp310-win_amd64.whl">Python 3.10 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp39-cp39-win_amd64.whl">Python 3.9 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp38-cp38-win_amd64.whl">Python 3.8 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-cp37-cp37m-win_amd64.whl">Python 3.7 (.whl)</a></p>
-</td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 24.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-1noble-cp312-cp312-linux_x86_64.whl">Python 3.12 (.whl)</a>  (Default)</p></td>
-</tr>
-<tr class="row-even"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 22.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-1jammy-cp311-cp311-linux_x86_64.whl">Python 3.11 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-1jammy-cp310-cp310-linux_x86_64.whl">Python 3.10 (.whl)</a>  (Default)</p>
-</td>
-</tr>
-<tr class="row-odd"><td><p><i class="fab fa-ubuntu"></i> Ubuntu 20.04</p></td>
-<td><p>x64</p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-1focal-cp39-cp39-linux_x86_64.whl">Python 3.9 (.whl)</a></p>
-<p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal5-5.13.3-1focal-cp38-cp38-linux_x86_64.whl">Python 3.8 (.whl)</a>  (Default)</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fa-code-source">
-<h3><i class="fas fa-code"></i> Source<a class="headerlink" href="#fa-code-source" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<colgroup>
-<col style="width: 100.0%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-ecal/ecal/releases/download/v5.13.3/ecal-fat-source.tar.gz">ecal-fat-source.tar.gz</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
 </section>
 </section>
 
@@ -493,12 +377,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changelog">Changelog</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ecal-installer">eCAL Installer</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-python-python-binding"><i class="fab fa-python"></i> Python Binding</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fa-code-source"><i class="fas fa-code"></i> Source</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloads">Downloads</a></li>
 </ul>
   </nav></div>
 

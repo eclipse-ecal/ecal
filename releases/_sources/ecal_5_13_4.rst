@@ -1,0 +1,29 @@
+
+:orphan:
+
+.. include:: /../include.txt
+
+.. _ecal_release_page_5_13_4:
+
+===============
+eCAL 5.13.4
+===============
+
+
+
+- Release Date: 2025-08-13
+- GitHub Release Page: https://github.com/eclipse-ecal/ecal/releases/tag/v5.13.4
+
+Changelog
+=========
+
+.. literalinclude:: changelog_ecal_5_13_4.txt
+   :language: text
+
+Downloads
+=========
+
+
+
+
+

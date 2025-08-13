@@ -43,11 +43,17 @@ eCAL 5.13
      - Support Status
 
 
+   * - :ref:`eCAL v5.13.4 <ecal_release_page_5_13_4>`
+
+     - 2025-08-13
+
+     - Supported
+       
    * - :ref:`eCAL v5.13.3 <ecal_release_page_5_13_3>`
 
      - 2024-10-24
 
-     - Supported
+     - EOL
        
    * - :ref:`eCAL v5.13.2 <ecal_release_page_5_13_2>`
 
