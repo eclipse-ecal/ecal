@@ -195,6 +195,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
+    if: github.repository == 'eclipse-ecal/ecal'
     if: github.ref_name == 'master'
     needs: build-ubuntu
     
