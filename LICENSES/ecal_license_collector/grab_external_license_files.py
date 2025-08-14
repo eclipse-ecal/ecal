@@ -6,7 +6,7 @@
 import os
 import sys
 
-thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "thirdparty")
+thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../..", "thirdparty")
 
 # Add thirdparty directory to the system path
 sys.path.insert(0, thirdparty_dir)
@@ -148,7 +148,7 @@ def copy_pcapplusplus_license_files(pcap_plus_plus_source_dir):
 
 if __name__ == "__main__":
     qt_source_dir           = "C:/Qt/6.6.3/Src"  # Adjust this path as necessary
-    pcapplusplus_source_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "../_build/complete/_deps/pcapplusplus-src"))
+    pcapplusplus_source_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "../../_build/complete/_deps/pcapplusplus-src"))
 
     copy_qt_license_files(qt_source_dir)
     copy_pcapplusplus_license_files(pcapplusplus_source_dir)

@@ -2,7 +2,7 @@ import os
 import sys
 import shutil
 
-thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "thirdparty")
+thirdparty_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../..", "thirdparty")
 
 # Add thirdparty directory to the system path
 sys.path.insert(0, thirdparty_dir)
@@ -61,8 +61,8 @@ if __name__ == "__main__":
         sbom = sbom_module.get_sbom()
         sbom_dict.update(sbom)
 
-    licenses_target_dir        = os.path.realpath(os.path.join(os.path.dirname(__file__), "../licenses"))
-    python_licenses_target_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), "../licenses_python_bindings"))
+    licenses_target_dir        = os.path.realpath(os.path.join(os.path.dirname(__file__), "../LICENSES_all"))
+    python_licenses_target_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), "../LICENSES_python_bindings"))
 
     # Make sure that the target directories exist but is empty
     os.makedirs(licenses_target_dir, exist_ok=True)
