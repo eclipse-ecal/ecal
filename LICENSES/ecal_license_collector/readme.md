@@ -1,6 +1,6 @@
-# License Collector
+﻿# License Collector
 
-These python files are a set of scripts that collect license information from various eCAL Thirdparty dependencies and copies them to a common directory.
+These python files are a set of scripts that collect license information from various eCAL thirdparty dependencies and copies them to a common directory.
 
 ## Scripts
 
@@ -17,13 +17,13 @@ These python files are a set of scripts that collect license information from va
     As not all thirdparty dependencies have license information available from a submodule, this script grabs them from other places and copies them to the `thirdparty/external` directory.
 
     - Qt: from a source directory (check the script to change the path)
-    - Pcap++: From the Cmake-fetched _deps directory (CMake eCAL on Windows to fetch pcap++)
+    - Pcap++: From the CMake-fetched _deps directory (CMake eCAL on Windows to fetch Pcap++)
 
-## Sbom sturcture
+## Sbom structure
 
-Each thirdparty component needs to publish information about itself for being collected by the scripts. The `sbom.py` scripts are auto-detected, so they only need to exist.
+Each thirdparty component needs to publish information about itself for being collected by the scripts. The `sbom.py` scripts are auto detected, so they only need to exist.
 
-For adding new dependencies it is easiest to copy and modify the sbom.py
+For adding new dependencies, it is easiest to copy and modify the sbom.py
 
 ```
 thirdparty
