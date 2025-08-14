@@ -44,6 +44,7 @@ struct PyCallbackToken {
 
 void AddRegistration(nanobind::module_& m)
 {
+  using namespace eCAL;
   using namespace eCAL::Registration;
 
   auto m_registration = m.def_submodule("registration", "eCAL Registration API.");
@@ -65,67 +66,112 @@ void AddRegistration(nanobind::module_& m)
     return "<ServiceMethod '" + sm.service_name + "::" + sm.method_name + "'>";
       });
 
-  m_registration.def("get_publisher_ids", []() -> nb::object {
+  m_registration.def("get_publisher_ids", []() -> std::optional<std::set<eCAL::STopicId>> {
     std::set<eCAL::STopicId> ids;
-    return GetPublisherIDs(ids) ? nb::cast(ids) : nb::none();
+    if (GetPublisherIDs(ids))
+      return ids;
+    return std::nullopt;
     }, "Get all known publisher topic IDs.");
 
-  m_registration.def("get_subscriber_ids", []() -> nb::object {
+  m_registration.def("get_subscriber_ids", []() -> std::optional<std::set<eCAL::STopicId>> {
     std::set<eCAL::STopicId> ids;
-    return GetSubscriberIDs(ids) ? nb::cast(ids) : nb::none();
+    if (GetSubscriberIDs(ids))
+      return ids;
+    return std::nullopt;
     }, "Get all known subscriber topic IDs.");
 
-  m_registration.def("get_server_ids", []() -> nb::object {
+  m_registration.def("get_server_ids", []() -> std::optional<std::set<eCAL::SServiceId>> {
     std::set<eCAL::SServiceId> ids;
-    return GetServerIDs(ids) ? nb::cast(ids) : nb::none();
+    if (GetServerIDs(ids))
+      return ids;
+    return std::nullopt;
     }, "Get all known server service IDs.");
 
-  m_registration.def("get_client_ids", []() -> nb::object {
+  m_registration.def("get_client_ids", []() -> std::optional<std::set<eCAL::SServiceId>> {
     std::set<eCAL::SServiceId> ids;
-    return GetClientIDs(ids) ? nb::cast(ids) : nb::none();
+    if (GetClientIDs(ids))
+      return ids;
+    return std::nullopt;
     }, "Get all known client service IDs.");
 
-  m_registration.def("get_published_topic_names", []() -> nb::object {
+  m_registration.def("get_published_topic_names", []() -> std::optional<std::set<std::string>> {
     std::set<std::string> names;
-    return GetPublishedTopicNames(names) ? nb::cast(names) : nb::none();
+    if (GetPublishedTopicNames(names))
+      return names;
+    return std::nullopt;
     }, "Convenience: Get all topic names currently being published.");
 
-  m_registration.def("get_subscribed_topic_names", []() -> nb::object {
+  m_registration.def("get_subscribed_topic_names", []() -> std::optional<std::set<std::string>> {
     std::set<std::string> names;
-    return GetSubscribedTopicNames(names) ? nb::cast(names) : nb::none();
+    if (GetSubscribedTopicNames(names))
+      return names;
+    return std::nullopt;
     }, "Convenience: Get all topic names currently being subscribed to.");
 
   // TODO: Should we wrap this function or should we deprecate it on C++ side
-  m_registration.def("get_server_method_names", []() -> nb::object {
+  m_registration.def("get_server_method_names", []() -> std::optional<std::set<SServiceMethod>> {
     std::set<SServiceMethod> methods;
-    return GetServerMethodNames(methods) ? nb::cast(methods) : nb::none();
+    if (GetServerMethodNames(methods))
+      return methods;
+    return std::nullopt;
     }, "Get all service/method name pairs of all eCAL servers.");
 
   // TODO: Should we wrap this function or should we deprecate it on C++ side
-  m_registration.def("get_client_method_names", []() -> nb::object {
+  m_registration.def("get_client_method_names", []() -> std::optional<std::set<SServiceMethod>> {
     std::set<SServiceMethod> methods;
-    return GetClientMethodNames(methods) ? nb::cast(methods) : nb::none();
+    if (GetClientMethodNames(methods))
+      return methods;
+    return std::nullopt;
     }, "Get all service/method name pairs of all eCAL clients.");
 
-  m_registration.def("get_publisher_info", [](const eCAL::STopicId& id) -> nb::object {
-    eCAL::SDataTypeInformation info;
-    return GetPublisherInfo(id, info) ? nb::cast(info) : nb::none();
-    }, nb::arg("topic_id"), "Get datatype info for a specific publisher topic ID.");
+  m_registration.def(
+    "get_publisher_info",
+    [](const STopicId& id) -> std::optional<SDataTypeInformation> {
+      SDataTypeInformation info;
+      if (GetPublisherInfo(id, info))
+        return info;
+      return std::nullopt;
+    },
+    nb::arg("topic_id"),
+      "Get datatype info for a specific publisher topic ID."
+      );
 
-  m_registration.def("get_subscriber_info", [](const eCAL::STopicId& id) -> nb::object {
-    eCAL::SDataTypeInformation info;
-    return GetSubscriberInfo(id, info) ? nb::cast(info) : nb::none();
-    }, nb::arg("topic_id"), "Get datatype info for a specific subscriber topic ID.");
+  m_registration.def(
+    "get_subscriber_info",
+    [](const STopicId& id) -> std::optional<SDataTypeInformation> {
+      SDataTypeInformation info;
+      if (GetSubscriberInfo(id, info))
+        return info;
+      return std::nullopt;
+    },
+    nb::arg("topic_id"),
+      "Get datatype info for a specific subscriber topic ID."
+      );
 
-  m_registration.def("get_server_info", [](const eCAL::SServiceId& id) -> nb::object {
-    eCAL::ServiceMethodInformationSetT methods;
-    return GetServerInfo(id, methods) ? nb::cast(methods) : nb::none();
-    }, nb::arg("server_id"), "Get method info for a specific server by ID.");
+  m_registration.def(
+    "get_server_info",
+    [](const SServiceId& id) -> std::optional<ServiceMethodInformationSetT> {
+      ServiceMethodInformationSetT methods;
+      if (GetServerInfo(id, methods))
+        return methods;
+      return std::nullopt;
+    },
+    nb::arg("server_id"),
+      "Get method info for a specific server by ID."
+      );
 
-  m_registration.def("get_client_info", [](const eCAL::SServiceId& id) -> nb::object {
-    eCAL:: ServiceMethodInformationSetT methods;
-    return GetClientInfo(id, methods) ? nb::cast(methods) : nb::none();
-    }, nb::arg("client_id"), "Get method info for a specific client by ID.");
+  m_registration.def(
+    "get_client_info",
+    [](const SServiceId& id) -> std::optional<ServiceMethodInformationSetT> {
+      ServiceMethodInformationSetT methods;
+      if (GetClientInfo(id, methods))
+        return methods;
+      return std::nullopt;
+    },
+    nb::arg("client_id"),
+      "Get method info for a specific client by ID."
+      );
+
 
   m_registration.def("add_publisher_event_callback", [](const nb::callable& py_cb) -> PyCallbackToken {
     auto cb_ptr = make_gil_safe_shared<nb::callable>(py_cb);
