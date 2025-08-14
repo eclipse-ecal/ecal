@@ -1,0 +1,1 @@
+This license directory is automatically created. See the license_collector dir to learn how to add more licenses

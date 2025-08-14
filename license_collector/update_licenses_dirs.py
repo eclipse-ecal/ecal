@@ -74,8 +74,6 @@ if __name__ == "__main__":
             item_path = os.path.join(target_dir, item)
             if os.path.isdir(item_path):
                 shutil.rmtree(item_path)
-            else:
-                os.remove(item_path)
 
     # Copy license files from the SBOM dictionary to the target directories
     copy_license_files_to(sbom_dict, licenses_target_dir)
