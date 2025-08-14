@@ -6,8 +6,8 @@ license = "Apache-2.0"
 license-files = [
   "LICENSE.txt",
   "NOTICE.md",
-  "licenses_python_binding/**/*",       # Matches all "main" licenses in subdirs
-  "licenses_python_binding/**/**/*"     # Matches all licenses from "thirdparty" sub-subdirs (unfortunatelly, the ** is not recursive here)
+  "LICENSES/LICENSES_python_bindings/**/*",       # Matches all "main" licenses in subdirs
+  "LICENSES/LICENSES_python_bindings/**/**/*"     # Matches all licenses from "thirdparty" sub-subdirs (unfortunatelly, the ** is not recursive here)
 ]
 authors = [
   { "name" = "Eclipse eCAL Team", "email" = "ecal-dev@eclipse.org" },
