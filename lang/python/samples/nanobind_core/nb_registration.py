@@ -55,11 +55,11 @@ def main():
   
   # Create a server
   print(f"Creating server on {service}")
-  server = ecal_core.ServiceServer(service, data_type_info=dtype)
+  server = ecal_core.ServiceServer(service)
   
   # Create a client
   print(f"Creating client on {service}")
-  #client = ecal_core.ServiceClient(service)
+  client = ecal_core.ServiceClient(service)
   
   time.sleep(2)
   
@@ -68,7 +68,7 @@ def main():
   pub_ids = ecal_core.registration.get_publisher_ids()
   if pub_ids:
     for tid in pub_ids:
-      print(f"Publisher ID: {tid.name}")
+      print(f"Publisher ID: {tid.topic_name}")
       info = ecal_core.registration.get_publisher_info(tid)
       if info:
         print(f" - Data type: {info.name}, Encoding: {info.encoding}")
@@ -77,7 +77,7 @@ def main():
   sub_ids = ecal_core.registration.get_subscriber_ids()
   if sub_ids:
     for tid in sub_ids:
-      print(f"Subscriber ID: {tid.name}")
+      print(f"Subscriber ID: {tid.topic_name}")
       info = ecal_core.registration.get_subscriber_info(tid)
       if info:
         print(f" - Data type: {info.name}, Encoding: {info.encoding}")
@@ -86,19 +86,19 @@ def main():
   server_ids = ecal_core.registration.get_server_ids()
   if server_ids:
     for sid in server_ids:
-      print(f"Server ID: {sid.name}")
-      info = ecal_core.registration.get_server_info(tid)
+      print(f"Server ID: {sid.service_name}")
+      info = ecal_core.registration.get_server_info(sid)
       if info:
         print(f" - {info}")
-  
-  # Query registration system for server info
-  #client_ids = ecal_core.registration.get_client_ids()
-  #if client_ids:
-  #  for sid in client_ids:
-  #    print(f"Client ID: {sid.name}")
-  #    info = ecal_core.registration.get_client_info(sid)
-  #    if info:
-  #      print(f" - {info}")
+
+  # Query registration system for client info
+  client_ids = ecal_core.registration.get_client_ids()
+  if client_ids:
+    for sid in client_ids:
+      print(f"Client ID: {sid.service_name}")
+      info = ecal_core.registration.get_client_info(sid)
+      if info:
+        print(f" - {info}")
 
   # Show topic names
   print("Published topics:", ecal_core.registration.get_published_topic_names())
