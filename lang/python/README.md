@@ -44,7 +44,7 @@ from ecal.msg.string.core import Subscriber as StringSubscriber
 def callback(publisher_id, data):
     print(f"Received: {data.message}")
 
-ecal_core.initialize([], "HelloWorldSubscriber")
+ecal_core.initialize("HelloWorldSubscriber")
 
 print("Waiting for data. Press Enter to exit!")
 subscriber = StringSubscriber("hello_topic")
