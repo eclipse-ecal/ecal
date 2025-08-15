@@ -90,12 +90,14 @@ class MessageSubscriber(typing.Generic[T]):
     to the appropriate user-provided callback.
     """
     
+    deserializer = self._deserializer
+
     def internal_receive_callback(publisher_id, data_type_info, data):
       if data_callback is None and error_callback is None:
         return
 
       try:
-        msg = self._deserializer.deserialize(data.buffer, data_type_info)
+        msg = deserializer.deserialize(data.buffer, data_type_info)
         if data_callback is not None:
           data_callback(publisher_id, ReceiveCallbackData(message=msg, send_timestamp=data.send_timestamp, send_clock=data.send_clock))
       except SerializationError as error:
