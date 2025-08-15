@@ -45,7 +45,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
               // Call the Python callback, forwarding the arguments.
               event_callback_(std::forward<decltype(args)>(args)...);
             }
-            catch (std::exception e)
+            catch (const std::exception& e)
             {
               std::cout << "Error invoking event callback: " << e.what() << std::endl;
             }
@@ -72,7 +72,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
             // Call the Python callback, forwarding the arguments.
             (*python_callback_pointer)(std::forward<decltype(args)>(args)...);
           }
-          catch (std::exception e)
+          catch (const std::exception& e)
           {
             std::cout << "Error invoking callback: " << e.what() << std::endl;
           }
@@ -93,7 +93,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
     .def("get_data_type_information", &CSubscriber::GetDataTypeInformation,
       "Get the topic's data type information.")
     .def("__repr__", [](const CSubscriber& pub) {
-    return "<Publisher topic='" + pub.GetTopicName() + "' subscribers=" +
+    return "<Subscriber topic='" + pub.GetTopicName() + "' publishers=" +
       std::to_string(pub.GetPublisherCount()) + ">";
       });
 }
