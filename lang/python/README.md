@@ -51,6 +51,8 @@ subscriber = StringSubscriber("hello_topic")
 subscriber.set_receive_callback(callback)
 
 input()
+
+subscriber.remove_receive_callback()
 ecal_core.finalize()
 ```
 
