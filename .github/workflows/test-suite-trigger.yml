@@ -23,7 +23,7 @@ jobs:
 
       - name: Trigger test suite if token is set
         run: |
-          if [ -z "${{ secrets.TEST_SUITE_TOKEN }}" ]; then
+          if [ -z "${{ secrets.ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN}}" ]; then
             echo "INFO: TEST_SUITE_TOKEN  is not set."
             echo "Skipping test trigger."
           else
