@@ -1,0 +1,57 @@
+name: Trigger ecal-test-suite
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine correct SHA
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+          else
+            echo "COMMIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
+          fi
+
+      - name: Trigger test suite if token is set
+        run: |
+          if [ -z "${{ secrets.ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN}}" ]; then
+            echo "INFO: ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKENis not set."
+            echo "Skipping test trigger."
+          else
+            echo "Triggering test suite..."
+            curl -X POST https://api.github.com/repos/eclipse-ecal/ecal-test-suite/dispatches \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: token ${{ secrets.ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN}}" \
+              -d '{
+                "event_type": "run-tests",
+                "client_payload": {
+                  "sha": "'"${{ env.COMMIT_SHA }}"'",
+                  "repo": "'"${{ github.repository }}"'",
+                  "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                }
+              }'
+          fi
+
+      - name: Test reports and logs
+        run: |
+          if [ -z "${{ secrets.ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN}}" ]; then
+            echo "INFO: ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN is not set."
+            echo "Skipping test trigger."
+          else
+            echo "Test in ecal test suite has been triggered."
+            echo ""
+            echo "View status and logs:"
+            echo "https://github.com/eclipse-ecal/ecal-test-suite/actions"
+            echo ""
+            echo "Test report (available after completion):"
+            echo "https://eclipse-ecal.github.io/ecal-test-suite/"
+          fi
