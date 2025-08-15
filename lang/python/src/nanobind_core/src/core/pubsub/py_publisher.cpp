@@ -43,7 +43,7 @@ void AddPubsubPublisher(nanobind::module_& module)
               // Call the Python callback, forwarding the arguments.
               event_callback_(std::forward<decltype(args)>(args)...);
             }
-            catch (std::exception e)
+            catch (const std::exception& e)
             {
               std::cout << "Error invoking event callback: " << e.what() << std::endl;
             }
