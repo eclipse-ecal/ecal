@@ -44,7 +44,7 @@ jobs:
       - name: Test reports and logs
         run: |
           if [ -z "${{ secrets.ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN}}" ]; then
-            echo "INFO: TEST_SUITE_TOKEN  is not set."
+            echo "INFO: ECAL_TEST_SUITE_DISPATCH_GITHUB_TOKEN is not set."
             echo "Skipping test trigger."
           else
             echo "Test in ecal test suite has been triggered."
