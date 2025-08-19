@@ -8,6 +8,7 @@ set (file_list_include
 if(WIN32)
   list(APPEND file_list_include
     qt/qt_windeployqt.cmake
+    qt/exclusive_command.cmake
   )
 endif()
 
@@ -19,6 +20,7 @@ set(file_list_no_include
 if(WIN32)
   list(APPEND file_list_no_include
     qt/qt_windeployqt_threadsafe_cmake.bat.in
+    qt/exclusive_command.ps1
   )
 endif()
 
