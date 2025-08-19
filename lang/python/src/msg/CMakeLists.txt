@@ -21,15 +21,13 @@
 ######
 add_library(python_msg INTERFACE)
 
-set(python_msg_files
-  ecal/msg/__init__.py
+set(pure_python_files
   ecal/msg/common/core.py
   ecal/msg/common/serializer.py
   ecal/msg/common/__init__.py
+  ecal/msg/proto/core.py
   ecal/msg/proto/helper.py
-  ecal/msg/proto/publisher.py
   ecal/msg/proto/serializer.py
-  ecal/msg/proto/subscriber.py
   ecal/msg/proto/__init__.py
   ecal/msg/string/core.py
   ecal/msg/string/serializer.py
@@ -37,15 +35,19 @@ set(python_msg_files
 )
 
 target_sources(python_msg
-  PUBLIC    
+  INTERFACE    
     FILE_SET python_msg_files
     TYPE HEADERS
-    BASE_DIRS .
+    BASE_DIRS ./ecal
     FILES
       ${pure_python_files}
 )
 
 #should we install the filesets or this this done via setup.toml
+install(TARGETS python_msg
+  FILE_SET python_msg_files DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
+)
+
 
 ##########
 # IDE Debugging / Runtime
