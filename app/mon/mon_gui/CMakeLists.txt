@@ -250,11 +250,21 @@ if ((WIN32 OR APPLE) AND (${QT_VERSION_MAJOR} GREATER_EQUAL 6))
         NO_UNSUPPORTED_PLATFORM_ERROR
     )
 
-    # Add a postbuild script that will also execute the created script via cmake -P
-    # This is necessary to make the application startable / debuggable from the build directory.
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
-    )
+    # Add a postbuild command that will also execute the created script via cmake -P.
+    # On Windows we use a custom exclusive_command command, which prevents
+    # different instances of windeployqt to access the same files at the same
+    # time.
+    # Running windeployqt is necessary to make the application startable / debuggable from the build directory.
+    if (WIN32)
+        add_exclusive_command_as_postbuild(
+            ${PROJECT_NAME}
+            ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
+        )
+    else()
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${PROJECT_NAME}> -DQT_DEPLOY_BIN_DIR=. -P ${qt_deploy_script}
+        )
+    endif()
 
     # Use the script for deploying the qt dlls in the install dir
     install(SCRIPT ${qt_deploy_script})
