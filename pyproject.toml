@@ -38,9 +38,6 @@ dependencies = [
 [tool.hatch.version]
 source = "vcs"
 
-[tool.hatch.build.hooks.vcs]
-version-file = "lang/python/src/core/ecal/_version.py"
-
 [tool.hatch.build.targets]
 # Files to include in the source archive to build from
 sdist.only-include = [

@@ -28,7 +28,6 @@ python_add_library(${PROJECT_NAME} MODULE WITH_SOABI
 )
 
 set(python_files
-  ecal/__init__.py
   ecal/core/__init__.py
   ecal/core/core.py
   ecal/core/publisher.py
