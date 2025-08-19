@@ -2,9 +2,11 @@
 # eCAL - enhanced Communication Abstraction Layer
 
 
-[![Windows](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml) [![Ubuntu](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml) [![macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml) [![Benchmark Link](https://img.shields.io/badge/performance%20benchmarks-via%20bencher-orange)](https://bencher.dev/console/projects/ecal/plots)
+[![Windows](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-windows.yml) [![Ubuntu](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-ubuntu.yml) [![macOS](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml/badge.svg)](https://github.com/eclipse-ecal/ecal/actions/workflows/build-macos.yml)
 
-[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt)
+[![Benchmark Link](https://img.shields.io/badge/performance%20benchmarks-via%20bencher-blue)](https://bencher.dev/console/projects/ecal/plots)
+
+[![License](https://img.shields.io/github/license/continental/ecal.svg?style=flat)](LICENSE.txt) 
 
 The **e**nhanced **C**ommunication **A**bstraction **L**ayer (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
 eCAL provides **publish - subscribe** and **server - client** pattern to connect different nodes in the network with almost no configuration required.
