@@ -27,7 +27,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/_version.py.in"
 
 set(python_top_level_files
   ecal/__init__.py
-  ${CMAKE_CURRENT_BINDARY_DIR}/ecal/_version.py
+  ${CMAKE_CURRENT_BINARY_DIR}/ecal/_version.py
 )
 
 target_sources(python_top_level
@@ -36,7 +36,7 @@ target_sources(python_top_level
     TYPE HEADERS
     BASE_DIRS 
       ./ecal
-      ${CMAKE_CURRENT_BINDARY_DIR}/ecal
+      ${CMAKE_CURRENT_BINARY_DIR}/ecal
     FILES
       ${python_top_level_files}
 )
