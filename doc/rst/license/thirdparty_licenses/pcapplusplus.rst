@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_pcapplusplus:
 
 ===============================================
-Qwt
+PcapPlusPlus
 ===============================================
 
 .. list-table::
@@ -12,33 +12,33 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - Unlicense
 
    * - **Copyright**
 
-     - None
+     - Copyright © 2025 seladb
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://pcapplusplus.github.io/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/seladb/PcapPlusPlus.git
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v25.05 <https://github.com/seladb/PcapPlusPlus.git/tree/v25.05>`_
 
    * - **Integration**
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-download| Fetched by CMake
 
        - |fa-windows| Binary distributions for Windows
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-python| Python wheels
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +50,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+PcapPlusPlus itself uses thirdparty dependencies

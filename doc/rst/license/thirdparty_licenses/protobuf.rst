@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_protobuf:
 
 ===============================================
-Qwt
+protobuf
 ===============================================
 
 .. list-table::
@@ -12,23 +12,23 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - BSD-3-Clause
 
    * - **Copyright**
 
-     - None
+     - Copyright 2008 Google Inc.  All rights reserved.
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://protobuf.dev/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/protocolbuffers/protobuf
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v3.11.4 <https://github.com/protocolbuffers/protobuf/tree/v3.11.4>`_
 
    * - **Integration**
 
@@ -38,7 +38,7 @@ Qwt
 
        - |fa-windows| Binary distributions for Windows
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-python| Python wheels
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +50,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+protobuf itself uses thirdparty dependencies

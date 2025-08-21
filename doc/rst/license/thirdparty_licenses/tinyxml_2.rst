@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_tinyxml_2:
 
 ===============================================
-Qwt
+TinyXML-2
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - Zlib
 
    * - **Copyright**
 
      - None
 
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
-
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/leethomason/tinyxml2
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `10.0.0 <https://github.com/leethomason/tinyxml2/tree/10.0.0>`_
 
    * - **Integration**
 
@@ -50,4 +46,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+TinyXML-2 itself uses thirdparty dependencies

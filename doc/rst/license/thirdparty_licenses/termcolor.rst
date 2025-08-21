@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_termcolor:
 
 ===============================================
-Qwt
+termcolor
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - BSD-3-Clause
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright (c) 2013, Ihor Kalnytskyi.   All rights reserved.
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/ikalnytskyi/termcolor
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v2.1.0 <https://github.com/ikalnytskyi/termcolor/tree/v2.1.0>`_
 
    * - **Integration**
 
@@ -50,4 +46,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+termcolor itself uses thirdparty dependencies

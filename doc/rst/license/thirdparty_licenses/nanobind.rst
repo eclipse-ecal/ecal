@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_nanobind:
 
 ===============================================
-Qwt
+nanobind
 ===============================================
 
 .. list-table::
@@ -12,33 +12,25 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - BSD-3-Clause
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright (c) 2022 Wenzel Jakob <wenzel.jakob@epfl.ch>, All rights reserved.
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/wjakob/nanobind
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v2.6.1 <https://github.com/wjakob/nanobind/tree/v2.6.1>`_
 
    * - **Integration**
 
      -
 
        - |fa-github| Git Submodule
-
-       - |fa-windows| Binary distributions for Windows
-
-       - |fa-ubuntu| Binary distributions for Linux
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +42,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+nanobind itself uses thirdparty dependencies

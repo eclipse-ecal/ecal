@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_libcurl:
 
 ===============================================
-Qwt
+libcurl
 ===============================================
 
 .. list-table::
@@ -12,23 +12,23 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - curl
 
    * - **Copyright**
 
-     - None
+     - Copyright (c) 1996 - 2024, Daniel Stenberg, <daniel@haxx.se>, and many   contributors, see the THANKS file.
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://curl.se/libcurl/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/curl/curl
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `curl-8_11_0 <https://github.com/curl/curl/tree/curl-8_11_0>`_
 
    * - **Integration**
 
@@ -37,8 +37,6 @@ Qwt
        - |fa-github| Git Submodule
 
        - |fa-windows| Binary distributions for Windows
-
-       - |fa-ubuntu| Binary distributions for Linux
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +48,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+libcurl itself uses thirdparty dependencies

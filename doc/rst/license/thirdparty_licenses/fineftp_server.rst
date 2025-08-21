@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_fineftp_server:
 
 ===============================================
-Qwt
+fineFTP Server
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - MIT
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright (c) 2020 Continental Corporation
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/eclipse-ecal/fineftp-server
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v1.5.1 <https://github.com/eclipse-ecal/fineftp-server/tree/v1.5.1>`_
 
    * - **Integration**
 
@@ -50,4 +46,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+fineFTP Server itself uses thirdparty dependencies

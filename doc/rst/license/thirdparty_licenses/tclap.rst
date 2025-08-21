@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_tclap:
 
 ===============================================
-Qwt
+tclap
 ===============================================
 
 .. list-table::
@@ -12,23 +12,23 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - MIT
 
    * - **Copyright**
 
-     - None
+     - Copyright (c) 2003 Michael E. Smoot   Copyright (c) 2004 Daniel Aarno   Copyright (c) 2017 Google Inc.
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://tclap.sourceforge.net/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/xguerin/tclap
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v1.2.5 <https://github.com/xguerin/tclap/tree/v1.2.5>`_
 
    * - **Integration**
 
@@ -50,4 +50,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+tclap itself uses thirdparty dependencies

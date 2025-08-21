@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_asio:
 
 ===============================================
-Qwt
+asio
 ===============================================
 
 .. list-table::
@@ -12,23 +12,23 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - BSL-1.0
 
    * - **Copyright**
 
-     - None
+     - Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://think-async.com/Asio/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/chriskohlhoff/asio
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `asio-1-34-2 <https://github.com/chriskohlhoff/asio/tree/asio-1-34-2>`_
 
    * - **Integration**
 
@@ -40,6 +40,8 @@ Qwt
 
        - |fa-ubuntu| Binary distributions for Linux
 
+       - |fa-python| Python wheels
+
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
    *Check build files for further information.*
@@ -50,4 +52,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+asio itself uses thirdparty dependencies

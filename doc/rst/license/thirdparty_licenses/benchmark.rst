@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_benchmark:
 
 ===============================================
-Qwt
+Benchmark
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - Apache-2.0
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright 2015 Google Inc. All rights reserved.
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/google/benchmark
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `bd9bb643f4fc4918a74320eeaf32db32d8986ab4 <https://github.com/google/benchmark/tree/bd9bb643f4fc4918a74320eeaf32db32d8986ab4>`_
 
    * - **Integration**
 
@@ -36,9 +32,7 @@ Qwt
 
        - |fa-github| Git Submodule
 
-       - |fa-windows| Binary distributions for Windows
-
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-vial-circle-check| Testing
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +44,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+Benchmark itself uses thirdparty dependencies

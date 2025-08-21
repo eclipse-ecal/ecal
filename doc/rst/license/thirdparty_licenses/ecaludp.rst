@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_ecaludp:
 
 ===============================================
-Qwt
+ecaludp
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - Apache-2.0
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright (c) 2024 Continental Corporation
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/eclipse-ecal/ecaludp
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v0.1.2 <https://github.com/eclipse-ecal/ecaludp/tree/v0.1.2>`_
 
    * - **Integration**
 
@@ -40,6 +36,8 @@ Qwt
 
        - |fa-ubuntu| Binary distributions for Linux
 
+       - |fa-python| Python wheels
+
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
    *Check build files for further information.*
@@ -50,4 +48,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+ecaludp itself uses thirdparty dependencies

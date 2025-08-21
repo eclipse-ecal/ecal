@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_robin_map:
 
 ===============================================
-Qwt
+robin-map
 ===============================================
 
 .. list-table::
@@ -12,23 +12,19 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - MIT
 
    * - **Copyright**
 
-     - None
-
-   * - **Homepage**
-
-     - https://qwt.sourceforge.io/
+     - Copyright (c) 2017 Thibaut Goetghebuer-Planchon <tessil@gmx.com>
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/Tessil/robin-map
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `v1.4.0 <https://github.com/Tessil/robin-map/tree/v1.4.0>`_
 
    * - **Integration**
 
@@ -40,6 +36,8 @@ Qwt
 
        - |fa-ubuntu| Binary distributions for Linux
 
+       - |fa-python| Python wheels
+
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
    *Check build files for further information.*
@@ -50,4 +48,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+robin-map itself uses thirdparty dependencies

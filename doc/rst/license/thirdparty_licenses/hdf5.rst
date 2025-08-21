@@ -1,9 +1,9 @@
 .. include:: /include.txt
 
-.. _thirdparty_licenses_qwt:
+.. _thirdparty_licenses_hdf5:
 
 ===============================================
-Qwt
+HDF5
 ===============================================
 
 .. list-table::
@@ -12,23 +12,23 @@ Qwt
 
    * - **License**
 
-     - qwt
+     - HDF5
 
    * - **Copyright**
 
-     - None
+     - Copyright 2006 by The HDF Group. Copyright 1998-2006 by The Board of Trustees of the University of Illinois.
 
    * - **Homepage**
 
-     - https://qwt.sourceforge.io/
+     - https://www.hdfgroup.org/solutions/hdf5/
 
    * - **Repository**
 
-     - https://sourceforge.net/p/qwt/git/ci/develop/tree/
+     - https://github.com/HDFGroup/hdf5
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `d11d9f8c72ce2e2fccb3af386f7a42dc45381357 <https://sourceforge.net/p/qwt/git/ci/d11d9f8c72ce2e2fccb3af386f7a42dc45381357>`_
+     - `hdf5-1_14_3 <https://github.com/HDFGroup/hdf5/tree/hdf5-1_14_3>`_
 
    * - **Integration**
 
@@ -38,7 +38,7 @@ Qwt
 
        - |fa-windows| Binary distributions for Windows
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-python| Python wheels
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -50,4 +50,4 @@ License Files
 Thirdparty Licenses
 ===================
 
-Qwt itself uses thirdparty dependencies
+HDF5 itself uses thirdparty dependencies
