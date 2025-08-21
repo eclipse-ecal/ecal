@@ -19,40 +19,31 @@
 ######
 # build
 ######
-add_library(python_msg INTERFACE)
+add_library(python_top_level INTERFACE)
 
-set(pure_python_files
-  ecal/msg/__init__.py
-  ecal/msg/common/core.py
-  ecal/msg/common/serializer.py
-  ecal/msg/common/__init__.py
-  ecal/msg/proto/core.py
-  ecal/msg/proto/helper.py
-  ecal/msg/proto/serializer.py
-  ecal/msg/proto/__init__.py
-  ecal/msg/string/core.py
-  ecal/msg/string/serializer.py
-  ecal/msg/string/__init__.py
+#configure_file("${CMAKE_CURRENT_LIST_DIR}/_version.py.in"
+#               "${CMAKE_CURRENT_BINARY_DIR}/ecal/_version.py"
+#                @ONLY)
+
+set(python_top_level_files
+  ecal/__init__.py
+ # ${CMAKE_CURRENT_BINARY_DIR}/ecal/_version.py
 )
 
-target_sources(python_msg
+target_sources(python_top_level
   INTERFACE    
-    FILE_SET python_msg_files
+    FILE_SET python_top_level_files
     TYPE HEADERS
-    BASE_DIRS ./ecal
+    BASE_DIRS 
+      ./ecal
+  #    ${CMAKE_CURRENT_BINARY_DIR}/ecal
     FILES
-      ${pure_python_files}
+      ${python_top_level_files}
 )
 
 #should we install the filesets or this this done via setup.toml
-install(TARGETS python_msg
-  FILE_SET python_msg_files DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
+install(TARGETS python_top_level
+  FILE_SET python_top_level_files DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
 )
-
-
-##########
-# IDE Debugging / Runtime
-###########
-copy_python_code(TARGET python_msg PYTHON_FILES ${pure_python_files} PYTHON_CODE_ROOT .)
 
 ecal_python_set_output_directory(${PROJECT_NAME})
