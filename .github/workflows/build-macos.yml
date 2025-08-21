@@ -25,7 +25,7 @@ jobs:
       run: brew install qt@5
 
     - name: Install Dependencies
-      run: brew install ninja protobuf hdf5@1.10 pkg-config capnp ccache
+      run: brew install ninja protobuf@29 hdf5@1.10 pkg-config capnp ccache
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -97,7 +97,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5" \
+        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5;/usr/local/opt/protobuf@29" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \
