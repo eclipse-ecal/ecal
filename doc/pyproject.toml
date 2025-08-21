@@ -3,8 +3,8 @@ name = "ecal-docs"
 requires-python = ">=3.10"
 dependencies = [
   "sphinx",
-  "sphinx-book-theme",
-  "sphinx-tabs",
+  "sphinx-book-theme == 1.1.4", # Fixed, as we have custom CSS files that must be updated manually, whenever sphinx-book-theme is updated
+  "sphinx-tabs == 3.4.7",       # Fixed, as we have custom CSS files that must be updated manually, whenever sphinx-tabs is updated
   "PyGithub",
   "autodoc",
   "semantic-version", 
