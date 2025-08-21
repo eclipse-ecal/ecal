@@ -19,7 +19,7 @@ PcapPlusPlus
 
    * - **Copyright**
 
-     - Copyright © 2025 seladb
+     - Copyright Â© 2025 seladb
 
    * - **Homepage**
 
@@ -27,11 +27,11 @@ PcapPlusPlus
 
    * - **Repository**
 
-     - https://github.com/seladb/PcapPlusPlus.git
+     - https://github.com/seladb/PcapPlusPlus
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `v25.05 <https://github.com/seladb/PcapPlusPlus.git/tree/v25.05>`_
+     - `v25.05 <https://github.com/seladb/PcapPlusPlus/tree/v25.05>`_
 
    * - **Integration**
 

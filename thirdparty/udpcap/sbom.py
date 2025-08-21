@@ -85,6 +85,8 @@ def _get_sbom_pcappp():
             line = line.strip()
             if line.startswith("GIT_REPOSITORY"):
                 sbom[component_name]["repo_url"] = line.split(' ')[1]
+                if sbom[component_name]["repo_url"].endswith(".git"):
+                    sbom[component_name]["repo_url"] = sbom[component_name]["repo_url"][:-4]
             elif line.startswith("GIT_TAG"):
                 sbom[component_name]["git_version"] = line.split(' ')[1]
 

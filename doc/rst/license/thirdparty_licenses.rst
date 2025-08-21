@@ -116,7 +116,7 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    * - :ref:`PcapPlusPlus <thirdparty_licenses_pcapplusplus>`
 
-     - Copyright © 2025 seladb
+     - Copyright Â© 2025 seladb
 
      - Unlicense
 

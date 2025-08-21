@@ -188,8 +188,8 @@ def update_documentation(thirdparty_sbom_dict):
     output = template.render(context)
 
     # Save the rendered template to a file
-    with open(licenses_main_output_rst_file_path, "w") as f:
-        f.write(output)
+    with open(licenses_main_output_rst_file_path, "wb") as f:
+        f.write(output.encode('utf-8'))
 
     ############## Individual component details #################
 
@@ -215,8 +215,8 @@ def update_documentation(thirdparty_sbom_dict):
         output = template.render(context)
 
         # Save the rendered template to a file
-        with open(details_output_file_path, "w") as f:
-            f.write(output)
+        with open(details_output_file_path, "wb") as f:
+            f.write(output.encode('utf-8'))
 
 
 
