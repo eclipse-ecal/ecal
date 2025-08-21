@@ -28,7 +28,6 @@ python_add_library(${PROJECT_NAME} MODULE WITH_SOABI
 )
 
 set(python_files
-  ecal/__init__.py
   ecal/core/__init__.py
   ecal/core/core.py
   ecal/core/publisher.py
@@ -42,7 +41,7 @@ target_sources(${PROJECT_NAME}
   PUBLIC    
     FILE_SET ecal_core_python_files
     TYPE HEADERS
-    BASE_DIRS .
+    BASE_DIRS ./ecal
     FILES
       ${python_files}
 )
@@ -61,6 +60,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 install(TARGETS ${PROJECT_NAME} core
   RUNTIME DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
   LIBRARY DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL NAMELINK_SKIP
+  FILE_SET ecal_core_python_files DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
 )
 
 

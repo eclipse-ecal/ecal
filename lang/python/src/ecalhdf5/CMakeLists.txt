@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2024 Continental Corporation
+# Copyright (C) 2016 - 2025 Continental Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ target_sources(${PROJECT_NAME}
   PUBLIC    
     FILE_SET ecal_hdf5_python_files
     TYPE HEADERS
-    BASE_DIRS .
+    BASE_DIRS ./ecal
     FILES
       ${python_files}
 )
@@ -55,6 +55,7 @@ if(TARGET hdf5-shared)
   install(TARGETS ${PROJECT_NAME} hdf5-shared
     RUNTIME DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL
     LIBRARY DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL NAMELINK_SKIP
+    FILE_SET ecal_hdf5_python_files DESTINATION ecal COMPONENT python EXCLUDE_FROM_ALL    
   )
 endif()
 
