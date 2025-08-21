@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+  
 .. include:: /include.txt
 
 .. _thirdparty_licenses:
@@ -12,7 +15,7 @@ The information in this list may not be exhaustive.
 Some dependencies, like GoogleTest, are not used in our officially distributed builds, even though they can be used with eCAL and therefore appear in this list.
 
 .. list-table:: 
-   :widths: 1 2 2
+   :widths: 1 2 1
    :header-rows: 1
    
    * - Component
@@ -33,24 +36,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - Apache-2.0
 
-   * - :ref:`libcurl <thirdparty_licenses_libcurl>`
-
-     - Copyright (c) 1996 - 2024, Daniel Stenberg, <daniel@haxx.se>, and many   contributors, see the THANKS file.
-
-     - curl
-
-   * - :ref:`ecaludp <thirdparty_licenses_ecaludp>`
-
-     - Copyright (c) 2024 Continental Corporation
-
-     - Apache-2.0
-
-   * - :ref:`Qt <thirdparty_licenses_qt>`
-
-     - The Qt Company Ltd.
-
-     - LGPL-3.0-only
-
    * - :ref:`Cap'n Proto <thirdparty_licenses_cap_n_proto>`
 
      - Copyright (c) 2013-2017 Sandstorm Development Group, Inc.; Cloudflare, Inc.;   and other contributors. Each commit is copyright by its respective author or   author's employer.
@@ -63,29 +48,23 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - convert-utf
 
-   * - :ref:`Flaticon <thirdparty_licenses_flaticon>`
+   * - :ref:`ecaludp <thirdparty_licenses_ecaludp>`
 
-     - Multiple authors, see license file
+     - Copyright (c) 2024 Continental Corporation
 
-     - CC-BY-3.0
-
-   * - :ref:`modpath.iss <thirdparty_licenses_modpath_iss>`
-
-     - Jared Breland <jbreland@legroom.net>
-
-     - LGPL-3.0-only
-
-   * - :ref:`nanopb <thirdparty_licenses_nanopb>`
-
-     - Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
-
-     - Zlib
+     - Apache-2.0
 
    * - :ref:`fineFTP Server <thirdparty_licenses_fineftp_server>`
 
      - Copyright (c) 2020 Continental Corporation
 
      - MIT
+
+   * - :ref:`Flaticon <thirdparty_licenses_flaticon>`
+
+     - Multiple authors, see license file
+
+     - CC-BY-3.0
 
    * - :ref:`FTXUI <thirdparty_licenses_ftxui>`
 
@@ -105,11 +84,43 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - HDF5
 
+   * - :ref:`libcurl <thirdparty_licenses_libcurl>`
+
+     - Copyright (c) 1996 - 2024, Daniel Stenberg, <daniel@haxx.se>, and many   contributors, see the THANKS file.
+
+     - curl
+
+   * - :ref:`modpath.iss <thirdparty_licenses_modpath_iss>`
+
+     - Jared Breland <jbreland@legroom.net>
+
+     - LGPL-3.0-only
+
    * - :ref:`nanobind <thirdparty_licenses_nanobind>`
 
      - Copyright (c) 2022 Wenzel Jakob <wenzel.jakob@epfl.ch>, All rights reserved.
 
      - BSD-3-Clause
+
+   * - :ref:`nanopb <thirdparty_licenses_nanopb>`
+
+     - Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
+
+     - Zlib
+
+   * - :ref:`Npcap <thirdparty_licenses_npcap>`
+
+     - copyright (c) 2013-2025 by Nmap Software LLC ("The Nmap Project").  All rights reserved.
+
+     - npcap
+
+   * - :ref:`PcapPlusPlus <thirdparty_licenses_pcapplusplus>`
+
+     - Copyright © 2025 seladb
+
+     - Unlicense
+
+       *(+ 6 thirdparty license files)*
 
    * - :ref:`protobuf <thirdparty_licenses_protobuf>`
 
@@ -117,9 +128,17 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - BSD-3-Clause
 
+   * - :ref:`Qt <thirdparty_licenses_qt>`
+
+     - The Qt Company Ltd.
+
+     - LGPL-3.0-only
+
+       *(+ 14 thirdparty license files)*
+
    * - :ref:`Qwt <thirdparty_licenses_qwt>`
 
-     - None
+     - Copyright (C) 1997   Josef Wilgen   Copyright (C) 2002   Uwe Rathmann
 
      - qwt
 
@@ -128,6 +147,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - Copyright (c) 2014, Steinwurf ApS
 
      - BSD-3-Clause
+
+   * - :ref:`robin-map <thirdparty_licenses_robin_map>`
+
+     - Copyright (c) 2017 Thibaut Goetghebuer-Planchon <tessil@gmx.com>
+
+     - MIT
 
    * - :ref:`spdlog <thirdparty_licenses_spdlog>`
 
@@ -155,33 +180,15 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    * - :ref:`TinyXML-2 <thirdparty_licenses_tinyxml_2>`
 
-     - None
+     - Lee Thomason
 
      - Zlib
-
-   * - :ref:`robin-map <thirdparty_licenses_robin_map>`
-
-     - Copyright (c) 2017 Thibaut Goetghebuer-Planchon <tessil@gmx.com>
-
-     - MIT
 
    * - :ref:`Udpcap <thirdparty_licenses_udpcap>`
 
      - Copyright (C) 2016 - 2019 Continental Corporation
 
      - Apache-2.0
-
-   * - :ref:`Npcap <thirdparty_licenses_npcap>`
-
-     - copyright (c) 2013-2025 by Nmap Software LLC ("The Nmap Project").  All rights reserved.
-
-     - npcap
-
-   * - :ref:`PcapPlusPlus <thirdparty_licenses_pcapplusplus>`
-
-     - Copyright ï¿½ 2025 seladb
-
-     - Unlicense
 
    * - :ref:`yaml-cpp <thirdparty_licenses_yaml_cpp>`
 
@@ -197,23 +204,15 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    thirdparty_licenses/benchmark
 
-   thirdparty_licenses/libcurl
-
-   thirdparty_licenses/ecaludp
-
-   thirdparty_licenses/qt
-
    thirdparty_licenses/cap_n_proto
 
    thirdparty_licenses/convert_utf
 
-   thirdparty_licenses/flaticon
-
-   thirdparty_licenses/modpath_iss
-
-   thirdparty_licenses/nanopb
+   thirdparty_licenses/ecaludp
 
    thirdparty_licenses/fineftp_server
+
+   thirdparty_licenses/flaticon
 
    thirdparty_licenses/ftxui
 
@@ -221,13 +220,27 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    thirdparty_licenses/hdf5
 
+   thirdparty_licenses/libcurl
+
+   thirdparty_licenses/modpath_iss
+
    thirdparty_licenses/nanobind
 
+   thirdparty_licenses/nanopb
+
+   thirdparty_licenses/npcap
+
+   thirdparty_licenses/pcapplusplus
+
    thirdparty_licenses/protobuf
+
+   thirdparty_licenses/qt
 
    thirdparty_licenses/qwt
 
    thirdparty_licenses/recycle
+
+   thirdparty_licenses/robin_map
 
    thirdparty_licenses/spdlog
 
@@ -239,12 +252,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    thirdparty_licenses/tinyxml_2
 
-   thirdparty_licenses/robin_map
-
    thirdparty_licenses/udpcap
-
-   thirdparty_licenses/npcap
-
-   thirdparty_licenses/pcapplusplus
 
    thirdparty_licenses/yaml_cpp

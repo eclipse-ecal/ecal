@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_protobuf:
@@ -34,7 +37,7 @@ protobuf
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/protobuf/protobuf`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -47,7 +50,8 @@ protobuf
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`protobuf/LICENSE`
+--------------------------------------------------------------------------------
 
-protobuf itself uses thirdparty dependencies
+.. literalinclude:: protobuf/LICENSE
+  :language: none

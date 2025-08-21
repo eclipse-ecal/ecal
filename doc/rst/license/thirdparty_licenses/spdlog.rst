@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_spdlog:
@@ -30,7 +33,7 @@ spdlog
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/spdlog/spdlog`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ spdlog
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`spdlog/LICENSE`
+--------------------------------------------------------------------------------
 
-spdlog itself uses thirdparty dependencies
+.. literalinclude:: spdlog/LICENSE
+  :language: none

@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_nanopb:
@@ -30,7 +33,7 @@ nanopb
 
      -
 
-       - |fa-file-alt| Copy in Repository
+       - |fa-file-alt| Copy in Repository :file:`/thirdparty/external/ecal/ecal/core/src/serialization`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -41,7 +44,8 @@ nanopb
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`nanopb/LICENSE.txt`
+--------------------------------------------------------------------------------
 
-nanopb itself uses thirdparty dependencies
+.. literalinclude:: nanopb/LICENSE.txt
+  :language: none

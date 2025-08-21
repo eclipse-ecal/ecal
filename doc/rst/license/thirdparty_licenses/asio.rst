@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_asio:
@@ -34,7 +37,7 @@ asio
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/asio/asio`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -49,7 +52,14 @@ asio
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`asio/LICENSE_1_0.txt`
+--------------------------------------------------------------------------------
 
-asio itself uses thirdparty dependencies
+.. literalinclude:: asio/LICENSE_1_0.txt
+  :language: none
+
+:file:`asio/COPYING`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: asio/COPYING
+  :language: none

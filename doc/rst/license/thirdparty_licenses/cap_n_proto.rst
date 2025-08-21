@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_cap_n_proto:
@@ -35,7 +38,8 @@ Cap'n Proto
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`cap_n_proto/LICENSE`
+--------------------------------------------------------------------------------
 
-Cap'n Proto itself uses thirdparty dependencies
+.. literalinclude:: cap_n_proto/LICENSE
+  :language: none

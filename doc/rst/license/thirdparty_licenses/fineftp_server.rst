@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_fineftp_server:
@@ -30,7 +33,7 @@ fineFTP Server
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/fineftp/fineftp-server`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -43,7 +46,8 @@ fineFTP Server
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`fineftp_server/LICENSE`
+--------------------------------------------------------------------------------
 
-fineFTP Server itself uses thirdparty dependencies
+.. literalinclude:: fineftp_server/LICENSE
+  :language: none

@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_recycle:
@@ -30,7 +33,7 @@ recycle
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/recycle/recycle`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ recycle
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`recycle/LICENSE.rst`
+--------------------------------------------------------------------------------
 
-recycle itself uses thirdparty dependencies
+.. literalinclude:: recycle/LICENSE.rst
+  :language: none

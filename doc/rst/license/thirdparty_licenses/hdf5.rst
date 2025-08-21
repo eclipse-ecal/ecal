@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_hdf5:
@@ -34,7 +37,7 @@ HDF5
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/hdf5/hdf5`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -47,7 +50,14 @@ HDF5
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`hdf5/COPYING`
+--------------------------------------------------------------------------------
 
-HDF5 itself uses thirdparty dependencies
+.. literalinclude:: hdf5/COPYING
+  :language: none
+
+:file:`hdf5/COPYING_LBNL_HDF5`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: hdf5/COPYING_LBNL_HDF5
+  :language: none

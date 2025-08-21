@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_qt:
@@ -43,7 +46,125 @@ Qt
 License Files
 =============
 
+:file:`qt/GPL-2.0-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/GPL-2.0-only.txt
+  :language: none
+
+:file:`qt/GPL-3.0-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/GPL-3.0-only.txt
+  :language: none
+
+:file:`qt/LGPL-2.1-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/LGPL-2.1-only.txt
+  :language: none
+
+:file:`qt/LGPL-3.0-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/LGPL-3.0-only.txt
+  :language: none
+
+:file:`qt/LicenseRef-Qt-Commercial.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/LicenseRef-Qt-Commercial.txt
+  :language: none
+
+:file:`qt/Qt-GPL-exception-1.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/Qt-GPL-exception-1.0.txt
+  :language: none
+
 Thirdparty Licenses
 ===================
 
-Qt itself uses thirdparty dependencies
+:file:`qt/thirdparty/qtbase_AFL-2.1.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_AFL-2.1.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_Apache-2.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_Apache-2.0.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_BSD-3-Clause.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_BSD-3-Clause.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_BSL-1.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_BSL-1.0.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_CC0-1.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_CC0-1.0.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_GFDL-1.3-no-invariants-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_GFDL-1.3-no-invariants-only.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_GPL-2.0-or-later.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_GPL-2.0-or-later.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_LicenseRef-SHA1-Public-Domain.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_LicenseRef-SHA1-Public-Domain.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_MIT.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_MIT.txt
+  :language: none
+
+:file:`qt/thirdparty/qtbase_UNICODE-3.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtbase_UNICODE-3.0.txt
+  :language: none
+
+:file:`qt/thirdparty/qtsvg_BSD-3-Clause.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtsvg_BSD-3-Clause.txt
+  :language: none
+
+:file:`qt/thirdparty/qtsvg_GFDL-1.3-no-invariants-only.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qtsvg_GFDL-1.3-no-invariants-only.txt
+  :language: none
+
+:file:`qt/thirdparty/qttranslations_BSD-3-Clause.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: qt/thirdparty/qttranslations_BSD-3-Clause.txt
+  :language: none

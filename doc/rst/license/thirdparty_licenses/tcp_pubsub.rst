@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_tcp_pubsub:
@@ -30,7 +33,7 @@ tcp_pubsub
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/tcp_pubsub/tcp_pubsub`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ tcp_pubsub
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`tcp_pubsub/LICENSE`
+--------------------------------------------------------------------------------
 
-tcp_pubsub itself uses thirdparty dependencies
+.. literalinclude:: tcp_pubsub/LICENSE
+  :language: none

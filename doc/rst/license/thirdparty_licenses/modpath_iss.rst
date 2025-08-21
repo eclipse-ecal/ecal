@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_modpath_iss:
@@ -26,14 +29,21 @@ modpath.iss
 
      -
 
-       - |fa-file-alt| Copy in Repository
+       - |fa-file-alt| Copy in Repository :file:`/cpack/innosetup/modpath.iss`
 
        - |fa-windows| Binary distributions for Windows
 
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`modpath_iss/lgpl-3.0.txt`
+--------------------------------------------------------------------------------
 
-modpath.iss itself uses thirdparty dependencies
+.. literalinclude:: modpath_iss/lgpl-3.0.txt
+  :language: none
+
+:file:`modpath_iss/gpl-3.0.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: modpath_iss/gpl-3.0.txt
+  :language: none

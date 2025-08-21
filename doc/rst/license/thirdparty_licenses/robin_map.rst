@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_robin_map:
@@ -30,7 +33,7 @@ robin-map
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/tsl-robin-map/tsl-robin-map`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ robin-map
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`robin_map/LICENSE`
+--------------------------------------------------------------------------------
 
-robin-map itself uses thirdparty dependencies
+.. literalinclude:: robin_map/LICENSE
+  :language: none

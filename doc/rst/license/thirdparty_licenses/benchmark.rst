@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_benchmark:
@@ -30,7 +33,7 @@ Benchmark
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/benchmark/benchmark`
 
        - |fa-vial-circle-check| Testing
 
@@ -41,7 +44,8 @@ Benchmark
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`benchmark/LICENSE`
+--------------------------------------------------------------------------------
 
-Benchmark itself uses thirdparty dependencies
+.. literalinclude:: benchmark/LICENSE
+  :language: none

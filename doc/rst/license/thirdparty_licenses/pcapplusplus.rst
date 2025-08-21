@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_pcapplusplus:
@@ -47,7 +50,47 @@ PcapPlusPlus
 License Files
 =============
 
+:file:`pcapplusplus/LICENSE`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/LICENSE
+  :language: none
+
 Thirdparty Licenses
 ===================
 
-PcapPlusPlus itself uses thirdparty dependencies
+:file:`pcapplusplus/thirdparty/EndianPortable_license.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/EndianPortable_license.txt
+  :language: none
+
+:file:`pcapplusplus/thirdparty/Getopt-for-Visual-Studio_license.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/Getopt-for-Visual-Studio_license.txt
+  :language: none
+
+:file:`pcapplusplus/thirdparty/hash-library_LICENSE`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/hash-library_LICENSE
+  :language: none
+
+:file:`pcapplusplus/thirdparty/json_license.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/json_license.txt
+  :language: none
+
+:file:`pcapplusplus/thirdparty/LightPcapNg_LICENSE.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/LightPcapNg_LICENSE.txt
+  :language: none
+
+:file:`pcapplusplus/thirdparty/MemPlumber_LICENSE.txt`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: pcapplusplus/thirdparty/MemPlumber_LICENSE.txt
+  :language: none

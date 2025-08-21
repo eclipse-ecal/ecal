@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+  
 .. include:: /include.txt
 
 .. _thirdparty_licenses:
@@ -20,13 +23,23 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - Copyright
 
      - License
-{% for component_name, sbom in sbom_dict.items() %}
+
+  {%- for component_name, sbom in sbom_dict.items() %}
+
    * - :ref:`{{ component_name }} <thirdparty_licenses_{{ to_escaped_component_name(component_name) }}>`
 
      - {{ sbom["copyright"] }}
 
      - {{ sbom["license"] }}
-{% endfor %}
+
+       {%- if sbom["thirdparty_license_files"] %}
+
+       *(+ {{ sbom["thirdparty_license_files"] | length }} thirdparty license files)*
+
+       {%- endif%}
+
+  {%- endfor %}
+
 
 .. toctree::
    :hidden:

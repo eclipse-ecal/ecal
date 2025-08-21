@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_qwt:
@@ -16,7 +19,7 @@ Qwt
 
    * - **Copyright**
 
-     - None
+     - Copyright (C) 1997   Josef Wilgen   Copyright (C) 2002   Uwe Rathmann
 
    * - **Homepage**
 
@@ -34,7 +37,7 @@ Qwt
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/qwt/qwt`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -47,7 +50,8 @@ Qwt
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`qwt/COPYING`
+--------------------------------------------------------------------------------
 
-Qwt itself uses thirdparty dependencies
+.. literalinclude:: qwt/COPYING
+  :language: none

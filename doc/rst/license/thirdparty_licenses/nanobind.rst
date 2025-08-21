@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_nanobind:
@@ -30,7 +33,7 @@ nanobind
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/nanobind/nanobind`
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
@@ -39,7 +42,8 @@ nanobind
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`nanobind/LICENSE`
+--------------------------------------------------------------------------------
 
-nanobind itself uses thirdparty dependencies
+.. literalinclude:: nanobind/LICENSE
+  :language: none

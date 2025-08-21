@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_tinyxml_2:
@@ -16,7 +19,7 @@ TinyXML-2
 
    * - **Copyright**
 
-     - None
+     - Lee Thomason
 
    * - **Repository**
 
@@ -30,7 +33,7 @@ TinyXML-2
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/tinyxml2/tinyxml2`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -43,7 +46,8 @@ TinyXML-2
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`tinyxml_2/LICENSE.txt`
+--------------------------------------------------------------------------------
 
-TinyXML-2 itself uses thirdparty dependencies
+.. literalinclude:: tinyxml_2/LICENSE.txt
+  :language: none

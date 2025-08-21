@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_libcurl:
@@ -34,7 +37,7 @@ libcurl
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/curl/curl`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ libcurl
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`libcurl/COPYING`
+--------------------------------------------------------------------------------
 
-libcurl itself uses thirdparty dependencies
+.. literalinclude:: libcurl/COPYING
+  :language: none

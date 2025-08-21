@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_termcolor:
@@ -30,7 +33,7 @@ termcolor
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/termcolor/termcolor`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -43,7 +46,8 @@ termcolor
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`termcolor/LICENSE`
+--------------------------------------------------------------------------------
 
-termcolor itself uses thirdparty dependencies
+.. literalinclude:: termcolor/LICENSE
+  :language: none

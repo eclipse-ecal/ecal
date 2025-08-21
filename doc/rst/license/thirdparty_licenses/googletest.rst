@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_googletest:
@@ -30,7 +33,7 @@ GoogleTest
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/gtest/googletest`
 
        - |fa-vial-circle-check| Testing
 
@@ -41,7 +44,8 @@ GoogleTest
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`googletest/LICENSE`
+--------------------------------------------------------------------------------
 
-GoogleTest itself uses thirdparty dependencies
+.. literalinclude:: googletest/LICENSE
+  :language: none

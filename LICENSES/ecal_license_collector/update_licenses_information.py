@@ -10,6 +10,8 @@ thirdparty_dir = os.path.join(repo_root_dir, "thirdparty")
 sys.path.insert(0, thirdparty_dir)
 
 import ecal_license_utils
+import copy
+from collections import OrderedDict
 
 # Iterate over subdirs in thirdparty directory to import their get_sbom modules
 sbom_module_list = []
@@ -31,7 +33,7 @@ def escape_component_name(component_name, lowercase = False):
     return escaped_name
     
 
-def copy_license_files_to(sbom_dict, target_dir, lowercase_dirs = False):
+def copy_license_files_to(sbom_dict, target_dir, lowercase_dirs = False, change_to_relative_path = False):
     """
     Copies license files from the SBOM dictionary to the specified target directory. For each sbom entry, a subdirectory is created in the target directory, and the license files are copied there.
     """
@@ -39,17 +41,34 @@ def copy_license_files_to(sbom_dict, target_dir, lowercase_dirs = False):
         if "license_files" in component_info:
             component_license_dir = escape_component_name(component_name, lowercase_dirs)
 
+            # Create a list of relative license files, that we may have to fill
+            relative_license_files            = []
+            relative_thirdparty_license_files = []
+            
             # Create a subdirectory for the component in the target directory
             target_component_dir = os.path.join(target_dir, component_license_dir)
             os.makedirs(target_component_dir, exist_ok=True)
+
+            # Copy (main) License files
             for license_file in component_info["license_files"]:
                 if os.path.exists(license_file):
                     target_file_path = os.path.join(target_component_dir, os.path.basename(license_file))
                     with open(license_file, 'rb') as src_file:
                         with open(target_file_path, 'wb') as dst_file:
                             dst_file.write(src_file.read())
+
+                    if change_to_relative_path:
+                        # Calculate new relative path
+                        rel_path = os.path.relpath(target_file_path, target_dir)
+                        rel_path = rel_path.replace(os.sep, "/")
+                        relative_license_files.append(rel_path)
+
                 else:
                     print(f"License file {license_file} does not exist and cannot be copied.")
+
+            if change_to_relative_path:
+                # Change original dict with the new relative paths
+                component_info["license_files"] = relative_license_files
 
             # Copy thirdparty licenses if available
             if component_info["thirdparty_license_files"]:
@@ -61,8 +80,19 @@ def copy_license_files_to(sbom_dict, target_dir, lowercase_dirs = False):
                         with open(thirdparty_license, 'rb') as src_file:
                             with open(target_file_path, 'wb') as dst_file:
                                 dst_file.write(src_file.read())
+
+                        if change_to_relative_path:
+                            # Calculate new relative path
+                            rel_path = os.path.relpath(target_file_path, target_dir)
+                            rel_path = rel_path.replace(os.sep, "/")
+                            relative_thirdparty_license_files.append(rel_path)
+
                     else:
                         print(f"Third-party license file {thirdparty_license} does not exist and cannot be copied.")
+
+                if change_to_relative_path:
+                    # Change original dict with the new relative paths
+                    component_info["thirdparty_license_files"] = relative_thirdparty_license_files
 
 def get_ecal_sbom():
     component_name = "eCAL"
@@ -120,6 +150,15 @@ def update_documentation(thirdparty_sbom_dict):
     documentation_licenses_dir            = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../doc/rst/license/"))
     documentation_thirdparty_licenses_dir = os.path.join(documentation_licenses_dir, "thirdparty_licenses")
 
+    ############## Make component paths relative #################
+
+    # Make all ["path"] entries relative to the repo dir
+    for component in thirdparty_sbom_dict.values():
+        if component["path"] and os.path.isabs(component["path"]):
+            rel_path = os.path.relpath(component["path"], start=repo_root_dir)
+            rel_path = rel_path.replace(os.sep, "/")
+            component["path"] = "/" + rel_path
+
     ############## Copy licenses to documentation #################
 
     # Make sure that the target directories exist but is empty
@@ -127,7 +166,7 @@ def update_documentation(thirdparty_sbom_dict):
         shutil.rmtree(documentation_thirdparty_licenses_dir)
     os.makedirs(documentation_thirdparty_licenses_dir, exist_ok=True)
 
-    copy_license_files_to(thirdparty_sbom_dict, documentation_thirdparty_licenses_dir, lowercase_dirs=True)
+    copy_license_files_to(thirdparty_sbom_dict, documentation_thirdparty_licenses_dir, lowercase_dirs=True, change_to_relative_path = True)
 
     ############## Main Thirdparty Licenses Table #################
 
@@ -192,15 +231,13 @@ if __name__ == "__main__":
     # Also create an SBOM Dict for eCAL itself
     ecal_sbom_dict = get_ecal_sbom()
 
-    # # Update the LICENSES/... dirs
-    # update_license_dirs(ecal_sbom_dict, thirdparty_sbom_dict)
+    # Update the LICENSES/... dirs
+    update_license_dirs(ecal_sbom_dict, thirdparty_sbom_dict)
 
     # Generate the documentation
-    update_documentation(thirdparty_sbom_dict)
-
-
-
-
-
-    # update_documentation(get_ecal_sbom())
+    thirdparty_sbom_dict_for_documentation = copy.deepcopy(thirdparty_sbom_dict)
+    thirdparty_sbom_dict_for_documentation = OrderedDict(
+        sorted(thirdparty_sbom_dict_for_documentation.items(), key=lambda x: x[0].lower())
+    )
     
+    update_documentation(thirdparty_sbom_dict_for_documentation)

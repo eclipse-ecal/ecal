@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_ecaludp:
@@ -30,7 +33,7 @@ ecaludp
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/ecaludp/ecaludp`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -45,7 +48,8 @@ ecaludp
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`ecaludp/LICENSE`
+--------------------------------------------------------------------------------
 
-ecaludp itself uses thirdparty dependencies
+.. literalinclude:: ecaludp/LICENSE
+  :language: none

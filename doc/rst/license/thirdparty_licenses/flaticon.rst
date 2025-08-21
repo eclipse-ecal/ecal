@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_flaticon:
@@ -26,7 +29,7 @@ Flaticon
 
      -
 
-       - |fa-file-alt| Copy in Repository
+       - |fa-file-alt| Copy in Repository :file:`/app/iconset/flaticon`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -37,7 +40,14 @@ Flaticon
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`flaticon/LICENSE`
+--------------------------------------------------------------------------------
 
-Flaticon itself uses thirdparty dependencies
+.. literalinclude:: flaticon/LICENSE
+  :language: none
+
+:file:`flaticon/license.htm`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: flaticon/license.htm
+  :language: none

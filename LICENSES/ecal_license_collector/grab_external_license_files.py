@@ -22,9 +22,12 @@ def copy_qt_license_files(qt_src_dir):
 
     # Copy everything from the LICENSES directory to the target directory
     qt_licenses_dir = os.path.join(qt_src_dir, "LICENSES")
-    for root, dirs, files in os.walk(qt_licenses_dir):
-        for file in files:
-            src_file_path = os.path.join(root, file)
+    original_qt_license_files = []
+    for file in os.listdir(qt_licenses_dir):
+        file_path = os.path.join(qt_licenses_dir, file)
+        if os.path.isfile(file_path):
+            original_qt_license_files.append(file)
+            src_file_path = file_path
             target_file_path = os.path.join(license_target_dir, file)
             target_file_path = os.path.normpath(target_file_path)
 
@@ -48,17 +51,22 @@ def copy_qt_license_files(qt_src_dir):
     for component in qt_components:
         component_licenses_dir = os.path.join(qt_src_dir, component, "LICENSES")
 
-        for root, dirs, files in os.walk(component_licenses_dir):
-            for file in files:
-                # Copy each license file to the external licenses directory, but prefix with the component name
-                src_file_path = os.path.join(root, file)
-                target_file_path = os.path.join(thirdparty_license_target_dir, f"{component}_{file}")
-                target_file_path = os.path.normpath(target_file_path)
+        if os.path.exists(component_licenses_dir):
+            for file in os.listdir(component_licenses_dir):
+                src_file_path = os.path.join(component_licenses_dir, file)
 
-                with open(src_file_path, 'rb') as src_file:
-                    with open(target_file_path, 'wb') as dst_file:
-                        dst_file.write(src_file.read())
-                        print(f"Copied {src_file_path} to {target_file_path}")
+                # Skip this file, if the filename matches the original qt licenses
+                if file in original_qt_license_files:
+                    continue
+
+                if os.path.isfile(src_file_path):
+                    target_file_path = os.path.join(thirdparty_license_target_dir, f"{component}_{file}")
+                    target_file_path = os.path.normpath(target_file_path)
+
+                    with open(src_file_path, 'rb') as src_file:
+                        with open(target_file_path, 'wb') as dst_file:
+                            dst_file.write(src_file.read())
+                            print(f"Copied {src_file_path} to {target_file_path}")
 
 def copy_pcapplusplus_license_files(pcap_plus_plus_source_dir):
     pcapplusplus_thirdparty_dir     = os.path.join(pcap_plus_plus_source_dir, "3rdParty")

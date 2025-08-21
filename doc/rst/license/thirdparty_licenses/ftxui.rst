@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_ftxui:
@@ -30,7 +33,7 @@ FTXUI
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/ftxui/ftxui`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -43,7 +46,8 @@ FTXUI
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`ftxui/LICENSE`
+--------------------------------------------------------------------------------
 
-FTXUI itself uses thirdparty dependencies
+.. literalinclude:: ftxui/LICENSE
+  :language: none

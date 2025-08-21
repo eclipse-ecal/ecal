@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
 .. include:: /include.txt
 
 .. _thirdparty_licenses_udpcap:
@@ -30,7 +33,7 @@ Udpcap
 
      -
 
-       - |fa-github| Git Submodule
+       - |fa-github| Git Submodule :file:`/thirdparty/udpcap/udpcap`
 
        - |fa-windows| Binary distributions for Windows
 
@@ -43,7 +46,8 @@ Udpcap
 License Files
 =============
 
-Thirdparty Licenses
-===================
+:file:`udpcap/LICENSE`
+--------------------------------------------------------------------------------
 
-Udpcap itself uses thirdparty dependencies
+.. literalinclude:: udpcap/LICENSE
+  :language: none

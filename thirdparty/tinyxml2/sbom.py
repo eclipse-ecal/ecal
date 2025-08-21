@@ -21,7 +21,7 @@ def get_sbom():
                                                             os.path.join(sbom[component_name]["path"], "LICENSE.txt"),
                                                         ]
     sbom[component_name]["thirdparty_license_files"] =  []
-    sbom[component_name]["copyright"] =                 ecal_license_utils.get_copyright_from_file(sbom[component_name]["license_files"][0])
+    sbom[component_name]["copyright"] =                 "Lee Thomason"
     sbom[component_name]["homepage"] =                  None
     sbom[component_name]["repo_url"] =                  ecal_license_utils.get_repo_url_from_submodule(component_dir)
     sbom[component_name]["git_version"] =               ecal_license_utils.get_git_version_from_submodule(component_dir)
