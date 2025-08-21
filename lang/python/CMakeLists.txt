@@ -140,6 +140,9 @@ set(CMAKE_INSTALL_RPATH "\$ORIGIN")
 # for build tree use.
 set(CMAKE_BUILD_WITH_INSTALL_RPATH "ON")
 
+add_subdirectory(src/top_level_ecal)
+add_dependencies(${PROJECT_NAME} python_top_level)
+
 add_subdirectory(src/core)
 add_dependencies(${PROJECT_NAME} _ecal_core_py)
 
