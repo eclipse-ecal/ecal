@@ -40,13 +40,13 @@ Flaticon
 License Files
 =============
 
-:file:`flaticon/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: flaticon/LICENSE
   :language: none
 
-:file:`flaticon/license.htm`
+:file:`license.htm`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: flaticon/license.htm

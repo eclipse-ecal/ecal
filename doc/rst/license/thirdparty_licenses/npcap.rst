@@ -48,7 +48,7 @@ Npcap
 License Files
 =============
 
-:file:`npcap/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: npcap/LICENSE

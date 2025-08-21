@@ -44,7 +44,7 @@ Benchmark
 License Files
 =============
 
-:file:`benchmark/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: benchmark/LICENSE

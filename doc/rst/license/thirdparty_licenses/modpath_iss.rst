@@ -36,13 +36,13 @@ modpath.iss
 License Files
 =============
 
-:file:`modpath_iss/lgpl-3.0.txt`
+:file:`lgpl-3.0.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: modpath_iss/lgpl-3.0.txt
   :language: none
 
-:file:`modpath_iss/gpl-3.0.txt`
+:file:`gpl-3.0.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: modpath_iss/gpl-3.0.txt

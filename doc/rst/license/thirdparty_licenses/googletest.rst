@@ -44,7 +44,7 @@ GoogleTest
 License Files
 =============
 
-:file:`googletest/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: googletest/LICENSE

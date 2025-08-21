@@ -48,7 +48,7 @@ robin-map
 License Files
 =============
 
-:file:`robin_map/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: robin_map/LICENSE

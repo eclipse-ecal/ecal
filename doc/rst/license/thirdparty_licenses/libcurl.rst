@@ -48,7 +48,7 @@ libcurl
 License Files
 =============
 
-:file:`libcurl/COPYING`
+:file:`COPYING`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: libcurl/COPYING

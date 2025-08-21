@@ -46,7 +46,7 @@ FTXUI
 License Files
 =============
 
-:file:`ftxui/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: ftxui/LICENSE

@@ -46,7 +46,7 @@ TinyXML-2
 License Files
 =============
 
-:file:`tinyxml_2/LICENSE.txt`
+:file:`LICENSE.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: tinyxml_2/LICENSE.txt

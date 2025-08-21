@@ -48,7 +48,7 @@ ecaludp
 License Files
 =============
 
-:file:`ecaludp/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: ecaludp/LICENSE

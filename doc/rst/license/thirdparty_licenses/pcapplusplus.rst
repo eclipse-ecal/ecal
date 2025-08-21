@@ -50,7 +50,7 @@ PcapPlusPlus
 License Files
 =============
 
-:file:`pcapplusplus/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/LICENSE
@@ -59,37 +59,37 @@ License Files
 Thirdparty Licenses
 ===================
 
-:file:`pcapplusplus/thirdparty/EndianPortable_license.txt`
+:file:`EndianPortable_license.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/EndianPortable_license.txt
   :language: none
 
-:file:`pcapplusplus/thirdparty/Getopt-for-Visual-Studio_license.txt`
+:file:`Getopt-for-Visual-Studio_license.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/Getopt-for-Visual-Studio_license.txt
   :language: none
 
-:file:`pcapplusplus/thirdparty/hash-library_LICENSE`
+:file:`hash-library_LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/hash-library_LICENSE
   :language: none
 
-:file:`pcapplusplus/thirdparty/json_license.txt`
+:file:`json_license.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/json_license.txt
   :language: none
 
-:file:`pcapplusplus/thirdparty/LightPcapNg_LICENSE.txt`
+:file:`LightPcapNg_LICENSE.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/LightPcapNg_LICENSE.txt
   :language: none
 
-:file:`pcapplusplus/thirdparty/MemPlumber_LICENSE.txt`
+:file:`MemPlumber_LICENSE.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: pcapplusplus/thirdparty/MemPlumber_LICENSE.txt

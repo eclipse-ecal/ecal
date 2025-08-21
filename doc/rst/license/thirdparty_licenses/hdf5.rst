@@ -50,13 +50,13 @@ HDF5
 License Files
 =============
 
-:file:`hdf5/COPYING`
+:file:`COPYING`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: hdf5/COPYING
   :language: none
 
-:file:`hdf5/COPYING_LBNL_HDF5`
+:file:`COPYING_LBNL_HDF5`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: hdf5/COPYING_LBNL_HDF5

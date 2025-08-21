@@ -44,7 +44,7 @@ nanopb
 License Files
 =============
 
-:file:`nanopb/LICENSE.txt`
+:file:`LICENSE.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: nanopb/LICENSE.txt

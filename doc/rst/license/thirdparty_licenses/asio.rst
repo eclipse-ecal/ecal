@@ -52,13 +52,13 @@ asio
 License Files
 =============
 
-:file:`asio/LICENSE_1_0.txt`
+:file:`LICENSE_1_0.txt`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: asio/LICENSE_1_0.txt
   :language: none
 
-:file:`asio/COPYING`
+:file:`COPYING`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: asio/COPYING

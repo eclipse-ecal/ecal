@@ -50,7 +50,7 @@ tclap
 License Files
 =============
 
-:file:`tclap/COPYING`
+:file:`COPYING`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: tclap/COPYING

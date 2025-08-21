@@ -46,7 +46,7 @@ fineFTP Server
 License Files
 =============
 
-:file:`fineftp_server/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: fineftp_server/LICENSE

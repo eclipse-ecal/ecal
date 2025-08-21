@@ -42,7 +42,7 @@ nanobind
 License Files
 =============
 
-:file:`nanobind/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: nanobind/LICENSE

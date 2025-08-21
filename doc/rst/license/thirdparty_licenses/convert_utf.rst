@@ -30,7 +30,7 @@ convert_utf
 License Files
 =============
 
-:file:`convert_utf/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: convert_utf/LICENSE

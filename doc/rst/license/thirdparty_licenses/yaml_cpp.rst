@@ -48,7 +48,7 @@ yaml-cpp
 License Files
 =============
 
-:file:`yaml_cpp/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: yaml_cpp/LICENSE

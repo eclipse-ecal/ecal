@@ -130,8 +130,9 @@ License Files
 =============
 
 {%- for license_file in component_details["license_files"] %}
+{%- set license_filename = license_file.split('/')[-1] %}
 
-:file:`{{ license_file }}`
+:file:`{{ license_filename }}`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: {{ license_file }}
@@ -145,8 +146,9 @@ Thirdparty Licenses
 ===================
 
 {%- for license_file in component_details["thirdparty_license_files"] %}
+{%- set license_filename = license_file.split('/')[-1] %}
 
-:file:`{{ license_file }}`
+:file:`{{ license_filename }}`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: {{ license_file }}

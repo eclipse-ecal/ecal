@@ -50,7 +50,7 @@ Qwt
 License Files
 =============
 
-:file:`qwt/COPYING`
+:file:`COPYING`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: qwt/COPYING

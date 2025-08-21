@@ -38,7 +38,7 @@ Cap'n Proto
 License Files
 =============
 
-:file:`cap_n_proto/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: cap_n_proto/LICENSE

@@ -48,7 +48,7 @@ tcp_pubsub
 License Files
 =============
 
-:file:`tcp_pubsub/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: tcp_pubsub/LICENSE

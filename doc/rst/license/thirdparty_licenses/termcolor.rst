@@ -46,7 +46,7 @@ termcolor
 License Files
 =============
 
-:file:`termcolor/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: termcolor/LICENSE

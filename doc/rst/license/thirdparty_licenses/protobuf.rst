@@ -50,7 +50,7 @@ protobuf
 License Files
 =============
 
-:file:`protobuf/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: protobuf/LICENSE

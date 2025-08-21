@@ -48,7 +48,7 @@ spdlog
 License Files
 =============
 
-:file:`spdlog/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: spdlog/LICENSE

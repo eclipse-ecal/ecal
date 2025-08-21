@@ -46,7 +46,7 @@ Udpcap
 License Files
 =============
 
-:file:`udpcap/LICENSE`
+:file:`LICENSE`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: udpcap/LICENSE

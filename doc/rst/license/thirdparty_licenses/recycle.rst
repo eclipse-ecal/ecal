@@ -48,7 +48,7 @@ recycle
 License Files
 =============
 
-:file:`recycle/LICENSE.rst`
+:file:`LICENSE.rst`
 --------------------------------------------------------------------------------
 
 .. literalinclude:: recycle/LICENSE.rst
