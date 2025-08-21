@@ -39,7 +39,7 @@ PcapPlusPlus
 
        - |fa-download| Fetched by CMake
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
        - |fa-python| Python wheels
 

@@ -35,9 +35,9 @@ nanopb
 
        - |fa-file-alt| Copy in Repository :file:`/thirdparty/external/ecal/ecal/core/src/serialization`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 

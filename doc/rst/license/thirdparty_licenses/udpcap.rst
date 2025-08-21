@@ -35,7 +35,7 @@ Udpcap
 
        - |fa-github| Git Submodule :file:`/thirdparty/udpcap/udpcap`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
        - |fa-python| Python wheels
 

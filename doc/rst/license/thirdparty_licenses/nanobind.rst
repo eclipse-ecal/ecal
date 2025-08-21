@@ -35,6 +35,8 @@ nanobind
 
        - |fa-github| Git Submodule :file:`/thirdparty/nanobind/nanobind`
 
+       - |fa-python| Python wheels
+
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*
    *Check build files for further information.*

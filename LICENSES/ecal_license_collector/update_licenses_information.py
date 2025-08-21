@@ -102,8 +102,8 @@ def get_ecal_sbom():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.COPY_IN_REPO,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
-                                                            ecal_license_utils.include_type.LINUX_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                             ecal_license_utils.include_type.PYTHON_BINDINGS,
                                                             ecal_license_utils.include_type.DOCUMENTATION,
                                                             ecal_license_utils.include_type.TESTING,

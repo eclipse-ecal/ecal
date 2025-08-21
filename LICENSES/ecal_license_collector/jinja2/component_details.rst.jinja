@@ -79,15 +79,15 @@
 
        {%- endif %}
 
-       {%- if ecal_license_utils.include_type.WINDOWS_BINARIES in component_details["include_type"] %}
+       {%- if ecal_license_utils.include_type.WINDOWS_BUILDS in component_details["include_type"] %}
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
        {%- endif %}
 
-       {%- if ecal_license_utils.include_type.LINUX_BINARIES in component_details["include_type"] %}
+       {%- if ecal_license_utils.include_type.LINUX_BUILDS in component_details["include_type"] %}
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        {%- endif %}
 

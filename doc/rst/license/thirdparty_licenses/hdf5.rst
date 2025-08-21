@@ -39,7 +39,9 @@ HDF5
 
        - |fa-github| Git Submodule :file:`/thirdparty/hdf5/hdf5`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
+
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 

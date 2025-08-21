@@ -35,9 +35,9 @@ ecaludp
 
        - |fa-github| Git Submodule :file:`/thirdparty/ecaludp/ecaludp`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 

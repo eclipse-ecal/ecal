@@ -33,7 +33,7 @@ Cap'n Proto
 
      -
 
-       - None
+       - |fa-ubuntu| Linux builds
 
 License Files
 =============

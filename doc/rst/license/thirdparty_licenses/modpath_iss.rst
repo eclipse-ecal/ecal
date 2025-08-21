@@ -31,7 +31,7 @@ modpath.iss
 
        - |fa-file-alt| Copy in Repository :file:`/cpack/innosetup/modpath.iss`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
 License Files
 =============

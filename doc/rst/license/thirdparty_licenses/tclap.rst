@@ -39,9 +39,9 @@ tclap
 
        - |fa-github| Git Submodule :file:`/thirdparty/tclap/tclap`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
 .. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
    *Especially Linux binaries are often built against system packages, if available.*

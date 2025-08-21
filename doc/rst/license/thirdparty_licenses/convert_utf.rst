@@ -27,6 +27,8 @@ convert_utf
 
        - |fa-file-alt| Copy in Repository :file:`contrib/ecaltime/linuxptp/src`
 
+       - |fa-ubuntu| Linux builds
+
 License Files
 =============
 

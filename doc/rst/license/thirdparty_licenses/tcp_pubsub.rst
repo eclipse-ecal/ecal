@@ -35,9 +35,9 @@ tcp_pubsub
 
        - |fa-github| Git Submodule :file:`/thirdparty/tcp_pubsub/tcp_pubsub`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 

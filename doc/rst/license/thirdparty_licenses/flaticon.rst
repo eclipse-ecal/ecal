@@ -31,9 +31,9 @@ Flaticon
 
        - |fa-file-alt| Copy in Repository :file:`/app/iconset/flaticon`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        - |fa-book| Documentation
 

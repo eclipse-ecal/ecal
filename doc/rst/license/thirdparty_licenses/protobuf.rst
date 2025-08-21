@@ -39,7 +39,9 @@ protobuf
 
        - |fa-github| Git Submodule :file:`/thirdparty/protobuf/protobuf`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
+
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 

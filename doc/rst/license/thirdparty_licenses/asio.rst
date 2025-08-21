@@ -39,9 +39,9 @@ asio
 
        - |fa-github| Git Submodule :file:`/thirdparty/asio/asio`
 
-       - |fa-windows| Binary distributions for Windows
+       - |fa-windows| Windows builds
 
-       - |fa-ubuntu| Binary distributions for Linux
+       - |fa-ubuntu| Linux builds
 
        - |fa-python| Python wheels
 
