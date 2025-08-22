@@ -277,6 +277,8 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+include(cmake/cmake_functions.cmake)
+
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
@@ -284,7 +286,6 @@ if(MSVC)
   if (ECAL_USE_QT)
     find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
     if (NOT "${QT_FOUND}")
-	  include("cmake/qt_msvc_path.cmake")
       autodetect_qt_msvc_dir()
     endif()
   endif()
@@ -640,7 +641,6 @@ message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                         : ${ECAL_INS
 message(STATUS "ECAL_USE_NPCAP                                      : ${ECAL_USE_NPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                          : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_BENCHMARK                     : ${ECAL_THIRDPARTY_BUILD_BENCHMARK}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS               : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                          : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                       : ${ECAL_THIRDPARTY_BUILD_FINEFTP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FTXUI                         : ${ECAL_THIRDPARTY_BUILD_FTXUI}")
