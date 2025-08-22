@@ -1,3 +1,6 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+  
 .. include:: /include.txt
 
 .. _thirdparty_licenses:
@@ -11,262 +14,244 @@ These components may either be shipped with the repository as source code, or al
 The information in this list may not be exhaustive.
 Some dependencies, like GoogleTest, are not used in our officially distributed builds, even though they can be used with eCAL and therefore appear in this list.
 
-Components by Eclipse eCAL™
-===========================
-
-The following external components are developed and maintained by the Eclipse eCAL team.
-They may have a different license than eCAL.
-
-.. list-table:: Components by Eclipse eCAL™
-   :widths: 10 15 30 45
+.. list-table:: 
+   :widths: 1 2 1
    :header-rows: 1
-
+   
    * - Component
-     - License
+
      - Copyright
-     - Included in...
 
-   * - `ecaludp <https://github.com/eclipse-ecal/ecaludp>`_
-     - :ref:`apache_2_0`
-     - 2024, Continental
-     - - |fa-github| Git submodule ``/tirdparty/ecaludp/ecaludp``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
-   * - `fineFTP Server <https://github.com/eclipse-ecal/fineftp-server>`_
-     - :ref:`mit_license`
-     - 2020 Continental Corporation
-     - - |fa-github| Git submodule ``/tirdparty/fineftp/fineftp-server``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
-   * - `tcp_pubsub <https://github.com/eclipse-ecal/tcp_pubsub>`_
-     - :ref:`mit_license`
-     - Copyright (c) 2021 Continental
-     - - |fa-github| Git submodule ``/tirdparty/tcp_pubsub/tcp_pubsub``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-
-   * - `Udpcap <https://github.com/eclipse-ecal/udpcap>`_
-     - :ref:`apache_2_0`
-     - 2022, Continental
-     - - |fa-github| Git submodule ``/tirdparty/udpcap/udpcap``
-       - |fa-windows| Binary distributions for Windows
-
-Thirdparty components
-=====================
-
-The following components are developed by third parties.
-They are used by Eclipse eCAL, but not associated to it in any way.
-
-.. list-table:: Thirdparty components
-   :widths: 10 15 30 45
-   :header-rows: 1
-
-   * - Component
      - License
-     - Copyright
-     - Included in...
 
-   * - `Asio <https://think-async.com>`_
-     - :ref:`boost_1_0`
-     - 2003-2018 Christopher M. Kohlhoff
-     - - |fa-github| Git submodule ``/tirdparty/asio/asio``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+   * - :ref:`asio <thirdparty_licenses_asio>`
 
-   * - `Bootstrap <https://getbootstrap.com/>`_
-     - :ref:`mit_license`
-     - 2011-2019 The Bootstrap Authors
+     - Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 
-       2011-2019 Twitter, Inc.
-     - - |fa-book| Documentation
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - BSL-1.0
 
-   * - `Cap'n Proto <https://capnproto.org>`_
-     - :ref:`mit_license`
-     - 2013-2014 Sandstorm Development Group, Inc. and contributors
-     - - |fa-ubuntu| Binary distributions for Linux
+   * - :ref:`Benchmark <thirdparty_licenses_benchmark>`
 
-   * - convert_utf
-     - :ref:`convert_utf_license`
-     - 2001-2004 Unicode, Inc.
-     - - |fa-file-alt| Copy in repository: :file:`convert_utf.cpp / .h`
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - Copyright 2015 Google Inc. All rights reserved.
 
-   * - `Findqwt.cmake <https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt>`_
-     - :ref:`findqwt-bsd-2`
-     - Copyright 2010-2013, Julien Schueller
+     - Apache-2.0
 
-       Copyright 2018-2020, Rolf Eike Beer
-     - - |fa-file-alt| Copy in repository (modified): ``cmake/Modules/Findqwt.cmake``
+   * - :ref:`Cap'n Proto <thirdparty_licenses_cap_n_proto>`
 
-   * - `Flaticons <https://www.flaticon.com/>`_
-     - :ref:`creative_commons_3_0`
-     - see :ref:`icon_licenses`
-     - - |fa-file-alt| Copy in repository: :file:`/app/iconset/flaticon/*`
-       - |fa-book| Documentation
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - Copyright (c) 2013-2017 Sandstorm Development Group, Inc.; Cloudflare, Inc.;   and other contributors. Each commit is copyright by its respective author or   author's employer.
 
-   * - `Font Awesome <https://fontawesome.com>`_
-     - :ref:`fontawesome_free_license`
-     - Fonticons, Inc.
-     - - |fa-book| Documentation
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - MIT
 
-   * - `Google Protobuf <https://developers.google.com/protocol-buffers>`_
-     - :ref:`bsd_3`
-     - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/protobuf/protobuf``
-       - |fa-windows| Binary distributions for Windows
+   * - :ref:`convert_utf <thirdparty_licenses_convert_utf>`
 
-   * - `Google Test <https://github.com/google/googletest>`_
-     - :ref:`bsd_3`
-     - Copyright 2008 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/gtest/googletest``
+     - Copyright 2001-2004 Unicode, Inc.
 
-   * - `HDF5 <https://www.hdfgroup.org/solutions/hdf5>`_
-     - :ref:`hdf5_bsd_3`
-     - 1998-2006 by The Board of Trustees of the University of Illinois
-       
-       2006 by The HDF Group
-     - - |fa-github| Git submodule ``/tirdparty/hdf5/hdf5``
-       - |fa-windows| Binary distributions for Windows
+     - convert-utf
 
-   * - `libcurl <https://curl.se/libcurl/>`_
-     - :ref:`mit_license`
-     - 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors, see the THANKS file
-     - - |fa-github| Git submodule ``/tirdparty/curl/curl``
-       - |fa-windows| Binary distributions for Windows
+   * - :ref:`ecaludp <thirdparty_licenses_ecaludp>`
 
-   * - `modpath.iss <http://www.legroom.net/software>`_
-     - :ref:`lgpl_3_0`
-     - Jared Breland
-     - - |fa-file-alt| Copy in repository: :file:`/cpack/innosetup/modpath.iss`
-       - |fa-windows| Binary distributions for Windows (Installer only)
+     - Copyright (c) 2024 Continental Corporation
 
-   * - `nanobind <https://github.com/wjakob/nanobind>`_
-     - :ref:`bsd_3`
-     - 2022, Wenzel Jakob
-     - - |fa-github| Git submodule ``/tirdparty/nanobind/nanobind``
+     - Apache-2.0
 
-   * - `nanopb <https://github.com/nanopb/nanopb>`_
-     - :ref:`zlib_license`
-     - 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>
-     - - |fa-file-alt| Copy in repository: :file:`ecal/ecal/core/src/serialization/nanopb/*`
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+   * - :ref:`fineFTP Server <thirdparty_licenses_fineftp_server>`
 
-   * - `npcap <https://nmap.org/npcap/>`_
-     - :ref:`npcap_license`
-     - 2013-2021 by Insecure.Com LLC
-     - Not included due to licensing issues.
-       Please check out the :ref:`npcap chapter <configuration_npcap>`.
-       eCAL for Windows links against the npcap SDK.
+     - Copyright (c) 2020 Continental Corporation
 
-   * - `PcapPlusPlus <https://pcapplusplus.github.io/>`_
-     - :ref:`unlicense_license`
-     - 2021 seladb
-     - - |fa-windows| Binary distributions for Windows
+     - MIT
 
-   * - `Qt <https://www.qt.io/>`_
-     - :ref:`lgpl_3_0`
+   * - :ref:`Flaticon <thirdparty_licenses_flaticon>`
+
+     - Multiple authors, see license file
+
+     - CC-BY-3.0
+
+   * - :ref:`FTXUI <thirdparty_licenses_ftxui>`
+
+     - Copyright (c) 2019 Arthur Sonzogni.
+
+     - MIT
+
+   * - :ref:`GoogleTest <thirdparty_licenses_googletest>`
+
+     - Copyright 2008, Google Inc.   All rights reserved.
+
+     - BSD-3-Clause
+
+   * - :ref:`HDF5 <thirdparty_licenses_hdf5>`
+
+     - Copyright 2006 by The HDF Group. Copyright 1998-2006 by The Board of Trustees of the University of Illinois.
+
+     - HDF5
+
+   * - :ref:`libcurl <thirdparty_licenses_libcurl>`
+
+     - Copyright (c) 1996 - 2024, Daniel Stenberg, <daniel@haxx.se>, and many   contributors, see the THANKS file.
+
+     - curl
+
+   * - :ref:`modpath.iss <thirdparty_licenses_modpath_iss>`
+
+     - Jared Breland <jbreland@legroom.net>
+
+     - LGPL-3.0-only
+
+   * - :ref:`nanobind <thirdparty_licenses_nanobind>`
+
+     - Copyright (c) 2022 Wenzel Jakob <wenzel.jakob@epfl.ch>, All rights reserved.
+
+     - BSD-3-Clause
+
+   * - :ref:`nanopb <thirdparty_licenses_nanopb>`
+
+     - Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
+
+     - Zlib
+
+   * - :ref:`Npcap <thirdparty_licenses_npcap>`
+
+     - copyright (c) 2013-2025 by Nmap Software LLC ("The Nmap Project").  All rights reserved.
+
+     - npcap
+
+   * - :ref:`PcapPlusPlus <thirdparty_licenses_pcapplusplus>`
+
+     - Copyright © 2025 seladb
+
+     - Unlicense
+
+       *(+ 6 thirdparty license files)*
+
+   * - :ref:`protobuf <thirdparty_licenses_protobuf>`
+
+     - Copyright 2008 Google Inc.  All rights reserved.
+
+     - BSD-3-Clause
+
+   * - :ref:`Qt <thirdparty_licenses_qt>`
+
      - The Qt Company Ltd.
-     - - |fa-windows| Binary distributions for Windows
 
-   * - `qwt <https://sourceforge.net/projects/qwt/>`_
-     - :ref:`qwt_license`
-     - 	Uwe Rathmann
-     - - |fa-github| Git submodule ``/tirdparty/qwt/qwt``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - LGPL-3.0-only
 
-   * - `recycle <https://github.com/steinwurf/recycle>`_
-     - :ref:`bsd_3`
+       *(+ 14 thirdparty license files)*
+
+   * - :ref:`Qwt <thirdparty_licenses_qwt>`
+
+     - Copyright (C) 1997   Josef Wilgen   Copyright (C) 2002   Uwe Rathmann
+
+     - qwt
+
+   * - :ref:`recycle <thirdparty_licenses_recycle>`
+
      - Copyright (c) 2014, Steinwurf ApS
-     - - |fa-github| Git submodule ``/tirdparty/recycle/recycle``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
-       
-   * - `robin-map <https://github.com/Tessil/robin-map>`_
-     - :ref:`mit_license`
-     - 2017, Thibaut Goetghebuer-Planchon
-     - - |fa-github| Git submodule ``/tirdparty/tsl-robin-map/tsl-robin-map``
 
-   * - `spdlog <https://github.com/gabime/spdlog>`_
-     - :ref:`mit_license`
-     - 2016 Gabi Melman
-     - - |fa-github| Git submodule ``/tirdparty/spdlog/spdlog``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - BSD-3-Clause
 
-   * - `Sphinx Book Theme <https://github.com/executablebooks/sphinx-book-theme>`_
-     - :ref:`bsd_3`
-     - 2020 Chris Holdgraf
-     - - |fa-book| Documentation
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+   * - :ref:`robin-map <thirdparty_licenses_robin_map>`
 
-   * - `tclap <http://tclap.sourceforge.net>`_
-     - :ref:`mit_license`
-     - Copyright (c) 2003 Michael E. Smoot 
-       
-       Copyright (c) 2004 Daniel Aarno
+     - Copyright (c) 2017 Thibaut Goetghebuer-Planchon <tessil@gmx.com>
 
-       Copyright (c) 2017 Google Inc.
-     - - |fa-github| Git submodule ``/tirdparty/tclap/tclap``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - MIT
 
-   * - `termcolor <https://github.com/ikalnytskyi/termcolor>`_
-     - :ref:`bsd_3`
-     - 2013, Ihor Kalnytskyi
-     - - |fa-github| Git submodule ``/tirdparty/termcolor/termcolor``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+   * - :ref:`spdlog <thirdparty_licenses_spdlog>`
 
-   * - `TinyXML-2 <https://github.com/leethomason/tinyxml2>`_
-     - :ref:`zlib_license`
-     - 	Lee Thomason
-     - - |fa-github| Git submodule ``/tirdparty/tinyxml2/tinyxml2``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - Copyright (c) 2016 Gabi Melman.
 
-   * - `yaml-cpp <https://github.com/jbeder/yaml-cpp/>`_
-     - :ref:`mit_license`
-     - 	Copyright (c) 2008-2015 Jesse Beder
-     - - |fa-github| Git submodule ``/thirdparty/yaml-cpp/yaml-cpp``
-       - |fa-windows| Binary distributions for Windows
-       - |fa-ubuntu| Binary distributions for Linux
+     - MIT
 
-License texts
-=============
+   * - :ref:`tclap <thirdparty_licenses_tclap>`
 
-.. note::
+     - Copyright (c) 2003 Michael E. Smoot   Copyright (c) 2004 Daniel Aarno   Copyright (c) 2017 Google Inc.
 
-  Even though the GPL License is included here, eCAL does not use any GPL code.
-  The license is only listed here, as it is required as base for LGPL licenses.
+     - MIT
+
+   * - :ref:`tcp_pubsub <thirdparty_licenses_tcp_pubsub>`
+
+     - Copyright (c) 2021 Continental Corporation
+
+     - MIT
+
+   * - :ref:`termcolor <thirdparty_licenses_termcolor>`
+
+     - Copyright (c) 2013, Ihor Kalnytskyi.   All rights reserved.
+
+     - BSD-3-Clause
+
+   * - :ref:`TinyXML-2 <thirdparty_licenses_tinyxml_2>`
+
+     - Lee Thomason
+
+     - Zlib
+
+   * - :ref:`Udpcap <thirdparty_licenses_udpcap>`
+
+     - Copyright (C) 2016 - 2019 Continental Corporation
+
+     - Apache-2.0
+
+   * - :ref:`yaml-cpp <thirdparty_licenses_yaml_cpp>`
+
+     - Copyright (c) 2008-2015 Jesse Beder.
+
+     - MIT
+
 
 .. toctree::
+   :hidden:
 
-   thirdparty_licenses/apache-2.0.rst
-   thirdparty_licenses/boost-1.0.rst
-   thirdparty_licenses/bsd-3.rst
-   thirdparty_licenses/convert-utf.rst
-   thirdparty_licenses/creative-commons-3.0.rst
-   thirdparty_licenses/findqwt-bsd-2.rst
-   thirdparty_licenses/fontawesome-free.rst
-   thirdparty_licenses/gpl-2.0.rst
-   thirdparty_licenses/gpl-3.0.rst
-   thirdparty_licenses/hdf5-bsd-3.rst
-   thirdparty_licenses/lgpl-2.1.rst
-   thirdparty_licenses/lgpl-3.0.rst
-   thirdparty_licenses/mit.rst
-   thirdparty_licenses/npcap.rst
-   thirdparty_licenses/qwt.rst
-   thirdparty_licenses/unlicense.rst
-   thirdparty_licenses/zlib.rst
+   thirdparty_licenses/asio
+
+   thirdparty_licenses/benchmark
+
+   thirdparty_licenses/cap_n_proto
+
+   thirdparty_licenses/convert_utf
+
+   thirdparty_licenses/ecaludp
+
+   thirdparty_licenses/fineftp_server
+
+   thirdparty_licenses/flaticon
+
+   thirdparty_licenses/ftxui
+
+   thirdparty_licenses/googletest
+
+   thirdparty_licenses/hdf5
+
+   thirdparty_licenses/libcurl
+
+   thirdparty_licenses/modpath_iss
+
+   thirdparty_licenses/nanobind
+
+   thirdparty_licenses/nanopb
+
+   thirdparty_licenses/npcap
+
+   thirdparty_licenses/pcapplusplus
+
+   thirdparty_licenses/protobuf
+
+   thirdparty_licenses/qt
+
+   thirdparty_licenses/qwt
+
+   thirdparty_licenses/recycle
+
+   thirdparty_licenses/robin_map
+
+   thirdparty_licenses/spdlog
+
+   thirdparty_licenses/tclap
+
+   thirdparty_licenses/tcp_pubsub
+
+   thirdparty_licenses/termcolor
+
+   thirdparty_licenses/tinyxml_2
+
+   thirdparty_licenses/udpcap
+
+   thirdparty_licenses/yaml_cpp
