@@ -11,7 +11,8 @@ def get_sbom_qt():
     sbom = {}
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                         ]
     sbom[component_name]["path"] =                      None
     sbom[component_name]["license"] =                   "LGPL-3.0-only"
@@ -43,7 +44,9 @@ def get_sbom_capnp():
 
     sbom = {}
     sbom[component_name] =  {}
-    sbom[component_name]["include_type"] =              []
+    sbom[component_name]["include_type"] =              [
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
+                                                        ]
     sbom[component_name]["path"] =                      None
     sbom[component_name]["license"] =                   "MIT"
     sbom[component_name]["license_files"] =             [
@@ -66,6 +69,7 @@ def get_sbom_convertutf():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.COPY_IN_REPO,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                         ]
     sbom[component_name]["path"] =                      "contrib/ecaltime/linuxptp/src"
     sbom[component_name]["license"] =                   "convert-utf"
@@ -90,8 +94,8 @@ def get_sbom_flaticon():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.COPY_IN_REPO,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
-                                                            ecal_license_utils.include_type.LINUX_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                             ecal_license_utils.include_type.DOCUMENTATION,
                                                         ]
     sbom[component_name]["path"] =                      icon_dir
@@ -118,7 +122,7 @@ def get_sbom_modpath():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.COPY_IN_REPO,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
                                                         ]
     sbom[component_name]["path"] =                      file_path
     sbom[component_name]["license"] =                   "LGPL-3.0-only"
@@ -145,8 +149,8 @@ def get_sbom_nanopb():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.COPY_IN_REPO,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
-                                                            ecal_license_utils.include_type.LINUX_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                             ecal_license_utils.include_type.PYTHON_BINDINGS,
                                                         ]
     sbom[component_name]["path"] =                      nanopb_dir

@@ -51,6 +51,10 @@
    
    <i class="fas fa-pencil-alt"></i>
 
+.. |fa-vial-circle-check| raw:: html
+   
+   <i class="fas fa-vial-circle-check"></i>
+
 
 .. |ecalconfig-path-windows| replace:: :file:`%localappdata%\\eCAL\\ecal.yaml`
 .. |ecalconfig-path-ubuntu|  replace:: :file:`/etc/ecal/ecal.yaml`

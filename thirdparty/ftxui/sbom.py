@@ -12,8 +12,8 @@ def get_sbom():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.SUBMODULE,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
-                                                            ecal_license_utils.include_type.LINUX_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
+                                                            ecal_license_utils.include_type.LINUX_BUILDS,
                                                         ]
     sbom[component_name]["path"] =                      component_dir
     sbom[component_name]["license"] =                   "MIT"

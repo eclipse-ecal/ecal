@@ -1,0 +1,159 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+
+.. include:: /include.txt
+
+.. _thirdparty_licenses_{{ escaped_component_name }}:
+
+===============================================
+{{ component_name }}
+===============================================
+
+.. list-table::
+   :widths: 20 80
+   :header-rows: 0
+
+   * - **License**
+
+     - {{ component_details["license"] }}
+
+   * - **Copyright**
+
+     - {{ component_details["copyright"] }}
+
+   {% if component_details["homepage"] -%}
+   * - **Homepage**
+
+     - {{ component_details["homepage"] }}
+
+   {% endif -%}
+
+   {% if component_details["repo_url"] -%}
+   * - **Repository**
+
+     - {{ component_details["repo_url"] }}
+
+   {% endif -%}
+
+   {% if component_details["git_version"] -%}
+   * - **Upstream version** [#upstreamversion]_
+
+     {% if component_details["git_version_url"] -%}
+     - `{{ component_details["git_version"] }} <{{ component_details["git_version_url"] }}>`_
+     {%- else -%}
+     - {{ component_details["git_version"] }}
+     {%- endif %}
+
+   {% endif -%}
+
+   * - **Integration**
+
+     - 
+     {%- if not component_details["include_type"] %}
+
+       - None
+
+       {%- else %}
+
+       {%- if ecal_license_utils.include_type.SUBMODULE in component_details["include_type"] %}
+
+       - |fa-github| Git Submodule{% if component_details["path"] %} :file:`{{ component_details["path"] }}`{% endif %}
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.COPY_IN_REPO in component_details["include_type"] %}
+
+       - |fa-file-alt| Copy in Repository{% if component_details["path"] %} :file:`{{ component_details["path"] }}`{% endif %}
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.COPY_IN_REPO_MODIFIED in component_details["include_type"] %}
+
+       - |fa-file-alt| Copy in Repository (modified){% if component_details["path"] %} :file:`{{ component_details["path"] }}`{% endif %}
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.FETCHED_BY_CMAKE in component_details["include_type"] %}
+
+       - |fa-download| Fetched by CMake
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.WINDOWS_BUILDS in component_details["include_type"] %}
+
+       - |fa-windows| Windows builds
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.LINUX_BUILDS in component_details["include_type"] %}
+
+       - |fa-ubuntu| Linux builds
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.PYTHON_BINDINGS in component_details["include_type"] %}
+
+       - |fa-python| Python wheels
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.DOCUMENTATION in component_details["include_type"] %}
+
+       - |fa-book| Documentation
+
+       {%- endif %}
+
+       {%- if ecal_license_utils.include_type.TESTING in component_details["include_type"] %}
+
+       - |fa-vial-circle-check| Testing
+
+       {%- endif %}
+
+     {%- endif %}
+
+     {%- if component_details["special_include_text"] %}
+
+       {{ component_details["special_include_text"] }}
+
+     {%- endif %}
+
+
+{%- if component_details["git_version"] %}
+
+.. [#upstreamversion] *The actual version used for building may differ from the listed dependency version.*
+   *Especially Linux binaries are often built against system packages, if available.*
+   *Check build files for further information.*
+
+{%- endif %}
+
+License Files
+=============
+
+{%- for license_file in component_details["license_files"] %}
+{%- set license_filename = license_file.split('/')[-1] %}
+
+:file:`{{ license_filename }}`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: {{ license_file }}
+  :language: none
+
+{%- endfor %}
+
+{%- if component_details["thirdparty_license_files"] %}
+
+Thirdparty Licenses
+===================
+
+{%- for license_file in component_details["thirdparty_license_files"] %}
+{%- set license_filename = license_file.split('/')[-1] %}
+
+:file:`{{ license_filename }}`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: {{ license_file }}
+  :language: none
+
+{%- endfor %}
+
+{%- endif %}

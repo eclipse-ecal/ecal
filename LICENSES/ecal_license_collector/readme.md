@@ -4,9 +4,17 @@ These python files are a set of scripts that collect license information from va
 
 ## Scripts
 
-- `update_licenses_dirs.py`
+- `update_licenses_information.py`
 
-    This script fills the `licenses` and `licenses_python_binding` directories in the repo root. For that, it goes through the `thirdparty` directory, where each thirdparty dependency publishes information about itself in a python script.
+    This script it goes through the `thirdparty` directory, where each thirdparty dependency publishes information about itself in a python script. It then updates:
+
+    1. `LICENSES` dirs:
+    
+        The script fills the `LICENSES_all` and `LICENSES_python_bindings` directories by copying the license files from all components.
+
+    2. Documentation:
+
+        The scripts updates the `thirdparty_licenses` documentation files by generating `.rst` files
 
     Whenever a thirdparty dependency has been added / modified / removed, this script needs to be run again.
 
