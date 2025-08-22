@@ -26,4 +26,88 @@ Downloads
 
 
 
+eCAL Installer
+--------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   * - |fa-windows| Windows
+
+     - x64
+
+     - `ecal_5.13.4-win64.exe <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal_5.13.4-win64.exe>`__
+
+   * - |fa-Ubuntu| Ubuntu 24.04
+
+     - x64
+
+     - `ecal_5.13.4-noble_amd64.deb <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal_5.13.4-noble_amd64.deb>`__
+
+   * - |fa-Ubuntu| Ubuntu 22.04
+
+     - x64
+
+     - `ecal_5.13.4-jammy_amd64.deb <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal_5.13.4-jammy_amd64.deb>`__
+
+   
+|fa-python| Python Binding
+--------------------------
+
+.. list-table:: 
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   
+   * - |fa-windows| Windows
+
+     - x64
+
+     - `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-cp312-cp312-win_amd64.whl>`__ 
+
+       `Python 3.11 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-cp311-cp311-win_amd64.whl>`__ 
+
+       `Python 3.10 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-cp310-cp310-win_amd64.whl>`__ 
+
+       `Python 3.9 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-cp39-cp39-win_amd64.whl>`__ 
+
+       
+   * - |fa-Ubuntu| Ubuntu 24.04
+
+     - x64
+
+     - `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-1noble-cp312-cp312-linux_x86_64.whl>`__  (Default)
+
+       
+   * - |fa-Ubuntu| Ubuntu 22.04
+
+     - x64
+
+     - `Python 3.11 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-1jammy-cp311-cp311-linux_x86_64.whl>`__ 
+
+       `Python 3.10 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal5-5.13.4-1jammy-cp310-cp310-linux_x86_64.whl>`__  (Default)
+
+       
+|fa-code| Source
+----------------
+
+.. list-table::
+    :widths: 1
+
+    * - `ecal-fat-source.tar.gz <https://github.com/eclipse-ecal/ecal/releases/download/v5.13.4/ecal-fat-source.tar.gz>`__
+
+    
 
