@@ -7,8 +7,8 @@ class include_type(Enum):
     COPY_IN_REPO            = 2
     COPY_IN_REPO_MODIFIED   = 3
     FETCHED_BY_CMAKE        = 4
-    WINDOWS_BINARIES        = 5
-    LINUX_BINARIES          = 6
+    WINDOWS_BUILDS          = 5
+    LINUX_BUILDS            = 6
     PYTHON_BINDINGS         = 7
     DOCUMENTATION           = 8
     TESTING                 = 9

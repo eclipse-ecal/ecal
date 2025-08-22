@@ -1,0 +1,48 @@
+..
+  THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+  
+.. include:: /include.txt
+
+.. _thirdparty_licenses:
+
+===================
+External components
+===================
+
+Parts of eCAL have a different license than the main project.
+These components may either be shipped with the repository as source code, or along with / included in the eCAL binaries.
+The information in this list may not be exhaustive.
+Some dependencies, like GoogleTest, are not used in our officially distributed builds, even though they can be used with eCAL and therefore appear in this list.
+
+.. list-table:: 
+   :widths: 1 2 1
+   :header-rows: 1
+   
+   * - Component
+
+     - Copyright
+
+     - License
+
+  {%- for component_name, sbom in sbom_dict.items() %}
+
+   * - :ref:`{{ component_name }} <thirdparty_licenses_{{ to_escaped_component_name(component_name) }}>`
+
+     - {{ sbom["copyright"] }}
+
+     - {{ sbom["license"] }}
+
+       {%- if sbom["thirdparty_license_files"] %}
+
+       *(+ {{ sbom["thirdparty_license_files"] | length }} thirdparty license files)*
+
+       {%- endif%}
+
+  {%- endfor %}
+
+
+.. toctree::
+   :hidden:
+{% for component_name in sbom_dict.keys() %}
+   thirdparty_licenses/{{ to_escaped_component_name(component_name) }}
+{% endfor %}
