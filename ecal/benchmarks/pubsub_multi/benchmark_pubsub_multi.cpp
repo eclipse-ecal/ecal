@@ -56,21 +56,15 @@ namespace Multi_Send {
 
   // Benchmark function
   void BM_eCAL_Multi_Send(benchmark::State& state) {
-    // Create payload to send, size depends on second argument
+    // Define topic count and payload size from arguments
+    const int topic_count = state.range(0);
     const size_t payload_size = state.range(1);
-    std::vector<char> content_vector(payload_size);
-    std::generate(content_vector.begin(), content_vector.end(), gen);
-    const char* content_addr = content_vector.data();
+
+    // Reset kill signal
+    atom_stop = false;
 
     // Initialize eCAL
     eCAL::Initialize("Benchmark");
-
-    // Create the background publishers, count depends on first argument
-    const int topic_count = state.range(0);
-    std::vector<eCAL::CPublisher> background_publisher_vector;
-    for (int i=0; i<topic_count; i++) {
-      background_publisher_vector.emplace_back(eCAL::CPublisher("background_topic_" + std::to_string(i)));
-    }
 
     // Create background subscribers in a new thread
     std::thread background_receiver_thread([topic_count](){
@@ -82,16 +76,15 @@ namespace Multi_Send {
       // Keep this thread alive
       while(!atom_stop) { std::this_thread::sleep_for(std::chrono::milliseconds(10)); }
     });
-
-    // Reset kill signal
-    atom_stop = false;
     
     // Create background publishers in new threads
     std::vector<std::thread> background_thread_vector;
     for (int i=0; i<topic_count; i++) {
       background_thread_vector.emplace_back([i, payload_size](){
         // Create own payload to send
-        std::vector<char> content_vector(payload_size);
+        std::vector<char> background_content_vector(payload_size);
+        std::generate(background_content_vector.begin(), background_content_vector.end(), gen);
+        const char* background_content_addr = background_content_vector.data();
 
         // Create publisher
         eCAL::CPublisher background_publisher("background_topic_" + std::to_string(i));
@@ -101,11 +94,16 @@ namespace Multi_Send {
 
         // Keep sending
         while (!atom_stop) {
-          background_publisher.Send(content_vector.data(), payload_size);
+          background_publisher.Send(background_content_addr, payload_size);
         }
       });
     }
-    
+
+    // Create payload for the main publisher
+    std::vector<char> content_vector(payload_size);
+    std::generate(content_vector.begin(), content_vector.end(), gen);
+    const char* content_addr = content_vector.data();
+
     // Create publisher for the main thread
     eCAL::CPublisher publisher("benchmark_topic");
 
@@ -128,11 +126,11 @@ namespace Multi_Send {
     atom_stop = true;
 
     // Wait for threads to finish and finalize eCAL
-    background_receiver_thread.join();
     main_receiver_thread.join();
     for (auto& t : background_thread_vector) {
       t.join();
     }
+    background_receiver_thread.join();
     eCAL::Finalize();
   }
 
