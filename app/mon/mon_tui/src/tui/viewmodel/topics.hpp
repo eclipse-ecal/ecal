@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public:
   };
 
   TopicsViewModel(std::shared_ptr<MonitorModel> model_)
-    : TableViewModel<Topic>({"Id", "Host", "Process", "Topic", "Encoding", "Type", "Direction", "Layer", "Size", "DataClock", "Frequency"})
+    : TableViewModel<Topic>({"Id", "Host", "Process", "Topic", "Encoding", "Type", "Direction", "Layer", "Size", "DataClock", "Frequency(Hz)"})
   {
     title = "Topics";
 
@@ -73,8 +73,16 @@ public:
       case Column::DataClock:
         return std::to_string(value.data_clock);
       case Column::Frequency:
-        return std::to_string(value.data_frequency);
+        return roundToTwoDecimalsAsString(value.data_frequency_mhz / 1000.0f);
       default: return "";
     }
   }
+
+  private:
+    static std::string roundToTwoDecimalsAsString(double value) {
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << value;
+        return stream.str();
+    }
+
 };

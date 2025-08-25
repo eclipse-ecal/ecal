@@ -53,6 +53,6 @@ struct Topic
   int32_t message_drops;
   int64_t data_id;
   int64_t data_clock;
-  int32_t data_frequency;
+  int32_t data_frequency_mhz;
   std::map<std::string, std::string> attributes;
 };
