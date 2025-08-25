@@ -215,7 +215,7 @@ class MonitorModel
       topic.message_drops = t.message_drops();
       topic.data_id = t.data_id();
       topic.data_clock = t.data_clock();
-      topic.data_frequency = t.data_frequency();
+      topic.data_frequency_mhz = t.data_frequency();
     }
 
     for(auto &s: *mon_.mutable_services())
