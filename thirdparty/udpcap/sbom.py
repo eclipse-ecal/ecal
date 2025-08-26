@@ -12,7 +12,7 @@ def _get_sbom_udpcap():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.SUBMODULE,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
                                                             ecal_license_utils.include_type.PYTHON_BINDINGS,
                                                         ]
     sbom[component_name]["path"] =                      component_dir
@@ -61,7 +61,7 @@ def _get_sbom_pcappp():
     sbom[component_name] =  {}
     sbom[component_name]["include_type"] =              [
                                                             ecal_license_utils.include_type.FETCHED_BY_CMAKE,
-                                                            ecal_license_utils.include_type.WINDOWS_BINARIES,
+                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
                                                             ecal_license_utils.include_type.PYTHON_BINDINGS,
                                                         ]
     sbom[component_name]["path"] =                      None
@@ -85,6 +85,8 @@ def _get_sbom_pcappp():
             line = line.strip()
             if line.startswith("GIT_REPOSITORY"):
                 sbom[component_name]["repo_url"] = line.split(' ')[1]
+                if sbom[component_name]["repo_url"].endswith(".git"):
+                    sbom[component_name]["repo_url"] = sbom[component_name]["repo_url"][:-4]
             elif line.startswith("GIT_TAG"):
                 sbom[component_name]["git_version"] = line.split(' ')[1]
 
