@@ -1,0 +1,132 @@
+_THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY._
+
+# Notices for Eclipse eCAL
+
+This content is produced and maintained by the Eclipse eCAL project.
+
+* Project home: https://projects.eclipse.org/projects/automotive.ecal
+
+## Trademarks
+
+No trademarks.
+
+## Copyright
+
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
+
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Apache License, Version 2.0 which is available at
+https://www.apache.org/licenses/LICENSE-2.0.
+
+SPDX-License-Identifier: Apache-2.0
+
+## Source Code
+
+The project maintains the following source code repositories:
+
+* https://github.com/eclipse-ecal/.github
+* https://github.com/eclipse-ecal/ecal
+* https://github.com/eclipse-ecal/ecal-algorithm-samples
+* https://github.com/eclipse-ecal/ecal-camera-samples
+* https://github.com/eclipse-ecal/ecal-carla-bridge
+* https://github.com/eclipse-ecal/ecal-core
+* https://github.com/eclipse-ecal/ecal-foxglove-bridge
+* https://github.com/eclipse-ecal/ecal-gpsd-client
+* https://github.com/eclipse-ecal/ecal-grafana-dashboard
+* https://github.com/eclipse-ecal/ecal-mcap-tools
+* https://github.com/eclipse-ecal/ecal-mqtt-bridge
+* https://github.com/eclipse-ecal/ecal-test-suite
+* https://github.com/eclipse-ecal/ecal-utils
+* https://github.com/eclipse-ecal/ecaludp
+* https://github.com/eclipse-ecal/fineftp-server
+* https://github.com/eclipse-ecal/protobuf-datatypes-collection
+* https://github.com/eclipse-ecal/rmw_ecal
+* https://github.com/eclipse-ecal/rosidl_typesupport_protobuf
+* https://github.com/eclipse-ecal/rustecal
+* https://github.com/eclipse-ecal/tcp_pubsub
+* https://github.com/eclipse-ecal/udpcap
+
+## Cryptography
+
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.
+
+## Third party content
+
+eCAL makes use of the following external components:
+
+{%- for component_name, component_details in sbom_dict.items() %}
+
+### {{ component_name }}
+
+- **License**: {{ component_details["license"] }}
+
+{%- if component_details["thirdparty_license_files"] %}
+  _(+ {{ component_details["thirdparty_license_files"] | length }} thirdparty license files)_
+{%- endif%}
+- **Copyright**: {{ component_details["copyright"] }}
+
+{%- if component_details["homepage"] %}
+- **Homepage**: {{ component_details["homepage"] }}
+{%- endif %}
+
+{%- if component_details["repo_url"] %}
+- **Repository**: {{ component_details["repo_url"] }}
+{%- endif %}
+- **Included in**:
+
+{%- if not component_details["include_type"] %}
+  - None
+{%- else %}
+
+  {%- if ecal_license_utils.include_type.SUBMODULE in component_details["include_type"] %}
+  - Git Submodule{% if component_details["path"] %} `{{ component_details["path"] }}`{% endif %}
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.COPY_IN_REPO in component_details["include_type"] %}
+  - Copy in Repository{% if component_details["path"] %} `{{ component_details["path"] }}`{% endif %}
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.COPY_IN_REPO_MODIFIED in component_details["include_type"] %}
+  - Copy in Repository (modified){% if component_details["path"] %} `{{ component_details["path"] }}`{% endif %}
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.FETCHED_BY_CMAKE in component_details["include_type"] %}
+  - Fetched by CMake
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.WINDOWS_BUILDS in component_details["include_type"] %}
+  - Windows builds
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.LINUX_BUILDS in component_details["include_type"] %}
+  - Linux builds
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.PYTHON_BINDINGS in component_details["include_type"] %}
+  - Python wheels
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.DOCUMENTATION in component_details["include_type"] %}
+  - Documentation
+  {%- endif %}
+
+  {%- if ecal_license_utils.include_type.TESTING in component_details["include_type"] %}
+  - Testing
+  {%- endif %}
+
+{%- endif %}
+
+{%- if component_details["special_include_text"] %}
+    {{ component_details["special_include_text"] }}
+{%- endif %}
+
+{%- endfor %}
