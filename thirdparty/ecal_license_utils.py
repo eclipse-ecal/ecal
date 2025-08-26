@@ -110,19 +110,19 @@ def extract_license_from_cpp_source_file(source_file_path):
 
 def get_git_version_from_submodule(submodule_path):
     # Get Git Tag (if it exists)
-    describe_result = subprocess.run("git describe --exact-match --tags", cwd=submodule_path, capture_output=True)
+    describe_result = subprocess.run("git describe --exact-match --tags", cwd=submodule_path, capture_output=True, shell=True)
     git_ref = describe_result.stdout.decode("utf-8").strip()
 
     # Get commit hash (if tag does not exist)
     if not git_ref:
-        rev_parse_result = subprocess.run("git rev-parse --verify HEAD", cwd=submodule_path, capture_output=True)
+        rev_parse_result = subprocess.run("git rev-parse --verify HEAD", cwd=submodule_path, capture_output=True, shell=True)
         git_ref = rev_parse_result.stdout.decode("utf-8").strip()
 
     return git_ref
 
 def get_repo_url_from_submodule(submodule_path):
     # Get the remote URL
-    remote_result = subprocess.run("git config --get remote.origin.url", cwd=submodule_path, capture_output=True)
+    remote_result = subprocess.run("git config --get remote.origin.url", cwd=submodule_path, capture_output=True, shell=True)
     repo_url = remote_result.stdout.decode("utf-8").strip()
 
     # Strip the ".git" suffix if it exists
