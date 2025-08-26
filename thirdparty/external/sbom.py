@@ -23,12 +23,16 @@ def get_sbom_qt():
         if os.path.isfile(os.path.join(license_dir, filename)):
             # add the license file to the list
             sbom[component_name]["license_files"].append(os.path.join(license_dir, filename))
+    # Sort the list, so it will stay stable between multiple runs
+    sbom[component_name]["license_files"].sort(key=lambda x: os.path.basename(x).lower())
 
     # add all third-party license files from the license directory
     sbom[component_name]["thirdparty_license_files"] = []
     for filename in os.listdir(os.path.join(license_dir, "thirdparty")):
         if os.path.isfile(os.path.join(license_dir, "thirdparty", filename)):
             sbom[component_name]["thirdparty_license_files"].append(os.path.join(license_dir, "thirdparty", filename))
+    # Sort the list, so it will stay stable between multiple runs
+    sbom[component_name]["thirdparty_license_files"].sort(key=lambda x: os.path.basename(x).lower())
 
     sbom[component_name]["copyright"] =                 "The Qt Company Ltd."
     sbom[component_name]["homepage"] =                  "https://www.qt.io/"

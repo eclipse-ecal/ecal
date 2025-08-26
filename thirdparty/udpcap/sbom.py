@@ -75,6 +75,9 @@ def _get_sbom_pcappp():
     for filename in os.listdir(thirdparty_license_dir):
         if os.path.isfile(os.path.join(thirdparty_license_dir, filename)):
             sbom[component_name]["thirdparty_license_files"].append(os.path.join(thirdparty_license_dir, filename))
+    # Sort the list, so it will stay stable between multiple runs
+    sbom[component_name]["thirdparty_license_files"].sort(key=lambda x: os.path.basename(x).lower())
+
 
     sbom[component_name]["copyright"] =                 'Copyright © 2025 seladb'
     sbom[component_name]["homepage"] =                  "https://pcapplusplus.github.io/"
