@@ -1,3 +1,5 @@
+_THIS FILE IS AUTO-GENERATED AND SHOULD NOT BE EDITED MANUALLY._
+
 # Notices for Eclipse eCAL
 
 This content is produced and maintained by the Eclipse eCAL project.
@@ -6,7 +8,7 @@ This content is produced and maintained by the Eclipse eCAL project.
 
 ## Trademarks
 
-eCAL™ is a trademark of the Eclipse Foundation.
+No trademarks.
 
 ## Copyright
 
@@ -26,6 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 
 The project maintains the following source code repositories:
 
+* https://github.com/eclipse-ecal/.github
 * https://github.com/eclipse-ecal/ecal
 * https://github.com/eclipse-ecal/ecal-algorithm-samples
 * https://github.com/eclipse-ecal/ecal-camera-samples
@@ -33,267 +36,19 @@ The project maintains the following source code repositories:
 * https://github.com/eclipse-ecal/ecal-core
 * https://github.com/eclipse-ecal/ecal-foxglove-bridge
 * https://github.com/eclipse-ecal/ecal-gpsd-client
-* https://github.com/eclipse-ecal/ecal-matlab-binding
+* https://github.com/eclipse-ecal/ecal-grafana-dashboard
 * https://github.com/eclipse-ecal/ecal-mcap-tools
 * https://github.com/eclipse-ecal/ecal-mqtt-bridge
-* https://github.com/eclipse-ecal/ecal-rs
+* https://github.com/eclipse-ecal/ecal-test-suite
 * https://github.com/eclipse-ecal/ecal-utils
 * https://github.com/eclipse-ecal/ecaludp
 * https://github.com/eclipse-ecal/fineftp-server
 * https://github.com/eclipse-ecal/protobuf-datatypes-collection
 * https://github.com/eclipse-ecal/rmw_ecal
 * https://github.com/eclipse-ecal/rosidl_typesupport_protobuf
+* https://github.com/eclipse-ecal/rustecal
 * https://github.com/eclipse-ecal/tcp_pubsub
 * https://github.com/eclipse-ecal/udpcap
-
-## Third party Content
-
-The following components are developed by third parties.
-They are used by Eclipse eCAL, but not associated to it in any way.
-
-### Components by Eclipse eCAL
-
-The following external components are developed and maintained by the Eclipse eCAL team.
-They may have a different license than eCAL.
-
-ecaludp
-  - License: Apache 2.0
-  - Project: https://github.com/eclipse-ecal/ecaludp
-  - Copyright: 2024, Continental
-  - Included in:
-    - Git submodule `/tirdparty/ecaludp/ecaludp`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-fineFTP Server
-  - License: MIT
-  - Project: https://github.com/eclipse-ecal/fineftp-server
-  - Copyright: 2020 Continental Corporation
-  - Included in:
-    - Git submodule `/tirdparty/fineftp/fineftp-server`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-tcp_pubsub
-  - License: MIT
-  - Project: https://github.com/eclipse-ecal/tcp_pubsub
-  - Copyright: 2021, Continental
-  - Included in:
-    - Git submodule `/tirdparty/tcp_pubsub/tcp_pubsub`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Udpcap
-  - License: Apache 2.0
-  - Project: https://github.com/eclipse-ecal/udpcap
-  - Copyright: 2022, Continental
-  - Included in:
-    - Git submodule `/tirdparty/udpcap/udpcap`
-    - Binary distributions for Windows
-
-### Thirdparty components
-
-The following components are developed by third parties.
-They are used by Eclipse eCAL, but not associated to it in any way.
-
-Asio
-  - License: Boost 1.0
-  - Project: https://think-async.com
-  - Copyright: 2003-2018 Christopher M. Kohlhoff
-  - Included in:
-    - Git submodule `/tirdparty/asio/asio`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Bootstrap
-  - License: MIT
-  - Project: https://getbootstrap.com/
-  - Copyright: 2011-2019 The Bootstrap Authors, 2011-2019 Twitter, Inc.
-  - Included in:
-    - Documentation
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Cap'n Proto
-  - License: MIT
-  - Project: https://capnproto.org
-  - Copyright: 2013-2014 Sandstorm Development Group, Inc. and contributors
-  - Included in:
-    - Binary distributions for Linux
-
-convert_utf
-  - License: Convert UTF License
-  - Copyright: 2001-2004 Unicode, Inc.
-  - Included in:
-    - Copy in repository: `convert_utf.cpp / .h`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Findqwt.cmake
-  - License: Modified BSD 2-Clause
-  - Project: https://gitlab.kitware.com/cmake/community/-/wikis/contrib/modules/FindQwt
-  - Copyright: 2010-2013, Julien Schueller; 2018-2020, Rolf Eike Beer
-  - Included in:
-    - Copy in repository (modified): `cmake/Modules/Findqwt.cmake`
-
-Flaticons
-  - License: Creative Commons 3.0
-  - Project: https://www.flaticon.com/
-  - Copyright: Multiple individual authors
-  - Included in:
-    - Copy in repository: `/app/iconset/flaticon/*`
-    - Documentation
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Font Awesome
-  - License: Font Awesome Free License
-  - Project: https://fontawesome.com
-  - Copyright: Fonticons, Inc.
-  - Included in:
-    - Documentation
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Google Protobuf
-  - License: BSD 3-Clause
-  - Project: https://developers.google.com/protocol-buffers
-  - Copyright: 2008 Google Inc.
-  - Included in:
-    - Git submodule `/tirdparty/protobuf/protobuf`
-    - Binary distributions for Windows
-
-Google Test
-  - License: BSD 3-Clause
-  - Project: https://github.com/google/googletest
-  - Copyright: 2008 Google Inc.
-  - Included in:
-    - Git submodule `/tirdparty/gtest/googletest`
-
-HDF5
-  - License: Modified BSD 3-Clause
-  - Project: https://www.hdfgroup.org/solutions/hdf5
-  - Copyright: 1998-2006 by The Board of Trustees of the University of Illinois, 2006 by The HDF Group
-  - Included in:
-    - Git submodule `/tirdparty/hdf5/hdf5`
-    - Binary distributions for Windows
-
-libcurl
-  - License: MIT
-  - Project: https://curl.se/libcurl/
-  - Copyright: 1996 - 2021, Daniel Stenberg, daniel@haxx.se, and many contributors (see the THANKS file)
-  - Included in:
-    - Git submodule `/tirdparty/curl/curl`
-    - Binary distributions for Windows
-
-modpath.iss
-  - License: LGPL 3.0
-  - Project: http://www.legroom.net/software
-  - Copyright: Jared Breland
-  - Included in:
-    - Copy in repository: `/cpack/innosetup/modpath.iss`
-    - Binary distributions for Windows (Installer only)
-
-nanopb
-  - License: Zlib License
-  - Project: https://github.com/nanopb/nanopb
-  - Copyright: 2011 Petteri Aimonen \<jpa at nanopb.mail.kapsi.fi\>
-  - Included in:
-    - Copy in repository: `ecal/ecal/core/src/serialization/nanopb/*`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-npcap
-  - License: Npcap License
-  - Project: https://nmap.org/npcap/
-  - Copyright: 2013-2021 by Insecure.Com LLC
-  - Not included due to licensing issues. eCAL for Windows links against the npcap SDK.
-
-PcapPlusPlus
-  - License: Unlicense
-  - Project: https://pcapplusplus.github.io/
-  - Copyright: 2021 seladb
-  - Included in:
-    - Binary distributions for Windows
-
-Qt
-  - License: LGPL 3.0
-  - Project: https://www.qt.io/
-  - Copyright: The Qt Company Ltd.
-  - Included in:
-    - Binary distributions for Windows
-
-qwt
-  - License: Qwt License
-  - Project: https://sourceforge.net/projects/qwt/
-  - Copyright: Uwe Rathmann
-  - Included in:
-    - Git submodule `/tirdparty/qwt/qwt`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-recycle
-  - License: BSD 3-Clause
-  - Project: https://github.com/steinwurf/recycle
-  - Copyright: 2014, Steinwurf ApS
-  - Included in:
-    - Git submodule `/tirdparty/recycle/recycle`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-spdlog
-  - License: MIT
-  - Project: https://github.com/gabime/spdlog
-  - Copyright: 2016 Gabi Melman
-  - Included in:
-    - Git submodule `/tirdparty/spdlog/spdlog`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-Sphinx Book Theme
-  - License: BSD 3-Clause
-  - Project: https://github.com/executablebooks/sphinx-book-theme
-  - Copyright: 2020 Chris Holdgraf
-  - Included in:
-    - Documentation
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-tclap
-  - License: MIT
-  - Project: http://tclap.sourceforge.net
-  - Copyright: 2003 Michael E. Smoot, 2004 Daniel Aarno, 2017 Google Inc.
-  - Included in:
-    - Git submodule `/tirdparty/tclap/tclap`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-termcolor
-  - License: BSD 3-Clause
-  - Project: https://github.com/ikalnytskyi/termcolor
-  - Copyright: 2013, Ihor Kalnytskyi
-  - Included in:
-    - Git submodule `/tirdparty/termcolor/termcolor`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-TinyXML-2
-  - License: Zlib License
-  - Project: https://github.com/leethomason/tinyxml2
-  - Copyright: Lee Thomason
-  - Included in:
-    - Git submodule `/tirdparty/tinyxml2/tinyxml2`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
-
-yaml-cpp
-  - License: MIT
-  - Project: https://github.com/jbeder/yaml-cpp/
-  - Copyright: 2008-2015 Jesse Beder
-  - Included in:
-    - Git submodule `/thirdparty/yaml-cpp/yaml-cpp`
-    - Binary distributions for Windows
-    - Binary distributions for Linux
 
 ## Cryptography
 
@@ -303,3 +58,292 @@ another country, of encryption software. BEFORE using any encryption software,
 please check the country's laws, regulations and policies concerning the import,
 possession, or use, and re-export of encryption software, to see if this is
 permitted.
+
+## Third party content
+
+eCAL makes use of the following external components:
+
+### asio
+
+- **License**: BSL-1.0
+- **Copyright**: Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+- **Homepage**: https://think-async.com/Asio/
+- **Repository**: https://github.com/chriskohlhoff/asio
+- **Included in**:
+  - Git Submodule `/thirdparty/asio/asio`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### Cap'n Proto
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2013-2017 Sandstorm Development Group, Inc.; Cloudflare, Inc.;   and other contributors. Each commit is copyright by its respective author or   author's employer.
+- **Homepage**: https://capnproto.org/
+- **Repository**: https://github.com/capnproto/capnproto
+- **Included in**:
+  - Linux builds
+
+### convert_utf
+
+- **License**: convert-utf
+- **Copyright**: Copyright 2001-2004 Unicode, Inc.
+- **Included in**:
+  - Copy in Repository `contrib/ecaltime/linuxptp/src`
+  - Linux builds
+
+### ecaludp
+
+- **License**: Apache-2.0
+- **Copyright**: Copyright (c) 2024 Continental Corporation
+- **Repository**: https://github.com/eclipse-ecal/ecaludp
+- **Included in**:
+  - Git Submodule `/thirdparty/ecaludp/ecaludp`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### fineFTP Server
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2020 Continental Corporation
+- **Repository**: https://github.com/eclipse-ecal/fineftp-server
+- **Included in**:
+  - Git Submodule `/thirdparty/fineftp/fineftp-server`
+  - Windows builds
+  - Linux builds
+
+### Flaticon
+
+- **License**: CC-BY-3.0
+- **Copyright**: Multiple authors, see license file
+- **Homepage**: https://www.flaticon.com/
+- **Included in**:
+  - Copy in Repository `/app/iconset/flaticon`
+  - Windows builds
+  - Linux builds
+  - Documentation
+
+### FTXUI
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2019 Arthur Sonzogni.
+- **Repository**: https://github.com/ArthurSonzogni/FTXUI
+- **Included in**:
+  - Git Submodule `/thirdparty/ftxui/ftxui`
+  - Windows builds
+  - Linux builds
+
+### GoogleTest
+
+- **License**: BSD-3-Clause
+- **Copyright**: Copyright 2008, Google Inc.   All rights reserved.
+- **Repository**: https://github.com/google/googletest
+- **Included in**:
+  - Git Submodule `/thirdparty/gtest/googletest`
+  - Testing
+
+### HDF5
+
+- **License**: HDF5
+- **Copyright**: Copyright 2006 by The HDF Group. Copyright 1998-2006 by The Board of Trustees of the University of Illinois.
+- **Homepage**: https://www.hdfgroup.org/solutions/hdf5/
+- **Repository**: https://github.com/HDFGroup/hdf5
+- **Included in**:
+  - Git Submodule `/thirdparty/hdf5/hdf5`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### libcurl
+
+- **License**: curl
+- **Copyright**: Copyright (c) 1996 - 2024, Daniel Stenberg, <daniel@haxx.se>, and many   contributors, see the THANKS file.
+- **Homepage**: https://curl.se/libcurl/
+- **Repository**: https://github.com/curl/curl
+- **Included in**:
+  - Git Submodule `/thirdparty/curl/curl`
+  - Windows builds
+  - Linux builds
+
+### modpath.iss
+
+- **License**: LGPL-3.0-only
+- **Copyright**: Jared Breland <jbreland@legroom.net>
+- **Homepage**: http://www.legroom.net/software
+- **Included in**:
+  - Copy in Repository `/cpack/innosetup/modpath.iss`
+  - Windows builds
+
+### nanobind
+
+- **License**: BSD-3-Clause
+- **Copyright**: Copyright (c) 2022 Wenzel Jakob <wenzel.jakob@epfl.ch>, All rights reserved.
+- **Repository**: https://github.com/wjakob/nanobind
+- **Included in**:
+  - Git Submodule `/thirdparty/nanobind/nanobind`
+  - Python wheels
+
+### nanopb
+
+- **License**: Zlib
+- **Copyright**: Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
+- **Homepage**: https://jpa.kapsi.fi/nanopb/
+- **Repository**: https://github.com/nanopb/nanopb
+- **Included in**:
+  - Copy in Repository `/thirdparty/external/ecal/ecal/core/src/serialization`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### Npcap
+
+- **License**: npcap
+- **Copyright**: copyright (c) 2013-2025 by Nmap Software LLC ("The Nmap Project").  All rights reserved.
+- **Homepage**: https://npcap.com/
+- **Repository**: https://github.com/nmap/npcap
+- **Included in**:
+  - None
+    Not included due to licensing issues, but can be used as plugin. Please check out the npcap chapter. eCAL for Windows links against the npcap SDK, which is fetched by CMake.
+
+### PcapPlusPlus
+
+- **License**: Unlicense
+  _(+ 6 thirdparty license files)_
+- **Copyright**: Copyright © 2025 seladb
+- **Homepage**: https://pcapplusplus.github.io/
+- **Repository**: https://github.com/seladb/PcapPlusPlus
+- **Included in**:
+  - Fetched by CMake
+  - Windows builds
+  - Python wheels
+
+### protobuf
+
+- **License**: BSD-3-Clause
+- **Copyright**: Copyright 2008 Google Inc.  All rights reserved.
+- **Homepage**: https://protobuf.dev/
+- **Repository**: https://github.com/protocolbuffers/protobuf
+- **Included in**:
+  - Git Submodule `/thirdparty/protobuf/protobuf`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### Qt
+
+- **License**: LGPL-3.0-only
+  _(+ 14 thirdparty license files)_
+- **Copyright**: The Qt Company Ltd.
+- **Homepage**: https://www.qt.io/
+- **Repository**: https://github.com/qt/qtbase
+- **Included in**:
+  - Windows builds
+  - Linux builds
+
+### Qwt
+
+- **License**: qwt
+- **Copyright**: Copyright (C) 1997   Josef Wilgen   Copyright (C) 2002   Uwe Rathmann
+- **Homepage**: https://qwt.sourceforge.io/
+- **Repository**: https://sourceforge.net/p/qwt/git/ci/develop/tree/
+- **Included in**:
+  - Git Submodule `/thirdparty/qwt/qwt`
+  - Windows builds
+  - Linux builds
+
+### recycle
+
+- **License**: BSD-3-Clause
+- **Copyright**: Copyright (c) 2014, Steinwurf ApS
+- **Repository**: https://github.com/steinwurf/recycle
+- **Included in**:
+  - Git Submodule `/thirdparty/recycle/recycle`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### robin-map
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2017 Thibaut Goetghebuer-Planchon <tessil@gmx.com>
+- **Repository**: https://github.com/Tessil/robin-map
+- **Included in**:
+  - Git Submodule `/thirdparty/tsl-robin-map/tsl-robin-map`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### spdlog
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2016 Gabi Melman.
+- **Repository**: https://github.com/gabime/spdlog
+- **Included in**:
+  - Git Submodule `/thirdparty/spdlog/spdlog`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### tclap
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2003 Michael E. Smoot   Copyright (c) 2004 Daniel Aarno   Copyright (c) 2017 Google Inc.
+- **Homepage**: https://tclap.sourceforge.net/
+- **Repository**: https://github.com/xguerin/tclap
+- **Included in**:
+  - Git Submodule `/thirdparty/tclap/tclap`
+  - Windows builds
+  - Linux builds
+
+### tcp_pubsub
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2021 Continental Corporation
+- **Repository**: https://github.com/eclipse-ecal/tcp_pubsub
+- **Included in**:
+  - Git Submodule `/thirdparty/tcp_pubsub/tcp_pubsub`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
+### termcolor
+
+- **License**: BSD-3-Clause
+- **Copyright**: Copyright (c) 2013, Ihor Kalnytskyi.   All rights reserved.
+- **Repository**: https://github.com/ikalnytskyi/termcolor
+- **Included in**:
+  - Git Submodule `/thirdparty/termcolor/termcolor`
+  - Windows builds
+  - Linux builds
+
+### TinyXML-2
+
+- **License**: Zlib
+- **Copyright**: Lee Thomason
+- **Repository**: https://github.com/leethomason/tinyxml2
+- **Included in**:
+  - Git Submodule `/thirdparty/tinyxml2/tinyxml2`
+  - Windows builds
+  - Linux builds
+
+### Udpcap
+
+- **License**: Apache-2.0
+- **Copyright**: Copyright (C) 2016 - 2019 Continental Corporation
+- **Repository**: https://github.com/eclipse-ecal/udpcap
+- **Included in**:
+  - Git Submodule `/thirdparty/udpcap/udpcap`
+  - Windows builds
+  - Python wheels
+
+### yaml-cpp
+
+- **License**: MIT
+- **Copyright**: Copyright (c) 2008-2015 Jesse Beder.
+- **Repository**: https://github.com/jbeder/yaml-cpp
+- **Included in**:
+  - Git Submodule `/thirdparty/yaml-cpp/yaml-cpp`
+  - Windows builds
+  - Linux builds
+  - Python wheels
