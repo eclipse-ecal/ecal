@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - support/*
 
 jobs:
   update-licenses:
@@ -11,40 +12,21 @@ jobs:
 
     steps:
 
-    - name: Checkout repository with submodules
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        submodules:  'true'
+        submodules:  'false'
         fetch-depth: 0
+
+    - name: Initialize submodules
+      run: |
+        git submodule init
+        git submodule update --init --depth=1
 
     - name: Run license collector script
       run: python3 LICENSES/ecal_license_collector/update_licenses_information.py
 
-    # - name: Check for changes
-    #   id: git-check
-    #   run: |
-    #     git config --global user.name "github-actions[bot]"
-    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    #     git status --porcelain
-    #     if [ -n "$(git status --porcelain)" ]; then
-    #         echo "changes=true" >> $GITHUB_OUTPUT
-    #     else
-    #         echo "changes=false" >> $GITHUB_OUTPUT
-    #     fi
-
-    # - name: Create branch, commit, and push changes
-    #   if: steps.git-check.outputs.changes == 'true'
-    #   run: |
-    #     BRANCH_NAME="auto/update-licenses-$(date +%Y%m%d%H%M%S)"
-    #     git checkout -b "$BRANCH_NAME"
-    #     git add -A
-    #     git commit -m "Auto-update license information"
-    #     git push origin "$BRANCH_NAME"
-    #     echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-    #   id: commit_push
-
     - name: Create Pull Request
-      # if: steps.git-check.outputs.changes == 'true'
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
