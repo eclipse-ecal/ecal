@@ -218,7 +218,27 @@ def update_documentation(thirdparty_sbom_dict):
         with open(details_output_file_path, "wb") as f:
             f.write(output.encode('utf-8'))
 
+def update_notice_md(thirdparty_sbom_dict):
+    notice_md_path = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../NOTICE.md"))
 
+    # Load the Jinja2 template
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    resource_path = os.path.join(script_dir, "jinja2")
+    
+    template_loader     = jinja2.FileSystemLoader(searchpath=resource_path)
+    template_env        = jinja2.Environment(loader=template_loader)
+    template            = template_env.get_template("notice.md.jinja")
+
+    # Render the template with the context
+    context = {
+        'sbom_dict':                  thirdparty_sbom_dict,
+        'ecal_license_utils':         ecal_license_utils,
+    }
+    output = template.render(context)
+
+    # Save the rendered template to a file
+    with open(notice_md_path, "wb") as f:
+        f.write(output.encode('utf-8'))
 
 if __name__ == "__main__":
     # Create a dictionary to hold License information from all thirdparty modules
@@ -241,3 +261,6 @@ if __name__ == "__main__":
     )
     
     update_documentation(thirdparty_sbom_dict_for_documentation)
+
+    # Update the NOTICE.md in the repo root
+    update_notice_md(thirdparty_sbom_dict_for_documentation)
