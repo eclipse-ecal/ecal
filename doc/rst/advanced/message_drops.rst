@@ -32,7 +32,7 @@ Dropping on Transport Layer
   - Having different link speeds in your network will almost always cause many drops for large messages, as you are e.g. sending with 10 Gbit to a 1Gbit port and so 90% of all packages are dropped.
     This has to be viewed on a traffic-per-message-basis, not on a traffic-per-second basis. For instance, you may be sending only 1 message per second from a 10Gibt link. This message is maybe sent in 10ms, while the 1 Gbit link would need 100ms to receive all the data.
     Consequently, the 1Gbit connection will inevitably start dropping fragments, even though the network is not even close to its capacity.
-    You can work around it by just connecting everything with the same link-speed, and by using the ``bandwidth_max_udp`` setting from the :ref:`ecal.yaml <configuration_options>`
+    If you want to avoid drops, it is recommended to use TCP instead.
 
   - Larger eCAL Messages are more likely to be corrupt, as they consist of more fragments.
 
