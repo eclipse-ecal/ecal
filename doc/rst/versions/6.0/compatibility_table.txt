@@ -3,15 +3,17 @@
 
    * - Wire compatibility
      
-     - * **eCAL UDP**: 
+     - * **eCAL UDP**: 100% compatible
+
+         (by setting ``multicast_config_version`` to ``v2`` in ini file for eCAL 5.13)
   
-       * **eCAL TCP**: 
+       * **eCAL TCP**: 100% compatible
 
-       * **Services**: 
+       * **Services**: 100% compatible
 
-       * **eCAL Shared Memory**: 
+       * **eCAL Shared Memory**: 100% compatible
 
-       * **eCAL Registration Layer**: 
+       * **eCAL Registration Layer**: 100% compatible
 
 
    * - API / ABI
@@ -23,8 +25,8 @@
 
    * - Tools
        
-     - * **Rec**: 
+     - * **Rec**: 100% compatible
 
-       * **Sys**: 
+       * **Sys**: 100% compatible
 
-       * **Measurements**: 
+       * **Measurements**: 100% compatible
