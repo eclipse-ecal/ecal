@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@
 
 #include "hostname.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>
 #include <WinSock2.h>
-#else // WIN32
+#else // _WIN32
 #include <unistd.h>
-#endif // WIN32
+#endif // _WIN32
 
 namespace EcalParser
 {
@@ -36,7 +36,7 @@ namespace EcalParser
     
     if (hostname.empty())
     {
-#ifdef WIN32
+#ifdef _WIN32
       WORD wVersionRequested = MAKEWORD(2, 2);
 
       WSADATA wsaData;
@@ -47,7 +47,7 @@ namespace EcalParser
         /* Winsock DLL.                                  */
         printf("WSAStartup failed with error: %d\n", err);
       }
-#endif // WIN32
+#endif // _WIN32
 
       char hostname_char[1024] = { 0 };
       if (gethostname(hostname_char, 1024) == 0)

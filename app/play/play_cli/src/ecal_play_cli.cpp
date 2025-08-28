@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,9 +35,9 @@
 #include <ecal_utils/str_convert.h>
 #include <ecal_utils/command_line.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #define NOMINMAX
-#endif // WIN32
+#endif // _WIN32
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -215,11 +215,11 @@ void printMeasurementInformation(std::shared_ptr<EcalPlay> ecal_player)
   }
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 int main()
 #else
 int main(int argc, char *argv[])
-#endif // WIN32
+#endif // _WIN32
 {
 // For linux big measurements require more file descriptors than the default value
 #ifdef ECAL_OS_LINUX
@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
     cmd.add(*arg_iterator);
   }
  
-#ifdef WIN32
+#ifdef _WIN32
   auto utf8_argv_vector = EcalUtils::CommandLine::GetUtf8Argv();
   try
   {
@@ -302,7 +302,7 @@ int main(int argc, char *argv[])
   {
     std::cerr << "Error parsing command line: " << e.what() << std::endl;
   }
-#endif // WIN32
+#endif // _WIN32
 
   
   //////////////////////////////////////////////////////////////////////////////

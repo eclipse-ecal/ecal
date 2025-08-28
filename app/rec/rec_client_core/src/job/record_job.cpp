@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,12 +142,12 @@ namespace eCAL
           std::string system_information_path = hostname_dir + "/system_information.txt";
 
           std::ofstream system_information_file;
-#ifdef WIN32
+#ifdef _WIN32
           std::wstring w_system_information_path = EcalUtils::StrConvert::Utf8ToWide(system_information_path);
           system_information_file.open(w_system_information_path, std::ios::trunc);
 #else
           system_information_file.open(system_information_path, std::ios::trunc);
-#endif // WIN32
+#endif // _WIN32
 
           if (system_information_file.is_open())
           {
@@ -227,12 +227,12 @@ namespace eCAL
         EcalRecLogger::Instance()->info("Creating eacalmeas file: " + ecalmeas_file_path);
 
         std::ofstream ecalmeas_file;
-#ifdef WIN32
+#ifdef _WIN32
         std::wstring w_ecalmeas_file_path = EcalUtils::StrConvert::Utf8ToWide(ecalmeas_file_path);
         ecalmeas_file.open(w_ecalmeas_file_path, std::ios::out | std::ios::trunc);
 #else
         ecalmeas_file.open(ecalmeas_file_path, std::ios::out | std::ios::trunc);
-#endif // WIN32
+#endif // _WIN32
 
         if (ecalmeas_file.is_open())
         {
@@ -258,12 +258,12 @@ namespace eCAL
         EcalRecLogger::Instance()->info("Saving description to " + full_path);
 
         std::ofstream description_file;
-#ifdef WIN32
+#ifdef _WIN32
         std::wstring w_full_path = EcalUtils::StrConvert::Utf8ToWide(full_path);
         description_file.open(w_full_path, std::ios::out | std::ios::trunc);
 #else
         description_file.open(full_path, std::ios::out | std::ios::trunc);
-#endif // WIN32
+#endif // _WIN32
 
         if (description_file.is_open())
         {
@@ -466,12 +466,12 @@ namespace eCAL
       if (!error)
       {
         std::ofstream description_file;
-#ifdef WIN32
+#ifdef _WIN32
         std::wstring w_description_path = EcalUtils::StrConvert::Utf8ToWide(description_path);
         description_file.open(w_description_path, std::ios::out | std::ios::app);
 #else
         description_file.open(description_path, std::ios::out | std::ios::app);
-#endif // WIN32
+#endif // _WIN32
 
         if (description_file.is_open())
         {

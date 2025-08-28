@@ -19,12 +19,12 @@
 
 #include "ecal_utils/command_line.h"
 
-#ifdef WIN32
+#ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #define NOMINMAX
   #include <Windows.h>
   #include <shellapi.h>
-#endif // WIN32
+#endif // _WIN32
 
 #include <ecal_utils/str_convert.h>
 #include <iostream>
@@ -34,7 +34,7 @@ namespace EcalUtils
   namespace CommandLine
   {
 
-#ifdef WIN32
+#ifdef _WIN32
     std::vector<std::string> GetUtf8Argv()
     {
       int commandline_w_argc(0);
