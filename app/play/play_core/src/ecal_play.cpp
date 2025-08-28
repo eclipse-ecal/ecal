@@ -167,12 +167,12 @@ std::map<std::string, std::string> EcalPlay::LoadChannelMappingFile(const std::s
 {
   std::map<std::string, std::string> channel_mapping;
 
-#ifdef WIN32
+#ifdef _WIN32
   std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
   std::ifstream mapping_file(w_path);
 #else
   std::ifstream mapping_file(path);
-#endif // WIN32
+#endif // _WIN32
 
   if (mapping_file.is_open() == true)
   {
@@ -252,12 +252,12 @@ bool EcalPlay::LoadDescription(const std::string& path)
   std::stringstream ss;
   std::string line;
 
-#ifdef WIN32
+#ifdef _WIN32
   std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
   std::ifstream description_file(w_path);
 #else
   std::ifstream description_file(path);
-#endif // WIN32
+#endif // _WIN32
 
   if (description_file.is_open())
   {
@@ -298,12 +298,12 @@ bool EcalPlay::LoadScenarios(const std::string& selected_dir, const std::string&
 
   std::string scenario_line;
 
-#ifdef WIN32
+#ifdef _WIN32
   std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(selected_file);
   std::ifstream scenario_file(w_path);
 #else
   std::ifstream scenario_file(selected_file);
-#endif // WIN32
+#endif // _WIN32
 
   if (scenario_file.is_open())
   {
@@ -419,12 +419,12 @@ bool EcalPlay::SaveScenariosToDisk(const std::string& selected_dir, const std::s
 
     std::ofstream scenario_file_stream;
 
-#ifdef WIN32
+#ifdef _WIN32
     std::wstring w_scenario_path = EcalUtils::StrConvert::Utf8ToWide(scenario_path);
     scenario_file_stream.open (w_scenario_path);
 #else
     scenario_file_stream.open (scenario_path);
-#endif // WIN32
+#endif // _WIN32
 
     if (!scenario_file_stream.is_open())
     {

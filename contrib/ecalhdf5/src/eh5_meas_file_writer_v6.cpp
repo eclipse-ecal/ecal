@@ -23,11 +23,11 @@
 
 #include "eh5_meas_file_writer_v6.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dirent.h>
-#endif //WIN32
+#endif //_WIN32
 
 #include <string>
 #include <list>

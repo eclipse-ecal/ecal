@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ namespace eCAL
 
         if (!is_absolute && !task_dir.empty())
         {
-#ifdef WIN32
+#ifdef _WIN32
           if (task_dir.back() == '/' || task_dir.back() == '\\'
             || (!task_path.empty() && (task_path.front() == '/' || task_path.front() == '\\')))
-#else // WIN32
+#else // _WIN32
           if (task_dir.back() == '/')
-#endif // WIN32
+#endif // _WIN32
           {
             task_path = task_dir + task_path;
           }
@@ -135,12 +135,12 @@ namespace eCAL
 
         if (!is_absolute && !working_dir.empty())
         {
-#ifdef WIN32
+#ifdef _WIN32
           if (working_dir.back() == '/' || working_dir.back() == '\\'
             || (!executable_path.empty() && (executable_path.front() == '/' || executable_path.front() == '\\')))
-#else // WIN32
+#else // _WIN32
           if (working_dir.back() == '/')
-#endif // WIN32
+#endif // _WIN32
           {
             executable_path = working_dir + executable_path;
           }

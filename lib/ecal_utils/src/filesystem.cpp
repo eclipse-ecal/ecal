@@ -69,12 +69,12 @@ namespace EcalUtils
 
     FileStatus::FileStatus(const std::string& path, OsStyle input_path_style)
     {
-#ifdef WIN32
+#ifdef _WIN32
       std::wstring w_native_path_ = StrConvert::Utf8ToWide(ToNativeSeperators(path, input_path_style));
       const int error_code = _wstat64(w_native_path_.c_str(), &file_status_);
-#else // WIN32
+#else // _WIN32
       const int error_code = stat(ToNativeSeperators(path, input_path_style).c_str(), &file_status_);
-#endif // WIN32
+#endif // _WIN32
       is_ok_ = (error_code == 0);
     }
 
@@ -94,12 +94,12 @@ namespace EcalUtils
       case S_IFREG:  return Type::RegularFile;
       case S_IFDIR:  return Type::Dir;
       case S_IFCHR:  return Type::CharacterDevice;
-#ifndef WIN32
+#ifndef _WIN32
       case S_IFBLK:  return Type::BlockDevice;
       case S_IFIFO:  return Type::Fifo;
       case S_IFLNK:  return Type::SymbolicLink;
       case S_IFSOCK: return Type::Socket;
-#endif // !WIN32
+#endif // !_WIN32
       default:       return Type::Unknown;
       }
 
@@ -113,7 +113,7 @@ namespace EcalUtils
       return file_status_.st_size;
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     bool FileStatus::PermissionRootRead()     const { return 0 != (file_status_.st_mode & S_IREAD); }
     bool FileStatus::PermissionRootWrite()    const { return 0 != (file_status_.st_mode & S_IWRITE); }
     bool FileStatus::PermissionRootExecute()  const { return 0 != (file_status_.st_mode & S_IEXEC); }
@@ -123,7 +123,7 @@ namespace EcalUtils
     bool FileStatus::PermissionOwnerRead()    const { return 0 != (file_status_.st_mode & S_IREAD); }
     bool FileStatus::PermissionOwnerWrite()   const { return 0 != (file_status_.st_mode & S_IWRITE); }
     bool FileStatus::PermissionOwnerExecute() const { return 0 != (file_status_.st_mode & S_IEXEC); }
-#else // WIN32
+#else // _WIN32
     bool FileStatus::PermissionRootRead()     const { return 0 != (file_status_.st_mode & S_IRUSR); }
     bool FileStatus::PermissionRootWrite()    const { return 0 != (file_status_.st_mode & S_IWUSR); }
     bool FileStatus::PermissionRootExecute()  const { return 0 != (file_status_.st_mode & S_IXUSR); }
@@ -133,7 +133,7 @@ namespace EcalUtils
     bool FileStatus::PermissionOwnerRead()    const { return 0 != (file_status_.st_mode & S_IROTH); }
     bool FileStatus::PermissionOwnerWrite()   const { return 0 != (file_status_.st_mode & S_IWOTH); }
     bool FileStatus::PermissionOwnerExecute() const { return 0 != (file_status_.st_mode & S_IXOTH); }
-#endif // WIN32
+#endif // _WIN32
 
     bool FileStatus::CanOpenDir() const
     {
@@ -144,7 +144,7 @@ namespace EcalUtils
         return false;
 
       bool can_open_dir(false);
-#ifdef WIN32
+#ifdef _WIN32
       std::string find_file_path = path_ + "\\*";
       std::replace(find_file_path.begin(), find_file_path.end(), '/', '\\');
 
@@ -158,14 +158,14 @@ namespace EcalUtils
         can_open_dir = true;
       }
       FindClose(hFind);
-#else // WIN32
+#else // _WIN32
       DIR *dp = opendir(path_.c_str());
       if (dp != NULL)
       {
         can_open_dir = true;
         closedir(dp);
       }
-#endif // WIN32
+#endif // _WIN32
 
       return can_open_dir;
     }
@@ -195,7 +195,7 @@ namespace EcalUtils
       std::string clean_path = ToNativeSeperators(CleanPath(path, input_path_style), input_path_style);
 
       std::map<std::string, FileStatus> content;
-#ifdef WIN32
+#ifdef _WIN32
       std::string find_file_path = clean_path + "\\*";
       std::replace(find_file_path.begin(), find_file_path.end(), '/', '\\');
 
@@ -217,7 +217,7 @@ namespace EcalUtils
           content.emplace(file_name, FileStatus(clean_path + "\\" + file_name));
       } while (FindNextFileW(hFind, &ffd) != 0);
       FindClose(hFind);
-#else // WIN32
+#else // _WIN32
       DIR *dp;
       struct dirent *dirp;
       if ((dp = opendir(clean_path.c_str())) == NULL)
@@ -234,7 +234,7 @@ namespace EcalUtils
       }
       closedir(dp);
 
-#endif // WIN32
+#endif // _WIN32
       return content;
     }
 
@@ -309,11 +309,11 @@ namespace EcalUtils
       std::string source_clean      = ToNativeSeperators(CleanPath(source,      input_path_style), input_path_style);
       std::string destination_clean = ToNativeSeperators(CleanPath(destination, input_path_style), input_path_style);
 
-#if defined WIN32
+#if defined _WIN32
       std::wstring w_source_clean      = StrConvert::Utf8ToWide(source_clean);
       std::wstring w_destination_clean = StrConvert::Utf8ToWide(destination_clean);
       return (CopyFileW(w_source_clean.c_str(), w_destination_clean.c_str(), FALSE) != FALSE);
-#else // WIN32
+#else // _WIN32
       int input_fd {-1}, output_fd {-1};
       bool copy_succeeded {false};
       if ((input_fd = open(source_clean.c_str(), O_RDONLY)) == -1)
@@ -352,14 +352,14 @@ namespace EcalUtils
       close(input_fd);
       close(output_fd);
       return copy_succeeded;
-#endif // WIN32
+#endif // _WIN32
     }
 
     bool DeleteDir(const std::string& source, OsStyle input_path_style)
     {
       std::string clean_path = ToNativeSeperators(CleanPath(source, input_path_style), input_path_style);
 
-#if defined(WIN32)
+#if defined(_WIN32)
       
       std::wstring w_clean_path = StrConvert::Utf8ToWide(source);
 
@@ -387,7 +387,7 @@ namespace EcalUtils
 #elif defined(__QNXNTO__)
       // TODO: Find an alternative to traverse directories on QNX operating system that does not use fts
       return false;
-#else // WIN32
+#else // _WIN32
       
       // This code has been taken from the open-bsd rm sourcecode:
       // http://cvsweb.openbsd.org/cgi-bin/cvsweb/src/bin/rm/rm.c?rev=1.27
@@ -478,7 +478,7 @@ namespace EcalUtils
       fts_close(fts);
       
       return success;
-#endif // WIN32
+#endif // _WIN32
     }
 
     std::string GetAbsoluteRoot(const std::string& path, OsStyle input_path_style)

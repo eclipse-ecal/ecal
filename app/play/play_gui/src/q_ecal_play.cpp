@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@
 
 #include "ecal_play_logger.h"
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
   #include <QWinTaskbarButton>
-#endif //WIN32
+#endif //_WIN32
 
 QEcalPlay::QEcalPlay()
   : ecal_play_()
@@ -679,10 +679,10 @@ bool QEcalPlay::initializePublishers(bool suppress_error_dialog)
                               std::cout << "An unknown error occured while initializing eCAL publishers." << std::endl;
                             }
 
-#ifndef WIN32
+#ifndef _WIN32
                             if (!success.first)
                               success.second += "\n\nTip: If you are on a Linux-like OS and receive a \"too many ope files\" error, you may want to increase the limit of open file descriptors for eCAL Play!";
-#endif //!WIN32
+#endif //!_WIN32
                           });
 
   while (!success_future.isFinished())

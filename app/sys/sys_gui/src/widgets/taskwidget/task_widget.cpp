@@ -1843,9 +1843,9 @@ void TaskWidget::algoPathChooseButtonClicked()
     QString algo_path = QFileDialog::getOpenFileName(this, tr("Choose Algo Path"), start_path, tr("All Files (*)"));
     if (!algo_path.isEmpty())
     {
-#ifdef WIN32
+#ifdef _WIN32
       algo_path.replace('/', '\\');
-#endif // WIN32
+#endif // _WIN32
 
       ui_.algo_path_lineedit->setPlaceholderText(tr("Path"));
 
@@ -2035,9 +2035,9 @@ void TaskWidget::workingDirChooseButtonClicked()
     QString working_directory = QFileDialog::getExistingDirectory(this, tr("Choose Working Directory"), start_directory);
     if (!working_directory.isEmpty())
     {
-#ifdef WIN32
+#ifdef _WIN32
       working_directory.replace('/', '\\');
-#endif // WIN32
+#endif // _WIN32
 
       std::vector<std::shared_ptr<EcalSysTask>> modified_tasks;
       for (auto& task : selected_tasks)

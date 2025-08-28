@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@
 #include <QMessageBox>
 #include <QStyleFactory>
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
   #include <QWinTaskbarButton>
   #include <QWinTaskbarProgress>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #define NOMINMAX
   #include <Windows.h>
@@ -60,7 +60,7 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   , measurement_loaded_                     (false)
   , measurement_boundaries_                 (eCAL::Time::ecal_clock::time_point(eCAL::Time::ecal_clock::duration(0)), eCAL::Time::ecal_clock::time_point(eCAL::Time::ecal_clock::duration(0)))
   , measurement_frame_count_                (0)
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
   , taskbar_play_icon_                      (":ecalicons/TASKBAR_PLAY")
   , taskbar_play_icon_disabled_             (":ecalicons/TASKBAR_PLAY_DISABLED")
   , taskbar_pause_icon_                     (":ecalicons/TASKBAR_PAUSE")
@@ -233,7 +233,7 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   //////////////////////////////////////////////////////////////////////////////
   connect(ui_.menu_recent_measurement, &QMenu::aboutToShow, this, &EcalplayGui::populateRecentMeasurementsMenu);
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #if(QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   //////////////////////////////////////////////////////////////////////////////
@@ -287,9 +287,9 @@ EcalplayGui::EcalplayGui(QWidget *parent)
   // Special show-console button for Windows
   ui_.action_debug_console->setChecked(GetConsoleWindow());
   connect(ui_.action_debug_console, &QAction::triggered, [this](bool checked) {showConsole(checked); });
-#else //WIN32
+#else //_WIN32
   ui_.action_debug_console->setVisible(false);
-#endif // WIN32
+#endif // _WIN32
 
   //////////////////////////////////////////////////////////////////////////////
   //// Initial layout                                                       ////
@@ -318,10 +318,10 @@ void EcalplayGui::showEvent(QShowEvent* /*event*/)
 {
   if (first_show_event_)
   {
-#if (defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if (defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   taskbar_button_   ->setWindow(this->windowHandle());
   thumbnail_toolbar_->setWindow(this->windowHandle());
-#endif // WIN32
+#endif // _WIN32
 
     saveInitialLayout();
 
@@ -378,7 +378,7 @@ void EcalplayGui::measurementLoaded(const QString& path)
   measurement_path_label_->setText(" " + QDir::toNativeSeparators(path) + " ");
   addRecentMeasurement(path);
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
   thumbnail_play_pause_button_      ->setEnabled(true);
   thumbnail_play_pause_button_      ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_ : taskbar_pause_icon_);
 
@@ -389,7 +389,7 @@ void EcalplayGui::measurementLoaded(const QString& path)
   thumbnail_step_button_            ->setIcon(taskbar_step_icon_);
 
   updateTaskbarProgressRange();
-#endif //WIN32
+#endif //_WIN32
 }
 
 void EcalplayGui::measurementClosed()
@@ -413,7 +413,7 @@ void EcalplayGui::measurementClosed()
   setWindowFilePath("");
   measurement_path_label_->setText(tr(" No measurement loaded "));
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
   thumbnail_play_pause_button_      ->setEnabled(false);
   thumbnail_play_pause_button_      ->setIcon(play_pause_button_state_is_play_ ? taskbar_play_icon_disabled_ : taskbar_pause_icon_disabled_);
 
@@ -424,7 +424,7 @@ void EcalplayGui::measurementClosed()
   thumbnail_step_button_            ->setIcon(taskbar_step_icon_disabled_);
 
   updateTaskbarProgressRange();
-#endif //WIN32
+#endif //_WIN32
 }
 
 void EcalplayGui::publishersInitStateChanged(bool publishers_initialized)
@@ -503,11 +503,11 @@ void EcalplayGui::stepReferenceChannelChanged(const QString& step_reference_chan
   {
     ui_.action_step_channel->setText("Step channel");
     ui_.action_step_channel->setEnabled(false);
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
     thumbnail_step_channel_button_->setEnabled(false);
     thumbnail_step_channel_button_->setToolTip("Step channel");
     thumbnail_step_channel_button_->setIcon(taskbar_step_channel_icon_disabled_);
-#endif //WIN32
+#endif //_WIN32
   }
   else
   {
@@ -518,24 +518,24 @@ void EcalplayGui::stepReferenceChannelChanged(const QString& step_reference_chan
     {
       QString description = tr("Step") + " \"" + target_channel_it->second.c_str() + "\"";
       ui_.action_step_channel->setText(tr("Step") + " \"" + target_channel_it->second.c_str() + "\"");
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
       thumbnail_step_channel_button_->setToolTip(description);
-#endif //WIN32
+#endif //_WIN32
     }
     else
     {
       QString description = tr("Step") + " \"" + step_reference_channel + "\"";
       ui_.action_step_channel->setText(description);
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
       thumbnail_step_channel_button_->setToolTip(description);
-#endif //WIN32
+#endif //_WIN32
     }
 
     ui_.action_step_channel->setEnabled(true);
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
     thumbnail_step_channel_button_->setEnabled(true);
     thumbnail_step_channel_button_->setIcon(taskbar_step_channel_icon_);
-#endif //WIN32
+#endif //_WIN32
   }
 }
 
@@ -574,10 +574,10 @@ void EcalplayGui::setPlayPauseActionToPlay()
     ui_.action_play->setIcon(QPixmap(":/ecalicons/START"));
     play_pause_button_state_is_play_ = true;
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
     thumbnail_play_pause_button_->setToolTip("Play");
     thumbnail_play_pause_button_->setIcon(thumbnail_play_pause_button_->isEnabled() ? taskbar_play_icon_ : taskbar_pause_icon_disabled_);
-#endif // WIN32
+#endif // _WIN32
   }
 }
 
@@ -589,10 +589,10 @@ void EcalplayGui::setPlayPauseActionToPause()
     ui_.action_play->setIcon(QPixmap(":/ecalicons/PAUSE"));
     play_pause_button_state_is_play_ = false;
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
     thumbnail_play_pause_button_->setToolTip("Pause");
     thumbnail_play_pause_button_->setIcon(thumbnail_play_pause_button_->isEnabled() ? taskbar_pause_icon_ : taskbar_pause_icon_disabled_);
-#endif // WIN32
+#endif // _WIN32
   }
 }
 
@@ -962,7 +962,7 @@ void EcalplayGui::dropEvent(QDropEvent* event)
   QWidget::dropEvent(event);
 }
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
 ////////////////////////////////////////////////////////////////////////////////
 //// Windows Taskbar                                                        ////
 ////////////////////////////////////////////////////////////////////////////////
@@ -1000,7 +1000,7 @@ void EcalplayGui::updateTaskbarProgressRange()
 }
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 void EcalplayGui::showConsole(bool show)
 {
   if (show)
@@ -1031,4 +1031,4 @@ void EcalplayGui::showConsole(bool show)
   ui_.action_debug_console->blockSignals(false);
 }
 
-#endif // WIN32
+#endif // _WIN32
