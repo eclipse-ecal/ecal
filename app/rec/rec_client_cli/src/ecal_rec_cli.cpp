@@ -38,7 +38,7 @@
 
 
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -48,14 +48,14 @@
 /** Win32 Console Handler (CTRL+C, Close Window) */
 BOOL WINAPI ConsoleHandler(DWORD);
 
-#else // WIN32
+#else // _WIN32
 
 #include <signal.h>
 
 /** POSIX signal handler */
 void SignalHandler(int s);
 
-#endif // WIN32
+#endif // _WIN32
 
 /** Global eCAL Rec instance */
 std::shared_ptr<eCAL::rec::EcalRec> ecal_rec;
@@ -68,11 +68,11 @@ std::condition_variable               ecal_rec_exit_cv_;
 std::chrono::steady_clock::time_point ctrl_exit_until(std::chrono::steady_clock::duration::max());
 bool                                  ctrl_exit_event(false);
 
-#ifdef WIN32
+#ifdef _WIN32
 int main()
 #else
 int main(int argc, char** argv)
-#endif // WIN32
+#endif // _WIN32
 {
   TCLAP::CmdLine cmd("eCAL Recorder", ' ', ECAL_REC_VERSION_STRING);
   
@@ -128,12 +128,12 @@ int main(int argc, char** argv)
  
   try
   {
-#ifdef WIN32
+#ifdef _WIN32
     auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
     cmd.parse(utf8_args_vector);
 #else
     cmd.parse(argc, argv);
-#endif // WIN32
+#endif // _WIN32
   }
   catch (TCLAP::ArgException& e)
   {
@@ -313,7 +313,7 @@ int main(int argc, char** argv)
   header_ss                                                                                      << std::endl;
 
   // Signal handling for Ctrl+C
-#ifdef WIN32
+#ifdef _WIN32
 
   std::string attention_string1 = "!! Attention !!";
   std::string attention_string2 = "Closing the console with the [X] button may lead to incomplete measurements";
@@ -335,7 +335,7 @@ int main(int argc, char** argv)
     std::cerr << "Unable to set Ctrl+C handler" << std::endl;
   }
 
-#else // WIN32
+#else // _WIN32
   struct sigaction sigIntHandler;
 
   sigIntHandler.sa_handler = SignalHandler;
@@ -515,7 +515,7 @@ void UpdateEcalState()
   }
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {
   if (dwType == CTRL_C_EVENT)
@@ -547,7 +547,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
 
   return FALSE;
 }
-#else // WIN32
+#else // _WIN32
 
 void SignalHandler(int s)
 {
@@ -564,4 +564,4 @@ void SignalHandler(int s)
   }
 }
 
-#endif //WIN32
+#endif //_WIN32

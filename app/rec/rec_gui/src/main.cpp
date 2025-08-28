@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,12 +85,12 @@ int main(int argc, char *argv[])
 
   try
   {
-#ifdef WIN32
+#ifdef _WIN32
     auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
     cmd.parse(utf8_args_vector);
 #else
     cmd.parse(argc, argv);
-#endif // WIN32
+#endif // _WIN32
   }
   catch (TCLAP::ArgException& e)
   {
@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
       advanced_tclap_output.version(cmd);
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     // On Windows we display the command line help as GUI window. That approach
     // is somehow standard on Windows, as Windows will not print the
     // stdout/stderr streams to the console the app was started from.
@@ -130,9 +130,9 @@ int main(int argc, char *argv[])
 
     w.show();
     return a.exec();
-#else // WIN32
+#else // _WIN32
     return 0;
-#endif // WIN32
+#endif // _WIN32
   }
 
   // Just make sure that eCAL is initialized

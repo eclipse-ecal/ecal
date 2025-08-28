@@ -102,9 +102,9 @@ void PlayThread::Run()
               // condition variable predicate function.
               // When pausing while waiting for the next frame, the outer
               // do-while loop causes the 
-#ifdef WIN32
+#ifdef _WIN32
               pause_cv_.wait_until(command_lock, wait_until_timepoint);
-#else // WIN32
+#else // _WIN32
               if (wait_until_timepoint == std::chrono::steady_clock::time_point::max())
               {
                 pause_cv_.wait(command_lock);
@@ -113,7 +113,7 @@ void PlayThread::Run()
               {
                 pause_cv_.wait_until(command_lock, wait_until_timepoint);
               }
-#endif // WIN32
+#endif // _WIN32
               wait_until_timepoint = GetSystemTime_Private(command_.next_frame_timestamp_);
             } 
 

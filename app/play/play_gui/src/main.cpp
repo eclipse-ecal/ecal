@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
   cmd.setOutput(&advanced_tclap_output);
 
-#ifdef WIN32
+#ifdef _WIN32
   auto utf8_argv_vector = EcalUtils::CommandLine::GetUtf8Argv();
   try
   {
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
   {
     std::cerr << "Error parsing command line: " << e.what() << std::endl;
   }
-#endif // WIN32
+#endif // _WIN32
 
   QApplication a(argc, argv);
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
       advanced_tclap_output.version(cmd);
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     // On Windows we display the command line help as GUI window. That approach
     // is somehow standard on Windows, as Windows will not print the
     // stdout/stderr streams to the console the app was started from.
@@ -148,9 +148,9 @@ int main(int argc, char *argv[])
 
     w.show();
     return a.exec();
-#else // WIN32
+#else // _WIN32
     return 0;
-#endif // WIN32
+#endif // _WIN32
   }
 
 

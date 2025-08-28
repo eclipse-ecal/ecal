@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public:
   ResourceBar(QWidget *parent = Q_NULLPTR) : QWidget(parent) 
   { 
     setupUi(this); 
-#ifdef WIN32
+#ifdef _WIN32
     // On Windows, the progress bar is green. The default white text is very hard to read, so we modify that color.
     QPalette pal = bar->palette();
     pal.setColor(QPalette::HighlightedText, pal.color(QPalette::Text));

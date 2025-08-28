@@ -32,13 +32,13 @@
 
 #include "publisher_statistics.h"
 
-#ifdef WIN32
+#ifdef _WIN32
   #define NOMINMAX
   #define WIN32_LEAN_AND_MEAN
   #include <Windows.h> // IWYU pragma: keep
 #else 
   #include <unistd.h>
-#endif // WIN32
+#endif // _WIN32
 
 Publisher::Publisher(const std::string& topic_name, double frequency, std::size_t payload_size, bool quiet, bool log_print_verbose_times)
   : ecal_pub                (topic_name)
@@ -159,7 +159,7 @@ bool Publisher::preciseWaitUntil(std::chrono::steady_clock::time_point time) con
     {
       while (std::chrono::steady_clock::now() < (time - max_time_to_busy_wait))
       {
-#ifdef WIN32
+#ifdef _WIN32
         Sleep(0); // NOLINT(misc-include-cleaner)
 #else
         usleep(1);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,21 @@
 
 #include "ecal_meas_cutter.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 int main()
 {
   SetConsoleOutputCP(CP_UTF8);
 #else
 int main(int argc, char* argv[])
 {
-#endif // WIN32
+#endif // _WIN32
 
   std::vector<std::string> cmd_arguments;
-#ifdef WIN32
+#ifdef _WIN32
   cmd_arguments = EcalUtils::CommandLine::GetUtf8Argv();
 #else
   cmd_arguments.insert(cmd_arguments.end(), argv, argv + argc);
-#endif // WIN32
+#endif // _WIN32
 
   eCALMeasCutter app(cmd_arguments);
   return app.run();

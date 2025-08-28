@@ -34,9 +34,9 @@
 #include <sstream>
 #include <iomanip>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <process.h>
-#endif // WIN32
+#endif // _WIN32
 
 
 
@@ -339,11 +339,11 @@ namespace eCAL
       RecorderStatus recorder_status;
 
       recorder_status.timestamp_ = eCAL::Time::ecal_clock::now();
-#ifdef WIN32
+#ifdef _WIN32
       recorder_status.pid_       = static_cast<int>(_getpid());
-#else // WIN32
+#else // _WIN32
       recorder_status.pid_       = static_cast<int>(getpid());
-#endif // WIN32
+#endif // _WIN32
 
       {
         std::lock_guard<decltype(ecal_mutex_)> ecal_lock(ecal_mutex_);

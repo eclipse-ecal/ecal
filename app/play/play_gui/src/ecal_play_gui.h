@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 #include <QtWidgets/QMainWindow>
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
 #include <QWinTaskbarButton>
 #include <QWinThumbnailToolBar>
 #include <QWinThumbnailToolButton>
@@ -138,7 +138,7 @@ private:
   bool askToSaveScenarios();
 
 
-#if((defined WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
+#if((defined _WIN32) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)))
 ////////////////////////////////////////////////////////////////////////////////
 //// Windows taskbar button                                                 ////
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,11 +167,11 @@ private:
   void updateTaskbarProgressRange();
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 ////////////////////////////////////////////////////////////////////////////////
 //// Windows specific                                                        ////
 ////////////////////////////////////////////////////////////////////////////////
 private slots:
   void showConsole(bool show);
-#endif // WIN32
+#endif // _WIN32
 };

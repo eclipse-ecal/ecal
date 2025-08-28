@@ -33,7 +33,7 @@
 #include <thread>
 #include <vector>
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -58,9 +58,9 @@ void printUsage(const std::string& arg0)
 
 int main(int argc, char** argv)
 {
-#ifdef WIN32
+#ifdef _WIN32
   SetConsoleOutputCP(CP_UTF8);
-#endif // WIN32
+#endif // _WIN32
 
   bool quiet_arg           = false;
   bool verbose_print_times = false;

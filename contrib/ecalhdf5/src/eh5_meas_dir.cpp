@@ -25,11 +25,11 @@
 #include "escape.h"
 
 #define NOMINMAX
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dirent.h>
-#endif //WIN32
+#endif //_WIN32
 
 #include <iostream>
 #include <limits>
@@ -363,7 +363,7 @@ void eCAL::eh5::HDF5MeasDir::DisconnectPreSplitCallback()
 std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& path) const
 {
   std::list<std::string> paths;
-#ifdef WIN32
+#ifdef _WIN32
   std::string dpath = path + "/*.*";
   std::wstring dpath_w = EcalUtils::StrConvert::Utf8ToWide(dpath);
 
@@ -420,7 +420,7 @@ std::list<std::string> eCAL::eh5::HDF5MeasDir::GetHdfFiles(const std::string& pa
     }
     closedir(dir);
 }
-#endif  //  WIN32
+#endif  //  _WIN32
   return paths;
 }
 
