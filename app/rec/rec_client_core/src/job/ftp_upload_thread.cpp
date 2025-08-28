@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 #include <ecal_utils/filesystem.h>
 #include <ecal_utils/str_convert.h>
 
-#ifdef WIN32
+#ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #define NOMINMAX
   #include <Windows.h>
@@ -358,10 +358,10 @@ namespace eCAL
       for(size_t i = 0; i < skip_files_.size(); i++)
       {
         skip_files_[i] = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + skip_files_[i], EcalUtils::Filesystem::OsStyle::Current);
-#ifdef WIN32
+#ifdef _WIN32
         // On windows we lower-case-compare files
         std::transform(skip_files_[i].begin(), skip_files_[i].end(), skip_files_[i].begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
-#endif // WIN32
+#endif // _WIN32
       }
     }
 
@@ -497,10 +497,10 @@ namespace eCAL
         files_to_upload.remove_if([this](const std::pair<std::string, uint64_t>& file_pair_to_upload) -> bool
         {
           std::string normalized_file_to_upload = EcalUtils::Filesystem::CleanPath(local_root_dir_ + "/" + file_pair_to_upload.first, EcalUtils::Filesystem::OsStyle::Current);
-#ifdef WIN32
+#ifdef _WIN32
           // On windows we lower-case-compare files
           std::transform(normalized_file_to_upload.begin(), normalized_file_to_upload.end(), normalized_file_to_upload.begin(), [](unsigned char c) { return static_cast<unsigned char>(std::tolower(c)); });
-#endif // WIN32
+#endif // _WIN32
 
           return (std::find(skip_files_.begin(), skip_files_.end(), normalized_file_to_upload) != skip_files_.end());
         });
@@ -562,12 +562,12 @@ namespace eCAL
 
         // Open the local file
         std::ifstream file;
-#ifdef WIN32
+#ifdef _WIN32
         std::wstring w_native_path = EcalUtils::StrConvert::Utf8ToWide(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path, EcalUtils::Filesystem::OsStyle::Current));
         file.open(w_native_path, std::ios::binary);
 #else
         file.open(EcalUtils::Filesystem::ToNativeSeperators(local_complete_file_path, EcalUtils::Filesystem::OsStyle::Current), std::ios::binary);
-#endif // WIN32
+#endif // _WIN32
 
         bool abort_uploading = false;
 
@@ -838,7 +838,7 @@ namespace eCAL
       }
 
 
-#ifdef WIN32
+#ifdef _WIN32
       WORD wVersionRequested = MAKEWORD(2, 2);
 
       WSADATA wsaData;
@@ -849,7 +849,7 @@ namespace eCAL
         /* Winsock DLL.                                  */
         printf("WSAStartup failed with error: %d\n", err);
       }
-#endif // WIN32
+#endif // _WIN32
 
       std::array<char, 1024> hostname_char_array{};
       gethostname(&hostname_char_array.front(), static_cast<int>(hostname_char_array.size()));

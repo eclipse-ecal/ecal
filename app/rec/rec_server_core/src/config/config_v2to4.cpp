@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,12 +202,12 @@ namespace eCAL
         }
 
         FILE* xml_file;
-#ifdef WIN32
+#ifdef _WIN32
         std::wstring w_path = EcalUtils::StrConvert::Utf8ToWide(path);
         xml_file = _wfopen(w_path.c_str(), L"w");
 #else
         xml_file = fopen(path.c_str(), "w");
-#endif // WIN32
+#endif // _WIN32
 
         if (xml_file == nullptr)
         {

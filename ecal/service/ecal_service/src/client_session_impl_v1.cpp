@@ -41,7 +41,7 @@
 #include <ecal_service/logger.h>
 #include <ecal_service/state.h>
 
-#ifdef WIN32
+#ifdef _WIN32
   #include <Winsock2.h>
 #else
   #include <netinet/in.h>

@@ -83,7 +83,7 @@
 
 #include "bytes_to_pretty_string_utils.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -93,14 +93,14 @@
 // Win32 Console Handler (CTRL+C, Close Window)
 BOOL WINAPI ConsoleHandler(DWORD);
 
-#else // WIN32
+#else // _WIN32
 
 #include <signal.h>
 
 /** POSIX signal handler */
 void SignalHandler(int s);
 
-#endif // WIN32
+#endif // _WIN32
 
 /**************************************
 * Global Methods
@@ -143,12 +143,12 @@ std::unique_ptr<eCAL::rec_cli::command::Record> record_command;
 
 int main(int argc, char** argv)
 {
-#ifdef WIN32
+#ifdef _WIN32
   (void)argc; // suppress unused warning
   (void)argv; // suppress unused warning
 
   EcalUtils::WinCpChanger win_cp_changer(CP_UTF8); // The WinCpChanger will set the Codepage back to the original, once destroyed
-#endif // WIN32
+#endif // _WIN32
 
   // Define the command line object.
   TCLAP::CmdLine cmd(ECAL_REC_NAME, ' ', ECAL_REC_VERSION_STRING);
@@ -264,12 +264,12 @@ int main(int argc, char** argv)
 
   try
   {
-#ifdef WIN32
+#ifdef _WIN32
     auto utf8_args_vector = EcalUtils::CommandLine::GetUtf8Argv();
     cmd.parse(utf8_args_vector);
 #else
     cmd.parse(argc, argv);
-#endif // WIN32
+#endif // _WIN32
   }
   catch (TCLAP::ArgException& e)
   {
@@ -359,7 +359,7 @@ int main(int argc, char** argv)
   /* CTRL+C handler / Signal handler                                      */
   /************************************************************************/
   std::cout << std::endl;
-#ifdef WIN32
+#ifdef _WIN32
 
   if (!remote_control_arg.isSet())
   {
@@ -384,7 +384,7 @@ int main(int argc, char** argv)
     std::cerr << "Unable to set Ctrl+C handler" << std::endl;
   }
 
-#else // WIN32
+#else // _WIN32
   struct sigaction sigIntHandler;
 
   sigIntHandler.sa_handler = SignalHandler;
@@ -1387,11 +1387,11 @@ int main(int argc, char** argv)
   /************************************************************************/
   if (interactive_arg.isSet() || interactive_dont_exit_arg.isSet())
   {
-#ifdef WIN32
+#ifdef _WIN32
     // Create buffer fo the manual ReadConsoleW call
     std::wstring w_buffer;
     w_buffer.reserve(4096);
-#endif // WIN32
+#endif // _WIN32
 
     std::cout << "Using interactive mode. Type \"help\" to view a list of all commands." << std::endl;
     for (;;)
@@ -1407,7 +1407,7 @@ int main(int argc, char** argv)
       std::string line;
       bool success = false;
 
-#ifdef WIN32
+#ifdef _WIN32
       HANDLE h_in = GetStdHandle(STD_INPUT_HANDLE);
       DWORD std_handle_type = GetFileType(h_in);
       if (std_handle_type == FILE_TYPE_CHAR)
@@ -1441,7 +1441,7 @@ int main(int argc, char** argv)
       }
 #else
       success = bool(std::getline(std::cin, line));
-#endif // WIN32
+#endif // _WIN32
       
       if (!success || ctrl_exit_event)
       {
@@ -1725,7 +1725,7 @@ bool IsBuiltInFtpServerBusy(bool print_status)
   return (open_connections > 0);
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 BOOL WINAPI ConsoleHandler(DWORD dwType)
 {
   if (dwType == CTRL_C_EVENT)
@@ -1813,7 +1813,7 @@ void InterruptStdIn()
 }
 
 
-#else // WIN32
+#else // _WIN32
 
 void SignalHandler(int s)
 {
@@ -1900,5 +1900,5 @@ void InterruptStdIn()
   ::fclose(stdin);
 }
 
-#endif //WIN32
+#endif //_WIN32
 

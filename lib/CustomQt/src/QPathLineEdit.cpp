@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,11 +53,11 @@ QPathLineEdit::QPathLineEdit(const QString &contents, QWidget *parent)
           }
 
           QString root_path;
-#ifdef WIN32
+#ifdef _WIN32
           if (text.endsWith('\\') || text.endsWith('/'))
-#else //WIN32
+#else //_WIN32
           if (text.endsWith('/'))
-#endif //WIN32
+#endif //_WIN32
           {
             root_path = text;
             // Usually, the completer disappears, when typing a directory

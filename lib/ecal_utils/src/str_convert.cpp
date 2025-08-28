@@ -19,11 +19,11 @@
 
 #include <ecal_utils/str_convert.h>
 
-#ifdef WIN32
+#ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #define NOMINMAX
   #include <Windows.h>
-#endif // WIN32
+#endif // _WIN32
 
 #include <string>
 
@@ -31,7 +31,7 @@ namespace EcalUtils
 {
   namespace StrConvert
   {
-#ifdef WIN32
+#ifdef _WIN32
     std::string WideToAnsi(const std::wstring& wstr,  unsigned int ansi_code_page)
     {
         int count = WideCharToMultiByte(ansi_code_page, 0, wstr.c_str(), static_cast<int>(wstr.length()), NULL, 0, NULL, NULL);

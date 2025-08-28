@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -370,9 +370,9 @@ void RunnerWidget::pathButtonClicked()
     QString new_path = QFileDialog::getOpenFileName(this, tr("Choose Runner Path"), start_path, tr("All Files (*)"));
     if (!new_path.isEmpty())
     {
-#ifdef WIN32
+#ifdef _WIN32
       new_path.replace('/', '\\');
-#endif // WIN32
+#endif // _WIN32
 
       if (new_path.toStdString() != selected_runners.front()->GetPath())
       {
@@ -446,9 +446,9 @@ void RunnerWidget::defaultAlgoDirButtonClicked()
     QString new_default_algo_dir = QFileDialog::getExistingDirectory(this, tr("Choose Default Algo Directory"), start_path);
     if (!new_default_algo_dir.isEmpty())
     {
-#ifdef WIN32
+#ifdef _WIN32
       new_default_algo_dir.replace('/', '\\');
-#endif // WIN32
+#endif // _WIN32
 
       if (new_default_algo_dir.toStdString() != selected_runners.front()->GetDefaultAlgoDir())
       {

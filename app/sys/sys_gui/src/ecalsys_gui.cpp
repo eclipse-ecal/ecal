@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2020 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@
 #include <QDesktopWidget>
 #endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <Windows.h>
 #endif
 
@@ -172,12 +172,12 @@ EcalsysGui::EcalsysGui(QWidget *parent)
   connect(ui_.action_group_collapse,               &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->collapseGroups(); });
 
   // Special show-console button for Windows
-#ifdef WIN32
+#ifdef _WIN32
   ui_.action_show_console->setChecked(GetConsoleWindow());
   connect(ui_.action_show_console, &QAction::triggered, [this](bool checked) {showConsole(checked); });
-#else //WIN32
+#else //_WIN32
   ui_.action_show_console->setVisible(false);
-#endif // WIN32
+#endif // _WIN32
 
 
   // Perform startup checks after a few seconds
@@ -977,7 +977,7 @@ void EcalsysGui::menuHelpLicensesTriggered()
   license_dialog.exec();
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning (disable : 4996)
 void EcalsysGui::showConsole(bool show)
@@ -1000,7 +1000,7 @@ void EcalsysGui::showConsole(bool show)
   }
 }
 #pragma warning(pop)
-#endif // WIN32
+#endif // _WIN32
 
 
 void EcalsysGui::openFile(QString path, bool append)
@@ -1246,7 +1246,7 @@ void EcalsysGui::updateHostActions(QMenu* menu)
 
 void EcalsysGui::updateRecentFiles(const QString& new_config_file)
 {
-#ifdef WIN32
+#ifdef _WIN32
   QString config_file = new_config_file;
   config_file.replace("/", "\\");
 
@@ -1270,7 +1270,7 @@ void EcalsysGui::updateRecentFiles(const QString& new_config_file)
 
   // Add the config
   last_config_list.push_front(new_config_file);
-#endif // WIN32
+#endif // _WIN32
 
   // trim the list to 10 elements
   while (last_config_list.size() > 10)

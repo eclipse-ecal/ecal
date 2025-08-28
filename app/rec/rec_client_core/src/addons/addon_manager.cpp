@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ namespace eCAL
     {
       std::vector<std::string> addon_dirs;
       auto default_addon_dir = EcalUtils::Filesystem::ApplicationDir();
-#ifdef WIN32
+#ifdef _WIN32
       default_addon_dir += std::string(1, EcalUtils::Filesystem::NativeSeparator()) + "ecalrec_addons";
 #else
       default_addon_dir += std::string(1, EcalUtils::Filesystem::NativeSeparator()) + ".."
@@ -56,7 +56,7 @@ namespace eCAL
       if (additional_addon_dirs != nullptr)
       {
         auto dir_delimiter
-#ifdef WIN32
+#ifdef _WIN32
         { ";" };
 #else
         { ":" };
@@ -64,7 +64,7 @@ namespace eCAL
         EcalUtils::String::Split(std::string(additional_addon_dirs), dir_delimiter, addon_dirs);
       }
 
-#ifndef WIN32
+#ifndef _WIN32
       // Add the actually installed plugin directory (which may be a multiarch lib dir!)
 
       std::string installed_plugin_dir;

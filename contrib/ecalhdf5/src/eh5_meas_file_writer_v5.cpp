@@ -25,11 +25,11 @@
 #include "escape.h"
 #include "datatype_helper.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <dirent.h>
-#endif //WIN32
+#endif //_WIN32
 
 #include <string>
 #include <list>
