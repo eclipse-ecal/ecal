@@ -28,7 +28,7 @@ jobs:
           else
             REF="${GITHUB_SHA}"
             fi
-            REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.html"
+            REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.rst"
           echo "REQUIREMENTS_URL=${REQUIREMENTS_URL}" >> $GITHUB_OUTPUT
 
           if [[ $GITHUB_REF == refs/tags/v* ]]; then
