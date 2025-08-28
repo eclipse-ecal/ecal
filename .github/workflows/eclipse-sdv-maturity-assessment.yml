@@ -27,8 +27,8 @@ jobs:
             REF="${GITHUB_REF#refs/tags/}"
           else
             REF="${GITHUB_SHA}"
-          fi
-            REQUIREMENTS_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/${REF}/license/thirdparty_licenses.html"
+            fi
+            REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.html"
           echo "REQUIREMENTS_URL=${REQUIREMENTS_URL}" >> $GITHUB_OUTPUT
 
           if [[ $GITHUB_REF == refs/tags/v* ]]; then
@@ -54,6 +54,10 @@ jobs:
           artifacts_documentation: ${{ steps.generate_values.outputs.DOCUMENTATION_URL }}
           artifacts_coding_guidelines: ""
           artifacts_release_process: ""
+
+      - name: Display SDV manifest file
+        run: |
+          cat "${{ steps.quevee.outputs.manifest_file }}"
 
       - name: Upload manifest file
         uses: actions/upload-artifact@v4
