@@ -223,10 +223,10 @@ For the subscriber, similiar changes apply as for the publisher. See `publisher_
     - none - use callbacks instead
   * - ``ReceiveBuffer(...)``
     - none - use callbacks instead
-  * - ``bool AddReceiveCallback(...)``
-    - ``void SetReceiveCallback(...)``
-  * - ``bool RemReceiveCallback(...)``
-    - ``void RemoveReceiveCallback(...)``
+  * - ``AddReceiveCallback(...)``
+    - ``SetReceiveCallback(...)``
+  * - ``RemReceiveCallback(...)``
+    - ``RemoveReceiveCallback(...)``
   * - ``AddEventCallback(...)``
     - none - set EventCallback in constructor instead
   * - ``RemEventCallback(...)``
@@ -327,10 +327,10 @@ The previous methods to set an event callback, ``AddEventCallback(...)`` and ``R
       - none. Destruction is now handled by the server destructor
     * - ``AddDescription(...)``
       - none - this will be set in the ``SetMethodCallback(...)`` method with the parameter ``SServiceMethodInformation``
-    * - ``bool AddMethodCallback(...)``
-      - ``bool SetMethodCallback(...)``
-    * - ``bool RemMethodCallback(...)``
-      - ``bool RemoveMethodCallback(...)``
+    * - ``AddMethodCallback(...)``
+      - ``SetMethodCallback(...)``
+    * - ``RemMethodCallback(...)``
+      - ``RemoveMethodCallback(...)``
     * - ``AddEventCallback(...)``
       - none - set EventCallback in constructor instead
     * - ``RemEventCallback(...)``
@@ -434,10 +434,10 @@ eCAL Service Client
     - none. Destruction is now handled by the client destructor
   * - ``SetHostName(...)``
     - none
-  * - ``bool Call(...)``
-    - ``bool CallWithCallback(...)`` or ``bool CallWithResponse(...)``
-  * - ``bool CallAsync(...)``
-    - ``bool CallWithCallbackAsync(...)``
+  * - ``Call(...)``
+    - ``CallWithCallback(...)`` or ``CallWithResponse(...)``
+  * - ``CallAsync(...)``
+    - ``CallWithCallbackAsync(...)``
   * - ``AddResponseCallback(...)``
     - none - use ``CallWithResponse(...)`` instead
   * - ``RemResponseCallback(...)``
@@ -533,8 +533,8 @@ The following functions were from the config.h (previous ecal_config.h):
     - none
   * - ``IsInprocRecEnable()``
     - none
-  * - ``std::string GetHostGroupName()``
-    - ``std::string GetShmTransportDomain()``
+  * - ``GetHostGroupName()``
+    - ``GetShmTransportDomain()``
   * - ``GetMonitoringTimeoutMs()``
     - none
   * - ``GetMonitoringFilterExcludeList()``
