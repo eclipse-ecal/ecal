@@ -760,7 +760,7 @@ Again, the entire eCAL message must be dropped, in this case.</p></li>
 <li><p>Having different link speeds in your network will almost always cause many drops for large messages, as you are e.g. sending with 10 Gbit to a 1Gbit port and so 90% of all packages are dropped.
 This has to be viewed on a traffic-per-message-basis, not on a traffic-per-second basis. For instance, you may be sending only 1 message per second from a 10Gibt link. This message is maybe sent in 10ms, while the 1 Gbit link would need 100ms to receive all the data.
 Consequently, the 1Gbit connection will inevitably start dropping fragments, even though the network is not even close to its capacity.
-You can work around it by just connecting everything with the same link-speed, and by using the <code class="docutils literal notranslate"><span class="pre">bandwidth_max_udp</span></code> setting from the <a class="reference internal" href="../configuration/options.html#configuration-options"><span class="std std-ref">ecal.yaml</span></a></p></li>
+If you want to avoid drops, it is recommended to use TCP instead.</p></li>
 <li><p>Larger eCAL Messages are more likely to be corrupt, as they consist of more fragments.</p></li>
 <li><p>You can tune the eCAL UDP Layer by tuning the UDP settings of your operating system.
 Usually this means to just increase the send- and receive-buffer sizes, in order to be better prepared for bursts of data.
