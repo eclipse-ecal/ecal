@@ -1022,11 +1022,11 @@ Please note, that when referenced to <code class="docutils literal notranslate">
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ReceiveBuffer(...)</span></code></p></td>
 <td><p>none - use callbacks instead</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">AddReceiveCallback(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">SetReceiveCallback(...)</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">AddReceiveCallback(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">SetReceiveCallback(...)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RemReceiveCallback(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">RemoveReceiveCallback(...)</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">RemReceiveCallback(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">RemoveReceiveCallback(...)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">AddEventCallback(...)</span></code></p></td>
 <td><p>none - set EventCallback in constructor instead</p></td>
@@ -1138,11 +1138,11 @@ Please note, that when referenced to <code class="docutils literal notranslate">
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">AddDescription(...)</span></code></p></td>
 <td><p>none - this will be set in the <code class="docutils literal notranslate"><span class="pre">SetMethodCallback(...)</span></code> method with the parameter <code class="docutils literal notranslate"><span class="pre">SServiceMethodInformation</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">AddMethodCallback(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">SetMethodCallback(...)</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">AddMethodCallback(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">SetMethodCallback(...)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RemMethodCallback(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">RemoveMethodCallback(...)</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">RemMethodCallback(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">RemoveMethodCallback(...)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">AddEventCallback(...)</span></code></p></td>
 <td><p>none - set EventCallback in constructor instead</p></td>
@@ -1249,11 +1249,11 @@ to define more details and set an optional event callback.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetHostName(...)</span></code></p></td>
 <td><p>none</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Call(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">CallWithCallback(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">CallWithResponse(...)</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">Call(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">CallWithCallback(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">CallWithResponse(...)</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CallAsync(...)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">CallWithCallbackAsync(...)</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">CallAsync(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">CallWithCallbackAsync(...)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">AddResponseCallback(...)</span></code></p></td>
 <td><p>none - use <code class="docutils literal notranslate"><span class="pre">CallWithResponse(...)</span></code> instead</p></td>
@@ -1353,8 +1353,8 @@ Mostly because you can directly access the content via the the configuration Obj
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IsInprocRecEnable()</span></code></p></td>
 <td><p>none</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetHostGroupName()</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">GetShmTransportDomain()</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">GetHostGroupName()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">GetShmTransportDomain()</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetMonitoringTimeoutMs()</span></code></p></td>
 <td><p>none</p></td>
