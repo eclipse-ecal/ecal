@@ -1,0 +1,66 @@
+name: Eclipse SDV Maturity Assessment
+
+on:
+  push:
+
+jobs:
+  run-assessment:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Generate values
+        id: generate_values
+        run: |
+          
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+            RELEASE_URL="${REPO_URL}/releases/tag/${TAG_NAME}"
+            echo "Release URL: ${RELEASE_URL}"
+            echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_OUTPUT
+          else
+            echo "RELEASE_URL=" >> $GITHUB_OUTPUT
+            echo "Not a tag push."
+          fi
+
+          # if [[ $GITHUB_REF == refs/tags/* ]]; then
+          #   REF="${GITHUB_REF#refs/tags/}"
+          # else
+          #   REF="${GITHUB_SHA}"
+          # fi
+          # REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.rst"
+          # echo "REQUIREMENTS_URL=${REQUIREMENTS_URL}" >> $GITHUB_OUTPUT
+
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            if [[ $TAG_NAME =~ ^v([0-9]+)\.([0-9]+) ]]; then
+              VERSION="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+              DOCUMENTATION_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/${VERSION}/index.html"
+            else
+              DOCUMENTATION_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/stable/index.html"
+            fi
+          else
+            DOCUMENTATION_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/stable/index.html"
+          fi
+          echo "DOCUMENTATION_URL=${DOCUMENTATION_URL}" >> $GITHUB_OUTPUT
+
+      - name: Call Eclipse Quevee Action
+        uses: eclipse-dash/quevee@v1
+        id: quevee
+        with:
+          release_url: ${{ steps.generate_values.outputs.RELEASE_URL }}
+          artifacts_requirements: ""
+          artifacts_testing: ""
+          artifacts_documentation: ${{ steps.generate_values.outputs.DOCUMENTATION_URL }}
+          artifacts_coding_guidelines: ""
+          artifacts_release_process: ""
+
+      - name: Display SDV manifest file
+        run: |
+          cat "${{ steps.quevee.outputs.manifest_file }}"
+
+      - name: Upload manifest file
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdv-manifest
+          path: ${{ steps.quevee.outputs.manifest_file }}
