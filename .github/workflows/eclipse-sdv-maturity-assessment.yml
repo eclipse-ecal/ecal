@@ -23,13 +23,13 @@ jobs:
             echo "Not a tag push."
           fi
 
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            REF="${GITHUB_REF#refs/tags/}"
-          else
-            REF="${GITHUB_SHA}"
-            fi
-            REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.rst"
-          echo "REQUIREMENTS_URL=${REQUIREMENTS_URL}" >> $GITHUB_OUTPUT
+          # if [[ $GITHUB_REF == refs/tags/* ]]; then
+          #   REF="${GITHUB_REF#refs/tags/}"
+          # else
+          #   REF="${GITHUB_SHA}"
+          # fi
+          # REQUIREMENTS_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${REF}/doc/rst/license/thirdparty_licenses.rst"
+          # echo "REQUIREMENTS_URL=${REQUIREMENTS_URL}" >> $GITHUB_OUTPUT
 
           if [[ $GITHUB_REF == refs/tags/v* ]]; then
             TAG_NAME="${GITHUB_REF#refs/tags/}"
@@ -49,7 +49,7 @@ jobs:
         id: quevee
         with:
           release_url: ${{ steps.generate_values.outputs.RELEASE_URL }}
-          artifacts_requirements: ${{ steps.generate_values.outputs.REQUIREMENTS_URL }}
+          artifacts_requirements: ""
           artifacts_testing: ""
           artifacts_documentation: ${{ steps.generate_values.outputs.DOCUMENTATION_URL }}
           artifacts_coding_guidelines: ""
