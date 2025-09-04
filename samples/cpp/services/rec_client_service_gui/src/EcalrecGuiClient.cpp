@@ -41,14 +41,14 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   connect(recorder_service_poll_timer_, &QTimer::timeout, this,
           [this]()
           {
-            std::cout << "Instances:\n";
-            auto client_instances = this->recorder_service_.GetClientInstances();
+            //std::cout << "Rec Client Instances:\n";
+            //auto client_instances = this->recorder_service_.GetClientInstances();
 
-            for (const auto& instance : client_instances)
-            {
-              const auto client_id = instance.GetClientID();
-              std::cout << "  - Host: " << client_id.host_name << " PID: " << client_id.process_id << " ID: " << client_id.entity_id << std::endl;
-            }
+            //for (const auto& instance : client_instances)
+            //{
+            //  const auto client_id = instance.GetClientID();
+            //  std::cout << "  - Host: " << client_id.host_name << " PID: " << client_id.process_id << " ID: " << client_id.entity_id << std::endl;
+            //}
             this->updateClientListTreeWidget();
           });
   recorder_service_poll_timer_->start(std::chrono::milliseconds(500));
