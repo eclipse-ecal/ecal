@@ -229,26 +229,24 @@ void EcalrecGuiClient::callService(const std::string& method, const RequestT& re
   // Clear the response text edit
   ui_.response_texteedit->clear();
 
-  // Iterate over all client instances and call the service on the checked ones
-  auto client_instances = recorder_service_.GetClientInstances();
-  for (auto& instance : client_instances)
+  // Iterate over all items in the tree widget and call the service on the checked ones
+  QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
+  while (*it)
   {
-    // check if we need to call this instance
+    if ((*it)->checkState(0) == Qt::CheckState::Checked)
     {
-      QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
-      while (*it)
+      for (auto& instance : recorder_service_.GetClientInstances())
       {
-        if ((*it)->checkState(0) == Qt::CheckState::Checked
-        && (*it)->text(0).toStdString() == instance.GetClientID().host_name
-        && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
-        && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
+        if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
+          && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
+          && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
         {
-          instance.CallWithCallbackAsync(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
+          instance.CallWithCallbackAsync(method, request, [this](const eCAL::SServiceResponse& service_response) { this->onRecorderResponse(service_response); });
           break;
         }
-        ++it;
       }
     }
+    ++it;
   }
 }
 
