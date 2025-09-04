@@ -235,15 +235,24 @@ void EcalrecGuiClient::callService(const std::string& method, const RequestT& re
   {
     if ((*it)->checkState(0) == Qt::CheckState::Checked)
     {
+      bool found_instance = false;
       for (auto& instance : recorder_service_.GetClientInstances())
       {
         if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
           && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
           && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
         {
+          found_instance = true;
           instance.CallWithCallbackAsync(method, request, [this](const eCAL::SServiceResponse& service_response) { this->onRecorderResponse(service_response); });
           break;
         }
+      }
+      if (!found_instance)
+      {
+        QMessageBox::warning(this, "Warning", QString("Could not find recorder client instance for host %1, PID %2, ID %3")
+                            .arg((*it)->text(0))
+                            .arg((*it)->data(1, Qt::ItemDataRole()).toInt())
+                            .arg((*it)->data(2, Qt::ItemDataRole()).toULongLong()));
       }
     }
     ++it;
