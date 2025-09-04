@@ -238,11 +238,12 @@ void EcalrecGuiClient::callService(const std::string& method, const RequestT& re
       QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
       while (*it)
       {
-        if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
+        if ((*it)->checkState(0) == Qt::CheckState::Checked
+        && (*it)->text(0).toStdString() == instance.GetClientID().host_name
         && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
         && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
         {
-          instance.CallWithCallback(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
+          instance.CallWithCallbackAsync(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
           break;
         }
         ++it;
