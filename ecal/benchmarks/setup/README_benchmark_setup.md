@@ -1,10 +1,10 @@
-# Setup & Lifecycle Benchmarks (eCAL + Google Benchmark)
+# eCAL Setup & Lifecycle Benchmarks
 
 This document describes microbenchmarks that measure initialization, teardown, and entity-creation costs for an eCAL-based publish/subscribe setup.
 
 ---
 
-## Benchmarks at a glance
+## Overview
 
 The suite registers five cases. All use the topic name `benchmark_topic` when creating publishers/subscribers and build into a standalone Google Benchmark binary via `BENCHMARK_MAIN()`.
 

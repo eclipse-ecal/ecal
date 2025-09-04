@@ -1,6 +1,6 @@
 # eCAL Pub/Sub Benchmark
 
-This README documents the `benchmark_pubsub.cpp` microbenchmarks that measure eCAL publish/subscribe performance within a single process.
+This document describes the `benchmark_pubsub.cpp` microbenchmarks that measure eCAL publish/subscribe performance within a single process.
 
 ---
 
@@ -16,11 +16,11 @@ All three benchmarks sweep the payload size from **1 B** to **16 MiB** with a mu
 
 ---
 
-## What the code does
+## How it works
 
 - Initializes eCAL with `eCAL::Initialize("Benchmark")`, creates a `CPublisher` on `benchmark_topic`, and spawns a receiver thread with a `CSubscriber` on the same topic.
 - **Payload generation:** For each selected size, a `std::vector<char>` is filled with random bytes via `std::mt19937` and `uniform_int_distribution<0,255>`. 
-- **Send benchmark:** In the benchmark loop, `publisher.Send(content_ptr, payload_size)` is invoked; timing is handled by Google Benchmark (`UseRealTime`).  citeturn1search1
+- **Send benchmark:** In the benchmark loop, `publisher.Send(content_ptr, payload_size)` is invoked; timing is handled by Google Benchmark (`UseRealTime`).
 - **Send+Receive benchmark:** Before each iteration, a flag is reset; after `Send`, the code blocks on a condition variable that the subscriber callback sets to signal message arrival.
 - **Receive Latency benchmark:** Timestamps are taken around the blocking wait (`time_start` before waiting; callback stores `time_end`). The iteration time is set to `time_end - time_start` via `state.SetIterationTime(...)` and `UseManualTime`.
 - **Ranges & timing modes:**
@@ -33,7 +33,7 @@ All three benchmarks sweep the payload size from **1 B** to **16 MiB** with a mu
 
 ---
 
-## Configuration & knobs
+## Configuration options
 
 - **Topic name:** `benchmark_topic`  
 - **Registration delay:** 2000 ms before measuring to allow discovery/matching  

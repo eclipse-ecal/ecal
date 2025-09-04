@@ -1,4 +1,4 @@
-# Multi‑Topic Pub/Sub Background‑Load Benchmark (eCAL + Google Benchmark)
+# eCAL Multi‑Topic Pub/Sub Background‑Load Benchmark
 
 This document describes a microbenchmark that measures publish performance on a **foreground topic** while generating configurable **background traffic** on multiple other topics.
 
@@ -15,7 +15,7 @@ For each combination, the foreground publisher emits a payload of the same size 
 
 ---
 
-## Benchmark at a glance
+## Overview
 
 - **Foreground topic**: `benchmark_topic`
 - **Background topics**: `background_topic_{i}` (one publisher + one subscriber per topic)
@@ -40,9 +40,7 @@ For each combination, the foreground publisher emits a payload of the same size 
 
 ---
 
-## Tuning & parameters
-
-Adjust the following constants near the top of the source as needed:
+## Configuration options
 
 - **`registration_delay_ms`** (default: 2000 ms)
 - **`warmup_time_s`** (default: 2 s)

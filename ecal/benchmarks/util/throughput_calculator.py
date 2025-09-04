@@ -55,11 +55,10 @@ for itm in benchmarks:
    try:
       # Get payload size (in byte) from benchmark name
       payload_size = int(re.search(r'/(\d+)/[a-z]', itm["name"]).group(1))
-      # Get background thread count from benchmark name (if applicable)
+      # Get background thread count from benchmark name (if applicable), default to 1 to account for the main thread
       thread_count = 1
       multi = re.search(r'[a-z]/(\d+)/[0-9]', itm["name"])
       if multi:
-         # Adding 1 to account for the main thread
          thread_count += int(multi.group(1))
       # Get time taken. Expecting time in nanoseconds
       real_time_ns = float(itm["real_time"])
