@@ -35,7 +35,7 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   connect(ui_.command_request_button,    &QPushButton::clicked,                 this,                   &EcalrecGuiClient::commandRequest);
   connect(ui_.get_state_request_button,  &QPushButton::clicked,                 this,                   &EcalrecGuiClient::getStateRequest);
   connect(ui_.response_clear_button,     &QPushButton::clicked,                 ui_.response_texteedit, &QTextEdit::clear);
-  connect(this,                          &EcalrecGuiClient::setResponseSignal,  ui_.response_texteedit, &QTextEdit::setText                   ,Qt::ConnectionType::QueuedConnection);
+  connect(this,                          &EcalrecGuiClient::setResponseSignal,  ui_.response_texteedit, &QTextEdit::append                   ,Qt::ConnectionType::QueuedConnection);
 
   recorder_service_poll_timer_ = new QTimer(this);
   connect(recorder_service_poll_timer_, &QTimer::timeout, this,
@@ -226,8 +226,11 @@ void EcalrecGuiClient::getStateRequest()
 template <typename RequestT>
 void EcalrecGuiClient::callService(const std::string& method, const RequestT& request)
 {
-  auto client_instances = recorder_service_.GetClientInstances();
+  // Clear the response text edit
+  ui_.response_texteedit->clear();
 
+  // Iterate over all client instances and call the service on the checked ones
+  auto client_instances = recorder_service_.GetClientInstances();
   for (auto& instance : client_instances)
   {
     // check if we need to call this instance
@@ -270,6 +273,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
       eCAL::pb::rec_client::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
 
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -279,6 +283,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
       eCAL::pb::rec_client::State response;
       response.ParseFromString(service_response_.response);
 
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -287,6 +292,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -298,6 +304,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
   {
     eCAL::pb::rec_client::Response response;
     response.ParseFromString(service_response_.response);
+    response_stream << "------------------------------------------------\n";
     response_stream << "RecorderService " << method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
