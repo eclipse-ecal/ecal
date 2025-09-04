@@ -52,6 +52,7 @@ public:
     UNIT_NAME,
     PROCESS_ID,
     SERVICE_NAME,
+    SERVICE_ID,
     STYPE,
     TCP_PORT,
     METHOD_NAME,
@@ -103,6 +104,10 @@ public:
       else if (column == Columns::SERVICE_NAME)
       {
         return service_.service_name().c_str();
+      }
+      else if (column == Columns::SERVICE_ID)
+      {
+        return service_.service_id().c_str();
       }
       else if (column == Columns::STYPE)
       {
