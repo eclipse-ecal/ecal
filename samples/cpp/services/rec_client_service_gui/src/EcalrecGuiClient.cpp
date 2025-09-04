@@ -364,7 +364,7 @@ void EcalrecGuiClient::updateClientListTreeWidget()
       item->setData(0, Qt::ItemDataRole::CheckStateRole, Qt::CheckState::Unchecked);
       item->setData(0, Qt::ItemDataRole::DisplayRole, QString::fromStdString(instance.GetClientID().host_name));
       item->setData(1, Qt::ItemDataRole::DisplayRole, instance.GetClientID().process_id);
-      item->setData(2, Qt::ItemDataRole::DisplayRole, instance.GetClientID().entity_id);
+      item->setData(2, Qt::ItemDataRole::DisplayRole, static_cast<qulonglong>(instance.GetClientID().entity_id));
 
       ui_.client_list_tree_widget->addTopLevelItem(item);
     }
