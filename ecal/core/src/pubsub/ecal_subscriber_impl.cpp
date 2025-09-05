@@ -459,27 +459,31 @@ namespace eCAL
       return 0;
     }
 
-    // store receive layer
-    m_layers.udp.active |= layer_ == tl_ecal_udp;
-    m_layers.shm.active |= layer_ == tl_ecal_shm;
-    m_layers.tcp.active |= layer_ == tl_ecal_tcp;
+    // fields that are protected with mutex that are also used in GetRegistrationSample
+    {
+      const std::lock_guard<std::mutex> lock(m_state_mutex);
+      // store receive layer
+      m_layers.udp.active |= layer_ == tl_ecal_udp;
+      m_layers.shm.active |= layer_ == tl_ecal_shm;
+      m_layers.tcp.active |= layer_ == tl_ecal_tcp;
+      
+      // increase read clock
+      m_clock++;
+
+      // store size
+      m_topic_size = size_;
+    }
 
 #ifndef NDEBUG
     // log it
     Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
 #endif
 
-    // increase read clock
-    m_clock++;
-
     TriggerMessageDropUdate(publication_info, clock_);
     TriggerFrequencyUpdate();
 
     // reset timeout
     m_receive_time = 0;
-
-    // store size
-    m_topic_size = size_;
 
     // execute callback
     bool processed = false;
@@ -593,54 +597,61 @@ namespace eCAL
     auto& ecal_reg_sample_topic                = ecal_reg_sample.topic;
     ecal_reg_sample_topic.shm_transport_domain = m_attributes.shm_transport_domain;
     ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
-    // topic_information
+    
+
+    // fields that need to be protected with mutex, as they are used in ApplySample too
     {
+      const std::lock_guard<std::mutex> lock(m_state_mutex);
+      ecal_reg_sample_topic.data_clock = m_clock;
+      ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
+
+      // topic_information
+    
       auto& ecal_reg_sample_tdatatype      = ecal_reg_sample_topic.datatype_information;
       ecal_reg_sample_tdatatype.encoding   = m_topic_info.encoding;
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
-    }
-    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
+    
 
 #if ECAL_CORE_TRANSPORT_UDP
-    // udp multicast layer
-    {
-      Registration::TLayer udp_tlayer;
-      udp_tlayer.type      = tl_ecal_udp;
-      udp_tlayer.version   = ecal_transport_layer_version;
-      udp_tlayer.enabled   = m_layers.udp.read_enabled;
-      udp_tlayer.active    = m_layers.udp.active;
-      ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
-    }
+      // udp multicast layer
+      {
+        Registration::TLayer udp_tlayer;
+        udp_tlayer.type      = tl_ecal_udp;
+        udp_tlayer.version   = ecal_transport_layer_version;
+        udp_tlayer.enabled   = m_layers.udp.read_enabled;
+        udp_tlayer.active    = m_layers.udp.active;
+        ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
+      }
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
-    // shm layer
-    {
-      Registration::TLayer shm_tlayer;
-      shm_tlayer.type      = tl_ecal_shm;
-      shm_tlayer.version   = ecal_transport_layer_version;
-      shm_tlayer.enabled   = m_layers.shm.read_enabled;
-      shm_tlayer.active    = m_layers.shm.active;
-      ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
-    }
+      // shm layer
+      {
+        Registration::TLayer shm_tlayer;
+        shm_tlayer.type      = tl_ecal_shm;
+        shm_tlayer.version   = ecal_transport_layer_version;
+        shm_tlayer.enabled   = m_layers.shm.read_enabled;
+        shm_tlayer.active    = m_layers.shm.active;
+        ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
+      }
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
-    // tcp layer
-    {
-      Registration::TLayer tcp_tlayer;
-      tcp_tlayer.type      = tl_ecal_tcp;
-      tcp_tlayer.version   = ecal_transport_layer_version;
-      tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-      tcp_tlayer.active    = m_layers.tcp.active;
-      ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
-    }
+      // tcp layer
+      {
+        Registration::TLayer tcp_tlayer;
+        tcp_tlayer.type      = tl_ecal_tcp;
+        tcp_tlayer.version   = ecal_transport_layer_version;
+        tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
+        tcp_tlayer.active    = m_layers.tcp.active;
+        ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
+      }
 #endif
+    }
 
     ecal_reg_sample_topic.process_name   = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_clock     = m_clock;
     ecal_reg_sample_topic.data_frequency = GetFrequency();
     ecal_reg_sample_topic.message_drops  = GetMessageDropsAndFireDroppedEvents();
 
