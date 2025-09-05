@@ -21,6 +21,7 @@
  * @brief  eCAL threading helper class
 **/
 
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -105,7 +106,7 @@ namespace eCAL
     std::mutex mtx_;                  /**< Mutex for thread synchronization. */
     std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
     bool stopThread_{ false };          /**< Flag to indicate whether the callback thread should stop. */
-    bool triggerThread_{ false };       /**< Flag to indicate whether the callback thread should be triggered. */
+    std::atomic<bool> triggerThread_{ false };  /**< Flag to indicate whether the callback thread should be triggered. */
 
     /**
      * @brief Callback function that runs in the callback thread.

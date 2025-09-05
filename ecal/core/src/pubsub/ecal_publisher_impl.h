@@ -158,7 +158,7 @@ namespace eCAL
     EventCallbackMapT                      m_event_callback_map;
 
     std::mutex                             m_event_id_callback_mutex;
-    PubEventCallbackT                  m_event_id_callback;
+    PubEventCallbackT                      m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;
@@ -167,16 +167,18 @@ namespace eCAL
     ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
 
 #if ECAL_CORE_TRANSPORT_UDP
-    std::unique_ptr<CDataWriterUdpMC>      m_writer_udp;
+    std::shared_ptr<CDataWriterUdpMC>      m_writer_udp;
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    std::unique_ptr<CDataWriterSHM>        m_writer_shm;
+    std::shared_ptr<CDataWriterSHM>        m_writer_shm;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    std::unique_ptr<CDataWriterTCP>        m_writer_tcp;
+    std::shared_ptr<CDataWriterTCP>        m_writer_tcp;
 #endif
 
     SLayerStates                           m_layers;
     std::atomic<bool>                      m_created;
+
+    std::mutex                             m_state_mutex;
   };
 }
