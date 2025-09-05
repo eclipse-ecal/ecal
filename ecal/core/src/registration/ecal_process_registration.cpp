@@ -49,7 +49,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.process_parameter               = eCAL::Process::GetProcessParameter();
 
   {
-    std::lock_guard<std::mutex> lock(g_process_state_mutex);
+    const std::lock_guard<std::mutex> lock(g_process_state_mutex);
     process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_state.severity);
     process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_state.severity_level);
     process_sample_process.state.info           = g_process_state.info;
