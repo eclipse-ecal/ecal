@@ -18,7 +18,7 @@
 */
 
 /**
- * @brief  Definition of custom data types.
+ * @brief  Definition of types and functions to be used when working with atomic variables.
 **/
 
 #pragma once
@@ -34,9 +34,9 @@ namespace eCAL
     {
       using StringSPtr = std::shared_ptr<std::string>;
 
-      void Update(Atomic::StringSPtr& atomic_string_, const std::string& new_value_);
+      void Store(StringSPtr& atomic_string_, const std::string& new_value_);
 
-      std::string Read(const Atomic::StringSPtr& atomic_string_);
+      std::string Load(const StringSPtr& atomic_string_);
     } // Atomic
   } // Types
 } // eCAL

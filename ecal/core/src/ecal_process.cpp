@@ -283,7 +283,7 @@ namespace eCAL
     {
       g_process_severity.store(severity_, std::memory_order_release);
       g_process_severity_level.store(level_, std::memory_order_release);
-      Types::Atomic::Update(g_process_info, info_);
+      Types::Atomic::Store(g_process_info, info_);
     }
   }
 }

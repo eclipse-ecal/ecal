@@ -25,12 +25,12 @@ namespace eCAL
   {
     namespace Atomic
     {    
-      void Update(StringSPtr& atomic_string_, const std::string& new_value_)
+      void Store(StringSPtr& atomic_string_, const std::string& new_value_)
       {
         std::atomic_store(&atomic_string_, std::make_shared<std::string>(new_value_));
       }
 
-      std::string Read(const StringSPtr& atomic_string_)
+      std::string Load(const StringSPtr& atomic_string_)
       {
         auto ptr = std::atomic_load(&atomic_string_);
         return ptr ? *ptr : std::string{};
