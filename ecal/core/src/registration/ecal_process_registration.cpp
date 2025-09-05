@@ -47,9 +47,13 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.process_name         = eCAL::Process::GetProcessName();
   process_sample_process.unit_name            = eCAL::Process::GetUnitName();
   process_sample_process.process_parameter               = eCAL::Process::GetProcessParameter();
-  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
-  process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-  process_sample_process.state.info           = g_process_info;
+
+  {
+    std::lock_guard<std::mutex> lock(g_process_state_mutex);
+    process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_state.severity);
+    process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_state.severity_level);
+    process_sample_process.state.info           = g_process_state.info;
+  }
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {

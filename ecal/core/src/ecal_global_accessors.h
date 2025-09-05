@@ -22,12 +22,13 @@
 **/
 
 #pragma once
-#include <atomic>
+
+#include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
-#include <memory>
 
-#include <ecal/process_severity.h>
+#include "ecal/types/process.h"
 
 // Forward declaration of global accessible classes
 namespace eCAL
@@ -113,8 +114,7 @@ namespace eCAL
   extern std::string                   g_process_par;
   extern int                           g_process_id;
   extern std::string                   g_process_id_s;
-  extern std::string                   g_process_info;
 
-  extern eCAL::Process::eSeverity        g_process_severity;
-  extern eCAL::Process::eSeverityLevel  g_process_severity_level;
+  extern Types::Process::SProcessState g_process_state;
+  extern std::mutex                    g_process_state_mutex;
 }
