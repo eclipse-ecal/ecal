@@ -45,10 +45,9 @@ namespace eCAL
   std::string                   g_process_par;
   int                           g_process_id(0);
   std::string                   g_process_id_s;
-  std::string                   g_process_info;
 
-  eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
-  eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
+  Types::Process::SProcessState g_process_state;
+  std::mutex                    g_process_state_mutex;
 
   void SetGlobalUnitName(const char *unit_name_)
   {
