@@ -34,9 +34,23 @@ namespace eCAL
     {
       using StringSPtr = std::shared_ptr<std::string>;
 
-      void Store(StringSPtr& atomic_string_, const std::string& new_value_);
+      /**
+       * @brief This functions stores atomically a new value
+       *        by creating a new shared pointer for the variable.
+       * 
+       * @param string_sptr_ String shared pointer
+       * @param new_value_   Value to be set into the shared pointer
+       */
+      void Store(StringSPtr& string_sptr_, const std::string& new_value_);
 
-      std::string Load(const StringSPtr& atomic_string_);
+      /**
+       * @brief This functions loads atomically values out of a shared pointer.
+       * 
+       * @param string_sptr_ String shared pointer
+       * 
+       * @returns Copy of the value of the shared pointer as std::string.
+       */
+      std::string Load(const StringSPtr& string_sptr_);
     } // Atomic
   } // Types
 } // eCAL
