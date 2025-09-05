@@ -97,6 +97,7 @@ set(ecal_config_src
     src/config/configuration.cpp
     src/config/ecal_path_processing.cpp
     src/config/ecal_path_processing.h
+    src/types/atomics.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -716,6 +717,7 @@ endif()
 target_link_libraries(${TARGET_NAME}
   PRIVATE
     ecaludp::ecaludp
+    atomic
 )
 
 target_include_directories(${TARGET_NAME}

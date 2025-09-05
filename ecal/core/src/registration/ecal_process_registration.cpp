@@ -46,10 +46,10 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
   process_sample_process.process_name         = eCAL::Process::GetProcessName();
   process_sample_process.unit_name            = eCAL::Process::GetUnitName();
-  process_sample_process.process_parameter               = eCAL::Process::GetProcessParameter();
-  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity);
-  process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level);
-  process_sample_process.state.info           = g_process_info;
+  process_sample_process.process_parameter    = eCAL::Process::GetProcessParameter();
+  process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_severity.load(std::memory_order_acquire));
+  process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_severity_level.load(std::memory_order_acquire));
+  process_sample_process.state.info           = Types::Atomic::Read(g_process_info);
 #if ECAL_CORE_TIMEPLUGIN
   if (g_timegate() == nullptr)
   {

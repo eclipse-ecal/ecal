@@ -28,27 +28,26 @@
 #include "ecal_globals.h"
 #include "ecal_utils/filesystem.h"
 
-#include <atomic>
 #include <string>
 
 namespace eCAL
 {
-  std::unique_ptr<CGlobals>     g_globals_ctx(nullptr);
+  std::unique_ptr<CGlobals>          g_globals_ctx(nullptr);
 
-  std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
-  Configuration                 g_ecal_configuration{};
+  std::string                        g_default_ini_file(ECAL_DEFAULT_CFG);
+  Configuration                      g_ecal_configuration{};
 
-  std::string                   g_host_name;
-  std::string                   g_unit_name;
+  std::string                        g_host_name;
+  std::string                        g_unit_name;
   
-  std::string                   g_process_name;
-  std::string                   g_process_par;
-  int                           g_process_id(0);
-  std::string                   g_process_id_s;
-  std::string                   g_process_info;
+  std::string                        g_process_name;
+  std::string                        g_process_par;
+  int                                g_process_id(0);
+  std::string                        g_process_id_s;
+  Types::Atomic::StringSPtr          g_process_info;
 
-  eCAL::Process::eSeverity        g_process_severity(eCAL::Process::eSeverity::unknown);
-  eCAL::Process::eSeverityLevel  g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
+  std::atomic<eCAL::Process::eSeverity>        g_process_severity(eCAL::Process::eSeverity::unknown);
+  std::atomic<eCAL::Process::eSeverityLevel>   g_process_severity_level(eCAL::Process::eSeverityLevel::level1);
 
   void SetGlobalUnitName(const char *unit_name_)
   {

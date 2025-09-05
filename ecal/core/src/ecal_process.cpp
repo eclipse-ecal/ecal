@@ -281,9 +281,9 @@ namespace eCAL
 
     void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_)
     {
-      g_process_severity = severity_;
-      g_process_severity_level = level_;
-      g_process_info = info_;
+      g_process_severity.store(severity_, std::memory_order_release);
+      g_process_severity_level.store(level_, std::memory_order_release);
+      Types::Atomic::Update(g_process_info, info_);
     }
   }
 }

@@ -28,6 +28,7 @@
 #include <memory>
 
 #include <ecal/process_severity.h>
+#include <types/atomics.h>
 
 // Forward declaration of global accessible classes
 namespace eCAL
@@ -69,6 +70,9 @@ namespace eCAL
 
   void SetGlobalUnitName(const char *unit_name_);
 
+  void InitializeGlobals();
+  void FinalizeGlobals();
+
   // Declaration of getter functions for globally accessible variable instances
   CGlobals*               g_globals();
   Logging::CLogReceiver*  g_log_udp_receiver();
@@ -101,20 +105,20 @@ namespace eCAL
 #endif
 
   // declaration of globally accessible variables
-  extern std::unique_ptr<CGlobals>     g_globals_ctx;
+  extern std::unique_ptr<CGlobals>                   g_globals_ctx;
 
-  extern std::string                   g_default_ini_file;
-  extern Configuration                 g_ecal_configuration;
+  extern std::string                                 g_default_ini_file;
+  extern Configuration                               g_ecal_configuration;
 
-  extern std::string                   g_host_name;
-  extern std::string                   g_unit_name;
+  extern std::string                                 g_host_name;
+  extern std::string                                 g_unit_name;
 
-  extern std::string                   g_process_name;
-  extern std::string                   g_process_par;
-  extern int                           g_process_id;
-  extern std::string                   g_process_id_s;
-  extern std::string                   g_process_info;
+  extern std::string                                 g_process_name;
+  extern std::string                                 g_process_par;
+  extern int                                         g_process_id;
+  extern std::string                                 g_process_id_s;
+  extern Types::Atomic::StringSPtr                   g_process_info;
 
-  extern eCAL::Process::eSeverity        g_process_severity;
-  extern eCAL::Process::eSeverityLevel  g_process_severity_level;
+  extern std::atomic<eCAL::Process::eSeverity>       g_process_severity;
+  extern std::atomic<eCAL::Process::eSeverityLevel>  g_process_severity_level;
 }
