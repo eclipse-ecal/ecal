@@ -281,9 +281,10 @@ namespace eCAL
 
     void SetState(eCAL::Process::eSeverity severity_, eCAL::Process::eSeverityLevel level_, const std::string& info_)
     {
-      g_process_severity = severity_;
-      g_process_severity_level = level_;
-      g_process_info = info_;
+      const std::lock_guard<std::mutex> lock(g_process_state_mutex);
+      g_process_state.severity = severity_;
+      g_process_state.severity_level = level_;
+      g_process_state.info = info_;
     }
   }
 }
