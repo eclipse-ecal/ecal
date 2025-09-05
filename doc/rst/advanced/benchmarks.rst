@@ -6,9 +6,12 @@
 eCAL performance benchmarks
 ===========================
 
-eCAL includes performance benchmarks based on the Google Benchmark framework. To build them, set ``-DECAL_THIRDPARTY_BUILD_BENCHMARK`` and ``-DECAL_BUILD_BENCHMARKS`` to ``ON``. The applications are named ``ecal_benchmark_<type>``.
+eCAL includes performance benchmarks based on the Google Benchmark framework.
+To build them, set ``ECAL_THIRDPARTY_BUILD_BENCHMARK`` and ``ECAL_BUILD_BENCHMARKS`` to ``ON``.
+The applications are named ``ecal_benchmark_<type>``.
 
-The performance benchmarks are also executed automatically for each commit on the master branch of the `GitHub repository <https://github.com/eclipse-ecal/ecal>`. These results can be found on `Bencher <https://bencher.dev/console/projects/ecal/plots>`.
+The performance benchmarks are also executed automatically on GitHub runners for each commit on the master branch of the `GitHub repository <https://github.com/eclipse-ecal/ecal>`.
+These results can be found on `Bencher <https://bencher.dev/console/projects/ecal/plots>`.
 
 Currently, the benchmarks focus mostly on publisher-subscriber performance via shared memory.
 
@@ -40,16 +43,16 @@ Current benchmark set
 | BM_eCAL_Send_Double_Buffer    | 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
 |                               | 16,777,216           |                   |                                   | Double Buffer mode active     |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
-| BM_eCAL_Send_Zero_Copy_Handsha| 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
-| ke                            | 16,777,216           |                   |                                   | Zero Copy and Handshake mode  |
+| BM_eCAL_Send_Zero_Copy_       | 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
+| Handshake                     | 16,777,216           |                   |                                   | Zero Copy and Handshake mode  |
 |                               |                      |                   |                                   | active                        |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
 | BM_eCAL_Send_Zero_Copy_Double_| 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish u message with|
 | Buffer                        | 16,777,216           |                   |                                   | Zero Copy and Double Buffer   |
 |                               |                      |                   |                                   | mode active                   |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
-| BM_eCAL_Send_Double_Buffer_Han| 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
-| dshake                        | 16,777,216           |                   |                                   | Double Buffer and Handshake   |
+| BM_eCAL_Send_Double_Buffer_   | 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
+| Handshake                     | 16,777,216           |                   |                                   | Double Buffer and Handshake   |
 |                               |                      |                   |                                   | mode active                   |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
 | BM_eCAL_Send_Zero_Copy_Double_| 1; 64; 4096; 262,144;|                   | Yes                               | Time to publish a message with|
@@ -66,8 +69,8 @@ Current benchmark set
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
 | BM_eCAL_Initialize            |                      |                   |                                   | Time to initialize eCAL       |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
-| BM_eCAL_Initialize_and_Finaliz|                      |                   |                                   | Time to initialize and        |
-| e                             |                      |                   |                                   | finalize eCAL                 |
+| BM_eCAL_Initialize_and_       |                      |                   |                                   | Time to initialize and        |
+| Finalize                      |                      |                   |                                   | finalize eCAL                 |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
 | BM_eCAL_Publisher_Creation    |                      |                   |                                   | Time to create a publisher    |
 |                               |                      |                   |                                   | object                        |
@@ -78,3 +81,16 @@ Current benchmark set
 | BM_eCAL_Registration_Delay    |                      |                   |                                   | Time until a new object is    |
 |                               |                      |                   |                                   | registered via eCAL           |
 +-------------------------------+----------------------+-------------------+-----------------------------------+-------------------------------+
+
+.. note::
+   The full name of a benchmark as it shows up in the results is ``<benchmark name>/<optional variants>/<optional benchmark configurations>``,
+   e.g. ``BM_eCAL_Send/262144/real_time``, ``BM_eCAL_Multi_Send/8/4096/min_warmup_time:2.000/real_time`` or ``BM_eCAL_Ping``.
+
+
+-------------------------------
+Performance regression analysis
+-------------------------------
+
+`Bencher <https://bencher.dev/console/projects/ecal/plots>` also scans for statistically significant performance regression in benchmark results via so-called `Thresholds <https://bencher.dev/docs/explanation/thresholds/>`.
+A threshold with a t-test for an alpha value of 0.5% is active on all benchmarks. The current limit can be seen by activating the upper boundary in the performance plot view.
+So-called Alerts are generated should a result cross this limit, they are indicated via an icon in the performance plot.
