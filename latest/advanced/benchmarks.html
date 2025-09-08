@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>1. Introduction &#8212; Eclipse eCAL™</title>
+    <title>eCAL performance benchmarks &#8212; Eclipse eCAL™</title>
   
   
   
@@ -46,7 +46,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started/introduction';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'advanced/benchmarks';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
@@ -56,8 +56,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2. Installing eCAL" href="setup.html" />
-    <link rel="prev" title="Welcome to Eclipse eCAL™" href="../index.html" />
+    <link rel="next" title="How eCAL relates to ROS" href="ros_comparison.html" />
+    <link rel="prev" title="eCAL Measurement Format" href="measurement_format.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -197,39 +197,39 @@ document.write(`
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">2. Installing eCAL</a></li>
-<li class="toctree-l1"><a class="reference internal" href="samples.html">3. eCAL Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="network.html">4. Network configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="services.html">5. eCAL Services</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="monitor.html">6.1.  Monitor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recorder.html">6.2.  Recorder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="player.html">6.3.  Player</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sys.html">6.4.  Sys</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/setup.html">2. Installing eCAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/samples.html">3. eCAL Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/network.html">4. Network configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/services.html">5. eCAL Services</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/applications.html">6. Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/monitor.html">6.1.  Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/recorder.html">6.2.  Recorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/player.html">6.3.  Player</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="howto.html">7. HowTo: Writing eCAL Sample Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="howto/setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="howto/setup/cpp.html">7.1.1. C/C++ Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/setup/python.html">7.1.2. Python Setup</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/howto.html">7. HowTo: Writing eCAL Sample Applications</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/howto/setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/setup/cpp.html">7.1.1. C/C++ Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/setup/python.html">7.1.2. Python Setup</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="howto/pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/binary_blob.html">7.2.1. Binary: Blob</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/string_hello_world.html">7.2.2. String: Hello World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/protobuf_person.html">7.2.3. Protobuf: Person</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/pubsub/flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/howto/pubsub.html">7.2. Pubsub: Publisher &amp; Subscriber</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/pubsub/binary_blob.html">7.2.1. Binary: Blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/pubsub/string_hello_world.html">7.2.2. String: Hello World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/pubsub/protobuf_person.html">7.2.3. Protobuf: Person</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/pubsub/capnproto_addressbook.html">7.2.4. Cap’n Proto: AddressBook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/pubsub/flatbuffers_monster.html">7.2.5. FlatBuffers: Monster</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="howto/clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
-<li class="toctree-l3"><a class="reference internal" href="howto/clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../getting_started/howto/clientserver.html">7.3. Service: Client &amp; Server</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/clientserver/binary_mirror.html">7.3.1. Binary: Mirror</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/howto/clientserver/protobuf_math.html">7.3.2. Protobuf: Math</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="howto/configuration.html">7.4. Runtime Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/howto/configuration.html">7.4. Runtime Configuration</a></li>
 </ul>
 </details></li>
 </ul>
@@ -438,7 +438,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../versions/ecal_versions.html">eCAL Versions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../versions/compatibility.html">eCAL Compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../versions/6.0/whats_new.html">eCAL 6.0</a></li>
@@ -452,31 +452,31 @@ document.write(`
 </details></li>
 <li class="toctree-l1"><a class="reference external" href="https://eclipse-ecal.github.io/ecal/releases/">Downloads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../versions/6.0/migration_guide.html">eCAL 6 Migration Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../advanced/tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/documentation.html">Edit the documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/ecal_in_docker.html">eCAL in Docker</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Edit the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecal_in_docker.html">eCAL in Docker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../development/building_ecal_with_conan_dependencies.html">Building eCAL with Conan dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/rec_distributed_recordings.html">Distributed Recordings with eCAL Rec</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../advanced/ecal_internals.html">eCAL internals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/performance.html">Performance measurements</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../advanced/transport_layers.html">Transport Layers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../advanced/layers/shm.html">eCAL SHM Layer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../advanced/layers/shm_zerocopy.html">eCAL Zero Copy</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="ecal_internals.html">eCAL internals</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="performance.html">Performance measurements</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="transport_layers.html">Transport Layers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="layers/shm.html">eCAL SHM Layer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="layers/shm_zerocopy.html">eCAL Zero Copy</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../advanced/layers/udp_mc.html">eCAL UDP Layer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../advanced/layers/tcp.html">eCAL TCP Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="layers/udp_mc.html">eCAL UDP Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="layers/tcp.html">eCAL TCP Layer</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/message_drops.html">Message Drops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/threading_model.html">Threading model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/measurement_format.html">eCAL Measurement Format</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/benchmarks.html">eCAL performance benchmarks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_drops.html">Message Drops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="threading_model.html">Threading model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="measurement_format.html">eCAL Measurement Format</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">eCAL performance benchmarks</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/ros_comparison.html">How eCAL relates to ROS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ros_comparison.html">How eCAL relates to ROS</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../license.html">License</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../license/ecal_license.html">eCAL License</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../license/thirdparty_licenses.html">External components</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -584,7 +584,7 @@ document.write(`
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/getting_started/introduction.rst" target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/advanced/benchmarks.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -601,7 +601,7 @@ document.write(`
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fgetting_started/introduction.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2Fadvanced/benchmarks.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -631,7 +631,7 @@ document.write(`
       
       
       
-      <li><a href="../_sources/getting_started/introduction.rst" target="_blank"
+      <li><a href="../_sources/advanced/benchmarks.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -702,7 +702,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -713,11 +715,20 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>eCAL performance benchmarks</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-benchmark-set">Current benchmark set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-regression-analysis">Performance regression analysis</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -727,42 +738,183 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="introduction">
-<span id="getting-started-introduction"></span><h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>The <strong>enhanced communication abstraction layer</strong> (eCAL) is a middleware that enables scalable, high performance interprocess communication on a single computer node or between different nodes in a computer network.
-eCAL is designed for typical network computing scenarios where different processes exchange there I/O’s using a publish/subscribe pattern.</p>
-<p>If you have ever worked with other publish subscribe middlewares like <a class="reference external" href="https://en.wikipedia.org/wiki/MQTT">MQTT</a> or <a class="reference external" href="https://www.ros.org/">ROS</a>, you should be familiar with the terminology.
-But just in case you are new to this topic, let us clarify the basic terminology:</p>
-<ul>
-<li><p><strong>eCAL Process / Node</strong>:</p>
-<p>The term eCAL Process (or eCAL node) describes one small entity of your system that offers or consumes data. Typically, this is an executable (or a script) running on a PC.</p>
-</li>
-<li><p><strong>eCAL Topic</strong>:</p>
-<p>eCAL Processes do not sent data directly to the receiver.
-Instead, they offer the data as a <em>topic</em>, which is identified by its name.
-The process is now a <strong>publisher</strong> of that topic.
-Another process that is interested in the data can now <strong>subscribe</strong> to the topic and will automatically receive all messages from it.</p>
-<p>Publishers and subscribers do not have to know anything about each other; the dataflow is entirely managed by eCAL.</p>
-</li>
-</ul>
-<p>Let us look at the following example:</p>
-<img alt="eCAL concept" src="../_images/ecal_concept_notebooks.svg" />
-<p>The image shows two PCs.
-<cite>Proc1</cite> and <cite>Proc2</cite> are running on one PC, while <cite>Proc3</cite> runs on another PC that is connected via Ethernet.</p>
-<p><cite>Proc1</cite> <strong>publishes</strong> <cite>Topic A</cite>. That topic is <strong>subscribed</strong> by <cite>Proc2</cite> and <cite>Proc3</cite>, so both will receive all messages that are sent to that topic.
-<cite>Proc2</cite> also publishes <cite>Topic B</cite>, which is subscribed by <cite>Proc3</cite>, while <cite>Proc3</cite> publishes <cite>Topic C</cite> which is subscribed by <cite>Proc 2</cite>.</p>
-<p>What are the advantages of such a public-subscribe system?</p>
-<ul class="simple">
-<li><p>Components of your system can be implemented independent from each other; they only have to agree on the data format</p></li>
-<li><p>You can add and remove publishers and subscribers, use different versions or replace the publisher with a replay</p></li>
-<li><p>Publishers and subscribers can run on different machines that may even run different operating systems</p></li>
-</ul>
+  <section id="ecal-performance-benchmarks">
+<span id="benchmarks"></span><h1>eCAL performance benchmarks<a class="headerlink" href="#ecal-performance-benchmarks" title="Link to this heading">#</a></h1>
+<p>eCAL includes performance benchmarks based on the Google Benchmark framework.
+To build them, set <code class="docutils literal notranslate"><span class="pre">ECAL_THIRDPARTY_BUILD_BENCHMARK</span></code> and <code class="docutils literal notranslate"><span class="pre">ECAL_BUILD_BENCHMARKS</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code>.
+The applications are named <code class="docutils literal notranslate"><span class="pre">ecal_benchmark_&lt;type&gt;</span></code>.</p>
+<p>The performance benchmarks are also executed automatically on GitHub runners for each commit on the master branch of the <cite>GitHub repository &lt;https://github.com/eclipse-ecal/ecal&gt;</cite>.
+These results can be found on <cite>Bencher &lt;https://bencher.dev/console/projects/ecal/plots&gt;</cite>.</p>
+<p>Currently, the benchmarks focus mostly on publisher-subscriber performance via shared memory.</p>
+<section id="current-benchmark-set">
+<h2>Current benchmark set<a class="headerlink" href="#current-benchmark-set" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Benchmark name</p></th>
+<th class="head"><p>For message size
+of [Bytes]</p></th>
+<th class="head"><p>For background
+thread count of</p></th>
+<th class="head"><p>Calculated frequency (throughput)
+and datarate available</p></th>
+<th class="head"><p>Measurement object</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BM_eCAL_Send</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message</p></td>
+</tr>
+<tr class="row-odd"><td><p>BM_eCAL_Send_and_Receive</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message and
+wait until it has been
+received</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Receive_Latency</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time between publishing and
+receiving a message</p></td>
+</tr>
+<tr class="row-odd"><td><p>BM_eCAL_Send_Zero_Copy</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Zero Copy mode active</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Send_Handshake</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Handshake mode active</p></td>
+</tr>
+<tr class="row-odd"><td><p>BM_eCAL_Send_Double_Buffer</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Double Buffer mode active</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id1"><span class="problematic" id="id2">BM_eCAL_Send_Zero_Copy_</span></a>
+Handshake</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Zero Copy and Handshake mode
+active</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id3"><span class="problematic" id="id4">BM_eCAL_Send_Zero_Copy_Double_</span></a>
+Buffer</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish u message with
+Zero Copy and Double Buffer
+mode active</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id5"><span class="problematic" id="id6">BM_eCAL_Send_Double_Buffer_</span></a>
+Handshake</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Double Buffer and Handshake
+mode active</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id7"><span class="problematic" id="id8">BM_eCAL_Send_Zero_Copy_Double_</span></a>
+Buffer_Handshake</p></td>
+<td><p>1; 64; 4096; 262,144;
+16,777,216</p></td>
+<td></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+Zero Copy, Double Buffer and
+Handshake mode active</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Multi_Send</p></td>
+<td><p>1; 4096; 16,777,216</p></td>
+<td><p>1; 2; 4; 8; 16; 32</p></td>
+<td><p>Yes</p></td>
+<td><p>Time to publish a message with
+active background publishers.
+Frequency and datarate are
+combined values.</p></td>
+</tr>
+<tr class="row-odd"><td><p>BM_eCAL_Ping</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time to receive a response
+from a server as a client</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Initialize</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time to initialize eCAL</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id9"><span class="problematic" id="id10">BM_eCAL_Initialize_and_</span></a>
+Finalize</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time to initialize and
+finalize eCAL</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Publisher_Creation</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time to create a publisher
+object</p></td>
+</tr>
+<tr class="row-odd"><td><p>BM_eCAL_Subscriber_Creation</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time to create a subscriber
+object</p></td>
+</tr>
+<tr class="row-even"><td><p>BM_eCAL_Registration_Delay</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Time until a new object is
+registered via eCAL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>eCAL works entirely decentral. It does not rely on a central broker, like the <em>MQTT Broker</em> or the <em>roscore</em> from ROS1</p>
+<p>The full name of a benchmark as it shows up in the results is <code class="docutils literal notranslate"><span class="pre">&lt;benchmark</span> <span class="pre">name&gt;/&lt;optional</span> <span class="pre">variants&gt;/&lt;optional</span> <span class="pre">benchmark</span> <span class="pre">configurations&gt;</span></code>,
+e.g. <code class="docutils literal notranslate"><span class="pre">BM_eCAL_Send/262144/real_time</span></code>, <code class="docutils literal notranslate"><span class="pre">BM_eCAL_Multi_Send/8/4096/min_warmup_time:2.000/real_time</span></code> or <code class="docutils literal notranslate"><span class="pre">BM_eCAL_Ping</span></code>.</p>
 </div>
-<hr class="docutils" />
-<p>Now, if you think you understood the basic concept, advance to the next section!</p>
+</section>
+<section id="performance-regression-analysis">
+<h2>Performance regression analysis<a class="headerlink" href="#performance-regression-analysis" title="Link to this heading">#</a></h2>
+<p><cite>Bencher &lt;https://bencher.dev/console/projects/ecal/plots&gt;</cite> also scans for statistically significant performance regression in benchmark results via so-called <cite>Thresholds &lt;https://bencher.dev/docs/explanation/thresholds/&gt;</cite>.
+A threshold with a t-test for an alpha value of 0.5% is active on all benchmarks. The current limit can be seen by activating the upper boundary in the performance plot view.
+So-called Alerts are generated should a result cross this limit, they are indicated via an icon in the performance plot.</p>
+</section>
 </section>
 
 
@@ -777,20 +929,20 @@ Another process that is interested in the data can now <strong>subscribe</strong
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../index.html"
+       href="measurement_format.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Welcome to Eclipse eCAL™</p>
+        <p class="prev-next-title">eCAL Measurement Format</p>
       </div>
     </a>
     <a class="right-next"
-       href="setup.html"
+       href="ros_comparison.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">2. </span>Installing eCAL</p>
+        <p class="prev-next-title">How eCAL relates to ROS</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -800,6 +952,22 @@ Another process that is interested in the data can now <strong>subscribe</strong
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-benchmark-set">Current benchmark set</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-regression-analysis">Performance regression analysis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
