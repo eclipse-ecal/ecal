@@ -14,7 +14,7 @@ The eCAL benchmarks measure latency, i.e. time taken to execute certain actions.
 
 > **Note**: The script is tailored to work in the environment of the automated benchmarking routine in the eCAL GitHub repository, so it expects a specific input and produces a specific output, see below.
 
-**Executing the script** Call the script with the `-f` or `--file` parameter and pass the path to the input file. The path can be relative to the python file.
+**Executing the script**: Call the script with the `-f` or `--file` parameter and pass the path to the input file. The path can be relative to the python file.
 
 > **Example**: `throughput_calculator.py -f /path/to/file`
 
@@ -45,7 +45,7 @@ The eCAL benchmarks measure latency, i.e. time taken to execute certain actions.
 
 The script creates a new JSON file with the name of `$name_of_the_input_file$_throughput-calculation.json`. The file contains the calculated values in a structure that them makes them readable by Bencher (bencher.dev), our tool to store and display benchmark results:
 ```
-"$name$" : {
+"$benchmark_name$" : {
    "throughput" : {
       "value" : frequency
    },
