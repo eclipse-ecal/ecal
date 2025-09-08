@@ -599,11 +599,15 @@ namespace eCAL
     ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
     
 
+    SLayerStates current_layer_states;
     // fields that need to be protected with mutex, as they are used in ApplySample too
     {
       const std::lock_guard<std::mutex> lock(m_state_mutex);
       ecal_reg_sample_topic.data_clock = m_clock;
       ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
+
+      current_layer_states = m_layers;
+    }
 
       // topic_information
     
@@ -619,8 +623,8 @@ namespace eCAL
         Registration::TLayer udp_tlayer;
         udp_tlayer.type      = tl_ecal_udp;
         udp_tlayer.version   = ecal_transport_layer_version;
-        udp_tlayer.enabled   = m_layers.udp.read_enabled;
-        udp_tlayer.active    = m_layers.udp.active;
+        udp_tlayer.enabled   = current_layer_states.udp.read_enabled;
+        udp_tlayer.active    = current_layer_states.udp.active;
         ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
       }
 #endif
@@ -631,8 +635,8 @@ namespace eCAL
         Registration::TLayer shm_tlayer;
         shm_tlayer.type      = tl_ecal_shm;
         shm_tlayer.version   = ecal_transport_layer_version;
-        shm_tlayer.enabled   = m_layers.shm.read_enabled;
-        shm_tlayer.active    = m_layers.shm.active;
+        shm_tlayer.enabled   = current_layer_states.shm.read_enabled;
+        shm_tlayer.active    = current_layer_states.shm.active;
         ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
       }
 #endif
@@ -643,12 +647,11 @@ namespace eCAL
         Registration::TLayer tcp_tlayer;
         tcp_tlayer.type      = tl_ecal_tcp;
         tcp_tlayer.version   = ecal_transport_layer_version;
-        tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-        tcp_tlayer.active    = m_layers.tcp.active;
+        tcp_tlayer.enabled   = current_layer_states.tcp.read_enabled;
+        tcp_tlayer.active    = current_layer_states.tcp.active;
         ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
       }
 #endif
-    }
 
     ecal_reg_sample_topic.process_name   = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
