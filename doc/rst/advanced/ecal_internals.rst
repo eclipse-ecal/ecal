@@ -10,4 +10,5 @@ eCAL internals
    message_drops
    threading_model
    measurement_format
+   benchmarks
    
