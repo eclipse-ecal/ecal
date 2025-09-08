@@ -92,9 +92,8 @@ namespace eCAL
     void trigger()
     {
       {
-        const std::unique_lock<std::mutex> lock(mtx_);
         // Set the flag to signal the callback thread to trigger
-        triggerThread_ = true;
+        triggerThread_.store(true, std::memory_order_relaxed);
         // Notify the callback thread to wake up and check the flag
         cv_.notify_one();
       }
@@ -129,9 +128,9 @@ namespace eCAL
               break;
             }
 
-            if (triggerThread_) {
+            if (triggerThread_.load(std::memory_order_relaxed)) {
               // If the triggerThread flag is true, reset it and proceed
-              triggerThread_ = false;
+              triggerThread_.store(false, std::memory_order_relaxed);
             }
           }
         }
