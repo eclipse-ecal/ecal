@@ -185,6 +185,8 @@ namespace eCAL
     // did we write anything
     bool written(false);
 
+    auto current_state = getWriterStateSnapshot();
+
     ////////////////////////////////////////////////////////////////////////////
     // SHM
     ////////////////////////////////////////////////////////////////////////////
@@ -195,47 +197,42 @@ namespace eCAL
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM");
 #endif
-
       // send it
       bool shm_sent(false);
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len = payload_buf_size;
-        wattr.hash = snd_hash;
-        wattr.time = time_;
-        wattr.zero_copy = m_attributes.shm.zero_copy_mode;
+        wattr.len                    = payload_buf_size;
+        wattr.hash                   = snd_hash;
+        wattr.time                   = time_;
+        wattr.zero_copy              = m_attributes.shm.zero_copy_mode;
         wattr.acknowledge_timeout_ms = m_attributes.shm.acknowledge_timeout_ms;
 
+        wattr.clock = current_state.clock;
+        wattr.id    = current_state.id;
+
+        // prepare send
+        if (writer_shm->PrepareWrite(wattr))
         {
-          const std::lock_guard<std::mutex> lock(m_state_mutex);
-          wattr.clock = m_clock;
-          wattr.id = m_id;
+          // register new to update listening subscribers and rematch
+          Register();
+          Process::SleepMS(5);
         }
 
-        
-          // prepare send
-          if (writer_shm->PrepareWrite(wattr))
-          {
-            // register new to update listening subscribers and rematch
-            Register();
-            Process::SleepMS(5);
-          }
-
-          // we are the only active layer, and we support zero copy -> we do a zero copy write via payload
-          if (allow_zero_copy)
-          {
-            // write to shm layer (write content into the opened memory file without additional copy)
-            shm_sent = writer_shm->Write(payload_, wattr);
-          }
-          // multiple layer are active -> we make a copy and use that one
-          else
-          {
-            // wrap the buffer into a payload object
-            CBufferPayloadWriter payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
-            // write to shm layer (write content into the opened memory file without additional copy)
-            shm_sent = writer_shm->Write(payload_buf, wattr);
-          }
+        // we are the only active layer, and we support zero copy -> we do a zero copy write via payload
+        if (allow_zero_copy)
+        {
+          // write to shm layer (write content into the opened memory file without additional copy)
+          shm_sent = writer_shm->Write(payload_, wattr);
+        }
+        // multiple layer are active -> we make a copy and use that one
+        else
+        {
+          // wrap the buffer into a payload object
+          CBufferPayloadWriter payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
+          // write to shm layer (write content into the opened memory file without additional copy)
+          shm_sent = writer_shm->Write(payload_buf, wattr);
+        }
 
         m_layers.shm.active = true;
       }
@@ -270,16 +267,13 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len = payload_buf_size;
-        wattr.hash = snd_hash;
-        wattr.time = time_;
+        wattr.len      = payload_buf_size;
+        wattr.hash     = snd_hash;
+        wattr.time     = time_;
         wattr.loopback = m_attributes.loopback;
 
-        {
-          const std::lock_guard<std::mutex> lock(m_state_mutex);
-          wattr.clock = m_clock;
-          wattr.id = m_id;
-        }
+        wattr.clock    = current_state.clock;
+        wattr.id       = current_state.id;
 
         // prepare send
         if (writer_udp->PrepareWrite(wattr))
@@ -324,15 +318,12 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len = payload_buf_size;
-        wattr.hash = snd_hash;
-        wattr.time = time_;
+        wattr.len   = payload_buf_size;
+        wattr.hash  = snd_hash;
+        wattr.time  = time_;
 
-        {
-          const std::lock_guard<std::mutex> lock(m_state_mutex);
-          wattr.clock = m_clock;
-          wattr.id = m_id;
-        }
+        wattr.clock = current_state.clock;
+        wattr.id    = current_state.id;
 
         // write to tcp layer
         tcp_sent = writer_tcp->Write(m_payload_buffer.data(), wattr);
