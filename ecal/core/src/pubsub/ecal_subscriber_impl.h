@@ -183,5 +183,7 @@ namespace eCAL
     std::atomic<bool>                         m_created;
 
     eCAL::eCALReader::SAttributes             m_attributes;
+
+    std::mutex                                m_state_mutex;
   };
 }

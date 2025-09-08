@@ -242,7 +242,7 @@ namespace eCAL
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))    monitoring_instance->Start();
 #endif
     initialized =  true;
-    components  |= components_;
+    components.fetch_or(components_, std::memory_order_relaxed);
 
     return new_initialization;
   }

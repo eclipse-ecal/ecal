@@ -166,13 +166,17 @@ namespace eCAL
       // add client registrations
       if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(m_send_thread_sample_list);
 #endif
-
-      // append applied samples list to sample list
-      if (!m_applied_sample_list.empty())
       {
+        // append applied samples list to sample list
+
+        // Lock the applied sample list before checking or copying to avoid race conditions
+        // Sanitizers reported potential data races if empty() is called outside the lock
         const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        std::copy(m_applied_sample_list.begin(), m_applied_sample_list.end(), std::back_inserter(m_send_thread_sample_list));
-        m_applied_sample_list.clear();
+        if (!m_applied_sample_list.empty())
+        {
+          std::copy(m_applied_sample_list.begin(), m_applied_sample_list.end(), std::back_inserter(m_send_thread_sample_list));
+          m_applied_sample_list.clear();
+        }
       }
 
       // send collected registration sample list
