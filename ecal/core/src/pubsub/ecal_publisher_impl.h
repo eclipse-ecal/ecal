@@ -189,7 +189,7 @@ namespace eCAL
 
     inline WriterStateSnapshot getWriterStateSnapshot()
     {
-      std::lock_guard<std::mutex> lock(m_state_mutex);
+      const std::lock_guard<std::mutex> lock(m_state_mutex);
       return { m_clock, m_id };
     }
   };
