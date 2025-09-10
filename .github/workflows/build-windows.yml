@@ -344,6 +344,46 @@ jobs:
       shell: pwsh
         
     #---------------------------------------------------------------------------------------------------
+    
+  assess-runner-performance:
+    runs-on: windows-2022
+    #needs: run-benchmarks
+    
+    env:
+      OS_VERSION: windows-2022
+    
+    steps:
+    - name: Install Bencher CLI
+      run: |
+        powershell -c "irm https://bencher.dev/download/install-cli.ps1 | iex"
+      shell: pwsh
+        
+    - name: Fetch 7z-Score Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            ecal/benchmarks/util/7z_score.py
+        sparse-checkout-cone-mode: false
+
+    - name: Run 7zip Benchmark
+      run: |
+        python ecal/benchmarks/util/7z_score.py
+      working-directory: ${{ github.workspace }}
+      shell: cmd
+    
+    - name: Log Result with Bencher
+      run: |
+        bencher run `
+        --project ecal `
+        --token '${{secrets.BENCHER_API_TOKEN}}' `
+        --branch '${{ github.ref_name }}' `
+        --testbed '${{ env.OS_VERSION }}' `
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' `
+        --adapter json `
+        --file ${{ github.workspace }}/7z_score.json
+      shell: pwsh
+    
+    #---------------------------------------------------------------------------------------------------
 
   sign-windows-installer:
     if: github.repository == 'eclipse-ecal/ecal'
