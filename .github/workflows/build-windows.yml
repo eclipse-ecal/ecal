@@ -365,7 +365,7 @@ jobs:
             ecal/benchmarks/util/7z_score.py
         sparse-checkout-cone-mode: false
 
-    - name: Run 7zip Benchmark
+    - name: Run 7-Zip Benchmark
       run: |
         python ecal/benchmarks/util/7z_score.py
       working-directory: ${{ github.workspace }}
