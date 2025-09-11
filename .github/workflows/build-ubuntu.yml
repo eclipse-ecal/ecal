@@ -277,7 +277,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
         
   assess-runner-performance:
-    #needs: run-benchmarks
+    needs: run-benchmarks
   
     strategy:
       fail-fast: false

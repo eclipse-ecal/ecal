@@ -347,7 +347,7 @@ jobs:
     
   assess-runner-performance:
     runs-on: windows-2022
-    #needs: run-benchmarks
+    needs: run-benchmarks
     
     env:
       OS_VERSION: windows-2022
