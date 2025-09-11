@@ -32,4 +32,5 @@ Overview over the sub-folders and which benchmarks are implemented in their sour
    - Subscriber Creation
    - Registration Delay
 - **util**
+   - Python script to run the 7-Zip compression/decompression benchmark and report back the total score
    - Python script to calculate frequency and datarate with the results of a PubSub benchmark

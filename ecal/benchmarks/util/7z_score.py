@@ -4,7 +4,7 @@ import json
 
 # Run 7-Zip benchmark and capture output
 try:
-   output = subprocess.run(["C:/Program Files/7-Zip/7z.exe", "b"], capture_output=True, text=True, check=True)
+   output = subprocess.run(["7z", "b"], capture_output=True, text=True, check=True)
 except FileNotFoundError as e:
    print(f"7-Zip executable not found: {e}")
    exit(1)
