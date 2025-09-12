@@ -1,8 +1,39 @@
-# eCAL Benchmark Throughput Calculation Utility
+# eCAL Benchmark Utility Scripts
 
-This document describes the `throughput_calculator.py` python script.
+This document describes the `7z_score.py` and the `throughput_calculator.py` python scripts.
 
 ---
+
+# 7z-Score Python Script
+
+# Purpose
+
+This is script will run the 7-Zip compression/decompression benchmark and report back the total score. It is made to simply and quickly assess the performance of a given system. In our case, we use it to automatically assess the performance of GitHub runners in the scope of cross-referencing benchmark results from these runners.
+
+---
+
+# How it works
+
+- **Running the 7-Zip Benchmark**: The script calls `7z b` to run the 7-Zip compression/decompression benchmark. To work, 7-Zip must be installed and `7z` known as a path variable.
+- **Extracting the total score**: From the benchmark results, the script takes only the **total score** value (`Tot`), which is the average of the compression and decompression ratings over different dictionary sizes (**higher is better**). Refer to the [7-Zip Documentation](https://documentation.help/7-Zip/bench.htm) for further information.
+- **Output**: Console output of the total score as well as storing it in a JSON file (see below).
+
+---
+
+# Output
+
+The script creates a new JSON file with the name of `7z_score.json`. The file contains the total score value in a structure that makes it readable by Bencher (bencher.dev), our tool to store and display benchmark results:
+```
+"7z_score" : {
+   "score" : {
+      "value" : score
+   }
+}
+```
+
+---
+
+# Throughput Calculator Python Script
 
 # Purpose
 
@@ -43,7 +74,7 @@ The eCAL benchmarks measure latency, i.e. time taken to execute certain actions.
 
 # Output
 
-The script creates a new JSON file with the name of `$name_of_the_input_file$_throughput-calculation.json`. The file contains the calculated values in a structure that them makes them readable by Bencher (bencher.dev), our tool to store and display benchmark results:
+The script creates a new JSON file with the name of `$name_of_the_input_file$_throughput-calculation.json`. The file contains the calculated values in a structure that makes them readable by Bencher (bencher.dev), our tool to store and display benchmark results:
 ```
 "$benchmark_name$" : {
    "throughput" : {

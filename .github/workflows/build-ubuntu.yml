@@ -273,3 +273,44 @@ jobs:
         --github-actions '${{ secrets.GITHUB_TOKEN }}' \
         --adapter json \
         --file ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}_throughput-calculation.json
+        
+    #---------------------------------------------------------------------------------------------------
+        
+  assess-runner-performance:
+    needs: run-benchmarks
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
+
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Install Bencher CLI
+      uses: bencherdev/bencher@main
+        
+    - name: Fetch 7z-Score Python Script
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+            ecal/benchmarks/util/7z_score.py
+        sparse-checkout-cone-mode: false
+
+    - name: Run 7-Zip Benchmark
+      run: |
+        python ecal/benchmarks/util/7z_score.py
+      working-directory: ${{ github.workspace }}
+    
+    - name: Log Result with Bencher
+      run: |
+        bencher run \
+        --project ecal \
+        --token '${{secrets.BENCHER_API_TOKEN}}' \
+        --branch '${{ github.ref_name }}' \
+        --testbed '${{ matrix.os }}' \
+        --github-actions '${{ secrets.GITHUB_TOKEN }}' \
+        --adapter json \
+        --file ${{ github.workspace }}/7z_score.json
+    
+    #---------------------------------------------------------------------------------------------------
