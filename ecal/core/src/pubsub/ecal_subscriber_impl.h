@@ -161,7 +161,7 @@ namespace eCAL
 
     mutable std::mutex                        m_read_buf_mutex;
     std::condition_variable                   m_read_buf_cv;
-    bool                                      m_read_buf_received = false;
+    std::atomic<bool>                         m_read_buf_received;
     std::string                               m_read_buf;
     long long                                 m_read_time = 0;
 

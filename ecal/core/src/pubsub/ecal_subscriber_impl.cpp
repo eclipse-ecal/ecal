@@ -72,6 +72,7 @@ namespace eCAL
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
                  m_topic_info(topic_info_),
                  m_topic_size(0),
+                 m_read_buf_received(false),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
@@ -133,25 +134,28 @@ namespace eCAL
 
   bool CSubscriberImpl::Read(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ms_ /* = 0 */)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
     std::unique_lock<std::mutex> read_buffer_lock(m_read_buf_mutex);
 
+
     // No need to wait (for whatever time) if something has been received
-    if (!m_read_buf_received)
+    bool received = m_read_buf_received.load(std::memory_order_acquire);
+    if (!received)
     {
       if (rcv_timeout_ms_ < 0)
       {
-        m_read_buf_cv.wait(read_buffer_lock, [this]() { return this->m_read_buf_received; });
+        m_read_buf_cv.wait(read_buffer_lock, [&received]() { return received; });
       }
       else if (rcv_timeout_ms_ > 0)
       {
-        m_read_buf_cv.wait_for(read_buffer_lock, std::chrono::milliseconds(rcv_timeout_ms_), [this]() { return this->m_read_buf_received; });
+        m_read_buf_cv.wait_for(read_buffer_lock, std::chrono::milliseconds(rcv_timeout_ms_), [&received]() { return received; });
       }
     }
 
     // did we receive new samples ?
-    if (m_read_buf_received)
+    // returns the value before the call
+    if (m_read_buf_received.exchange(false))
     {
 #ifndef NDEBUG
       // log it
@@ -160,21 +164,20 @@ namespace eCAL
       // copy content to target string
       buf_.clear();
       buf_.swap(m_read_buf);
-      m_read_buf_received = false;
 
       // apply time
       if (time_ != nullptr) *time_ = m_read_time;
 
       // return success
-      return(true);
+      return true;
     }
 
-    return(false);
+    return false;
   }
 
   bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
@@ -186,12 +189,12 @@ namespace eCAL
       m_receive_callback = std::move(callback_);
     }
 
-    return(true);
+    return true;
   }
 
   bool CSubscriberImpl::RemoveReceiveCallback()
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
@@ -203,12 +206,12 @@ namespace eCAL
       m_receive_callback = nullptr;
     }
 
-    return(true);
+    return true;
   }
 
   bool CSubscriberImpl::SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventCallback");
@@ -220,12 +223,12 @@ namespace eCAL
       m_event_callback_map[type_] = std::move(callback_);
     }
 
-    return(true);
+    return true;
   }
 
   bool CSubscriberImpl::RemoveEventCallback(eSubscriberEvent type_)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
@@ -237,12 +240,12 @@ namespace eCAL
       m_event_callback_map[type_] = nullptr;
     }
 
-    return(true);
+    return true;
   }
 
   bool CSubscriberImpl::SetEventIDCallback(const SubEventCallbackT callback_)
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
@@ -258,7 +261,7 @@ namespace eCAL
 
   bool CSubscriberImpl::RemoveEventCallback()
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
@@ -280,7 +283,7 @@ namespace eCAL
 
     Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute - Setting subscriber attributes no longer has an effect.");
 
-    return(false);
+    return false;
   }
 
   bool CSubscriberImpl::ClearAttribute(const std::string& /* attr_name_ */)
@@ -291,7 +294,7 @@ namespace eCAL
 
     Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute - Clear subscriber attributes no longer has an effect.");
 
-    return(false);
+    return false;
   }
 
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
@@ -436,7 +439,7 @@ namespace eCAL
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-    if (!m_created) return(0);
+    if (!m_created.load(std::memory_order_acquire)) return 0;
 
     // We don't want to apply samples which are received on layers which are not activated for this subscriber
     if (!ShouldApplySampleBasedOnLayer(layer_))
@@ -528,7 +531,7 @@ namespace eCAL
       m_read_buf.clear();
       m_read_buf.assign(payload_, payload_ + size_);
       m_read_time = time_;
-      m_read_buf_received = true;
+      m_read_buf_received.store(true, std::memory_order_release);
 
       // inform receive
       m_read_buf_cv.notify_one();
@@ -538,7 +541,7 @@ namespace eCAL
 #endif
     }
 
-    return(size_);
+    return size_;
   }
 
   void CSubscriberImpl::Register()

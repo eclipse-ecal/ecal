@@ -32,6 +32,15 @@
 #include <utility>
 #include <vector>
 
+namespace
+{
+  static inline int64_t now_ns()
+  {
+    using namespace std::chrono;
+    return duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count();
+  }
+}
+
 namespace eCAL
 {
   ////////////////////////////////////////
@@ -41,7 +50,7 @@ namespace eCAL
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_time_of_last_life_signal(std::chrono::steady_clock::now())
+    m_time_of_last_life_signal(now_ns())
   {
   }
 
@@ -56,7 +65,7 @@ namespace eCAL
 
   bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_)
   {
-    if (m_created) return false;
+    if (m_created.load(std::memory_order_acquire)) return false;
 
     // open memory file events
     gOpenNamedEvent(&m_event_snd, memfile_event_, false);
@@ -65,7 +74,7 @@ namespace eCAL
     // create memory file access
     m_memfile.Create(memfile_name_.c_str(), false);
 
-    m_created = true;
+    m_created.store(true, std::memory_order_release);
 
 #ifndef NDEBUG
     // log it
@@ -77,7 +86,7 @@ namespace eCAL
 
   bool CMemFileObserver::Destroy()
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
     // destroy memory file (access only)
     m_memfile.Destroy(false);
@@ -86,7 +95,7 @@ namespace eCAL
     gCloseEvent(m_event_snd);
     gCloseEvent(m_event_ack);
 
-    m_created = false;
+    m_created.store(false, std::memory_order_release);
 
 #ifndef NDEBUG
     // log it
@@ -98,14 +107,14 @@ namespace eCAL
 
   bool CMemFileObserver::Start(const int timeout_, const MemFileDataCallbackT& callback_)
   {
-    if (!m_created)     return false;
-    if (m_is_observing) return false;
+    if (!m_created.load(std::memory_order_acquire))     return false;
+    if (m_is_observing.load(std::memory_order_acquire)) return false;
 
     // assign callback
     m_data_callback = callback_;
 
     // mark as running
-    m_is_observing = true;
+    m_is_observing.store(true, std::memory_order_release);
 
     // start observer thread
     m_thread = std::thread(&CMemFileObserver::Observe, this, timeout_);
@@ -121,12 +130,12 @@ namespace eCAL
 
   bool CMemFileObserver::Stop()
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
-    if (m_is_observing)
+    if (m_is_observing.load(std::memory_order_acquire))
     {
       // signal observer to stop
-      m_do_stop = true;
+      m_do_stop.store(true, std::memory_order_release);
 
       // set sync event to unlock loop
       gSetEvent(m_event_snd);
@@ -140,9 +149,12 @@ namespace eCAL
 
   bool CMemFileObserver::ResetTimeout()
   {
-    if (!m_is_observing) return false;
+    if (!m_is_observing.load(std::memory_order_acquire)) return false;
 
-    m_time_of_last_life_signal = std::chrono::steady_clock::now();
+    m_time_of_last_life_signal.store(
+      now_ns(), 
+      std::memory_order_relaxed
+    );
     
     return true;
   }
@@ -158,9 +170,11 @@ namespace eCAL
     // Boolean that tells whether the SHM file has new data that we have NOT already accessed
     bool has_unprocessed_data = false;
 
+    const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::milliseconds(timeout_)).count();
+
     // runs as long as there is no timeout and no external stop request
-    while(std::chrono::steady_clock::now() - std::chrono::steady_clock::time_point(m_time_of_last_life_signal) < std::chrono::milliseconds(timeout_)
-           && !m_do_stop)
+    while(now_ns() - m_time_of_last_life_signal.load(std::memory_order_relaxed) < timeout_ns
+           && !m_do_stop.load(std::memory_order_acquire))
     {
       if (!has_unprocessed_data)
       {
@@ -171,7 +185,7 @@ namespace eCAL
         if (has_unprocessed_data)
         {
           // We got a signal from the publisher! It is alive! So we reset the time since the last live signal
-          m_time_of_last_life_signal = std::chrono::steady_clock::now();
+          m_time_of_last_life_signal.store(now_ns(), std::memory_order_relaxed);
         }
       }
 
@@ -179,7 +193,7 @@ namespace eCAL
       if(has_unprocessed_data)
       {
         // last chance to stop ..
-        if(m_do_stop) break;
+        if(m_do_stop.load(std::memory_order_acquire)) break;
 
         // try to open memory file (timeout 5 ms)
         if(m_memfile.GetReadAccess(5))
@@ -279,7 +293,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    if(m_do_stop)
+    if(m_do_stop.load(std::memory_order_acquire))
     {
       Logging::Log(Logging::log_level_debug2, std::string("CMemFileObserver " + m_memfile.Name() + " stopped"));
     }
@@ -290,7 +304,7 @@ namespace eCAL
 #endif
 
     // mark as stopped
-    m_is_observing = false; //-V1020
+    m_is_observing.store(false, std::memory_order_release); //-V1020
   }
 
   bool CMemFileObserver::ReadFileHeader(SMemFileHeader& mfile_hdr_)
@@ -332,80 +346,103 @@ namespace eCAL
 
   void CMemFileThreadPool::Start()
   {
-    if(m_created) return;
+    if(m_created.load(std::memory_order_acquire)) return;
 
     // start cleanup thread
-    m_do_cleanup = true;
+    m_do_cleanup.store(true, std::memory_order_release);
     m_cleanup_thread = std::thread(&CMemFileThreadPool::CleanupPoolThread, this);
 
-    m_created = true;
+    m_created.store(true, std::memory_order_release);
   }
 
   void CMemFileThreadPool::Stop()
   {
-    if(!m_created) return;
+    // if(!m_created.load(std::memory_order_acquire)) return;
 
-    // stop cleanup thread
-    {
-      const std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
-      m_do_cleanup = false;
-      m_do_cleanup_cv.notify_one();
-    }
+    // // stop cleanup thread
+    // {
+    //   const std::lock_guard<std::mutex> lock(m_do_cleanup_mtx);
+    //   m_do_cleanup.store(false, std::memory_order_release);
+    //   m_do_cleanup_cv.notify_one();
+    // }
+
+    if (!m_created.exchange(false, std::memory_order_acq_rel)) return;
+
+    m_do_cleanup.store(false, std::memory_order_release);
+    m_do_cleanup_cv.notify_one();
+
     if (m_cleanup_thread.joinable()) m_cleanup_thread.join();
 
-    // lock pool
-    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+    std::vector<std::shared_ptr<CMemFileObserver>> observers;
+    
+    {
+      // lock pool
+      const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+      observers.reserve(m_observer_pool.size());
+      for (auto & observer : m_observer_pool) observers.push_back(observer.second);
+    }
 
-    // stop all running observers
-    for (auto & observer : m_observer_pool) observer.second->Stop();
+    for (auto& observer : observers) observer->Stop();
 
-    // clear pool (and destroy all)
-    m_observer_pool.clear();
-
-    m_created = false;
+    {
+      // lock pool
+      const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+      // clear pool (and destroy all)
+      m_observer_pool.clear();
+    }
   }
 
   bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
   {
-    if(!m_created)            return(false);
+    if(!m_created.load(std::memory_order_acquire))            return(false);
     if(memfile_name_.empty()) return(false);
 
-    // lock pool
-    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
-
-    // if the observer is existing reset its timeout
-    // this should avoid that an observer will timeout in the case that
-    // there are no incoming data but the registration layer
-    // confirms that there are still existing (sleepy) shm writer on this host
-    auto observer_it = m_observer_pool.find(memfile_name_);
-    if(observer_it != m_observer_pool.end())
+    std::shared_ptr<CMemFileObserver> observer;
+    bool need_start = false;
     {
-      auto& observer = observer_it->second;
-      if (observer->IsObserving())
+      // lock pool
+      const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+
+      // if the observer is existing reset its timeout
+      // this should avoid that an observer will timeout in the case that
+      // there are no incoming data but the registration layer
+      // confirms that there are still existing (sleepy) shm writer on this host
+      auto observer_it = m_observer_pool.find(memfile_name_);
+      if(observer_it != m_observer_pool.end())
       {
-        observer->ResetTimeout();
+        observer = observer_it->second;
+        if (observer->IsObserving())
+        {
+          observer->ResetTimeout();
+          return true;
+        }
+        else
+        {
+          need_start = true;
+        }
+
       }
+      // okay, we need to start a new observer
       else
       {
-        observer->Stop();
-        observer->Start(timeout_observation_ms, callback_);
+        observer = std::make_shared<CMemFileObserver>();
+        observer->Create(memfile_name_, memfile_event_);
+        m_observer_pool[memfile_name_] = observer;
+        need_start = true;
       }
+    } // release lock on m_observer_pool_sync
 
-      return(true);
-    }
-    // okay, we need to start a new observer
-    else
+    if (need_start && observer)
     {
-      auto observer = std::make_shared<CMemFileObserver>();
-      observer->Create(memfile_name_, memfile_event_);
+      observer->Stop();
       observer->Start(timeout_observation_ms, callback_);
-      m_observer_pool[memfile_name_] = observer;
+    }
 #ifndef NDEBUG
       // log it
       Logging::Log(Logging::log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + memfile_name_ + " added"));
 #endif
-      return(true);
-    }
+
+    return true;
   }
 
   void CMemFileThreadPool::CleanupPoolThread()
@@ -415,8 +452,10 @@ namespace eCAL
       {
         // cycling with 1 second timeout
         std::unique_lock<std::mutex> lock(m_do_cleanup_mtx);
-        m_do_cleanup_cv.wait_for(lock, std::chrono::milliseconds(1000), [&]() -> bool {return !m_do_cleanup; });
-        if (!m_do_cleanup)
+        const bool stop_requested = m_do_cleanup_cv.wait_for(lock, std::chrono::milliseconds(1000), 
+          [&]() -> bool {return !m_do_cleanup.load(std::memory_order_acquire); 
+        });
+        if (stop_requested)
         {
           // cleanup thread stopped
           return;
@@ -429,24 +468,31 @@ namespace eCAL
 
   void CMemFileThreadPool::CleanupPool()
   {
-    // lock pool
-    const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
-
-    // remove outdated / finished observer from the thread pool
-    for(auto observer = m_observer_pool.begin(); observer != m_observer_pool.end();)
+    std::vector<std::shared_ptr<CMemFileObserver>> removed_observers;
+    
     {
-      if(!observer->second->IsObserving())
+      // lock pool
+      const std::lock_guard<std::mutex> lock(m_observer_pool_sync);
+
+      // remove outdated / finished observer from the thread pool
+      for(auto observer = m_observer_pool.begin(); observer != m_observer_pool.end();)
       {
+        if(!observer->second->IsObserving())
+        {
 #ifndef NDEBUG
-        // log it
-        Logging::Log(eCAL::Logging::log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
+          // log it
+          Logging::Log(eCAL::Logging::log_level_debug2, std::string("CMemFileThreadPool::ObserveFile " + observer->first + " removed"));
 #endif
-        observer = m_observer_pool.erase(observer);
+          removed_observers.push_back(observer->second);
+          observer = m_observer_pool.erase(observer);
+        }
+        else
+        {
+          ++observer;
+        }
       }
-      else
-      {
-        observer++;
-      }
-    }
+    } // release lock onn m_observer_pool_sync
+
+    removed_observers.clear();
   }
 }

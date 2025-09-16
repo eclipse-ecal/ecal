@@ -27,6 +27,7 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include <iostream>
 
 #pragma once
 
@@ -62,6 +63,7 @@ namespace eCAL
     template <typename DurationType>
     void start(DurationType timeout)
     {
+      stopThread_.store(false, std::memory_order_relaxed);
       callbackThread_ = std::thread(&CCallbackThread::callbackFunction<DurationType>, this, timeout);
     }
 
@@ -71,10 +73,10 @@ namespace eCAL
      */
     void stop()
     {
+      bool expected = false;
+      // Set the flag to signal the callback thread to stop
+      if (stopThread_.compare_exchange_strong(expected, true, std::memory_order_relaxed))
       {
-        const std::unique_lock<std::mutex> lock(mtx_);
-        // Set the flag to signal the callback thread to stop
-        stopThread_ = true;
         // Notify the callback thread to wake up and check the flag
         cv_.notify_one();
       }
@@ -104,7 +106,7 @@ namespace eCAL
     std::function<void()> callback_;  /**< The callback function to be executed in the callback thread. */
     std::mutex mtx_;                  /**< Mutex for thread synchronization. */
     std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
-    bool stopThread_{ false };          /**< Flag to indicate whether the callback thread should stop. */
+    std::atomic<bool> stopThread_{ false };     /**< Flag to indicate whether the callback thread should stop. */
     std::atomic<bool> triggerThread_{ false };  /**< Flag to indicate whether the callback thread should be triggered. */
 
     /**
@@ -121,25 +123,29 @@ namespace eCAL
         {
           std::unique_lock<std::mutex> lock(mtx_);
           // Wait for a signal or a timeout
-          if (cv_.wait_for(lock, timeout, [this] { return stopThread_ || triggerThread_; }))
-          {
-            if (stopThread_) {
-              // If the stopThread flag is true, break out of the loop
-              break;
-            }
-
-            if (triggerThread_.load(std::memory_order_relaxed)) {
-              // If the triggerThread flag is true, reset it and proceed
-              triggerThread_.store(false, std::memory_order_relaxed);
-            }
-          }
+          cv_.wait_for(lock, timeout, [this] { return stopThread_.load(std::memory_order_relaxed) || triggerThread_.load(std::memory_order_relaxed); });
         }
+
+        if (stopThread_.load(std::memory_order_relaxed)) {
+          // If the stopThread flag is true, break out of the loop
+          break;
+        }
+
+        // TO ASK: DO we always want to trigger the callback, or only when the triggerThread variable is true?
+        // Previous logic:
+        triggerThread_.store(false, std::memory_order_relaxed);
 
         // Do some work in the callback thread
         if (callback_)
         {
           callback_();
         }
+
+        // revised logic:
+        // if(triggerThread_.exchange(false, std::memory_order_relaxed))
+        // {
+        //    if (callback_) callback_();
+        // }
       }
     }
   };

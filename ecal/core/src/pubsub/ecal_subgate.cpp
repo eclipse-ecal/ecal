@@ -51,35 +51,34 @@ namespace eCAL
 
   void CSubGate::Start()
   {
-    if(m_created) return;
-    m_created = true;
+    bool expected = false;
+    m_created.compare_exchange_strong(expected, true);
   }
 
   void CSubGate::Stop()
   {
-    if(!m_created) return;
+    bool expected = true;
+    if(!m_created.compare_exchange_strong(expected, false)) return;
 
     // stop & destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     m_topic_name_subscriber_map.clear();
-
-    m_created = false;
   }
 
   bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)
   {
-    if(!m_created) return(false);
+    if(!m_created.load(std::memory_order_acquire)) return false;
 
     // register reader
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     m_topic_name_subscriber_map.emplace(std::pair<std::string, std::shared_ptr<CSubscriberImpl>>(topic_name_, datareader_));
 
-    return(true);
+    return true;
   }
 
   bool CSubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)
   {
-    if(!m_created) return(false);
+    if(!m_created.load(std::memory_order_acquire)) return false;
     bool ret_state = false;
 
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
@@ -94,7 +93,7 @@ namespace eCAL
       }
     }
 
-    return(ret_state);
+    return ret_state;
   }
 
   bool CSubGate::HasSample(const std::string& sample_name_)
@@ -105,7 +104,7 @@ namespace eCAL
 
   bool CSubGate::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_)
   {
-    if(!m_created) return false;
+    if(!m_created.load(std::memory_order_acquire)) return false;
 
     Payload::Sample ecal_sample;
     if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return false;
@@ -180,7 +179,7 @@ namespace eCAL
 
   bool CSubGate::ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
     // apply sample to data reader
     size_t applied_size(0);
@@ -207,7 +206,7 @@ namespace eCAL
 
   void CSubGate::ApplyPublisherRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if(!m_created.load(std::memory_order_acquire)) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.topic_name;
@@ -258,7 +257,7 @@ namespace eCAL
 
   void CSubGate::ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_)
   {
-    if (!m_created) return;
+    if (!m_created.load(std::memory_order_acquire)) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.topic_name;
@@ -280,7 +279,7 @@ namespace eCAL
 
   void CSubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
-    if (!m_created) return;
+    if (!m_created.load(std::memory_order_acquire)) return;
 
     // read reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);

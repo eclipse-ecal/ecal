@@ -46,35 +46,34 @@ namespace eCAL
 
   void CPubGate::Start()
   {
-    if(m_created) return;
-    m_created = true;
+    bool expected = false;
+    m_created.compare_exchange_strong(expected, true);
   }
 
   void CPubGate::Stop()
   {
-    if(!m_created) return;
+    bool expected = true;
+    if(!m_created.compare_exchange_strong(expected, false)) return;
 
     // stop & destroy all remaining publisher
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     m_topic_name_publisher_map.clear();
-
-    m_created = false;
   }
 
   bool CPubGate::Register(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_)
   {
-    if(!m_created) return(false);
+    if(!m_created.load(std::memory_order_acquire)) return false;
 
     // register writer and multicast group
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     m_topic_name_publisher_map.emplace(std::pair<std::string, std::shared_ptr<CPublisherImpl>>(topic_name_, publisher_));
 
-    return(true);
+    return true;
   }
 
   bool CPubGate::Unregister(const std::string& topic_name_, const std::shared_ptr<CPublisherImpl>& publisher_)
   {
-    if(!m_created) return(false);
+    if(!m_created.load(std::memory_order_acquire)) return false;
     bool ret_state = false;
 
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
@@ -89,12 +88,12 @@ namespace eCAL
       }
     }
 
-    return(ret_state);
+    return ret_state;
   }
 
   void CPubGate::ApplySubscriberRegistration(const Registration::Sample& ecal_sample_)
   {
-    if(!m_created) return;
+    if(!m_created.load(std::memory_order_acquire)) return;
 
     const auto&        ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.topic_name;
@@ -152,7 +151,7 @@ namespace eCAL
 
   void CPubGate::ApplySubscriberUnregistration(const Registration::Sample& ecal_sample_)
   {
-    if (!m_created) return;
+    if (!m_created.load(std::memory_order_acquire)) return;
 
     const auto& ecal_topic = ecal_sample_.topic;
     const std::string& topic_name = ecal_topic.topic_name;
@@ -174,7 +173,7 @@ namespace eCAL
 
   void CPubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {
-    if (!m_created) return;
+    if (!m_created.load(std::memory_order_acquire)) return;
 
     // read reader registrations
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);

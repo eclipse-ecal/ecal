@@ -120,7 +120,7 @@ namespace eCAL
     m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // mark as created
-    m_created = true;
+    m_created.store(true, std::memory_order_release);
   }
 
   CPublisherImpl::~CPublisherImpl()
@@ -129,7 +129,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CPublisherImpl::Destructor");
 #endif
 
-    if (!m_created) return;
+    if (!m_created.load(std::memory_order_acquire)) return;
 
     // stop all transport layer
     StopAllLayer();
@@ -147,7 +147,7 @@ namespace eCAL
     }
 
     // mark as no more created
-    m_created = false;
+    m_created.store(false, std::memory_order_release);
 
     // and unregister
     Unregister();
@@ -381,7 +381,7 @@ namespace eCAL
 
   bool CPublisherImpl::SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventCallback");
@@ -398,7 +398,7 @@ namespace eCAL
 
   bool CPublisherImpl::RemoveEventCallback(ePublisherEvent type_)
   {
-    if (!m_created) return(false);
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventCallback");
@@ -415,7 +415,7 @@ namespace eCAL
 
   bool CPublisherImpl::SetEventCallback(const PubEventCallbackT callback_)
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::SetEventCallback");
@@ -431,7 +431,7 @@ namespace eCAL
 
   bool CPublisherImpl::RemoveEventCallback()
   {
-    if (!m_created) return false;
+    if (!m_created.load(std::memory_order_acquire)) return false;
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::RemoveEventCallback");

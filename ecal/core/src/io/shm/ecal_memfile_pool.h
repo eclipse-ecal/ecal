@@ -63,7 +63,7 @@ namespace eCAL
 
     bool Start(int timeout_, const MemFileDataCallbackT& callback_);
     bool Stop();
-    bool IsObserving() {return(m_is_observing);};
+    bool IsObserving() { return m_is_observing.load(std::memory_order_acquire); }
 
     bool ResetTimeout();
 
@@ -75,7 +75,8 @@ namespace eCAL
     std::atomic<bool>       m_do_stop;
     std::atomic<bool>       m_is_observing;
 
-    std::atomic<std::chrono::steady_clock::time_point> m_time_of_last_life_signal;
+    // To discuss: Switch to atomic<int64_t> to stay guaranteed lock free
+    std::atomic<int64_t>    m_time_of_last_life_signal;
 
     MemFileDataCallbackT    m_data_callback;
 
