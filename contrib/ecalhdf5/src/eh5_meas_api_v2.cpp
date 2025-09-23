@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -253,6 +253,11 @@ bool eCAL::eh5::v2::HDF5Meas::GetEntryDataSize(long long entry_id, size_t& size)
 bool eCAL::eh5::v2::HDF5Meas::GetEntryData(long long entry_id, void* data) const
 {
   return hdf_meas_impl_->GetEntryData(entry_id, data);
+}
+
+bool eCAL::eh5::v2::HDF5Meas::GetEntryDataAsString(long long entry_id, std::string& data) const
+{
+  return hdf_meas_impl_->GetEntryDataAsString(entry_id, data);
 }
 
 void eCAL::eh5::v2::HDF5Meas::SetFileBaseName(const std::string& base_name)

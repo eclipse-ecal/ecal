@@ -200,6 +200,11 @@ void ValidateDataInMeasurementGeneric(Reader& hdf5_reader, const TestingMeasEntr
   EXPECT_TRUE(hdf5_reader.GetEntryData(info.ID, const_cast<char*>(data_read.data())));
 
   EXPECT_EQ(data_read, entry.data);
+
+  // Use new function to verify data
+  std::string data_read_as_string;
+  EXPECT_TRUE(hdf5_reader.GetEntryDataAsString(info.ID, data_read_as_string));
+  EXPECT_EQ(data_read_as_string, entry.data);
 }
 
 
@@ -1009,6 +1014,7 @@ TEST(HDF5, MergedMeasurements)
 
 }
 
+/*
 // We don't write empty measurements.
 // If we change the implementation, we can reactivate this test
 TEST(HDF5, DISABLED_WriteReadEmptyMeasurement)
@@ -1042,6 +1048,7 @@ TEST(HDF5, DISABLED_WriteReadEmptyMeasurement)
     EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel), 0);
   }
 }
+*/
 
 // This tests confirms if you write with the old API, you can read the information both old and new api
 TEST(HDF5, TestReaderWriterV5)

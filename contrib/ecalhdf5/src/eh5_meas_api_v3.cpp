@@ -327,6 +327,15 @@ bool eCAL::eh5::v3::HDF5Meas::GetEntryData(long long entry_id, void* data) const
   return ret_val;
 }
 
+bool eCAL::eh5::v3::HDF5Meas::GetEntryDataAsString(long long entry_id, std::string& data) const
+{
+  if (hdf_meas_impl_)
+  {
+    return hdf_meas_impl_->GetEntryDataAsString(entry_id, data);
+  }
+  return false;
+}
+
 void eCAL::eh5::v3::HDF5Meas::SetFileBaseName(const std::string& base_name)
 {
   if (hdf_meas_impl_)

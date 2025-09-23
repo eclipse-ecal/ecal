@@ -314,6 +314,21 @@ bool eCAL::eh5::HDF5MeasDir::GetEntryData(long long entry_id, void* data) const
   return ret_val;
 }
 
+bool eCAL::eh5::HDF5MeasDir::GetEntryDataAsString(long long entry_id, std::string& data) const
+{
+  bool result = false;
+
+  // Find the entry by ID
+  const auto& found = entries_by_id_.find(entry_id);
+  if (found != entries_by_id_.end())
+  {
+    // Get the entry data as a string
+    result = found->second.reader->GetEntryDataAsString(found->second.file_id, data);
+  }
+
+  return result;
+}
+
 void eCAL::eh5::HDF5MeasDir::SetFileBaseName(const std::string& base_name)
 {
   base_name_ = base_name;

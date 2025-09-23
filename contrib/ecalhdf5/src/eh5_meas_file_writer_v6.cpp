@@ -193,6 +193,12 @@ bool eCAL::eh5::HDF5MeasFileWriterV6::GetEntryData(long long /*entry_id*/, void*
   return false;
 }
 
+bool eCAL::eh5::HDF5MeasFileWriterV6::GetEntryDataAsString(long long /*entry_id*/, std::string& /*data*/) const
+{
+  // UNSUPPORTED FUNCTION
+  return false;
+}
+
 void eCAL::eh5::HDF5MeasFileWriterV6::SetFileBaseName(const std::string& base_name)
 {
   base_name_ = base_name;
