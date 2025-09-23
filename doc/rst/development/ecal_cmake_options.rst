@@ -49,7 +49,7 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_BUILD_TESTS``                      | ``OFF`` | Build the eCAL google tests                                     |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_BUILD_BENCHMARKS``                 | ``OFF`` | Build the eCAL benchmarks                                     |
+| ``ECAL_BUILD_BENCHMARKS``                 | ``OFF`` | Build the eCAL benchmarks                                       |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_INSTALL_SAMPLE_SOURCES``           | ``ON``  | Install the sources of eCAL samples                             |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
@@ -59,7 +59,7 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_ASIO``            | ``ON``  | Build asio with eCAL                                            |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_THIRDPARTY_BUILD_BENCHMARK``       | ``ON``  | Build Google Benchmark with eCAL                                            |
+| ``ECAL_THIRDPARTY_BUILD_BENCHMARK``       | ``ON``  | Build Google Benchmark with eCAL                                |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS`` | ``ON``  | Build CMakeFunctions with eCAL                                  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
