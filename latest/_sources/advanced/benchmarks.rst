@@ -149,3 +149,5 @@ Performance regression analysis
 `Bencher <https://bencher.dev/console/projects/ecal/plots>`_ also scans for statistically significant performance regression in benchmark results via so-called `Thresholds <https://bencher.dev/docs/explanation/thresholds/>`_.
 A threshold with a t-test for an alpha value of 0.5% is active on all benchmarks. The current limit can be seen by activating the upper boundary in the performance plot view.
 So-called Alerts are generated should a result cross this limit, they are indicated via an icon in the performance plot.
+
+.. image:: img_documentation/bencher_threshold_alert_example.png
