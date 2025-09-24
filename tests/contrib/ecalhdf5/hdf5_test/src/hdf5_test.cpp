@@ -1014,7 +1014,6 @@ TEST(HDF5, MergedMeasurements)
 
 }
 
-/*
 // We don't write empty measurements.
 // If we change the implementation, we can reactivate this test
 TEST(HDF5, DISABLED_WriteReadEmptyMeasurement)
@@ -1048,7 +1047,6 @@ TEST(HDF5, DISABLED_WriteReadEmptyMeasurement)
     EXPECT_EQ(hdf5_reader.GetMaxTimestamp(channel), 0);
   }
 }
-*/
 
 // This tests confirms if you write with the old API, you can read the information both old and new api
 TEST(HDF5, TestReaderWriterV5)
