@@ -123,17 +123,19 @@ namespace eCAL
         {
           std::unique_lock<std::mutex> lock(mtx_);
           // Wait for a signal or a timeout
-          cv_.wait_for(lock, timeout, [this] { return stopThread_.load(std::memory_order_relaxed) || triggerThread_.load(std::memory_order_relaxed); });
-        }
+          if(cv_.wait_for(lock, timeout, [this] { return stopThread_.load(std::memory_order_relaxed) || triggerThread_.load(std::memory_order_relaxed); }))
+          {
+            if (stopThread_.load(std::memory_order_relaxed)) 
+            {
+              // If the stopThread flag is true, break out of the loop
+              break;
+            }
 
-        if (stopThread_.load(std::memory_order_relaxed)) {
-          // If the stopThread flag is true, break out of the loop
-          break;
+            // TO ASK: DO we always want to trigger the callback, or only when the triggerThread variable is true?
+            // Previous logic:
+            triggerThread_.store(false, std::memory_order_relaxed);
+              }
         }
-
-        // TO ASK: DO we always want to trigger the callback, or only when the triggerThread variable is true?
-        // Previous logic:
-        triggerThread_.store(false, std::memory_order_relaxed);
 
         // Do some work in the callback thread
         if (callback_)
