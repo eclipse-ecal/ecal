@@ -757,6 +757,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetEntryDataAsString()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>
@@ -1171,6 +1172,23 @@ document.write(`
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE">
+<span id="_CPPv3NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE"></span><span id="_CPPv2NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE"></span><span id="eCAL::eh5::v2::HDF5Meas::GetEntryDataAsString__l-l.ssRC"></span><span class="target" id="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas_1a036f52353b5bb4f6b2981d9513918cbe"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetEntryDataAsString</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">entry_id</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Gets data from a specific entry and stores it in a std::string Can be used to speed up retrieval, as underlying datasets need to be opened only once. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry_id</strong> – <strong>[in]</strong> Entry ID </p></li>
+<li><p><strong>data</strong> – <strong>[out]</strong> Data to be read from the measurement </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Data was retrieved successfully </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE">
 <span id="_CPPv3N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="_CPPv2N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"></span><span id="eCAL::eh5::v2::HDF5Meas::SetFileBaseName__ssCR"></span><span class="target" id="classeCAL_1_1eh5_1_1v2_1_1HDF5Meas_1a4d464b9758c1adafc81f02a6b99cf3a5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetFileBaseName</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">base_name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE" title="Link to this definition">#</a><br /></dt>
 <dd><p>Set measurement file base name (desired name for the actual hdf5 files that will be created) </p>
@@ -1303,6 +1321,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas19GetEntriesInfoRangeERKNSt6stringExxR12EntryInfoSet"><code class="docutils literal notranslate"><span class="pre">GetEntriesInfoRange()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas16GetEntryDataSizeExR6size_t"><code class="docutils literal notranslate"><span class="pre">GetEntryDataSize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas12GetEntryDataExPv"><code class="docutils literal notranslate"><span class="pre">GetEntryData()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK4eCAL3eh52v28HDF5Meas20GetEntryDataAsStringExRNSt6stringE"><code class="docutils literal notranslate"><span class="pre">GetEntryDataAsString()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas15SetFileBaseNameERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SetFileBaseName()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas14AddEntryToFileEPKvRKyRKxRKxRKNSt6stringExx"><code class="docutils literal notranslate"><span class="pre">AddEntryToFile()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL3eh52v28HDF5Meas23ConnectPreSplitCallbackE16CallbackFunction"><code class="docutils literal notranslate"><span class="pre">ConnectPreSplitCallback()</span></code></a></li>

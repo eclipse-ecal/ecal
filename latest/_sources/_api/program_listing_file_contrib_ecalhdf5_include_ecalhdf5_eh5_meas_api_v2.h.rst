@@ -12,7 +12,7 @@ Program Listing for File eh5_meas_api_v2.h
 
    /* ========================= eCAL LICENSE =================================
     *
-    * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright (C) 2016 - 2025 Continental Corporation
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -108,6 +108,8 @@ Program Listing for File eh5_meas_api_v2.h
          bool GetEntryDataSize(long long entry_id, size_t& size) const;
    
          bool GetEntryData(long long entry_id, void* data) const;
+   
+         bool GetEntryDataAsString(long long entry_id, std::string& data) const;
    
          void SetFileBaseName(const std::string& base_name);
    

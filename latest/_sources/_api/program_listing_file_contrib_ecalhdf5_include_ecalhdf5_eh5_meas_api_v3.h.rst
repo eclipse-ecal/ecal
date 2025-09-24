@@ -99,6 +99,8 @@ Program Listing for File eh5_meas_api_v3.h
    
          bool GetEntryData(long long entry_id, void* data) const;
    
+         bool GetEntryDataAsString(long long entry_id, std::string& data) const;
+   
          void SetFileBaseName(const std::string& base_name);
    
          bool AddEntryToFile(const SWriteEntry& entry);
