@@ -200,6 +200,11 @@ void ValidateDataInMeasurementGeneric(Reader& hdf5_reader, const TestingMeasEntr
   EXPECT_TRUE(hdf5_reader.GetEntryData(info.ID, const_cast<char*>(data_read.data())));
 
   EXPECT_EQ(data_read, entry.data);
+
+  // Use new function to verify data
+  std::string data_read_as_string;
+  EXPECT_TRUE(hdf5_reader.GetEntryDataAsString(info.ID, data_read_as_string));
+  EXPECT_EQ(data_read_as_string, entry.data);
 }
 
 

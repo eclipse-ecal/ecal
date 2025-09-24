@@ -266,6 +266,16 @@ namespace eCAL
       bool GetEntryData(long long entry_id, void* data) const;
 
       /**
+      * @brief Gets data from a specific entry and stores it in a std::string
+      *        Can be used to speed up retrieval, as underlying datasets need to be opened only once.
+      *
+      * @param [in]  entry_id   Entry ID      
+      * @param [out]  data      Data to be  read  from the measurement
+      * @return                 Data was retrieved successfully
+      **/
+      bool GetEntryDataAsString(long long entry_id, std::string& data) const;
+
+      /**
        * @brief Set measurement file base name (desired name for the actual hdf5 files that will be created)
        *
        * @param base_name        Name of the hdf5 files that will be created.

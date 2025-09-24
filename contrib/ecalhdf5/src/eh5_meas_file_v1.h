@@ -216,6 +216,16 @@ namespace eCAL
       bool GetEntryData(long long entry_id, void* data) const override;
 
       /**
+      * @brief Gets data from a specific entry and stores it in a std::string
+      *        Can be used to speed up retrieval, as underlying datasets need to be opened only once.
+      *
+      * @param [in]  entry_id   Entry ID      
+      * @param [out]  data      Data to be  read  from the measurement
+      * @return                 Data was retrieved successfully
+      **/
+      bool GetEntryDataAsString(long long entry_id, std::string& data) const override;
+
+      /**
       * @brief Set measurement file base name
       *
       * @param base_name        File base name.

@@ -299,6 +299,11 @@ bool eCAL::eh5::HDF5MeasFileV1::GetEntryData(long long entry_id, void* data) con
   return (readStatus >= 0);
 }
 
+bool eCAL::eh5::HDF5MeasFileV1::GetEntryDataAsString(long long /*entry_id*/, std::string& /*data*/) const
+{
+   ReportUnsupportedAction();
+   return false; 
+}
 
 void eCAL::eh5::HDF5MeasFileV1::SetFileBaseName(const std::string& /*base_name*/)
 {
