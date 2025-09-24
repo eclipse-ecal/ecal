@@ -23,11 +23,17 @@ eCAL 6.0
      - Support Status
 
 
+   * - :ref:`eCAL v6.0.1 <ecal_release_page_6_0_1>`
+
+     - 2025-09-24
+
+     - Supported
+       
    * - :ref:`eCAL v6.0.0 <ecal_release_page_6_0_0>`
 
      - 2025-08-01
 
-     - Supported
+     - EOL
        
 eCAL 5.13
 ===========
