@@ -119,8 +119,6 @@ private:
   std::map<std::string, PublisherInfo>    publisher_map_;
   bool                                    publishers_initialized_;
 
-  static const size_t                     MIN_SEND_BUFFER_SIZE = 10 * 1024 * 1024;
-  size_t                                  allocated_buffer_size_;
-  void*                                   send_buffer_;
+  std::string                             send_buffer_;
 };
 
