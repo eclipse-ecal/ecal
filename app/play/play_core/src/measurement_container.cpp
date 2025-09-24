@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,7 @@ MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::v2::HDF5Me
   , meas_dir_              (meas_dir)
   , use_receive_timestamp_ (use_receive_timestamp)
   , publishers_initialized_(false)
-  , send_buffer_           (nullptr)
 {
-  send_buffer_           = malloc(MIN_SEND_BUFFER_SIZE);
-  allocated_buffer_size_ = MIN_SEND_BUFFER_SIZE;
-
   // Create a table of all frames, sorted by their timestamps
   CreateFrameTable();
 }
@@ -43,7 +39,6 @@ MeasurementContainer::MeasurementContainer(std::shared_ptr<eCAL::eh5::v2::HDF5Me
 MeasurementContainer::~MeasurementContainer()
 {
   DeInitializePublishers();
-  free(send_buffer_);
 }
 
 void MeasurementContainer::CreateFrameTable()
@@ -188,39 +183,22 @@ bool MeasurementContainer::PublishFrame(long long index)
 
   if (frame_table_[index].publisher_info_)
   {
-    size_t data_size;
-    if (hdf5_meas_->GetEntryDataSize(frame_table_[index].id_, data_size))
+    if (hdf5_meas_->GetEntryDataAsString(frame_table_[index].id_, send_buffer_))
     {
-      if (data_size > allocated_buffer_size_)
+      long long timestamp_usecs = -1;
+      if (use_receive_timestamp_)
       {
-        void* temp = realloc(send_buffer_, data_size);
-        if (temp == nullptr)
-        {
-          return false;
-        }
-        else
-        {
-          send_buffer_ = temp;
-        }
-        allocated_buffer_size_ = data_size;
+        timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].receive_timestamp_.time_since_epoch()).count();
       }
-      if (hdf5_meas_->GetEntryData(frame_table_[index].id_, send_buffer_))
+      else
       {
-        long long timestamp_usecs = -1;
-        if (use_receive_timestamp_)
-        {
-          timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].receive_timestamp_.time_since_epoch()).count();
-        }
-        else
-        {
-          timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].send_timestamp_.time_since_epoch()).count();
-        }
-        // this is not supported by the eCAL v6 API
-        //frame_table_[index].publisher_info_->publisher_.SetID(frame_table_[index].send_id_);
-        frame_table_[index].publisher_info_->publisher_.Send(send_buffer_, data_size, timestamp_usecs);
-        frame_table_[index].publisher_info_->message_counter_++;
-        return true;
+        timestamp_usecs = std::chrono::duration_cast<std::chrono::microseconds>(frame_table_[index].send_timestamp_.time_since_epoch()).count();
       }
+      // this is not supported by the eCAL v6 API
+      //frame_table_[index].publisher_info_->publisher_.SetID(frame_table_[index].send_id_);
+      frame_table_[index].publisher_info_->publisher_.Send(send_buffer_, timestamp_usecs);
+      frame_table_[index].publisher_info_->message_counter_++;
+      return true;
     }
   }
 
