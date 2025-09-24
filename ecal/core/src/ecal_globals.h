@@ -24,7 +24,6 @@
 #pragma once
 
 #include "ecal_global_accessors.h"
-#include <atomic>
 #include <string>
 #include <vector>
 #if ECAL_CORE_REGISTRATION
@@ -67,7 +66,7 @@ namespace eCAL
     bool IsInitialized (); 
     bool IsInitialized ( unsigned int component_  );
     
-    unsigned int GetComponents() const { return(components.load(std::memory_order_acquire)); };
+    unsigned int GetComponents() const { return(components); };
 
     bool Finalize();
 
@@ -103,7 +102,7 @@ namespace eCAL
 
   private:
     bool                                                                  initialized;
-    std::atomic<unsigned int>                                             components;
+    unsigned int                                                          components;
     std::unique_ptr<Logging::CLogProvider>                                log_provider_instance;
     std::unique_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
