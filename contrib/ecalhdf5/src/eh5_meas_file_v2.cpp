@@ -293,20 +293,20 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntryDataAsString(long long entry_id, std::st
 {
   if (!this->IsOk()) return false;
 
-  auto dataset_id = H5Dopen(file_id_, std::to_string(entry_id).c_str(), H5P_DEFAULT);
+  const auto dataset_id = H5Dopen(file_id_, std::to_string(entry_id).c_str(), H5P_DEFAULT);
 
   if (dataset_id < 0) return false;
 
-  auto stored_data_size = static_cast<size_t>(H5Dget_storage_size(dataset_id));
+  const auto stored_data_size = static_cast<size_t>(H5Dget_storage_size(dataset_id));
 
   data.resize(stored_data_size);
   void* data_ptr = const_cast<void*>(static_cast<const void*>(data.data()));
 
-  herr_t read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data_ptr);
+  const herr_t read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data_ptr);
 
   H5Dclose(dataset_id);
 
-  return (read_status >= 0) ? true : false;
+  return (read_status >= 0);
 }
 
 void eCAL::eh5::HDF5MeasFileV2::SetFileBaseName(const std::string& /*base_name*/)
