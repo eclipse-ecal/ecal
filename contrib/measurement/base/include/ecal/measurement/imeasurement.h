@@ -122,10 +122,7 @@ namespace eCAL
     private:
       BinaryFrame operator[](const experimental::measurement::base::EntryInfo& entry)
       {
-        size_t message_size;
-        meas->GetEntryDataSize(entry.ID, message_size);
-        data.resize(message_size);
-        meas->GetEntryData(entry.ID, (void*)data.data());
+        meas->GetEntryDataAsString(entry.ID, data);
         return make_frame(data, entry.SndTimestamp, entry.RcvTimestamp);
       }
 
