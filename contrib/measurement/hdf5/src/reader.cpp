@@ -117,3 +117,8 @@ bool Reader::GetEntryData(long long entry_id, void* data) const
 {
   return impl->measurement.GetEntryData(entry_id, data);
 }
+
+bool Reader::GetEntryDataAsString(long long entry_id, std::string& data) const
+{
+  return impl->measurement.GetEntryDataAsString(entry_id, data);
+}

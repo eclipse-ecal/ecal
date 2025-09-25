@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,6 +215,16 @@ namespace eCAL
            * @return                 true if succeeds, false if it fails
           **/
           bool GetEntryData(long long entry_id, void* data) const override;
+
+          /**
+          * @brief Gets data from a specific entry and stores it in a std::string
+          *        Can be used to speed up retrieval, as underlying datasets need to be opened only once.
+          *
+          * @param [in]  entry_id   Entry ID
+          * @param [out]  data      Data to be  read  from the measurement
+          * @return                 Data was retrieved successfully
+          **/
+          bool GetEntryDataAsString(long long entry_id, std::string& data) const override;
 
         private:
           std::unique_ptr<ReaderImpl> impl;

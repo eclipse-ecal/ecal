@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,14 +105,7 @@ void MeasurementImporter::getData(eCALMeasCutterUtils::Timestamp timestamp, eCAL
   const auto& entry_info = _current_opened_channel_data._timestamp_entry_info_map.at(timestamp);
 
   auto data_id = entry_info.ID;
-
-  size_t size = 0;
-  _reader->GetEntryDataSize(data_id, size);
-
-   std::vector<char> buffer(size);
-   _reader->GetEntryData(data_id, buffer.data());
-
-  data.assign(buffer.data(), size);
+  _reader->GetEntryDataAsString(data_id, data);
 
   meta_data.clear();
   meta_data[eCALMeasCutterUtils::MetaDatumKey::RECEIVER_TIMESTAMP].receiver_timestamp = entry_info.RcvTimestamp;
