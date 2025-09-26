@@ -178,7 +178,7 @@ namespace eCAL
     
     void SetRegistrationRefresh(unsigned int timeout_ms_)
     {
-      g_registration_provider()->SetRegistrationRefresh(std::chrono::milliseconds::duration(timeout_ms_));
+      g_registration_provider()->SetRegistrationRefresh(std::chrono::milliseconds(timeout_ms_));
     }
     
   }
