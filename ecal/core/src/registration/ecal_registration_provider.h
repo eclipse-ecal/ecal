@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,12 @@ namespace eCAL
 
     bool RegisterSample(const Registration::Sample& sample_);
     bool UnregisterSample(const Registration::Sample& sample_);
+
+    template<typename DurationType>
+    void SetRegistrationRefresh(const DurationType& timeout)
+    {
+      m_reg_sample_snd_thread->setTimeout(timeout);
+    }
 
   protected:
     void AddSingleSample(const Registration::Sample& sample_);

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,19 @@ namespace eCAL
     template <typename DurationType>
     void start(DurationType timeout)
     {
-      callbackThread_ = std::thread(&CCallbackThread::callbackFunction<DurationType>, this, timeout);
+      setTimeout(timeout);
+      callbackThread_ = std::thread(&CCallbackThread::callbackFunction, this);
+    }
+
+    template <typename DurationType>
+    void setTimeout(DurationType timeout)
+    {
+      {
+        std::unique_lock<std::mutex> lock(mtx_);
+        timeout_to_set_ = std::chrono::duration_cast<std::chrono::steady_clock::duration>(timeout);
+        new_timeout_available_.store(true, std::memory_order_release);
+      }
+      cv_.notify_one();
     }
 
     /**
@@ -107,21 +119,22 @@ namespace eCAL
     bool stopThread_{ false };          /**< Flag to indicate whether the callback thread should stop. */
     std::atomic<bool> triggerThread_{ false };  /**< Flag to indicate whether the callback thread should be triggered. */
 
+    std::chrono::steady_clock::duration timeout_               { std::chrono::seconds(1) };
+    std::chrono::steady_clock::duration timeout_to_set_        { std::chrono::seconds(1) };
+    std::atomic<bool>                   new_timeout_available_ { false };
+
     /**
      * @brief Callback function that runs in the callback thread.
      * Periodically checks the stopThread flag and executes the callback function.
-     * @tparam DurationType The type of the timeout duration (e.g., std::chrono::seconds, std::chrono::milliseconds).
-     * @param timeout The timeout duration for waiting in the callback thread.
      */
-    template <typename DurationType>
-    void callbackFunction(DurationType timeout)
+    void callbackFunction()
     {
       while (true)
       {
         {
           std::unique_lock<std::mutex> lock(mtx_);
           // Wait for a signal or a timeout
-          if (cv_.wait_for(lock, timeout, [this] { return stopThread_ || triggerThread_; }))
+          if (cv_.wait_for(lock, timeout_, [this] { return stopThread_ || triggerThread_; }))
           {
             if (stopThread_) {
               // If the stopThread flag is true, break out of the loop
@@ -132,6 +145,11 @@ namespace eCAL
               // If the triggerThread flag is true, reset it and proceed
               triggerThread_.store(false, std::memory_order_relaxed);
             }
+          }
+
+          if (new_timeout_available_.exchange(false, std::memory_order_release))
+          {
+            timeout_ = timeout_to_set_;
           }
         }
 

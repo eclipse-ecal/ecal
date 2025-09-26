@@ -184,6 +184,8 @@ namespace eCAL
      * @param client_method_names_ Set to store the client/method names (Set { (ClientName, MethodName) }).
     **/
     ECAL_API bool GetClientMethodNames(std::set<SServiceMethod>& client_method_names_);
+
+    ECAL_API void               SetRegistrationRefresh(unsigned int timeout_ms_);
   }
 }
 
