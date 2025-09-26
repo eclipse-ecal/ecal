@@ -148,4 +148,6 @@ Other Downloads
 
     * - `ecal-fat-source.zip <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.1/ecal-fat-source.zip>`__
 
+    * - `sdv-manifest.toml <https://github.com/eclipse-ecal/ecal/releases/download/v6.0.1/sdv-manifest.toml>`__
+
     
