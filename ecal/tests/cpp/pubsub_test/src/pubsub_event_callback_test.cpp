@@ -111,7 +111,7 @@ TEST_F(core_cpp_pubsub_event, PublisherCallback_LongSleepInCallback)
     CPublisher pub(
       "MyTopic",
       SDataTypeInformation(),
-      [&disconnect_called](const STopicId& tid, const SPubEventCallbackData& d)
+      [&disconnect_called](const STopicId& /*tid*/, const SPubEventCallbackData& d)
       {
         if (d.event_type == ePublisherEvent::disconnected)
         {
@@ -177,7 +177,7 @@ TEST_F(core_cpp_pubsub_event, SubscriberCallback_LongSleepInCallback)
     CSubscriber sub(
       "MyTopic",
       SDataTypeInformation(),
-      [&disconnect_called](const STopicId& tid, const SSubEventCallbackData& d)
+      [&disconnect_called](const STopicId& /*tid*/, const SSubEventCallbackData& d)
       {
         if (d.event_type == eSubscriberEvent::disconnected)
         {
