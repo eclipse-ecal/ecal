@@ -21,7 +21,6 @@
  * @brief  eCAL threading helper class
 **/
 
-#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <functional>
@@ -92,8 +91,9 @@ namespace eCAL
     void trigger()
     {
       {
+        const std::unique_lock<std::mutex> lock(mtx_);
         // Set the flag to signal the callback thread to trigger
-        triggerThread_.store(true, std::memory_order_relaxed);
+        triggerThread_ = true;
         // Notify the callback thread to wake up and check the flag
         cv_.notify_one();
       }
@@ -105,7 +105,7 @@ namespace eCAL
     std::mutex mtx_;                  /**< Mutex for thread synchronization. */
     std::condition_variable cv_;      /**< Condition variable for signaling between threads. */
     bool stopThread_{ false };          /**< Flag to indicate whether the callback thread should stop. */
-    std::atomic<bool> triggerThread_{ false };  /**< Flag to indicate whether the callback thread should be triggered. */
+    bool triggerThread_{ false };       /**< Flag to indicate whether the callback thread should be triggered. */
 
     /**
      * @brief Callback function that runs in the callback thread.
@@ -128,9 +128,9 @@ namespace eCAL
               break;
             }
 
-            if (triggerThread_.load(std::memory_order_relaxed)) {
+            if (triggerThread_) {
               // If the triggerThread flag is true, reset it and proceed
-              triggerThread_.store(false, std::memory_order_relaxed);
+              triggerThread_ = false;
             }
           }
         }
