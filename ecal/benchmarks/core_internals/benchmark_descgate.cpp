@@ -199,8 +199,8 @@ int main(int argc, char** argv)
 {
   ::benchmark::Initialize(&argc, argv);
 
-  RegisterFamily<CDescGateOld>("Legacy");
   RegisterFamily<CDescGate>("New");
+  // We can potentially register other implementations to compare the benchmarks.
 
   ::benchmark::RunSpecifiedBenchmarks();
 }
