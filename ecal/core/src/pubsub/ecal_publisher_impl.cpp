@@ -165,11 +165,11 @@ namespace eCAL
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
-    allow_zero_copy &= !std::atomic_load(&m_writer_udp);
+    allow_zero_copy &= !m_writer_udp;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
     // tcp is active -> no zero copy
-    allow_zero_copy &= !std::atomic_load(&m_writer_tcp);
+    allow_zero_copy &= !m_writer_tcp;
 #endif
 
     // create a payload copy for all layer
@@ -185,34 +185,31 @@ namespace eCAL
     // did we write anything
     bool written(false);
 
-    auto current_state = getWriterStateSnapshot();
-
     ////////////////////////////////////////////////////////////////////////////
     // SHM
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_SHM
-    auto writer_shm = std::atomic_load(&m_writer_shm);
-    if (writer_shm)
+    if (m_writer_shm)
     {
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM");
 #endif
+
       // send it
       bool shm_sent(false);
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len                    = payload_buf_size;
-        wattr.hash                   = snd_hash;
-        wattr.time                   = time_;
-        wattr.zero_copy              = m_attributes.shm.zero_copy_mode;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
+        wattr.zero_copy = m_attributes.shm.zero_copy_mode;
         wattr.acknowledge_timeout_ms = m_attributes.shm.acknowledge_timeout_ms;
 
-        wattr.clock = current_state.clock;
-        wattr.id    = current_state.id;
-
         // prepare send
-        if (writer_shm->PrepareWrite(wattr))
+        if (m_writer_shm->PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
           Register();
@@ -223,7 +220,7 @@ namespace eCAL
         if (allow_zero_copy)
         {
           // write to shm layer (write content into the opened memory file without additional copy)
-          shm_sent = writer_shm->Write(payload_, wattr);
+          shm_sent = m_writer_shm->Write(payload_, wattr);
         }
         // multiple layer are active -> we make a copy and use that one
         else
@@ -231,7 +228,7 @@ namespace eCAL
           // wrap the buffer into a payload object
           CBufferPayloadWriter payload_buf(m_payload_buffer.data(), m_payload_buffer.size());
           // write to shm layer (write content into the opened memory file without additional copy)
-          shm_sent = writer_shm->Write(payload_buf, wattr);
+          shm_sent = m_writer_shm->Write(payload_buf, wattr);
         }
 
         m_layers.shm.active = true;
@@ -255,8 +252,7 @@ namespace eCAL
     // UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_UDP
-    auto writer_udp = std::atomic_load(&m_writer_udp);
-    if (writer_udp)
+    if (m_writer_udp)
     {
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::udp");
@@ -267,16 +263,15 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len      = payload_buf_size;
-        wattr.hash     = snd_hash;
-        wattr.time     = time_;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
         wattr.loopback = m_attributes.loopback;
 
-        wattr.clock    = current_state.clock;
-        wattr.id       = current_state.id;
-
         // prepare send
-        if (writer_udp->PrepareWrite(wattr))
+        if (m_writer_udp->PrepareWrite(wattr))
         {
           // register new to update listening subscribers and rematch
           Register();
@@ -284,7 +279,7 @@ namespace eCAL
         }
 
         // write to udp multicast layer
-        udp_sent = writer_udp->Write(m_payload_buffer.data(), wattr);
+        udp_sent = m_writer_udp->Write(m_payload_buffer.data(), wattr);
         m_layers.udp.active = true;
       }
       written |= udp_sent;
@@ -306,8 +301,7 @@ namespace eCAL
     // TCP
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_TCP
-    auto writer_tcp = std::atomic_load(&m_writer_tcp);
-    if (writer_tcp)
+    if (m_writer_tcp)
     {
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Send::TCP");
@@ -318,15 +312,14 @@ namespace eCAL
       {
         // fill writer data
         struct SWriterAttr wattr;
-        wattr.len   = payload_buf_size;
-        wattr.hash  = snd_hash;
-        wattr.time  = time_;
-
-        wattr.clock = current_state.clock;
-        wattr.id    = current_state.id;
+        wattr.len = payload_buf_size;
+        wattr.id = m_id;
+        wattr.clock = m_clock;
+        wattr.hash = snd_hash;
+        wattr.time = time_;
 
         // write to tcp layer
-        tcp_sent = writer_tcp->Write(m_payload_buffer.data(), wattr);
+        tcp_sent = m_writer_tcp->Write(m_payload_buffer.data(), wattr);
         m_layers.tcp.active = true;
       }
       written |= tcp_sent;
@@ -492,16 +485,13 @@ namespace eCAL
 
     // add a new subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    auto writer_udp = std::atomic_load(&m_writer_udp);
-    if (writer_udp) writer_udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
+    if (m_writer_udp) m_writer_udp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    auto writer_shm = std::atomic_load(&m_writer_shm);
-    if (writer_shm) writer_shm->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
+    if (m_writer_shm) m_writer_shm->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    auto writer_tcp = std::atomic_load(&m_writer_tcp);
-    if (writer_tcp) writer_tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
+    if (m_writer_tcp) m_writer_tcp->ApplySubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id, reader_par_);
 #endif
 
     // add key to connection map, including connection state
@@ -552,16 +542,13 @@ namespace eCAL
   {
     // remove subscription
 #if ECAL_CORE_TRANSPORT_UDP
-    auto writer_udp = std::atomic_load(&m_writer_udp);
-    if (writer_udp) writer_udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
+    if (m_writer_udp) m_writer_udp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 #if ECAL_CORE_TRANSPORT_SHM
-    auto writer_shm = std::atomic_load(&m_writer_shm);
-    if (writer_shm) writer_shm->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
+    if (m_writer_shm) m_writer_shm->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-    auto writer_tcp = std::atomic_load(&m_writer_tcp);
-    if (writer_tcp) writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
+    if (m_writer_tcp) m_writer_tcp->RemoveSubscription(subscription_info_.host_name, subscription_info_.process_id, subscription_info_.entity_id);
 #endif
 
     {
@@ -584,6 +571,9 @@ namespace eCAL
 
   void CPublisherImpl::RefreshSendCounter()
   {
+    // increase write clock
+    m_clock++;
+
     // update send frequency
     {
       // we should think about if we would like to potentially use the `time_` variable to tick with (but we would need the same base for checking incoming samples then....
@@ -654,64 +644,55 @@ namespace eCAL
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
+    ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
-    auto writer_udp = std::atomic_load(&m_writer_udp);
-    if (writer_udp)
+    if (m_writer_udp)
     {
       eCAL::Registration::TLayer udp_tlayer;
       udp_tlayer.type = tl_ecal_udp;
       udp_tlayer.version = ecal_transport_layer_version;
       udp_tlayer.enabled = m_layers.udp.write_enabled;
       udp_tlayer.active = m_layers.udp.active;
-      udp_tlayer.par_layer.layer_par_udpmc = writer_udp->GetConnectionParameter().layer_par_udpmc;
+      udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
       ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
     // shm layer
-    auto writer_shm = std::atomic_load(&m_writer_shm);
-
-    if (writer_shm)
+    if (m_writer_shm)
     {
       eCAL::Registration::TLayer shm_tlayer;
       shm_tlayer.type = tl_ecal_shm;
       shm_tlayer.version = ecal_transport_layer_version;
       shm_tlayer.enabled = m_layers.shm.write_enabled;
       shm_tlayer.active = m_layers.shm.active;
-      shm_tlayer.par_layer.layer_par_shm = writer_shm->GetConnectionParameter().layer_par_shm;
+      shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
       ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
     // tcp layer
-    auto writer_tcp = std::atomic_load(&m_writer_tcp);
-    if (writer_tcp)
+    if (m_writer_tcp)
     {
       eCAL::Registration::TLayer tcp_tlayer;
       tcp_tlayer.type = tl_ecal_tcp;
       tcp_tlayer.version = ecal_transport_layer_version;
       tcp_tlayer.enabled = m_layers.tcp.write_enabled;
       tcp_tlayer.active = m_layers.tcp.active;
-      tcp_tlayer.par_layer.layer_par_tcp = writer_tcp->GetConnectionParameter().layer_par_tcp;
+      tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
       ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.process_name   = m_attributes.process_name;
-    ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_frequency = GetFrequency();
-
-    {
-      const std::lock_guard<std::mutex> lock(m_state_mutex);
-      ecal_reg_sample_topic.data_clock   = m_clock;
-      ecal_reg_sample_topic.data_id      = m_id;
-
-      ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
-    }
+    ecal_reg_sample_topic.process_name = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
+    ecal_reg_sample_topic.data_id      = m_id;
+    ecal_reg_sample_topic.data_clock       = m_clock;
+    ecal_reg_sample_topic.data_frequency        = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -822,7 +803,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartUdpLayer::ACTIVATED");
 
     // create writer
-    std::atomic_store(&m_writer_udp, std::make_shared<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_publisher_id, m_attributes)));
+    m_writer_udp = std::make_unique<CDataWriterUdpMC>(eCAL::eCALWriter::BuildUDPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -848,7 +829,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartShmLayer::ACTIVATED");
 
     // create writer
-    std::atomic_store(&m_writer_shm, std::make_shared<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes)));
+    m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes));
 
     // register activated layer
     Register();
@@ -874,7 +855,7 @@ namespace eCAL
     Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::StartTcpLayer::ACTIVATED");
 
     // create writer
-    std::atomic_store(&m_writer_tcp, std::make_shared<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_publisher_id, m_attributes)));
+    m_writer_tcp = std::make_unique<CDataWriterTCP>(eCAL::eCALWriter::BuildTCPAttributes(m_publisher_id, m_attributes));
 
     // register activated layer
     Register();
@@ -895,7 +876,7 @@ namespace eCAL
     m_layers.udp.write_enabled = false;
 
     // destroy writer
-    std::atomic_store(&m_writer_udp, std::shared_ptr<CDataWriterUdpMC>{});
+    m_writer_udp.reset();
 #endif
 
 #if ECAL_CORE_TRANSPORT_SHM
@@ -903,7 +884,7 @@ namespace eCAL
     m_layers.shm.write_enabled = false;
 
     // destroy writer
-    std::atomic_store(&m_writer_shm, std::shared_ptr<CDataWriterSHM>{});
+    m_writer_shm.reset();
 #endif
 
 #if ECAL_CORE_TRANSPORT_TCP
@@ -911,27 +892,25 @@ namespace eCAL
     m_layers.tcp.write_enabled = false;
 
     // destroy writer
-    std::atomic_store(&m_writer_tcp, std::shared_ptr<CDataWriterTCP>{});
+    m_writer_tcp.reset();
 #endif
   }
 
   size_t CPublisherImpl::PrepareWrite(long long id_, size_t len_)
   {
-    const std::lock_guard<std::mutex> lock(m_state_mutex);
     // store id
     m_id = id_;
 
-    // increase write clock
-    m_clock++;
-    
-      // handle write counters
+    // handle write counters
     RefreshSendCounter();
+
     // calculate unique send hash
     const std::hash<SSndHash> hf;
     const size_t snd_hash = hf(SSndHash(m_publisher_id, m_clock));
+
     // store size for monitoring
     m_topic_size = len_;
-   
+
     // return the hash for the write action
     return snd_hash;
   }
