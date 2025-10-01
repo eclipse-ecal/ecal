@@ -170,13 +170,13 @@ namespace eCAL
     case bct_unreg_process:
       break;
     case bct_reg_service:
-      m_server_infos.RegisterSample(sample_);
+      m_server_infos.RegisterSample(sample_.identifier, sample_.service);
       break;
     case bct_unreg_service:
       m_server_infos.UnregisterSample(sample_);
       break;
     case bct_reg_client:
-      m_client_infos.RegisterSample(sample_);
+      m_client_infos.RegisterSample(sample_.identifier, sample_.client);
       break;
     case bct_unreg_client:
       m_client_infos.UnregisterSample(sample_);
@@ -212,7 +212,7 @@ namespace eCAL
 
   }
 
-  inline void CDescGate::CollectedTopicInfo::RegisterSample(const Registration::Sample& sample_, std::function<void(const STopicId&)> on_new_topic)
+  void CDescGate::CollectedTopicInfo::RegisterSample(const Registration::Sample& sample_, const std::function<void(const STopicId&)>& on_new_topic)
   {
     std::unique_lock<std::mutex> guard(mutex);
 
@@ -239,7 +239,7 @@ namespace eCAL
     }
   }
 
-  inline void CDescGate::CollectedTopicInfo::UnregisterSample(const Registration::Sample& sample_, std::function<void(const STopicId&)> on_erased_topic)
+  void CDescGate::CollectedTopicInfo::UnregisterSample(const Registration::Sample& sample_, const std::function<void(const STopicId&)>& on_erased_topic)
   {
     std::unique_lock<std::mutex> guard(mutex); 
 
@@ -248,7 +248,7 @@ namespace eCAL
     {
       // First erase and then call the callback.
       // Should think about if it makes sense to already release the mutex
-      STopicId erased_id = iterator->second.id;
+      const STopicId erased_id = iterator->second.id;
       map.erase(iterator);
       
       guard.unlock();
@@ -256,9 +256,9 @@ namespace eCAL
     }
   }
 
-  inline std::set<STopicId> CDescGate::CollectedTopicInfo::GetIDs() const
+  std::set<STopicId> CDescGate::CollectedTopicInfo::GetIDs() const
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    const std::lock_guard<std::mutex> guard(mutex);
 
     std::set<STopicId> topic_ids;
     for (const auto& map_iterator : map)
@@ -268,9 +268,9 @@ namespace eCAL
     return topic_ids;
   }
 
-  inline bool CDescGate::CollectedTopicInfo::GetInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
+  bool CDescGate::CollectedTopicInfo::GetInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    const std::lock_guard<std::mutex> guard(mutex);
 
     auto iterator = map.find(id_.topic_id.entity_id);
 
@@ -280,33 +280,10 @@ namespace eCAL
     topic_info_ = iterator->second.datatype_info;
     return true;
   }
-
-  inline void CDescGate::CollectedServiceInfo::RegisterSample(const Registration::Sample& sample_)
+   
+  void CDescGate::CollectedServiceInfo::UnregisterSample(const Registration::Sample& sample_)
   {
-    std::lock_guard<std::mutex> guard(mutex);
-
-    auto iterator = map.find(sample_.identifier.entity_id);
-
-    if (iterator != map.end())
-    {
-      // See if we need to update service method information.
-      // In theory, this should be an invariant, at least with v6.
-      iterator->second.service_method_information = Convert(sample_.service);
-    }
-    else
-    {
-      auto service_id = eCAL::SServiceId{ ConvertToEntityId(sample_.identifier), sample_.topic.topic_name };
-      auto service_method_information = Convert(sample_.service);
-      auto service_info = ServiceInfo{ service_id, std::move(service_method_information) };
-
-      map.emplace(sample_.identifier.entity_id, service_info);
-    }
-
-  }
-
-  inline void CDescGate::CollectedServiceInfo::UnregisterSample(const Registration::Sample& sample_)
-  {
-    std::lock_guard<std::mutex> guard(mutex);
+    const std::lock_guard<std::mutex> guard(mutex);
 
     auto iterator = map.find(sample_.identifier.entity_id);
     if (iterator != map.end())
@@ -315,9 +292,9 @@ namespace eCAL
     }
   }
 
-  inline std::set<SServiceId> CDescGate::CollectedServiceInfo::GetIDs() const
+  std::set<SServiceId> CDescGate::CollectedServiceInfo::GetIDs() const
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    const std::lock_guard<std::mutex> guard(mutex);
 
     std::set<SServiceId> service_ids;
     for (const auto& map_iterator : map)
@@ -327,9 +304,9 @@ namespace eCAL
     return service_ids;
   }
 
-  inline bool CDescGate::CollectedServiceInfo::GetInfo(const SServiceId& id_, ServiceMethodInformationSetT& topic_info_) const
+  bool CDescGate::CollectedServiceInfo::GetInfo(const SServiceId& id_, ServiceMethodInformationSetT& topic_info_) const
   {
-    std::lock_guard<std::mutex> guard(mutex);
+    const std::lock_guard<std::mutex> guard(mutex);
 
     auto iterator = map.find(id_.service_id.entity_id);
 

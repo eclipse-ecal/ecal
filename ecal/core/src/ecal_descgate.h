@@ -32,7 +32,6 @@
 
 #include <atomic>
 #include <chrono>
-#include <map>
 #include <unordered_map>
 #include <mutex>
 #include <string>
@@ -92,11 +91,11 @@ namespace eCAL
     public:
       void RegisterSample(
         const Registration::Sample& sample_,
-        std::function<void(const STopicId&)> on_new_topic);
+        const std::function<void(const STopicId&)>& on_new_topic);
 
       void UnregisterSample(
         const Registration::Sample& sample_,
-        std::function<void(const STopicId&)> on_erased_topic);
+        const std::function<void(const STopicId&)>& on_erased_topic);
 
       std::set<STopicId> GetIDs() const;
 
@@ -115,8 +114,29 @@ namespace eCAL
       std::unordered_map<EntityIdT, ServiceInfo> map;
 
     public:
+      template <typename Service>
       void RegisterSample(
-        const Registration::Sample& sample_);
+        const Registration::SampleIdentifier& sample_id_, const Service& sample_service_)
+      {
+        std::lock_guard<std::mutex> guard(mutex);
+
+        auto iterator = map.find(sample_id_.entity_id);
+
+        if (iterator != map.end())
+        {
+          // See if we need to update service method information.
+          // In theory, this should be an invariant, at least with v6.
+          iterator->second.service_method_information = Convert(sample_service_);
+        }
+        else
+        {
+          auto service_id = eCAL::SServiceId{ ConvertToEntityId(sample_id_), sample_service_.service_name };
+          auto service_method_information = Convert(sample_service_);
+          auto service_info = ServiceInfo{ service_id, std::move(service_method_information) };
+
+          map.emplace(sample_id_.entity_id, service_info);
+        }
+      }
 
       void UnregisterSample(
         const Registration::Sample& sample_c);

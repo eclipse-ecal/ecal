@@ -30,6 +30,12 @@
 
 namespace
 {
+  void VerifyTopic(const eCAL::STopicId topic_id_, const std::string& expected_topic_name_, std::uint64_t expected_topic_id_)
+  {
+    EXPECT_EQ(topic_id_.topic_id.entity_id, expected_topic_id_);
+    EXPECT_EQ(topic_id_.topic_name, expected_topic_name_);
+  }
+
   eCAL::Registration::Sample CreatePublisher(const std::string& topic_name_, std::uint64_t topic_id_)
   {
     eCAL::Registration::Sample reg_sample;
@@ -68,7 +74,13 @@ namespace
     return reg_sample;
   }
 
-  eCAL::Registration::Sample CreateService(const std::string& service_name_, std::uint64_t service_id_)
+  void VerifyService(const eCAL::SServiceId service_id_, const std::string& expected_service_name_, std::uint64_t expected_service_id_)
+  {
+    EXPECT_EQ(service_id_.service_id.entity_id, expected_service_id_);
+    EXPECT_EQ(service_id_.service_name, expected_service_name_);
+  }
+
+  eCAL::Registration::Sample CreateServer(const std::string& service_name_, std::uint64_t service_id_)
   {
     eCAL::Registration::Sample reg_sample;
     reg_sample.cmd_type             = eCAL::bct_reg_service;
@@ -81,9 +93,9 @@ namespace
     return reg_sample;
   }
 
-  eCAL::Registration::Sample DestroyService(const std::string& service_name_, std::uint64_t service_id_)
+  eCAL::Registration::Sample DestroyServer(const std::string& service_name_, std::uint64_t service_id_)
   {
-    eCAL::Registration::Sample reg_sample = CreateService(service_name_, service_id_);
+    eCAL::Registration::Sample reg_sample = CreateServer(service_name_, service_id_);
     reg_sample.cmd_type = eCAL::bct_unreg_service;
     return reg_sample;
   }
@@ -146,6 +158,19 @@ TEST(core_cpp_descgate, PublisherQualities)
   {
     for (const auto& id : id_set)
     {
+      if (id.topic_id.entity_id == 1)
+      {
+        VerifyTopic(id, "pub1", 1);
+      }
+      else if (id.topic_id.entity_id == 2)
+      {
+        VerifyTopic(id, "pub2", 2);
+      }
+      else
+      {
+        FAIL() << "Expected only ID 1 or 2";
+      }
+
       eCAL::SDataTypeInformation topic_info;
       bool found = desc_gate.GetPublisherInfo(id, topic_info);
       EXPECT_TRUE(found);
@@ -229,6 +254,19 @@ TEST(core_cpp_descgate, SubscriberQualities)
   {
     for (const auto& id : id_set)
     {
+      if (id.topic_id.entity_id == 1)
+      {
+        VerifyTopic(id, "sub1", 1);
+      }
+      else if (id.topic_id.entity_id == 2)
+      {
+        VerifyTopic(id, "sub2", 2);
+      }
+      else
+      {
+        FAIL() << "Expected only ID 1 or 2";
+      }
+
       eCAL::SDataTypeInformation topic_info;
       bool found = desc_gate.GetSubscriberInfo(id, topic_info);
       EXPECT_TRUE(found);
@@ -283,13 +321,21 @@ TEST(core_cpp_descgate, ServiceExpiration)
   auto runs(5);
   while ((runs--) != 0)
   {
-    desc_gate.ApplySample(CreateService("service1", 1), eCAL::tl_none);
+    desc_gate.ApplySample(CreateServer("service1", 1), eCAL::tl_none);
 
-    EXPECT_EQ(1, desc_gate.GetServerIDs().size());
+    auto server_ids = desc_gate.GetServerIDs();
+    EXPECT_EQ(1, server_ids.size());
+    eCAL::ServiceMethodInformationSetT methods;
+    for (const auto& server_id : server_ids)
+    {
+      VerifyService(server_id, "service1", 1);
+      EXPECT_TRUE(desc_gate.GetServerInfo(server_id, methods));
+      EXPECT_EQ(1, methods.size()); // There should be one 
+    }
   }
 
   // now let the sample expire
-  desc_gate.ApplySample(DestroyService("service1", 1), eCAL::tl_none);
+  desc_gate.ApplySample(DestroyServer("service1", 1), eCAL::tl_none);
 
   // sample should be expired
   EXPECT_EQ(0, desc_gate.GetServerIDs().size());
@@ -303,7 +349,7 @@ TEST(core_cpp_descgate, ManyService)
   for (auto service = 0; service < num_service; ++service)
   {
     // create registration sample for service-xx
-    desc_gate.ApplySample(CreateService("service" + std::to_string(service), service), eCAL::tl_none);
+    desc_gate.ApplySample(CreateServer("service" + std::to_string(service), service), eCAL::tl_none);
   }
 
   // map should contain num_service samples
@@ -313,7 +359,7 @@ TEST(core_cpp_descgate, ManyService)
   for (auto service = 0; service < num_service; ++service)
   {
     // create registration sample for service-xx
-    desc_gate.ApplySample(DestroyService("service" + std::to_string(service), service), eCAL::tl_none);
+    desc_gate.ApplySample(DestroyServer("service" + std::to_string(service), service), eCAL::tl_none);
   }
 
   // samples should be expired
@@ -329,7 +375,17 @@ TEST(core_cpp_descgate, ClientExpiration)
   while ((runs--) != 0)
   {
     desc_gate.ApplySample(CreateClient("client1", 1), eCAL::tl_none);
-    EXPECT_EQ(1, desc_gate.GetClientIDs().size());
+
+    auto client_ids = desc_gate.GetClientIDs();
+    EXPECT_EQ(1, client_ids.size());
+    eCAL::ServiceMethodInformationSetT methods;
+    for (const auto& client_id : client_ids)
+    {
+      VerifyService(client_id, "client1", 1);
+      EXPECT_TRUE(desc_gate.GetClientInfo(client_id, methods));
+      EXPECT_EQ(1, methods.size()); // There should be one 
+    }
+
   }
 
   // now let the sample expire
