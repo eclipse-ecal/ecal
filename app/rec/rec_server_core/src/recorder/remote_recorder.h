@@ -145,6 +145,8 @@ namespace eCAL
       void removeAutorecoveryActions_NoLock();
       void QueueSetSettings_NoLock(const RecorderSettings& settings);
       void QueueSetCommand_NoLock(const RecorderCommand& command);
+
+      bool ConnectToFreeRecorderService();
       bool CallRecorderService(const std::string& method_name_, const google::protobuf::Message& request_, google::protobuf::Message& response_);
 
     //////////////////////////////////////////
@@ -160,13 +162,13 @@ namespace eCAL
       bool currently_executing_action_;
 
       bool    recorder_enabled_;
-      int32_t connected_pid_;
-      bool    client_in_sync_;
-      bool    recorder_alive_;
+
+      eCAL::SEntityId connected_service_client_id_;
+      bool            client_in_sync_;
 
       std::atomic<bool> ever_participated_in_a_measurement_;
 
-      eCAL::rec::RecorderStatus                     last_status_;
+      eCAL::rec::RecorderStatus          last_status_;
       eCAL::Time::ecal_clock::time_point last_status_timestamp_;
       std::pair<bool, std::string>       last_response_;
 

@@ -46,9 +46,8 @@ namespace eCAL
       , next_ping_time_                     (std::chrono::steady_clock::time_point(std::chrono::steady_clock::duration(0)))
       , currently_executing_action_         (false)
       , recorder_enabled_                   (false)
-      , connected_pid_                      (0)
+      , connected_service_client_id_        {}
       , client_in_sync_                     (false)
-      , recorder_alive_                     (false)
       , ever_participated_in_a_measurement_ (false)
       , last_response_                      ({true, ""})
       , should_be_connected_to_ecal_        (false)
@@ -106,7 +105,7 @@ namespace eCAL
         // Remove all unfinished actions from the action queue
         actions_to_perform_.clear();
 
-        if (should_be_connected_to_ecal_ && recorder_alive_)
+        if (should_be_connected_to_ecal_ && (connected_service_client_id_.entity_id != 0))
         {
           // De-initialize the recorder
           RecorderCommand de_initialize_command;
@@ -182,7 +181,7 @@ namespace eCAL
     bool RemoteRecorder::IsAlive() const
     {
       std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
-      return recorder_alive_;
+      return (connected_service_client_id_.entity_id != 0);
     }
 
     std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> RemoteRecorder::GetStatus() const
@@ -222,6 +221,12 @@ namespace eCAL
     {
       while (!IsInterrupted())
       {
+        // TODO: Only connect to the recorder, if it is enabled. Currently, We always try to connect.
+
+        ////////////////////////////////////////////
+        // Get next action to perform
+        ////////////////////////////////////////////
+
         Action this_loop_action;
 
         {
@@ -270,7 +275,6 @@ namespace eCAL
             {
               bool set_settings_successfull = (response.result() == eCAL::pb::rec_client::ServiceResult::success);
 
-              recorder_alive_ = true;
               client_in_sync_ = set_settings_successfull;
 
               if (set_settings_successfull)
@@ -287,11 +291,8 @@ namespace eCAL
             }
             else
             {
-              recorder_alive_ = false;
               client_in_sync_ = false;
-              eCAL::rec::EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": Unable to contact recorder");
               actions_to_perform_.emplace_front(Action(true)); // Next just ping the client to see if we can recover
-              last_response_ = { false, "Unable to contact recorder" };
             }
           }
         }
@@ -323,8 +324,6 @@ namespace eCAL
             {
               bool execute_command_successfull = (response_pb.result() == eCAL::pb::rec_client::ServiceResult::success);
 
-              recorder_alive_ = true;
-
               if (execute_command_successfull)
               {
                 eCAL::rec::EcalRecLogger::Instance()->info("Successfully sent command to " + hostname_);
@@ -338,10 +337,7 @@ namespace eCAL
             }
             else
             {
-              recorder_alive_ = false;
-              eCAL::rec::EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": Unable to contact recorder");
               actions_to_perform_.emplace_front(Action(true)); // Next just ping the client to see if we can recover
-              last_response_ = { false, "Unable to contact recorder" };
             }
 
             // Report the last response
@@ -366,134 +362,135 @@ namespace eCAL
           }
         }
         ////////////////////////////////////////////
-        // Get State / Ping
+        // Get State / Ping / Connect / Add auto-recovery actions
         ////////////////////////////////////////////
         else
         {
-          eCAL::pb::rec_client::GetStateRequest request;
-          eCAL::pb::rec_client::State           state_response_pb;
-
-          // Retrieve the state from the client
-          auto before_call_timestamp = eCAL::Time::ecal_clock::now();
-
-          bool call_success = CallRecorderService("GetState", request, state_response_pb);
-
-          auto after_call_timestamp = eCAL::Time::ecal_clock::now();
-          if (IsInterrupted()) return;
-
-          if (call_success)
+          // Ping the existing client or connect to a new free recorder client, if necessary.
           {
-            eCAL::rec::RecorderStatus last_status;
-            std::string               hostname;
+            bool need_to_reconnect = false;
+            {
+              std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+              need_to_reconnect = (connected_service_client_id_.entity_id == 0);
+            }
 
-            eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
+            if (need_to_reconnect) // Try to connect to a new recorder and set the last status
+            {
+              const bool successfully_connected = ConnectToFreeRecorderService();
+              
+              if (IsInterrupted()) return;
 
-            int32_t                   client_pid  = state_response_pb.process_id();
+              if (successfully_connected)
+              {
+                std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
 
+                // Log the successful connection
+                // TODO: Put this logging in the other function
+                std::stringstream ss;
+                ss << "Connected to recorder service for host " << hostname_
+                  << " (PID: " << connected_service_client_id_.process_id
+                  << ", EntityId: " << connected_service_client_id_.entity_id << ")";
+                eCAL::rec::EcalRecLogger::Instance()->info(ss.str());
+
+                client_in_sync_ = false; // We need to set all settings again, as we don't know which state the new recorder is in
+
+                // The new connection has also set a new status, so we need to call the update_jobstatus_function_
+                update_jobstatus_function_(hostname_, last_status_);
+              }
+            }
+            else // Poll the status from the currently connected recorder
             {
               std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
 
-              // Correct the connected PID
-              if (connected_pid_ != client_pid)
-              {
-                // Some recorder on the same host with a different PID has connected!
-                if (!recorder_alive_)
-                  eCAL::rec::EcalRecLogger::Instance()->info("New recorder on host " + hostname_ + " has connected");
+              const eCAL::pb::rec_client::GetStateRequest request;
+              eCAL::pb::rec_client::State                 state_response_pb;
 
-                client_in_sync_ = false;
-                connected_pid_  = client_pid;
-              }
-              else
-              {
-                // Log an info, if the recorder as not been alive, previously
-                if (!recorder_alive_)
-                  eCAL::rec::EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " has reconnected!");
-              }
+              // Retrieve the state from the client
+              const auto before_call_timestamp = eCAL::Time::ecal_clock::now();
+              const bool call_success = CallRecorderService("GetState", request, state_response_pb);
+              const auto after_call_timestamp = eCAL::Time::ecal_clock::now();
 
-              update_jobstatus_function_(hostname_, last_status);
+              if (IsInterrupted()) return;
 
-              last_status_     = std::move(last_status);
-              if (after_call_timestamp >= before_call_timestamp)
+              if (call_success)
               {
-                last_status_timestamp_ = before_call_timestamp + (after_call_timestamp - before_call_timestamp) / 2;
-              }
-              else
-              {
-                last_status_timestamp_ = after_call_timestamp;
-              }
-              recorder_alive_ = true;
+                std::string hostname;
+                eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status_);
 
-              // Auto recovery
-              if (recorder_enabled_ && recorder_alive_ && !client_in_sync_)
-              {
-                // Remove all old autorecovery actions. We don't need them anyways, as we are adding new ones.
-                removeAutorecoveryActions_NoLock();
+                update_jobstatus_function_(hostname_, last_status_);
 
-                // (3) If the recorder is not connected but should be, we connect it again
-                if (should_be_connected_to_ecal_ && !last_status_.initialized_)
+                if (after_call_timestamp >= before_call_timestamp)
                 {
-                  RecorderCommand connect_to_ecal_command;
-                  connect_to_ecal_command.type_ = RecorderCommand::Type::INITIALIZE;
-                  actions_to_perform_.emplace_front(Action(connect_to_ecal_command, true));
-                }
-
-                // (2) Set all settings again
-                if ((actions_to_perform_.size() > 0) && actions_to_perform_.front().IsSettings())
-                {
-                  // Merge settings
-                  actions_to_perform_.front().settings_ = complete_settings_;
-                  actions_to_perform_.front().SetIsAutorecoveryAction(true);
+                  last_status_timestamp_ = before_call_timestamp + (after_call_timestamp - before_call_timestamp) / 2;
                 }
                 else
                 {
-                  actions_to_perform_.emplace_front(Action(complete_settings_, true));
+                  last_status_timestamp_ = after_call_timestamp;
                 }
-
-                // (1) Stop recording (or entirely disconnect from ecal)
-                if (!should_be_connected_to_ecal_ && last_status_.initialized_)
-                {
-                  // If the recorder is connected to ecal but shouldn't, we disconnect it first
-                  RecorderCommand disconnect_command;
-                  disconnect_command.type_ = RecorderCommand::Type::DE_INITIALIZE;
-                  actions_to_perform_.emplace_front(Action(disconnect_command, true));
-                }
-                else
-                {
-                  // If the recorder is recording, we need to stop it
-                  bool is_recording = false;
-                  for (const eCAL::rec::JobStatus& job_status : last_status_.job_statuses_)
-                  {
-                    if (job_status.state_ == eCAL::rec::JobState::Recording)
-                    {
-                      is_recording = true;
-                      break;
-                    }
-                  }
-
-                  if (is_recording)
-                  {
-                    RecorderCommand stop_command;
-                    stop_command.type_ = RecorderCommand::Type::STOP_RECORDING;
-                    actions_to_perform_.emplace_front(Action(stop_command, true));
-                  }
-                }
-              }
-              else if (!recorder_alive_)
-              {
-                actions_to_perform_.emplace_front(Action(true));
               }
             }
           }
-          else
+
+          std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+
+          // If we are out of sync, we add the autorecovery options
+          if (recorder_enabled_ && (connected_service_client_id_.entity_id != 0) && !client_in_sync_) // TODO: check if we should skip the entire loop if the recorder is not enabled, instead of checking the enabled status here
           {
-            std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+            // Remove all old autorecovery actions. We don't need them anyways, as we are adding new ones.
+            removeAutorecoveryActions_NoLock();
 
-            // Log an info, if the recorder has been alive, previously
-            if (recorder_alive_)
-              eCAL::rec::EcalRecLogger::Instance()->info("Recorder on host " + hostname_ + " is not alive any more.");
+            // (3) If the recorder is not connected but should be, we connect it again
+            if (should_be_connected_to_ecal_ && !last_status_.initialized_)
+            {
+              RecorderCommand connect_to_ecal_command;
+              connect_to_ecal_command.type_ = RecorderCommand::Type::INITIALIZE;
+              actions_to_perform_.emplace_front(Action(connect_to_ecal_command, true));
+            }
 
-            recorder_alive_ = false;
-            last_response_  = { false, "Unable to contact recorder" };
+            // (2) Set all settings again
+            if ((actions_to_perform_.size() > 0) && actions_to_perform_.front().IsSettings())
+            {
+              // Merge settings
+              actions_to_perform_.front().settings_ = complete_settings_;
+              actions_to_perform_.front().SetIsAutorecoveryAction(true);
+            }
+            else
+            {
+              actions_to_perform_.emplace_front(Action(complete_settings_, true));
+            }
+
+            // (1) Stop recording (or entirely disconnect from ecal)
+            if (!should_be_connected_to_ecal_ && last_status_.initialized_)
+            {
+              // If the recorder is connected to ecal but shouldn't, we disconnect it first
+              RecorderCommand disconnect_command;
+              disconnect_command.type_ = RecorderCommand::Type::DE_INITIALIZE;
+              actions_to_perform_.emplace_front(Action(disconnect_command, true));
+            }
+            else
+            {
+              // If the recorder is recording, we need to stop it
+              bool is_recording = false;
+              for (const eCAL::rec::JobStatus& job_status : last_status_.job_statuses_)
+              {
+                if (job_status.state_ == eCAL::rec::JobState::Recording)
+                {
+                  is_recording = true;
+                  break;
+                }
+              }
+
+              if (is_recording)
+              {
+                RecorderCommand stop_command;
+                stop_command.type_ = RecorderCommand::Type::STOP_RECORDING;
+                actions_to_perform_.emplace_front(Action(stop_command, true));
+              }
+            }
+          }
+          else if (connected_service_client_id_.entity_id == 0) // If recorder not connected => try to connect in next loop
+          {
+            actions_to_perform_.emplace_front(Action(true)); // In the next loop we try to connect, again
           }
 
           next_ping_time_ = std::chrono::steady_clock::now() + std::chrono::milliseconds(200);
@@ -663,25 +660,103 @@ namespace eCAL
       actions_to_perform_.emplace_back(Action(command));
     }
 
+    bool RemoteRecorder::ConnectToFreeRecorderService()
+    {
+      auto client_instances = recorder_service_.GetClientInstances();
+      for (auto& client_instance : client_instances)
+      {
+        if (IsInterrupted())
+          return false;
+
+        if (client_instance.GetClientID().host_name == hostname_)
+        {
+          eCAL::pb::rec_client::GetStateRequest request;
+          eCAL::pb::rec_client::State           state_response_pb;
+
+          // TODO:  enrich the getstaterequest with a "desire to own the client" functionality
+
+          auto before_call_timestamp = eCAL::Time::ecal_clock::now();
+          auto client_instance_response_pair = client_instance.CallWithResponse("GetState", request, 0);
+          auto after_call_timestamp = eCAL::Time::ecal_clock::now();
+
+          if (!client_instance_response_pair.first)
+          {
+            // If contacting the recorder at all failed, continue to try the next one
+            continue;
+          }
+          else
+          {
+            state_response_pb.ParseFromString(client_instance_response_pair.second.response);
+            // TODO: Check if owning the rec client was successful
+
+            {
+              std::lock_guard<decltype(io_mutex_)> io_lock(io_mutex_);
+
+              // Set the connected client ID, which is used to see if the connection has been successful
+              connected_service_client_id_ = client_instance.GetClientID();
+
+              // Set the last status of the connected client. The last status is used by the autorecovery, so it is important that we set it.
+              eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, connected_service_client_id_.host_name, last_status_);
+              if (after_call_timestamp >= before_call_timestamp)
+              {
+                last_status_timestamp_ = before_call_timestamp + (after_call_timestamp - before_call_timestamp) / 2;
+              }
+              else
+              {
+                last_status_timestamp_ = after_call_timestamp;
+              }
+
+            }
+
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
     bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
     {
-      constexpr int timeout_ms(1000);
+      constexpr int timeout_ms(1000); // TODO: I think I should remove this timeout, it just causes requests to stack up
 
       auto client_instances = recorder_service_.GetClientInstances();
       for (auto& client_instance : client_instances)
       {
-        // TODO: We need to filter for pid as well in the future?
-        // Currently empty hostname means "all hosts"
-        if (client_instance.GetClientID().host_name == hostname_ || hostname_.empty())
+        if (client_instance.GetClientID() == connected_service_client_id_)
         {
           auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
-          if (client_instance_response.first)
+
+          if (!client_instance_response.first)
           {
+            // The Client was not reachable
+            eCAL::rec::EcalRecLogger::Instance()->error("Failed sending message to " + hostname_
+              + ": Connected recorder is unreachable (PID: "
+              + std::to_string(connected_service_client_id_.process_id)
+              + ", Service ID: "
+              + std::to_string(connected_service_client_id_.entity_id)
+              + ")");
+            connected_service_client_id_ = eCAL::SEntityId();
+            last_response_ = { false, "Unable to contact recorder" };
+            return false;
+          }
+          else
+          {
+            // The Client was reachable. The response message is returned. It may still contain an error that is reported by the client.
             response.ParseFromString(client_instance_response.second.response);
             return true;
           }
         }
       }
+
+      // The client that we had previously connected to does not appear in the list anymore.
+      eCAL::rec::EcalRecLogger::Instance()->error("Failed sending message to " + hostname_
+        + ": Previously connected recorder does not exist anymore (PID: "
+        + std::to_string(connected_service_client_id_.process_id)
+        + ", Service ID: "
+        + std::to_string(connected_service_client_id_.entity_id)
+        + ")");
+      connected_service_client_id_ = eCAL::SEntityId();
+      last_response_ = { false, "Unable to contact recorder" };
       return false;
     }
   }
