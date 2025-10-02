@@ -1,160 +1,58 @@
-/* ========================= eCAL LICENSE =================================
- *
- * Copyright (C) 2016 - 2025 Continental Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * ========================= eCAL LICENSE =================================
-*/
-
-/**
- * @brief  eCAL description gateway class
-**/
-
 #include "ecal_descgate.h"
 
 #include <iostream>
 
 namespace
 {
-  // TODO: this is not very performant
-  // a) this should be done when the information is first retrieved
-  // b) we always copy the info around, which is problematic for performance
-  eCAL::SDataTypeInformation GetDataTypeInformation(const eCAL::SDataTypeInformation& datatype_info_, const std::string& legacy_type_, const std::string& legacy_desc_)
-  {
-    eCAL::SDataTypeInformation datatype_info;
-
-    // if the new datatype_info field is set, use it
-    if (!datatype_info_.name.empty())
-    {
-      datatype_info = datatype_info_;
-    }
-    // otherwise use the old type and desc fields
-    else
-    {
-      datatype_info.name = legacy_type_;
-      datatype_info.descriptor = legacy_desc_;
-    }
-
-    return datatype_info;
-  }
+  // Keep all helpers with internal linkage in this TU.
 
   eCAL::SEntityId ConvertToEntityId(const eCAL::Registration::SampleIdentifier& sample_identifier)
   {
-    eCAL::SEntityId id{ sample_identifier.entity_id, sample_identifier.process_id, sample_identifier.host_name};
-    return id;
+    return eCAL::SEntityId{ sample_identifier.entity_id
+                          , sample_identifier.process_id
+                          , sample_identifier.host_name };
   }
 
-  // we could also think about an update function here
-  // e.g. we don't always copy everything, but only write if things have changed. At least this would be beneficial for performance.
-  template<typename Service>
-  eCAL::ServiceMethodInformationSetT Convert(const Service& service_)
+  // This creates a normalized SDataTypeInformation either from the new field
+  // or from the legacy type/desc fields.
+  eCAL::SDataTypeInformation GetDataTypeInformation(const eCAL::SDataTypeInformation& datatype_info_,
+    const std::string& legacy_type_,
+    const std::string& legacy_desc_)
+  {
+    if (!datatype_info_.name.empty())
+      return datatype_info_;
+
+    eCAL::SDataTypeInformation fused_datatype_info;
+    fused_datatype_info.name = legacy_type_;
+    fused_datatype_info.descriptor = legacy_desc_;
+    return fused_datatype_info;
+  }
+
+  // Convert a "service-like" structure with .methods[] into ServiceMethodInformationSetT.
+  template <typename MethodContainer>
+  eCAL::ServiceMethodInformationSetT ConvertMethods(const MethodContainer& methods_container)
   {
     eCAL::ServiceMethodInformationSetT methods;
-    for (const auto& method : service_.methods)
+    for (const auto& method : methods_container)
     {
-      const eCAL::SDataTypeInformation request_datatype = GetDataTypeInformation(method.request_datatype_information, method.req_type, method.req_desc);
-      const eCAL::SDataTypeInformation response_datatype = GetDataTypeInformation(method.response_datatype_information, method.resp_type, method.resp_desc);
-      methods.insert(eCAL::SServiceMethodInformation{method.method_name, request_datatype, response_datatype });
+      const auto request_datatype = GetDataTypeInformation(method.request_datatype_information, method.req_type, method.req_desc);
+      const auto response_datatype = GetDataTypeInformation(method.response_datatype_information, method.resp_type, method.resp_desc);
+      methods.insert(eCAL::SServiceMethodInformation{ method.method_name, request_datatype, response_datatype });
     }
     return methods;
   }
 
-  void ApplyTopicDescription(eCAL::CDescGate::STopicIdInfoMap& topic_info_map_,
-    const eCAL::CDescGate::STopicEventCallbackMap& topic_callback_map_,
-    const eCAL::Registration::SampleIdentifier& topic_id_,
-    const std::string& topic_name_,
-    const eCAL::SDataTypeInformation& topic_info_)
+  // Helper to notify all callbacks with a specific event type
+  template <class CallbackMap>
+  auto MakeNotifyLambda(CallbackMap& callbacks, eCAL::Registration::RegistrationEventType ev)
   {
-    const auto topic_info_key = eCAL::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
-
-    // update topic info
-    bool new_topic_info(false);
-    {
-      const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-      eCAL::CDescGate::TopicIdInfoMap::iterator topic_info_quality_iter = topic_info_map_.map.find(topic_info_key);
-      new_topic_info = topic_info_quality_iter == topic_info_map_.map.end();
-
-      if (new_topic_info)
+    return [&callbacks, ev](const auto& tid)
       {
-        std::tie(topic_info_quality_iter, std::ignore) = topic_info_map_.map.emplace(topic_info_key, eCAL::SDataTypeInformation{});
-      }
-
-      topic_info_quality_iter->second = topic_info_;
-    }
-
-    // notify publisher / subscriber registration callbacks about new entity
-    if (new_topic_info)
-    {
-      const std::unique_lock<std::mutex> lock(topic_callback_map_.mtx);
-      for (const auto& callback_iter : topic_callback_map_.map)
-      {
-        if (callback_iter.second)
-        {
-          callback_iter.second(topic_info_key, eCAL::Registration::RegistrationEventType::new_entity);
-        }
-      }
-    }
-  }
-
-  void RemTopicDescription(eCAL::CDescGate::STopicIdInfoMap& topic_info_map_,
-    const eCAL::CDescGate::STopicEventCallbackMap& topic_callback_map_,
-    const eCAL::Registration::SampleIdentifier& topic_id_,
-    const std::string& topic_name_)
-  {
-    const auto topic_info_key = eCAL::STopicId{ ConvertToEntityId(topic_id_), topic_name_ };
-
-    // delete topic info
-    bool deleted_topic_info(false);
-    {
-      const std::unique_lock<std::mutex> lock(topic_info_map_.mtx);
-      deleted_topic_info = topic_info_map_.map.erase(topic_info_key) > 0;
-    }
-
-    // notify publisher / subscriber registration callbacks about deleted entity
-    if (deleted_topic_info)
-    {
-      const std::unique_lock<std::mutex> lock(topic_callback_map_.mtx);
-      for (const auto& callback_iter : topic_callback_map_.map)
-      {
-        if (callback_iter.second)
-        {
-          callback_iter.second(topic_info_key, eCAL::Registration::RegistrationEventType::deleted_entity);
-        }
-      }
-    }
-  }
-
-  template<typename Service>
-  void ApplyServiceDescription(eCAL::CDescGate::SServiceIdInfoMap& service_method_info_map_,
-    const eCAL::Registration::SampleIdentifier& service_id_,
-    const Service& service_)
-  {
-    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_), service_.service_name };
-
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.id_map[service_method_info_key] = Convert(service_);
-  }
-
-  template<typename Service>
-  void RemServiceDescription(eCAL::CDescGate::SServiceIdInfoMap& service_method_info_map_,
-    const eCAL::Registration::SampleIdentifier& service_id_,
-    const Service& service_)
-  {
-    const auto service_method_info_key = eCAL::SServiceId{ ConvertToEntityId(service_id_),  service_.service_name };
-
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    service_method_info_map_.id_map.erase(service_method_info_key);
+        const std::lock_guard<std::mutex> guard(callbacks.mtx);
+        for (const auto& kv : callbacks.map)
+          if (kv.second)
+            kv.second(tid, ev);
+      };
   }
 }
 
@@ -165,21 +63,19 @@ namespace eCAL
 
   std::set<STopicId> CDescGate::GetPublisherIDs() const
   {
-    return GetTopicIDs(m_publisher_info_map);
+    return m_publisher_infos.GetIDs();
   }
 
   bool CDescGate::GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
   {
-    return GetTopic(id_, m_publisher_info_map, topic_info_);
+    return m_publisher_infos.GetInfo(id_, topic_info_);
   }
 
   Registration::CallbackToken CDescGate::AddPublisherEventCallback(const Registration::TopicEventCallbackT& callback_)
   {
     const std::lock_guard<std::mutex> lock(m_publisher_callback_map.mtx);
-
     const Registration::CallbackToken new_token = CreateToken();
     m_publisher_callback_map.map[new_token] = callback_;
-
     return new_token;
   }
 
@@ -191,21 +87,19 @@ namespace eCAL
 
   std::set<STopicId> CDescGate::GetSubscriberIDs() const
   {
-    return GetTopicIDs(m_subscriber_info_map);
+    return m_subscriber_infos.GetIDs();
   }
 
   bool CDescGate::GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
   {
-    return GetTopic(id_, m_subscriber_info_map, topic_info_);
+    return m_subscriber_infos.GetInfo(id_, topic_info_);
   }
 
   Registration::CallbackToken CDescGate::AddSubscriberEventCallback(const Registration::TopicEventCallbackT& callback_)
   {
     const std::lock_guard<std::mutex> lock(m_subscriber_callback_map.mtx);
-
     const Registration::CallbackToken new_token = CreateToken();
     m_subscriber_callback_map.map[new_token] = callback_;
-
     return new_token;
   }
 
@@ -217,76 +111,22 @@ namespace eCAL
 
   std::set<SServiceId> CDescGate::GetServerIDs() const
   {
-    return GetServiceIDs(m_service_info_map);
+    return m_server_infos.GetIDs();
   }
 
   bool CDescGate::GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const
   {
-    return GetService(id_, m_service_info_map, service_info_);
+    return m_server_infos.GetInfo(id_, service_info_);
   }
 
   std::set<SServiceId> CDescGate::GetClientIDs() const
   {
-    return GetServiceIDs(m_client_info_map);
+    return m_client_infos.GetIDs();
   }
 
   bool CDescGate::GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const
   {
-    return GetService(id_, m_client_info_map, service_info_);
-  }
-
-  std::set<STopicId> CDescGate::GetTopicIDs(const STopicIdInfoMap& topic_info_map_)
-  {
-    std::set<STopicId> topic_id_set;
-
-    const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    for (const auto& topic_map_it : topic_info_map_.map)
-    {
-      topic_id_set.insert(topic_map_it.first);
-    }
-    return topic_id_set;
-  }
-
-  bool CDescGate::GetTopic(const STopicId& id_, const STopicIdInfoMap& topic_info_map_, SDataTypeInformation& topic_info_)
-  {
-    const std::lock_guard<std::mutex> lock(topic_info_map_.mtx);
-    auto iter = topic_info_map_.map.find(id_);
-    if (iter == topic_info_map_.map.end())
-    {
-      return false;
-    }
-    else
-    {
-      topic_info_ = iter->second;
-      return true;
-    }
-  }
-
-  std::set<SServiceId> CDescGate::GetServiceIDs(const SServiceIdInfoMap& service_method_info_map_)
-  {
-    std::set<SServiceId> service_id_set;
-
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    for (const auto& service_method_info_map_it : service_method_info_map_.id_map)
-    {
-      service_id_set.insert(service_method_info_map_it.first);
-    }
-    return service_id_set;
-  }
-
-  bool CDescGate::GetService(const SServiceId& id_, const SServiceIdInfoMap& service_method_info_map_, ServiceMethodInformationSetT& service_method_info_)
-  {
-    const std::lock_guard<std::mutex> lock(service_method_info_map_.mtx);
-    auto iter = service_method_info_map_.id_map.find(id_);
-    if (iter == service_method_info_map_.id_map.end())
-    {
-      return false;
-    }
-    else
-    {
-      service_method_info_ = iter->second;
-      return true;
-    }
+    return m_client_infos.GetInfo(id_, service_info_);
   }
 
   void CDescGate::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)
@@ -298,43 +138,177 @@ namespace eCAL
     case bct_reg_process:
     case bct_unreg_process:
       break;
+
     case bct_reg_service:
-      ApplyServiceDescription(m_service_info_map, sample_.identifier, sample_.service);
-      break;
-    case bct_unreg_service:
-      RemServiceDescription(m_service_info_map, sample_.identifier, sample_.service);
-      break;
-    case bct_reg_client:
-      ApplyServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
-      break;
-    case bct_unreg_client:
-      RemServiceDescription(m_client_info_map, sample_.identifier, sample_.client);
-      break;
-    case bct_reg_publisher:
-      ApplyTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.datatype_information);
-      break;
-    case bct_unreg_publisher:
-      RemTopicDescription(m_publisher_info_map, m_publisher_callback_map, sample_.identifier, sample_.topic.topic_name);
-      break;
-    case bct_reg_subscriber:
-      ApplyTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name, sample_.topic.datatype_information);
-      break;
-    case bct_unreg_subscriber:
-      RemTopicDescription(m_subscriber_info_map, m_subscriber_callback_map, sample_.identifier, sample_.topic.topic_name);
-      break;
-    default:
     {
-      std::cerr << "CDescGate::ApplySample : unknown sample type" << '\n';
+      const auto methods = ConvertMethods(sample_.service.methods);
+      m_server_infos.RegisterSample(sample_.identifier, sample_.service.service_name, methods);
+      break;
     }
-    break;
+
+    case bct_unreg_service:
+      m_server_infos.UnregisterSample(sample_);
+      break;
+
+    case bct_reg_client:
+    {
+      const auto methods = ConvertMethods(sample_.client.methods);
+      m_client_infos.RegisterSample(sample_.identifier, sample_.client.service_name, methods);
+      break;
+    }
+
+    case bct_unreg_client:
+      m_client_infos.UnregisterSample(sample_);
+      break;
+
+    case bct_reg_publisher:
+      m_publisher_infos.RegisterSample(sample_, MakeNotifyLambda(m_publisher_callback_map, eCAL::Registration::RegistrationEventType::new_entity));
+      break;
+
+    case bct_unreg_publisher:
+      m_publisher_infos.UnregisterSample(sample_, MakeNotifyLambda(m_publisher_callback_map, eCAL::Registration::RegistrationEventType::deleted_entity));
+      break;
+
+    case bct_reg_subscriber:
+      m_subscriber_infos.RegisterSample(sample_, MakeNotifyLambda(m_subscriber_callback_map, eCAL::Registration::RegistrationEventType::new_entity));
+      break;
+
+    case bct_unreg_subscriber:
+      m_subscriber_infos.UnregisterSample(sample_, MakeNotifyLambda(m_subscriber_callback_map, eCAL::Registration::RegistrationEventType::deleted_entity));
+      break;
+
+    default:
+      std::cerr << "CDescGate::ApplySample : unknown sample type\n";
+      break;
     }
   }
 
   Registration::CallbackToken CDescGate::CreateToken()
   {
-    // Atomically increment m_callback_token using fetch_add to ensure thread safety.
-    // fetch_add returns the value before increment, so we add 1 to get the new token value.
-    // memory_order_relaxed is used to optimize performance without additional synchronization.
+    // fetch_add returns old value; add 1 to make tokens start at 1
     return m_callback_token.fetch_add(1, std::memory_order_relaxed) + 1;
+  }
+
+  // ---------- CollectedTopicInfo ----------
+
+  void CDescGate::CollectedTopicInfo::RegisterSample(const Registration::Sample& sample_,
+    const std::function<void(const STopicId&)>& on_new_topic)
+  {
+    std::unique_lock<std::mutex> guard(mutex);
+
+    auto it = map.find(sample_.identifier.entity_id);
+    if (it != map.end())
+    {
+      // Update normalized datatype info (v6 should be invariant, but we keep it robust)
+      it->second.datatype_info = sample_.topic.datatype_information;
+      return;
+    }
+
+    const STopicId           topic_id{ ConvertToEntityId(sample_.identifier), sample_.topic.topic_name };
+    SDataTypeInformation     datatype = sample_.topic.datatype_information;
+    TopicInfo                topic_info{ topic_id, std::move(datatype) };
+
+    map.emplace(sample_.identifier.entity_id, std::move(topic_info));
+
+    // Unlock before invoking callback
+    guard.unlock();
+    on_new_topic(topic_id);
+  }
+
+  void CDescGate::CollectedTopicInfo::UnregisterSample(const Registration::Sample& sample_,
+    const std::function<void(const STopicId&)>& on_erased_topic)
+  {
+    std::unique_lock<std::mutex> guard(mutex);
+
+    auto it = map.find(sample_.identifier.entity_id);
+    if (it == map.end())
+      return;
+
+    const STopicId erased_id = it->second.id;
+    map.erase(it);
+
+    guard.unlock();
+    on_erased_topic(erased_id);
+  }
+
+  std::set<STopicId> CDescGate::CollectedTopicInfo::GetIDs() const
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    std::set<STopicId> topic_ids;
+    for (const auto& map_iterator : map)
+    {
+      topic_ids.insert(map_iterator.second.id);
+    }
+    return topic_ids;
+  }
+
+  bool CDescGate::CollectedTopicInfo::GetInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    const auto iterator = map.find(id_.topic_id.entity_id);
+    if (iterator == map.end())
+      return false;
+
+    topic_info_ = iterator->second.datatype_info;
+    return true;
+  }
+
+  void CDescGate::CollectedServiceInfo::RegisterSample(const Registration::SampleIdentifier& sample_id_,
+    const std::string& service_name_,
+    const ServiceMethodInformationSetT& method_info_)
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    auto it = map.find(sample_id_.entity_id);
+    if (it != map.end())
+    {
+      // Update existing service entry (e.g., datatype / method info refresh)
+      it->second.service_method_information = method_info_;
+      return;
+    }
+
+    // Insert new service entry
+    const auto service_id = eCAL::SServiceId{ ConvertToEntityId(sample_id_), service_name_ };
+    ServiceInfo service_info{ service_id, method_info_ };
+
+    map.emplace(sample_id_.entity_id, std::move(service_info));
+  }
+   
+  void CDescGate::CollectedServiceInfo::UnregisterSample(const Registration::Sample& sample_)
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    const auto iterator = map.find(sample_.identifier.entity_id);
+    if (iterator != map.end())
+    {
+      map.erase(iterator);
+    }
+  }
+
+  std::set<SServiceId> CDescGate::CollectedServiceInfo::GetIDs() const
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    std::set<SServiceId> service_ids;
+    for (const auto& map_iterator : map)
+    {
+      service_ids.insert(map_iterator.second.id);
+    }
+    return service_ids;
+  }
+
+  bool CDescGate::CollectedServiceInfo::GetInfo(const SServiceId& id_, ServiceMethodInformationSetT& topic_info_) const
+  {
+    const std::lock_guard<std::mutex> guard(mutex);
+
+    const auto iterator = map.find(id_.service_id.entity_id);
+
+    if (iterator == map.end())
+      return false;
+
+    topic_info_ = iterator->second.service_method_information;
+    return true;
   }
 }
