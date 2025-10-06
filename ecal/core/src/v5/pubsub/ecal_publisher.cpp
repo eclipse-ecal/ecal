@@ -43,10 +43,10 @@ namespace eCAL
   ECAL_CORE_NAMESPACE_V5
   {
     // Class to bridge legacy callbacks to v6 Callbacks
-    class CEventCallbackAdapater
+    class CPublisherEventCallbackAdapater
     {
     public:
-      CEventCallbackAdapater(std::shared_ptr<CPublisherImpl> publisher_impl_)
+      CPublisherEventCallbackAdapater(std::shared_ptr<CPublisherImpl> publisher_impl_)
         : m_publisher_impl(publisher_impl_)
         , m_is_registered(false)
       {
@@ -174,7 +174,7 @@ namespace eCAL
 
       // create publisher
       m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
-      m_callback_adapter = std::make_shared<CEventCallbackAdapater>(m_publisher_impl);
+      m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher
       g_pubgate()->Register(topic_name_, m_publisher_impl);

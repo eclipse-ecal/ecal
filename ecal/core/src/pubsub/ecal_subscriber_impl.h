@@ -82,12 +82,7 @@ namespace eCAL
     bool SetReceiveCallback(ReceiveCallbackT callback_);
     bool RemoveReceiveCallback();
 
-    // deprecated event callback interface
-    bool SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_);
-    bool RemoveEventCallback(eSubscriberEvent type_);
-
-    // future event callback interface
-    bool SetEventIDCallback(const SubEventCallbackT callback_);
+    bool SetEventCallback(const SubEventCallbackT callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
@@ -170,10 +165,6 @@ namespace eCAL
     std::atomic<int>                          m_receive_time;
 
     std::deque<size_t>                        m_sample_hash_queue;
-
-    using EventCallbackMapT = std::map<eSubscriberEvent, v5::SubEventCallbackT>;
-    std::mutex                                m_event_callback_map_mutex;
-    EventCallbackMapT                         m_event_callback_map;
 
     std::mutex                                m_event_id_callback_mutex;
     SubEventCallbackT                         m_event_id_callback;
