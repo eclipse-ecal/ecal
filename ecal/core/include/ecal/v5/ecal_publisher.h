@@ -45,6 +45,8 @@ namespace eCAL
 
   ECAL_CORE_NAMESPACE_V5
   {
+    class CEventCallbackAdapater;
+
     /**
      * @brief eCAL publisher class.
      *
@@ -319,6 +321,7 @@ namespace eCAL
     private:
       // class members
       std::shared_ptr<CPublisherImpl> m_publisher_impl;
+      std::shared_ptr<CEventCallbackAdapater> m_callback_adapter;
       long long                       m_filter_id;
     };
   }

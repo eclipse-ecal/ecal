@@ -81,11 +81,6 @@ namespace eCAL
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
-    // deprecated event callback interface
-    bool SetEventCallback(ePublisherEvent type_, const v5::PubEventCallbackT callback_);
-    bool RemoveEventCallback(ePublisherEvent type_);
-
-    // future event callback interface
     bool SetEventCallback(const PubEventCallbackT callback_);
     bool RemoveEventCallback();
 
@@ -153,12 +148,8 @@ namespace eCAL
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
 
-    using EventCallbackMapT = std::map<ePublisherEvent, v5::PubEventCallbackT>;
-    std::mutex                             m_event_callback_map_mutex;
-    EventCallbackMapT                      m_event_callback_map;
-
     std::mutex                             m_event_id_callback_mutex;
-    PubEventCallbackT                  m_event_id_callback;
+    PubEventCallbackT                      m_event_id_callback;
 
     long long                              m_id = 0;
     long long                              m_clock = 0;
