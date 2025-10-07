@@ -38,6 +38,20 @@
 #include <utility>
 
 
+namespace {
+  eCAL::v5::SPubEventCallbackData v6tov5CallbackData(const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& v6_callback_data_)
+  {
+    eCAL::v5::SPubEventCallbackData v5_callback_data;
+    v5_callback_data.type = v6_callback_data_.event_type;
+    v5_callback_data.time = v6_callback_data_.event_time;
+    v5_callback_data.clock = 0;
+    v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
+    v5_callback_data.tdatatype = v6_callback_data_.subscriber_datatype;
+    return v5_callback_data;
+  }
+}
+
+
 namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V5
@@ -46,9 +60,8 @@ namespace eCAL
     class CPublisherEventCallbackAdapater
     {
     public:
-      CPublisherEventCallbackAdapater(std::shared_ptr<CPublisherImpl> publisher_impl_)
+      CPublisherEventCallbackAdapater(const std::shared_ptr<CPublisherImpl>& publisher_impl_)
         : m_publisher_impl(publisher_impl_)
-        , m_is_registered(false)
       {
       }
 
@@ -96,22 +109,11 @@ namespace eCAL
         return publisher->SetEventCallback(internal_callback);
       }
 
-      v5::SPubEventCallbackData v6tov5CallbackData(const STopicId& topic_id_, const eCAL::SPubEventCallbackData& v6_callback_data_)
-      {
-        SPubEventCallbackData v5_callback_data;
-        v5_callback_data.type = v6_callback_data_.event_type;
-        v5_callback_data.time = v6_callback_data_.event_time;
-        v5_callback_data.clock = 0;
-        v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
-        v5_callback_data.tdatatype = v6_callback_data_.subscriber_datatype;
-        return v5_callback_data;
-      }
-
       using EventCallbackMapT = std::map<ePublisherEvent, v5::PubEventCallbackT>;
       std::mutex                             m_event_callback_map_mutex;
       EventCallbackMapT                      m_event_callback_map;
       std::weak_ptr<CPublisherImpl>          m_publisher_impl;
-      bool                                   m_is_registered;
+      bool                                   m_is_registered{ false };
     };
 
     CPublisher::CPublisher() :

@@ -81,7 +81,7 @@ namespace eCAL
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
-    bool SetEventCallback(const PubEventCallbackT callback_);
+    bool SetEventCallback(const PubEventCallbackT& callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);

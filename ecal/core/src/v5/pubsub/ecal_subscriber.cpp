@@ -38,6 +38,21 @@
 #include <string>
 #include <utility>
 
+namespace
+{
+  eCAL::v5::SSubEventCallbackData v6tov5CallbackData(const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& v6_callback_data_)
+  {
+    eCAL::v5::SSubEventCallbackData v5_callback_data;
+    v5_callback_data.type = v6_callback_data_.event_type;
+    v5_callback_data.time = v6_callback_data_.event_time;
+    v5_callback_data.clock = 0;
+    v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
+    v5_callback_data.tdatatype = v6_callback_data_.publisher_datatype;
+    return v5_callback_data;
+  }
+}
+
+
 namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V5
@@ -46,9 +61,8 @@ namespace eCAL
     class CSubscriberEventCallbackAdapater
     {
     public:
-      CSubscriberEventCallbackAdapater(std::shared_ptr<CSubscriberImpl> subscriber_impl_)
+      CSubscriberEventCallbackAdapater(const std::shared_ptr<CSubscriberImpl>& subscriber_impl_)
         : m_subscriber_impl(subscriber_impl_)
-        , m_is_registered(false)
       {
       }
     
@@ -96,22 +110,11 @@ namespace eCAL
         return subscriber->SetEventCallback(internal_callback);
       }
     
-      v5::SSubEventCallbackData v6tov5CallbackData(const STopicId& topic_id_, const eCAL::SSubEventCallbackData& v6_callback_data_)
-      {
-        SSubEventCallbackData v5_callback_data;
-        v5_callback_data.type = v6_callback_data_.event_type;
-        v5_callback_data.time = v6_callback_data_.event_time;
-        v5_callback_data.clock = 0;
-        v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
-        v5_callback_data.tdatatype = v6_callback_data_.publisher_datatype;
-        return v5_callback_data;
-      }
-    
       using EventCallbackMapT = std::map<eSubscriberEvent, v5::SubEventCallbackT>;
       std::mutex                             m_event_callback_map_mutex;
       EventCallbackMapT                      m_event_callback_map;
       std::weak_ptr<CSubscriberImpl>         m_subscriber_impl;
-      bool                                   m_is_registered;
+      bool                                   m_is_registered{ false };
     };
 
 

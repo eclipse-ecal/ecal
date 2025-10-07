@@ -166,7 +166,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(const ReceiveCallbackT& callback_)
   {
     if (!m_created) return(false);
 
@@ -177,7 +177,7 @@ namespace eCAL
     // set receive callback
     {
       const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-      m_receive_callback = std::move(callback_);
+      m_receive_callback = callback_;
     }
 
     return(true);
@@ -200,7 +200,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventCallback(const SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(const SubEventCallbackT& callback_)
   {
     if (!m_created) return false;
 

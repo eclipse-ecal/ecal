@@ -366,7 +366,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CPublisherImpl::SetEventCallback(const PubEventCallbackT callback_)
+  bool CPublisherImpl::SetEventCallback(const PubEventCallbackT& callback_)
   {
     if (!m_created) return false;
 

@@ -79,10 +79,10 @@ namespace eCAL
 
     bool Read(std::string& buf_, long long* time_ = nullptr, int rcv_timeout_ms_ = 0);
 
-    bool SetReceiveCallback(ReceiveCallbackT callback_);
+    bool SetReceiveCallback(const ReceiveCallbackT& callback_);
     bool RemoveReceiveCallback();
 
-    bool SetEventCallback(const SubEventCallbackT callback_);
+    bool SetEventCallback(const SubEventCallbackT& callback_);
     bool RemoveEventCallback();
 
     bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
