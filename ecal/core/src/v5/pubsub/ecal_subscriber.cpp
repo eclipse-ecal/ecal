@@ -38,10 +38,86 @@
 #include <string>
 #include <utility>
 
+namespace
+{
+  eCAL::v5::SSubEventCallbackData v6tov5CallbackData(const eCAL::STopicId& topic_id_, const eCAL::SSubEventCallbackData& v6_callback_data_)
+  {
+    eCAL::v5::SSubEventCallbackData v5_callback_data;
+    v5_callback_data.type = v6_callback_data_.event_type;
+    v5_callback_data.time = v6_callback_data_.event_time;
+    v5_callback_data.clock = 0;
+    v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
+    v5_callback_data.tdatatype = v6_callback_data_.publisher_datatype;
+    return v5_callback_data;
+  }
+}
+
+
 namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V5
   {
+    // Class to bridge legacy callbacks to v6 Callbacks
+    class CSubscriberEventCallbackAdapater
+    {
+    public:
+      CSubscriberEventCallbackAdapater(const std::shared_ptr<CSubscriberImpl>& subscriber_impl_)
+        : m_subscriber_impl(subscriber_impl_)
+      {
+      }
+    
+      bool AddEventCallback(eSubscriberEvent type_, const SubEventCallbackT& callback_)
+      {
+        const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+        m_event_callback_map[type_] = callback_;
+    
+        if (!m_is_registered)
+        {
+          m_is_registered = true;
+          return RegisterCallbackWithSubscriber();
+        }
+    
+        return true;
+      }
+    
+      bool RemoveEventCallback(eSubscriberEvent type_)
+      {
+        const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+        m_event_callback_map[type_] = nullptr;
+    
+        return true;
+      }
+    
+    private:
+      bool RegisterCallbackWithSubscriber()
+      {
+        auto subscriber = m_subscriber_impl.lock();
+        if (subscriber == nullptr)
+          return false;
+    
+        auto internal_callback = [this](const STopicId& topic_id_, const eCAL::SSubEventCallbackData& callback_data_)
+          {
+            const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+    
+            const auto& v5_callback = m_event_callback_map.find(callback_data_.event_type);
+            if (v5_callback != m_event_callback_map.end() && v5_callback->second != nullptr)
+            {
+              auto v5_callback_data = v6tov5CallbackData(topic_id_, callback_data_);
+              v5_callback->second(topic_id_.topic_name.c_str(), &v5_callback_data);
+            }
+          };
+    
+        return subscriber->SetEventCallback(internal_callback);
+      }
+    
+      using EventCallbackMapT = std::map<eSubscriberEvent, v5::SubEventCallbackT>;
+      std::mutex                             m_event_callback_map_mutex;
+      EventCallbackMapT                      m_event_callback_map;
+      std::weak_ptr<CSubscriberImpl>         m_subscriber_impl;
+      bool                                   m_is_registered{ false };
+    };
+
+
     CSubscriber::CSubscriber() :
       m_subscriber_impl(nullptr)
     {
@@ -91,6 +167,7 @@ namespace eCAL
 
       // create datareader
       m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
+      m_callback_adapter = std::make_shared<CSubscriberEventCallbackAdapater>(m_subscriber_impl);
 
       // register datareader
       g_subgate()->Register(topic_name_, m_subscriber_impl);
@@ -184,13 +261,13 @@ namespace eCAL
     {
       if (m_subscriber_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_subscriber_impl->SetEventCallback(type_, callback_));
+      return(m_callback_adapter->AddEventCallback(type_, callback_));
     }
 
     bool CSubscriber::RemEventCallback(eSubscriberEvent type_)
     {
       if (m_subscriber_impl == nullptr) return(false);
-      return(m_subscriber_impl->RemoveEventCallback(type_));
+      return(m_callback_adapter->RemoveEventCallback(type_));
     }
 
     bool CSubscriber::IsPublished() const

@@ -37,10 +37,85 @@
 #include <string>
 #include <utility>
 
+
+namespace {
+  eCAL::v5::SPubEventCallbackData v6tov5CallbackData(const eCAL::STopicId& topic_id_, const eCAL::SPubEventCallbackData& v6_callback_data_)
+  {
+    eCAL::v5::SPubEventCallbackData v5_callback_data;
+    v5_callback_data.type = v6_callback_data_.event_type;
+    v5_callback_data.time = v6_callback_data_.event_time;
+    v5_callback_data.clock = 0;
+    v5_callback_data.tid = std::to_string(topic_id_.topic_id.entity_id);
+    v5_callback_data.tdatatype = v6_callback_data_.subscriber_datatype;
+    return v5_callback_data;
+  }
+}
+
+
 namespace eCAL
 {
   ECAL_CORE_NAMESPACE_V5
   {
+    // Class to bridge legacy callbacks to v6 Callbacks
+    class CPublisherEventCallbackAdapater
+    {
+    public:
+      CPublisherEventCallbackAdapater(const std::shared_ptr<CPublisherImpl>& publisher_impl_)
+        : m_publisher_impl(publisher_impl_)
+      {
+      }
+
+      bool AddEventCallback(ePublisherEvent type_, const PubEventCallbackT& callback_)
+      {
+        const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+        m_event_callback_map[type_] = callback_;
+      
+        if (!m_is_registered)
+        {
+          m_is_registered = true;
+          return RegisterCallbackWithPublisher();
+        }
+      
+        return true;
+      }
+      
+      bool RemoveEventCallback(ePublisherEvent type_)
+      {
+        const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+        m_event_callback_map[type_] = nullptr;
+      
+        return true;
+      }
+
+    private:
+      bool RegisterCallbackWithPublisher()
+      {
+        auto publisher = m_publisher_impl.lock();
+        if (publisher == nullptr)
+          return false;
+      
+        auto internal_callback = [this](const STopicId& topic_id_, const eCAL::SPubEventCallbackData& callback_data_)
+          {
+            const std::lock_guard<std::mutex> guard(m_event_callback_map_mutex);
+
+            const auto& v5_callback = m_event_callback_map.find(callback_data_.event_type);
+            if (v5_callback != m_event_callback_map.end() && v5_callback->second != nullptr)
+            {
+              auto v5_callback_data = v6tov5CallbackData(topic_id_, callback_data_);
+              v5_callback->second(topic_id_.topic_name.c_str(), &v5_callback_data);
+            }
+          };
+      
+        return publisher->SetEventCallback(internal_callback);
+      }
+
+      using EventCallbackMapT = std::map<ePublisherEvent, v5::PubEventCallbackT>;
+      std::mutex                             m_event_callback_map_mutex;
+      EventCallbackMapT                      m_event_callback_map;
+      std::weak_ptr<CPublisherImpl>          m_publisher_impl;
+      bool                                   m_is_registered{ false };
+    };
+
     CPublisher::CPublisher() :
       m_publisher_impl(nullptr),
       m_filter_id(0)
@@ -67,9 +142,11 @@ namespace eCAL
     **/
     CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                   m_publisher_impl(std::move(rhs.m_publisher_impl)),
+                  m_callback_adapter(std::move(rhs.m_callback_adapter)),
                   m_filter_id(rhs.m_filter_id)
     {
       rhs.m_publisher_impl = nullptr;
+      rhs.m_callback_adapter = nullptr;
     }
 
     /**
@@ -81,6 +158,7 @@ namespace eCAL
       Destroy();
 
       m_publisher_impl = std::move(rhs.m_publisher_impl);
+      m_callback_adapter = std::move(rhs.m_callback_adapter);
       m_filter_id  = rhs.m_filter_id;
       
       rhs.m_publisher_impl = nullptr;
@@ -98,6 +176,7 @@ namespace eCAL
 
       // create publisher
       m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
+      m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher
       g_pubgate()->Register(topic_name_, m_publisher_impl);
@@ -191,13 +270,14 @@ namespace eCAL
     {
       if (m_publisher_impl == nullptr) return(false);
       RemEventCallback(type_);
-      return(m_publisher_impl->SetEventCallback(type_, std::move(callback_)));
+
+      return(m_callback_adapter->AddEventCallback(type_, callback_));
     }
 
     bool CPublisher::RemEventCallback(ePublisherEvent type_)
     {
       if (m_publisher_impl == nullptr) return(false);
-      return(m_publisher_impl->RemoveEventCallback(type_));
+      return(m_callback_adapter->RemoveEventCallback(type_));
     }
 
     bool CPublisher::IsSubscribed() const

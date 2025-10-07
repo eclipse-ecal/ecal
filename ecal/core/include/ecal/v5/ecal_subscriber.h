@@ -43,6 +43,8 @@ namespace eCAL
 
   ECAL_CORE_NAMESPACE_V5
   {
+    class CSubscriberEventCallbackAdapater;
+
     /**
      * @brief eCAL subscriber class.
     **/
@@ -287,6 +289,7 @@ namespace eCAL
     private:
       // class members
       std::shared_ptr<CSubscriberImpl> m_subscriber_impl;
+      std::shared_ptr<CSubscriberEventCallbackAdapater> m_callback_adapter;
     };
   }
 }

@@ -47,7 +47,7 @@ namespace eCAL
     CSubscriber(topic_name_, data_type_info_, config_)
   {
     // add event callback for all current event types
-    m_subscriber_impl->SetEventIDCallback(event_callback_);
+    m_subscriber_impl->SetEventCallback(event_callback_);
   }
 
   CSubscriber::~CSubscriber()

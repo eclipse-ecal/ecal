@@ -118,12 +118,6 @@ namespace eCAL
       m_receive_callback = nullptr;
     }
 
-    // reset event callback map
-    {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map.clear();
-    }
-
     // mark as no more created
     m_created = false;
 
@@ -172,7 +166,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CSubscriberImpl::SetReceiveCallback(ReceiveCallbackT callback_)
+  bool CSubscriberImpl::SetReceiveCallback(const ReceiveCallbackT& callback_)
   {
     if (!m_created) return(false);
 
@@ -183,7 +177,7 @@ namespace eCAL
     // set receive callback
     {
       const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-      m_receive_callback = std::move(callback_);
+      m_receive_callback = callback_;
     }
 
     return(true);
@@ -206,41 +200,7 @@ namespace eCAL
     return(true);
   }
 
-  bool CSubscriberImpl::SetEventCallback(eSubscriberEvent type_, v5::SubEventCallbackT callback_)
-  {
-    if (!m_created) return(false);
-
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventCallback");
-#endif
-
-    // set event callback
-    {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map[type_] = std::move(callback_);
-    }
-
-    return(true);
-  }
-
-  bool CSubscriberImpl::RemoveEventCallback(eSubscriberEvent type_)
-  {
-    if (!m_created) return(false);
-
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
-#endif
-
-    // remove event callback
-    {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      m_event_callback_map[type_] = nullptr;
-    }
-
-    return(true);
-  }
-
-  bool CSubscriberImpl::SetEventIDCallback(const SubEventCallbackT callback_)
+  bool CSubscriberImpl::SetEventCallback(const SubEventCallbackT& callback_)
   {
     if (!m_created) return false;
 
@@ -756,24 +716,6 @@ namespace eCAL
 
       // call event callback
       m_event_id_callback(topic_id, data);
-    }
-
-    // deprecated event handling with topic name
-    {
-      const std::lock_guard<std::mutex> lock(m_event_callback_map_mutex);
-      auto iter = m_event_callback_map.find(type_);
-      if (iter != m_event_callback_map.end() && iter->second)
-      {
-        v5::SSubEventCallbackData data;
-        data.type      = type_;
-        data.time      = eCAL::Time::GetMicroSeconds();
-        data.clock     = 0;
-        data.tid       = std::to_string(publication_info_.entity_id);
-        data.tdatatype = data_type_info_;
-
-        // call event callback
-        (iter->second)(m_attributes.topic_name.c_str(), &data);
-      }
     }
   }
 
