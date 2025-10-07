@@ -167,6 +167,7 @@ namespace eCAL
 
       // create datareader
       m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
+      m_callback_adapter = std::make_shared<CSubscriberEventCallbackAdapater>(m_subscriber_impl);
 
       // register datareader
       g_subgate()->Register(topic_name_, m_subscriber_impl);
