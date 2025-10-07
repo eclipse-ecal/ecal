@@ -717,14 +717,12 @@ namespace eCAL
 
     bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
     {
-      constexpr int timeout_ms(1000); // TODO: I think I should remove this timeout, it just causes requests to stack up
-
       auto client_instances = recorder_service_.GetClientInstances();
       for (auto& client_instance : client_instances)
       {
         if (client_instance.GetClientID() == connected_service_client_id_)
         {
-          auto client_instance_response = client_instance.CallWithResponse(method_name, request, timeout_ms);
+          auto client_instance_response = client_instance.CallWithResponse(method_name, request);
 
           if (!client_instance_response.first)
           {
