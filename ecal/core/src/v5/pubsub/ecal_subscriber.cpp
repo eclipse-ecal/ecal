@@ -213,13 +213,15 @@ namespace eCAL
     bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
     {
       if (m_subscriber_impl == nullptr) return false;
-      return m_subscriber_impl->SetAttribute(attr_name_, attr_value_);
+      Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
+      return false;
     }
 
     bool CSubscriber::ClearAttribute(const std::string& attr_name_)
     {
       if (m_subscriber_impl == nullptr) return false;
-      return m_subscriber_impl->ClearAttribute(attr_name_);
+      Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
+      return false;
     }
 
     bool CSubscriber::ReceiveBuffer(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ /* = 0 */) const

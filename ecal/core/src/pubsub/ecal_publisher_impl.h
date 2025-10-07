@@ -84,9 +84,6 @@ namespace eCAL
     bool SetEventCallback(const PubEventCallbackT& callback_);
     bool RemoveEventCallback();
 
-    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
-    bool ClearAttribute(const std::string& attr_name_);
-
     void ApplySubscriberRegistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void ApplySubscriberUnregistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
