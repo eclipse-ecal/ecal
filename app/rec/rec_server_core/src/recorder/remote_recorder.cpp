@@ -415,7 +415,11 @@ namespace eCAL
               if (call_success)
               {
                 std::string hostname;
-                eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status_);
+                {
+                  eCAL::rec::RecorderStatus last_status;
+                  eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, connected_service_client_id_.host_name, last_status);
+                  last_status_ = std::move(last_status); // Necessary, as FromProtobuf expects a clean output-variable
+                }
 
                 update_jobstatus_function_(hostname_, last_status_);
 
@@ -696,7 +700,11 @@ namespace eCAL
               connected_service_client_id_ = client_instance.GetClientID();
 
               // Set the last status of the connected client. The last status is used by the autorecovery, so it is important that we set it.
-              eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, connected_service_client_id_.host_name, last_status_);
+              {
+                eCAL::rec::RecorderStatus last_status;
+                eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, connected_service_client_id_.host_name, last_status);
+                last_status_ = std::move(last_status); // Necessary, as FromProtobuf expects a clean variable as output
+              }
               if (after_call_timestamp >= before_call_timestamp)
               {
                 last_status_timestamp_ = before_call_timestamp + (after_call_timestamp - before_call_timestamp) / 2;
