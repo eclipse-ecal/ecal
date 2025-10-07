@@ -232,28 +232,6 @@ namespace eCAL
     return true;
   }
 
-  bool CSubscriberImpl::SetAttribute(const std::string& /* attr_name_ */, const std::string& /* attr_value_ */)
-  {
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute");
-#endif
-
-    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::SetAttribute - Setting subscriber attributes no longer has an effect.");
-
-    return(false);
-  }
-
-  bool CSubscriberImpl::ClearAttribute(const std::string& /* attr_name_ */)
-  {
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute");
-#endif
-
-    Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CSubscriberImpl::ClearAttribute - Clear subscriber attributes no longer has an effect.");
-
-    return(false);
-  }
-
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
 #ifndef NDEBUG

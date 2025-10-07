@@ -85,9 +85,6 @@ namespace eCAL
     bool SetEventCallback(const SubEventCallbackT& callback_);
     bool RemoveEventCallback();
 
-    bool SetAttribute(const std::string& attr_name_, const std::string& attr_value_);
-    bool ClearAttribute(const std::string& attr_name_);
-
     void SetFilterIDs(const std::set<long long>& filter_ids_);
 
     void ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
