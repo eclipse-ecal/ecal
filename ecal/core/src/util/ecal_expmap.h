@@ -331,6 +331,25 @@ namespace eCAL
         return false;
       }
 
+      /**
+       * @brief Resets the timestamp of a key-value pair in the map
+       * 
+       * This function can be called to reset the timestamp only without updating the actual content of the key-value pair.
+       * If the provided key does not exist in the map, the function will return false.
+       */
+      bool touch(const Key& k)
+      {
+        typename InternalMapType::iterator it
+          = _internal_map.find(k);
+
+        if (it != _internal_map.end())
+        {
+          update_timestamp(it);
+          return true;
+        }
+        return false;
+      }
+
       // Remove all elements from the cache 
       void clear()
       {
