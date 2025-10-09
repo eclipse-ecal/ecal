@@ -100,34 +100,34 @@ namespace eCAL
                               , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                               , const RecorderSettings& initial_settings);
       
-      ~RemoteRecorder();
+      ~RemoteRecorder() override;
 
     //////////////////////////////////////////
     // Public API
     //////////////////////////////////////////
     public:
-      virtual void SetRecorderEnabled(bool enabled, bool connect_to_ecal = false) override;
-      virtual bool IsRecorderEnabled() const override;
+      void SetRecorderEnabled(bool enabled, bool connect_to_ecal = false) override;
+      bool IsRecorderEnabled() const override;
 
-      virtual bool EverParticipatedInAMeasurement() const override;
+      bool EverParticipatedInAMeasurement() const override;
 
-      virtual void SetSettings(const RecorderSettings& settings) override;
-      virtual void SetCommand(const RecorderCommand& command) override;
+      void SetSettings(const RecorderSettings& settings) override;
+      void SetCommand(const RecorderCommand& command) override;
 
-      virtual bool IsAlive() const override;
-      virtual std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> GetStatus() const override;
+      bool IsAlive() const override;
+      std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> GetStatus() const override;
 
-      virtual bool IsRequestPending() const override;
-      virtual void WaitForPendingRequests() const override;
+      bool IsRequestPending() const override;
+      void WaitForPendingRequests() const override;
 
-      virtual std::pair<bool, std::string> GetLastResponse() const override;
+      std::pair<bool, std::string> GetLastResponse() const override;
 
     //////////////////////////////////////////
     // InterruptibleThread overrides
     //////////////////////////////////////////
     protected:
-      virtual void Run() override;
-      virtual void Interrupt() override;
+      void Run() override;
+      void Interrupt() override;
 
     //////////////////////////////////////////
     // Converter Functions
@@ -142,7 +142,7 @@ namespace eCAL
     // Auxiliary helper methods
     //////////////////////////////////////////
     private:
-      void removeAutorecoveryActions_NoLock();
+      void QueueAutoRecoveryCommands_NoLock();
       void QueueSetSettings_NoLock(const RecorderSettings& settings);
       void QueueSetCommand_NoLock(const RecorderCommand& command);
 
