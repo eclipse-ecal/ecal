@@ -248,14 +248,6 @@ namespace eCAL
           {
             std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
             
-            // Log the successful connection
-            // TODO: Put this logging in the other function
-            std::stringstream ss;
-            ss << "Connected to recorder service for host " << hostname_
-               << " (PID: " << connected_service_client_id_.process_id
-               << ", EntityId: " << connected_service_client_id_.entity_id << ")";
-            eCAL::rec::EcalRecLogger::Instance()->info(ss.str());
-            
             // The new connection has also set a new status, so we need to call the update_jobstatus_function_
             update_jobstatus_function_(hostname_, last_status_);
             
@@ -266,7 +258,7 @@ namespace eCAL
               QueueAutoRecoveryCommands_NoLock();
             }
           }
-          else // Connection was not sucessful
+          else // Connection was not successful
           {
             // Wait a short time before trying to connect the next time
             std::unique_lock<decltype(io_mutex_)> io_lock(io_mutex_);
@@ -317,21 +309,21 @@ namespace eCAL
           auto const set_config_pb = SettingsToSettingsPb(this_loop_action.settings_);
           eCAL::pb::rec_client::Response response;
 
-          bool const call_successfull = CallRecorderService("SetConfig", set_config_pb, response);
+          bool const call_successful = CallRecorderService("SetConfig", set_config_pb, response);
 
           if (IsInterrupted()) return;
           
           
-          if (call_successfull)
+          if (call_successful)
           {
             std::unique_lock<decltype(io_mutex_)> const io_lock(io_mutex_);
-            bool const set_settings_successfull = (response.result() == eCAL::pb::rec_client::ServiceResult::success);
+            bool const set_settings_successful = (response.result() == eCAL::pb::rec_client::ServiceResult::success);
 
-            client_in_sync_ = set_settings_successfull;
+            client_in_sync_ = set_settings_successful;
 
-            if (set_settings_successfull)
+            if (set_settings_successful)
             {
-              eCAL::rec::EcalRecLogger::Instance()->info("Sucessfully set settings for recorder on " + hostname_);
+              eCAL::rec::EcalRecLogger::Instance()->info("Successfully set settings for recorder on " + hostname_);
             }
             else
             {
@@ -340,7 +332,7 @@ namespace eCAL
               // TODO: Check if this need to be protected by a check for recorder_enabled_
             }
 
-            last_response_ = { set_settings_successfull, response.error() };
+            last_response_ = { set_settings_successful, response.error() };
           }
         }
         ////////////////////////////////////////////
@@ -348,7 +340,7 @@ namespace eCAL
         ////////////////////////////////////////////
         else if (this_loop_action.IsCommand())
         {
-          // Even if sending the command should be unsuccessfull, we save the connected to ecal state for later recovery
+          // Even if sending the command should be unsuccessful, we save the connected to ecal state for later recovery
           if ((this_loop_action.command_.type_ == RecorderCommand::Type::INITIALIZE)
             || (this_loop_action.command_.type_ == RecorderCommand::Type::START_RECORDING))
           {
@@ -362,16 +354,16 @@ namespace eCAL
           eCAL::pb::rec_client::CommandRequest const command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
           eCAL::pb::rec_client::Response             response_pb;
 
-          bool const call_successfull  = CallRecorderService("SetCommand", command_request_pb, response_pb);
+          bool const call_successful  = CallRecorderService("SetCommand", command_request_pb, response_pb);
 
           {
             std::unique_lock<decltype(io_mutex_)> const io_lock(io_mutex_);
 
-            if (call_successfull)
+            if (call_successful)
             {
-              bool const execute_command_successfull = (response_pb.result() == eCAL::pb::rec_client::ServiceResult::success);
+              bool const execute_command_successful = (response_pb.result() == eCAL::pb::rec_client::ServiceResult::success);
 
-              if (execute_command_successfull)
+              if (execute_command_successful)
               {
                 eCAL::rec::EcalRecLogger::Instance()->info("Successfully sent command to " + hostname_);
               }
@@ -380,7 +372,7 @@ namespace eCAL
                 eCAL::rec::EcalRecLogger::Instance()->error("Failed sending command to " + hostname_ + ": " + response_pb.error());
               }
 
-              last_response_ = { execute_command_successfull, response_pb.error() };
+              last_response_ = { execute_command_successful, response_pb.error() };
             }
 
             // Report the last response
@@ -707,6 +699,13 @@ namespace eCAL
               // Set the connected client ID, which is used to see if the connection has been successful
               connected_service_client_id_ = client_instance.GetClientID();
 
+              // Log the successful connection
+              std::stringstream ss;
+              ss << "Connected to recorder service for host " << hostname_
+                 << " (PID: " << connected_service_client_id_.process_id
+                 << ", EntityId: " << connected_service_client_id_.entity_id << ")";
+              eCAL::rec::EcalRecLogger::Instance()->info(ss.str());
+
               // Set the last status of the connected client. The last status is used by the autorecovery, so it is important that we set it.
               {
                 eCAL::rec::RecorderStatus last_status;
@@ -746,17 +745,22 @@ namespace eCAL
           {
             // The Client was not reachable
             eCAL::rec::EcalRecLogger::Instance()->error("Failed sending message to " + hostname_
-              + ": Connected recorder is unreachable (PID: "
-              + std::to_string(connected_service_client_id_.process_id)
-              + ", Service ID: "
-              + std::to_string(connected_service_client_id_.entity_id)
-              + ")");
-            connected_service_client_id_ = eCAL::SEntityId();
-            last_response_ = { false, "Unable to contact recorder" };
-            
-            // Notify the io_cv, as the WaitForPendingRequests function also returns if the recorder is not connected, anymore
-            io_cv_.notify_all();
-            
+                                                      + ": Connected recorder is unreachable (PID: "
+                                                      + std::to_string(connected_service_client_id_.process_id)
+                                                      + ", Service ID: "
+                                                      + std::to_string(connected_service_client_id_.entity_id)
+                                                      + ")");
+
+            {
+              std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
+
+              connected_service_client_id_ = eCAL::SEntityId();
+              last_response_ = { false, "Unable to contact recorder" };
+
+              // Notify the io_cv, as the WaitForPendingRequests function also returns if the recorder is not connected, anymore
+              io_cv_.notify_all();
+            }
+
             return false;
           }
           else
@@ -770,17 +774,21 @@ namespace eCAL
 
       // The client that we had previously connected to does not appear in the list anymore.
       eCAL::rec::EcalRecLogger::Instance()->error("Failed sending message to " + hostname_
-        + ": Previously connected recorder does not exist anymore (PID: "
-        + std::to_string(connected_service_client_id_.process_id)
-        + ", Service ID: "
-        + std::to_string(connected_service_client_id_.entity_id)
-        + ")");
-      connected_service_client_id_ = eCAL::SEntityId();
-      last_response_ = { false, "Unable to contact recorder" };
-      
-      // Notify the io_cv, as the WaitForPendingRequests function also returns if the recorder is not connected, anymore
-      io_cv_.notify_all();
-      
+                                                + ": Previously connected recorder does not exist anymore (PID: "
+                                                + std::to_string(connected_service_client_id_.process_id)
+                                                + ", Service ID: "
+                                                + std::to_string(connected_service_client_id_.entity_id)
+                                                + ")");
+
+      {
+        std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
+
+        connected_service_client_id_ = eCAL::SEntityId();
+        last_response_               = { false, "Unable to contact recorder" };
+
+        // Notify the io_cv, as the WaitForPendingRequests function also returns if the recorder is not connected, anymore
+        io_cv_.notify_all();
+      }
       return false;
     }
   }
