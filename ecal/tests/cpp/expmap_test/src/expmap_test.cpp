@@ -301,3 +301,21 @@ TEST(core_cpp_core, ExpMap_Remove)
   EXPECT_EQ(0, expmap.size());
   EXPECT_FALSE(expmap.erase("B"));
 }
+
+TEST(core_cpp_core, ExpMap_Touch)
+{
+  eCAL::Util::CExpirationMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
+  expmap["A"] = 1;
+  expmap["B"] = 2;
+  EXPECT_EQ(2, expmap.size());
+  TestingClock::increment_time(std::chrono::milliseconds(150));
+  expmap.touch("A");
+  // B gets timeouted here
+  TestingClock::increment_time(std::chrono::milliseconds(150)); 
+  exmap.erased_expired();
+  // only A remains in the map
+  EXPECT_EQ(1, expmap.size());
+  EXPECT_EG(1, expmap["A"]);
+  TestingClock::increment_time(std::chrono::milliseconds(150));
+  EXPECT_EQ(0, expmap.size());
+}
