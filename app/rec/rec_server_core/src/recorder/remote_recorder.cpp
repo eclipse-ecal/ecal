@@ -424,8 +424,8 @@ namespace eCAL
             std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
 
             {
-              std::string hostname;
               eCAL::rec::RecorderStatus last_status;
+              std::string               hostname;
               eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
               last_status_ = std::move(last_status); // Necessary, as FromProtobuf expects a clean output-variable
             }
@@ -497,7 +497,17 @@ namespace eCAL
       if (settings.IsRecordModeSet())
       {
         std::string serialized_string;
-        serialized_string = (settings.GetRecordMode() == eCAL::rec::RecordMode::All ? "all" : (settings.GetRecordMode() == eCAL::rec::RecordMode::Blacklist ? "blacklist" : "whitelist"));
+        switch (settings.GetRecordMode())
+        {
+        case eCAL::rec::RecordMode::All:
+          serialized_string = "all";
+          break;
+        case eCAL::rec::RecordMode::Blacklist:
+          serialized_string = "blacklist";
+          break;
+        default:
+          serialized_string = "whitelist";
+        }
         (*config)["record_mode"] = serialized_string;
       }
       if (settings.IsListedTopicsSet())
@@ -700,7 +710,7 @@ namespace eCAL
               // Set the last status of the connected client. The last status is used by the autorecovery, so it is important that we set it.
               {
                 eCAL::rec::RecorderStatus last_status;
-                std::string hostname;
+                std::string               hostname;
                 eCAL::rec::proto_helpers::FromProtobuf(state_response_pb, hostname, last_status);
                 last_status_ = std::move(last_status); // Necessary, as FromProtobuf expects a clean variable as output
               }

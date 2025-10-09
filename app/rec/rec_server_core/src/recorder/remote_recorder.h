@@ -72,8 +72,14 @@ namespace eCAL
           , is_command_(true)
           , is_autorecovery_action_(is_autorecovery)
         {}
-
-        ~Action() {}
+        
+        ~Action() = default;                            // Default destructor
+        
+        Action(const Action&)            = default;     // Copy constructor
+        Action& operator=(const Action&) = default;     // Copy assignment operator
+        
+        Action(Action&&)            = default;          // Move constructor
+        Action& operator=(Action&&) = default;          // Move assignment operator
 
         RecorderSettings settings_;
         RecorderCommand  command_;
@@ -99,6 +105,14 @@ namespace eCAL
                               , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
                               , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                               , const RecorderSettings& initial_settings);
+        
+        // Delete copy constructor and copy assignment operator
+        RemoteRecorder(const RemoteRecorder&)             = delete;
+        RemoteRecorder& operator=(const RemoteRecorder&)  = delete;
+        
+        // Delete move constructor and move assignment operator
+        RemoteRecorder(RemoteRecorder&&)            = delete;
+        RemoteRecorder& operator=(RemoteRecorder&&) = delete;
       
       ~RemoteRecorder() override;
 
