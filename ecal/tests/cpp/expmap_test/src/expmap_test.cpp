@@ -309,7 +309,7 @@ TEST(core_cpp_core, ExpMap_Touch)
   expmap["B"] = 2;
   EXPECT_EQ(2, expmap.size());
   TestingClock::increment_time(std::chrono::milliseconds(150));
-  EXPECT_EQ(true, expmap.touch("A"));
+  EXPECT_TRUE(expmap.touch("A"));
   
   // B gets timeouted here
   TestingClock::increment_time(std::chrono::milliseconds(150)); 
@@ -325,5 +325,5 @@ TEST(core_cpp_core, ExpMap_Touch)
 
   // A does not longer exist
   EXPECT_EQ(0, expmap.size());
-  EXPECT_EQ(false, expmap.touch("A"));
+  EXPECT_FALSE(expmap.touch("A"));
 }
