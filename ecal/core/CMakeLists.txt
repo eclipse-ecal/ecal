@@ -41,6 +41,7 @@ project(core VERSION ${eCAL_VERSION_STRING})
 find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
+find_package(protozero        REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
@@ -228,6 +229,10 @@ set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
+    src/monitoring/ecal_monitoring_receiver.cpp
+    src/monitoring/ecal_monitoring_receiver.h
+    src/monitoring/ecal_monitoring_provider.cpp
+    src/monitoring/ecal_monitoring_provider.h
 )
 endif()
 
@@ -745,6 +750,7 @@ target_link_libraries(${TARGET_NAME}
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
+    protozero::protozero
 )
 
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
