@@ -313,15 +313,15 @@ TEST(core_cpp_core, ExpMap_Touch)
   
   // B gets timeouted here
   TestingClock::increment_time(std::chrono::milliseconds(150)); 
-  exmap.erased_expired();
+  expmap.erased_expired();
   
   // only A remains in the map
   EXPECT_EQ(1, expmap.size());
-  EXPECT_EQ(1, expmap["A"]);
+  EXPECT_EQ(1, expmap.at("A"));
   
   // A gets timeouted here
   TestingClock::increment_time(std::chrono::milliseconds(150));
-  exmap.erased_expired();
+  expmap.erased_expired();
 
   // A does not longer exist
   EXPECT_EQ(0, expmap.size());
