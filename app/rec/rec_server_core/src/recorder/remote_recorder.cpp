@@ -77,15 +77,26 @@ namespace eCAL
       {
         recorder_enabled_ = true;
 
-        QueueSetSettings_NoLock(complete_settings_); // TODO: do I need this? The recorder is in un-synced state and will set all settings anyways
+        if (connected_service_client_id_.entity_id != 0)
+        {
+          // Make sure that the recorder is in sync
+          actions_to_perform_.emplace_front(true); // Action(true) indicates a Ping followed by forced autorecovery actions
+        }
 
         if (connect_to_ecal)
         {
-          // De-initialize the recorder
-          RecorderCommand initialize_command;
-          initialize_command.type_ = RecorderCommand::Type::INITIALIZE;
+          if (connected_service_client_id_.entity_id != 0)
+          {
+            // Initialize the recorder
+            RecorderCommand initialize_command;
+            initialize_command.type_ = RecorderCommand::Type::INITIALIZE;
 
-          QueueSetCommand_NoLock(initialize_command);
+            QueueSetCommand_NoLock(initialize_command);
+          }
+          else
+          {
+            should_be_connected_to_ecal_ = connect_to_ecal;
+          }
         }
 
         // Inform the thread about the settings AND the initialize command
@@ -255,7 +266,7 @@ namespace eCAL
             client_in_sync_ = false; // We need to set all settings again, as we don't know which state the new recorder is in
             if (recorder_enabled_)
             {
-              QueueAutoRecoveryCommands_NoLock();
+              QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock();
             }
           }
           else // Connection was not successful
@@ -328,7 +339,7 @@ namespace eCAL
             else
             {
               eCAL::rec::EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": " + response.error());
-              QueueAutoRecoveryCommands_NoLock(); // The client is not in sync anymore, so we need to recover from that
+              QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock(); // The client is not in sync anymore, so we need to recover from that
               // TODO: Check if this need to be protected by a check for recorder_enabled_
             }
 
@@ -431,6 +442,12 @@ namespace eCAL
             else
             {
               last_status_timestamp_ = after_call_timestamp;
+            }
+
+            // Check if we are supposed to force an autorecovery (idicated from a Ping Action that has autorecovery set to true)
+            if (this_loop_action.IsAutorecoveryAction())
+            {
+              QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock();
             }
           }
         }
@@ -595,7 +612,7 @@ namespace eCAL
     // Auxiliary helper methods
     //////////////////////////////////////////
 
-    void RemoteRecorder::QueueAutoRecoveryCommands_NoLock()
+    void RemoteRecorder::QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock()
     {
       // Remove all old autorecovery actions. We don't need them anyways, as we are adding new ones.
       auto new_end = std::remove_if(actions_to_perform_.begin(), actions_to_perform_.end(), [](const Action& action) {return action.IsAutorecoveryAction(); });
@@ -733,7 +750,6 @@ namespace eCAL
 
     bool RemoteRecorder::CallRecorderService(const std::string& method_name, const google::protobuf::Message& request, google::protobuf::Message& response)
     {
-      // TODO: THis needs to lock the Mutex!!!!
       auto client_instances = recorder_service_.GetClientInstances();
       for (auto& client_instance : client_instances)
       {

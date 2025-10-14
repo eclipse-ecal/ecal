@@ -53,7 +53,7 @@ namespace eCAL
       class Action
       {
       public:
-        Action(bool is_autorecovery = true)
+        Action(bool is_autorecovery = false)
           : is_settings_(false)
           , is_command_(false)
           , is_autorecovery_action_(is_autorecovery)
@@ -156,7 +156,7 @@ namespace eCAL
     // Auxiliary helper methods
     //////////////////////////////////////////
     private:
-      void QueueAutoRecoveryCommands_NoLock();
+      void QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock();
       void QueueSetSettings_NoLock(const RecorderSettings& settings);
       void QueueSetCommand_NoLock(const RecorderCommand& command);
 
