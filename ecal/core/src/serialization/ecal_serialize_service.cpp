@@ -297,35 +297,129 @@ namespace
 
 namespace eCAL
 {
-  // service request - serialize/deserialize
-  bool SerializeToBuffer(const Service::Request& source_sample_, std::vector<char>& target_buffer_)
+  namespace nanopb
   {
-    return RequestStruct2Buffer(source_sample_, target_buffer_);
+    // service request - serialize/deserialize
+    bool SerializeToBuffer(const Service::Request& source_sample_, std::vector<char>& target_buffer_)
+    {
+      return RequestStruct2Buffer(source_sample_, target_buffer_);
+    }
+
+    bool SerializeToBuffer(const Service::Request& source_sample_, std::string& target_buffer_)
+    {
+      return RequestStruct2Buffer(source_sample_, target_buffer_);
+    }
+
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Request& target_sample_)
+    {
+      return Buffer2RequestStruct(data_, size_, target_sample_);
+    }
+
+    // service response - serialize/deserialize
+    bool SerializeToBuffer(const Service::Response& source_sample_, std::vector<char>& target_buffer_)
+    {
+      return ResponseStruct2Buffer(source_sample_, target_buffer_);
+    }
+
+    bool SerializeToBuffer(const Service::Response& source_sample_, std::string& target_buffer_)
+    {
+      return ResponseStruct2Buffer(source_sample_, target_buffer_);
+    }
+
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Response& target_sample_)
+    {
+      return Buffer2ResponseStruct(data_, size_, target_sample_);
+    }
+  }
+}
+
+/// <summary>
+/// PROTOZERO IMPLEMENTATION STARTS HERE!
+/// </summary>
+/// 
+
+#include <ecal/core/pb/service.pbftags.h>
+#include <protozero/pbf_writer.hpp>
+
+namespace {
+  void SerializeServiceHeader(::protozero::pbf_writer& writer, const eCAL::Service::ServiceHeader& service_header)
+  {
+    writer.add_string(+eCAL::pb::ServiceHeader::optional_string_host_name, service_header.host_name);
+    writer.add_string(+eCAL::pb::ServiceHeader::optional_string_service_name, service_header.service_name);
+    writer.add_string(+eCAL::pb::ServiceHeader::optional_string_service_id, service_header.service_id);
+    writer.add_string(+eCAL::pb::ServiceHeader::optional_string_method_name, service_header.method_name);
+    writer.add_string(+eCAL::pb::ServiceHeader::optional_string_error, service_header.error);
+    writer.add_int32(+eCAL::pb::ServiceHeader::optional_int32_id, service_header.id);
+    writer.add_enum(+eCAL::pb::ServiceHeader::optional_e_call_state_state, service_header.state);
   }
 
-  bool SerializeToBuffer(const Service::Request& source_sample_, std::string& target_buffer_)
+  void SerializeServiceRequest(::protozero::pbf_writer& writer, const eCAL::Service::Request& service_request)
   {
-    return RequestStruct2Buffer(source_sample_, target_buffer_);
+    {
+      ::protozero::pbf_writer header_writer{ writer, +eCAL::pb::Request::optional_message_header };
+      SerializeServiceHeader(header_writer, service_request.header);
+    }
+    writer.add_bytes(+eCAL::pb::Request::optional_bytes_request, service_request.request);
   }
 
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Request& target_sample_)
+  void SerializeServiceResponse(::protozero::pbf_writer& writer, const eCAL::Service::Response& service_response)
   {
-    return Buffer2RequestStruct(data_, size_, target_sample_);
+    {
+      ::protozero::pbf_writer header_writer{ writer, +eCAL::pb::Response::optional_message_header };
+      SerializeServiceHeader(header_writer, service_response.header);
+    }
+    writer.add_bytes(+eCAL::pb::Response::optional_bytes_response, service_response.response);
+    writer.add_int64(+eCAL::pb::Response::optional_int64_ret_state, service_response.ret_state);
   }
+}
 
-  // service response - serialize/deserialize
-  bool SerializeToBuffer(const Service::Response& source_sample_, std::vector<char>& target_buffer_)
-  {
-    return ResponseStruct2Buffer(source_sample_, target_buffer_);
-  }
 
-  bool SerializeToBuffer(const Service::Response& source_sample_, std::string& target_buffer_)
+namespace eCAL
+{
+  namespace protozero
   {
-    return ResponseStruct2Buffer(source_sample_, target_buffer_);
-  }
+    // service request - serialize/deserialize
+    bool SerializeToBuffer(const eCAL::Service::Request& source_sample_, std::vector<char>& target_buffer_)
+    {
+      target_buffer_.clear();
+      //::protozero::basic_pbf_writer<std::vector<char>> request_writer{ target_buffer_ };
+      //SerializeServiceRequest(request_writer, source_sample_);
+      return true;
+    }
 
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Response& target_sample_)
-  {
-    return Buffer2ResponseStruct(data_, size_, target_sample_);
+    bool SerializeToBuffer(const eCAL::Service::Request& source_sample_, std::string& target_buffer_)
+    {
+      target_buffer_.clear();
+      ::protozero::pbf_writer request_writer{ target_buffer_ };
+      SerializeServiceRequest(request_writer, source_sample_);
+      return true;
+    }
+
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Request& target_sample_)
+    {
+      return Buffer2RequestStruct(data_, size_, target_sample_);
+    }
+
+    // service response - serialize/deserialize
+    bool SerializeToBuffer(const Service::Response& source_sample_, std::vector<char>& target_buffer_)
+    {
+      target_buffer_.clear();
+      //::protozero::basic_pbf_writer<std::vector<char>> response_writer{ target_buffer_ };
+      //SerializeServiceResponse(response_writer, source_sample_);
+      return true;
+    }
+
+    bool SerializeToBuffer(const Service::Response& source_sample_, std::string& target_buffer_)
+    {
+      target_buffer_.clear();
+      ::protozero::pbf_writer response_writer{ target_buffer_ };
+      SerializeServiceResponse(response_writer, source_sample_);
+      return true;
+    }
+
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Response& target_sample_)
+    {
+      return Buffer2ResponseStruct(data_, size_, target_sample_);
+    }
   }
 }

@@ -229,10 +229,6 @@ set(ecal_monitoring_src
     src/monitoring/ecal_monitoring_def.h
     src/monitoring/ecal_monitoring_impl.cpp
     src/monitoring/ecal_monitoring_impl.h
-    src/monitoring/ecal_monitoring_receiver.cpp
-    src/monitoring/ecal_monitoring_receiver.h
-    src/monitoring/ecal_monitoring_provider.cpp
-    src/monitoring/ecal_monitoring_provider.h
 )
 endif()
 
@@ -751,6 +747,9 @@ target_link_libraries(${TARGET_NAME}
     Threads::Threads
     eCAL::ecal-utils
     protozero::protozero
+    # We want to remove this later and instead take the headers as part of the library,
+    # to allow for easier crosscompilation
+    eCAL::core_pbftags 
 )
 
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
