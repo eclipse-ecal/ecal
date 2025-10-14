@@ -81,7 +81,8 @@ namespace eCAL
     auto res = m_topic_name_publisher_map.equal_range(topic_name_);
     for(auto iter = res.first; iter != res.second; ++iter)
     {
-      if(iter->second == publisher_)
+      auto publisher = iter->second.lock();
+      if(!publisher || publisher == publisher_)
       {
         m_topic_name_publisher_map.erase(iter);
         ret_state = true;
@@ -146,7 +147,9 @@ namespace eCAL
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for(TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplySubscriberRegistration(subscription_info, topic_information, layer_states, reader_par);
+      auto publisher = iter->second.lock();
+      if(publisher)
+        publisher->ApplySubscriberRegistration(subscription_info, topic_information, layer_states, reader_par);
     }
   }
 
@@ -168,7 +171,9 @@ namespace eCAL
     auto res = m_topic_name_publisher_map.equal_range(topic_name);
     for (TopicNamePublisherMapT::const_iterator iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplySubscriberUnregistration(subscription_info, topic_information);
+      auto publisher = iter->second.lock();
+      if (publisher)
+        publisher->ApplySubscriberUnregistration(subscription_info, topic_information);
     }
   }
 
@@ -180,7 +185,9 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_publisher_mutex);
     for (const auto& iter : m_topic_name_publisher_map)
     {
-      iter.second->GetRegistration(reg_sample_list_.push_back());
+      auto publisher = iter.second.lock();
+      if (publisher)
+        publisher->GetRegistration(reg_sample_list_.push_back());
     }
   }
 }

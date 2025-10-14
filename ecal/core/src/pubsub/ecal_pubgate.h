@@ -55,7 +55,7 @@ namespace eCAL
   protected:
     static std::atomic<bool>  m_created;
 
-    using TopicNamePublisherMapT = std::multimap<std::string, std::shared_ptr<CPublisherImpl>>;
+    using TopicNamePublisherMapT = std::multimap<std::string, std::weak_ptr<CPublisherImpl>>;
     std::shared_timed_mutex  m_topic_name_publisher_mutex;
     TopicNamePublisherMapT   m_topic_name_publisher_map;
   };

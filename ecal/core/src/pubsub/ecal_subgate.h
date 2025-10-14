@@ -59,7 +59,7 @@ namespace eCAL
   protected:
     static std::atomic<bool> m_created;
 
-    using TopicNameSubscriberMapT = std::unordered_multimap<std::string, std::shared_ptr<CSubscriberImpl>>;
+    using TopicNameSubscriberMapT = std::unordered_multimap<std::string, std::weak_ptr<CSubscriberImpl>>;
     std::shared_timed_mutex  m_topic_name_subscriber_mutex;
     TopicNameSubscriberMapT  m_topic_name_subscriber_map;
   };

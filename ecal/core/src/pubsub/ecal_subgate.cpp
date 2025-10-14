@@ -86,7 +86,8 @@ namespace eCAL
     auto res = m_topic_name_subscriber_map.equal_range(topic_name_);
     for(auto iter = res.first; iter != res.second; ++iter)
     {
-      if(iter->second == datareader_)
+      auto subscriber = iter->second.lock();
+      if(!subscriber || subscriber == datareader_)
       {
         m_topic_name_subscriber_map.erase(iter);
         ret_state = true;
@@ -151,23 +152,24 @@ namespace eCAL
         const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
         auto res = m_topic_name_subscriber_map.equal_range(ecal_sample.topic_info.topic_name);
         std::transform(
-          res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+          res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second.lock(); }
         );
       }
 
       const auto& ecal_sample_content = ecal_sample.content;
       for (const auto& reader : readers_to_apply)
       {
-        applied_size = reader->ApplySample(
-          ecal_sample.topic_info,
-          payload_addr,
-          payload_size,
-          ecal_sample_content.id,
-          ecal_sample_content.clock,
-          ecal_sample_content.time,
-          static_cast<size_t>(ecal_sample_content.hash),
-          layer_
-        );
+        if(reader)
+          applied_size = reader->ApplySample(
+            ecal_sample.topic_info,
+            payload_addr,
+            payload_size,
+            ecal_sample_content.id,
+            ecal_sample_content.clock,
+            ecal_sample_content.time,
+            static_cast<size_t>(ecal_sample_content.hash),
+            layer_
+          );
       }
     }
     break;
@@ -192,14 +194,15 @@ namespace eCAL
       const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
       auto res = m_topic_name_subscriber_map.equal_range(topic_info_.topic_name);
       std::transform(
-        res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second; }
+        res.first, res.second, std::back_inserter(readers_to_apply), [](const auto& match) { return match.second.lock(); }
       );
     }
 
 
     for (const auto& reader : readers_to_apply)
     {
-      applied_size = reader->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      if(reader)
+        applied_size = reader->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, layer_);
     }
 
     return (applied_size > 0);
@@ -247,12 +250,16 @@ namespace eCAL
     auto res = m_topic_name_subscriber_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
+      auto subscriber = iter->second.lock();
       // apply layer specific parameter
       for (const auto& transport_layer : ecal_sample_.topic.transport_layer)
       {
-        iter->second->ApplyLayerParameter(publication_info, transport_layer.type, transport_layer.par_layer);
+        if (subscriber)
+          subscriber->ApplyLayerParameter(publication_info, transport_layer.type, transport_layer.par_layer);
       }
-      iter->second->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
+
+      if(subscriber)
+        subscriber->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
     }
   }
 
@@ -274,7 +281,9 @@ namespace eCAL
     auto res = m_topic_name_subscriber_map.equal_range(topic_name);
     for (auto iter = res.first; iter != res.second; ++iter)
     {
-      iter->second->ApplyPublisherUnregistration(publication_info, topic_information);
+      auto subscriber = iter->second.lock();
+      if (subscriber)
+        subscriber->ApplyPublisherUnregistration(publication_info, topic_information);
     }
   }
 
@@ -286,7 +295,9 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     for (const auto& iter : m_topic_name_subscriber_map)
     {
-      iter.second->GetRegistration(reg_sample_list_.push_back());
+      auto subscriber = iter.second.lock();
+      if (subscriber)
+        subscriber->GetRegistration(reg_sample_list_.push_back());
     }
   }
 }
