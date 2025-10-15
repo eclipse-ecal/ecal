@@ -66,17 +66,17 @@ namespace eCAL
     if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   }
 
-  CPublisher::CPublisher(CPublisher&& rhs) noexcept :
-    m_publisher_impl(std::move(rhs.m_publisher_impl))
+  CPublisher::CPublisher(CPublisher&& rhs) noexcept
   {
+    std::swap(m_publisher_impl, rhs.m_publisher_impl);
   }
 
   CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
-    if (this != &rhs)
-    {
-      m_publisher_impl = std::move(rhs.m_publisher_impl);
-    }
+    // clean-up existing m_publisher_impl before swapping with rhs
+    if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
+    m_publisher_impl = nullptr;
+    std::swap(m_publisher_impl, rhs.m_publisher_impl);
     return *this;
   }
 
