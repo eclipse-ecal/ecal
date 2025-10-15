@@ -504,3 +504,35 @@ TEST(core_cpp_pubsub, SubscriberReconnection)
   // without destroying any pub / sub
   eCAL::Finalize();
 }
+
+TEST(core_cpp_pubsub, MoveAssignment)
+{
+  eCAL::Initialize();
+
+  eCAL::CPublisher publisher("publisher_topic_1");
+  // overwriting publisher_topic_1 with publisher_topic_2 by move assignment
+  publisher = eCAL::CPublisher("publisher_topic_2");
+
+  eCAL::CSubscriber subscriber("subscriber_topic_1");
+  // overwriting subscriber_topic_1 with subscriber_topic_2 by move assignment
+  subscriber = eCAL::CSubscriber("subscriber_topic_2");
+  
+  // wait 2 seconds until registration is properly applied
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+
+  std::set<eCAL::STopicId> publisher_topic_ids;
+  eCAL::Registration::GetPublisherIDs(publisher_topic_ids);
+
+  std::set<eCAL::STopicId> subscriber_topic_ids;
+  eCAL::Registration::GetSubscriberIDs(subscriber_topic_ids);
+
+  for (const auto& publisher_topic_id : publisher_topic_ids)
+    // publisher_topic_1 shouldn't be in the publisher topic list anymore
+    EXPECT_STRNE(publisher_topic_id.topic_name.c_str(), "publisher_topic_1");
+
+  for (const auto& subscriber_topic_id : subscriber_topic_ids)
+    // subscriber_topic_1 shouldn't be in the subscriber topic list anymore
+    EXPECT_STRNE(subscriber_topic_id.topic_name.c_str(), "subscriber_topic_1");
+
+  eCAL::Finalize();
+}
