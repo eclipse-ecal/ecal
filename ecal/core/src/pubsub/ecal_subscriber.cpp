@@ -66,9 +66,10 @@ namespace eCAL
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
+    // clean-up existing m_subscriber_impl before swapping with rhs
     if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
     m_subscriber_impl = nullptr;
-    std::swap(this->m_subscriber_impl, rhs.m_subscriber_impl);
+    std::swap(m_subscriber_impl, rhs.m_subscriber_impl);
     return *this;
   }
 
