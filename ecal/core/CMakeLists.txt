@@ -386,6 +386,7 @@ set(ecal_serialization_src
     src/serialization/nanopb/ecal/core/pb/service.npb.h
     src/serialization/nanopb/ecal/core/pb/topic.npb.c
     src/serialization/nanopb/ecal/core/pb/topic.npb.h
+    src/serialization/protozero/ecal_helper.h
     src/serialization/ecal_serialize_common.cpp
     src/serialization/ecal_serialize_common.h
     src/serialization/ecal_serialize_logging.cpp
