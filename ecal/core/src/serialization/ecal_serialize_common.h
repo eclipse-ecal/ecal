@@ -66,3 +66,45 @@ namespace eCAL
     void decode_service_methods(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Service::Method>& method_vec);
   }
 }
+
+#include <ecal/core/pb/datatype.pbftags.h>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/ecal_helper.h>
+
+namespace eCAL
+{
+  inline namespace protozero
+  {
+    template <typename Writer>
+    void SerializeDataTypeInformation(Writer& writer, const eCAL::SDataTypeInformation& data_type_info)
+    {
+      writer.add_string(+eCAL::pb::DataTypeInformation::optional_string_name, data_type_info.name);
+      writer.add_string(+eCAL::pb::DataTypeInformation::optional_string_encoding, data_type_info.encoding);
+      writer.add_bytes(+eCAL::pb::DataTypeInformation::optional_bytes_descriptor_information, data_type_info.descriptor);
+    }
+
+    inline bool DeserializeDataTypeInformation(::protozero::pbf_reader& reader, eCAL::SDataTypeInformation& data_type_info)
+    {
+      while (reader.next())
+      {
+        switch (reader.tag())
+        {
+        case +eCAL::pb::DataTypeInformation::optional_string_name:
+          AssignString(reader, data_type_info.name);
+          break;
+        case +eCAL::pb::DataTypeInformation::optional_string_encoding:
+          AssignString(reader, data_type_info.encoding);
+          break;
+        case +eCAL::pb::DataTypeInformation::optional_bytes_descriptor_information:
+          AssignBytes(reader, data_type_info.descriptor);
+          break;
+        default:
+          reader.skip();
+        }
+      }
+      return true;
+    }
+  }
+}
+
+

@@ -14,7 +14,6 @@
 #include <string>
 
 using google::protobuf::Descriptor;
-using google::protobuf::DescriptorProto;
 using google::protobuf::EnumDescriptor;
 using google::protobuf::FileDescriptor;
 using google::protobuf::FieldDescriptor;
@@ -92,8 +91,8 @@ namespace {
     case FieldDescriptor::TYPE_SINT32:   return "sint32";
     case FieldDescriptor::TYPE_SINT64:   return "sint64";
     case FieldDescriptor::TYPE_GROUP:    return "group";
-    case FieldDescriptor::TYPE_MESSAGE:  return "message"; // << your request
-    case FieldDescriptor::TYPE_ENUM:     return to_snake(f->enum_type()->name());
+    case FieldDescriptor::TYPE_MESSAGE:  return "message"; // literal
+    case FieldDescriptor::TYPE_ENUM:     return "enum";
     default: return "unknown";
     }
   }
@@ -101,16 +100,27 @@ namespace {
   std::string enumerator_name(const FieldDescriptor* f) {
     std::string label = label_to_string(f->label());
     std::string type = field_kind(f);
-    std::string name = f->name(); // proto already lower_snake
+    std::string name = f->name(); // already lower_snake in proto
     return sanitize_identifier(label + "_" + type + "_" + name);
   }
 
   // Flatten nested message path: Outer_Inner_Leaf
-  std::string flattened(const Descriptor* d) {
+  std::string flattened_msg(const Descriptor* d) {
     std::string s;
     for (const auto* cur = d; cur != nullptr; cur = cur->containing_type()) {
       std::string part = sanitize_identifier(cur->name());
       s = s.empty() ? part : (part + "_" + s);
+    }
+    return s;
+  }
+
+  // Flatten nested enum path: Outer_Inner_EnumName
+  std::string flattened_enum(const EnumDescriptor* e) {
+    std::string s = sanitize_identifier(e->name());
+    const Descriptor* parent = e->containing_type();
+    while (parent) {
+      s = sanitize_identifier(parent->name()) + "_" + s;
+      parent = parent->containing_type();
     }
     return s;
   }
@@ -135,33 +145,49 @@ namespace {
     os << "\n";
   }
 
-  void emit_enum_for_message(std::ostringstream& os, const Descriptor* msg) {
-    std::string message_name = flattened(msg);
+  // --- emission ---
 
-    os << "enum class " << message_name << " : ::protozero::pbf_tag_type {\n";
+  void emit_enum_for_message(std::ostringstream& os, const Descriptor* msg) {
+    const std::string name = flattened_msg(msg);
+
+    os << "enum class " << name << " : ::protozero::pbf_tag_type {\n";
     for (int i = 0; i < msg->field_count(); ++i) {
       const auto* f = msg->field(i);
       os << "    " << enumerator_name(f) << " = " << f->number();
       os << (i + 1 < msg->field_count() ? ",\n" : "\n");
     }
     os << "};\n\n";
-    os << "inline constexpr uint32_t operator+(" << message_name << " e) {\n";
-    os << "    return static_cast<uint32_t>(e);";
-    os << "};\n\n\n";
+    os << "inline constexpr uint32_t operator+(" << name << " e) {\n";
+    os << "    return static_cast<uint32_t>(e);\n";
+    os << "}\n\n";
+  }
+
+  void emit_proto_enum(std::ostringstream& os, const EnumDescriptor* e) {
+    const std::string name = flattened_enum(e);
+    os << "enum class " << name << " : std::int32_t {\n";
+    for (int i = 0; i < e->value_count(); ++i) {
+      const auto* v = e->value(i);
+      os << "    " << sanitize_identifier(v->name()) << " = " << v->number();
+      os << (i + 1 < e->value_count() ? ",\n" : "\n");
+    }
+    os << "};\n\n";
+    os << "inline constexpr std::int32_t operator+(" << name << " v) {\n";
+    os << "    return static_cast<std::int32_t>(v);\n";
+    os << "}\n\n";
   }
 
   void walk_messages(std::ostringstream& os, const FileDescriptor* file) {
+    // Top-level messages
     for (int i = 0; i < file->message_type_count(); ++i) {
-      const Descriptor* descriptor = file->message_type(i);
-      // Skip synthetic map entry messages
-      if (descriptor->options().map_entry()) continue;
+      const Descriptor* d = file->message_type(i);
+      if (d->options().map_entry()) continue;
 
-      // Emit this message
-      emit_enum_for_message(os, descriptor);
+      emit_enum_for_message(os, d);
 
-      // Recurse nested
+      // nested recurse
       std::function<void(const Descriptor*)> rec;
-      rec = [&rec, &os](const Descriptor* m) {
+      rec = [&](const Descriptor* m) {
+        // nested messages
         for (int j = 0; j < m->nested_type_count(); ++j) {
           const auto* n = m->nested_type(j);
           if (n->options().map_entry()) continue;
@@ -169,7 +195,16 @@ namespace {
           rec(n);
         }
         };
-      rec(descriptor);
+      // include enums directly nested in this top-level message
+      for (int k = 0; k < d->enum_type_count(); ++k) {
+        emit_proto_enum(os, d->enum_type(k));
+      }
+      rec(d);
+    }
+
+    // Top-level enums (not nested in any message)
+    for (int i = 0; i < file->enum_type_count(); ++i) {
+      emit_proto_enum(os, file->enum_type(i));
     }
   }
 

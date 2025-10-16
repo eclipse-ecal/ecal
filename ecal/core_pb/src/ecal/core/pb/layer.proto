@@ -35,7 +35,7 @@ message LayerParTcp
   int32            port               =   1;    // tcp writers port number
 }
 
-message ConnnectionPar                          // connection parameter for reader / writer
+message ConnectionPar                          // connection parameter for reader / writer
 {
   // Reserved fields in enums are not supported in protobuf 3.0
   // reserved 3;
@@ -70,5 +70,5 @@ message TransportLayer
   int32                 version            =   2;    // transport layer version
   bool                  enabled            =   6;    // transport layer enabled ?
   bool                  active             =   3;    // transport layer in use ?
-  ConnnectionPar        par_layer          =   5;    // transport layer parameter
+  ConnectionPar         par_layer          =   5;    // transport layer parameter
 }

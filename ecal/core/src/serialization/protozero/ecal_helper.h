@@ -33,5 +33,12 @@ inline void AssignBytes(::protozero::pbf_reader& reader, std::string& assignee)
 template <class Assignee, class Conversion>
 void AssignMessage(protozero::pbf_reader& parent_reader, Assignee& assignee, Conversion&& convert) {
     protozero::pbf_reader message_reader = parent_reader.get_message();
-    return convert(message_reader, assignee)
+    convert(message_reader, assignee);
+}
+
+template <class Assignee, class Conversion>
+void AddRepeatedMessage(protozero::pbf_reader& parent_reader, Assignee& assignee, Conversion&& convert) {
+    protozero::pbf_reader message_reader = parent_reader.get_message();
+    auto& new_assignee_element = assignee.push_back();
+    convert(message_reader, new_assignee_element);
 }
