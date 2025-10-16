@@ -354,7 +354,7 @@ namespace {
     writer.add_string(+eCAL::pb::ServiceHeader::optional_string_method_name, service_header.method_name);
     writer.add_string(+eCAL::pb::ServiceHeader::optional_string_error, service_header.error);
     writer.add_int32(+eCAL::pb::ServiceHeader::optional_int32_id, service_header.id);
-    writer.add_enum(+eCAL::pb::ServiceHeader::optional_e_call_state_state, service_header.state); //TODO check enums!
+    writer.add_enum(+eCAL::pb::ServiceHeader::optional_enum_state, service_header.state); //TODO check enums!
   }
   
   void DeserializeServiceHeader(::protozero::pbf_reader& reader, eCAL::Service::ServiceHeader& service_header)
@@ -381,7 +381,7 @@ namespace {
       case +eCAL::pb::ServiceHeader::optional_int32_id:
         service_header.id = reader.get_int32();
         break;
-      case +eCAL::pb::ServiceHeader::optional_e_call_state_state:
+      case +eCAL::pb::ServiceHeader::optional_enum_state:
         service_header.state = (eCAL::Service::eMethodCallState)reader.get_enum(); // TODO check enums!
         break;
       default:

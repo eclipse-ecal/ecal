@@ -89,13 +89,25 @@ namespace eCAL
     }
 
     // generate TLayer
-    TLayer GenerateTLayer()
+    TLayer GenerateTLayer(eTLayerType type)
     {
       TLayer layer;
-      layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
+      layer.type      = type;
       layer.version   = rand() % 100;
       layer.enabled   = rand() % 2 == 1;
       layer.active    = rand() % 2 == 1;
+      switch (type)
+      {
+      case eTLayerType::tl_ecal_shm:
+        layer.par_layer.layer_par_shm.memory_file_list.push_back(GenerateString(5));
+        layer.par_layer.layer_par_shm.memory_file_list.push_back(GenerateString(10));
+        break;
+      case eTLayerType::tl_ecal_tcp:
+        layer.par_layer.layer_par_tcp.port = rand();
+        break;
+      default:
+        break;
+      }
       return layer;
     }
 
@@ -110,8 +122,9 @@ namespace eCAL
       topic.topic_name           = GenerateString(8);
       topic.direction            = GenerateString(5);
       topic.datatype_information = GenerateDataTypeInformation();
-      topic.transport_layer.push_back(GenerateTLayer());
-      topic.transport_layer.push_back(GenerateTLayer());
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_shm));
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_udp));
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_tcp));
       topic.topic_size           = rand() % 1000;
       topic.connections_local    = rand() % 50;
       topic.connections_external = rand() % 50;
