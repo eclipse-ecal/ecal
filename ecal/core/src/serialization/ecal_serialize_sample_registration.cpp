@@ -628,33 +628,439 @@ namespace
 
 namespace eCAL
 {
-  bool SerializeToBuffer(const Registration::Sample& source_sample_, std::vector<char>& target_buffer_)
+  namespace nanopb
   {
-    return RegistrationStruct2Buffer(source_sample_, target_buffer_);
+    bool SerializeToBuffer(const Registration::Sample& source_sample_, std::vector<char>& target_buffer_)
+    {
+      return RegistrationStruct2Buffer(source_sample_, target_buffer_);
+    }
+  
+    bool SerializeToBuffer(const Registration::Sample& source_sample_, std::string& target_buffer_)
+    {
+      return RegistrationStruct2Buffer(source_sample_, target_buffer_);
+    }
+  
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Registration::Sample& target_sample_)
+    {
+      return Buffer2RegistrationStruct(data_, size_, target_sample_);
+    }
+  
+    bool SerializeToBuffer(const Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
+    {
+      return RegistrationListStruct2Buffer(source_sample_list_, target_buffer_);
+    }
+  
+    bool SerializeToBuffer(const Registration::SampleList& source_sample_list_, std::string& target_buffer_)
+    {
+      return RegistrationListStruct2Buffer(source_sample_list_, target_buffer_);
+    }
+  
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Registration::SampleList& target_sample_list_)
+    {
+      return Buffer2RegistrationListStruct(data_, size_, target_sample_list_);
+    }
+  }
+}
+
+
+/// <summary>
+/// PROTOZERO IMPLEMENTATION STARTS HERE!
+/// </summary>
+/// 
+
+#include <ecal/core/pb/ecal.pbftags.h>
+#include <ecal/core/pb/layer.pbftags.h>
+#include <ecal/core/pb/topic.pbftags.h>
+#include <protozero/pbf_writer.hpp>
+#include <protozero/buffer_vector.hpp>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/ecal_helper.h>
+
+namespace
+{
+
+  //using namespace eCAL::protozero;
+
+  void SerializeParamTCP(::protozero::pbf_writer& writer, const eCAL::Registration::LayerParTcp& layer)
+  {
+    // Serialize TCP-specific parameters
+    writer.add_int32(+eCAL::pb::LayerParTcp::optional_int32_port, layer.port);
   }
 
-  bool SerializeToBuffer(const Registration::Sample& source_sample_, std::string& target_buffer_)
+  void DeserializeParamTCP(::protozero::pbf_reader& reader, eCAL::Registration::LayerParTcp& layer)
   {
-    return RegistrationStruct2Buffer(source_sample_, target_buffer_);
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::LayerParTcp::optional_int32_port:
+        layer.port = reader.get_int32();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
   }
 
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Registration::Sample& target_sample_)
+  void SerializeParamSHM(::protozero::pbf_writer& writer, const eCAL::Registration::LayerParShm& layer)
+  {
+    for (const auto& memory_file : layer.memory_file_list)
+    {
+      writer.add_string(+eCAL::pb::LayerParShm::repeated_string_memory_file_list, memory_file);
+    }
+  }
+
+  void DeserializeParamSHM(::protozero::pbf_reader& reader, eCAL::Registration::LayerParShm& layer)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::LayerParShm::repeated_string_memory_file_list:
+        layer.memory_file_list.push_back(reader.get_string());
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  void DeserializeConnectionPar(::protozero::pbf_reader& reader, eCAL::Registration::ConnectionPar& connection_par)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::ConnectionPar::optional_message_layer_par_udpmc:
+        // we cannot do anything as the message is empty
+        reader.skip();
+        break;
+      case +eCAL::pb::ConnectionPar::optional_message_layer_par_tcp:
+        AssignMessage(reader, connection_par.layer_par_tcp, DeserializeParamTCP);
+        break;
+      case +eCAL::pb::ConnectionPar::optional_message_layer_par_shm:
+        AssignMessage(reader, connection_par.layer_par_shm, DeserializeParamSHM);
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  } // namespace
+
+  void SerializeTransportLayer(::protozero::pbf_writer& writer, const eCAL::Registration::TLayer& layer)
+  {
+    static_assert(static_cast<int>(eCAL::eTLayerType::tl_none) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_none)
+      && static_cast<int>(eCAL::eTLayerType::tl_ecal_shm) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_ecal_shm)
+      && static_cast<int>(eCAL::eTLayerType::tl_ecal_udp) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_ecal_udp_mc)
+      && static_cast<int>(eCAL::eTLayerType::tl_ecal_tcp) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_ecal_tcp)
+      && static_cast<int>(eCAL::eTLayerType::tl_all) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_all)
+      , "Enum values of eCAL::Registration::TLayer and eCAL::pb::TransportLayer do not match!");
+
+    writer.add_enum(+eCAL::pb::TransportLayer::optional_enum_type, static_cast<int>(layer.type));
+    writer.add_int32(+eCAL::pb::TransportLayer::optional_int32_version, layer.version);
+    writer.add_bool(+eCAL::pb::TransportLayer::optional_bool_enabled, layer.enabled);
+    writer.add_bool(+eCAL::pb::TransportLayer::optional_bool_active, layer.active);
+    {
+      ::protozero::pbf_writer parameter_writer{ writer, +eCAL::pb::TransportLayer::optional_message_par_layer };
+
+      switch (layer.type)
+      {
+      case eCAL::eTLayerType::tl_ecal_shm:
+      {
+        ::protozero::pbf_writer shm_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_shm };
+        SerializeParamSHM(shm_writer, layer.par_layer.layer_par_shm);
+      }
+      break;
+      case eCAL::eTLayerType::tl_ecal_udp:
+        // UDP has no Layer parameters, we do not serialize anything here
+        break;
+      case eCAL::eTLayerType::tl_ecal_tcp:
+      {
+        ::protozero::pbf_writer tcp_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_tcp };
+        SerializeParamTCP(tcp_writer, layer.par_layer.layer_par_tcp);
+      }
+      break;
+      case eCAL::eTLayerType::tl_none:
+      case eCAL::eTLayerType::tl_all:
+      default:
+        break;
+      }
+    }
+  }
+
+  void DeserializeTransportLayer(::protozero::pbf_reader& reader, eCAL::Registration::TLayer& layer)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::TransportLayer::optional_enum_type:
+        layer.type = static_cast<eCAL::eTLayerType>(reader.get_enum());
+        break;
+      case +eCAL::pb::TransportLayer::optional_int32_version:
+        layer.version = reader.get_int32();
+        break;
+      case +eCAL::pb::TransportLayer::optional_bool_enabled:
+        layer.enabled = reader.get_bool();
+        break;
+      case +eCAL::pb::TransportLayer::optional_bool_active:
+        layer.active = reader.get_bool();
+        break;
+      case +eCAL::pb::TransportLayer::optional_message_par_layer:
+      {
+        AssignMessage(reader, layer.par_layer, DeserializeConnectionPar);
+      }
+      break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  void SerializeTopicSample(::protozero::pbf_writer& writer, const eCAL::Registration::Sample& sample)
+  {
+    // sanity check
+    assert((sample.cmd_type == eCAL::bct_reg_publisher) || (sample.cmd_type == eCAL::bct_unreg_publisher) ||
+      (sample.cmd_type == eCAL::bct_reg_subscriber) || (sample.cmd_type == eCAL::bct_unreg_subscriber));
+
+    // we need to properly match the enums / make sure that they have the same values
+    writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
+    {
+      ::protozero::pbf_writer topic_writer{ writer, +eCAL::pb::Sample::optional_message_topic };
+      // First, write the topic_id as it will be essential to have the info early in the stream
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_id, std::to_string(sample.identifier.entity_id));
+
+      // static information
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_host_name, sample.identifier.host_name);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_process_id, sample.identifier.process_id);
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_process_name, sample.topic.process_name);
+
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_name, sample.topic.topic_name);
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_direction, sample.topic.direction);
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_shm_transport_domain, sample.topic.shm_transport_domain);
+
+      {
+        ::protozero::pbf_writer datatype_writer{ topic_writer, +eCAL::pb::Topic::optional_message_datatype_information };
+        eCAL::protozero::SerializeDataTypeInformation(datatype_writer, sample.topic.datatype_information);
+      }
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_unit_name, sample.topic.unit_name);
+
+      // registration information
+      for (const auto& layer : sample.topic.transport_layer)
+      {
+        ::protozero::pbf_writer layer_writer{ topic_writer, +eCAL::pb::Topic::repeated_message_transport_layer };
+        SerializeTransportLayer(layer_writer, layer);
+      }
+
+      // dynamic information
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_registration_clock, sample.topic.registration_clock);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_topic_size, sample.topic.topic_size);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_connections_local, sample.topic.connections_local);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_connections_external, sample.topic.connections_external);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_message_drops, sample.topic.message_drops);
+      // TODO: Do we still transport the data_id? It is not used anymore.
+      topic_writer.add_int64(+eCAL::pb::Topic::optional_int64_data_id, sample.topic.data_id);
+      topic_writer.add_int64(+eCAL::pb::Topic::optional_int64_data_clock, sample.topic.data_clock);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_data_frequency, sample.topic.data_frequency);
+    }
+  }
+
+  // This must be a reader at the start of the Topic message!
+  void DeserializeTopicSample(::protozero::pbf_reader& reader, eCAL::Registration::Sample& sample)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Topic::optional_string_host_name:
+        sample.identifier.host_name = reader.get_string();
+        // Probably this is unnecessary, we should remove this field either from topic... or we remove the host field.
+        sample.host.name = sample.identifier.host_name;
+        break;
+      case +eCAL::pb::Topic::optional_int32_process_id:
+        sample.identifier.process_id = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_string_process_name:
+        AssignString(reader, sample.topic.process_name);
+        break;
+      case +eCAL::pb::Topic::optional_string_topic_id:
+        // this could possibly be faster if we do not need to construct a string here
+        sample.identifier.entity_id = std::stoull(reader.get_string());
+        break;
+      case +eCAL::pb::Topic::optional_string_topic_name:
+        AssignString(reader, sample.topic.topic_name);
+        break;
+      case +eCAL::pb::Topic::optional_string_direction:
+        AssignString(reader, sample.topic.direction);
+        break;
+      case +eCAL::pb::Topic::optional_string_shm_transport_domain:
+        AssignString(reader, sample.topic.shm_transport_domain);
+        break;
+      case +eCAL::pb::Topic::optional_message_datatype_information:
+        AssignMessage(reader, sample.topic.datatype_information, ::eCAL::protozero::DeserializeDataTypeInformation);
+        break;
+      case +eCAL::pb::Topic::optional_string_unit_name:
+        AssignString(reader, sample.topic.unit_name);
+        break;
+      case +eCAL::pb::Topic::repeated_message_transport_layer:
+        AddRepeatedMessage(reader, sample.topic.transport_layer, DeserializeTransportLayer);
+        break;
+      case +eCAL::pb::Topic::optional_int32_registration_clock:
+        sample.topic.registration_clock = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_int32_topic_size:
+        sample.topic.topic_size = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_int32_connections_local:
+        sample.topic.connections_local = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_int32_connections_external:
+        sample.topic.connections_external = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_int32_message_drops:
+        sample.topic.message_drops = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_int64_data_id:
+        sample.topic.data_id = reader.get_int64();
+        break;
+      case +eCAL::pb::Topic::optional_int64_data_clock:
+        sample.topic.data_clock = reader.get_int64();
+        break;
+      case +eCAL::pb::Topic::optional_int32_data_frequency:
+        sample.topic.data_frequency = reader.get_int32();
+        break;
+      default:
+        reader.skip();
+      }
+    }
+  }
+
+  void SerializeRegistrationSample(::protozero::pbf_writer& writer, const ::eCAL::Registration::Sample& sample)
+  {
+    switch (sample.cmd_type)
+    {
+    case eCAL::eCmdType::bct_none:
+      return;
+    case eCAL::eCmdType::bct_set_sample:
+    case eCAL::eCmdType::bct_reg_publisher:
+    case eCAL::eCmdType::bct_reg_subscriber:
+    case eCAL::eCmdType::bct_unreg_publisher:
+    case eCAL::eCmdType::bct_unreg_subscriber:
+      return SerializeTopicSample(writer, sample);
+    case eCAL::eCmdType::bct_reg_process:
+    case eCAL::eCmdType::bct_unreg_process:
+
+    case eCAL::eCmdType::bct_reg_service:
+    case eCAL::eCmdType::bct_unreg_service:
+
+    case eCAL::eCmdType::bct_reg_client:
+    case eCAL::eCmdType::bct_unreg_client:
+
+    default:
+      return;
+    }
+  }
+
+  void DeserializeRegistrationSample(::protozero::pbf_reader& reader, ::eCAL::Registration::Sample& sample)
+  {
+    // We read only the command type and save it. Then depending on the command type we read the rest of the message
+    auto tag_reader = ::protozero::pbf_reader{ reader };
+    while (tag_reader.next(+eCAL::pb::Sample::optional_enum_cmd_type))
+    {
+      sample.cmd_type = static_cast<eCAL::eCmdType>(tag_reader.get_enum());
+      break;
+    }
+
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Sample::optional_message_topic:
+        AssignMessage(reader, sample, DeserializeTopicSample);
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  void SerializeRegistrationSampleList(::protozero::pbf_writer& writer, const ::eCAL::Registration::SampleList& sample_list)
+  {
+    for (const auto& sample : sample_list)
+    {
+      ::protozero::pbf_writer sample_writer{ writer, +eCAL::pb::SampleList::repeated_message_samples };
+      SerializeRegistrationSample(sample_writer, sample);
+    }
+  }
+
+  void DeserializeRegistrationSampleList(::protozero::pbf_reader& reader, ::eCAL::Registration::SampleList& sample_list)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::SampleList::repeated_message_samples:
+        AddRepeatedMessage(reader, sample_list, DeserializeRegistrationSample);
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+}
+
+
+namespace eCAL
+{
+namespace protozero
+{
+  bool SerializeToBuffer(const ::eCAL::Registration::Sample& source_sample_, std::vector<char>& target_buffer_)
+  {
+      target_buffer_.clear();
+      ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
+      //SerializeRegistrationSample(writer, source_sample_);
+      return true;
+  }
+  
+  bool SerializeToBuffer(const ::eCAL::Registration::Sample& source_sample_, std::string& target_buffer_)
+  {
+      target_buffer_.clear();
+      ::protozero::pbf_writer writer{ target_buffer_ };
+      SerializeRegistrationSample(writer, source_sample_);
+      return true;
+  }
+  
+  bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::Sample& target_sample_)
   {
     return Buffer2RegistrationStruct(data_, size_, target_sample_);
   }
-
-  bool SerializeToBuffer(const Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
+  
+  bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
   {
-    return RegistrationListStruct2Buffer(source_sample_list_, target_buffer_);
+    target_buffer_.clear();
+    ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
+    //SerializeRegistrationSampleList(writer, source_sample_list_);
+    return true;
   }
 
-  bool SerializeToBuffer(const Registration::SampleList& source_sample_list_, std::string& target_buffer_)
+  bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::string& target_buffer_)
   {
-    return RegistrationListStruct2Buffer(source_sample_list_, target_buffer_);
+    target_buffer_.clear();
+    ::protozero::pbf_writer writer{ target_buffer_ };
+    SerializeRegistrationSampleList(writer, source_sample_list_);
+    return true;
   }
-
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Registration::SampleList& target_sample_list_)
+  
+  bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::SampleList& target_sample_list_)
   {
     return Buffer2RegistrationListStruct(data_, size_, target_sample_list_);
   }
 }
+}
+
