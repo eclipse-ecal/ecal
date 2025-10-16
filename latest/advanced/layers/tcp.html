@@ -726,7 +726,11 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to use</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to use</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#force-tcp-via-ecal-yaml">Force TCP via <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#force-tcp-from-your-application-code">Force TCP from your application code</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -780,50 +784,57 @@ It will however act in a best-effort way and skip messages, if you overload your
 </section>
 <section id="how-to-use">
 <h2>How to use<a class="headerlink" href="#how-to-use" title="Link to this heading">#</a></h2>
-<p>The eCAL TCP Layer is a <strong>publisher</strong> setting.
-When using network communication, the data is sent <strong>either</strong> via UDP <strong>or</strong> via TCP.
-That means, that (by default), any subscriber can receive data from UDP and TCP subscribers (even simultaneously if they send on the same topic).</p>
-<p>You can activate TCP in the following ways:</p>
-<ol class="arabic">
-<li><p><strong>Use TCP as system default (only recommended for testing):</strong></p>
-<p>Modify the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> and change the following:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Publisher specific base settings</span>
-<span class="nt">publisher</span><span class="p">:</span>
+<p>Which transport layer will be used for transferring data from a publisher to a subscriber is determined by:</p>
+<ol class="arabic simple">
+<li><p><strong>Publisher</strong> settings: The <strong>enabled layers</strong> as well as the <strong>layer priority</strong></p></li>
+<li><p><strong>Subscriber</strong> settings: The <strong>enabled layers</strong></p></li>
+</ol>
+<section id="force-tcp-via-ecal-yaml">
+<h3>Force TCP via <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code><a class="headerlink" href="#force-tcp-via-ecal-yaml" title="Link to this heading">#</a></h3>
+<p>TCP can be enabled via the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> configuration file.
+Using the configuration file however has the drawback, that TCP will be used by all nodes that load that particular file for all data transfers.</p>
+<p><strong>By default</strong>, the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> should look as follows:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">publisher</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">layer</span><span class="p">:</span>
-<span class="w">  </span><span class="c1"># Base configuration for shared memory publisher</span>
-<span class="w">    </span><span class="nt">shm</span><span class="p">:</span>
-<span class="w">      </span><span class="c1"># Enable layer</span>
-<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="p p-Indicator">[</span><span class="nv">..</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="c1"># Base configuration for UDP publisher</span>
+<span class="w">    </span><span class="c1"># [...]</span>
 <span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
-<span class="w">      </span><span class="c1"># Enable layer</span>
-<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-
-<span class="w">    </span><span class="c1"># Base configuration for TCP publisher</span>
-<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
-<span class="w">      </span><span class="c1"># Enable layer</span>
 <span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                  </span><span class="c1"># TCP already enabled for publishing</span>
+<span class="w">  </span><span class="nt">priority_network</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;udp&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;tcp&quot;</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Default: publisher prioritize UDP over TCP!!!</span>
+
+<span class="nt">subscriber</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">layer</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># [...]</span>
+<span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                 </span><span class="c1"># Default: TCP disabled for subscribers</span>
 </pre></div>
 </div>
-<p>This will</p>
-<ul class="simple">
-<li><p>Turn on TCP automatically (in the means of automatic switching between Shared Memory and TCP)</p></li>
-<li><p>Turn off UDP Multicast</p></li>
-</ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>While this may be fine for testing, you may run into side effects that you didn’t expect, mostly from the fact that each additional subscriber will cause more network usage.
-Transmitting small messages is way more efficient using UDP Multicast.</p>
+<p>In order to make eCAL use TCP, you have to <strong>enable TCP for subscribing</strong> and also either change the <strong>publisher’s layer priority</strong> or <strong>disable UDP for subscribing</strong>.</p>
+<p>For example, you can change the <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code> to the following:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">publisher</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># [...]</span>
+<span class="w">  </span><span class="nt">priority_network</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;tcp&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;udp&quot;</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Change priority: publisher prioritize TCP over UDP!!!</span>
+
+<span class="nt">subscriber</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">layer</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># [...]</span>
+<span class="w">    </span><span class="nt">udp</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">                 </span><span class="c1"># Disable UDP for subscribing</span>
+<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                  </span><span class="c1"># Enable TCP for subscribing</span>
+</pre></div>
 </div>
-</li>
-<li><p><strong>Use TCP selectively from your code for a single publisher:</strong></p>
+</section>
+<section id="force-tcp-from-your-application-code">
+<h3>Force TCP from your application code<a class="headerlink" href="#force-tcp-from-your-application-code" title="Link to this heading">#</a></h3>
 <p>Usually, you can somewhat estimate the size of your messages when writing your publisher code.
 Therefore, we recommend enabling TCP from the eCAL Publisher API only for those that actually benefit from that:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/config/publisher.h&gt;</span>
 
-<span class="p">...</span>
+<span class="c1">// [...]</span>
 
 <span class="c1">// Create a publisher configuration object</span>
 <span class="n">eCAL</span><span class="o">::</span><span class="n">Publisher</span><span class="o">::</span><span class="n">Configuration</span><span class="w"> </span><span class="n">pub_config</span><span class="p">;</span>
@@ -836,16 +847,10 @@ Therefore, we recommend enabling TCP from the eCAL Publisher API only for those 
 <span class="c1">// Create a publisher (topic name &quot;person&quot;) and pass the configuration object</span>
 <span class="n">eCAL</span><span class="o">::</span><span class="n">protobuf</span><span class="o">::</span><span class="n">CPublisher</span><span class="o">&lt;</span><span class="n">pb</span><span class="o">::</span><span class="n">People</span><span class="o">::</span><span class="n">Person</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pub</span><span class="p">(</span><span class="s">&quot;person&quot;</span><span class="p">);</span>
 
-<span class="p">...</span>
+<span class="c1">// [...]</span>
 </pre></div>
 </div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>Also see the <code class="docutils literal notranslate"><span class="pre">person_snd_tcp</span></code> sample:</p>
-<p><a class="github reference external" href="https://github.com/eclipse-ecal/ecal/tree/master/ecal/samples/cpp/pubsub/protobuf/person_snd_tcp">eclipse-ecal/ecal</a></p>
-</div>
-</li>
-</ol>
+</section>
 </section>
 </section>
 
@@ -895,7 +900,11 @@ Therefore, we recommend enabling TCP from the eCAL Publisher API only for those 
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to use</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use">How to use</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#force-tcp-via-ecal-yaml">Force TCP via <code class="file docutils literal notranslate"><span class="pre">ecal.yaml</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#force-tcp-from-your-application-code">Force TCP from your application code</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

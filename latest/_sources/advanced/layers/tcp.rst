@@ -55,75 +55,79 @@ Let's compare the "normal" UDP Layer with the TCP Layer and assume transferring 
 How to use
 ==========
 
-The eCAL TCP Layer is a **publisher** setting.
-When using network communication, the data is sent **either** via UDP **or** via TCP.
-That means, that (by default), any subscriber can receive data from UDP and TCP subscribers (even simultaneously if they send on the same topic).
+Which transport layer will be used for transferring data from a publisher to a subscriber is determined by:
 
-You can activate TCP in the following ways:
+1. **Publisher** settings: The **enabled layers** as well as the **layer priority**
 
-#. **Use TCP as system default (only recommended for testing):**
+2. **Subscriber** settings: The **enabled layers**
 
-   Modify the :file:`ecal.yaml` and change the following:
+Force TCP via :file:`ecal.yaml`
+-------------------------------
 
-   .. code-block:: yaml
+TCP can be enabled via the :file:`ecal.yaml` configuration file.
+Using the configuration file however has the drawback, that TCP will be used by all nodes that load that particular file for all data transfers.
 
-    # Publisher specific base settings
-    publisher:
-      layer:
-      # Base configuration for shared memory publisher
-        shm:
-          # Enable layer
-          enable: true
-          [..]
-        
-        # Base configuration for UDP publisher
-        udp:
-          # Enable layer
-          enable: false
-            
-        # Base configuration for TCP publisher
-        tcp:
-          # Enable layer
-          enable: true 
-   
-   This will
+**By default**, the :file:`ecal.yaml` should look as follows:
 
-   - Turn on TCP automatically (in the means of automatic switching between Shared Memory and TCP)
-   - Turn off UDP Multicast
+.. code-block:: yaml
 
-   .. important::
+   publisher:
+     layer:
+       # [...]
+       udp:
+         enable: true
+       tcp:
+         enable: true                  # TCP already enabled for publishing
+     priority_network: ["udp", "tcp"]  # Default: publisher prioritize UDP over TCP!!!
 
-      While this may be fine for testing, you may run into side effects that you didn't expect, mostly from the fact that each additional subscriber will cause more network usage.
-      Transmitting small messages is way more efficient using UDP Multicast.
+   subscriber:
+     layer:
+       # [...]
+       udp:
+         enable: true
+       tcp:
+         enable: false                 # Default: TCP disabled for subscribers
 
-#. **Use TCP selectively from your code for a single publisher:**
-   
-   Usually, you can somewhat estimate the size of your messages when writing your publisher code.
-   Therefore, we recommend enabling TCP from the eCAL Publisher API only for those that actually benefit from that:
+In order to make eCAL use TCP, you have to **enable TCP for subscribing** and also either change the **publisher's layer priority** or **disable UDP for subscribing**.
 
-   .. code-block:: cpp
+For example, you can change the :file:`ecal.yaml` to the following:
 
-      #include <ecal/config/publisher.h>
+.. code-block:: yaml
 
-      ...
+   publisher:
+     # [...]
+     priority_network: ["tcp", "udp"]  # Change priority: publisher prioritize TCP over UDP!!!
 
-      // Create a publisher configuration object
-      eCAL::Publisher::Configuration pub_config;
+   subscriber:
+     layer:
+       # [...]
+       udp:
+         enable: false                 # Disable UDP for subscribing
+       tcp:
+         enable: true                  # Enable TCP for subscribing
 
-      // Set enable shm and tcp, disable udp layer
-      pub_config.layer.shm.enable = true;
-      pub_config.layer.udp.enable = false;
-      pub_config.layer.tcp.enable = true;
+Force TCP from your application code
+------------------------------------
 
-      // Create a publisher (topic name "person") and pass the configuration object
-      eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+Usually, you can somewhat estimate the size of your messages when writing your publisher code.
+Therefore, we recommend enabling TCP from the eCAL Publisher API only for those that actually benefit from that:
 
-      ...
+.. code-block:: cpp
 
+   #include <ecal/config/publisher.h>
 
-   .. seealso:: 
+   // [...]
 
-      Also see the ``person_snd_tcp`` sample:
+   // Create a publisher configuration object
+   eCAL::Publisher::Configuration pub_config;
 
-      https://github.com/eclipse-ecal/ecal/tree/master/ecal/samples/cpp/pubsub/protobuf/person_snd_tcp
+   // Set enable shm and tcp, disable udp layer
+   pub_config.layer.shm.enable = true;
+   pub_config.layer.udp.enable = false;
+   pub_config.layer.tcp.enable = true;
+
+   // Create a publisher (topic name "person") and pass the configuration object
+   eCAL::protobuf::CPublisher<pb::People::Person> pub("person");
+
+   // [...]
 
