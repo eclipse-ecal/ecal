@@ -145,8 +145,9 @@ namespace eCAL
       // Add the settings to the complete settings. This is important in cases where we want to set everything, e.g. when connecting and syncing a new ecal_rec client instance
       complete_settings_.AddSettings(settings);
 
-      // Only send the settings to the client if this recorder is enabled
-      if (recorder_enabled_ && IsRunning())
+      // Only send the settings to the client if this recorder is enabled and connected.
+      // If the recorder is not connected, the complete settings will be set via the auto-recovery upon successful connection.
+      if (recorder_enabled_ && (connected_service_client_id_.entity_id != 0) && IsRunning())
       {
         // Add the settings to the action queue
         QueueSetSettings_NoLock(settings);
@@ -160,12 +161,28 @@ namespace eCAL
     {
       std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
 
+      if (!IsRunning() || IsInterrupted())
+        return;
+
+      // Return, if the recorder is not enabled.
+      // The UPLOAD_MEASURMENT, ADD_COMMENT and DELETE_MEASUREMENT command may always be sent, even if the recorder is not enabled anymore
       if (!recorder_enabled_
         && (command.type_ != RecorderCommand::Type::UPLOAD_MEASUREMENT)
         && (command.type_ != RecorderCommand::Type::ADD_COMMENT)
-        && (command.type_ != RecorderCommand::Type::DELETE_MEASUREMENT)) // The UPLOAD_MEASURMENT, ADD_COMMENT and DELETE_MEASUREMENT command may always be sent
+        && (command.type_ != RecorderCommand::Type::DELETE_MEASUREMENT))
       {
         return;
+      }
+
+      // Safe the connected-to-ecal state for a potential autorecovery
+      if ((command.type_ == RecorderCommand::Type::INITIALIZE)
+        || (command.type_ == RecorderCommand::Type::START_RECORDING))
+      {
+        should_be_connected_to_ecal_ = true;
+      }
+      else if (command.type_ == RecorderCommand::Type::DE_INITIALIZE)
+      {
+        should_be_connected_to_ecal_ = false;
       }
 
       if ((command.type_ == RecorderCommand::Type::SAVE_PRE_BUFFER)
@@ -177,7 +194,6 @@ namespace eCAL
         // handling
         ever_participated_in_a_measurement_ = true;
       }
-
 
       // Add command to the action queue
       QueueSetCommand_NoLock(command);
@@ -198,10 +214,12 @@ namespace eCAL
       return {last_status_, last_status_timestamp_};
     }
 
-    bool RemoteRecorder::IsRequestPending() const // TODO: I think this should return false, if the recorder isn't even connected(?) ------ second thought: May be it shouldn't, I should check the GUI, I think this function is represented there with an an hourglass
+    bool RemoteRecorder::IsRequestPending() const
     {
       std::lock_guard<decltype(io_mutex_)> const io_lock(io_mutex_);
-      return IsRunning() && ((!actions_to_perform_.empty()) || currently_executing_action_);
+      return IsRunning()
+            && (connected_service_client_id_.entity_id != 0)
+            && ((!actions_to_perform_.empty()) || currently_executing_action_);
     }
 
     void RemoteRecorder::WaitForPendingRequests() const
@@ -217,9 +235,10 @@ namespace eCAL
       // If the recorder is connected, we wait until the queue has been emptied
       if (IsRunning() && !IsInterrupted())
       {
-        const auto pred = [this]() {
-          return IsInterrupted() || ((actions_to_perform_.empty()) && !currently_executing_action_);
-        };
+        const auto pred = [this]()
+                          {
+                            return IsInterrupted() || ((actions_to_perform_.empty()) && !currently_executing_action_);
+                          };
 
         io_cv_.wait(io_lock, pred);
       }
@@ -339,8 +358,11 @@ namespace eCAL
             else
             {
               eCAL::rec::EcalRecLogger::Instance()->error("Failed setting settings for recorder on " + hostname_ + ": " + response.error());
-              QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock(); // The client is not in sync anymore, so we need to recover from that
-              // TODO: Check if this need to be protected by a check for recorder_enabled_
+
+              if (recorder_enabled_)
+              {
+                QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock(); // The client is not in sync anymore, so we need to recover from that
+              }
             }
 
             last_response_ = { set_settings_successful, response.error() };
@@ -351,17 +373,6 @@ namespace eCAL
         ////////////////////////////////////////////
         else if (this_loop_action.IsCommand())
         {
-          // Even if sending the command should be unsuccessful, we save the connected to ecal state for later recovery
-          if ((this_loop_action.command_.type_ == RecorderCommand::Type::INITIALIZE)
-            || (this_loop_action.command_.type_ == RecorderCommand::Type::START_RECORDING))
-          {
-            should_be_connected_to_ecal_ = true;
-          }
-          else if (this_loop_action.command_.type_ == RecorderCommand::Type::DE_INITIALIZE)
-          {
-            should_be_connected_to_ecal_ = false;
-          }
-
           eCAL::pb::rec_client::CommandRequest const command_request_pb = RecorderCommandToCommandPb(this_loop_action.command_);
           eCAL::pb::rec_client::Response             response_pb;
 
@@ -667,10 +678,13 @@ namespace eCAL
 
     void RemoteRecorder::QueueSetSettings_NoLock(const RecorderSettings& settings)
     {
-      if ((!actions_to_perform_.empty()) && (actions_to_perform_.back().IsSettings())) {
+      if ((!actions_to_perform_.empty()) && (actions_to_perform_.back().IsSettings()))
+      {
         // If there are settings that haven't been set, yet, we add the new ones, so they can all be set in one single call
         actions_to_perform_.back().settings_.AddSettings(settings);
-      } else {
+      }
+      else
+      {
         // If there are no other settings that haven't been set, yet
         actions_to_perform_.emplace_back(settings);
       }
