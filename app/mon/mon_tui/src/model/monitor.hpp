@@ -213,7 +213,6 @@ class MonitorModel
       topic.local_connections_count = t.connections_local();
       topic.external_connections_count = t.connections_external();
       topic.message_drops = t.message_drops();
-      topic.data_id = t.data_id();
       topic.data_clock = t.data_clock();
       topic.data_frequency_mhz = t.data_frequency();
     }
