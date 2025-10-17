@@ -82,23 +82,6 @@ namespace eCAL
       }
     };
 
-    // eCAL host
-    struct Host
-    {
-      std::string                         name;                         // host name
-      OSInfo                              os;                           // operating system details
-
-      bool operator==(const Host& other) const {
-        return name == other.name && os == other.os;
-      }
-
-      void clear()
-      {
-        name.clear();
-        os.clear();
-      }
-    };
-
     // Process severity information
     struct ProcessState
     {
@@ -349,7 +332,6 @@ namespace eCAL
     {
       SampleIdentifier                    identifier;                   // Unique identifier to see who produced the sample (publisher / subscriber / ...)
       eCmdType                            cmd_type = bct_none;          // registration command type
-      Host                                host;                         // host information
       Process                             process;                      // process information
       Service::Service                    service;                      // service information
       Service::Client                     client ;                      // client information
@@ -358,7 +340,6 @@ namespace eCAL
       bool operator==(const Sample& other) const {
         return identifier == other.identifier &&
           cmd_type == other.cmd_type &&
-          host == other.host &&
           process == other.process &&
           service == other.service &&
           client == other.client &&
@@ -369,7 +350,6 @@ namespace eCAL
       {
         identifier.clear();
         cmd_type = bct_none;
-        host.clear();
         process.clear();
         service.clear();
         client.clear();
