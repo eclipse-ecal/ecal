@@ -169,7 +169,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type   = bct_reg_process;
       sample.identifier = GenerateIdentifier();
-      // Process samples don't have an id internally, hence it must be 0.
+      // Process samples don't have an id internally, hence it must be equal to the process id.
       sample.identifier.entity_id = sample.identifier.process_id;
       sample.process    = GenerateProcess();
       return sample;
