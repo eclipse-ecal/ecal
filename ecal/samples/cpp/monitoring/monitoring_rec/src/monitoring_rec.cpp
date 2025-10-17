@@ -204,7 +204,6 @@ int main()
         std::cout << "connections external        : " << topic.connections_external() << "\n";   // number of external connected entities
         std::cout << "message drops               : " << topic.message_drops()        << "\n";   // dropped messages
 
-        std::cout << "data id                     : " << topic.data_id()              << "\n";   // data send id (publisher setid)
         std::cout << "data clock                  : " << topic.data_clock()           << "\n";   // data clock (send / receive action)
         std::cout << "data frequency              : " << topic.data_frequency()       << "\n";   // data frequency (send / receive samples per second * 1000)
 

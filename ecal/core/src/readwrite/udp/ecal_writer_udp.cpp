@@ -74,7 +74,6 @@ namespace eCAL
 
     // append content
     auto& ecal_sample_content = ecal_sample.content;
-    ecal_sample_content.id               = attr_.id;
     ecal_sample_content.clock            = attr_.clock;
     ecal_sample_content.time             = attr_.time;
     ecal_sample_content.hash             = attr_.hash;

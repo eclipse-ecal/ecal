@@ -83,7 +83,6 @@ namespace
 
     // topic content
     pb_sample_.has_content = true;
-    pb_sample_.content.id    = payload_.content.id;
     pb_sample_.content.clock = payload_.content.clock;
     pb_sample_.content.time  = payload_.content.time;
     pb_sample_.content.hash  = payload_.content.hash;
@@ -183,7 +182,6 @@ namespace
     payload_.topic_info.process_id = pb_sample.topic.process_id;
 
     // topic content
-    payload_.content.id    = pb_sample.content.id;
     payload_.content.clock = pb_sample.content.clock;
     payload_.content.time  = pb_sample.content.time;
     payload_.content.hash  = pb_sample.content.hash;

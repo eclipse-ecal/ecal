@@ -85,8 +85,6 @@ namespace eCAL
     bool SetEventCallback(const SubEventCallbackT& callback_);
     bool RemoveEventCallback();
 
-    void SetFilterIDs(const std::set<long long>& filter_ids_);
-
     void ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
     void ApplyPublisherUnregistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
 
@@ -103,7 +101,7 @@ namespace eCAL
     const SDataTypeInformation& GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
-    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
+    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
   protected:
     void Register();
@@ -127,7 +125,6 @@ namespace eCAL
 
     bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const;
     bool ShouldApplySampleBasedOnLayer(eTLayerType layer_) const;
-    bool ShouldApplySampleBasedOnId(long long id_) const;
 
     void TriggerFrequencyUpdate();
     void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
@@ -177,8 +174,6 @@ namespace eCAL
     
     using CounterCacheMapT = CounterCacheMap<SPublicationInfo>;
     CounterCacheMapT                          m_publisher_message_counter_map;
-    
-    std::set<long long>                       m_id_set;
 
     SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;

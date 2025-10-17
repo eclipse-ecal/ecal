@@ -184,8 +184,6 @@ namespace
     pb_topic_.connections_external = registration_topic_.connections_external;
     // message_drops
     pb_topic_.message_drops = registration_topic_.message_drops;
-    // data_id
-    pb_topic_.data_id = registration_topic_.data_id;
     // data_clock
     pb_topic_.data_clock = registration_topic_.data_clock;
     // data_frequency
@@ -447,8 +445,6 @@ namespace
       registration_.topic.connections_external = pb_sample_.topic.connections_external;
       // message_drops
       registration_.topic.message_drops = pb_sample_.topic.message_drops;
-      // data_id
-      registration_.topic.data_id = pb_sample_.topic.data_id;
       // data_clock
       registration_.topic.data_clock = pb_sample_.topic.data_clock;
       // data_frequency

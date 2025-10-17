@@ -50,7 +50,7 @@ namespace eCAL
     void SetConnectionParameter(SReaderLayerPar& par_) override;
 
   private:
-    size_t OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_);
+    size_t OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long clock_, long long time_, size_t hash_);
 
     eCAL::eCALReader::SHM::SAttributes m_attributes;
   };

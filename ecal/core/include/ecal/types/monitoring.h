@@ -89,6 +89,7 @@ namespace eCAL
       int32_t                             connections_external{0}; //!< number of external connected entities
       int32_t                             message_drops{0};        //!< dropped messages
 
+      [[deprecated("The data_id field is deprecated and will always be zero")]]
       int64_t                             data_id{0};              //!< data send id (publisher setid)
       int64_t                             data_clock{0};           //!< data clock (send / receive action)
       int32_t                             data_frequency{0};       //!< data frequency (send / receive samples per second) [mHz]

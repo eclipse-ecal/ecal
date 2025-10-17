@@ -103,7 +103,7 @@ namespace eCAL
 
     // send content via data writer layer
     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-    return m_publisher_impl->Write(payload_, write_time, 0);
+    return m_publisher_impl->Write(payload_, write_time);
   }
 
   bool CPublisher::Send(const std::string& payload_, long long time_)

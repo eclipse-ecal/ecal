@@ -117,8 +117,7 @@ namespace eCAL
     };
 
     CPublisher::CPublisher() :
-      m_publisher_impl(nullptr),
-      m_filter_id(0)
+      m_publisher_impl(nullptr)
     {
     }
 
@@ -142,8 +141,7 @@ namespace eCAL
     **/
     CPublisher::CPublisher(CPublisher&& rhs) noexcept :
                   m_publisher_impl(std::move(rhs.m_publisher_impl)),
-                  m_callback_adapter(std::move(rhs.m_callback_adapter)),
-                  m_filter_id(rhs.m_filter_id)
+                  m_callback_adapter(std::move(rhs.m_callback_adapter))
     {
       rhs.m_publisher_impl = nullptr;
       rhs.m_callback_adapter = nullptr;
@@ -159,7 +157,6 @@ namespace eCAL
 
       m_publisher_impl = std::move(rhs.m_publisher_impl);
       m_callback_adapter = std::move(rhs.m_callback_adapter);
-      m_filter_id  = rhs.m_filter_id;
       
       rhs.m_publisher_impl = nullptr;
 
@@ -214,24 +211,25 @@ namespace eCAL
       return m_publisher_impl->SetDataTypeInformation(data_type_info_);
     }
 
-    bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+    bool CPublisher::SetAttribute(const std::string& /*attr_name_*/, const std::string& /*attr_value_*/)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::SetAttribute - Setting publisher attributes no longer has an effect.");
       return false;
     }
 
-    bool CPublisher::ClearAttribute(const std::string& attr_name_)
+    bool CPublisher::ClearAttribute(const std::string& /*attr_name_*/)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::ClearAttribute - Clear publisher attributes no longer has an effect.");
       return false;
     }
 
-    bool CPublisher::SetID(long long filter_id_)
+    bool CPublisher::SetID(long long /*filter_id_*/)
     {
-      m_filter_id = filter_id_;
-      return true;
+      if (m_publisher_impl == nullptr) return false;
+      Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::SetID - Setting the publisher ID no longer has an effect.");
+      return false;
     }
 
     size_t CPublisher::Send(const void* const buf_, const size_t len_, const long long time_ /* = DEFAULT_TIME_ARGUMENT */)
@@ -257,7 +255,7 @@ namespace eCAL
 
        // send content via data writer layer
        const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-       const size_t written_bytes = m_publisher_impl->Write(payload_, write_time, m_filter_id);
+       const size_t written_bytes = m_publisher_impl->Write(payload_, write_time);
 
        // return number of bytes written
        return written_bytes;

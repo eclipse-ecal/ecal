@@ -162,7 +162,6 @@ namespace eCAL
           ecal_sample.topic_info,
           payload_addr,
           payload_size,
-          ecal_sample_content.id,
           ecal_sample_content.clock,
           ecal_sample_content.time,
           static_cast<size_t>(ecal_sample_content.hash),
@@ -178,7 +177,7 @@ namespace eCAL
     return (applied_size > 0);
   }
 
-  bool CSubGate::ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
+  bool CSubGate::ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long clock_, long long time_, size_t hash_, eTLayerType layer_)
   {
     if (!m_created) return false;
 
@@ -199,7 +198,7 @@ namespace eCAL
 
     for (const auto& reader : readers_to_apply)
     {
-      applied_size = reader->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, layer_);
+      applied_size = reader->ApplySample(topic_info_, buf_, len_, clock_, time_, hash_, layer_);
     }
 
     return (applied_size > 0);

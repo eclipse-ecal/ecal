@@ -65,7 +65,6 @@ namespace eCAL
     Content GenerateContent(const char* payload_addr, size_t payload_size)
     {
       Content content;
-      content.id      = rand() % 100;
       content.clock   = rand() % 1000;
       content.time    = rand() % 10000;
       content.hash    = rand() % 100000;
@@ -79,7 +78,6 @@ namespace eCAL
     Content GenerateContent(const std::vector<char>& payload_vec)
     {
       Content content;
-      content.id      = rand() % 100;
       content.clock   = rand() % 1000;
       content.time    = rand() % 10000;
       content.hash    = rand() % 100000;

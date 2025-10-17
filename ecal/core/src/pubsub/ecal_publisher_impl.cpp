@@ -147,7 +147,7 @@ namespace eCAL
     Unregister();
   }
 
-  bool CPublisherImpl::Write(CPayloadWriter& payload_, long long time_, long long filter_id_)
+  bool CPublisherImpl::Write(CPayloadWriter& payload_, long long time_)
   {
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
@@ -174,7 +174,7 @@ namespace eCAL
     }
 
     // prepare counter and internal states
-    const size_t snd_hash = PrepareWrite(filter_id_, payload_buf_size);
+    const size_t snd_hash = PrepareWrite(payload_buf_size);
 
     // did we write anything
     bool written(false);
@@ -195,7 +195,6 @@ namespace eCAL
         // fill writer data
         struct SWriterAttr wattr;
         wattr.len = payload_buf_size;
-        wattr.id = m_id;
         wattr.clock = m_clock;
         wattr.hash = snd_hash;
         wattr.time = time_;
@@ -258,7 +257,6 @@ namespace eCAL
         // fill writer data
         struct SWriterAttr wattr;
         wattr.len = payload_buf_size;
-        wattr.id = m_id;
         wattr.clock = m_clock;
         wattr.hash = snd_hash;
         wattr.time = time_;
@@ -307,7 +305,6 @@ namespace eCAL
         // fill writer data
         struct SWriterAttr wattr;
         wattr.len = payload_buf_size;
-        wattr.id = m_id;
         wattr.clock = m_clock;
         wattr.hash = snd_hash;
         wattr.time = time_;
@@ -630,7 +627,6 @@ namespace eCAL
 
     ecal_reg_sample_topic.process_name = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_id      = m_id;
     ecal_reg_sample_topic.data_clock       = m_clock;
     ecal_reg_sample_topic.data_frequency        = GetFrequency();
 
@@ -818,11 +814,8 @@ namespace eCAL
 #endif
   }
 
-  size_t CPublisherImpl::PrepareWrite(long long id_, size_t len_)
+  size_t CPublisherImpl::PrepareWrite(size_t len_)
   {
-    // store id
-    m_id = id_;
-
     // handle write counters
     RefreshSendCounter();
 
