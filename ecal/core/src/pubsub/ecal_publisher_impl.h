@@ -77,7 +77,7 @@ namespace eCAL
     CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
     ~CPublisherImpl();
 
-    bool Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
+    bool Write(CPayloadWriter& payload_, long long time_);
 
     bool SetDataTypeInformation(const SDataTypeInformation& topic_info_);
 
@@ -120,7 +120,7 @@ namespace eCAL
 
     size_t GetConnectionCount();
 
-    size_t PrepareWrite(long long id_, size_t len_);
+    size_t PrepareWrite(size_t len_);
 
     TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
@@ -148,7 +148,6 @@ namespace eCAL
     std::mutex                             m_event_id_callback_mutex;
     PubEventCallbackT                      m_event_id_callback;
 
-    long long                              m_id = 0;
     long long                              m_clock = 0;
 
     std::mutex                             m_frequency_calculator_mutex;

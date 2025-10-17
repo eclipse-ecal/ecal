@@ -232,15 +232,6 @@ namespace eCAL
     return true;
   }
 
-  void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
-  {
-#ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
-#endif
-
-    m_id_set = filter_ids_;
-  }
-
   void CSubscriberImpl::ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_)
   {
     // flag write enabled from publisher side (information not used yet)
@@ -389,12 +380,6 @@ namespace eCAL
     {
       // not clear why we are returning the size_ if we are not applying the sample, but why not...
       return size_;
-    }
-
-    // We might not want to apply samples sent with a given ID (deprecated!)
-    if (!ShouldApplySampleBasedOnId(id_))
-    {
-      return 0;
     }
 
     // store receive layer
@@ -769,17 +754,6 @@ namespace eCAL
       {
         return true;
       }
-    }
-
-    return true;
-  }
-
-  bool CSubscriberImpl::ShouldApplySampleBasedOnId(long long id_) const
-  {
-    // 
-    if (!m_id_set.empty() && (m_id_set.find(id_) == m_id_set.end()))
-    {
-      return false;
     }
 
     return true;

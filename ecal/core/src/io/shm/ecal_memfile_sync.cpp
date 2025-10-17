@@ -167,8 +167,6 @@ namespace eCAL
     struct SMemFileHeader memfile_hdr;
     // set data size
     memfile_hdr.data_size         = static_cast<uint64_t>(data_.len);
-    // set header id
-    memfile_hdr.id                = static_cast<uint64_t>(data_.id);
     // set header clock
     memfile_hdr.clock             = static_cast<uint64_t>(data_.clock);
     // set header time
