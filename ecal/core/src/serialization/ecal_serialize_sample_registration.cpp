@@ -670,6 +670,8 @@ namespace eCAL
 
 #include <ecal/core/pb/ecal.pbftags.h>
 #include <ecal/core/pb/layer.pbftags.h>
+#include <ecal/core/pb/process.pbftags.h>
+#include <ecal/core/pb/service.pbftags.h>
 #include <ecal/core/pb/topic.pbftags.h>
 #include <protozero/pbf_writer.hpp>
 #include <protozero/buffer_vector.hpp>
@@ -941,6 +943,153 @@ namespace
   }
 
   template<typename Writer>
+  void SerializeProcessSample(Writer& writer, const eCAL::Registration::Sample& sample)
+  {
+    // sanity check
+    assert((sample.cmd_type == eCAL::bct_reg_process) || (sample.cmd_type == eCAL::bct_unreg_process));
+  
+    // we need to properly match the enums / make sure that they have the same values
+    writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
+    {
+      Writer process_writer{ writer, +eCAL::pb::Sample::optional_message_process};
+  
+      // identification
+      process_writer.add_int32(+eCAL::pb::Process::optional_int32_process_id, sample.identifier.process_id);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_host_name, sample.identifier.host_name);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_process_name, sample.process.process_name);
+
+      // static information
+      process_writer.add_string(+eCAL::pb::Process::optional_string_shm_transport_domain, sample.process.shm_transport_domain);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_unit_name, sample.process.unit_name);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_process_parameter, sample.process.process_parameter);
+      process_writer.add_int32(+eCAL::pb::Process::optional_int32_component_init_state, sample.process.component_init_state);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_component_init_info, sample.process.component_init_info);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_ecal_runtime_version, sample.process.ecal_runtime_version);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_config_file_path, sample.process.config_file_path);
+      process_writer.add_string(+eCAL::pb::Process::optional_string_time_sync_module_name, sample.process.time_sync_module_name);
+
+      // dynamic information
+      process_writer.add_int32(+eCAL::pb::Process::optional_int32_registration_clock, sample.process.registration_clock);
+      {
+        Writer state_writer{ process_writer, +eCAL::pb::Process::optional_message_state };
+        state_writer.add_enum(+eCAL::pb::ProcessState::optional_enum_severity, static_cast<int>(sample.process.state.severity));
+        state_writer.add_enum(+eCAL::pb::ProcessState::optional_enum_severity_level, static_cast<int>(sample.process.state.severity_level));
+        state_writer.add_string(+eCAL::pb::ProcessState::optional_string_info, sample.process.state.info);
+      }
+      process_writer.add_enum(+eCAL::pb::Process::optional_enum_time_sync_state, static_cast<int>(sample.process.time_sync_state));
+    }
+  }
+
+  // This must be a reader at the start of the Process message!
+  void DeserializeProcessSample(::protozero::pbf_reader& reader, eCAL::Registration::Sample& sample)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Process::optional_int32_process_id:
+        sample.identifier.process_id = reader.get_int32();
+        // A process has now entity id, e.g it's the process id
+        sample.identifier.entity_id = sample.identifier.process_id; 
+        break;
+      case +eCAL::pb::Process::optional_string_host_name:
+        AssignString(reader, sample.identifier.host_name);
+        break;
+      case +eCAL::pb::Process::optional_string_process_name:
+        AssignString(reader, sample.process.process_name);
+        break;
+      case +eCAL::pb::Process::optional_string_shm_transport_domain:
+        AssignString(reader, sample.process.shm_transport_domain);
+        break;
+      case +eCAL::pb::Process::optional_string_unit_name:
+        AssignString(reader, sample.process.unit_name);
+        break;
+      case +eCAL::pb::Process::optional_string_process_parameter:
+        AssignString(reader, sample.process.process_parameter);
+        break;
+      case +eCAL::pb::Process::optional_int32_component_init_state:
+        sample.process.component_init_state = reader.get_int32();
+        break;
+      case +eCAL::pb::Process::optional_string_component_init_info:
+        AssignString(reader, sample.process.component_init_info);
+        break;
+      case +eCAL::pb::Process::optional_string_ecal_runtime_version:
+        AssignString(reader, sample.process.ecal_runtime_version);
+        break;
+      case +eCAL::pb::Process::optional_string_config_file_path:
+        AssignString(reader, sample.process.config_file_path);
+        break;
+      case +eCAL::pb::Process::optional_string_time_sync_module_name:
+        AssignString(reader, sample.process.time_sync_module_name);
+        break;
+      case +eCAL::pb::Process::optional_int32_registration_clock:
+        sample.process.registration_clock = reader.get_int32();
+        break;
+      case +eCAL::pb::Process::optional_message_state:
+        AssignMessage(reader, sample.process.state, [](auto& state_reader, auto& state)
+          {
+            while (state_reader.next())
+            {
+              switch (state_reader.tag())
+              {
+              case +eCAL::pb::ProcessState::optional_enum_severity:
+                state.severity = static_cast<eCAL::Registration::eProcessSeverity>(state_reader.get_enum());
+                break;
+              case +eCAL::pb::ProcessState  ::optional_enum_severity_level:
+                state.severity_level = static_cast<eCAL::Registration::eProcessSeverityLevel>(state_reader.get_enum());
+                break;
+              case +eCAL::pb::ProcessState::optional_string_info:
+                AssignString(state_reader, state.info);
+                break;
+              default:
+                state_reader.skip(); 
+              }
+            } 
+          });
+        break;
+      case +eCAL::pb::Process::optional_enum_time_sync_state:
+        sample.process.time_sync_state = static_cast<eCAL::Registration::eTimeSyncState>(reader.get_enum());
+        break;    
+      default:
+        reader.skip();
+        break;
+      }   
+    }
+  }
+/*
+  void SerializeMethodSample(::protozero::pbf_writer& writer, const ::eCAL::Service::Method& method)
+  {
+    writer.add_string(+eCAL::pb::Method::optional_string_method_name, method.method_name);
+
+    writer.add_string(+eCAL::pb::Method::optional_string_request_type_name, method.request_type_name);
+    writer.add_string(+eCAL::pb::Method::optional_string_response_type_name, method.response_type_name);
+  }
+  
+
+  void SerializeServiceSample(::protozero::pbf_writer& writer, const ::eCAL::Registration::Sample& sample)
+  {
+    // sanity check
+    assert((sample.cmd_type == eCAL::bct_reg_service) || (sample.cmd_type == eCAL::bct_unreg_service));
+
+    // we need to properly match the enums / make sure that they have the same values
+    writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
+    {
+      ::protozero::pbf_writer&  service_writer{ writer, +eCAL::pb::Sample::optional_message_service};
+
+      service_writer.add_string(+eCAL::pb::Service::optional_string_service_id, std::to_string(sample.identifier.entity_id));
+      service_writer.add_int32(+eCAL::pb::Service::optional_int32_process_id, sample.identifier.process_id);
+      service_writer.add_string(+eCAL::pb::Service::optional_string_host_name, sample.identifier.host_name);
+
+      service_writer.add_string(+eCAL::pb::Service::optional_string_process_name, sample.service.process_name);
+      service_writer.add_string(+eCAL::pb::Service::optional_string_service_name, sample.service.service_name);
+      service_writer.add_string(+eCAL::pb::Service::optional_string_unit_name, sample.service.unit_name);
+
+
+    }
+  }
+    */
+
+  template<typename Writer>
   void SerializeRegistrationSample(Writer& writer, const ::eCAL::Registration::Sample& sample)
   {
     switch (sample.cmd_type)
@@ -955,7 +1104,7 @@ namespace
       return SerializeTopicSample(writer, sample);
     case eCAL::eCmdType::bct_reg_process:
     case eCAL::eCmdType::bct_unreg_process:
-
+      return SerializeProcessSample(writer, sample);
     case eCAL::eCmdType::bct_reg_service:
     case eCAL::eCmdType::bct_unreg_service:
 
@@ -983,6 +1132,9 @@ namespace
       {
       case +eCAL::pb::Sample::optional_message_topic:
         AssignMessage(reader, sample, DeserializeTopicSample);
+        break;
+      case +eCAL::pb::Sample::optional_message_process:
+        AssignMessage(reader, sample, DeserializeProcessSample);
         break;
       default:
         reader.skip();
