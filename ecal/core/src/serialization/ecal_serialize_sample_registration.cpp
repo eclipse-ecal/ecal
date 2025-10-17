@@ -680,8 +680,8 @@ namespace
 {
 
   //using namespace eCAL::protozero;
-
-  void SerializeParamTCP(::protozero::pbf_writer& writer, const eCAL::Registration::LayerParTcp& layer)
+  template <typename Writer>
+  void SerializeParamTCP(Writer& writer, const eCAL::Registration::LayerParTcp& layer)
   {
     // Serialize TCP-specific parameters
     writer.add_int32(+eCAL::pb::LayerParTcp::optional_int32_port, layer.port);
@@ -703,7 +703,8 @@ namespace
     }
   }
 
-  void SerializeParamSHM(::protozero::pbf_writer& writer, const eCAL::Registration::LayerParShm& layer)
+  template <typename Writer>
+  void SerializeParamSHM(Writer& writer, const eCAL::Registration::LayerParShm& layer)
   {
     for (const auto& memory_file : layer.memory_file_list)
     {
@@ -750,7 +751,8 @@ namespace
     }
   } // namespace
 
-  void SerializeTransportLayer(::protozero::pbf_writer& writer, const eCAL::Registration::TLayer& layer)
+  template <typename Writer>
+  void SerializeTransportLayer(Writer& writer, const eCAL::Registration::TLayer& layer)
   {
     static_assert(static_cast<int>(eCAL::eTLayerType::tl_none) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_none)
       && static_cast<int>(eCAL::eTLayerType::tl_ecal_shm) == static_cast<int>(eCAL::pb::eTransportLayerType::tl_ecal_shm)
@@ -764,13 +766,13 @@ namespace
     writer.add_bool(+eCAL::pb::TransportLayer::optional_bool_enabled, layer.enabled);
     writer.add_bool(+eCAL::pb::TransportLayer::optional_bool_active, layer.active);
     {
-      ::protozero::pbf_writer parameter_writer{ writer, +eCAL::pb::TransportLayer::optional_message_par_layer };
+      Writer parameter_writer{ writer, +eCAL::pb::TransportLayer::optional_message_par_layer };
 
       switch (layer.type)
       {
       case eCAL::eTLayerType::tl_ecal_shm:
       {
-        ::protozero::pbf_writer shm_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_shm };
+        Writer shm_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_shm };
         SerializeParamSHM(shm_writer, layer.par_layer.layer_par_shm);
       }
       break;
@@ -779,7 +781,7 @@ namespace
         break;
       case eCAL::eTLayerType::tl_ecal_tcp:
       {
-        ::protozero::pbf_writer tcp_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_tcp };
+        Writer tcp_writer{ parameter_writer, +eCAL::pb::ConnectionPar::optional_message_layer_par_tcp };
         SerializeParamTCP(tcp_writer, layer.par_layer.layer_par_tcp);
       }
       break;
@@ -821,7 +823,8 @@ namespace
     }
   }
 
-  void SerializeTopicSample(::protozero::pbf_writer& writer, const eCAL::Registration::Sample& sample)
+  template <typename Writer>
+  void SerializeTopicSample(Writer& writer, const eCAL::Registration::Sample& sample)
   {
     // sanity check
     assert((sample.cmd_type == eCAL::bct_reg_publisher) || (sample.cmd_type == eCAL::bct_unreg_publisher) ||
@@ -830,7 +833,7 @@ namespace
     // we need to properly match the enums / make sure that they have the same values
     writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
     {
-      ::protozero::pbf_writer topic_writer{ writer, +eCAL::pb::Sample::optional_message_topic };
+      Writer topic_writer{ writer, +eCAL::pb::Sample::optional_message_topic };
       // First, write the topic_id as it will be essential to have the info early in the stream
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_id, std::to_string(sample.identifier.entity_id));
 
@@ -844,7 +847,7 @@ namespace
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_shm_transport_domain, sample.topic.shm_transport_domain);
 
       {
-        ::protozero::pbf_writer datatype_writer{ topic_writer, +eCAL::pb::Topic::optional_message_datatype_information };
+        Writer datatype_writer{ topic_writer, +eCAL::pb::Topic::optional_message_datatype_information };
         eCAL::protozero::SerializeDataTypeInformation(datatype_writer, sample.topic.datatype_information);
       }
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_unit_name, sample.topic.unit_name);
@@ -852,7 +855,7 @@ namespace
       // registration information
       for (const auto& layer : sample.topic.transport_layer)
       {
-        ::protozero::pbf_writer layer_writer{ topic_writer, +eCAL::pb::Topic::repeated_message_transport_layer };
+        Writer layer_writer{ topic_writer, +eCAL::pb::Topic::repeated_message_transport_layer };
         SerializeTransportLayer(layer_writer, layer);
       }
 
@@ -878,8 +881,6 @@ namespace
       {
       case +eCAL::pb::Topic::optional_string_host_name:
         sample.identifier.host_name = reader.get_string();
-        // Probably this is unnecessary, we should remove this field either from topic... or we remove the host field.
-        sample.host.name = sample.identifier.host_name;
         break;
       case +eCAL::pb::Topic::optional_int32_process_id:
         sample.identifier.process_id = reader.get_int32();
@@ -939,7 +940,8 @@ namespace
     }
   }
 
-  void SerializeRegistrationSample(::protozero::pbf_writer& writer, const ::eCAL::Registration::Sample& sample)
+  template<typename Writer>
+  void SerializeRegistrationSample(Writer& writer, const ::eCAL::Registration::Sample& sample)
   {
     switch (sample.cmd_type)
     {
@@ -989,11 +991,12 @@ namespace
     }
   }
 
-  void SerializeRegistrationSampleList(::protozero::pbf_writer& writer, const ::eCAL::Registration::SampleList& sample_list)
+  template<typename Writer>
+  void SerializeRegistrationSampleList(Writer& writer, const ::eCAL::Registration::SampleList& sample_list)
   {
     for (const auto& sample : sample_list)
     {
-      ::protozero::pbf_writer sample_writer{ writer, +eCAL::pb::SampleList::repeated_message_samples };
+      Writer sample_writer{ writer, +eCAL::pb::SampleList::repeated_message_samples };
       SerializeRegistrationSample(sample_writer, sample);
     }
   }
@@ -1022,30 +1025,33 @@ namespace protozero
 {
   bool SerializeToBuffer(const ::eCAL::Registration::Sample& source_sample_, std::vector<char>& target_buffer_)
   {
-      target_buffer_.clear();
-      ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
-      //SerializeRegistrationSample(writer, source_sample_);
-      return true;
+    target_buffer_.clear();
+    ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
+    SerializeRegistrationSample(writer, source_sample_);
+    return true;
   }
   
   bool SerializeToBuffer(const ::eCAL::Registration::Sample& source_sample_, std::string& target_buffer_)
   {
-      target_buffer_.clear();
-      ::protozero::pbf_writer writer{ target_buffer_ };
-      SerializeRegistrationSample(writer, source_sample_);
-      return true;
+    target_buffer_.clear();
+    ::protozero::pbf_writer writer{ target_buffer_ };
+    SerializeRegistrationSample(writer, source_sample_);
+    return true;
   }
   
   bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::Sample& target_sample_)
   {
-    return Buffer2RegistrationStruct(data_, size_, target_sample_);
+    target_sample_.clear();
+    ::protozero::pbf_reader message{ data_, size_ };
+    DeserializeRegistrationSample(message, target_sample_);
+    return true;
   }
   
   bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
   {
     target_buffer_.clear();
     ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
-    //SerializeRegistrationSampleList(writer, source_sample_list_);
+    SerializeRegistrationSampleList(writer, source_sample_list_);
     return true;
   }
 
@@ -1059,7 +1065,10 @@ namespace protozero
   
   bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::SampleList& target_sample_list_)
   {
-    return Buffer2RegistrationListStruct(data_, size_, target_sample_list_);
+    target_sample_list_.clear();
+    ::protozero::pbf_reader message{ data_, size_ };
+    DeserializeRegistrationSampleList(message, target_sample_list_);
+    return true;
   }
 }
 }
