@@ -361,7 +361,7 @@ namespace eCAL
 #endif
   }
 
-  size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
+  size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
   {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);

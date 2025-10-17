@@ -121,7 +121,6 @@ namespace eCAL
           ecal_header_topic_info,
           data_payload,
           static_cast<size_t>(ecal_header_content.size),
-          ecal_header_content.id,
           ecal_header_content.clock,
           ecal_header_content.time,
           ecal_header_content.hash,

@@ -43,8 +43,7 @@ namespace eCAL
       }
 
       // compare content
-      if (sample1.content.id    != sample2.content.id ||
-          sample1.content.clock != sample2.content.clock ||
+      if (sample1.content.clock != sample2.content.clock ||
           sample1.content.time  != sample2.content.time ||
           sample1.content.hash  != sample2.content.hash ||
           sample1.content.size  != sample2.content.size) {

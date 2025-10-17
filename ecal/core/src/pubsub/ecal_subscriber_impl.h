@@ -101,7 +101,7 @@ namespace eCAL
     const SDataTypeInformation& GetDataTypeInformation() const { return(m_topic_info); }
 
     void InitializeLayers();
-    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
+    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
   protected:
     void Register();

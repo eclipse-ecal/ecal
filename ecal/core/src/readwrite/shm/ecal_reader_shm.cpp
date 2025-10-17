@@ -59,20 +59,20 @@ namespace eCAL
         topic_info.topic_id   = par_.topic_id;
         topic_info.process_id = par_.process_id;
 
-        auto data_callback = [this, topic_info](const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)->size_t
+        auto data_callback = [this, topic_info](const char* buf_, size_t len_, long long clock_, long long time_, size_t hash_)->size_t
         {
-          return OnNewShmFileContent(topic_info, buf_, len_, id_, clock_, time_, hash_);
+          return OnNewShmFileContent(topic_info, buf_, len_, clock_, time_, hash_);
         };
         g_memfile_pool()->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
       }
     }
   }
 
-  size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
+  size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long clock_, long long time_, size_t hash_)
   {
     if (g_subgate() != nullptr)
     {
-      if (g_subgate()->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
+      if (g_subgate()->ApplySample(topic_info_, buf_, len_, clock_, time_, hash_, tl_ecal_shm))
       {
         return len_;
       }
