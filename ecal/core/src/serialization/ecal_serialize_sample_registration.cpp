@@ -207,9 +207,6 @@ namespace
     ///////////////////////////////////////////////
     pb_sample_.has_host = true;
 
-    // host_name
-    eCAL::nanopb::encode_string(pb_sample_.host.name, registration_.host.name);
-
     pb_sample_.has_process = false;
     pb_sample_.has_service = false;
     pb_sample_.has_client = false;
@@ -302,12 +299,6 @@ namespace
     ///////////////////////////////////////////////
     // assign decoder
     ///////////////////////////////////////////////
-
-    ///////////////////////////////////////////////
-    // host information
-    ///////////////////////////////////////////////
-    // host_name
-    eCAL::nanopb::decode_string(pb_sample_.host.name, registration_.host.name);
 
     ///////////////////////////////////////////////
     // process information
