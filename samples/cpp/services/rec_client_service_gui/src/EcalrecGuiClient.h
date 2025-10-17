@@ -35,6 +35,8 @@
 
 #include "ui_MainWindow.h"
 
+#include <QTimer>
+
 class EcalrecGuiClient : public QMainWindow
 {
   Q_OBJECT
@@ -58,7 +60,10 @@ private:
 
   void onRecorderResponse(const eCAL::SServiceResponse& service_response_);
 
+  void updateClientListTreeWidget();
+
   Ui::EcalrecGuiServiceMainWindow ui_;
-  std::string hostname_;
   eCAL::protobuf::CServiceClientUntyped<eCAL::pb::rec_client::EcalRecClientService> recorder_service_;
+
+  QTimer* recorder_service_poll_timer_;
 };
