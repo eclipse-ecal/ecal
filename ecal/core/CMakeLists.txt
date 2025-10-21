@@ -88,6 +88,77 @@ if(UNIX)
 endif()
 
 macro(add_ecal_core_library TARGET_NAME)
+
+
+add_library(ecal_core_serialization OBJECT)
+target_sources(ecal_core_serialization 
+  PUBLIC
+    src/serialization/ecal_serialize_logging.h
+    src/serialization/ecal_serialize_monitoring.h
+    src/serialization/ecal_serialize_sample_payload.h
+    src/serialization/ecal_serialize_sample_registration.h
+    src/serialization/ecal_serialize_service.h
+    src/serialization/ecal_struct_sample_common.h
+    src/serialization/ecal_struct_sample_payload.h
+    src/serialization/ecal_struct_sample_registration.h
+    src/serialization/ecal_struct_service.h
+  PRIVATE
+    src/serialization/nanopb/pb.h
+    src/serialization/nanopb/pb_common.c
+    src/serialization/nanopb/pb_common.h
+    src/serialization/nanopb/pb_decode.c
+    src/serialization/nanopb/pb_decode.h
+    src/serialization/nanopb/pb_encode.c
+    src/serialization/nanopb/pb_encode.h
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
+    src/serialization/nanopb/ecal/core/pb/host.npb.c
+    src/serialization/nanopb/ecal/core/pb/host.npb.h
+    src/serialization/nanopb/ecal/core/pb/layer.npb.c
+    src/serialization/nanopb/ecal/core/pb/layer.npb.h
+    src/serialization/nanopb/ecal/core/pb/logging.npb.c
+    src/serialization/nanopb/ecal/core/pb/logging.npb.h
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
+    src/serialization/nanopb/ecal/core/pb/process.npb.c
+    src/serialization/nanopb/ecal/core/pb/process.npb.h
+    src/serialization/nanopb/ecal/core/pb/service.npb.c
+    src/serialization/nanopb/ecal/core/pb/service.npb.h
+    src/serialization/nanopb/ecal/core/pb/topic.npb.c
+    src/serialization/nanopb/ecal/core/pb/topic.npb.h
+    src/serialization/protozero/ecal_helper.h
+    src/serialization/ecal_serialize_common.cpp
+    src/serialization/ecal_serialize_common.h
+    src/serialization/ecal_serialize_logging.cpp
+    src/serialization/ecal_serialize_monitoring.cpp
+    src/serialization/ecal_serialize_sample_payload.cpp
+    src/serialization/ecal_serialize_sample_registration.cpp
+    src/serialization/ecal_serialize_service.cpp
+)
+
+target_include_directories(ecal_core_serialization
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
+)
+
+target_link_libraries(ecal_core_serialization 
+  PRIVATE
+    protozero::protozero
+    # We want to remove this later and instead take the headers as part of the library,
+    # to allow for easier crosscompilation
+    eCAL::core_pbftags 
+)
+
+set_property(TARGET ecal_core_serialization PROPERTY FOLDER core)
+
+
+
 ######################################
 # config
 ######################################
@@ -361,48 +432,7 @@ endif()
 # serialization
 ######################################
 set(ecal_serialization_src
-    src/serialization/nanopb/pb.h
-    src/serialization/nanopb/pb_common.c
-    src/serialization/nanopb/pb_common.h
-    src/serialization/nanopb/pb_decode.c
-    src/serialization/nanopb/pb_decode.h
-    src/serialization/nanopb/pb_encode.c
-    src/serialization/nanopb/pb_encode.h
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
-    src/serialization/nanopb/ecal/core/pb/host.npb.c
-    src/serialization/nanopb/ecal/core/pb/host.npb.h
-    src/serialization/nanopb/ecal/core/pb/layer.npb.c
-    src/serialization/nanopb/ecal/core/pb/layer.npb.h
-    src/serialization/nanopb/ecal/core/pb/logging.npb.c
-    src/serialization/nanopb/ecal/core/pb/logging.npb.h
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
-    src/serialization/nanopb/ecal/core/pb/process.npb.c
-    src/serialization/nanopb/ecal/core/pb/process.npb.h
-    src/serialization/nanopb/ecal/core/pb/service.npb.c
-    src/serialization/nanopb/ecal/core/pb/service.npb.h
-    src/serialization/nanopb/ecal/core/pb/topic.npb.c
-    src/serialization/nanopb/ecal/core/pb/topic.npb.h
-    src/serialization/protozero/ecal_helper.h
-    src/serialization/ecal_serialize_common.cpp
-    src/serialization/ecal_serialize_common.h
-    src/serialization/ecal_serialize_logging.cpp
-    src/serialization/ecal_serialize_logging.h
-    src/serialization/ecal_serialize_monitoring.cpp
-    src/serialization/ecal_serialize_monitoring.h
-    src/serialization/ecal_serialize_sample_payload.cpp
-    src/serialization/ecal_serialize_sample_payload.h
-    src/serialization/ecal_serialize_sample_registration.cpp
-    src/serialization/ecal_serialize_sample_registration.h
-    src/serialization/ecal_serialize_service.cpp
-    src/serialization/ecal_serialize_service.h
-    src/serialization/ecal_struct_sample_common.h
-    src/serialization/ecal_struct_sample_payload.h
-    src/serialization/ecal_struct_sample_registration.h
-    src/serialization/ecal_struct_service.h
+
 )
 
 ######################################
@@ -723,8 +753,6 @@ target_link_libraries(${TARGET_NAME}
 target_include_directories(${TARGET_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -747,10 +775,7 @@ target_link_libraries(${TARGET_NAME}
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
-    protozero::protozero
-    # We want to remove this later and instead take the headers as part of the library,
-    # to allow for easier crosscompilation
-    eCAL::core_pbftags 
+    ecal_core_serialization
 )
 
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)

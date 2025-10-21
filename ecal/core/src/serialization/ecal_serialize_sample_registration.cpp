@@ -1056,17 +1056,67 @@ namespace
       }   
     }
   }
-/*
-  void SerializeMethodSample(::protozero::pbf_writer& writer, const ::eCAL::Service::Method& method)
+
+  template<typename Writer>
+  void SerializeMethodSample(Writer& writer, const ::eCAL::Service::Method& method)
   {
     writer.add_string(+eCAL::pb::Method::optional_string_method_name, method.method_name);
 
-    writer.add_string(+eCAL::pb::Method::optional_string_request_type_name, method.request_type_name);
-    writer.add_string(+eCAL::pb::Method::optional_string_response_type_name, method.response_type_name);
+    writer.add_string(+eCAL::pb::Method::optional_string_req_type, method.req_type);
+    writer.add_bytes(+eCAL::pb::Method::optional_bytes_req_desc, method.req_desc);
+    writer.add_string(+eCAL::pb::Method::optional_string_resp_type, method.resp_type);
+    writer.add_bytes(+eCAL::pb::Method::optional_bytes_resp_desc, method.resp_desc);
+
+    {
+      Writer request_datatype_information_writer{ writer, +eCAL::pb::Method::optional_message_request_datatype_information };
+      eCAL::protozero::SerializeDataTypeInformation(request_datatype_information_writer, method.request_datatype_information);
+    }
+    {
+      Writer response_datatype_information_writer{ writer, +eCAL::pb::Method::optional_message_response_datatype_information };
+      eCAL::protozero::SerializeDataTypeInformation(response_datatype_information_writer, method.response_datatype_information);
+    }
+    writer.add_int64(+eCAL::pb::Method::optional_int64_call_count, method.call_count);
+  }
+
+  void DeserializeMethodSample(::protozero::pbf_reader& reader, ::eCAL::Service::Method& method)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Method::optional_string_method_name:
+        AssignString(reader, method.method_name);
+        break;
+      case +eCAL::pb::Method::optional_string_req_type:
+        AssignString(reader, method.req_type);
+        break;
+      case +eCAL::pb::Method::optional_bytes_req_desc:
+        AssignBytes(reader, method.req_desc);
+        break;
+      case +eCAL::pb::Method::optional_string_resp_type:
+        AssignString(reader, method.resp_type);
+        break;
+      case +eCAL::pb::Method::optional_bytes_resp_desc:
+        AssignBytes(reader, method.resp_desc);
+        break;
+      case +eCAL::pb::Method::optional_message_request_datatype_information:
+        AssignMessage(reader, method.request_datatype_information, ::eCAL::protozero::DeserializeDataTypeInformation);
+        break;
+      case +eCAL::pb::Method::optional_message_response_datatype_information:
+        AssignMessage(reader, method.response_datatype_information, ::eCAL::protozero::DeserializeDataTypeInformation);
+        break;
+      case +eCAL::pb::Method::optional_int64_call_count:
+        method.call_count = reader.get_int64();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
   }
   
-
-  void SerializeServiceSample(::protozero::pbf_writer& writer, const ::eCAL::Registration::Sample& sample)
+  template<typename Writer>
+  void SerializeServiceSample(Writer& writer, const ::eCAL::Registration::Sample& sample)
   {
     // sanity check
     assert((sample.cmd_type == eCAL::bct_reg_service) || (sample.cmd_type == eCAL::bct_unreg_service));
@@ -1074,20 +1124,148 @@ namespace
     // we need to properly match the enums / make sure that they have the same values
     writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
     {
-      ::protozero::pbf_writer&  service_writer{ writer, +eCAL::pb::Sample::optional_message_service};
+      Writer service_writer{ writer, +eCAL::pb::Sample::optional_message_service};
 
+      // identifier
       service_writer.add_string(+eCAL::pb::Service::optional_string_service_id, std::to_string(sample.identifier.entity_id));
       service_writer.add_int32(+eCAL::pb::Service::optional_int32_process_id, sample.identifier.process_id);
       service_writer.add_string(+eCAL::pb::Service::optional_string_host_name, sample.identifier.host_name);
 
+      // static information
       service_writer.add_string(+eCAL::pb::Service::optional_string_process_name, sample.service.process_name);
       service_writer.add_string(+eCAL::pb::Service::optional_string_service_name, sample.service.service_name);
       service_writer.add_string(+eCAL::pb::Service::optional_string_unit_name, sample.service.unit_name);
 
+      // transport specific parameter
+      for (const auto& method : sample.service.methods)
+      {
+        Writer method_writer{ service_writer, +eCAL::pb::Service::repeated_message_methods };
+        SerializeMethodSample(method_writer, method);
+      }
+      service_writer.add_uint32(+eCAL::pb::Service::optional_uint32_version, sample.service.version);
+      service_writer.add_uint32(+eCAL::pb::Service::optional_uint32_tcp_port_v0, sample.service.tcp_port_v0);
+      service_writer.add_uint32(+eCAL::pb::Service::optional_uint32_tcp_port_v1, sample.service.tcp_port_v1);
 
+      // dynamic information
+      service_writer.add_int32(+eCAL::pb::Service::optional_int32_registration_clock, sample.service.registration_clock);
     }
   }
-    */
+
+  void DeserializeServiceSample(::protozero::pbf_reader& reader, ::eCAL::Registration::Sample& sample)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Service::optional_string_service_id:
+        sample.identifier.entity_id = std::stoull(reader.get_string());
+        break;
+      case +eCAL::pb::Service::optional_int32_process_id:
+        sample.identifier.process_id = reader.get_int32();
+        break;
+      case +eCAL::pb::Service::optional_string_host_name:
+        AssignString(reader, sample.identifier.host_name);
+        break;
+      case +eCAL::pb::Service::optional_string_process_name:
+        AssignString(reader, sample.service.process_name);
+        break;
+      case +eCAL::pb::Service::optional_string_unit_name:
+        AssignString(reader, sample.service.unit_name);
+        break;
+      case +eCAL::pb::Service::optional_string_service_name:
+        AssignString(reader, sample.service.service_name);
+        break;
+      case +eCAL::pb::Service::repeated_message_methods:
+        AddRepeatedMessage(reader, sample.service.methods, DeserializeMethodSample);
+        break;
+      case +eCAL::pb::Service::optional_uint32_version:
+        sample.service.version = reader.get_uint32();
+        break;
+      case +eCAL::pb::Service::optional_uint32_tcp_port_v0:
+        sample.service.tcp_port_v0 = reader.get_uint32();
+        break;
+      case +eCAL::pb::Service::optional_uint32_tcp_port_v1:
+        sample.service.tcp_port_v1 = reader.get_uint32();
+        break;
+      case +eCAL::pb::Service::optional_int32_registration_clock:
+        sample.service.registration_clock = reader.get_int32();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  template<typename Writer>
+  void SerializeClientSample(Writer& writer, const ::eCAL::Registration::Sample& sample)
+  {
+    // sanity check
+    assert((sample.cmd_type == eCAL::bct_reg_client) || (sample.cmd_type == eCAL::bct_unreg_client));
+
+    // we need to properly match the enums / make sure that they have the same values
+    writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, static_cast<int>(sample.cmd_type));
+    {
+      Writer client_writer{ writer, +eCAL::pb::Sample::optional_message_client};
+
+      client_writer.add_string(+eCAL::pb::Client::optional_string_service_id, std::to_string(sample.identifier.entity_id));
+      client_writer.add_int32(+eCAL::pb::Client::optional_int32_process_id, sample.identifier.process_id);
+      client_writer.add_string(+eCAL::pb::Client::optional_string_host_name, sample.identifier.host_name);
+
+      client_writer.add_string(+eCAL::pb::Client::optional_string_process_name, sample.client.process_name);
+      client_writer.add_string(+eCAL::pb::Client::optional_string_service_name, sample.client.service_name);
+      client_writer.add_string(+eCAL::pb::Client::optional_string_unit_name, sample.client.unit_name);
+
+      for (const auto& method : sample.client.methods)
+      {
+        Writer method_writer{ client_writer, +eCAL::pb::Client::repeated_message_methods };
+        SerializeMethodSample(method_writer, method);
+      }
+      client_writer.add_uint32(+eCAL::pb::Client::optional_uint32_version, sample.client.version);
+
+      client_writer.add_int32(+eCAL::pb::Client::optional_int32_registration_clock, sample.client.registration_clock);
+    }
+  }
+
+  void DeserializeClientSample(::protozero::pbf_reader& reader, ::eCAL::Registration::Sample& sample)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Client::optional_string_service_id:
+        sample.identifier.entity_id = std::stoull(reader.get_string());
+        break;
+      case +eCAL::pb::Client::optional_int32_process_id:
+        sample.identifier.process_id = reader.get_int32();
+        break;
+      case +eCAL::pb::Client::optional_string_host_name:
+        AssignString(reader, sample.identifier.host_name);
+        break;
+      case +eCAL::pb::Client::optional_string_process_name:
+        AssignString(reader, sample.client.process_name);
+        break;
+      case +eCAL::pb::Client::optional_string_service_name:
+        AssignString(reader, sample.client.service_name);
+        break;
+      case +eCAL::pb::Client::optional_string_unit_name:
+        AssignString(reader, sample.client.unit_name);
+        break;        
+      case +eCAL::pb::Client::repeated_message_methods:
+        AddRepeatedMessage(reader, sample.client.methods, DeserializeMethodSample);
+        break;
+      case +eCAL::pb::Client::optional_uint32_version:
+        sample.client.version = reader.get_uint32();
+        break;
+      case +eCAL::pb::Client::optional_int32_registration_clock:
+        sample.client.registration_clock = reader.get_int32();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
 
   template<typename Writer>
   void SerializeRegistrationSample(Writer& writer, const ::eCAL::Registration::Sample& sample)
@@ -1095,8 +1273,8 @@ namespace
     switch (sample.cmd_type)
     {
     case eCAL::eCmdType::bct_none:
-      return;
     case eCAL::eCmdType::bct_set_sample:
+      return;
     case eCAL::eCmdType::bct_reg_publisher:
     case eCAL::eCmdType::bct_reg_subscriber:
     case eCAL::eCmdType::bct_unreg_publisher:
@@ -1107,10 +1285,10 @@ namespace
       return SerializeProcessSample(writer, sample);
     case eCAL::eCmdType::bct_reg_service:
     case eCAL::eCmdType::bct_unreg_service:
-
+      return SerializeServiceSample(writer, sample);
     case eCAL::eCmdType::bct_reg_client:
     case eCAL::eCmdType::bct_unreg_client:
-
+      return SerializeClientSample(writer, sample);
     default:
       return;
     }
@@ -1135,6 +1313,12 @@ namespace
         break;
       case +eCAL::pb::Sample::optional_message_process:
         AssignMessage(reader, sample, DeserializeProcessSample);
+        break;
+      case +eCAL::pb::Sample::optional_message_service:
+        AssignMessage(reader, sample, DeserializeServiceSample);
+        break;
+      case +eCAL::pb::Sample::optional_message_client:
+        AssignMessage(reader, sample, DeserializeClientSample);
         break;
       default:
         reader.skip();

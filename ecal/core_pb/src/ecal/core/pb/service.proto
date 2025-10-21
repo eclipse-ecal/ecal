@@ -107,6 +107,6 @@ message Client                                   // client
   repeated Method      methods            =  9;  // list of methods
   uint32               version            =  8;  // client protocol version
 
-  // ddynamic information
+  // dynamic information
   int32                registration_clock =  1;  // registration clock
 }
