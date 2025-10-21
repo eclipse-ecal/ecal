@@ -333,7 +333,7 @@ void EcalrecGuiClient::updateClientListTreeWidget()
   // Remove old client instances
   {
     QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
-    while (*it)
+    while ((*it) != nullptr)
     {
       bool item_still_exists = false;
       for (const auto& instance : current_client_instances)
@@ -361,7 +361,7 @@ void EcalrecGuiClient::updateClientListTreeWidget()
     bool client_instance_is_in_list = false;
 
     QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
-    while (*it)
+    while ((*it) != nullptr)
     {
       if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
         && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
