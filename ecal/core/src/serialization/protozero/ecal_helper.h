@@ -30,6 +30,12 @@ inline void AssignBytes(::protozero::pbf_reader& reader, std::string& assignee)
   AssignString(reader, assignee);
 }
 
+inline void AssignBytes(::protozero::pbf_reader& reader, std::vector<char>& assignee)
+{
+  protozero::data_view bytes_view = reader.get_view();
+  assignee.assign(bytes_view.data(), bytes_view.data() + bytes_view.size());
+}
+
 template <class Assignee, class Conversion>
 void AssignMessage(protozero::pbf_reader& parent_reader, Assignee& assignee, Conversion&& convert) {
     protozero::pbf_reader message_reader = parent_reader.get_message();
