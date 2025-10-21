@@ -34,8 +34,8 @@ namespace eCAL
       RegistrationSampleSerializationTest() {
         samples.push_back(GenerateProcessSample());
         samples.push_back(GenerateTopicSample());
-        //samples.push_back(GenerateServiceSample());
-        //samples.push_back(GenerateClientSample());
+        samples.push_back(GenerateServiceSample());
+        samples.push_back(GenerateClientSample());
       }
 
     protected:

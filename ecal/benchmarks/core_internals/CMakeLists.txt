@@ -36,3 +36,16 @@ target_link_libraries(ecal_benchmark_descgate
 )
 
 target_compile_features(ecal_benchmark_descgate PRIVATE cxx_std_14)
+
+add_executable(ecal_benchmark_serialization
+  benchmark_serialization.cpp
+)
+
+target_link_libraries(ecal_benchmark_serialization
+  PRIVATE
+    benchmark::benchmark
+    ecal_core_serialization
+    generate_serialization_test_data
+)
+
+target_compile_features(ecal_benchmark_serialization PRIVATE cxx_std_14)
