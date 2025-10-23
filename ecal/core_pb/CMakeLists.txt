@@ -25,7 +25,7 @@ add_library(core_protos INTERFACE)
 add_library(eCAL::core_protos ALIAS core_protos)
 
 
-function(PROTOBUF_GENERATE_PBFTAGS HDRS_RET PROTO_OUT_DIR_RET PROTO_ROOT)
+function(PROTOBUF_GENERATE_PBFTAGS HDRS_RET PROTO_OUT_DIR_RET PROTO_ROOT COPY_DIRECTORY)
   if(NOT ARGN)
     message(SEND_ERROR "Error: PROTOBUF_GENERATE_PBFTAGS() called without any proto files")
     return()
@@ -55,19 +55,34 @@ function(PROTOBUF_GENERATE_PBFTAGS HDRS_RET PROTO_OUT_DIR_RET PROTO_ROOT)
     # Remove the file extension
     string(REGEX REPLACE "\\.[^.]*$" "" REL_FIL_WE ${REL_FIL})
 
-    list(APPEND HDRS "${PROTO_OUT_DIR}/${REL_FIL_WE}.pbftags.h")
+    set(ABSOLUTE_GENERATED_FILENAME "${PROTO_OUT_DIR}/${REL_FIL_WE}.pbftags.h")
+    set(ABSOLUTE_GENERATED_FILENAME_CORE_COPY "${COPY_DIRECTORY}/${REL_FIL_WE}.pbftags.h")
+
+    list(APPEND HDRS ${ABSOLUTE_GENERATED_FILENAME})
+    list(APPEND COPIED_HDRS "${ABSOLUTE_GENERATED_FILENAME_CORE_COPY}")
 
     add_custom_command(
-      OUTPUT "${PROTO_OUT_DIR}/${REL_FIL_WE}.pbftags.h"
+      OUTPUT "${ABSOLUTE_GENERATED_FILENAME}"
       COMMAND protobuf::protoc
       ARGS "--proto_path=${PROTO_ROOT}" "--plugin=protoc-gen-pbftags=$<TARGET_FILE:protoc-gen-pbftags>" "--pbftags_out=${PROTO_OUT_DIR}" ${ABS_FIL}
       DEPENDS ${ABS_FIL} protobuf::protoc protoc-gen-pbftags
       COMMENT "Running C++ protocol buffer compiler for pbftags on ${ABS_FIL}"
       VERBATIM )
 
+    add_custom_command(
+      OUTPUT ${ABSOLUTE_GENERATED_FILENAME_CORE_COPY}
+      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${ABSOLUTE_GENERATED_FILENAME}" "${ABSOLUTE_GENERATED_FILENAME_CORE_COPY}"
+      DEPENDS "${ABSOLUTE_GENERATED_FILENAME}"
+      COMMENT "Copy (if different) ${ABSOLUTE_GENERATED_FILENAME} -> ${ABSOLUTE_GENERATED_FILENAME_CORE_COPY}"
+      VERBATIM
+    )
+
   endforeach()
 
   set_source_files_properties(${HDRS} PROPERTIES GENERATED TRUE)
+  set_source_files_properties(${COPIED_HDRS} PROPERTIES GENERATED TRUE)
+
+  add_custom_target(core_pbftags_copies DEPENDS ${COPIED_HDRS})
   
   set(${HDRS_RET}          ${HDRS}          PARENT_SCOPE)
   set(${PROTO_OUT_DIR_RET} ${PROTO_OUT_DIR} PARENT_SCOPE)
@@ -84,8 +99,14 @@ function(PROTOBUF_TARGET_PBFTAGS)
   # PROTOBUF_TARGET_CPP_UNPARSED_ARGUMENTS: These are all .proto files
   # INPUT_INSTALL_DIR: If this option is given, we want also to install files and and add them to the interface include path.
   
-  PROTOBUF_GENERATE_PBFTAGS(proto_headers proto_include_dirs ${PROTOBUF_TARGET_PBFTAGS_PROTO_ROOT} ${PROTOBUF_TARGET_PBFTAGS_PROTO_FILES} )
-  target_sources(${PROTOBUF_TARGET_PBFTAGS_TARGET} PUBLIC ${proto_headers})   
+  PROTOBUF_GENERATE_PBFTAGS(
+    proto_headers
+    proto_include_dirs 
+    ${PROTOBUF_TARGET_PBFTAGS_PROTO_ROOT}
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization/protozero
+    ${PROTOBUF_TARGET_PBFTAGS_PROTO_FILES} 
+  )
+
   target_sources(${PROTOBUF_TARGET_PBFTAGS_TARGET}
     ${PROTOBUF_TARGET_PBFTAGS_VISIBILITY}    
     FILE_SET pbftags
@@ -177,3 +198,7 @@ PROTOBUF_TARGET_PBFTAGS(
 )
 
 target_link_libraries(core_pbftags INTERFACE protozero::protozero)
+
+# eCAL core needs to depend on this target, if available. 
+# In SDK builds only, we rely on checked in files instead
+add_dependencies(ecal_core_serialization core_pbftags_copies)
