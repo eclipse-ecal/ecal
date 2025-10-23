@@ -129,6 +129,15 @@ target_sources(ecal_core_serialization
     src/serialization/nanopb/ecal/core/pb/topic.npb.c
     src/serialization/nanopb/ecal/core/pb/topic.npb.h
     src/serialization/protozero/ecal_helper.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/datatype.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/ecal.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/host.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/layer.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/logging.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/monitoring.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/process.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/service.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/topic.pbftags.h
     src/serialization/ecal_serialize_common.cpp
     src/serialization/ecal_serialize_common.h
     src/serialization/ecal_serialize_logging.cpp
@@ -145,14 +154,12 @@ target_include_directories(ecal_core_serialization
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero>
 )
 
 target_link_libraries(ecal_core_serialization 
   PRIVATE
     protozero::protozero
-    # We want to remove this later and instead take the headers as part of the library,
-    # to allow for easier crosscompilation
-    eCAL::core_pbftags 
 )
 
 set_property(TARGET ecal_core_serialization PROPERTY FOLDER core)
