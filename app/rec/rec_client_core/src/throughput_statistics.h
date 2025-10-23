@@ -29,24 +29,24 @@ namespace eCAL
 {
   namespace rec
   {
-    class ThroughputStats {
+    class ThroughputStatistics {
 
     public:
       using duration_t   = std::chrono::milliseconds;
       using time_point_t = std::chrono::time_point<duration_t>;
 
     public:
-      explicit ThroughputStats(size_t bins_per_second)
+      explicit ThroughputStatistics(size_t bins_per_second)
         : bin_width_(std::chrono::duration_cast<duration_t>(std::chrono::seconds(1)) / bins_per_second)
         , bin_count_(bins_per_second + 1)
         , bins_     (bin_count_)
       {}
 
       // Default the copy and move constructors and assignment operators
-      ThroughputStats(const ThroughputStats&)                 = default;
-      ThroughputStats& operator=(const ThroughputStats&)      = default;
-      ThroughputStats(ThroughputStats&&) noexcept             = default;
-      ThroughputStats& operator=(ThroughputStats&&) noexcept  = default;
+      ThroughputStatistics(const ThroughputStatistics&)                 = default;
+      ThroughputStatistics& operator=(const ThroughputStatistics&)      = default;
+      ThroughputStatistics(ThroughputStatistics&&) noexcept             = default;
+      ThroughputStatistics& operator=(ThroughputStatistics&&) noexcept  = default;
 
       void AddFrame(uint64_t bytes)
       {

@@ -143,7 +143,7 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
     {
       // Data that is needed by HDF5 Items _and_ addon items
       std::string hostname              = client_job_status.first;
-      int         process_id                   = client_job_status.second.client_pid_;
+      int         process_id            = client_job_status.second.client_pid_;
       bool        is_deleted            = client_job_status.second.job_status_.is_deleted_;
       auto        recorder_status_it    = std::find_if(recorder_statuses.begin(), recorder_statuses.end(),
                                                 [process_id = client_job_status.second.client_pid_] (const auto& rec_status) -> bool
@@ -163,6 +163,7 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ }) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateWriteThroughput        (client_job_status.second.job_status_.rec_hdf5_status_.write_throughput_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateState                  (client_job_status.second.job_status_.state_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUploadStatus           (client_job_status.second.job_status_.upload_status_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfo                   (client_job_status.second.job_status_.rec_hdf5_status_.info_) || update_needed_hdf5_rec;
@@ -263,6 +264,7 @@ void JobHistoryModel::recordJobCreated(const eCAL::rec_server::JobHistoryEntry& 
       hdf5_item->setInfoLastCommandResponse(client_status.second.info_last_command_response_);
       hdf5_item->setLength                 ({client_status.second.job_status_.rec_hdf5_status_.total_length_, client_status.second.job_status_.rec_hdf5_status_.total_frame_count_ });
       hdf5_item->setUnflushedFrameCount    (client_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_);
+      hdf5_item->setWriteThroughput        (client_status.second.job_status_.rec_hdf5_status_.write_throughput_);
       hdf5_item->setState                  (client_status.second.job_status_.state_);
       hdf5_item->setUploadStatus           (client_status.second.job_status_.upload_status_);
       hdf5_item->setInfo                   (client_status.second.job_status_.rec_hdf5_status_.info_);

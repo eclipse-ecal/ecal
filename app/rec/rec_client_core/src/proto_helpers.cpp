@@ -48,7 +48,10 @@ namespace eCAL
         
         // unflushed_frame_count
         hdf5_status_pb.set_unflushed_frame_count(hdf5_job_status.unflushed_frame_count_);
-        
+
+        // write_throughput
+        ToProtobuf(hdf5_job_status.write_throughput_, *hdf5_status_pb.mutable_write_throughput());
+
         // info_ok
         hdf5_status_pb.set_info_ok              (hdf5_job_status.info_.first);
         
@@ -304,6 +307,7 @@ namespace eCAL
         hdf5_job_status.total_frame_count_     = hdf5_status_pb.total_frame_count();
         hdf5_job_status.total_length_          = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(hdf5_status_pb.total_length_secs()));
         hdf5_job_status.unflushed_frame_count_ = hdf5_status_pb.unflushed_frame_count();
+        FromProtobuf(hdf5_status_pb.write_throughput(), hdf5_job_status.write_throughput_);
         hdf5_job_status.info_                  = std::make_pair(hdf5_status_pb.info_ok(), hdf5_status_pb.info_message());
       }
 

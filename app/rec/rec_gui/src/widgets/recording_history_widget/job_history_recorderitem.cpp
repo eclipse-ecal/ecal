@@ -277,11 +277,12 @@ const QString&                                          JobHistoryRecorderItem::
 const QString&                                          JobHistoryRecorderItem::addonName()               const { return addon_name_; }
 bool                                                    JobHistoryRecorderItem::isAddonItem()             const { return !addon_id_.isEmpty(); }
 
-int                                                     JobHistoryRecorderItem::process_id()                     const { return pid_; }
+int                                                     JobHistoryRecorderItem::process_id()              const { return pid_; }
 bool                                                    JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
 std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
 int64_t                                                 JobHistoryRecorderItem::unflushedFrameCount()     const { return unflushed_frame_count_; }
+eCAL::rec::Throughput                                   JobHistoryRecorderItem::writeThroughput()         const { return write_throughput_; }
 eCAL::rec::JobState                                     JobHistoryRecorderItem::state()                   const { return state_; }
 eCAL::rec::UploadStatus                                 JobHistoryRecorderItem::uploadStatus()            const { return upload_status_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::info()                    const { return info_; }
@@ -305,11 +306,12 @@ const std::pair<bool, std::string>&                     JobHistoryRecorderItem::
     return info_;
 }
 
-void JobHistoryRecorderItem::setPid                    (int process_id)                                                               { pid_ = process_id; }
+void JobHistoryRecorderItem::setPid                    (int process_id)                                                        { pid_ = process_id; }
 void JobHistoryRecorderItem::setStillOnline            (bool still_online)                                                     { still_online_ = still_online; }
 void JobHistoryRecorderItem::setInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response)        { info_last_command_response_ = info_last_command_response; }
 void JobHistoryRecorderItem::setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length) { length_ = length; }
 void JobHistoryRecorderItem::setUnflushedFrameCount    (int64_t unflushed_frame_count)                                         { unflushed_frame_count_ = unflushed_frame_count; }
+void JobHistoryRecorderItem::setWriteThroughput        (const eCAL::rec::Throughput& write_throughput)                         { write_throughput_ = write_throughput; }
 void JobHistoryRecorderItem::setState                  (eCAL::rec::JobState state)                                             { state_ = state; }
 void JobHistoryRecorderItem::setUploadStatus           (const eCAL::rec::UploadStatus& upload_status)                          { upload_status_ = upload_status; }
 void JobHistoryRecorderItem::setInfo                   (const std::pair<bool, std::string>& info)                              { info_ = info; }
@@ -364,6 +366,18 @@ bool JobHistoryRecorderItem::updateUnflushedFrameCount(int64_t unflushed_frame_c
   }
   return false;
 }
+
+bool JobHistoryRecorderItem::updateWriteThroughput(const eCAL::rec::Throughput& write_throughput)
+{
+  if (write_throughput_ != write_throughput)
+  {
+    write_throughput_ = write_throughput;
+    return true;
+  }
+  return false;
+}
+
+
 
 bool JobHistoryRecorderItem::updateState(eCAL::rec::JobState state)
 {

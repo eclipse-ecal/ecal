@@ -178,7 +178,7 @@ namespace eCAL
 
     // Subscriber throughput statistics
     private:
-      mutable ThroughputStats               subscriber_throughput_statistics_;// todo don't make mutable
+      mutable ThroughputStatistics          subscriber_throughput_statistics_;// todo don't make mutable
       mutable std::mutex                    subscriber_throughput_mutex_;
     };
   }

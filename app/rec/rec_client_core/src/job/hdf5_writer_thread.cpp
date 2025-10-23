@@ -40,6 +40,7 @@ namespace eCAL
       , new_topic_info_map_          (initial_topic_info_map)
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
+      , throughput_statistics_       (2)
     {
       hdf5_writer_ = std::make_unique<eCAL::eh5::v2::HDF5Meas>();
     }
@@ -180,15 +181,20 @@ namespace eCAL
             break;
 
           // Write Frame element to HDF5
-          if (!hdf5_writer_->AddEntryToFile(
+          if (hdf5_writer_->AddEntryToFile(
             frame->data_.data(),
             frame->data_.size(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_, 
+            frame->topic_name_,
             frame->id_,
             frame->clock_
           ))
+          {
+            std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
+            throughput_statistics_.AddFrame(static_cast<uint64_t>(frame->data_.size()));
+          }
+          else
           {
             last_status_.info_ = { false, "Error adding frame to measurement" };
             EcalRecLogger::Instance()->error("Hdf5WriterThread::Run(): Unable to add Frame to measurement");
@@ -246,6 +252,11 @@ namespace eCAL
 
         last_status_.unflushed_frame_count_ = frame_buffer_.size();
         last_status_.total_frame_count_     = written_frames_ + frame_buffer_.size();
+      }
+
+      {
+        std::lock_guard<std::mutex> throughput_statistics_lock_(throughput_statistics_mutex_);
+        last_status_.write_throughput_ = throughput_statistics_.GetThroughput();
       }
 
       return last_status_;

@@ -52,11 +52,12 @@ public:
   const QString& addonName() const;
   bool isAddonItem() const;
 
-  int                                                     process_id()                     const;
+  int                                                     process_id()              const;
   bool                                                    stillOnline()             const;
   std::pair<bool, std::string>                            infoLastCommandResponse() const;
   std::pair<std::chrono::steady_clock::duration, int64_t> length()                  const;
   int64_t                                                 unflushedFrameCount()     const;
+  eCAL::rec::Throughput                                   writeThroughput()         const;
   eCAL::rec::JobState                                     state()                   const;
   eCAL::rec::UploadStatus                                 uploadStatus()            const;
   std::pair<bool, std::string>                            info()                    const;
@@ -68,6 +69,7 @@ public:
   void setInfoLastCommandResponse(const std::pair<bool, std::string>&   info_last_command_response);
   void setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
   void setUnflushedFrameCount    (int64_t                               unflushed_frame_count);
+  void setWriteThroughput        (const eCAL::rec::Throughput&          write_throughput);
   void setState                  (eCAL::rec::JobState                   state);
   void setUploadStatus           (const eCAL::rec::UploadStatus&        upload_status);
   void setInfo                   (const std::pair<bool, std::string>&   info);
@@ -78,6 +80,7 @@ public:
   bool updateInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response);
   bool updateLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
   bool updateUnflushedFrameCount    (int64_t                             unflushed_frame_count);
+  bool updateWriteThroughput        (const eCAL::rec::Throughput&        write_throughput);
   bool updateState                  (eCAL::rec::JobState                 state);
   bool updateUploadStatus           (const eCAL::rec::UploadStatus&      upload_status);
   bool updateInfo                   (const std::pair<bool, std::string>& info);
@@ -128,6 +131,7 @@ private:
 
   std::pair<std::chrono::steady_clock::duration, int64_t> length_;
   int64_t                                                 unflushed_frame_count_;
+  eCAL::rec::Throughput                                   write_throughput_;
   eCAL::rec::JobState                                     state_;
   eCAL::rec::UploadStatus                                 upload_status_;
   std::pair<bool, std::string>                            info_;

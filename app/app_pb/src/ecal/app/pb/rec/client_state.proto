@@ -46,6 +46,7 @@ message State
     double        total_length_secs            =  1;
     int64         total_frame_count            =  2;
     int64         unflushed_frame_count        =  3;
+    Throughput    write_throughput             =  6;
     bool          info_ok                      =  4;
     string        info_message                 =  5;
   }

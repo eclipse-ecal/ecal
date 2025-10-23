@@ -49,9 +49,25 @@ namespace eCAL
       {
           return !(*this == other);
       }
-    };
 
-    
+      // Operator+
+      Throughput operator+(const Throughput& other) const
+      {
+        return Throughput
+                {
+                  bytes_per_second_ + other.bytes_per_second_,
+                  frames_per_second_ + other.frames_per_second_
+                };
+      }
+
+      // Operator+=
+      Throughput& operator+=(const Throughput& other)
+      {
+        bytes_per_second_  += other.bytes_per_second_;
+        frames_per_second_ += other.frames_per_second_;
+        return *this;
+      }
+    };
 
     struct RecHdf5JobStatus
     {
@@ -60,6 +76,7 @@ namespace eCAL
       std::chrono::steady_clock::duration total_length_;
       int64_t                             total_frame_count_;
       int64_t                             unflushed_frame_count_;
+      Throughput                          write_throughput_;
       std::pair<bool, std::string>        info_;
 
       bool operator==(const RecHdf5JobStatus& other) const { return (total_length_ == other.total_length_) && (total_frame_count_ == other.total_frame_count_) && (unflushed_frame_count_ == other.unflushed_frame_count_) && (info_ == other.info_); }

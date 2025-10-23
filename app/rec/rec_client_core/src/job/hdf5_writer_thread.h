@@ -27,6 +27,8 @@
 #include <map>
 
 #include "frame.h"
+#include "throughput_statistics.h"
+
 #include "rec_client_core/job_config.h"
 #include "rec_client_core/topic_info.h"
 #include "rec_client_core/state.h"
@@ -96,8 +98,10 @@ namespace eCAL
       mutable std::mutex                                    hdf5_writer_mutex_;
       std::unique_ptr<eCAL::eh5::v2::HDF5Meas>              hdf5_writer_;
 
-
       std::atomic<bool> flushing_;
+
+      mutable std::mutex           throughput_statistics_mutex_;
+      mutable ThroughputStatistics throughput_statistics_;
     };
   }
 }
