@@ -30,14 +30,28 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
   // initialize eCAL API
   eCAL::Initialize("RecClientServiceGui");
 
-  connect(ui_.hostname_lineedit, &QLineEdit::editingFinished, this, [this]() {hostname_ = ui_.hostname_lineedit->text().toStdString(); });
-
   connect(ui_.get_config_request_button, &QPushButton::clicked,                 this,                   &EcalrecGuiClient::getConfigRequest);
   connect(ui_.set_config_request_button, &QPushButton::clicked,                 this,                   &EcalrecGuiClient::setConfigRequest);
   connect(ui_.command_request_button,    &QPushButton::clicked,                 this,                   &EcalrecGuiClient::commandRequest);
   connect(ui_.get_state_request_button,  &QPushButton::clicked,                 this,                   &EcalrecGuiClient::getStateRequest);
   connect(ui_.response_clear_button,     &QPushButton::clicked,                 ui_.response_texteedit, &QTextEdit::clear);
-  connect(this,                          &EcalrecGuiClient::setResponseSignal,  ui_.response_texteedit, &QTextEdit::setText                   ,Qt::ConnectionType::QueuedConnection);
+  connect(this,                          &EcalrecGuiClient::setResponseSignal,  ui_.response_texteedit, &QTextEdit::append                   ,Qt::ConnectionType::QueuedConnection);
+
+  recorder_service_poll_timer_ = new QTimer(this);
+  connect(recorder_service_poll_timer_, &QTimer::timeout, this,
+          [this]()
+          {
+            //std::cout << "Rec Client Instances:\n";
+            //auto client_instances = this->recorder_service_.GetClientInstances();
+
+            //for (const auto& instance : client_instances)
+            //{
+            //  const auto client_id = instance.GetClientID();
+            //  std::cout << "  - Host: " << client_id.host_name << " PID: " << client_id.process_id << " ID: " << client_id.entity_id << std::endl;
+            //}
+            this->updateClientListTreeWidget();
+          });
+  recorder_service_poll_timer_->start(std::chrono::milliseconds(500));
 }
 
 EcalrecGuiClient::~EcalrecGuiClient()
@@ -212,15 +226,36 @@ void EcalrecGuiClient::getStateRequest()
 template <typename RequestT>
 void EcalrecGuiClient::callService(const std::string& method, const RequestT& request)
 {
-  auto client_instances = recorder_service_.GetClientInstances();
-  for (auto& client_instance : client_instances)
+  // Clear the response text edit
+  ui_.response_texteedit->clear();
+
+  // Iterate over all items in the tree widget and call the service on the checked ones
+  QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
+  while (*it)
   {
-    // TODO: We need to filter for pid as well in the future?
-    // Currently empty hostname means "all hosts"
-    if ((client_instance.GetClientID().host_name == hostname_) || hostname_.empty())
+    if ((*it)->checkState(0) == Qt::CheckState::Checked)
     {
-      client_instance.CallWithCallback(method, request, [this](const eCAL::SServiceResponse& service_response) {this->onRecorderResponse(service_response); });
+      bool found_instance = false;
+      for (auto& instance : recorder_service_.GetClientInstances())
+      {
+        if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
+          && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
+          && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
+        {
+          found_instance = true;
+          instance.CallWithCallbackAsync(method, request, [this](const eCAL::SServiceResponse& service_response) { this->onRecorderResponse(service_response); });
+          break;
+        }
+      }
+      if (!found_instance)
+      {
+        QMessageBox::warning(this, "Warning", QString("Could not find recorder client instance for host %1, PID %2, ID %3")
+                            .arg((*it)->text(0))
+                            .arg((*it)->data(1, Qt::ItemDataRole()).toInt())
+                            .arg((*it)->data(2, Qt::ItemDataRole()).toULongLong()));
+      }
     }
+    ++it;
   }
 }
 
@@ -246,6 +281,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
       eCAL::pb::rec_client::GetConfigResponse response;
       response.ParseFromString(service_response_.response);
 
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -255,6 +291,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
       eCAL::pb::rec_client::State response;
       response.ParseFromString(service_response_.response);
 
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -263,6 +300,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
     {
       eCAL::pb::rec_client::Response response;
       response.ParseFromString(service_response_.response);
+      response_stream << "------------------------------------------------\n";
       response_stream << "RecorderService " << method_name.c_str() << " called successfully on host " << host_name.c_str() << "\n";
       response_stream << "------------------------------------------------\n\n";
       response_stream << response.DebugString().c_str();
@@ -274,6 +312,7 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
   {
     eCAL::pb::rec_client::Response response;
     response.ParseFromString(service_response_.response);
+    response_stream << "------------------------------------------------\n";
     response_stream << "RecorderService " << method_name.c_str() << " failed with \"" << response.error().c_str() << "\" on host " << host_name.c_str() << "\n";
     response_stream << "------------------------------------------------\n\n";
     response_stream << response.DebugString().c_str();
@@ -287,3 +326,62 @@ void EcalrecGuiClient::onRecorderResponse(const eCAL::SServiceResponse& service_
 
 }
 
+void EcalrecGuiClient::updateClientListTreeWidget()
+{
+  auto current_client_instances = this->recorder_service_.GetClientInstances();
+
+  // Remove old client instances
+  {
+    QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
+    while ((*it) != nullptr)
+    {
+      bool item_still_exists = false;
+      for (const auto& instance : current_client_instances)
+      {
+        if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
+          && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
+          && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
+        {
+          item_still_exists = true;
+          break;
+        }
+      }
+      
+      if (!item_still_exists)
+      {
+        delete *it;
+      }
+      ++it;
+    }
+  }
+
+  // Add new client instances
+  for (const auto& instance : current_client_instances)
+  {
+    bool client_instance_is_in_list = false;
+
+    QTreeWidgetItemIterator it(ui_.client_list_tree_widget);
+    while ((*it) != nullptr)
+    {
+      if ((*it)->text(0).toStdString() == instance.GetClientID().host_name
+        && (*it)->data(1, Qt::ItemDataRole()).toInt() == instance.GetClientID().process_id
+        && (*it)->data(2, Qt::ItemDataRole()).toULongLong() == instance.GetClientID().entity_id)
+      {
+        client_instance_is_in_list = true;
+        break;
+      }
+      ++it;
+    }
+
+    if (!client_instance_is_in_list)
+    {
+      QTreeWidgetItem* item = new QTreeWidgetItem(ui_.client_list_tree_widget);
+      item->setData(0, Qt::ItemDataRole::CheckStateRole, Qt::CheckState::Unchecked);
+      item->setData(0, Qt::ItemDataRole::DisplayRole, QString::fromStdString(instance.GetClientID().host_name));
+      item->setData(1, Qt::ItemDataRole::DisplayRole, instance.GetClientID().process_id);
+      item->setData(2, Qt::ItemDataRole::DisplayRole, static_cast<qulonglong>(instance.GetClientID().entity_id));
+
+      ui_.client_list_tree_widget->addTopLevelItem(item);
+    }
+  }
+}

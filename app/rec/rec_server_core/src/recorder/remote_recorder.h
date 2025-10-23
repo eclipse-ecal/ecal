@@ -53,7 +53,7 @@ namespace eCAL
       class Action
       {
       public:
-        Action(bool is_autorecovery = true)
+        Action(bool is_autorecovery = false)
           : is_settings_(false)
           , is_command_(false)
           , is_autorecovery_action_(is_autorecovery)
@@ -72,8 +72,14 @@ namespace eCAL
           , is_command_(true)
           , is_autorecovery_action_(is_autorecovery)
         {}
-
-        ~Action() {}
+        
+        ~Action() = default;                            // Default destructor
+        
+        Action(const Action&)            = default;     // Copy constructor
+        Action& operator=(const Action&) = default;     // Copy assignment operator
+        
+        Action(Action&&)            = default;          // Move constructor
+        Action& operator=(Action&&) = default;          // Move assignment operator
 
         RecorderSettings settings_;
         RecorderCommand  command_;
@@ -99,35 +105,43 @@ namespace eCAL
                               , const std::function<void(const std::string& hostname, const eCAL::rec::RecorderStatus& recorder_status)>& update_jobstatus_function
                               , const std::function<void(int64_t job_id, const std::string& hostname, const std::pair<bool, std::string>& info_command_response)>& report_job_command_response_callback
                               , const RecorderSettings& initial_settings);
+        
+        // Delete copy constructor and copy assignment operator
+        RemoteRecorder(const RemoteRecorder&)             = delete;
+        RemoteRecorder& operator=(const RemoteRecorder&)  = delete;
+        
+        // Delete move constructor and move assignment operator
+        RemoteRecorder(RemoteRecorder&&)            = delete;
+        RemoteRecorder& operator=(RemoteRecorder&&) = delete;
       
-      ~RemoteRecorder();
+      ~RemoteRecorder() override;
 
     //////////////////////////////////////////
     // Public API
     //////////////////////////////////////////
     public:
-      virtual void SetRecorderEnabled(bool enabled, bool connect_to_ecal = false) override;
-      virtual bool IsRecorderEnabled() const override;
+      void SetRecorderEnabled(bool enabled, bool connect_to_ecal = false) override;
+      bool IsRecorderEnabled() const override;
 
-      virtual bool EverParticipatedInAMeasurement() const override;
+      bool EverParticipatedInAMeasurement() const override;
 
-      virtual void SetSettings(const RecorderSettings& settings) override;
-      virtual void SetCommand(const RecorderCommand& command) override;
+      void SetSettings(const RecorderSettings& settings) override;
+      void SetCommand(const RecorderCommand& command) override;
 
-      virtual bool IsAlive() const override;
-      virtual std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> GetStatus() const override;
+      bool IsAlive() const override;
+      std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point> GetStatus() const override;
 
-      virtual bool IsRequestPending() const override;
-      virtual void WaitForPendingRequests() const override;
+      bool IsRequestPending() const override;
+      void WaitForPendingRequests() const override;
 
-      virtual std::pair<bool, std::string> GetLastResponse() const override;
+      std::pair<bool, std::string> GetLastResponse() const override;
 
     //////////////////////////////////////////
     // InterruptibleThread overrides
     //////////////////////////////////////////
     protected:
-      virtual void Run() override;
-      virtual void Interrupt() override;
+      void Run() override;
+      void Interrupt() override;
 
     //////////////////////////////////////////
     // Converter Functions
@@ -142,9 +156,11 @@ namespace eCAL
     // Auxiliary helper methods
     //////////////////////////////////////////
     private:
-      void removeAutorecoveryActions_NoLock();
+      void QueueAutoRecoveryCommandsBasedOnLastStatus_NoLock();
       void QueueSetSettings_NoLock(const RecorderSettings& settings);
       void QueueSetCommand_NoLock(const RecorderCommand& command);
+
+      bool ConnectToFreeRecorderService();
       bool CallRecorderService(const std::string& method_name_, const google::protobuf::Message& request_, google::protobuf::Message& response_);
 
     //////////////////////////////////////////
@@ -160,13 +176,13 @@ namespace eCAL
       bool currently_executing_action_;
 
       bool    recorder_enabled_;
-      int32_t connected_pid_;
-      bool    client_in_sync_;
-      bool    recorder_alive_;
+
+      eCAL::SEntityId connected_service_client_id_;
+      bool            client_in_sync_;
 
       std::atomic<bool> ever_participated_in_a_measurement_;
 
-      eCAL::rec::RecorderStatus                     last_status_;
+      eCAL::rec::RecorderStatus          last_status_;
       eCAL::Time::ecal_clock::time_point last_status_timestamp_;
       std::pair<bool, std::string>       last_response_;
 
