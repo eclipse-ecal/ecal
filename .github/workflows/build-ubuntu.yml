@@ -86,6 +86,7 @@ jobs:
           thirdparty/fineftp/fineftp-server \
           thirdparty/ftxui/ftxui \
           thirdparty/nanobind/nanobind \
+          thirdparty/protozero/protozero \
           thirdparty/qwt/qwt \
           thirdparty/recycle/recycle \
           thirdparty/tsl-robin-map/tsl-robin-map \

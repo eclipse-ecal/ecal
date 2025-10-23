@@ -162,7 +162,10 @@ target_link_libraries(ecal_core_serialization
     protozero::protozero
 )
 
-set_property(TARGET ecal_core_serialization PROPERTY FOLDER core)
+set_target_properties(ecal_core_serialization PROPERTIES 
+  POSITION_INDEPENDENT_CODE ON  
+  FOLDER core
+)
 
 
 
