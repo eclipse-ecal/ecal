@@ -32,6 +32,27 @@ namespace eCAL
 {
   namespace rec
   {
+    struct Throughput
+    {
+      uint64_t bytes_per_second_{ 0 };
+      uint64_t frames_per_second_{ 0 };
+      
+      // Equality operator
+      bool operator==(const Throughput& other) const
+      {
+          return bytes_per_second_  == other.bytes_per_second_
+              && frames_per_second_ == other.frames_per_second_;
+      }
+  
+      // Inequality operator
+      bool operator!=(const Throughput& other) const
+      {
+          return !(*this == other);
+      }
+    };
+
+    
+
     struct RecHdf5JobStatus
     {
       RecHdf5JobStatus() : total_length_(0), total_frame_count_(0), unflushed_frame_count_(0), info_{ true, "" } {}
@@ -151,6 +172,7 @@ namespace eCAL
       bool                                                    initialized_;
       std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
       std::set<std::string>                                   subscribed_topics_;
+      Throughput                                              subscriber_throughput_;
       std::vector<RecorderAddonStatus>                        addon_statuses_;
       std::vector<JobStatus>                                  job_statuses_;
       std::pair<bool, std::string>                            info_;

@@ -61,6 +61,7 @@ namespace eCAL
       , pre_buffer_            (false, std::chrono::steady_clock::duration(0))
       , connected_to_ecal_     (false)
       , record_mode_           (RecordMode::All)
+      , subscriber_throughput_statistics_(2)
     {
       garbage_collector_trigger_thread_ = std::make_unique<GarbageCollectorTriggerThread>(*this);
       garbage_collector_trigger_thread_->Start();
@@ -357,6 +358,9 @@ namespace eCAL
           recorder_status.subscribed_topics_.emplace(subscriber.first);
         }
       }
+
+      // subscriber_throughput_
+      recorder_status.subscriber_throughput_ = GetSubscriberThroughput();
 
       // addon_statuses_
       recorder_status.addon_statuses_ = addon_manager_->GetAddonStatuses();
@@ -702,17 +706,30 @@ namespace eCAL
 
       std::shared_ptr<Frame> frame = std::make_shared<Frame>(&data_, topic_id_.topic_name, ecal_receive_time, system_receive_time);
 
+      // Add to the pre-buffer (it is thread-safe by using a mutex internally)
       pre_buffer_.push_back(frame);
 
       {
+        // Add to the currently recording job (if there is any)
         std::shared_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
         if (recording_recorder_job_ != nullptr)
         {
           recording_recorder_job_->AddFrame(std::move(frame));
         }
       }
+
+      {
+        // Add to the subscriber statistics
+        std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
+        subscriber_throughput_statistics_.AddFrame(data_.buffer_size);
+      }
     }
 
+    Throughput EcalRecImpl::GetSubscriberThroughput() const
+    {
+      std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
+      return subscriber_throughput_statistics_.GetThroughput();
+    }
     //////////////////////////////////////
     /// API for external threads      ////
     //////////////////////////////////////

@@ -45,6 +45,9 @@ namespace eCAL
 
     class EcalRec
     {
+    //////////////////////////////////////
+    /// EcalRec class                 ////
+    //////////////////////////////////////
     public:
       EcalRec();
       ~EcalRec();
@@ -109,6 +112,8 @@ namespace eCAL
       bool IsConnectedToEcal() const;
 
       std::set<std::string> GetSubscribedTopics() const;
+
+      Throughput GetSubscriberThroughput();
 
     private:
       std::unique_ptr<EcalRecImpl> recorder_;

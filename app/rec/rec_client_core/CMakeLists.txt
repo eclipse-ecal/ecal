@@ -51,6 +51,7 @@ set(source_files
     src/monitoring_thread.cpp
     src/monitoring_thread.h
     src/proto_helpers.cpp
+    src/throughput_statistics.h
 
     src/addons/addon.cpp
     src/addons/addon.h

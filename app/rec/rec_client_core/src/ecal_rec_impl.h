@@ -36,6 +36,8 @@
 #include <rec_client_core/job_config.h>
 #include <rec_client_core/upload_config.h>
 
+#include "throughput_statistics.h"
+
 #include "job/record_job.h"
 
 #include "frame_buffer.h"
@@ -49,6 +51,13 @@ namespace eCAL
     class GarbageCollectorTriggerThread;
     class MonitoringThread;
     class AddonManager;
+
+    struct SubscriberStatisticsEntry
+    {
+      std::chrono::steady_clock::time_point start_of_statistics;
+      uint64_t                              bytes_since_start = 0;
+      uint64_t                              frames_since_start = 0;
+    };
 
     class EcalRecImpl
     {
@@ -116,6 +125,8 @@ namespace eCAL
 
       void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
 
+      Throughput GetSubscriberThroughput() const;
+
       //////////////////////////////////////
       //// API for external threads     ////
       //////////////////////////////////////
@@ -164,6 +175,11 @@ namespace eCAL
       RecordMode                                                record_mode_;       /**< All / Blacklist / Whitelist */
       std::set<std::string>                                     listed_topics_;     /**< When in Blacklist or Whitelist mode, this list holds the according topic list */
       std::set<std::string>                                     hosts_filter_;      /**< Only subscribe to topics published by there hosts*/
+
+    // Subscriber throughput statistics
+    private:
+      mutable ThroughputStats               subscriber_throughput_statistics_;// todo don't make mutable
+      mutable std::mutex                    subscriber_throughput_mutex_;
     };
   }
 }

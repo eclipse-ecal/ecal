@@ -179,5 +179,10 @@ namespace eCAL
     {
       return recorder_->GetSubscribedTopics();
     }
+
+    Throughput EcalRec::GetSubscriberThroughput()
+    {
+      return recorder_->GetSubscriberThroughput();
+    }
   }
 }

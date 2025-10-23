@@ -41,6 +41,8 @@
 #include <ecal_utils/string.h>
 #include "models/item_data_roles.h"
 
+#include <CustomQt/QBytesToPrettyStringUtils.h>
+
 //////////////////////////////////////////////////////
 // Constructor & destructor
 //////////////////////////////////////////////////////
@@ -349,7 +351,8 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
         {
             if (role == Qt::ItemDataRole::DisplayRole)
             {
-              return tr("Recording");
+              return tr("Recording")
+                + " (" + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr("/s)");
             }
             else if (role == Qt::ItemDataRole::DecorationRole)
             {
@@ -360,7 +363,8 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
         {
           if (role == Qt::ItemDataRole::DisplayRole)
           {
-            return tr("Subscribing (") + QString::number(recorder_list_[row].subscribed_topics_.size()) + tr(" Topics)");
+            return tr("Subscribing (") + QString::number(recorder_list_[row].subscribed_topics_.size()) + tr(" Topics, ")
+                 + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr("/s)");
           }
           else if (role == Qt::ItemDataRole::DecorationRole)
           {
@@ -397,6 +401,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
             else
             {
               tooltip += "\nSubscribed to " + QString::number(recorder_list_[row].subscribed_topics_.size()) + " Topics";
+              tooltip += "\nReceiving " + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr(" / s");
             }
           }
 
@@ -1216,6 +1221,13 @@ void RecorderModel::recorderStatusUpdate(const eCAL::rec_server::RecorderStatusM
           if (recorder_list_[i].subscribed_topics_ != recorder_status_it->second.first.subscribed_topics_)
           {
             recorder_list_[i].subscribed_topics_ = recorder_status_it->second.first.subscribed_topics_;
+            update_view = true;
+          }
+
+          // subscriber_throughput_ (HDF5)
+          if (recorder_list_[i].subscriber_throughput_ != recorder_status_it->second.first.subscriber_throughput_)
+          {
+            recorder_list_[i].subscriber_throughput_ = recorder_status_it->second.first.subscriber_throughput_;
             update_view = true;
           }
 

@@ -35,6 +35,12 @@ message State
   //   double        queued_secs                  =  6;
   // }
   
+  message Throughput
+  {
+    uint64 bytes_per_sec             =  1;
+    uint64 frames_per_sec            =  2;
+  }
+
   message RecHdf5Status
   {
     double        total_length_secs            =  1;
@@ -130,13 +136,14 @@ message State
   reserved 22;  // eCAL Rec 2.0 field
                 // repeated WriterState buffer_writer_states = 22;
 
-  string                       host_name                         = 11;
-  int32                        process_id                              = 12;
+  string                       host_name                        = 11;
+  int32                        process_id                       = 12;
 
   bool                         initialized                      = 13;
   int64                        pre_buffer_length_frames_count   = 20;
   double                       pre_buffer_length_secs           = 21;
   repeated string              subscribed_topics                = 23;
+  Throughput                   subscriber_throughput            = 29;
   repeated RecorderAddonStatus addon_statuses                   = 24;
   repeated JobStatus           job_statuses                     = 25;
   

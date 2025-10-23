@@ -166,6 +166,7 @@ private:
     bool                                                    time_error_warning_;
     std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
     std::set<std::string>                                   subscribed_topics_;
+    eCAL::rec::Throughput                                   subscriber_throughput_;
     bool                                                    recording_;
     std::pair<bool, std::string>                            info_;
   };
