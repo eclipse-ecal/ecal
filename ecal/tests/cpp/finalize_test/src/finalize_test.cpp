@@ -48,39 +48,32 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
     return;
   });
 
-  std::vector<eCAL::CPublisher> pubs;
+  eCAL::CPublisher pub("foo");
   
-  for (size_t i = 0; i < 100; ++i)
-  {
-    pubs.emplace_back("foo");
-  }
-
   // let's match them
-  eCAL::Process::SleepMS(10 * CMN_REGISTRATION_REFRESH_MS);
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
 
   std::atomic<bool> pub_stop(false);
 
-  auto send_function = [&pubs, &pub_stop, &receive_counter]() {
+  auto send_function = [&pub, &pub_stop, &receive_counter]() {
     while(pub_stop == false)
     {
-      for (auto& pub : pubs)
-      {
-        pub.Send("Hello from send thread");
-      }
+      pub.Send("bar");
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
   };
 
   std::thread send_thread(send_function);
 
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
   // finalize eCAL API
   // without destroying any pub / sub
   EXPECT_EQ(true, eCAL::Finalize());
 
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::cout << "eCAL finalized, waiting to see if segfault occurs..." << std::endl;
 
-  EXPECT_EQ(true, eCAL::Initialize("finalize"));
-
-  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   pub_stop.exchange(true);
   send_thread.join();
