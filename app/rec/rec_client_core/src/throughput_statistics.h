@@ -19,9 +19,10 @@
 
 #pragma once
 
-#include <vector>
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
+#include <vector>
 
 #include <rec_client_core/state.h>
 
@@ -47,6 +48,9 @@ namespace eCAL
       ThroughputStatistics& operator=(const ThroughputStatistics&)      = default;
       ThroughputStatistics(ThroughputStatistics&&) noexcept             = default;
       ThroughputStatistics& operator=(ThroughputStatistics&&) noexcept  = default;
+      
+      // Default destructor
+      ~ThroughputStatistics() = default;
 
       void AddFrame(uint64_t bytes)
       {
@@ -93,7 +97,7 @@ namespace eCAL
     private:
       struct Bin
       {
-        time_point_t start_time{};
+        time_point_t start_time;
         uint64_t     bytes = 0;
         uint64_t     frames = 0;
       };
