@@ -16,6 +16,8 @@
 #
 # ========================= eCAL LICENSE =================================
 
+find_package(Protobuf REQUIRED)
+
 add_executable(protoc-gen-pbftags)
 target_sources(protoc-gen-pbftags
   PRIVATE
