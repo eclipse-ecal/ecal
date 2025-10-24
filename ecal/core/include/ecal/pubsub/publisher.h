@@ -165,7 +165,7 @@ namespace eCAL
       const SDataTypeInformation& GetDataTypeInformation() const;
 
   private:
-    std::shared_ptr<CPublisherImpl> m_publisher_impl;
+    std::weak_ptr<CPublisherImpl> m_publisher_impl;
   };
 
 }

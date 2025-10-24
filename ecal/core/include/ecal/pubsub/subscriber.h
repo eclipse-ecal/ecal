@@ -140,6 +140,6 @@ namespace eCAL
       const SDataTypeInformation& GetDataTypeInformation() const;
 
   private:
-    std::shared_ptr<CSubscriberImpl> m_subscriber_impl;
+    std::weak_ptr<CSubscriberImpl> m_subscriber_impl;
   };
 }
