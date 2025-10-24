@@ -126,6 +126,6 @@ namespace eCAL
       bool IsConnected() const;
 
   private:
-    std::shared_ptr<CServiceServerImpl> m_service_server_impl;
+    std::weak_ptr<CServiceServerImpl> m_service_server_impl;
   };
 }
