@@ -16,6 +16,7 @@ set(ecal_submodule_dependencies
   #libssh2
   nanobind
   Protobuf
+  protozero
   qwt
   recycle
   spdlog
