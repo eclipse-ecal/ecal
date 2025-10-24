@@ -35,7 +35,8 @@
 #include <string>
 #include <thread>
 
-constexpr std::chrono::milliseconds UDP_WAIT_TIME(1);
+constexpr std::chrono::milliseconds TIMEOUT_TIME(100);
+constexpr std::chrono::milliseconds TIMEOUT_ITERATION_TIME(10);
 
 class CoutRedirect {
 public:
@@ -81,6 +82,28 @@ eCAL::Configuration GetConsoleConfiguration()
   config.logging.provider.console.enable     = true;
   config.logging.provider.console.log_level  = eCAL::Logging::log_level_all;
   return config;
+}
+
+// returns logging after a timeout
+// it will poll in the meantime the GetLogging function and returns as soon as
+// a message arrives
+// this shall prevent sporadic test failures, as we don't check here for performance
+// instead the overall execution of the logging
+size_t getLoggingSizeWithTimeout(eCAL::Logging::SLogging& log_)
+{
+  size_t log_size = 0;
+  auto start =  std::chrono::steady_clock::now();
+  while (std::chrono::steady_clock::now() - start < TIMEOUT_TIME)
+  {
+    eCAL::Logging::GetLogging(log_);
+    log_size = log_.log_messages.size();
+
+    if (log_size > 0)
+      return log_size;
+    std::this_thread::sleep_for(TIMEOUT_ITERATION_TIME);
+  }
+  
+  return size_t{0};
 }
 
 TEST(logging_to /*unused*/, file /*unused*/)
@@ -133,13 +156,10 @@ TEST(logging_to /*unused*/, udp /*unused*/)
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);  
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
-
-  std::this_thread::sleep_for(UDP_WAIT_TIME);
   
   eCAL::Logging::SLogging log;
-  eCAL::Logging::GetLogging(log);
 
-  EXPECT_EQ(log.log_messages.size(), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
   
   // check whole log message for information
   // check before the size -> crashes the whole test if it's not checked before
@@ -175,14 +195,6 @@ TEST(logging_to /*unused*/, console /*unused*/)
   eCAL::Finalize();
 }
 
-int getLogging(eCAL::Logging::SLogging& log_)
-{
-  std::this_thread::sleep_for(UDP_WAIT_TIME);
-
-  eCAL::Logging::GetLogging(log_);
-  return static_cast<int>(log_.log_messages.size());
-}
-
 TEST(logging_levels /*unused*/, all /*unused*/)
 {
   const std::string unit_name    = "logging_levels_all_udp";
@@ -190,33 +202,32 @@ TEST(logging_levels /*unused*/, all /*unused*/)
   auto  ecal_config              = GetUDPConfiguration();
 
   eCAL::Initialize(ecal_config, unit_name, eCAL::Init::Logging);
-
-  eCAL::Logging::SLogging log;
  
+  eCAL::Logging::SLogging log;
+
   eCAL::Logging::Log(eCAL::Logging::log_level_info, log_message);
-  
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
  
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug1, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug1, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug2, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug3, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug4, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Finalize();
 }
@@ -235,11 +246,11 @@ TEST(logging_levels /*unused*/, log_warning_vs_info /*unused*/)
   
   // logging not expected
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   // logging expected
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, log_message);
-  EXPECT_EQ(getLogging(log), 1);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 1);
 
   eCAL::Finalize();
 }
@@ -257,28 +268,28 @@ TEST(logging_levels /*unused*/, none /*unused*/)
   eCAL::Logging::SLogging log;
  
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_warning, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_error, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
  
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug1, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug1, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug2, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug3, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_debug4, log_message);
-  EXPECT_EQ(getLogging(log), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
 
   eCAL::Finalize();
 }
@@ -323,12 +334,9 @@ TEST(logging_disable /*unused*/, udp /*unused*/)
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
 
-  std::this_thread::sleep_for(UDP_WAIT_TIME);
-  
   eCAL::Logging::SLogging log;
-  eCAL::Logging::GetLogging(log);
 
-  EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
   
   eCAL::Finalize();
 }
@@ -343,13 +351,10 @@ TEST(logging_disable /*unused*/, udp_receive /*unused*/)
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);  
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
-
-  std::this_thread::sleep_for(UDP_WAIT_TIME);
   
   eCAL::Logging::SLogging log;
-  eCAL::Logging::GetLogging(log);
 
-  EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
   
   eCAL::Finalize();
 }
@@ -366,13 +371,10 @@ TEST(logging_disable /*unused*/, udp_different_receive_port /*unused*/)
   eCAL::Initialize(ecal_config, unit_name.c_str(), eCAL::Init::Logging);
 
   eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message);
-
-  std::this_thread::sleep_for(UDP_WAIT_TIME);
   
   eCAL::Logging::SLogging log;
-  eCAL::Logging::GetLogging(log);
 
-  EXPECT_EQ(log.log_messages.size(), 0);
+  EXPECT_EQ(getLoggingSizeWithTimeout(log), 0);
   
   eCAL::Finalize();
 }
