@@ -93,7 +93,7 @@ namespace eCAL
       int64_t                             data_clock{0};           //!< data clock (send / receive action)
       int32_t                             data_frequency{0};       //!< data frequency (send / receive samples per second) [mHz]
     };
-
+      
     struct SProcess                                                //<! eCAL Process struct
     {
       int32_t        registration_clock{0};                        //!< registration clock

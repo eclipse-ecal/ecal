@@ -43,8 +43,16 @@ void AssignMessage(protozero::pbf_reader& parent_reader, Assignee& assignee, Con
 }
 
 template <class Assignee, class Conversion>
-void AddRepeatedMessage(protozero::pbf_reader& parent_reader, Assignee& assignee, Conversion&& convert) {
+void AddRepeatedMessage(protozero::pbf_reader& parent_reader, std::vector<Assignee>& assignee, Conversion&& convert) {
     protozero::pbf_reader message_reader = parent_reader.get_message();
-    auto& new_assignee_element = assignee.push_back();
+    assignee.emplace_back();
+    auto& new_assignee_element = assignee.at(assignee.size() - 1);
     convert(message_reader, new_assignee_element);
+}
+
+template <class Assignee, class Conversion>
+void AddRepeatedMessage(protozero::pbf_reader& parent_reader, eCAL::Util::CExpandingVector<Assignee>& assignee, Conversion&& convert) {
+  protozero::pbf_reader message_reader = parent_reader.get_message();
+  auto& new_assignee_element = assignee.push_back();
+  convert(message_reader, new_assignee_element);
 }
