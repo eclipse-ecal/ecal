@@ -44,7 +44,8 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
   eCAL::CSubscriber sub("foo");
   sub.SetReceiveCallback([&receive_counter](const eCAL::STopicId& /*topic_id*/, const eCAL::SDataTypeInformation& /*datatype_info_*/, const eCAL::SReceiveCallbackData& /*data_*/)
   {
-    std::cout << receive_counter++ << std::endl;
+    // std::cout << receive_counter++ << std::endl;
+    ++receive_counter;
     return;
   });
 
@@ -59,7 +60,6 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
     while(pub_stop == false)
     {
       pub.Send("bar");
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
   };
 
