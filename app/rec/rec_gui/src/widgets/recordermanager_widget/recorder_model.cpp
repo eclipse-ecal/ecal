@@ -31,6 +31,7 @@
 #include <QStyleOption>
 #include <QBrush>
 #include <QVariant>
+#include <QTimeZone>
 #include <QDateTime>
 
 #include "qecalrec.h"
@@ -530,7 +531,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
       {
         if (role == Qt::ItemDataRole::DisplayRole)
         {
-          QDateTime time = QDateTime::fromMSecsSinceEpoch(std::chrono::duration_cast<std::chrono::milliseconds>(recorder_list_[row].timestamp_.time_since_epoch()).count(), Qt::TimeSpec::UTC);
+          QDateTime time = QDateTime::fromMSecsSinceEpoch(std::chrono::duration_cast<std::chrono::milliseconds>(recorder_list_[row].timestamp_.time_since_epoch()).count(), QTimeZone("UTC"));
           return time.toString("yyyy-MM-dd hh:mm:ss.zzz");
         }
         else if (role == ItemDataRoles::SortRole)
