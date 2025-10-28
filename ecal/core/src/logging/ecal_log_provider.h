@@ -82,7 +82,6 @@ namespace eCAL
         std::mutex                                m_log_mtx;
 
         std::atomic<bool>                         m_created;
-        std::atomic<bool>                         m_stopping;
         std::unique_ptr<eCAL::UDP::CSampleSender> m_udp_logging_sender;
 
         // log message list and log message serialization buffer
