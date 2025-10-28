@@ -140,6 +140,7 @@ namespace eCAL
   {
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
     : m_created(false)
+    , m_stopping(false)
     , m_logfile(nullptr)
     , m_attributes(attr_)
     {
@@ -171,7 +172,8 @@ namespace eCAL
         }
       }
 
-      m_created = true;
+      m_created.store(true);
+      m_stopping.store(false);
     }
   
     bool CLogProvider::StartFileLogging()
@@ -209,10 +211,11 @@ namespace eCAL
 
     void CLogProvider::Log(const eLogLevel level_, const std::string& msg_)
     {
-      const std::lock_guard<std::mutex> lock(m_log_mtx);
-
+      if(m_stopping) return;
       if(!m_created) return;
       if(msg_.empty()) return;
+
+      const std::lock_guard<std::mutex> lock(m_log_mtx);
 
       const Filter log_con  = level_ & m_attributes.console_sink.log_level;
       const Filter log_file = level_ & m_attributes.file_sink.log_level;
@@ -263,6 +266,7 @@ namespace eCAL
 
     void CLogProvider::Stop()
     {
+      m_stopping.store(true);
       if(!m_created) return;
 
       const std::lock_guard<std::mutex> lock(m_log_mtx);
