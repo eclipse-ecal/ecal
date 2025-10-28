@@ -33,10 +33,10 @@
 
 namespace eCAL
 {
-  CMemFileMap* g_memfile_map()
+  std::shared_ptr<CMemFileMap> g_memfile_map()
   {
     static std::shared_ptr<CMemFileMap> m(new CMemFileMap);
-    return(m.get());
+    return m;
   }
 }
 

@@ -70,66 +70,66 @@ namespace eCAL
 
     bool Finalize();
 
-    const std::unique_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
-    const std::unique_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };
+    const std::shared_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
+    const std::shared_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };
 
 #if ECAL_CORE_MONITORING
-    const std::unique_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
+    const std::shared_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    const std::unique_ptr<CTimeGate>&                                     timegate()               { return timegate_instance; };
+    const std::shared_ptr<CTimeGate>&                                     timegate()               { return timegate_instance; };
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    const std::unique_ptr<CSubGate>&                                      subgate()                { return subgate_instance; };
+    const std::shared_ptr<CSubGate>&                                      subgate()                { return subgate_instance; };
 #endif
 #if ECAL_CORE_PUBLISHER
-    const std::unique_ptr<CPubGate>&                                      pubgate()                { return pubgate_instance; };
+    const std::shared_ptr<CPubGate>&                                      pubgate()                { return pubgate_instance; };
 #endif
 #if ECAL_CORE_SERVICE
-    const std::unique_ptr<CServiceGate>&                                  servicegate()            { return servicegate_instance; };
-    const std::unique_ptr<CClientGate>&                                   clientgate()             { return clientgate_instance; };
+    const std::shared_ptr<CServiceGate>&                                  servicegate()            { return servicegate_instance; };
+    const std::shared_ptr<CClientGate>&                                   clientgate()             { return clientgate_instance; };
 #endif
 #if ECAL_CORE_REGISTRATION
-    const std::unique_ptr<CRegistrationProvider>&                         registration_provider()  { return registration_provider_instance; };
-    const std::unique_ptr<CRegistrationReceiver>&                         registration_receiver()  { return registration_receiver_instance; };
+    const std::shared_ptr<CRegistrationProvider>&                         registration_provider()  { return registration_provider_instance; };
+    const std::shared_ptr<CRegistrationReceiver>&                         registration_receiver()  { return registration_receiver_instance; };
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    const std::unique_ptr<CMemFileThreadPool>&                            memfile_pool()           { return memfile_pool_instance; };
-    const std::unique_ptr<CMemFileMap>&                                   memfile_map()            { return memfile_map_instance; };
+    const std::shared_ptr<CMemFileThreadPool>&                            memfile_pool()           { return memfile_pool_instance; };
+    const std::shared_ptr<CMemFileMap>&                                   memfile_map()            { return memfile_map_instance; };
     
 #endif
-    const std::unique_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
+    const std::shared_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
 
   private:
     bool                                                                  initialized;
     unsigned int                                                          components;
-    std::unique_ptr<Logging::CLogProvider>                                log_provider_instance;
-    std::unique_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
+    std::shared_ptr<Logging::CLogProvider>                                log_provider_instance;
+    std::shared_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
-    std::unique_ptr<CMonitoring>                                          monitoring_instance;
+    std::shared_ptr<CMonitoring>                                          monitoring_instance;
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    std::unique_ptr<CTimeGate>                                            timegate_instance;
+    std::shared_ptr<CTimeGate>                                            timegate_instance;
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    std::unique_ptr<CSubGate>                                             subgate_instance;
+    std::shared_ptr<CSubGate>                                             subgate_instance;
 #endif
 #if ECAL_CORE_PUBLISHER
-    std::unique_ptr<CPubGate>                                             pubgate_instance;
+    std::shared_ptr<CPubGate>                                             pubgate_instance;
 #endif
 #if ECAL_CORE_SERVICE
-    std::unique_ptr<CServiceGate>                                         servicegate_instance;
-    std::unique_ptr<CClientGate>                                          clientgate_instance;
+    std::shared_ptr<CServiceGate>                                         servicegate_instance;
+    std::shared_ptr<CClientGate>                                          clientgate_instance;
 #endif
 #if ECAL_CORE_REGISTRATION
-    std::unique_ptr<CRegistrationProvider>                                registration_provider_instance;
-    std::unique_ptr<CRegistrationReceiver>                                registration_receiver_instance;
+    std::shared_ptr<CRegistrationProvider>                                registration_provider_instance;
+    std::shared_ptr<CRegistrationReceiver>                                registration_receiver_instance;
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    std::unique_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
-    std::unique_ptr<CMemFileMap>                                          memfile_map_instance;
+    std::shared_ptr<CMemFileThreadPool>                                   memfile_pool_instance;
+    std::shared_ptr<CMemFileMap>                                          memfile_map_instance;
     
 #endif
-    std::unique_ptr<CDescGate>                                            descgate_instance;
+    std::shared_ptr<CDescGate>                                            descgate_instance;
   };
 }

@@ -149,7 +149,7 @@ TEST(core_cpp_registration_public, GetTopics)
 TEST(core_cpp_registration_public, GetTopicsParallel)
 {
   constexpr const int max_publisher_count(2000);
-  constexpr const int waiting_time_thread(4000);
+  constexpr const int waiting_time_thread(10000);
   constexpr const int parallel_threads(1);
 
   std::atomic<bool> testing_completed{ false };

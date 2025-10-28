@@ -33,7 +33,7 @@
 
 namespace eCAL
 {
-  std::unique_ptr<CGlobals>     g_globals_ctx(nullptr);
+  std::shared_ptr<CGlobals>     g_globals_ctx(nullptr);
 
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
   Configuration                 g_ecal_configuration{};
@@ -59,105 +59,118 @@ namespace eCAL
     }
   }
 
-  CGlobals* g_globals()
+  std::shared_ptr<CGlobals> g_globals()
   {
-    return g_globals_ctx.get();
+    return g_globals_ctx;
   }
 
-  Logging::CLogReceiver* g_log_udp_receiver()
+  std::shared_ptr<Logging::CLogReceiver> g_log_udp_receiver()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->log_udp_receiver().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->log_udp_receiver();
   }
 
-  Logging::CLogProvider* g_log_provider()
+  std::shared_ptr<Logging::CLogProvider> g_log_provider()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->log_provider().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->log_provider();
   }
 
   Configuration& g_ecal_config()
   {
-    return(g_ecal_configuration);
+    return g_ecal_configuration;
   }
 
 #if ECAL_CORE_MONITORING
-  CMonitoring* g_monitoring()
+  std::shared_ptr<CMonitoring> g_monitoring()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->monitoring().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->monitoring();
   }
 #endif
 
 #if ECAL_CORE_TIMEPLUGIN
-  CTimeGate* g_timegate()
+  std::shared_ptr<CTimeGate> g_timegate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->timegate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->timegate();
   }
 #endif
 
 #if ECAL_CORE_REGISTRATION
-  CRegistrationProvider* g_registration_provider()
+  std::shared_ptr<CRegistrationProvider> g_registration_provider()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->registration_provider().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->registration_provider();
   }
 
-  CRegistrationReceiver* g_registration_receiver()
+  std::shared_ptr<CRegistrationReceiver> g_registration_receiver()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->registration_receiver().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->registration_receiver();
   }
 #endif
 
-  CDescGate* g_descgate()
+  std::shared_ptr<CDescGate> g_descgate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->descgate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->descgate();
   }
 
 #if ECAL_CORE_SUBSCRIBER
-  CSubGate* g_subgate()
+  std::shared_ptr<CSubGate> g_subgate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->subgate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->subgate();
   }
 #endif
 
 #if ECAL_CORE_PUBLISHER
-  CPubGate* g_pubgate()
+  std::shared_ptr<CPubGate> g_pubgate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->pubgate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->pubgate();
   }
 #endif
 
 #if ECAL_CORE_SERVICE
-  CServiceGate* g_servicegate()
+  std::shared_ptr<CServiceGate> g_servicegate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->servicegate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->servicegate();
   }
 
-  CClientGate* g_clientgate()
+  std::shared_ptr<CClientGate> g_clientgate()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->clientgate().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->clientgate();
   }
 #endif
 
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  CMemFileThreadPool* g_memfile_pool()
+  std::shared_ptr<CMemFileThreadPool> g_memfile_pool()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->memfile_pool().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->memfile_pool();
   }
 
-  CMemFileMap* g_memfile_map()
+  std::shared_ptr<CMemFileMap> g_memfile_map()
   {
-    if (g_globals() == nullptr) return(nullptr);
-    return(g_globals()->memfile_map().get());
+    auto globals = g_globals();
+    if (globals == nullptr) return nullptr;
+    return globals->memfile_map();
   }
 #endif
 }
