@@ -78,7 +78,7 @@ namespace eCAL
         uint64_t total_frames = 0;
 
         auto currently_active_bin = GetBinIndexForTimepoint(now);
-        for (int i = 0; i < bins_.size(); i++)
+        for (size_t i = 0; i < bins_.size(); i++)
         {
           if (i == currently_active_bin)
           {
@@ -122,7 +122,7 @@ namespace eCAL
 
       void RotateBins(time_point_t now)
       {
-        for (int i = 0; i < bins_.size(); i++)
+        for (size_t i = 0; i < bins_.size(); i++)
         {
           const auto should_be_timepoint = GetTimePointForBinIndex(i, now);
           if (bins_[i].start_time < should_be_timepoint)
