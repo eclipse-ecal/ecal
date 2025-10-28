@@ -18,16 +18,11 @@
 */
 
 #include <chrono>
-#include <cstddef>
 #include <ecal/ecal.h>
-#include <ecal/pubsub/publisher.h>
-#include <ecal/pubsub/subscriber.h>
 
 #include <atomic>
 #include <functional>
 #include <iostream>
-#include <memory>
-#include <string>
 #include <thread>
 
 #include <gtest/gtest.h>
@@ -44,7 +39,6 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
   eCAL::CSubscriber sub("foo");
   sub.SetReceiveCallback([&receive_counter](const eCAL::STopicId& /*topic_id*/, const eCAL::SDataTypeInformation& /*datatype_info_*/, const eCAL::SReceiveCallbackData& /*data_*/)
   {
-    // std::cout << receive_counter++ << std::endl;
     ++receive_counter;
     return;
   });
@@ -70,11 +64,10 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
   // finalize eCAL API
   // without destroying any pub / sub
   EXPECT_EQ(true, eCAL::Finalize());
+  
+  // eCAL finalized, waiting to see if segfault occure
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-  std::cout << "eCAL finalized, waiting to see if segfault occurs..." << std::endl;
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-  pub_stop.exchange(true);
+  pub_stop.store(true);
   send_thread.join();
 }
