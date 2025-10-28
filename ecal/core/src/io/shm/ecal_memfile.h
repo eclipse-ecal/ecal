@@ -220,7 +220,7 @@ namespace eCAL
     access_state    m_access_state;
     std::string     m_name;
     SInternalHeader m_header;
-    SMemFileInfo    m_memfile_info;
+    std::shared_ptr<SMemFileInfo>    m_memfile_info;
     CNamedMutex     m_memfile_mutex;
 
   private:

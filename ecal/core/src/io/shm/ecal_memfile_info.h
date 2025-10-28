@@ -25,6 +25,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include <ecal/os.h>
@@ -57,5 +58,6 @@ namespace eCAL
     std::string  name;
     size_t       size        = 0;
     bool         exists      = false;
+    std::mutex   mtx;
   };
 }

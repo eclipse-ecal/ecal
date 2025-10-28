@@ -32,6 +32,7 @@
 #include <cstdio>
 #include <cstring>
 #include <random>
+#include <thread>
 
 #define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) (reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)) //NOLINT
 
@@ -82,7 +83,7 @@ namespace eCAL
       // reset header and info
       m_header       = SInternalHeader();
 
-      m_memfile_info = SMemFileInfo();
+      m_memfile_info = std::make_shared<SMemFileInfo>();
 
       // create memory file
       if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
@@ -113,12 +114,12 @@ namespace eCAL
       // for performance reasons only apply consistency check if it is explicitly set
       if(m_memfile_mutex.Lock(PUB_MEMFILE_CREATE_TO))
       {
-        if (m_memfile_info.mem_address != nullptr)
+        if (m_memfile_info->mem_address != nullptr)
         {
-          auto* header = reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address);
+          auto* header = reinterpret_cast<SInternalHeader*>(m_memfile_info->mem_address);
 
           // reset header if memfile does not exist or rather is not initialized as well as if lock state is inconsistent
-          if (!m_memfile_info.exists || header->int_hdr_size == 0 || (m_auto_sanitizing && m_memfile_mutex.WasRecovered()))
+          if (!m_memfile_info->exists || header->int_hdr_size == 0 || (m_auto_sanitizing && m_memfile_mutex.WasRecovered()))
             *header = m_header;
           else
           {
@@ -139,11 +140,11 @@ namespace eCAL
       if(m_memfile_mutex.Lock(PUB_MEMFILE_CREATE_TO))
       {
         // read internal header size of memory file
-        const auto header_size = static_cast<SInternalHeader*>(m_memfile_info.mem_address)->int_hdr_size;
+        const auto header_size = static_cast<SInternalHeader*>(m_memfile_info->mem_address)->int_hdr_size;
         memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
 
         // copy compatible header part into m_header
-        memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
+        memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
 
         // unlock mutex
         m_memfile_mutex.Unlock();
@@ -182,7 +183,7 @@ namespace eCAL
     // reset header and info
     m_header       = SInternalHeader();
 
-    m_memfile_info = SMemFileInfo();
+    m_memfile_info = std::make_shared<SMemFileInfo>();
 
     return(ret_state);
   }
@@ -221,10 +222,10 @@ namespace eCAL
     if (m_access_state != access_state::read_access)         return(0);
     if (len_ == 0)                                           return(0);
     if (len_ > static_cast<size_t>(m_header.cur_data_size))  return(0);
-    if (m_memfile_info.mem_address == nullptr)               return(0);
+    if (m_memfile_info->mem_address == nullptr)               return(0);
 
     // return read address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + m_header.int_hdr_size;
+    buf_ = static_cast<char*>(m_memfile_info->mem_address) + m_header.int_hdr_size;
 
     return(len_);
   }
@@ -282,15 +283,15 @@ namespace eCAL
     if (m_access_state != access_state::write_access)        return(0);
     if (len_ == 0)                                           return(0);
     if (len_ > static_cast<size_t>(m_header.max_data_size))  return(0);
-    if (m_memfile_info.mem_address == nullptr)               return(0);
+    if (m_memfile_info->mem_address == nullptr)               return(0);
 
     // update m_header and write into memory file header
     m_header.cur_data_size = (unsigned long)(len_);
-    auto* pHeader = static_cast<SInternalHeader*>(m_memfile_info.mem_address);
+    auto* pHeader = static_cast<SInternalHeader*>(m_memfile_info->mem_address);
     pHeader->cur_data_size = m_header.cur_data_size;
 
     // return write address
-    buf_ = static_cast<char*>(m_memfile_info.mem_address) + m_header.int_hdr_size;
+    buf_ = static_cast<char*>(m_memfile_info->mem_address) + m_header.int_hdr_size;
 
     return(len_);
   }
@@ -357,7 +358,6 @@ namespace eCAL
   bool CMemoryFile::GetAccess(int timeout_)
   {
     if (!m_created)                            return(false);
-    if (m_memfile_info.mem_address == nullptr) return(false);
 
     // lock mutex
     if(!m_memfile_mutex.Lock(timeout_))
@@ -368,25 +368,28 @@ namespace eCAL
       return(false);
     }
 
+    std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
+    if (m_memfile_info->mem_address == nullptr) return(false);
+
     // reset current data size field of memfile header if lock is inconsistent 
     if (m_auto_sanitizing && m_memfile_mutex.WasRecovered())
     {
       m_header.cur_data_size = 0;
-      *reinterpret_cast<SInternalHeader*>(m_memfile_info.mem_address) = m_header;
+      *reinterpret_cast<SInternalHeader*>(m_memfile_info->mem_address) = m_header;
     }
 
     // update compatible header part of m_header
-    memcpy(&m_header, m_memfile_info.mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(m_header.int_hdr_size)));
-
+    memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(m_header.int_hdr_size)));
+    
     // check size again
     size_t const len = static_cast<size_t>(m_header.int_hdr_size) + static_cast<size_t>(m_header.max_data_size);
-    if (len > m_memfile_info.size)
+    if (len > m_memfile_info->size)
     {
       // check file size and update memory file map
       memfile::db::CheckFileSize(m_name, len, m_memfile_info);
 
       // check size again and give up if it is still too small
-      if (len > m_memfile_info.size)
+      if (len > m_memfile_info->size)
       {
         // unlock mutex
         m_memfile_mutex.Unlock();
