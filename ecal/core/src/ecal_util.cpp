@@ -55,10 +55,11 @@ namespace eCAL
         Process::SleepMS(1000);
       }
 
-      Monitoring::SMonitoring monitoring;
-      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring);
+      Monitoring::SMonitoring monitoring_type;
+      auto monitoring = g_monitoring();
+      if (monitoring != nullptr) monitoring->GetMonitoring(monitoring_type);
 
-      return(monitoring);
+      return monitoring_type;
     }
 
     void ShutdownProcess(const std::string& process_name_)

@@ -70,8 +70,14 @@ namespace eCAL
 
   void SetGlobalUnitName(const char *unit_name_);
 
+  std::shared_ptr<CGlobals> CreateGlobalsInstance();
+  void                      ResetGlobalsInstance();
+
+  void                      SetGlobalEcalConfiguration(const Configuration& config_);
+  void                      ResetGlobalEcalConfiguration(); 
+
   // Declaration of getter functions for globally accessible variable instances
-  std::shared_ptr<CGlobals> g_globals();
+  std::shared_ptr<CGlobals>               g_globals();
   std::shared_ptr<Logging::CLogReceiver>  g_log_udp_receiver();
   std::shared_ptr<Logging::CLogProvider>  g_log_provider();
 #if ECAL_CORE_MONITORING

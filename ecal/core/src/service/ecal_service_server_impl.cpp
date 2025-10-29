@@ -290,8 +290,8 @@ namespace eCAL
     }
 
     // Send registration sample
-    if (g_registration_provider())
-      g_registration_provider()->RegisterSample(GetRegistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->RegisterSample(GetRegistrationSample());
 
     m_created = true;
 #ifndef NDEBUG
@@ -334,8 +334,8 @@ namespace eCAL
     }
 
     // Send unregistration sample
-    if (g_registration_provider())
-      g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->UnregisterSample(GetUnregistrationSample());
 
     m_created = false;
 #ifndef NDEBUG

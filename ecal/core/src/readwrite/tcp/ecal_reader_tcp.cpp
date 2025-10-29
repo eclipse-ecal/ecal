@@ -111,13 +111,14 @@ namespace eCAL
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
-      if (g_subgate() != nullptr)
+      auto subgate = g_subgate();
+      if (subgate != nullptr)
       {
         // use this intermediate variables as optimization
         const auto& ecal_header_topic_info = m_ecal_header.topic_info;
         const auto& ecal_header_content    = m_ecal_header.content;
 
-        g_subgate()->ApplySample(
+        subgate->ApplySample(
           ecal_header_topic_info,
           data_payload,
           static_cast<size_t>(ecal_header_content.size),

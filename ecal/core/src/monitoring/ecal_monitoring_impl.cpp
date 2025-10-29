@@ -49,14 +49,18 @@ namespace eCAL
     if (m_init) return;
 
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+      registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
     m_init = true;
   }
 
   void CMonitoringImpl::Destroy()
   {
     // stop registration receiver utilization to enrich monitor information
-    g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+      registration_receiver->RemCustomApplySampleCallback("monitoring");
     m_init = false;
   }
 

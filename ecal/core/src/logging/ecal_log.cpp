@@ -39,7 +39,8 @@ namespace eCAL
     **/
     void Log(eLogLevel level_, const std::string& msg_)
     {
-      if(g_log_provider() != nullptr) g_log_provider()->Log(level_, msg_);
+      auto log_provider = g_log_provider();
+      if(log_provider != nullptr) log_provider->Log(level_, msg_);
     }
 
     /**
@@ -51,9 +52,10 @@ namespace eCAL
     **/
     bool GetLogging(std::string& log_)
     {
-      if (g_log_udp_receiver() == nullptr)
+      auto log_udp_receiver = g_log_udp_receiver();
+      if (log_udp_receiver == nullptr)
         return false;
-      return g_log_udp_receiver()->GetLogging(log_);
+      return log_udp_receiver->GetLogging(log_);
     }
 
     /**
@@ -65,9 +67,10 @@ namespace eCAL
     **/
     bool GetLogging(Logging::SLogging& log_)
     {
-      if (g_log_udp_receiver() == nullptr)
+      auto log_udp_receiver = g_log_udp_receiver();
+      if (log_udp_receiver == nullptr)
         return false;
-      g_log_udp_receiver()->GetLogging(log_);
+      log_udp_receiver->GetLogging(log_);
       return true;
     }
   }

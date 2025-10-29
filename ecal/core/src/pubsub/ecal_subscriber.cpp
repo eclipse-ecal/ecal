@@ -42,7 +42,8 @@ namespace eCAL
     m_subscriber_impl = subscriber_impl;
 
     // register subscriber
-    if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, subscriber_impl);
+    auto subgate = g_subgate();
+    if (subgate != nullptr) subgate->Register(topic_name_, subscriber_impl);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_) :
@@ -60,7 +61,8 @@ namespace eCAL
     if (subscriber_impl == nullptr) return;
 
     // unregister subscriber
-    if (g_subgate() != nullptr) g_subgate()->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
+    auto subgate = g_subgate();
+    if (subgate != nullptr) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept

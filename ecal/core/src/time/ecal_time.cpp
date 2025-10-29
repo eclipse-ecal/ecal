@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,10 @@ namespace eCAL
     {
       static const std::string empty_string{ "" };
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->GetName());
+        return timegate->GetName();
       }
 #endif
       return empty_string;
@@ -49,21 +50,23 @@ namespace eCAL
     long long GetMicroSeconds()
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->GetMicroSeconds());
+        return timegate->GetMicroSeconds();
       }
 #endif
       const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-      return(std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count());
+      return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
     }
 
     long long GetNanoSeconds()
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->GetNanoSeconds());
+        return timegate->GetNanoSeconds();
       }
 #endif
       const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -73,43 +76,47 @@ namespace eCAL
     bool SetNanoSeconds(long long time_)
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->SetNanoSeconds(time_));
+        return timegate->SetNanoSeconds(time_);
       }
 #endif
       (void)time_;
-      return(false);
+      return false;
     }
 
     bool IsSynchronized()
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->IsSynchronized());
+        return timegate->IsSynchronized();
       }
 #endif
-      return(false);
+      return false;
     }
 
     bool IsMaster()
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        return(g_timegate()->IsMaster());
+        return timegate->IsMaster();
       }
 #endif
-      return(false);
+      return false;
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
     {
 #if ECAL_CORE_TIMEGATE
-      if ((g_timegate() != nullptr) && g_timegate()->IsValid())
+      auto timegate = g_timegate();
+      if ((timegate != nullptr) && timegate->IsValid())
       {
-        g_timegate()->SleepForNanoseconds(duration_nsecs_);
+        timegate->SleepForNanoseconds(duration_nsecs_);
       }
 #endif
       eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
@@ -118,7 +125,8 @@ namespace eCAL
     void GetStatus(int& error_, std::string* const status_message_)
     {
 #if ECAL_CORE_TIMEGATE
-      if (g_timegate() == nullptr)
+      auto timegate = g_timegate();
+      if (timegate == nullptr)
       {
         error_ = -1;
         if (status_message_ != nullptr)
@@ -128,7 +136,7 @@ namespace eCAL
       }
       else 
       {
-        g_timegate()->GetStatus(error_, status_message_);
+        timegate->GetStatus(error_, status_message_);
       }
 #else
       error_ = -1;

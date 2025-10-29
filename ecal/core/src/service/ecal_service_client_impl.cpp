@@ -114,9 +114,10 @@ namespace eCAL
     }
 
     // Send registration sample
-    if (!m_service_name.empty() && g_registration_provider() != nullptr)
+    auto registration_provider = g_registration_provider();
+    if (!m_service_name.empty() && registration_provider != nullptr)
     {
-      g_registration_provider()->RegisterSample(GetRegistrationSample());
+      registration_provider->RegisterSample(GetRegistrationSample());
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Registered client with service name: " + m_service_name);
 #endif
@@ -143,9 +144,10 @@ namespace eCAL
     }
 
     // Send unregistration sample
-    if (g_registration_provider() != nullptr)
+    auto registration_provider = g_registration_provider();
+    if (registration_provider != nullptr)
     {
-      g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+      registration_provider->UnregisterSample(GetUnregistrationSample());
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Unregistered client for service name: " + m_service_name);
 #endif

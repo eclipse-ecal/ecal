@@ -170,7 +170,8 @@ namespace eCAL
       m_callback_adapter = std::make_shared<CSubscriberEventCallbackAdapater>(m_subscriber_impl);
 
       // register datareader
-      g_subgate()->Register(topic_name_, m_subscriber_impl);
+      auto subgate = g_subgate();
+      if (subgate != nullptr) subgate->Register(topic_name_, m_subscriber_impl);
 
       // we made it :-)
       return(true);
@@ -189,7 +190,8 @@ namespace eCAL
       RemReceiveCallback();
 
       // unregister datareader
-      if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
+      auto subgate = g_subgate();
+      if (subgate != nullptr) subgate->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
 
 #ifndef NDEBUG
       // log it

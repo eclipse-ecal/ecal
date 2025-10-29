@@ -49,7 +49,8 @@ namespace eCAL
     m_publisher_impl = publisher_impl;
 
     // register publisher
-    if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, publisher_impl);
+    auto pubgate = g_pubgate();
+    if (pubgate != nullptr) pubgate->Register(topic_name_, publisher_impl);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_) :
@@ -67,7 +68,8 @@ namespace eCAL
     if (publisher_impl == nullptr) return;
 
     // unregister publisher
-    if (g_pubgate() != nullptr) g_pubgate()->Unregister(publisher_impl->GetTopicName(), publisher_impl);
+    auto pubgate = g_pubgate();
+    if (pubgate != nullptr) pubgate->Unregister(publisher_impl->GetTopicName(), publisher_impl);
   }
 
   CPublisher::CPublisher(CPublisher&& rhs) noexcept

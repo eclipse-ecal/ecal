@@ -262,13 +262,14 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
 
   // Subscriber2 that receives data from Publisher2
   eCAL::CSubscriber sub2("topic2");
-  auto subscriber2_callback = [&subscriber2_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
+  auto subscriber2_callback = [&subscriber2_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& data_) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
-    //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buf), data_.size) << std::endl;
+    std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buffer), data_.buffer_size) << std::endl;
     };
   sub2.SetReceiveCallback(subscriber2_callback);
 
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // Start publisher1 thread
   std::thread pub1_thread(publisher1_function);
 

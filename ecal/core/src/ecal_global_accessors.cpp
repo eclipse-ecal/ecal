@@ -59,6 +59,27 @@ namespace eCAL
     }
   }
 
+  std::shared_ptr<CGlobals> CreateGlobalsInstance() 
+  { 
+    g_globals_ctx = std::make_shared<CGlobals>(); 
+    return g_globals_ctx; 
+  }
+
+  void ResetGlobalsInstance() 
+  { 
+    g_globals_ctx.reset(); 
+  }
+
+  void ResetGlobalEcalConfiguration() 
+  { 
+    g_ecal_configuration = Configuration(); 
+  }
+
+  void SetGlobalEcalConfiguration(const Configuration& config_)
+  {
+    g_ecal_configuration = config_;
+  }
+
   std::shared_ptr<CGlobals> g_globals()
   {
     return g_globals_ctx;
@@ -76,11 +97,6 @@ namespace eCAL
     auto globals = g_globals();
     if (globals == nullptr) return nullptr;
     return globals->log_provider();
-  }
-
-  Configuration& g_ecal_config()
-  {
-    return g_ecal_configuration;
   }
 
 #if ECAL_CORE_MONITORING
