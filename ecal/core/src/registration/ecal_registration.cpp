@@ -60,7 +60,7 @@ namespace eCAL
     {
       auto descgate = g_descgate();
       if (descgate == nullptr) return;
-      return descgate->RemPublisherEventCallback(token_);
+      descgate->RemPublisherEventCallback(token_);
     }
 
     bool GetSubscriberIDs(std::set<STopicId>& topic_ids_)
@@ -89,7 +89,7 @@ namespace eCAL
     {
       auto descgate = g_descgate();
       if (descgate == nullptr) return;
-      return descgate->RemSubscriberEventCallback(token_);
+      descgate->RemSubscriberEventCallback(token_);
     }
 
     bool GetServerIDs(std::set<SServiceId>& service_ids_)
