@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@
 #include <mutex>
 #include <string>
 
+#include <iostream>
+
 namespace eCAL
 {
   CMemFileMap::~CMemFileMap()
@@ -44,23 +46,24 @@ namespace eCAL
     // erase memory files from memory map
     for (auto iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
     {
+      std::lock_guard<std::mutex> lock(iter->second->mtx);
       auto& memfile_info = iter->second;
 
       // unmap memory file
-      memfile::os::UnMapFile(memfile_info);
+      memfile::os::UnMapFile(*memfile_info);
 
       // remove memory file from system
-      if (memfile_info.remove) memfile::os::RemoveFile(memfile_info);
+      if (memfile_info->remove) memfile::os::RemoveFile(*memfile_info);
 
       // deallocate memory file
-      memfile::os::DeAllocFile(memfile_info);
+      memfile::os::DeAllocFile(*memfile_info);
     }
 
     // clear map
     m_memfile_map.clear();
   }
 
-  bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
+  bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
   {
     // we need a length != 0
     assert(len_ > 0);
@@ -73,7 +76,7 @@ namespace eCAL
     if (iter == m_memfile_map.end())
     {
       // create memory file
-      if (!memfile::os::AllocFile(name_, create_, mem_file_info_))
+      if (!memfile::os::AllocFile(name_, create_, *mem_file_info_))
       {
 #ifndef NDEBUG
         printf("Could create memory file: %s.\n\n", name_.c_str());
@@ -82,22 +85,23 @@ namespace eCAL
       }
 
       // check memory file size
-      memfile::os::CheckFileSize(len_, create_, mem_file_info_);
+      memfile::os::CheckFileSize(len_, create_, *mem_file_info_);
 
       // and add to memory file map
-      mem_file_info_.refcnt++;
+      mem_file_info_->refcnt++;
       m_memfile_map[name_] = mem_file_info_;
     }
     else
     {
       // tag memory file as existing
-      iter->second.exists = true;
+      iter->second->exists = true;
 
       // increase reference counter
-      iter->second.refcnt++;
+      iter->second->refcnt++;
 
       // check memory file size
-      memfile::os::CheckFileSize(len_, false, iter->second);
+      memfile::os::CheckFileSize(len_, false, *iter->second);
+
 
       // copy info from memory file map
       mem_file_info_ = iter->second;
@@ -120,21 +124,21 @@ namespace eCAL
       auto& memfile_info = iter->second;
 
       // decrease reference counter
-      memfile_info.refcnt--;
+      memfile_info->refcnt--;
       // mark for remove
-      memfile_info.remove |= remove_;
-      if (memfile_info.refcnt < 1)
+      memfile_info->remove |= remove_;
+      if (memfile_info->refcnt < 1)
       {
-        const bool remove_from_system = memfile_info.remove;
+        const bool remove_from_system = memfile_info->remove;
 
         // unmap memory file
-        memfile::os::UnMapFile(memfile_info);
+        memfile::os::UnMapFile(*memfile_info);
 
         // remove memory file from system
-        if (remove_from_system) memfile::os::RemoveFile(memfile_info);
+        if (remove_from_system) memfile::os::RemoveFile(*memfile_info);
 
         // dealloc memory file
-        memfile::os::DeAllocFile(memfile_info);
+        memfile::os::DeAllocFile(*memfile_info);
 
         memfile_map.erase(iter);
       }
@@ -146,10 +150,10 @@ namespace eCAL
     return(false);
   }
 
-  bool CMemFileMap::CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
+  bool CMemFileMap::CheckFileSize(const std::string& name_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
   {
     // check and correct file size
-    memfile::os::CheckFileSize(len_, false, mem_file_info_);
+    memfile::os::CheckFileSize(len_, false, *mem_file_info_);
 
     // lock memory map access
     const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
@@ -164,7 +168,7 @@ namespace eCAL
   {
     namespace db
     {
-      bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
+      bool AddFile(const std::string& name_, const bool create_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
       {
         if (g_memfile_map() == nullptr) return false;
         return g_memfile_map()->AddFile(name_, create_, len_, mem_file_info_);
@@ -176,7 +180,7 @@ namespace eCAL
         return g_memfile_map()->RemoveFile(name_, remove_);
       }
 
-      bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
+      bool CheckFileSize(const std::string& name_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
       {
         if (g_memfile_map() == nullptr) return false;
         return g_memfile_map()->CheckFileSize(name_, len_, mem_file_info_);
