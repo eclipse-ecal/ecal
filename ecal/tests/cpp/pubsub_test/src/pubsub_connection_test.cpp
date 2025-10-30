@@ -269,7 +269,6 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
     };
   sub2.SetReceiveCallback(subscriber2_callback);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   // Start publisher1 thread
   std::thread pub1_thread(publisher1_function);
 
