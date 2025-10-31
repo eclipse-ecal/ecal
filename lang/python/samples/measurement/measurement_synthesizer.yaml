@@ -1,7 +1,7 @@
 
 output_directory: "testmeas"
 file_base_name: "measurement"
-max_size_per_file: 500 #MB
+max_size_per_file: 1000 # MB
 #TODO: one file per channel
 
 frame_parameter_defaults: &frame_parameter_defaults
@@ -99,3 +99,4 @@ channels:
         <<: *frame_parameter_defaults
         cycle_time: 50000
         size: 100000
+
