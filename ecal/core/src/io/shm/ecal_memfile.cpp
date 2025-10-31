@@ -371,7 +371,7 @@ namespace eCAL
       return(false);
     }
 
-    std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
+    const std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
     if (m_memfile_info->mem_address == nullptr) return(false);
 
     // reset current data size field of memfile header if lock is inconsistent 

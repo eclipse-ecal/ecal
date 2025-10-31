@@ -29,7 +29,7 @@
 
 constexpr size_t CMN_REGISTRATION_REFRESH_MS = 1000;
 
-TEST(core_cpp_finalize, finalize_with_segfault_provocation)
+TEST(core_cpp_finalize /*unused*/, finalize_with_segfault_provocation /*unused*/)
 {
   // initialize eCAL API
   EXPECT_EQ(true, eCAL::Initialize("finalize"));
@@ -51,7 +51,7 @@ TEST(core_cpp_finalize, finalize_with_segfault_provocation)
   std::atomic<bool> pub_stop(false);
 
   auto send_function = [&pub, &pub_stop, &receive_counter]() {
-    while(pub_stop == false)
+    while(!pub_stop.load())
     {
       pub.Send("bar");
     }
