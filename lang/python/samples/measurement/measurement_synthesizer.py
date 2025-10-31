@@ -145,7 +145,7 @@ def main(argv):
         print(f"Usage: {argv[0]} <yaml settings path>", file=sys.stderr)
         print("", file=sys.stderr)
         print(f"Synthesizer for generating artifical eCAL HDF5 measurements.", file=sys.stderr)
-        print(f"MIT License, Copyright (c) 2025 Kristof Hannemann", file=sys.stderr)
+        print(f"Apache 2.0 License, Copyright (c) 2025 Aumovio", file=sys.stderr)
         
         return 1
         
@@ -183,3 +183,4 @@ def main(argv):
 if __name__ == '__main__':
 
     sys.exit(main(sys.argv))
+
