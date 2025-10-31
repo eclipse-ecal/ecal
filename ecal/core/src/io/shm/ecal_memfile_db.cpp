@@ -46,7 +46,7 @@ namespace eCAL
     // erase memory files from memory map
     for (auto iter = m_memfile_map.begin(); iter != m_memfile_map.end(); ++iter)
     {
-      std::lock_guard<std::mutex> lock(iter->second->mtx);
+      const std::lock_guard<std::mutex> lock_memfile_mtx(iter->second->mtx);
       auto& memfile_info = iter->second;
 
       // unmap memory file
@@ -63,7 +63,7 @@ namespace eCAL
     m_memfile_map.clear();
   }
 
-  bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
+  bool CMemFileMap::AddFile(const std::string& name_, const bool create_, const size_t len_, std::shared_ptr<SMemFileInfo>& memfile_info_)
   {
     // we need a length != 0
     assert(len_ > 0);
@@ -73,10 +73,12 @@ namespace eCAL
 
     // check for existing memory file
     const MemFileMapT::iterator iter = m_memfile_map.find(name_);
+    
     if (iter == m_memfile_map.end())
     {
+      std::lock_guard<std::mutex> lock_memfile_mtx(memfile_info_->mtx);
       // create memory file
-      if (!memfile::os::AllocFile(name_, create_, *mem_file_info_))
+      if (!memfile::os::AllocFile(name_, create_, *memfile_info_))
       {
 #ifndef NDEBUG
         printf("Could create memory file: %s.\n\n", name_.c_str());
@@ -85,14 +87,15 @@ namespace eCAL
       }
 
       // check memory file size
-      memfile::os::CheckFileSize(len_, create_, *mem_file_info_);
+      memfile::os::CheckFileSize(len_, create_, *memfile_info_);
 
       // and add to memory file map
-      mem_file_info_->refcnt++;
-      m_memfile_map[name_] = mem_file_info_;
+      memfile_info_->refcnt++;
+      m_memfile_map[name_] = memfile_info_;
     }
     else
     {
+      std::lock_guard<std::mutex> lock_memfile_mtx(iter->second->mtx);
       // tag memory file as existing
       iter->second->exists = true;
 
@@ -104,7 +107,7 @@ namespace eCAL
 
 
       // copy info from memory file map
-      mem_file_info_ = iter->second;
+      memfile_info_ = iter->second;
     }
 
     // return success
@@ -121,6 +124,7 @@ namespace eCAL
     const MemFileMapT::iterator iter = memfile_map.find(name_);
     if (iter != memfile_map.end())
     {
+      std::lock_guard<std::mutex> lock_memfile_mtx(iter->second->mtx);
       auto& memfile_info = iter->second;
 
       // decrease reference counter
@@ -155,11 +159,12 @@ namespace eCAL
     // check and correct file size
     memfile::os::CheckFileSize(len_, false, *mem_file_info_);
 
+    // This is not needed anymore, as we directly change from the shared pointer.
     // lock memory map access
-    const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
+    // const std::lock_guard<std::mutex> lock(m_memfile_map_mtx);
 
     // update/set info
-    m_memfile_map[name_] = mem_file_info_;
+    // m_memfile_map[name_] = mem_file_info_;
 
     return(true);
   }

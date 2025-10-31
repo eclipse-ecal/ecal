@@ -32,7 +32,6 @@
 #include <cstdio>
 #include <cstring>
 #include <random>
-#include <thread>
 
 #define SIZEOF_PARTIAL_STRUCT(_STRUCT_NAME_, _FIELD_NAME_) (reinterpret_cast<std::size_t>(&(reinterpret_cast<_STRUCT_NAME_*>(0)->_FIELD_NAME_)) + sizeof(_STRUCT_NAME_::_FIELD_NAME_)) //NOLINT
 
@@ -114,6 +113,7 @@ namespace eCAL
       // for performance reasons only apply consistency check if it is explicitly set
       if(m_memfile_mutex.Lock(PUB_MEMFILE_CREATE_TO))
       {
+        const std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
         if (m_memfile_info->mem_address != nullptr)
         {
           auto* header = reinterpret_cast<SInternalHeader*>(m_memfile_info->mem_address);
@@ -139,6 +139,7 @@ namespace eCAL
       // consistency check cannot be performed on read-only memfiles
       if(m_memfile_mutex.Lock(PUB_MEMFILE_CREATE_TO))
       {
+        const std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
         // read internal header size of memory file
         const auto header_size = static_cast<SInternalHeader*>(m_memfile_info->mem_address)->int_hdr_size;
         memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
@@ -183,7 +184,7 @@ namespace eCAL
     // reset header and info
     m_header       = SInternalHeader();
 
-    m_memfile_info = std::make_shared<SMemFileInfo>();
+    m_memfile_info.reset();
 
     return(ret_state);
   }
@@ -235,6 +236,8 @@ namespace eCAL
     if (buf_ == nullptr) return(0);
 
     const void* rbuf(nullptr);
+    
+    const std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
     if (GetReadAddress(rbuf, len_ + offset_) != 0u)
     {
       // copy from read buffer with offset
