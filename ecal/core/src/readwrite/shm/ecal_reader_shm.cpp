@@ -50,7 +50,7 @@ namespace eCAL
     {
       // start memory file receive thread if topic is subscribed in this process
       auto memfile_pool = g_memfile_pool();
-      if (memfile_pool != nullptr)
+      if (memfile_pool)
       {
         const std::string process_id = std::to_string(m_attributes.process_id);
         const std::string memfile_event = memfile_name + "_" + process_id;
@@ -73,7 +73,7 @@ namespace eCAL
   size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
   {
     auto subgate = g_subgate();
-    if (subgate != nullptr)
+    if (subgate)
     {
       if (subgate->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
       {

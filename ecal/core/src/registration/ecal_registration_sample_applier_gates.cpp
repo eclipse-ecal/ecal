@@ -43,7 +43,7 @@ namespace eCAL
       case bct_reg_service:
       {
         auto clientgate = g_clientgate();
-        if (clientgate != nullptr) clientgate->ApplyServiceRegistration(sample_);
+        if (clientgate) clientgate->ApplyServiceRegistration(sample_);
         break;
       }
 #endif
@@ -57,13 +57,13 @@ namespace eCAL
       case bct_reg_subscriber:
       {
         auto pubgate = g_pubgate();
-        if (pubgate != nullptr) pubgate->ApplySubscriberRegistration(sample_);
+        if (pubgate) pubgate->ApplySubscriberRegistration(sample_);
         break;
       }
       case bct_unreg_subscriber:
       {
         auto pubgate = g_pubgate();
-        if (pubgate != nullptr) pubgate->ApplySubscriberUnregistration(sample_);
+        if (pubgate) pubgate->ApplySubscriberUnregistration(sample_);
         break;
       }
 #endif
@@ -71,13 +71,13 @@ namespace eCAL
       case bct_reg_publisher:
         {
           auto subgate = g_subgate();
-          if (subgate != nullptr) subgate->ApplyPublisherRegistration(sample_);
+          if (subgate) subgate->ApplyPublisherRegistration(sample_);
           break;
         }
       case bct_unreg_publisher:
         {
           auto subgate = g_subgate();
-          if (subgate != nullptr) subgate->ApplyPublisherUnregistration(sample_);
+          if (subgate) subgate->ApplyPublisherUnregistration(sample_);
           break;
         }
 #endif

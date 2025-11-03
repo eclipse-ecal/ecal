@@ -181,7 +181,7 @@ namespace eCAL
 
       // register publisher
       auto pubgate = g_pubgate();
-      if (pubgate != nullptr) pubgate->Register(topic_name_, m_publisher_impl);
+      if (pubgate) pubgate->Register(topic_name_, m_publisher_impl);
 
       // we made it :-)
       return(true);
@@ -198,7 +198,7 @@ namespace eCAL
 
       // unregister publisher
       auto pubgate = g_pubgate();
-      if(pubgate != nullptr) pubgate->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
+      if(pubgate) pubgate->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   #ifndef NDEBUG
       // log it
       eCAL::Logging::Log(Logging::log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));

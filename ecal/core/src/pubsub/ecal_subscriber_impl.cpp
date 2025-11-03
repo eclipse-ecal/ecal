@@ -482,7 +482,7 @@ namespace eCAL
     Registration::Sample sample;
     GetRegistrationSample(sample);
     auto registration_provider = g_registration_provider();
-    if (registration_provider != nullptr) registration_provider->RegisterSample(sample);
+    if (registration_provider) registration_provider->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -497,7 +497,7 @@ namespace eCAL
     Registration::Sample sample;
     GetUnregistrationSample(sample);
     auto registration_provider = g_registration_provider();
-    if (registration_provider != nullptr) registration_provider->UnregisterSample(sample);
+    if (registration_provider) registration_provider->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it

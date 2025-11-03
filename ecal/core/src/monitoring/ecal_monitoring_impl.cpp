@@ -52,8 +52,10 @@ namespace eCAL
     // utilize registration receiver to enrich monitor information
     auto registration_receiver = g_registration_receiver();
     if (registration_receiver)
+    {
       registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
-    m_init = true;
+      m_init = true;
+    }
   }
 
   void CMonitoringImpl::Destroy()
@@ -61,8 +63,10 @@ namespace eCAL
     // stop registration receiver utilization to enrich monitor information
     auto registration_receiver = g_registration_receiver();
     if (registration_receiver)
+    {
       registration_receiver->RemCustomApplySampleCallback("monitoring");
-    m_init = false;
+      m_init = false;
+    }
   }
 
   bool CMonitoringImpl::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)

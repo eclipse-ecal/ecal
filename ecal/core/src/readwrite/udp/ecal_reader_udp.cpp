@@ -98,17 +98,18 @@ namespace eCAL
       }
     }
   }
+  
   bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
   {
     auto subgate = g_subgate();
-    if (subgate == nullptr) return(false);
-    return(subgate->HasSample(sample_name_));
+    if (subgate) return subgate->HasSample(sample_name_);
+    return false;
   }
 
   bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
     auto subgate = g_subgate();
-    if (subgate == nullptr) return false;
-    return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    if (subgate) return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    return false;
   }
 }

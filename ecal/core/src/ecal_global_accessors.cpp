@@ -89,23 +89,23 @@ namespace eCAL
   std::shared_ptr<Logging::CLogReceiver> g_log_udp_receiver()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->log_udp_receiver();
+    if (globals) return globals->log_udp_receiver();
+    return nullptr;
   }
 
   std::shared_ptr<Logging::CLogProvider> g_log_provider()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->log_provider();
+    if (globals) return globals->log_provider();
+    return nullptr;
   }
 
 #if ECAL_CORE_MONITORING
   std::shared_ptr<CMonitoring> g_monitoring()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->monitoring();
+    if (globals) return globals->monitoring();
+    return nullptr;
   }
 #endif
 
@@ -113,8 +113,8 @@ namespace eCAL
   std::shared_ptr<CTimeGate> g_timegate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->timegate();
+    if (globals) return globals->timegate();
+    return nullptr;
   }
 #endif
 
@@ -122,31 +122,31 @@ namespace eCAL
   std::shared_ptr<CRegistrationProvider> g_registration_provider()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->registration_provider();
+    if (globals) return globals->registration_provider();
+    return nullptr;
   }
 
   std::shared_ptr<CRegistrationReceiver> g_registration_receiver()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->registration_receiver();
+    if (globals) return globals->registration_receiver();
+    return nullptr;
   }
 #endif
 
   std::shared_ptr<CDescGate> g_descgate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->descgate();
+    if (globals) return globals->descgate();
+    return nullptr;
   }
 
 #if ECAL_CORE_SUBSCRIBER
   std::shared_ptr<CSubGate> g_subgate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->subgate();
+    if (globals) return globals->subgate();
+    return nullptr;
   }
 #endif
 
@@ -154,8 +154,8 @@ namespace eCAL
   std::shared_ptr<CPubGate> g_pubgate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->pubgate();
+    if (globals) return globals->pubgate();
+    return nullptr;
   }
 #endif
 
@@ -163,15 +163,15 @@ namespace eCAL
   std::shared_ptr<CServiceGate> g_servicegate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->servicegate();
+    if (globals) return globals->servicegate();
+    return nullptr;
   }
 
   std::shared_ptr<CClientGate> g_clientgate()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->clientgate();
+    if (globals) return globals->clientgate();
+    return nullptr;
   }
 #endif
 
@@ -179,15 +179,15 @@ namespace eCAL
   std::shared_ptr<CMemFileThreadPool> g_memfile_pool()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->memfile_pool();
+    if (globals) return globals->memfile_pool();
+    return nullptr;
   }
 
   std::shared_ptr<CMemFileMap> g_memfile_map()
   {
     auto globals = g_globals();
-    if (globals == nullptr) return nullptr;
-    return globals->memfile_map();
+    if (globals) return globals->memfile_map();
+    return nullptr;
   }
 #endif
 }

@@ -57,7 +57,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   }
 #if ECAL_CORE_TIMEPLUGIN
   auto timegate = g_timegate();
-  if (timegate == nullptr)
+  if (!timegate)
   {
     process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }
@@ -89,7 +89,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   // eCAL initialization state
   unsigned int comp_state = 0;
   auto globals = g_globals();
-  if (globals != nullptr)
+  if (globals)
   {
     comp_state = globals->GetComponents();
   }

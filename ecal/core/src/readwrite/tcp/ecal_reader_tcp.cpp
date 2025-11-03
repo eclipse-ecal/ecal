@@ -113,7 +113,7 @@ namespace eCAL
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
       auto subgate = g_subgate();
-      if (subgate != nullptr)
+      if (subgate)
       {
         // use this intermediate variables as optimization
         const auto& ecal_header_topic_info = m_ecal_header.topic_info;

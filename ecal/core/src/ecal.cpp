@@ -112,17 +112,17 @@ namespace eCAL
   {
     bool initialized{ false };
 
-    if (g_globals() == nullptr)
+    auto globals = g_globals();
+    if (!globals)
     {
       SetGlobalEcalConfiguration(config_);
       SetGlobalUnitName(unit_name_.c_str());
 
-      auto globals = CreateGlobalsInstance();
-      if (globals == nullptr) return false;
+      auto globals_instance = CreateGlobalsInstance();
+      if (!globals_instance) return false;
 
-      initialized = globals->Initialize(components_);
-      if (!initialized)
-        ResetGlobalsInstance();
+      initialized = globals_instance->Initialize(components_);
+      if (!initialized) ResetGlobalsInstance();
     }
     
     return initialized;
@@ -138,10 +138,8 @@ namespace eCAL
   bool IsInitialized()
   {
     auto globals = g_globals();
-    if (globals == nullptr)
-      return false;
-
-    return globals->IsInitialized();
+    if (globals) return globals->IsInitialized();
+    return false;
   }
 
   /**
@@ -154,10 +152,8 @@ namespace eCAL
   bool IsInitialized(unsigned int component_)
   {
     auto globals = g_globals();
-    if (globals == nullptr)
-      return false;
-
-    return globals->IsInitialized(component_);
+    if (globals ) return globals->IsInitialized(component_);
+    return false ;
   }
 
   /**
@@ -169,7 +165,7 @@ namespace eCAL
   {
     bool finalized{ false };
     auto globals = g_globals();
-    if (globals != nullptr)
+    if (globals)
     {
       finalized = globals->Finalize();
       ResetGlobalsInstance();
@@ -187,7 +183,7 @@ namespace eCAL
   bool Ok()
   {
     auto globals = g_globals();
-    const bool ecal_is_ok = (globals != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
+    const bool ecal_is_ok = globals && !gWaitForEvent(ShutdownProcEvent(), 0);
     return(ecal_is_ok);
   }
 }

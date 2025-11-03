@@ -197,7 +197,7 @@ namespace eCAL
       sstream << "Synchronization replay   : " << Config::GetTimesyncModuleReplay() << '\n';
       sstream << "State                    : ";
       auto timegate = g_timegate();
-      if (timegate != nullptr)
+      if (timegate)
       {
         if (timegate->IsSynchronized()) sstream << " synchronized " << '\n';
         else                            sstream << " not synchronized " << '\n';

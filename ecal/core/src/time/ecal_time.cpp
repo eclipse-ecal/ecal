@@ -40,7 +40,7 @@ namespace eCAL
       static const std::string empty_string{ "" };
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->GetName();
       }
@@ -52,7 +52,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->GetMicroSeconds();
       }
@@ -65,7 +65,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->GetNanoSeconds();
       }
@@ -78,7 +78,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->SetNanoSeconds(time_);
       }
@@ -91,7 +91,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->IsSynchronized();
       }
@@ -103,7 +103,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         return timegate->IsMaster();
       }
@@ -115,7 +115,7 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if ((timegate != nullptr) && timegate->IsValid())
+      if (timegate && timegate->IsValid())
       {
         timegate->SleepForNanoseconds(duration_nsecs_);
       }
@@ -127,17 +127,17 @@ namespace eCAL
     {
 #if ECAL_CORE_TIMEGATE
       auto timegate = g_timegate();
-      if (timegate == nullptr)
+      if (timegate)
+      {
+        timegate->GetStatus(error_, status_message_);
+      }
+      else
       {
         error_ = -1;
         if (status_message_ != nullptr)
         {
           status_message_->assign("Timegate has not been initialized!");
         }
-      }
-      else 
-      {
-        timegate->GetStatus(error_, status_message_);
       }
 #else
       error_ = -1;

@@ -68,7 +68,7 @@ namespace eCAL
     bool GetMonitoring(std::string& mon_, unsigned int entities_)
     {
       auto monitoring = g_monitoring();
-      if (monitoring != nullptr)
+      if (monitoring)
       {
         mon_.clear();
         monitoring->GetMonitoring(mon_, entities_);
@@ -80,7 +80,7 @@ namespace eCAL
     bool GetMonitoring(SMonitoring& mon_, unsigned int entities_)
     {
       auto monitoring = g_monitoring();
-      if (monitoring != nullptr)
+      if (monitoring)
       {
         monitoring->GetMonitoring(mon_, entities_);
         return true;

@@ -40,7 +40,7 @@ namespace eCAL
     m_service_client_impl = service_client_impl;
     // register client
     auto clientgate = g_clientgate();
-    if (clientgate != nullptr) clientgate->Register(service_name_, service_client_impl);
+    if (clientgate) clientgate->Register(service_name_, service_client_impl);
   }
 
   CServiceClient::~CServiceClient()
@@ -51,7 +51,7 @@ namespace eCAL
 
     // unregister client
     auto clientgate = g_clientgate();
-    if (clientgate != nullptr) clientgate->Unregister(service_client_impl->GetServiceName(), service_client_impl);
+    if (clientgate) clientgate->Unregister(service_client_impl->GetServiceName(), service_client_impl);
   }
 
   CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept

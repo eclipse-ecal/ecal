@@ -58,7 +58,7 @@ namespace eCAL
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
-    if (registration_provider_instance == nullptr)
+    if (!registration_provider_instance)
     {
       registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_attr);
       new_initialization = true;
@@ -67,7 +67,7 @@ namespace eCAL
     /////////////////////
     // REGISTRATION RECEIVER
     /////////////////////
-    if(registration_receiver_instance == nullptr) 
+    if(!registration_receiver_instance) 
     {
       registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_attr);
       new_initialization = true;
@@ -77,7 +77,7 @@ namespace eCAL
     /////////////////////
     // DESCRIPTION GATE
     /////////////////////
-    if (descgate_instance == nullptr)
+    if (!descgate_instance)
     {
       // create description gate with configured expiration timeout
       descgate_instance = std::make_shared<CDescGate>();
@@ -88,7 +88,7 @@ namespace eCAL
     /////////////////////
     // MEMFILE MAP
     /////////////////////
-    if (memfile_map_instance == nullptr)
+    if (!memfile_map_instance)
     {
       memfile_map_instance = std::make_shared<CMemFileMap>();
       new_initialization = true;
@@ -97,7 +97,7 @@ namespace eCAL
     /////////////////////
     // MEMFILE POOL
     /////////////////////
-    if (memfile_pool_instance == nullptr)
+    if (!memfile_pool_instance)
     {
       memfile_pool_instance = std::make_shared<CMemFileThreadPool>();
       new_initialization = true;
@@ -110,7 +110,7 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Subscriber) != 0u)
     {
-      if (subgate_instance == nullptr)
+      if (!subgate_instance)
       {
         subgate_instance = std::make_shared<CSubGate>();
         new_initialization = true;
@@ -124,7 +124,7 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Publisher) != 0u)
     {
-      if (pubgate_instance == nullptr)
+      if (!pubgate_instance)
       {
         pubgate_instance = std::make_shared<CPubGate>();
         new_initialization = true;
@@ -141,7 +141,7 @@ namespace eCAL
       /////////////////////
       // SERVICE GATE
       /////////////////////
-      if (servicegate_instance == nullptr)
+      if (!servicegate_instance)
       {
         servicegate_instance = std::make_shared<CServiceGate>();
         new_initialization = true;
@@ -150,7 +150,7 @@ namespace eCAL
       /////////////////////
       // CLIENT GATE
       /////////////////////
-      if (clientgate_instance == nullptr)
+      if (!clientgate_instance)
       {
         clientgate_instance = std::make_shared<CClientGate>();
         new_initialization = true;
@@ -178,7 +178,7 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Monitoring) != 0u)
     {
-      if (monitoring_instance == nullptr)
+      if (!monitoring_instance)
       {
         monitoring_instance = std::make_shared<CMonitoring>();
         new_initialization = true;
@@ -191,13 +191,13 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Logging) != 0u)
     {
-      if (log_provider_instance == nullptr)
+      if (!log_provider_instance)
       {
         log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
         new_initialization = true;
       }
 
-      if (log_udp_receiver_instance == nullptr)
+      if (!log_udp_receiver_instance)
       {
         log_udp_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
         new_initialization = true;

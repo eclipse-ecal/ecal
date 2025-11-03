@@ -58,7 +58,7 @@ namespace eCAL
 
       Monitoring::SMonitoring monitoring_type;
       auto monitoring = g_monitoring();
-      if (monitoring != nullptr) monitoring->GetMonitoring(monitoring_type);
+      if (monitoring) monitoring->GetMonitoring(monitoring_type);
 
       return monitoring_type;
     }

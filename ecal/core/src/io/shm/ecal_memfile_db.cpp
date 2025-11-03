@@ -168,22 +168,22 @@ namespace eCAL
       bool AddFile(const std::string& name_, const bool create_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
         auto memfile_map = g_memfile_map();
-        if (memfile_map == nullptr) return false;
-        return memfile_map->AddFile(name_, create_, len_, mem_file_info_);
+        if (memfile_map) return memfile_map->AddFile(name_, create_, len_, mem_file_info_);
+        return false;
       }
 
       bool RemoveFile(const std::string& name_, const bool remove_)
       {
         auto memfile_map = g_memfile_map();
-        if (memfile_map == nullptr) return false;
-        return memfile_map->RemoveFile(name_, remove_);
+        if (memfile_map) return memfile_map->RemoveFile(name_, remove_);
+        return false;
       }
 
       bool CheckFileSize(const std::string& name_, const size_t len_, SMemFileInfo& mem_file_info_)
       {
         auto memfile_map = g_memfile_map();
-        if (memfile_map == nullptr) return false;
-        return memfile_map->CheckFileSize(name_, len_, mem_file_info_);
+        if (memfile_map) return memfile_map->CheckFileSize(name_, len_, mem_file_info_);
+        return false;
       }
     }
   }

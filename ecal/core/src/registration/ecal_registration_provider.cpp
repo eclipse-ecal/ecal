@@ -153,23 +153,23 @@ namespace eCAL
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
       auto subgate = g_subgate();
-      if (subgate != nullptr) subgate->GetRegistrations(m_send_thread_sample_list);
+      if (subgate) subgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
       auto pubgate = g_pubgate();
-      if (pubgate != nullptr) pubgate->GetRegistrations(m_send_thread_sample_list);
+      if (pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
       auto servicegate = g_servicegate();
-      if (servicegate != nullptr) servicegate->GetRegistrations(m_send_thread_sample_list);
+      if (servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
       auto clientgate = g_clientgate();
-      if (clientgate != nullptr) clientgate->GetRegistrations(m_send_thread_sample_list);
+      if (clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list

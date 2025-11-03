@@ -116,7 +116,7 @@ namespace eCAL
 
     // Send registration sample
     auto registration_provider = g_registration_provider();
-    if (!m_service_name.empty() && registration_provider != nullptr)
+    if (!m_service_name.empty() && registration_provider)
     {
       registration_provider->RegisterSample(GetRegistrationSample());
 #ifndef NDEBUG
@@ -146,7 +146,7 @@ namespace eCAL
 
     // Send unregistration sample
     auto registration_provider = g_registration_provider();
-    if (registration_provider != nullptr)
+    if (registration_provider)
     {
       registration_provider->UnregisterSample(GetUnregistrationSample());
 #ifndef NDEBUG

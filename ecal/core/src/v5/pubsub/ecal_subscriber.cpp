@@ -172,7 +172,7 @@ namespace eCAL
 
       // register datareader
       auto subgate = g_subgate();
-      if (subgate != nullptr) subgate->Register(topic_name_, m_subscriber_impl);
+      if (subgate) subgate->Register(topic_name_, m_subscriber_impl);
 
       // we made it :-)
       return(true);
@@ -192,7 +192,7 @@ namespace eCAL
 
       // unregister datareader
       auto subgate = g_subgate();
-      if (subgate != nullptr) subgate->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
+      if (subgate) subgate->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
 
 #ifndef NDEBUG
       // log it
