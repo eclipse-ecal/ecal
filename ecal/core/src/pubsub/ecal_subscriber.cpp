@@ -69,10 +69,12 @@ namespace eCAL
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
-    auto subscriber_impl = m_subscriber_impl.lock();
-    // clean-up existing m_subscriber_impl before swapping with rhs
-    if (g_subgate() != nullptr) g_subgate()->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
-    subscriber_impl.reset();
+    {
+      auto subscriber_impl = m_subscriber_impl.lock();
+      // clean-up existing m_subscriber_impl before swapping with rhs
+      auto subgate = g_subgate();
+      if (subgate && subscriber_impl) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
+    }
     std::swap(m_subscriber_impl, rhs.m_subscriber_impl);
     return *this;
   }
@@ -80,45 +82,43 @@ namespace eCAL
   void CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
     auto subscriber_impl = m_subscriber_impl.lock();
-    if (subscriber_impl == nullptr) return;
-    static_cast<void>(subscriber_impl->SetReceiveCallback(std::move(callback_)));
+    if (subscriber_impl) static_cast<void>(subscriber_impl->SetReceiveCallback(std::move(callback_)));
   }
 
   void CSubscriber::RemoveReceiveCallback()
   {
     auto subscriber_impl = m_subscriber_impl.lock();
-    if (subscriber_impl == nullptr) return;
-    static_cast<void>(subscriber_impl->RemoveReceiveCallback());
+    if (subscriber_impl) static_cast<void>(subscriber_impl->RemoveReceiveCallback());
   }
 
   size_t CSubscriber::GetPublisherCount() const
   {
     auto subscriber_impl = m_subscriber_impl.lock();
-    if (subscriber_impl == nullptr) return 0;
-    return subscriber_impl->GetPublisherCount();
+    if (subscriber_impl) return subscriber_impl->GetPublisherCount();
+    return 0;
   }
 
   const std::string& CSubscriber::GetTopicName() const
   {
     auto subscriber_impl = m_subscriber_impl.lock();
     static const std::string empty_topic_name{};
-    if (subscriber_impl == nullptr) return empty_topic_name;
-    return subscriber_impl->GetTopicName();
+    if (subscriber_impl) return subscriber_impl->GetTopicName();
+    return empty_topic_name;
   }
 
   const STopicId& CSubscriber::GetTopicId() const
   {
     auto subscriber_impl = m_subscriber_impl.lock();
     static const STopicId empty_topic_id{};
-    if (subscriber_impl == nullptr) return empty_topic_id;
-    return subscriber_impl->GetTopicId();
+    if (subscriber_impl) return subscriber_impl->GetTopicId();
+    return empty_topic_id;
   }
 
   const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
     auto subscriber_impl = m_subscriber_impl.lock();
     static const SDataTypeInformation empty_data_type_information{};
-    if (subscriber_impl == nullptr) return empty_data_type_information;
-    return subscriber_impl->GetDataTypeInformation();
+    if (subscriber_impl) return subscriber_impl->GetDataTypeInformation();
+    return empty_data_type_information;
   }
 }

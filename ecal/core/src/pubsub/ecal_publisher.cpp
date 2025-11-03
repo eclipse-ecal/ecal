@@ -76,10 +76,12 @@ namespace eCAL
 
   CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
-    auto publisher_impl = m_publisher_impl.lock();
-    // clean-up existing m_publisher_impl before swapping with rhs
-    if (g_pubgate() != nullptr && publisher_impl != nullptr) g_pubgate()->Unregister(publisher_impl->GetTopicName(), publisher_impl);
-    m_publisher_impl.reset();
+    {
+      auto publisher_impl = m_publisher_impl.lock();
+      // clean-up existing m_publisher_impl before swapping with rhs
+      auto pubgate = g_pubgate();
+      if (pubgate && publisher_impl) pubgate->Unregister(publisher_impl->GetTopicName(), publisher_impl);
+    }
     std::swap(m_publisher_impl, rhs.m_publisher_impl);
     return *this;
   }
@@ -119,31 +121,31 @@ namespace eCAL
   size_t CPublisher::GetSubscriberCount() const
   {
     auto publisher_impl = m_publisher_impl.lock();
-    if (publisher_impl == nullptr) return 0;
-    return(publisher_impl->GetSubscriberCount());
+    if (publisher_impl) return publisher_impl->GetSubscriberCount();
+    return 0;
   }
 
   const std::string& CPublisher::GetTopicName() const
   {
     static const std::string empty_topic_name{};
     auto publisher_impl = m_publisher_impl.lock();
-    if (publisher_impl == nullptr) return empty_topic_name;
-    return(publisher_impl->GetTopicName());
+    if (publisher_impl) return publisher_impl->GetTopicName();
+    return empty_topic_name;
   }
 
   const STopicId& CPublisher::GetTopicId() const
   {
     static const STopicId empty_topic_id{};
     auto publisher_impl = m_publisher_impl.lock();
-    if (publisher_impl == nullptr) return empty_topic_id;
-    return(publisher_impl->GetTopicId());
+    if (publisher_impl) return publisher_impl->GetTopicId();
+    return empty_topic_id;
   }
 
   const SDataTypeInformation& CPublisher::GetDataTypeInformation() const
   {
     static const SDataTypeInformation empty_data_type_information{};
     auto publisher_impl = m_publisher_impl.lock();
-    if (publisher_impl == nullptr) return empty_data_type_information;
-    return(publisher_impl->GetDataTypeInformation());
+    if (publisher_impl) return publisher_impl->GetDataTypeInformation();
+    return empty_data_type_information;
   }
 }

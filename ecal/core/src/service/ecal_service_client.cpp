@@ -69,13 +69,14 @@ namespace eCAL
   {
     auto service_client_impl = m_service_client_impl.lock();
     std::vector<CClientInstance> instances;
-    if (service_client_impl == nullptr) return instances;
-
-    auto entity_ids = service_client_impl->GetServiceIDs();
-    instances.reserve(entity_ids.size());
-    for (const auto& entity_id : entity_ids)
+    if (service_client_impl) 
     {
-      instances.emplace_back(entity_id, service_client_impl);
+      auto entity_ids = service_client_impl->GetServiceIDs();
+      instances.reserve(entity_ids.size());
+      for (const auto& entity_id : entity_ids)
+      {
+        instances.emplace_back(entity_id, service_client_impl);
+      }
     }
     return instances;
   }
@@ -198,16 +199,16 @@ namespace eCAL
   {
     auto service_client_impl = m_service_client_impl.lock();
     static const std::string empty_service_name{};
-    if (service_client_impl == nullptr) return empty_service_name;
-    return service_client_impl->GetServiceName();
+    if (service_client_impl) return service_client_impl->GetServiceName();
+    return empty_service_name;
   }
 
   const SServiceId& CServiceClient::GetServiceId() const
   {
     auto service_client_impl = m_service_client_impl.lock();
     static const SServiceId empty_service_id{};
-    if (service_client_impl == nullptr) return empty_service_id;
-    return service_client_impl->GetServiceId();
+    if (service_client_impl) return service_client_impl->GetServiceId();
+    return empty_service_id;
   }
 
   bool CServiceClient::IsConnected() const
