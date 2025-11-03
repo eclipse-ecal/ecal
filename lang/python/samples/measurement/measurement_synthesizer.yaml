@@ -1,0 +1,102 @@
+
+output_directory: "testmeas"
+file_base_name: "measurement"
+max_size_per_file: 1000 # MB
+#TODO: one file per channel
+
+frame_parameter_defaults: &frame_parameter_defaults
+    size: 1000
+    size_deviation: 0
+    cycle_time: 10000
+    cycle_time_deviation: 1000
+    drop_probability: 0.001
+    send_receive_offset: 1000
+    send_receive_offset_deviation: 500
+
+channel_defaults: &channel_defaults
+  name: "__default__"
+  timestamp_begin: 1000000000
+  timestamp_end: 1200000000
+  frame_parameter:
+    <<: *frame_parameter_defaults
+    
+    
+channels:
+  - <<: *channel_defaults
+    name: "SmallData_HighFreq_A"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 10000
+        size: 1000
+  - <<: *channel_defaults
+    name: "SmallData_HighFreq_B"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 10000
+        size: 1000
+  - <<: *channel_defaults
+    name: "SmallData_HighFreq_HighJitter"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 10000
+        cycle_time_deviation: 5000
+        size: 1000
+  - <<: *channel_defaults
+    name: "MediumData_WithManyDrops"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 100000
+        cycle_time_deviation: 5000
+        drop_probability: 0.25
+        size: 100000
+  - <<: *channel_defaults
+    name: "LargeData_LowFreq_A"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 1000000
+  - <<: *channel_defaults
+    name: "LargeData_LowFreq_B"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        cycle_time_deviation: 2000
+        size: 1000000
+  - <<: *channel_defaults
+    name: "LargeData_LowFreq_C"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        cycle_time_deviation: 3000
+        size: 1000000
+  - <<: *channel_defaults
+    name: "LargeData_LowFreq_D"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 1000000
+  - <<: *channel_defaults
+    name: "MediumData_LowFreq_A"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 100000
+  - <<: *channel_defaults
+    name: "MediumData_LowFreq_B"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 100000
+  - <<: *channel_defaults
+    name: "MediumData_LowFreq_C"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 100000
+  - <<: *channel_defaults
+    name: "MediumData_LowFreq_D"
+    frame_parameter:
+        <<: *frame_parameter_defaults
+        cycle_time: 50000
+        size: 100000
+
