@@ -43,7 +43,7 @@ namespace eCAL
 
     bool AddFile(const std::string& name_, bool create_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
     bool RemoveFile(const std::string& name_, bool remove_);
-    bool CheckFileSize(const std::string& name_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
+    bool CheckFileSize(size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
 
   protected:
     using MemFileMapT = std::unordered_map<std::string, std::shared_ptr<SMemFileInfo>>;
@@ -58,7 +58,7 @@ namespace eCAL
       bool AddFile(const std::string& name_, bool create_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
       bool RemoveFile(const std::string& name_, bool remove_);
 
-      bool CheckFileSize(const std::string& name_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
+      bool CheckFileSize(size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
     }
   }
 }

@@ -30,8 +30,6 @@
 #include <mutex>
 #include <string>
 
-#include <iostream>
-
 namespace eCAL
 {
   CMemFileMap::~CMemFileMap()
@@ -155,7 +153,7 @@ namespace eCAL
     return(false);
   }
 
-  bool CMemFileMap::CheckFileSize(const std::string& name_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
+  bool CMemFileMap::CheckFileSize(const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
   {
     // check and correct file size
     memfile::os::CheckFileSize(len_, false, *mem_file_info_);
@@ -186,10 +184,10 @@ namespace eCAL
         return g_memfile_map()->RemoveFile(name_, remove_);
       }
 
-      bool CheckFileSize(const std::string& name_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
+      bool CheckFileSize(const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
       {
         if (g_memfile_map() == nullptr) return false;
-        return g_memfile_map()->CheckFileSize(name_, len_, mem_file_info_);
+        return g_memfile_map()->CheckFileSize(len_, mem_file_info_);
       }
     }
   }

@@ -143,7 +143,7 @@ namespace eCAL
         const std::lock_guard<std::mutex> lock(m_memfile_info->mtx);
         // read internal header size of memory file
         const auto header_size = static_cast<SInternalHeader*>(m_memfile_info->mem_address)->int_hdr_size;
-        memfile::db::CheckFileSize(name_, header_size, m_memfile_info);
+        memfile::db::CheckFileSize(header_size, m_memfile_info);
 
         // copy compatible header part into m_header
         memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
@@ -390,7 +390,7 @@ namespace eCAL
     if (len > m_memfile_info->size)
     {
       // check file size and update memory file map
-      memfile::db::CheckFileSize(m_name, len, m_memfile_info);
+      memfile::db::CheckFileSize(len, m_memfile_info);
 
       // check size again and give up if it is still too small
       if (len > m_memfile_info->size)
