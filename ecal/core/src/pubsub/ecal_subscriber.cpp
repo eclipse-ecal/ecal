@@ -83,7 +83,7 @@ namespace eCAL
   void CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
     auto subscriber_impl = m_subscriber_impl.lock();
-    if (subscriber_impl) static_cast<void>(subscriber_impl->SetReceiveCallback(std::move(callback_)));
+    if (subscriber_impl) static_cast<void>(subscriber_impl->SetReceiveCallback(callback_));
   }
 
   void CSubscriber::RemoveReceiveCallback()
