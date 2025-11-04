@@ -73,7 +73,6 @@ void InitializeAllSamples()
   pub_foo_process_a_register_1.topic.connections_local = 2;
   pub_foo_process_a_register_1.topic.connections_external = 2;
   pub_foo_process_a_register_1.topic.message_drops = 0;
-  pub_foo_process_a_register_1.topic.data_id = 0;
   pub_foo_process_a_register_1.topic.data_clock = 1;
   pub_foo_process_a_register_1.topic.data_frequency = 10;
 
@@ -98,7 +97,6 @@ void InitializeAllSamples()
   sub_foo_process_a_register_1.topic.connections_local = 2;
   sub_foo_process_a_register_1.topic.connections_external = 2;
   sub_foo_process_a_register_1.topic.message_drops = 0;
-  sub_foo_process_a_register_1.topic.data_id = 0;
   sub_foo_process_a_register_1.topic.data_clock = 1;
   sub_foo_process_a_register_1.topic.data_frequency = 10;
 
@@ -123,7 +121,6 @@ void InitializeAllSamples()
   sub_foo_process_b_register_1.topic.connections_local = 2;
   sub_foo_process_b_register_1.topic.connections_external = 2;
   sub_foo_process_b_register_1.topic.message_drops = 0;
-  sub_foo_process_b_register_1.topic.data_id = 0;
   sub_foo_process_b_register_1.topic.data_clock = 1;
   sub_foo_process_b_register_1.topic.data_frequency = 10;
 

@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ namespace eCAL
   { //-V802
     uint16_t   hdr_size   = sizeof(SMemFileHeader);
     uint64_t   data_size  = 0;
+    [[deprecated("This field is deprecated, but must be kept for compatibility reasons")]]
     uint64_t   id         = 0;
     uint64_t   clock      = 0;
     int64_t    time       = 0;

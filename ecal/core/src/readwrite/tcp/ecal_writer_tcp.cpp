@@ -81,7 +81,6 @@ namespace eCAL
 
     // set payload content (without payload)
     auto& proto_header_content = proto_header.content;
-    proto_header_content.id    = attr_.id;
     proto_header_content.clock = attr_.clock;
     proto_header_content.time  = attr_.time;
     proto_header_content.hash  = static_cast<int64_t>(attr_.hash);
