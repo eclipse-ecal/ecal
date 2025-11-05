@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +49,9 @@ namespace eCAL
     for (const auto& memfile_name : par_.parameter.layer_par_shm.memory_file_list)
     {
       // start memory file receive thread if topic is subscribed in this process
-      if (g_memfile_pool() != nullptr)
-      { 
+      auto memfile_pool = g_memfile_pool();
+      if (memfile_pool)
+      {
         const std::string process_id = std::to_string(m_attributes.process_id);
         const std::string memfile_event = memfile_name + "_" + process_id;
 
@@ -63,16 +65,17 @@ namespace eCAL
         {
           return OnNewShmFileContent(topic_info, buf_, len_, id_, clock_, time_, hash_);
         };
-        g_memfile_pool()->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
+        memfile_pool->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
       }
     }
   }
 
   size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
   {
-    if (g_subgate() != nullptr)
+    auto subgate = g_subgate();
+    if (subgate)
     {
-      if (g_subgate()->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
+      if (subgate->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
       {
         return len_;
       }

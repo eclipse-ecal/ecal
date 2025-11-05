@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +180,8 @@ namespace eCAL
       m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher
-      g_pubgate()->Register(topic_name_, m_publisher_impl);
+      auto pubgate = g_pubgate();
+      if (pubgate) pubgate->Register(topic_name_, m_publisher_impl);
 
       // we made it :-)
       return(true);
@@ -195,7 +197,8 @@ namespace eCAL
       if (m_publisher_impl == nullptr) return(false);
 
       // unregister publisher
-      if(g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
+      auto pubgate = g_pubgate();
+      if(pubgate) pubgate->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
   #ifndef NDEBUG
       // log it
       eCAL::Logging::Log(Logging::log_level_debug1, std::string(m_publisher_impl->GetTopicName() + "::CPublisher::Destroy"));

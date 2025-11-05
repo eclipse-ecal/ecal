@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,15 +98,18 @@ namespace eCAL
       }
     }
   }
+  
   bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
   {
-    if (g_subgate() == nullptr) return(false);
-    return(g_subgate()->HasSample(sample_name_));
+    auto subgate = g_subgate();
+    if (subgate) return subgate->HasSample(sample_name_);
+    return false;
   }
 
   bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
-    if (g_subgate() == nullptr) return false;
-    return g_subgate()->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    auto subgate = g_subgate();
+    if (subgate) return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    return false;
   }
 }

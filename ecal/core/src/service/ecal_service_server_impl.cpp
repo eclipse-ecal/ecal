@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,8 +291,8 @@ namespace eCAL
     }
 
     // Send registration sample
-    if (g_registration_provider())
-      g_registration_provider()->RegisterSample(GetRegistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->RegisterSample(GetRegistrationSample());
 
     m_created = true;
 #ifndef NDEBUG
@@ -334,8 +335,8 @@ namespace eCAL
     }
 
     // Send unregistration sample
-    if (g_registration_provider())
-      g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->UnregisterSample(GetUnregistrationSample());
 
     m_created = false;
 #ifndef NDEBUG

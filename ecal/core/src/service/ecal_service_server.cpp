@@ -37,7 +37,8 @@ namespace eCAL
     m_service_server_impl = service_server_impl;
 
     // register server
-    if (g_servicegate() != nullptr) g_servicegate()->Register(service_name_, service_server_impl);
+    auto servicegate = g_servicegate();
+    if (servicegate) servicegate->Register(service_name_, service_server_impl);
   }
 
   CServiceServer::~CServiceServer()
@@ -47,7 +48,8 @@ namespace eCAL
     if (service_server_impl == nullptr) return;
 
     // unregister server
-    if (g_servicegate() != nullptr) g_servicegate()->Unregister(service_server_impl->GetServiceName(), service_server_impl);
+    auto servicegate = g_servicegate();
+    if (servicegate) servicegate->Unregister(service_server_impl->GetServiceName(), service_server_impl);
   }
 
   CServiceServer::CServiceServer(CServiceServer&& rhs) noexcept

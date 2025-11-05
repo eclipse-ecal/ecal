@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,19 +56,20 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
     process_sample_process.state.info           = g_process_state.info;
   }
 #if ECAL_CORE_TIMEPLUGIN
-  if (g_timegate() == nullptr)
+  auto timegate = g_timegate();
+  if (!timegate)
   {
     process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }
   else
   {
-    if (!g_timegate()->IsSynchronized())
+    if (!timegate->IsSynchronized())
     {
       process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
     }
     else
     {
-      switch (g_timegate()->GetSyncMode())
+      switch (timegate->GetSyncMode())
       {
       case CTimeGate::eTimeSyncMode::realtime:
         process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_realtime;
@@ -80,12 +82,17 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
         break;
       }
     }
-    process_sample_process.time_sync_module_name = g_timegate()->GetName();
+    process_sample_process.time_sync_module_name = timegate->GetName();
   }
 #endif
 
   // eCAL initialization state
-  const unsigned int comp_state(g_globals()->GetComponents());
+  unsigned int comp_state = 0;
+  auto globals = g_globals();
+  if (globals)
+  {
+    comp_state = globals->GetComponents();
+  }
   process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
   std::string component_info;
   if ((comp_state & eCAL::Init::Publisher) != 0u) component_info += "|pub";

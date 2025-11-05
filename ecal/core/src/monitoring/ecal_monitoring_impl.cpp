@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,15 +50,23 @@ namespace eCAL
     if (m_init) return;
 
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
-    m_init = true;
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+    {
+      registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+      m_init = true;
+    }
   }
 
   void CMonitoringImpl::Destroy()
   {
     // stop registration receiver utilization to enrich monitor information
-    g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
-    m_init = false;
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+    {
+      registration_receiver->RemCustomApplySampleCallback("monitoring");
+      m_init = false;
+    }
   }
 
   bool CMonitoringImpl::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)

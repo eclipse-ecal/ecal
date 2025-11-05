@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -538,7 +539,8 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample registration_sample;
     GetRegistrationSample(registration_sample);
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(registration_sample);
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->RegisterSample(registration_sample);
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CPublisherImpl::Register");
@@ -551,7 +553,8 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample unregistration_sample;
     GetUnregistrationSample(unregistration_sample);
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(unregistration_sample);
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->UnregisterSample(unregistration_sample);
 
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CPublisherImpl::Unregister");

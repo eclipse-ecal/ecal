@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,39 +71,45 @@ namespace eCAL
 
   void SetGlobalUnitName(const char *unit_name_);
 
+  std::shared_ptr<CGlobals> CreateGlobalsInstance();
+  void                      ResetGlobalsInstance();
+
+  void                      SetGlobalEcalConfiguration(const Configuration& config_);
+  void                      ResetGlobalEcalConfiguration(); 
+
   // Declaration of getter functions for globally accessible variable instances
-  CGlobals*               g_globals();
-  Logging::CLogReceiver*  g_log_udp_receiver();
-  Logging::CLogProvider*  g_log_provider();
+  std::shared_ptr<CGlobals>               g_globals();
+  std::shared_ptr<Logging::CLogReceiver>  g_log_udp_receiver();
+  std::shared_ptr<Logging::CLogProvider>  g_log_provider();
 #if ECAL_CORE_MONITORING
-  CMonitoring*            g_monitoring();
+  std::shared_ptr<CMonitoring>            g_monitoring();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-  CTimeGate*              g_timegate();
+  std::shared_ptr<CTimeGate>              g_timegate();
 #endif
 #if ECAL_CORE_REGISTRATION
-  CRegistrationProvider*  g_registration_provider();
-  CRegistrationReceiver*  g_registration_receiver();
+  std::shared_ptr<CRegistrationProvider>  g_registration_provider();
+  std::shared_ptr<CRegistrationReceiver>  g_registration_receiver();
 #endif
-  CDescGate*              g_descgate();
+  std::shared_ptr<CDescGate>              g_descgate();
 #if ECAL_CORE_SUBSCRIBER
-  CSubGate*               g_subgate();
+  std::shared_ptr<CSubGate>               g_subgate();
 #endif
 #if ECAL_CORE_PUBLISHER
-  CPubGate*               g_pubgate();
+  std::shared_ptr<CPubGate>               g_pubgate();
 #endif
 #if ECAL_CORE_SERVICE
-  CServiceGate*           g_servicegate();
-  CClientGate*            g_clientgate();
+  std::shared_ptr<CServiceGate>           g_servicegate();
+  std::shared_ptr<CClientGate>            g_clientgate();
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  CMemFileThreadPool*     g_memfile_pool();
-  CMemFileMap*            g_memfile_map();
+  std::shared_ptr<CMemFileThreadPool>     g_memfile_pool();
+  std::shared_ptr<CMemFileMap>            g_memfile_map();
 
 #endif
 
   // declaration of globally accessible variables
-  extern std::unique_ptr<CGlobals>     g_globals_ctx;
+  extern std::shared_ptr<CGlobals>     g_globals_ctx;
 
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;

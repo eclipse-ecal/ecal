@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,78 +37,101 @@ namespace eCAL
   {
     bool GetPublisherIDs(std::set<STopicId>& topic_ids_)
     {
-      if (g_descgate() == nullptr) return false;
-      topic_ids_ = std::move(g_descgate()->GetPublisherIDs());
-      return true;
+      auto descgate = g_descgate();
+      if (descgate) 
+      {
+        topic_ids_ = std::move(descgate->GetPublisherIDs());
+        return true;
+      }
+      
+      return false;
     }
 
     bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_)
     {
-      if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetPublisherInfo(id_, topic_info_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->GetPublisherInfo(id_, topic_info_);
+      return false;
     }
 
     CallbackToken AddPublisherEventCallback(const TopicEventCallbackT& callback_)
     {
-      if (g_descgate() == nullptr) return CallbackToken();
-      return g_descgate()->AddPublisherEventCallback(callback_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->AddPublisherEventCallback(callback_);
+      return CallbackToken();
     }
 
     void RemPublisherEventCallback(CallbackToken token_)
     {
-      if (g_descgate() == nullptr) return;
-      return g_descgate()->RemPublisherEventCallback(token_);
+      auto descgate = g_descgate();
+      if (descgate) descgate->RemPublisherEventCallback(token_);
     }
 
     bool GetSubscriberIDs(std::set<STopicId>& topic_ids_)
     {
-      if (g_descgate() == nullptr) return false;
-      topic_ids_ = std::move(g_descgate()->GetSubscriberIDs());
-      return true;
+      auto descgate = g_descgate();
+      if (descgate) 
+      {
+        topic_ids_ = std::move(descgate->GetSubscriberIDs());
+        return true;
+      }
+      return false;
     }
 
     bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_)
     {
-      if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetSubscriberInfo(id_, topic_info_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->GetSubscriberInfo(id_, topic_info_);
+      return false;
     }
 
     ECAL_API CallbackToken AddSubscriberEventCallback(const TopicEventCallbackT& callback_)
     {
-      if (g_descgate() == nullptr) return CallbackToken();
-      return g_descgate()->AddSubscriberEventCallback(callback_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->AddSubscriberEventCallback(callback_);
+      return CallbackToken();
     }
 
     void RemSubscriberEventCallback(CallbackToken token_)
     {
-      if (g_descgate() == nullptr) return;
-      return g_descgate()->RemSubscriberEventCallback(token_);
+      auto descgate = g_descgate();
+      if (descgate) descgate->RemSubscriberEventCallback(token_);
     }
 
     bool GetServerIDs(std::set<SServiceId>& service_ids_)
     {
-      if (g_descgate() == nullptr) return false;
-      service_ids_ = std::move(g_descgate()->GetServerIDs());
-      return true;
+      auto descgate = g_descgate();
+      if (descgate)
+      {
+        service_ids_ = std::move(descgate->GetServerIDs());
+        return true;
+      }
+      return false;
     }
 
     bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
-      if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetServerInfo(id_, service_info_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->GetServerInfo(id_, service_info_);
+      return false;
     }
 
     bool GetClientIDs(std::set<SServiceId>& service_ids_)
     {
-       if (g_descgate() == nullptr) return false;
-       service_ids_ = std::move(g_descgate()->GetClientIDs());
-       return true;
+      auto descgate = g_descgate();
+      if (descgate) 
+      {
+        service_ids_ = std::move(descgate->GetClientIDs());
+        return true;
+      }
+      return false;
     }
 
     bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_)
     {
-      if (g_descgate() == nullptr) return false;
-      return g_descgate()->GetClientInfo(id_, service_info_);
+      auto descgate = g_descgate();
+      if (descgate) return descgate->GetClientInfo(id_, service_info_);
+      return false;
     }
 
     bool GetPublishedTopicNames(std::set<std::string>& topic_names_)

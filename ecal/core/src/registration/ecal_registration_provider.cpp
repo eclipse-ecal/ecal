@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,20 +152,24 @@ namespace eCAL
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      if (g_subgate() != nullptr) g_subgate()->GetRegistrations(m_send_thread_sample_list);
+      auto subgate = g_subgate();
+      if (subgate) subgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      if (g_pubgate() != nullptr) g_pubgate()->GetRegistrations(m_send_thread_sample_list);
+      auto pubgate = g_pubgate();
+      if (pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      if (g_servicegate() != nullptr) g_servicegate()->GetRegistrations(m_send_thread_sample_list);
+      auto servicegate = g_servicegate();
+      if (servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
-      if (g_clientgate() != nullptr) g_clientgate()->GetRegistrations(m_send_thread_sample_list);
+      auto clientgate = g_clientgate();
+      if (clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +40,8 @@ namespace eCAL
     **/
     void Log(eLogLevel level_, const std::string& msg_)
     {
-      if(g_log_provider() != nullptr) g_log_provider()->Log(level_, msg_);
+      auto log_provider = g_log_provider();
+      if(log_provider) log_provider->Log(level_, msg_);
     }
 
     /**
@@ -51,9 +53,9 @@ namespace eCAL
     **/
     bool GetLogging(std::string& log_)
     {
-      if (g_log_udp_receiver() == nullptr)
-        return false;
-      return g_log_udp_receiver()->GetLogging(log_);
+      auto log_udp_receiver = g_log_udp_receiver();
+      if (log_udp_receiver) return log_udp_receiver->GetLogging(log_);
+      return false;
     }
 
     /**
@@ -65,9 +67,9 @@ namespace eCAL
     **/
     bool GetLogging(Logging::SLogging& log_)
     {
-      if (g_log_udp_receiver() == nullptr)
-        return false;
-      g_log_udp_receiver()->GetLogging(log_);
+      auto log_udp_receiver = g_log_udp_receiver();
+      if (!log_udp_receiver) return false;
+      log_udp_receiver->GetLogging(log_);
       return true;
     }
   }
