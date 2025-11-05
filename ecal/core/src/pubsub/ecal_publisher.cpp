@@ -46,6 +46,8 @@ namespace eCAL
 
     // create publisher implementation
     auto publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
+    if (!publisher_impl) return;
+    
     m_publisher_impl = publisher_impl;
 
     // register publisher
@@ -58,18 +60,16 @@ namespace eCAL
   {
     auto publisher_impl = m_publisher_impl.lock();
     // add event callback for all current event types
-    if (publisher_impl != nullptr) publisher_impl->SetEventCallback(event_callback_);
+    if (publisher_impl) publisher_impl->SetEventCallback(event_callback_);
   }
 
   CPublisher::~CPublisher()
   {
     auto publisher_impl = m_publisher_impl.lock();
-    // could be already destroyed by move
-    if (publisher_impl == nullptr) return;
 
     // unregister publisher
     auto pubgate = g_pubgate();
-    if (pubgate) pubgate->Unregister(publisher_impl->GetTopicName(), publisher_impl);
+    if (pubgate && publisher_impl) pubgate->Unregister(publisher_impl->GetTopicName(), publisher_impl);
   }
 
   CPublisher::CPublisher(CPublisher&& rhs) noexcept
@@ -98,7 +98,7 @@ namespace eCAL
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
     auto publisher_impl = m_publisher_impl.lock();
-    if (publisher_impl == nullptr) return false;
+    if (!publisher_impl) return false;
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all

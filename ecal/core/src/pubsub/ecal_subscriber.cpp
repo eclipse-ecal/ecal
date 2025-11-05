@@ -51,18 +51,16 @@ namespace eCAL
   {
     auto subscriber_impl = m_subscriber_impl.lock();
     // add event callback for all current event types
-    if (subscriber_impl != nullptr) subscriber_impl->SetEventCallback(event_callback_);
+    if (subscriber_impl) subscriber_impl->SetEventCallback(event_callback_);
   }
 
   CSubscriber::~CSubscriber()
   {
     auto subscriber_impl = m_subscriber_impl.lock();
-    // could be already destroyed by move
-    if (subscriber_impl == nullptr) return;
 
     // unregister subscriber
     auto subgate = g_subgate();
-    if (subgate) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
+    if (subgate && subscriber_impl) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept
