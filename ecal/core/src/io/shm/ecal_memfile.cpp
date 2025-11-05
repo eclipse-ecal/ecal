@@ -84,7 +84,6 @@ namespace eCAL
       m_header       = SInternalHeader();
 
       m_memfile_info = std::make_shared<SMemFileInfo>();
-      if (!m_memfile_info) return false;
 
       // create memory file
       if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
