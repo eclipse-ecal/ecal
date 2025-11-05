@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ namespace eCAL
 
     void Stop();
 
-    bool AddFile(const std::string& name_, bool create_, size_t len_, SMemFileInfo& mem_file_info_);
+    bool AddFile(const std::string& name_, bool create_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
     bool RemoveFile(const std::string& name_, bool remove_);
-    bool CheckFileSize(const std::string& name_, size_t len_, SMemFileInfo& mem_file_info_);
+    bool CheckFileSize(size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
 
   protected:
-    using MemFileMapT = std::unordered_map<std::string, SMemFileInfo>;
+    using MemFileMapT = std::unordered_map<std::string, std::shared_ptr<SMemFileInfo>>;
     std::mutex  m_memfile_map_mtx;
     MemFileMapT m_memfile_map;
   };
@@ -54,10 +54,10 @@ namespace eCAL
   {
     namespace db
     {
-      bool AddFile(const std::string& name_, bool create_, size_t len_, SMemFileInfo& mem_file_info_);
+      bool AddFile(const std::string& name_, bool create_, size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
       bool RemoveFile(const std::string& name_, bool remove_);
 
-      bool CheckFileSize(const std::string& name_, size_t len_, SMemFileInfo& mem_file_info_);
+      bool CheckFileSize(size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_);
     }
   }
 }

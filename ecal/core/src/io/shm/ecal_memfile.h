@@ -214,14 +214,14 @@ namespace eCAL
       read_access,
       write_access
     };
-    bool            m_created;
-    bool            m_auto_sanitizing;
-    bool            m_payload_initialized;
-    access_state    m_access_state;
-    std::string     m_name;
-    SInternalHeader m_header;
-    SMemFileInfo    m_memfile_info;
-    CNamedMutex     m_memfile_mutex;
+    bool                          m_created;
+    bool                          m_auto_sanitizing;
+    bool                          m_payload_initialized;
+    access_state                  m_access_state;
+    std::string                   m_name;
+    SInternalHeader               m_header;
+    std::shared_ptr<SMemFileInfo> m_memfile_info;
+    CNamedMutex                   m_memfile_mutex;
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction
