@@ -218,12 +218,12 @@ namespace eCAL
 
   size_t CMemoryFile::GetReadAddress(const void*& buf_, const size_t len_)
   {
-    if (!m_created)                                          return(0);
-    if (m_access_state != access_state::read_access)         return(0);
-    if (len_ == 0)                                           return(0);
-    if (len_ > static_cast<size_t>(m_header.cur_data_size))  return(0);
+    if (!m_created)                                              return(0);
+    if (m_access_state != access_state::read_access)             return(0);
+    if (len_ == 0)                                               return(0);
+    if (len_ > static_cast<size_t>(m_header.cur_data_size))      return(0);
     auto memfile_info = m_memfile_info;
-    if (!memfile_info || !memfile_info->mem_address)         return(0);
+    if (!memfile_info || (memfile_info->mem_address == nullptr)) return(0);
 
     // return read address
     buf_ = static_cast<char*>(memfile_info->mem_address) + m_header.int_hdr_size;
@@ -359,9 +359,9 @@ namespace eCAL
 
   bool CMemoryFile::GetAccess(int timeout_)
   {
-    if (!m_created)                                  return(false);
+    if (!m_created)                                              return(false);
     auto memfile_info = m_memfile_info;
-    if (!memfile_info || !memfile_info->mem_address) return(false);
+    if (!memfile_info || (memfile_info->mem_address == nullptr)) return(false);
 
     // lock mutex
     if(!m_memfile_mutex.Lock(timeout_))
