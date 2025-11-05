@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,19 +36,20 @@ namespace eCAL
   CServiceClient::CServiceClient(const std::string& service_name_, const ServiceMethodInformationSetT& method_information_set_, const ClientEventCallbackT& event_callback_)
   {
     // create client implementation
-    m_service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_set_, event_callback_);
-
+    auto service_client_impl = CServiceClientImpl::CreateInstance(service_name_, method_information_set_, event_callback_);
+    m_service_client_impl = service_client_impl;
     // register client
-    if (g_clientgate() != nullptr) g_clientgate()->Register(service_name_, m_service_client_impl);
+    if (g_clientgate() != nullptr) g_clientgate()->Register(service_name_, service_client_impl);
   }
 
   CServiceClient::~CServiceClient()
   {
+    auto service_client_impl = m_service_client_impl.lock();
     // could be already destroyed by move
-    if (m_service_client_impl == nullptr) return;
+    if (service_client_impl == nullptr) return;
 
     // unregister client
-    if (g_clientgate() != nullptr) g_clientgate()->Unregister(m_service_client_impl->GetServiceName(), m_service_client_impl);
+    if (g_clientgate() != nullptr) g_clientgate()->Unregister(service_client_impl->GetServiceName(), service_client_impl);
   }
 
   CServiceClient::CServiceClient(CServiceClient&& rhs) noexcept
@@ -66,14 +68,16 @@ namespace eCAL
 
   std::vector<CClientInstance> CServiceClient::GetClientInstances() const
   {
+    auto service_client_impl = m_service_client_impl.lock();
     std::vector<CClientInstance> instances;
-    if (m_service_client_impl == nullptr) return instances;
-
-    auto entity_ids = m_service_client_impl->GetServiceIDs();
-    instances.reserve(entity_ids.size());
-    for (const auto& entity_id : entity_ids)
+    if (service_client_impl) 
     {
-      instances.emplace_back(entity_id, m_service_client_impl);
+      auto entity_ids = service_client_impl->GetServiceIDs();
+      instances.reserve(entity_ids.size());
+      for (const auto& entity_id : entity_ids)
+      {
+        instances.emplace_back(entity_id, service_client_impl);
+      }
     }
     return instances;
   }
@@ -194,16 +198,18 @@ namespace eCAL
 
   const std::string& CServiceClient::GetServiceName() const
   {
+    auto service_client_impl = m_service_client_impl.lock();
     static const std::string empty_service_name{};
-    if (m_service_client_impl == nullptr) return empty_service_name;
-    return m_service_client_impl->GetServiceName();
+    if (service_client_impl) return service_client_impl->GetServiceName();
+    return empty_service_name;
   }
 
   const SServiceId& CServiceClient::GetServiceId() const
   {
+    auto service_client_impl = m_service_client_impl.lock();
     static const SServiceId empty_service_id{};
-    if (m_service_client_impl == nullptr) return empty_service_id;
-    return m_service_client_impl->GetServiceId();
+    if (service_client_impl) return service_client_impl->GetServiceId();
+    return empty_service_id;
   }
 
   bool CServiceClient::IsConnected() const

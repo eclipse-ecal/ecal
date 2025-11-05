@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,26 +45,29 @@ namespace eCAL
     config.publisher = config_;
 
     // create publisher implementation
-    m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
+    auto publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
+    m_publisher_impl = publisher_impl;
 
     // register publisher
-    if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, m_publisher_impl);
+    if (g_pubgate() != nullptr) g_pubgate()->Register(topic_name_, publisher_impl);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_) :
     CPublisher(topic_name_, data_type_info_, config_)
   {
+    auto publisher_impl = m_publisher_impl.lock();
     // add event callback for all current event types
-    m_publisher_impl->SetEventCallback(event_callback_);
+    if (publisher_impl != nullptr) publisher_impl->SetEventCallback(event_callback_);
   }
 
   CPublisher::~CPublisher()
   {
+    auto publisher_impl = m_publisher_impl.lock();
     // could be already destroyed by move
-    if (m_publisher_impl == nullptr) return;
+    if (publisher_impl == nullptr) return;
 
     // unregister publisher
-    if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
+    if (g_pubgate() != nullptr) g_pubgate()->Unregister(publisher_impl->GetTopicName(), publisher_impl);
   }
 
   CPublisher::CPublisher(CPublisher&& rhs) noexcept
@@ -73,9 +77,12 @@ namespace eCAL
 
   CPublisher& CPublisher::operator=(CPublisher&& rhs) noexcept
   {
-    // clean-up existing m_publisher_impl before swapping with rhs
-    if (g_pubgate() != nullptr) g_pubgate()->Unregister(m_publisher_impl->GetTopicName(), m_publisher_impl);
-    m_publisher_impl = nullptr;
+    {
+      auto publisher_impl = m_publisher_impl.lock();
+      // clean-up existing m_publisher_impl before swapping with rhs
+      auto pubgate = g_pubgate();
+      if (pubgate && publisher_impl) pubgate->Unregister(publisher_impl->GetTopicName(), publisher_impl);
+    }
     std::swap(m_publisher_impl, rhs.m_publisher_impl);
     return *this;
   }
@@ -88,7 +95,8 @@ namespace eCAL
 
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
   {
-    if (m_publisher_impl == nullptr) return false;
+    auto publisher_impl = m_publisher_impl.lock();
+    if (publisher_impl == nullptr) return false;
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
@@ -96,14 +104,14 @@ namespace eCAL
      // for the monitoring layer and return
     if (GetSubscriberCount() == 0)
     {
-      m_publisher_impl->RefreshSendCounter();
+      publisher_impl->RefreshSendCounter();
       // we return false here to indicate that we did not really send something
       return false;
     }
 
     // send content via data writer layer
     const long long write_time = (time_ == DEFAULT_TIME_ARGUMENT) ? eCAL::Time::GetMicroSeconds() : time_;
-    return m_publisher_impl->Write(payload_, write_time, 0);
+    return publisher_impl->Write(payload_, write_time, 0);
   }
 
   bool CPublisher::Send(const std::string& payload_, long long time_)
@@ -113,28 +121,32 @@ namespace eCAL
 
   size_t CPublisher::GetSubscriberCount() const
   {
-    if (m_publisher_impl == nullptr) return 0;
-    return(m_publisher_impl->GetSubscriberCount());
+    auto publisher_impl = m_publisher_impl.lock();
+    if (publisher_impl) return publisher_impl->GetSubscriberCount();
+    return 0;
   }
 
   const std::string& CPublisher::GetTopicName() const
   {
     static const std::string empty_topic_name{};
-    if (m_publisher_impl == nullptr) return empty_topic_name;
-    return(m_publisher_impl->GetTopicName());
+    auto publisher_impl = m_publisher_impl.lock();
+    if (publisher_impl) return publisher_impl->GetTopicName();
+    return empty_topic_name;
   }
 
   const STopicId& CPublisher::GetTopicId() const
   {
     static const STopicId empty_topic_id{};
-    if (m_publisher_impl == nullptr) return empty_topic_id;
-    return(m_publisher_impl->GetTopicId());
+    auto publisher_impl = m_publisher_impl.lock();
+    if (publisher_impl) return publisher_impl->GetTopicId();
+    return empty_topic_id;
   }
 
   const SDataTypeInformation& CPublisher::GetDataTypeInformation() const
   {
     static const SDataTypeInformation empty_data_type_information{};
-    if (m_publisher_impl == nullptr) return empty_data_type_information;
-    return(m_publisher_impl->GetDataTypeInformation());
+    auto publisher_impl = m_publisher_impl.lock();
+    if (publisher_impl) return publisher_impl->GetDataTypeInformation();
+    return empty_data_type_information;
   }
 }

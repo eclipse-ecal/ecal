@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,6 +127,6 @@ namespace eCAL
       bool IsConnected() const;
 
   private:
-    std::shared_ptr<CServiceServerImpl> m_service_server_impl;
+    std::weak_ptr<CServiceServerImpl> m_service_server_impl;
   };
 }
