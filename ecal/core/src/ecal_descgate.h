@@ -50,24 +50,24 @@ namespace eCAL
     void ApplySample(const Registration::Sample& sample_, eTLayerType layer_);
 
     // get publisher information
-    [[nodiscard]] std::set<STopicId> GetPublisherIDs() const;
-    [[nodiscard]] bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
+    std::set<STopicId> GetPublisherIDs() const;
+    bool GetPublisherInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
     Registration::CallbackToken AddPublisherEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemPublisherEventCallback(Registration::CallbackToken token_);
 
     // get subscriber information
-    [[nodiscard]] std::set<STopicId> GetSubscriberIDs() const;
-    [[nodiscard]] bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
+    std::set<STopicId> GetSubscriberIDs() const;
+    bool GetSubscriberInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
     Registration::CallbackToken AddSubscriberEventCallback(const Registration::TopicEventCallbackT& callback_);
     void RemSubscriberEventCallback(Registration::CallbackToken token_);
 
     // get service information
-    [[nodiscard]] std::set<SServiceId> GetServerIDs() const;
-    [[nodiscard]] bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const;
+    std::set<SServiceId> GetServerIDs() const;
+    bool GetServerInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const;
 
     // get client information
-    [[nodiscard]] std::set<SServiceId> GetClientIDs() const;
-    [[nodiscard]] bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const;
+    std::set<SServiceId> GetClientIDs() const;
+    bool GetClientInfo(const SServiceId& id_, ServiceMethodInformationSetT& service_info_) const;
 
     // delete copy/move
     CDescGate(const CDescGate&) = delete;
@@ -96,8 +96,8 @@ namespace eCAL
         const Registration::Sample& sample_,
         const std::function<void(const STopicId&)>& on_erased_topic);
 
-      [[nodiscard]] std::set<STopicId> GetIDs() const;
-      [[nodiscard]] bool GetInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
+      std::set<STopicId> GetIDs() const;
+      bool GetInfo(const STopicId& id_, SDataTypeInformation& topic_info_) const;
     };
 
     class CollectedServiceInfo
@@ -120,8 +120,8 @@ namespace eCAL
 
       void UnregisterSample(const Registration::Sample& sample_c);
 
-      [[nodiscard]] std::set<SServiceId> GetIDs() const;
-      [[nodiscard]] bool GetInfo(const SServiceId& id_, ServiceMethodInformationSetT& topic_info_) const;
+      std::set<SServiceId> GetIDs() const;
+      bool GetInfo(const SServiceId& id_, ServiceMethodInformationSetT& topic_info_) const;
     };
 
     using TopicEventCallbackMap = std::map<Registration::CallbackToken, Registration::TopicEventCallbackT>;
