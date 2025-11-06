@@ -51,7 +51,7 @@ EcalrecGuiClient::EcalrecGuiClient(QWidget *parent)
             //}
             this->updateClientListTreeWidget();
           });
-  recorder_service_poll_timer_->start(std::chrono::milliseconds(500));
+  recorder_service_poll_timer_->start(500);
 }
 
 EcalrecGuiClient::~EcalrecGuiClient()
