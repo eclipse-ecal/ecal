@@ -217,14 +217,14 @@ namespace eCAL
       return m_publisher_impl->SetDataTypeInformation(data_type_info_);
     }
 
-    bool CPublisher::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+    bool CPublisher::SetAttribute(const std::string&, const std::string&)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::SetAttribute - Setting publisher attributes no longer has an effect.");
       return false;
     }
 
-    bool CPublisher::ClearAttribute(const std::string& attr_name_)
+    bool CPublisher::ClearAttribute(const std::string&)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::ClearAttribute - Clear publisher attributes no longer has an effect.");
