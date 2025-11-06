@@ -186,7 +186,7 @@ ecal_install_library(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER core)
 
-
+if (ECAL_CORE_GENERATE_PBFTAGS)
 add_library(core_pbftags INTERFACE)
 add_library(eCAL::core_pbftags ALIAS core_pbftags)
 
@@ -202,3 +202,4 @@ target_link_libraries(core_pbftags INTERFACE protozero::protozero)
 # eCAL core needs to depend on this target, if available. 
 # In SDK builds only, we rely on checked in files instead
 add_dependencies(ecal_core_serialization core_pbftags_copies)
+endif()

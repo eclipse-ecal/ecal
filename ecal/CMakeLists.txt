@@ -27,7 +27,9 @@ add_subdirectory(core)
 
 if(ECAL_CORE_USE_PROTOBUF)
   add_subdirectory(core_pb)
-  add_subdirectory(protoc_gen_pbftags)
+  if (ECAL_CORE_GENERATE_PBFTAGS)
+    add_subdirectory(protoc_gen_pbftags)
+  endif()
 endif()
 
 # --------------------------------------------------------

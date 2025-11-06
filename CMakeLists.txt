@@ -209,6 +209,11 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                     "Use native mutex with monot
 # ecal core configuration
 # --------------------------------------------------------
 set(ECAL_CORE_USE_PROTOBUF                                                                                              ON)
+if (CMAKE_CROSSCOMPILING)
+set(ECAL_CORE_GENERATE_PBFTAGS                                                                                         OFF)
+else()
+set(ECAL_CORE_GENERATE_PBFTAGS                                                                                          ON)
+endif()
 set(ECAL_CORE_BUILD_SAMPLES                                                                          ${ECAL_BUILD_SAMPLES})
 set(ECAL_CORE_BUILD_TESTS                                                                              ${ECAL_BUILD_TESTS})
 set(ECAL_CORE_CONFIGURATION                                                                                             ON)
