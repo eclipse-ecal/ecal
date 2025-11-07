@@ -217,7 +217,7 @@ namespace eCAL
       return m_publisher_impl->SetDataTypeInformation(data_type_info_);
     }
 
-    bool CPublisher::SetAttribute(const std::string& /*attr_name*/, const std::string& /*attr_value*/)
+    bool CPublisher::SetAttribute(const std::string& /*attr_name_*/, const std::string& /*attr_value_*/)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::SetAttribute - Setting publisher attributes no longer has an effect.");
