@@ -213,14 +213,14 @@ namespace eCAL
       return(true);
     }
 
-    bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+    bool CSubscriber::SetAttribute(const std::string& /*attr_name_*/, const std::string& /*attr_value_*/)
     {
       if (m_subscriber_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
       return false;
     }
 
-    bool CSubscriber::ClearAttribute(const std::string& attr_name_)
+    bool CSubscriber::ClearAttribute(const std::string& /*attr_name_*/)
     {
       if (m_subscriber_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
