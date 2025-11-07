@@ -213,7 +213,7 @@ namespace eCAL
       return(true);
     }
 
-    bool CSubscriber::SetAttribute(const std::string&, const std::string&)
+    bool CSubscriber::SetAttribute(const std::string& /*attr_name_*/, const std::string& /*attr_value_*/)
     {
       if (m_subscriber_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
