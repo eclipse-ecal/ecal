@@ -224,7 +224,7 @@ namespace eCAL
       return false;
     }
 
-    bool CPublisher::ClearAttribute(const std::string&)
+    bool CPublisher::ClearAttribute(const std::string& /*attr_name_*/)
     {
       if(m_publisher_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_publisher_impl->GetTopicName() + "::CPublisher::ClearAttribute - Clear publisher attributes no longer has an effect.");
