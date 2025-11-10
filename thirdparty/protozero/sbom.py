@@ -17,11 +17,11 @@ def get_sbom():
                                                             ecal_license_utils.include_type.PYTHON_BINDINGS,
                                                         ]
     sbom[component_name]["path"] =                      component_dir
-    sbom[component_name]["license"] =                   "BSD-3-Clause"
+    sbom[component_name]["license"] =                   "BSD-2-Clause"
     sbom[component_name]["license_files"] =             [
                                                             os.path.join(sbom[component_name]["path"], "LICENSE.md"),
                                                         ]
-    sbom[component_name]["thirdparty_license_files"] =  []
+    sbom[component_name]["thirdparty_license_files"] =  ["LICENSE.from_folly"]
     sbom[component_name]["copyright"] =                 ecal_license_utils.get_copyright_from_file(sbom[component_name]["license_files"][0])
     sbom[component_name]["homepage"] =                  "https://github.com/mapbox/protozero"
     sbom[component_name]["repo_url"] =                  ecal_license_utils.get_repo_url_from_submodule(component_dir)
