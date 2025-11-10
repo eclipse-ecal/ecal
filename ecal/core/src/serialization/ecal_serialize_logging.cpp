@@ -452,11 +452,19 @@ namespace eCAL
   
     bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::SLogMessage& target_sample_)
     {
-      // @todo what about clearing the objects? do we expect empty objects?
-      target_sample_ = Logging::SLogMessage{};
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeLogMessage(message, target_sample_);
-      return true;
+      try
+      {
+        // @todo what about clearing the objects? do we expect empty objects?
+        target_sample_ = Logging::SLogMessage{};
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializeLogMessage(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Logging::SLogMessage");
+        return false;
+      }
     }
   
     // log message list - serialize/deserialize
@@ -478,11 +486,19 @@ namespace eCAL
   
     bool DeserializeFromBuffer(const char* data_, size_t size_, Logging::SLogging& target_sample_)
     {
-      // @todo what about clearing the objects? do we expect empty objects?
-      target_sample_ = Logging::SLogging{};
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeLogMessageList(message, target_sample_);
-      return true;
+      try
+      {
+        // @todo what about clearing the objects? do we expect empty objects?
+        target_sample_ = Logging::SLogging{};
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializeLogMessageList(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Logging::SLogging");
+        return false;
+      }
     }
   }
 }

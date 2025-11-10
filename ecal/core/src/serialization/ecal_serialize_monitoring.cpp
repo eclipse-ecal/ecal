@@ -1431,9 +1431,17 @@ namespace eCAL
   
     bool DeserializeFromBuffer(const char* data_, size_t size_, Monitoring::SMonitoring& monitoring_)
     {
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeMonitoring(message, monitoring_);
-      return true;
+      try
+      {
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializeMonitoring(message, monitoring_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Monitoring::SMonitoring");
+        return false;
+      }
     }
   }
 }

@@ -29,6 +29,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "ecal_serialize_common.h"
 
@@ -403,4 +404,11 @@ namespace eCAL
       pb_callback.arg = &method_vec;
     }
   }
+}
+
+
+void eCAL::protozero::LogDeserializationException(const std::exception& exception, const std::string& context)
+{
+  std::cerr << "Exception thrown when deserializing protobuf data " << context << "\n";
+  std::cerr << exception.what() << "\n";
 }

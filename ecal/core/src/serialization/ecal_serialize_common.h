@@ -104,6 +104,8 @@ namespace eCAL
       }
       return true;
     }
+
+    void LogDeserializationException(const std::exception& exception, const std::string& context);
   }
 }
 

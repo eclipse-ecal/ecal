@@ -474,10 +474,18 @@ namespace eCAL
 
     bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Request& target_sample_)
     {
-      target_sample_.clear();
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeServiceRequest(message, target_sample_);
-      return true;
+      try
+      {
+        target_sample_.clear();
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializeServiceRequest(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Service::Request");
+        return false;
+      }
     }
 
     // service response - serialize/deserialize
@@ -499,10 +507,18 @@ namespace eCAL
 
     bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Response& target_sample_)
     {
-      target_sample_.clear();
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeServiceResponse(message, target_sample_);
-      return true;
+      try
+      {
+        target_sample_.clear();
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializeServiceResponse(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Service::Response");
+        return false;
+      }
     }
   }
 }

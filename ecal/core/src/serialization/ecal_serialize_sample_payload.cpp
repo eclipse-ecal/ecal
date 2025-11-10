@@ -382,11 +382,19 @@ namespace eCAL
   
     bool DeserializeFromBuffer(const char* data_, size_t size_, Payload::Sample& target_sample_)
     {
-      // @todo we clear the target sample before deserialization, but Payload::Sample doesn't have a clear function
-      // we should check this;
-      ::protozero::pbf_reader message{ data_, size_ };
-      DeserializePayloadSample(message, target_sample_);
-      return true;
+      try
+      {
+        // @todo we clear the target sample before deserialization, but Payload::Sample doesn't have a clear function
+        // we should check this;
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializePayloadSample(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Payload::Sample");
+        return false;
+      }
     }
   }
 }

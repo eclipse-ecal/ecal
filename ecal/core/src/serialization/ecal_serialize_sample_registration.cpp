@@ -1377,10 +1377,18 @@ namespace protozero
   
   bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::Sample& target_sample_)
   {
-    target_sample_.clear();
-    ::protozero::pbf_reader message{ data_, size_ };
-    DeserializeRegistrationSample(message, target_sample_);
-    return true;
+    try
+    {
+      target_sample_.clear();
+      ::protozero::pbf_reader message{ data_, size_ };
+      DeserializeRegistrationSample(message, target_sample_);
+      return true;
+    }
+    catch (const std::exception& exception)
+    {
+      LogDeserializationException(exception, "eCAL::Registration::Sample");
+      return false;
+    }
   }
   
   bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
@@ -1401,10 +1409,18 @@ namespace protozero
   
   bool DeserializeFromBuffer(const char* data_, size_t size_, ::eCAL::Registration::SampleList& target_sample_list_)
   {
-    target_sample_list_.clear();
-    ::protozero::pbf_reader message{ data_, size_ };
-    DeserializeRegistrationSampleList(message, target_sample_list_);
-    return true;
+    try
+    {
+      target_sample_list_.clear();
+      ::protozero::pbf_reader message{ data_, size_ };
+      DeserializeRegistrationSampleList(message, target_sample_list_);
+      return true;
+    }
+    catch (const std::exception& exception)
+    {
+      LogDeserializationException(exception, "eCAL::Registration::SampleList");
+      return false;
+    }
   }
 }
 }
