@@ -1,0 +1,2 @@
+# Force LF line endings for all files ending with pbftag.h
+*.pbftags.h text eol=lf
