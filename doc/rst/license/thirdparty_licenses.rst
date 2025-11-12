@@ -128,6 +128,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - BSD-3-Clause
 
+   * - :ref:`protozero <thirdparty_licenses_protozero>`
+
+     - Copyright (C) 2022, Mapbox.   All rights reserved.
+
+     - BSD-2-Clause
+
    * - :ref:`Qt <thirdparty_licenses_qt>`
 
      - The Qt Company Ltd.
@@ -233,6 +239,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
    thirdparty_licenses/pcapplusplus
 
    thirdparty_licenses/protobuf
+
+   thirdparty_licenses/protozero
 
    thirdparty_licenses/qt
 
