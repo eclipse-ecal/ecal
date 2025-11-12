@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-#
+# 
 #      http://www.apache.org/licenses/LICENSE-2.0
-#
+# 
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,36 +16,29 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.15)
 
-project(ecal_benchmark_internal)
+#Unfortunately, protozero currently does not support targets, so we will define them
 
-add_executable(ecal_benchmark_descgate
- benchmark_descgate.cpp
- ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_descgate.cpp
+include_guard(GLOBAL)
+
+include(GNUInstallDirs)
+add_library(protozero INTERFACE EXCLUDE_FROM_ALL)
+target_include_directories(protozero INTERFACE 
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/protozero/include>
+)
+add_library(protozero::protozero ALIAS protozero)
+
+# We don't want to install protozero. However we need to have the commands
+# Otherwise CMake will not be happy
+install(
+  TARGETS protozero
+  EXPORT protozeroTargets
 )
 
-target_include_directories(ecal_benchmark_descgate
-  PRIVATE
-    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+install(
+  EXPORT protozeroTargets 
+  FILE protozeroTargets.cmake 
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+  NAMESPACE protozero::
+  COMPONENT protozero_dev
 )
-
-target_link_libraries(ecal_benchmark_descgate
-  PRIVATE
-    benchmark::benchmark
-)
-
-target_compile_features(ecal_benchmark_descgate PRIVATE cxx_std_14)
-
-add_executable(ecal_benchmark_serialization
-  benchmark_serialization.cpp
-)
-
-target_link_libraries(ecal_benchmark_serialization
-  PRIVATE
-    benchmark::benchmark
-    ecal_core_serialization
-    generate_serialization_test_data
-)
-
-target_compile_features(ecal_benchmark_serialization PRIVATE cxx_std_14)

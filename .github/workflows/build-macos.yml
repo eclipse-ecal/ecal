@@ -46,6 +46,7 @@ jobs:
           thirdparty/qwt/qwt \
           thirdparty/recycle/recycle \
           thirdparty/spdlog/spdlog \
+          thirdparty/protozero/protozero \
           thirdparty/tclap/tclap \
           thirdparty/tcp_pubsub/tcp_pubsub \
           thirdparty/termcolor/termcolor \

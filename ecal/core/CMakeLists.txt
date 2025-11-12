@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,6 +42,7 @@ project(core VERSION ${eCAL_VERSION_STRING})
 find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
+find_package(protozero        REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
@@ -87,6 +89,87 @@ if(UNIX)
 endif()
 
 macro(add_ecal_core_library TARGET_NAME)
+
+
+add_library(ecal_core_serialization OBJECT)
+target_sources(ecal_core_serialization 
+  PUBLIC
+    src/serialization/ecal_serialize_logging.h
+    src/serialization/ecal_serialize_monitoring.h
+    src/serialization/ecal_serialize_sample_payload.h
+    src/serialization/ecal_serialize_sample_registration.h
+    src/serialization/ecal_serialize_service.h
+    src/serialization/ecal_struct_sample_common.h
+    src/serialization/ecal_struct_sample_payload.h
+    src/serialization/ecal_struct_sample_registration.h
+    src/serialization/ecal_struct_service.h
+  PRIVATE
+    src/serialization/nanopb/pb.h
+    src/serialization/nanopb/pb_common.c
+    src/serialization/nanopb/pb_common.h
+    src/serialization/nanopb/pb_decode.c
+    src/serialization/nanopb/pb_decode.h
+    src/serialization/nanopb/pb_encode.c
+    src/serialization/nanopb/pb_encode.h
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
+    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
+    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
+    src/serialization/nanopb/ecal/core/pb/host.npb.c
+    src/serialization/nanopb/ecal/core/pb/host.npb.h
+    src/serialization/nanopb/ecal/core/pb/layer.npb.c
+    src/serialization/nanopb/ecal/core/pb/layer.npb.h
+    src/serialization/nanopb/ecal/core/pb/logging.npb.c
+    src/serialization/nanopb/ecal/core/pb/logging.npb.h
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
+    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
+    src/serialization/nanopb/ecal/core/pb/process.npb.c
+    src/serialization/nanopb/ecal/core/pb/process.npb.h
+    src/serialization/nanopb/ecal/core/pb/service.npb.c
+    src/serialization/nanopb/ecal/core/pb/service.npb.h
+    src/serialization/nanopb/ecal/core/pb/topic.npb.c
+    src/serialization/nanopb/ecal/core/pb/topic.npb.h
+    src/serialization/protozero/ecal_helper.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/datatype.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/ecal.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/host.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/layer.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/logging.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/monitoring.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/process.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/service.pbftags.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/topic.pbftags.h
+    src/serialization/ecal_serialize_common.cpp
+    src/serialization/ecal_serialize_common.h
+    src/serialization/ecal_serialize_logging.cpp
+    src/serialization/ecal_serialize_monitoring.cpp
+    src/serialization/ecal_serialize_sample_payload.cpp
+    src/serialization/ecal_serialize_sample_registration.cpp
+    src/serialization/ecal_serialize_service.cpp
+)
+
+target_include_directories(ecal_core_serialization
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero>
+)
+
+target_link_libraries(ecal_core_serialization 
+  PRIVATE
+    protozero::protozero
+)
+
+set_target_properties(ecal_core_serialization PROPERTIES 
+  POSITION_INDEPENDENT_CODE ON  
+  FOLDER core
+)
+
+
+
 ######################################
 # config
 ######################################
@@ -360,47 +443,7 @@ endif()
 # serialization
 ######################################
 set(ecal_serialization_src
-    src/serialization/nanopb/pb.h
-    src/serialization/nanopb/pb_common.c
-    src/serialization/nanopb/pb_common.h
-    src/serialization/nanopb/pb_decode.c
-    src/serialization/nanopb/pb_decode.h
-    src/serialization/nanopb/pb_encode.c
-    src/serialization/nanopb/pb_encode.h
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
-    src/serialization/nanopb/ecal/core/pb/host.npb.c
-    src/serialization/nanopb/ecal/core/pb/host.npb.h
-    src/serialization/nanopb/ecal/core/pb/layer.npb.c
-    src/serialization/nanopb/ecal/core/pb/layer.npb.h
-    src/serialization/nanopb/ecal/core/pb/logging.npb.c
-    src/serialization/nanopb/ecal/core/pb/logging.npb.h
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
-    src/serialization/nanopb/ecal/core/pb/process.npb.c
-    src/serialization/nanopb/ecal/core/pb/process.npb.h
-    src/serialization/nanopb/ecal/core/pb/service.npb.c
-    src/serialization/nanopb/ecal/core/pb/service.npb.h
-    src/serialization/nanopb/ecal/core/pb/topic.npb.c
-    src/serialization/nanopb/ecal/core/pb/topic.npb.h
-    src/serialization/ecal_serialize_common.cpp
-    src/serialization/ecal_serialize_common.h
-    src/serialization/ecal_serialize_logging.cpp
-    src/serialization/ecal_serialize_logging.h
-    src/serialization/ecal_serialize_monitoring.cpp
-    src/serialization/ecal_serialize_monitoring.h
-    src/serialization/ecal_serialize_sample_payload.cpp
-    src/serialization/ecal_serialize_sample_payload.h
-    src/serialization/ecal_serialize_sample_registration.cpp
-    src/serialization/ecal_serialize_sample_registration.h
-    src/serialization/ecal_serialize_service.cpp
-    src/serialization/ecal_serialize_service.h
-    src/serialization/ecal_struct_sample_common.h
-    src/serialization/ecal_struct_sample_payload.h
-    src/serialization/ecal_struct_sample_registration.h
-    src/serialization/ecal_struct_service.h
+
 )
 
 ######################################
@@ -721,8 +764,6 @@ target_link_libraries(${TARGET_NAME}
 target_include_directories(${TARGET_NAME}
   PRIVATE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -745,6 +786,7 @@ target_link_libraries(${TARGET_NAME}
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
+    ecal_core_serialization
 )
 
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)

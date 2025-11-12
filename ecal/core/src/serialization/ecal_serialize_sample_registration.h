@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +33,29 @@
 
 namespace eCAL
 {
-  // registration sample - serialize/deserialize
-  bool SerializeToBuffer     (const Registration::Sample& registration_sample_, std::vector<char>& target_buffer_);
-  bool SerializeToBuffer     (const Registration::Sample& source_sample_, std::string& target_buffer_);
-  bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::Sample& target_sample_);
+  namespace nanopb
+  {
+    // registration sample - serialize/deserialize
+    bool SerializeToBuffer     (const Registration::Sample& registration_sample_, std::vector<char>& target_buffer_);
+    bool SerializeToBuffer     (const Registration::Sample& source_sample_, std::string& target_buffer_);
+    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::Sample& target_sample_);
+  
+    // registration sample list - serialize/deserialize
+    bool SerializeToBuffer     (const Registration::SampleList& registration_sample_, std::vector<char>& target_buffer_);
+    bool SerializeToBuffer     (const Registration::SampleList& source_sample_list_, std::string& target_buffer_);
+    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::SampleList& target_sample_);
+  }
 
-  // registration sample list - serialize/deserialize
-  bool SerializeToBuffer     (const Registration::SampleList& registration_sample_, std::vector<char>& target_buffer_);
-  bool SerializeToBuffer     (const Registration::SampleList& source_sample_list_, std::string& target_buffer_);
-  bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::SampleList& target_sample_);
+  inline namespace protozero
+  {
+    // registration sample - serialize/deserialize
+    bool SerializeToBuffer     (const Registration::Sample& registration_sample_, std::vector<char>& target_buffer_);
+    bool SerializeToBuffer     (const Registration::Sample& source_sample_, std::string& target_buffer_);
+    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::Sample& target_sample_);
+  
+    // registration sample list - serialize/deserialize
+    bool SerializeToBuffer     (const Registration::SampleList& registration_sample_, std::vector<char>& target_buffer_);
+    bool SerializeToBuffer     (const Registration::SampleList& source_sample_list_, std::string& target_buffer_);
+    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::SampleList& target_sample_);
+  }
 }

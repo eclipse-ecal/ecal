@@ -2,6 +2,7 @@
 # available (optional) thirdparty dependencies
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_USE_PROTOBUF                            "Protobuf library is available, eCAL protobuf support will be enabled"                                  ON)
+option(ECAL_CORE_GENERATE_PBFTAGS                        "Regenerate pbftags from proto files"                                                                   ON)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # additional builds (adapt to your needs)

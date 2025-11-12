@@ -16,36 +16,16 @@
 #
 # ========================= eCAL LICENSE =================================
 
-cmake_minimum_required(VERSION 3.15)
+find_package(Protobuf REQUIRED)
 
-project(ecal_benchmark_internal)
-
-add_executable(ecal_benchmark_descgate
- benchmark_descgate.cpp
- ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_descgate.cpp
-)
-
-target_include_directories(ecal_benchmark_descgate
+add_executable(protoc-gen-pbftags)
+target_sources(protoc-gen-pbftags
   PRIVATE
-    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+    main.cpp
 )
-
-target_link_libraries(ecal_benchmark_descgate
+target_link_libraries(protoc-gen-pbftags
   PRIVATE
-    benchmark::benchmark
+    protobuf::libprotoc protobuf::libprotobuf
 )
 
-target_compile_features(ecal_benchmark_descgate PRIVATE cxx_std_14)
-
-add_executable(ecal_benchmark_serialization
-  benchmark_serialization.cpp
-)
-
-target_link_libraries(ecal_benchmark_serialization
-  PRIVATE
-    benchmark::benchmark
-    ecal_core_serialization
-    generate_serialization_test_data
-)
-
-target_compile_features(ecal_benchmark_serialization PRIVATE cxx_std_14)
+set_property(TARGET protoc-gen-pbftags PROPERTY FOLDER core)

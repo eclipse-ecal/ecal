@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "ecal_serialize_common.h"
 
@@ -403,4 +405,11 @@ namespace eCAL
       pb_callback.arg = &method_vec;
     }
   }
+}
+
+
+void eCAL::protozero::LogDeserializationException(const std::exception& exception, const std::string& context)
+{
+  std::cerr << "Exception thrown when deserializing protobuf data " << context << "\n";
+  std::cerr << exception.what() << "\n";
 }

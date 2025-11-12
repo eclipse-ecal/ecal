@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +28,9 @@ add_subdirectory(core)
 
 if(ECAL_CORE_USE_PROTOBUF)
   add_subdirectory(core_pb)
+  if (ECAL_CORE_GENERATE_PBFTAGS)
+    add_subdirectory(protoc_gen_pbftags)
+  endif()
 endif()
 
 # --------------------------------------------------------
