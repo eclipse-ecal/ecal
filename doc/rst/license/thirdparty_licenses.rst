@@ -134,6 +134,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - BSD-2-Clause
 
+       *(+ 1 thirdparty license files)*
+
    * - :ref:`Qt <thirdparty_licenses_qt>`
 
      - The Qt Company Ltd.
