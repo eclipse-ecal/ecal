@@ -558,7 +558,7 @@ if(ECAL_BUILD_TESTS)
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (ECAL_USE_HDF5 AND ECAL_USE_QT)
+  if (ECAL_BUILD_APPS AND ECAL_USE_HDF5 AND ECAL_USE_QT)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
