@@ -57,3 +57,12 @@ License Files
 
 .. literalinclude:: protozero/LICENSE.md
   :language: none
+
+Thirdparty Licenses
+===================
+
+:file:`LICENSE.from_folly`
+--------------------------------------------------------------------------------
+
+.. literalinclude:: protozero/thirdparty/LICENSE.from_folly
+  :language: none
