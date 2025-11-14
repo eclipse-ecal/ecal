@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -191,6 +191,42 @@ TEST(core_cpp_core, ExpMap_Insert)
   expmap.erase_expired();
   EXPECT_EQ(0, expmap.size());
 }
+
+/*
+* Check the update function:
+* Insert
+* Sleep 100ms -> no expiration
+* Update
+* Sleep 150ms -> no expiration
+* Sleep 100ms -> expiration
+*/
+TEST(core_cpp_core, ExpMap_Update)
+{
+  eCAL::Util::CExpirationMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
+  auto ret = expmap.insert(std::make_pair("A", 1));
+
+  TestingClock::increment_time(std::chrono::milliseconds(100));
+
+  expmap.erase_expired();
+  EXPECT_EQ(1, expmap.size());
+
+  {
+    auto iterator = expmap.find("A");
+    ASSERT_NE(iterator, expmap.end());
+    expmap.update(iterator);
+  }
+
+  TestingClock::increment_time(std::chrono::milliseconds(150));
+  
+  expmap.erase_expired();
+  EXPECT_EQ(1, expmap.size());
+
+  TestingClock::increment_time(std::chrono::milliseconds(100));
+
+  expmap.erase_expired();
+  EXPECT_EQ(0, expmap.size());
+}
+
 
 // This tests uses find to find an element
 TEST(core_cpp_core, ExpMap_Find)
