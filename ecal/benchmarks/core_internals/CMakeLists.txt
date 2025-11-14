@@ -37,6 +37,27 @@ target_link_libraries(ecal_benchmark_descgate
 
 target_compile_features(ecal_benchmark_descgate PRIVATE cxx_std_14)
 
+
+
+add_executable(ecal_benchmark_expired_map
+  benchmark_expired_map.cpp
+)
+
+target_include_directories(ecal_benchmark_expired_map
+  PRIVATE
+    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+)
+
+target_link_libraries(ecal_benchmark_expired_map
+  PRIVATE
+    benchmark::benchmark   
+    generate_serialization_test_data
+)
+
+target_compile_features(ecal_benchmark_expired_map PRIVATE cxx_std_14)
+
+
+
 add_executable(ecal_benchmark_serialization
   benchmark_serialization.cpp
 )

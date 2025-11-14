@@ -361,3 +361,15 @@ namespace eCAL
     using SampleList = Util::CExpandingVector<Sample>;
   }
 }
+
+namespace std
+{
+  template<>
+  class hash<eCAL::Registration::SampleIdentifier> {
+  public:
+    size_t operator()(const eCAL::Registration::SampleIdentifier& identifier) const
+    {
+      return static_cast<size_t>(identifier.entity_id);
+    }
+  };
+}

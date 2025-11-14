@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,19 +60,9 @@ namespace eCAL
     template<class Key,
       class T,
       class ClockType = std::chrono::steady_clock,
-      class Compare = std::less<Key>,
-      class Alloc   = std::allocator<std::pair<const Key, T> > >
+      template<class, class, class...> class MapType = std::map>
     class CExpirationMap
     {
-    public:
-      // Type declarations necessary to be compliant to a regular map.
-      using allocator_type  = Alloc;
-      using value_type      = std::pair<const Key, T>;
-      using reference       = typename Alloc::reference;
-      using size_type       = typename Alloc::size_type;
-      using key_type        = Key;
-      using mapped_type     = T;
-
     private:
       struct AccessTimestampListEntry
       {
@@ -90,9 +80,16 @@ namespace eCAL
       };
 
       // Key to value and key history iterator 
-      using InternalMapType = std::map<Key, InternalMapEntry>;
+      using InternalMapType = MapType<Key, InternalMapEntry>;
 
     public:
+      // Type declarations necessary to be compliant to a regular map.
+      using allocator_type = typename InternalMapType::allocator_type;
+      using value_type = std::pair<const Key, T>;
+      using reference = typename InternalMapType::reference;
+      using size_type = typename InternalMapType::size_type;
+      using key_type = Key;
+      using mapped_type = T;
 
       class iterator
       {
@@ -129,6 +126,11 @@ namespace eCAL
         //friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
         bool operator==(const iterator& rhs) const { return it == rhs.it; }
         bool operator!=(const iterator& rhs) const { return it != rhs.it; }
+
+        operator typename InternalMapType::iterator()
+        {
+          return it;
+        }
 
       private:
         typename InternalMapType::iterator it;
@@ -268,12 +270,12 @@ namespace eCAL
 
       mapped_type& at(const key_type& k)
       {
-        return _internal_map.at(k).first;
+        return _internal_map.at(k).map_value;
       }
 
       const mapped_type& at(const key_type& k) const
       {
-        return _internal_map.at(k).first;
+        return _internal_map.at(k).map_value;
       }
 
       // Modifiers
@@ -336,6 +338,11 @@ namespace eCAL
       {
         _internal_map.clear(); // erase all elements from the map 
         _access_timestamps_list.clear();  // erase all elements from the list
+      }
+
+      void update(iterator element)
+      {
+        update_timestamp(element);
       }
 
     private:
