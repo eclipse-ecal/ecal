@@ -60,7 +60,7 @@ protected:
 
   void wait_disc() const
   {
-    std::this_thread::sleep_for(200ms);
+    std::this_thread::sleep_for(300ms);
   }
 };
 
@@ -87,7 +87,7 @@ TEST_F(core_cpp_pubsub_event, PublisherCallback_TopicIdsMatchSubscribers)
       wait_disc();
       CSubscriber sub3("MyTopic");  expected_ids.insert(sub3.GetTopicId());
       wait_disc();
-      //wait_disc();
+      wait_disc();
     }
     wait_disc();
   } // destroy also Publisher
