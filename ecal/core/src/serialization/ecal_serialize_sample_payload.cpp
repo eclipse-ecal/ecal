@@ -283,16 +283,20 @@ namespace
       switch (reader.tag())
       {
       case +eCAL::pb::Topic::optional_string_topic_name:
-        topic_info.topic_name = reader.get_string();
+        AssignString(reader, topic_info.topic_name);
         break;
       case +eCAL::pb::Topic::optional_string_topic_id:
-        topic_info.topic_id = std::stoull(reader.get_string());
+        {
+          static thread_local std::string topic_id_string;
+          AssignString(reader, topic_id_string);
+          topic_info.topic_id = std::stoull(topic_id_string);
+        }
         break;
       case +eCAL::pb::Topic::optional_int32_process_id:
         topic_info.process_id = reader.get_int32();
         break;
       case +eCAL::pb::Topic::optional_string_host_name:
-        topic_info.host_name = reader.get_string();
+        AssignString(reader, topic_info.host_name);
         break;
       default:
         reader.skip();

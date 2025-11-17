@@ -965,7 +965,7 @@ namespace{
         target_sample_.state_severity_level = reader.get_int32();
         break;
       case +eCAL::pb::ProcessState::optional_string_info:
-        target_sample_.state_info = reader.get_string();
+        AssignString(reader, target_sample_.state_info);
         break;
       }
     }
@@ -1005,22 +1005,22 @@ namespace{
         target_sample_.registration_clock = reader.get_int32();
         break;
       case +eCAL::pb::Process::optional_string_host_name:
-        target_sample_.host_name = reader.get_string();
+        AssignString(reader, target_sample_.host_name);
         break;
       case +eCAL::pb::Process::optional_string_shm_transport_domain:
-        target_sample_.shm_transport_domain = reader.get_string();
+        AssignString(reader, target_sample_.shm_transport_domain);
         break;
       case +eCAL::pb::Process::optional_int32_process_id:
         target_sample_.process_id = reader.get_int32();
         break;
       case +eCAL::pb::Process::optional_string_process_name:
-        target_sample_.process_name = reader.get_string();
+        AssignString(reader, target_sample_.process_name);
         break;
       case +eCAL::pb::Process::optional_string_unit_name:
-        target_sample_.unit_name = reader.get_string();
+        AssignString(reader, target_sample_.unit_name);
         break;
       case +eCAL::pb::Process::optional_string_process_parameter:
-        target_sample_.process_parameter = reader.get_string();
+        AssignString(reader, target_sample_.process_parameter);
         break;
       case +eCAL::pb::Process::optional_message_state:
       {
@@ -1031,19 +1031,19 @@ namespace{
         target_sample_.time_sync_state = reader.get_enum();
         break;
       case +eCAL::pb::Process::optional_string_time_sync_module_name:
-        target_sample_.time_sync_module_name = reader.get_string();
+        AssignString(reader, target_sample_.time_sync_module_name);
         break;
       case +eCAL::pb::Process::optional_int32_component_init_state:
         target_sample_.component_init_state = reader.get_int32();
         break;
       case +eCAL::pb::Process::optional_string_component_init_info:
-        target_sample_.component_init_info = reader.get_string();
+        AssignString(reader, target_sample_.component_init_info);
         break;
       case +eCAL::pb::Process::optional_string_ecal_runtime_version:
-        target_sample_.ecal_runtime_version = reader.get_string();
+        AssignString(reader, target_sample_.ecal_runtime_version);
         break;
       case +eCAL::pb::Process::optional_string_config_file_path:
-        target_sample_.config_file_path = reader.get_string();
+        AssignString(reader, target_sample_.config_file_path);
         break;
       default:
         reader.skip();
