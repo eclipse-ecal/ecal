@@ -722,7 +722,10 @@ namespace
       switch (reader.tag())
       {
       case +eCAL::pb::LayerParShm::repeated_string_memory_file_list:
-        layer.memory_file_list.push_back(reader.get_string());
+        {
+          auto& memory_file_string = layer.memory_file_list.push_back();
+          AssignString(reader, memory_file_string);
+        }
         break;
       default:
         reader.skip();
@@ -883,7 +886,7 @@ namespace
       switch (reader.tag())
       {
       case +eCAL::pb::Topic::optional_string_host_name:
-        sample.identifier.host_name = reader.get_string();
+        AssignString(reader, sample.identifier.host_name);
         break;
       case +eCAL::pb::Topic::optional_int32_process_id:
         sample.identifier.process_id = reader.get_int32();
@@ -892,8 +895,12 @@ namespace
         AssignString(reader, sample.topic.process_name);
         break;
       case +eCAL::pb::Topic::optional_string_topic_id:
-        // this could possibly be faster if we do not need to construct a string here
-        sample.identifier.entity_id = std::stoull(reader.get_string());
+        {
+          static thread_local std::string entity_id_string;
+          AssignString(reader, entity_id_string);
+          // TODO: use std::from_chars after migration to C++17
+          sample.identifier.entity_id = std::stoull(entity_id_string);
+        }
         break;
       case +eCAL::pb::Topic::optional_string_topic_name:
         AssignString(reader, sample.topic.topic_name);
@@ -1159,7 +1166,11 @@ namespace
       switch (reader.tag())
       {
       case +eCAL::pb::Service::optional_string_service_id:
-        sample.identifier.entity_id = std::stoull(reader.get_string());
+        {
+          static thread_local std::string entity_id_string;
+          AssignString(reader, entity_id_string);
+          sample.identifier.entity_id = std::stoull(entity_id_string);
+        }
         break;
       case +eCAL::pb::Service::optional_int32_process_id:
         sample.identifier.process_id = reader.get_int32();
@@ -1235,7 +1246,11 @@ namespace
       switch (reader.tag())
       {
       case +eCAL::pb::Client::optional_string_service_id:
-        sample.identifier.entity_id = std::stoull(reader.get_string());
+        {
+          static thread_local std::string entity_id_string;
+          AssignString(reader, entity_id_string);
+          sample.identifier.entity_id = std::stoull(entity_id_string);
+        }
         break;
       case +eCAL::pb::Client::optional_int32_process_id:
         sample.identifier.process_id = reader.get_int32();
