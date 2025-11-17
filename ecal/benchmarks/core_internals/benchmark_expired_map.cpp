@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ namespace
    * This exercises operator[] which in your class also updates the timestamp.
    */
   template <typename ExpiredMap>
-  static void BM_CExpirationMap_Find(benchmark::State& state)
+  void BM_CExpirationMap_Find(benchmark::State& state)
   {
     const std::size_t N = static_cast<std::size_t>(state.range(0));
 
@@ -168,7 +168,7 @@ namespace
  * This exercises operator[] which in your class also updates the timestamp.
  */
   template <typename ExpiredMap>
-  static void BM_CExpirationMap_Update(benchmark::State& state)
+  void BM_CExpirationMap_Update(benchmark::State& state)
   {
     const std::size_t N = static_cast<std::size_t>(state.range(0));
 
@@ -200,7 +200,7 @@ namespace
    * Benchmark: erase N elements from a cache that currently holds N elements
    */
   template <typename ExpiredMap>
-  static void BM_CExpirationMap_Erase(benchmark::State& state)
+  void BM_CExpirationMap_Erase(benchmark::State& state)
   {
     const std::size_t N = static_cast<std::size_t>(state.range(0));
 
