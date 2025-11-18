@@ -30,7 +30,13 @@
 //#undef ECAL_NO_DEPRECATION_WARNINGS
 
 #if !defined(ECAL_NO_DEPRECATION_WARNINGS) && ECAL_VERSION_INTEGER >= ECAL_VERSION_CALCULATE(6, 0, 0)
-#define ECAL_DEPRECATE_SINCE_6_0(__message__) [[deprecated(__message__)]] //!< Deprecate the following function with eCAL Version 5.13.0
+#define ECAL_DEPRECATE_SINCE_6_0(__message__) [[deprecated(__message__)]] //!< Deprecate the following function with eCAL Version 6.0.0
 #else 
-#define ECAL_DEPRECATE_SINCE_6_0(__message__)                             //!< Deprecate the following function with eCAL Version 5.13.0
+#define ECAL_DEPRECATE_SINCE_6_0(__message__)                             //!< Deprecate the following function with eCAL Version 6.0.0
+#endif
+
+#if !defined(ECAL_NO_DEPRECATION_WARNINGS) && ECAL_VERSION_INTEGER >= ECAL_VERSION_CALCULATE(6, 1, 0)
+#define ECAL_DEPRECATE_SINCE_6_1(__message__) [[deprecated(__message__)]] //!< Deprecate the following function with eCAL Version 6.1.0
+#else 
+#define ECAL_DEPRECATE_SINCE_6_1(__message__)                             //!< Deprecate the following function with eCAL Version 6.1.0
 #endif

@@ -196,22 +196,10 @@ namespace eCAL
       response_callback_(response.second);
     }
 
-    // Handle timeout event
-    if (!response.first && response.second.call_state == eCallState::timeouted)
-    {
-      SServiceId service_id;
-      service_id.service_name = m_service_name;
-      service_id.service_id = entity_id_;
-      NotifyEventCallback(service_id, eClientEvent::timeout);
-#ifndef NDEBUG
-      eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
-#endif
-    }
-
     return response;
   }
 
-  // Asynchronous call to a service with a specified timeout
+  // Asynchronous call to a service
   bool CServiceClientImpl::CallWithCallbackAsync(const SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseCallbackT & response_callback_)
   {
 #ifndef NDEBUG
