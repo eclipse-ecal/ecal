@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2019 Continental Corporation
+# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +42,7 @@ def add_proto_desc(file_desc_set, file_desc, inserted_files):
     file_desc.CopyToProto(desc_proto)
 
 # define get function for protobuf message descriptor
-def get_descriptor_from_type(type_):
+def get_descriptor_from_type(type_) -> bytes:
   """ Returns a file descriptor set which contains all dependencies of a protobuf type that 
   can be used for reflection purposes in eCAL.
 
@@ -55,8 +56,8 @@ def get_descriptor_from_type(type_):
   return file_desc_set.SerializeToString()
   
 # define get function for protobuf message descriptor
-def get_type_from_descriptor(typename, descriptor):
-  """ Returns a file descriptor set which contains all dependencies of a protobuf type that 
+def get_type_from_descriptor(typename : str, descriptor : bytes):
+  """ Returns a file descriptor set which contains all dependencies of a protobuf type that
   can be used for reflection purposes in eCAL.
 
   :param typename:   name of the type of the protobuf message
@@ -69,4 +70,10 @@ def get_type_from_descriptor(typename, descriptor):
   for file_desc_proto in file_desc_set.file:
     desc_pool.Add(file_desc_proto)
   desc = desc_pool.FindMessageTypeByName(typename)
-  return google.protobuf.message_factory.MessageFactory(desc_pool).GetPrototype(desc)
+
+  try: # Protobuf >= 5.0
+    return google.protobuf.message_factory.GetMessageClass(desc)
+  except: # Protobuf < 5.0
+    return google.protobuf.message_factory.MessageFactory(desc_pool).GetPrototype(desc)
+
+
