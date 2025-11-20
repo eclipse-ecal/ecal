@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +25,16 @@
 
 #pragma once
 
-#include <ecal/namespace.h>
+#include <cstddef>
+#include <cstdint>
+#include <ecal/deprecate.h>
 #include <ecal/types.h>
 
 #include <functional>
-#include <string>
-#include <vector>
 #include <set>
+#include <string>
+#include <tuple>
+#include <vector>
 
 namespace eCAL
 {
@@ -54,8 +58,9 @@ namespace eCAL
     none = 0,          //!< undefined
     connected = 1,     //!< a new server has been connected to this client
     disconnected = 2,  //!< a server has been disconnected from this client
+
     // TODO: does it make sense here? the user is already being notified about the timeout via the eCallState
-    timeout = 3,       //!< a service call has timeouted 
+    timeout ECAL_DEPRECATE_SINCE_6_1("Timeout Events are not fired anymore. Use the response of the service call to check for timeouts: if (service_respons_.call_state == eCAL::eCallState::timeouted)") = 3,       //!< a service call has timeouted 
   };
 
   inline std::string to_string(eClientEvent event_) {
