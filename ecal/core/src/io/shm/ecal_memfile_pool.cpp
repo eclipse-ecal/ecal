@@ -166,7 +166,7 @@ namespace eCAL
       {
         // Only wait for the new-data-event, if we haven't processed the data, yet
         // check for memory file update event from shm writer (20 ms)
-        has_unprocessed_data = gWaitForEvent(m_event_snd, 20);
+        has_unprocessed_data = gWaitForEvent(m_event_snd, 500);
 
         if (has_unprocessed_data)
         {

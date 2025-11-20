@@ -242,6 +242,7 @@ eCAL makes use of the following external components:
 ### protozero
 
 - **License**: BSD-2-Clause
+  _(+ 1 thirdparty license files)_
 - **Copyright**: Copyright (C) 2022, Mapbox.   All rights reserved.
 - **Homepage**: https://github.com/mapbox/protozero
 - **Repository**: https://github.com/mapbox/protozero
