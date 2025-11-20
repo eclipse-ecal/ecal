@@ -24,13 +24,16 @@
 
 #pragma once
 
-#include <ecal/namespace.h>
+#include <cstddef>
+#include <cstdint>
+#include <ecal/deprecate.h>
 #include <ecal/types.h>
 
 #include <functional>
-#include <string>
-#include <vector>
 #include <set>
+#include <string>
+#include <tuple>
+#include <vector>
 
 namespace eCAL
 {

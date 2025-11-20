@@ -25,6 +25,7 @@
 #pragma once
 
 // all ecal includes
+// IWYU pragma: begin_exports
 #include <ecal/os.h>
 #include <ecal/defs.h>
 #include <ecal/service/client.h>
@@ -44,3 +45,4 @@
 #include <ecal/pubsub/subscriber.h>
 #include <ecal/service/client.h>
 #include <ecal/service/server.h>
+// IWYU pragma: end_exports

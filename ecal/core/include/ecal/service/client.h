@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include <ecal/deprecate.h>
-#include <ecal/namespace.h>
 #include <ecal/os.h>
 
 #include <ecal/service/client_instance.h>

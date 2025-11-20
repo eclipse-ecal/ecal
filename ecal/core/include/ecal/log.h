@@ -25,8 +25,8 @@
 #pragma once
 
 #include <ecal/os.h>
-#include <ecal/log_level.h>
-#include <ecal/types/logging.h>
+#include <ecal/log_level.h>      // IWYU pragma: export
+#include <ecal/types/logging.h>  // IWYU pragma: export
 
 #include <list>
 #include <string>

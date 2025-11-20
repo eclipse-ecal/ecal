@@ -1,7 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +21,32 @@
  * @brief  eCAL service client implementation
 **/
 
-#include "ecal_global_accessors.h"
-
 #include "ecal_service_client_impl.h"
+
+#include <ecal/ecal.h>
+
+#include "ecal/log_level.h"
+#include "ecal/types.h"
+#include "ecal/v5/ecal_callback.h"
+#include "ecal_global_accessors.h"
+#include "ecal_service/client_session.h"
+#include "ecal_service/client_session_types.h"
+#include "ecal_service/error.h"
+#include "ecal_service/state.h"
 #include "ecal_service_singleton_manager.h"
+#include "ecal_struct_sample_common.h"
+#include "ecal_struct_sample_registration.h"
+#include "ecal_struct_service.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
 
 #include <chrono>
+#include <cstdint>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace
 {
@@ -115,10 +128,9 @@ namespace eCAL
     }
 
     // Send registration sample
-    auto registration_provider = g_registration_provider();
-    if (!m_service_name.empty() && registration_provider)
+    if (!m_service_name.empty() && g_registration_provider() != nullptr)
     {
-      registration_provider->RegisterSample(GetRegistrationSample());
+      g_registration_provider()->RegisterSample(GetRegistrationSample());
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Registered client with service name: " + m_service_name);
 #endif
@@ -145,10 +157,9 @@ namespace eCAL
     }
 
     // Send unregistration sample
-    auto registration_provider = g_registration_provider();
-    if (registration_provider)
+    if (g_registration_provider() != nullptr)
     {
-      registration_provider->UnregisterSample(GetUnregistrationSample());
+      g_registration_provider()->UnregisterSample(GetUnregistrationSample());
 #ifndef NDEBUG
       eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::~CServiceClientImpl: Unregistered client for service name: " + m_service_name);
 #endif
@@ -196,10 +207,22 @@ namespace eCAL
       response_callback_(response.second);
     }
 
+    // Handle timeout event
+    if (!response.first && response.second.call_state == eCallState::timeouted)
+    {
+      SServiceId service_id;
+      service_id.service_name = m_service_name;
+      service_id.service_id = entity_id_;
+      NotifyEventCallback(service_id, eClientEvent::timeout);
+#ifndef NDEBUG
+      eCAL::Logging::Log(eCAL::Logging::log_level_debug1, "CServiceClientImpl::CallWithCallback: Synchronous call for service: " + m_service_name + ", method: " + method_name_ + " timed out.");
+#endif
+    }
+
     return response;
   }
 
-  // Asynchronous call to a service
+  // Asynchronous call to a service with a specified timeout
   bool CServiceClientImpl::CallWithCallbackAsync(const SEntityId & entity_id_, const std::string & method_name_, const std::string & request_, const ResponseCallbackT & response_callback_)
   {
 #ifndef NDEBUG

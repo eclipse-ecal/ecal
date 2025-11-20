@@ -22,14 +22,21 @@
  * @brief  eCAL service client interface
 **/
 
-#include <ecal/service/client.h>
+#include <chrono>
+#include <condition_variable>
 #include <ecal/ecal.h>
+#include <ecal/service/client.h>
+#include <ecal/service/client_instance.h>
 
 #include "ecal_clientgate.h"
 #include "ecal_global_accessors.h"
 #include "ecal_service_client_impl.h"
 
+#include <mutex>
+#include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace eCAL
 {
