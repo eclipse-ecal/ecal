@@ -96,7 +96,7 @@ namespace eCAL
           = [&service_response_vec_, &service_response_vec_mutex](const SServiceResponse& service_response_)->void
             {
               // Lock the mutex to ensure thread-safe access to the response vector.
-              std::lock_guard<std::mutex> lock(service_response_vec_mutex);
+              const std::lock_guard<std::mutex> lock(service_response_vec_mutex);
               service_response_vec_.emplace_back(service_response_);
             };
 
@@ -110,7 +110,7 @@ namespace eCAL
     auto instances = GetClientInstances();
 
     // in case of no instance is connected we return false immediately
-    if (instances.size() == 0)
+    if (instances.empty())
     {
       return false;
     }
@@ -177,7 +177,7 @@ namespace eCAL
       }
 
       // Create a response callback, that will set the response and notify the condition variable
-      eCAL::ResponseCallbackT notifying_response_callback
+      const eCAL::ResponseCallbackT notifying_response_callback
                 = [mutex
                   , condition_variable
                   , finished_service_call_count
