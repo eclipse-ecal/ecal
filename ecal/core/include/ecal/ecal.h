@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@
 #pragma once
 
 // all ecal includes
+// IWYU pragma: begin_exports
 #include <ecal/os.h>
 #include <ecal/defs.h>
 #include <ecal/service/client.h>
@@ -44,3 +46,4 @@
 #include <ecal/pubsub/subscriber.h>
 #include <ecal/service/client.h>
 #include <ecal/service/server.h>
+// IWYU pragma: end_exports

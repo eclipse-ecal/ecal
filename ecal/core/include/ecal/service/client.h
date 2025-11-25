@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include <ecal/deprecate.h>
-#include <ecal/namespace.h>
 #include <ecal/os.h>
 
 #include <ecal/service/client_instance.h>
@@ -97,11 +95,29 @@ namespace eCAL
 
     /**
      * @brief Blocking call of a service method for all existing service instances, response will be returned as ServiceResponseVecT
-     *
+     * 
+     * This method calls all existing service instances of the service with the
+     * given method name and request string.
+     * 
+     * This method will block until all service calls have returned. In case
+     * that a timeout is specified, this method will wait for a service call
+     * response until the timeout is reached.
+     * 
+     * If a service call times out, it WILL NOT be cancelled (i.e. it may
+     * continue to execute in the background), but any responses that arrive
+     * will be ignored.
+     * Instead, the response vector will contain a service response element with:
+     *    service_response.call_state == eCallState::timeouted.
+     * 
+     * Changes with eCAL 6.1: In eCAL 6.0 and earlier, the response vector did
+     * not contain responses for timeouted calls. Instead, a timeout event was
+     * called. Beginning with eCAL 6.1, this function DOES include responses for
+     * timeouted calls in the response vector.
+     * 
      * @param       method_name_           Method name.
      * @param       request_               Request string.
      * @param [out] service_response_vec_  Response vector containing service responses from every called service (null pointer == no response).
-     * @param       timeout_ms_            Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
+     * @param       timeout_ms_            Maximum time before operation returns (in milliseconds. 0 or negative values mean infinite).
      *
      * @return  True if all calls were successful and minimum one instance was connected, otherwise false.
     **/
@@ -110,11 +126,32 @@ namespace eCAL
 
     /**
      * @brief Blocking call (with timeout) of a service method for all existing service instances, using callback
-     *
+     * 
+     * This method calls all existing service instances of the service with the
+     * given method name and request string.
+     * 
+     * This method will block until all service calls have returned, AND their
+     * response callbacks have been executed. In case that a timeout is
+     * specified, this method will wait for a service call response until the
+     * timeout is reached. This method MAY block longer than the specified
+     * timeout, as it also waits for the response callbacks to be executed.
+     * 
+     * If a service call times out, it WILL NOT be cancelled (i.e. it will
+     * continue to execute in the background), but any responses that arrive
+     * will be ignored.
+     * Instead, the response callback will be called with an
+     * eCAL::SServiceResponse, where
+     *    service_response.call_state == eCallState::timeouted.
+     * 
+     * Changes with eCAL 6.1: In eCAL 6.0 and earlier, the response callback was
+     * NOT called in case of timeouts. Instead, a timeout event was called.
+     * Beginning with eCAL 6.1, the response callback IS called in case of
+     * timeouts
+     * 
      * @param method_name_        Method name.
      * @param request_            Request string.
      * @param response_callback_  Callback function for the service method response.
-     * @param timeout_ms_         Maximum time before operation returns (in milliseconds, DEFAULT_TIME_ARGUMENT means infinite).
+     * @param timeout_ms_         Maximum time before operation returns (in milliseconds. 0 or negative values mean infinite).
      *
      * @return  True if all calls were successful and minimum one instance was connected, otherwise false.
     **/
