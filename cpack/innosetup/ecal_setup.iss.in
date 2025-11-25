@@ -86,10 +86,12 @@ Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app
 Source: "{#ComponentStagingDir}\_configuration\etc\ecal.yaml";    DestDir: "{app}\etc\"; Tasks: replaceconf;     Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 Source: "{#ComponentStagingDir}\_configuration\etc\ecaltime.yaml"; DestDir: "{app}\etc\";                         Flags: ignoreversion skipifsourcedoesntexist;                  Components: runtime
 
+
 Source: "{#CSharpStagingDir}\runtime\*";              DestDir: "{app}";      Flags: ignoreversion recursesubdirs; Components: runtime
 
 ; applications
 Source: "{#ComponentStagingDir}\app\*";               DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: applications
+Source: "{#ComponentStagingDir}\configuration\bin\*"; DestDir: "{app}\bin\";              Flags: ignoreversion recursesubdirs;     Components: applications
 
 ; samples
 Source: "{#ComponentStagingDir}\samples\*";           DestDir: "{app}";                   Flags: ignoreversion recursesubdirs;     Components: samples
