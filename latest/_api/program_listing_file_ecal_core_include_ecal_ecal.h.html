@@ -387,6 +387,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="define_namespace_8h_1a3bf2369bd0acf345358aace636fce2c3.html">Define ECAL_CORE_NAMESPACE_V5</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_namespace_8h_1a242e58e407887ec1a8e2aaeaf57a9a16.html">Define ECAL_CORE_NAMESPACE_V6</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_deprecate_8h_1ad0fce642e420a9f9d32b34cb1814ea2a.html">Define ECAL_DEPRECATE_SINCE_6_0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="define_deprecate_8h_1a77bcc00538318df00927e91e00a3806c.html">Define ECAL_DEPRECATE_SINCE_6_1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__meas_8h_1ae803c5567ff361b9f9ac4c52ddb59869.html">Define ECAL_EH5_DEPRECATE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__defs_8h_1accb613e2b9b76ded6bf8ca42b2824c5b.html">Define ECAL_HDF5_DATE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="define_eh5__defs_8h_1a5fe10ba3f1fa8832219784c6edc73f0d.html">Define ECAL_HDF5_NAME</a></li>
@@ -732,6 +733,7 @@ document.write(`
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/* ========================= eCAL LICENSE =================================</span>
 <span class="cm"> *</span>
 <span class="cm"> * Copyright (C) 2016 - 2025 Continental Corporation</span>
+<span class="cm"> * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="cm"> * you may not use this file except in compliance with the License.</span>
@@ -751,6 +753,7 @@ document.write(`
 <span class="cp">#pragma once</span>
 
 <span class="c1">// all ecal includes</span>
+<span class="c1">// IWYU pragma: begin_exports</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/os.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/defs.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/service/client.h&gt;</span>
@@ -770,6 +773,7 @@ document.write(`
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/pubsub/subscriber.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/service/client.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal/service/server.h&gt;</span>
+<span class="c1">// IWYU pragma: end_exports</span>
 </pre></div>
 </div>
 </section>

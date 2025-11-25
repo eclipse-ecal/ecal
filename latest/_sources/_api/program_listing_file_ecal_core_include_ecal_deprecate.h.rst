@@ -13,6 +13,7 @@ Program Listing for File deprecate.h
    /* ========================= eCAL LICENSE =================================
     *
     * Copyright (C) 2016 - 2024 Continental Corporation
+    * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -40,4 +41,10 @@ Program Listing for File deprecate.h
    #define ECAL_DEPRECATE_SINCE_6_0(__message__) [[deprecated(__message__)]] 
    #else 
    #define ECAL_DEPRECATE_SINCE_6_0(__message__)                             
+   #endif
+   
+   #if !defined(ECAL_NO_DEPRECATION_WARNINGS) && ECAL_VERSION_INTEGER >= ECAL_VERSION_CALCULATE(6, 1, 0)
+   #define ECAL_DEPRECATE_SINCE_6_1(__message__) [[deprecated(__message__)]] 
+   #else 
+   #define ECAL_DEPRECATE_SINCE_6_1(__message__)                             
    #endif

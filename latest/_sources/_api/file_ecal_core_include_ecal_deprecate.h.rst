@@ -51,3 +51,5 @@ Defines
 
 - :ref:`exhale_define_deprecate_8h_1ad0fce642e420a9f9d32b34cb1814ea2a`
 
+- :ref:`exhale_define_deprecate_8h_1a77bcc00538318df00927e91e00a3806c`
+
