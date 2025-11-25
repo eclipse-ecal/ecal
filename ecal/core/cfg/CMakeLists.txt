@@ -98,4 +98,8 @@ if(ECAL_DEFAULT_CONFIG_LOCATION AND NOT CMAKE_CROSSCOMPILING)
   endif()
 endif()
 
-ecal_install_app(${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME
+  DESTINATION "${eCAL_install_app_dir}"  # Install to the App-dir...
+  COMPONENT   configuration              # ... but as component "configuration"
+)
