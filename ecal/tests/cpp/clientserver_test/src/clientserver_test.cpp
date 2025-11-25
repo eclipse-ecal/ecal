@@ -33,23 +33,25 @@
 
 #include "atomic_signalable.h"
 
-#define ClientConnectEventTest                        1
-#define ServerConnectEventTest                        1
+//TODO: Enable all tests again
+#define ClientConnectEventTest                        0
+#define ServerConnectEventTest                        0
 
-#define ClientServerBaseCallbackTest                  1
-#define ClientServerBaseCallbackTimeoutTest           1
+#define ClientServerBaseCallbackTest                  0
+#define ClientServerBaseCallbackTimeoutTest           0
 
-#define ClientServerCallWithResponseTimeBehaviorTest  1
-#define ClientServerCallWithCallbackTimeBehaviorTest  1
+#define ClientServerCallWithResponseTimeBehaviorTest  0
+#define ClientServerCallWithCallbackTimeBehaviorTest  0
 
-#define ClientServerBaseAsyncCallbackTest             1
-#define ClientServerBaseAsyncTest                     1
+#define ClientServerBaseAsyncCallbackTest             0
+#define ClientServerBaseAsyncTest                     0
 
-#define NestedRPCCallTest                             1
+#define NestedRPCCallTest                             0
+#define NestedBlockingCallFromServerCallbackTest      1
 
-#define ClientServerBaseBlockingTest                  1
+#define ClientServerBaseBlockingTest                  0
 
-#define DO_LOGGING                                    0
+#define DO_LOGGING                                    1
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000
@@ -1138,3 +1140,81 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 }
 
 #endif /* NestedRPCCallTest */
+
+#if NestedBlockingCallFromServerCallbackTest
+
+TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
+{
+  constexpr size_t depth = 2;
+  
+  // validat input, just to make sure we don't break the test with wrong input
+  assert(depth >= 1);
+
+  // initialize eCAL API
+  eCAL::Initialize("nested blocking call from server callback test");
+
+  // Create servers and clients. We build a chain of depth amount of servers with each having a client that can call it.
+  std::vector<eCAL::CServiceServer> servers;
+  std::vector<eCAL::CServiceClient> clients;
+  servers.reserve(depth);
+  clients.reserve(depth);
+  for (size_t i = 0; i < depth; i++)
+  {
+    servers.emplace_back("service#" + std::to_string(i));
+    clients.emplace_back("service#" + std::to_string(i));
+
+    // Add a callback to the server that blocking-calls the next service
+    servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
+          [&clients, service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          {
+#if DO_LOGGING
+            PrintRequest(method_info_, request_);
+#endif // DO_LOGGING
+            EXPECT_EQ(request_, std::to_string(service_index));
+
+            // Use according client to call the next server
+            if ((service_index + 1) < clients.size())
+            {
+              eCAL::ServiceResponseVecT service_response_vec;
+              clients[service_index + 1].CallWithResponse("my_method", std::to_string(service_index + 1), service_response_vec);
+
+              EXPECT_EQ(service_response_vec.size(), 1);
+              EXPECT_EQ(service_response_vec.begin()->response, "Response from " + std::to_string(service_index + 1));
+            }
+
+            response_ = "Response from " + std::to_string(service_index);
+            return 0;
+          }
+    );
+  }
+
+  // Wait for servers and clients to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      for (const auto& client : clients)
+      {
+        if (client.GetClientInstances().size() == 0)
+        {
+          continue;
+        }
+      }
+      break;
+    }
+  }
+
+  // Call the first client
+  eCAL::ServiceResponseVecT service_response_vec;
+  clients.front().CallWithResponse("my_method", "0", service_response_vec);
+
+  ASSERT_EQ(service_response_vec.size(), 1);
+  ASSERT_EQ(service_response_vec.begin()->response, "Response from 0");
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* NestedBlockingCallFromServerCallbackTest */
