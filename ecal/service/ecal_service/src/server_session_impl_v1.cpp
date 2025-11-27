@@ -297,10 +297,17 @@ namespace ecal_service
 
                                 // Call the service callback
                                 const std::shared_ptr<std::string> response_buffer = std::make_shared<std::string>();
-                                me->service_callback_(payload_buffer, response_buffer);
 
-                                // Send the response to the client
-                                me->send_service_response(response_buffer);
+                                // TODO: This temporary test code must be replaced by a proper thread pool implementation.
+                                auto* tread = new std::thread(
+                                        [me, payload_buffer, response_buffer]()
+                                        {
+                                          me->service_callback_(payload_buffer, response_buffer);
+
+                                          // Send the response to the client
+                                          me->send_service_response(response_buffer);
+                                        });
+                                tread->detach();
                               }
                             }));
 

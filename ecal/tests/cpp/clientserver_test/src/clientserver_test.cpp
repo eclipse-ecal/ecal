@@ -1147,7 +1147,7 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 // This test injects blocking server callbacks into the service call. 
 TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
 {
-  constexpr size_t depth = 3; // TODO: Increase depth to actually trigger the problem
+  constexpr size_t depth = 100; // TODO: Increase depth to actually trigger the problem
   
   // validate input, just to make sure we don't break the test with wrong input
   assert(depth >= 1);
@@ -1227,7 +1227,7 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
 
 TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
 {
-  constexpr size_t depth = 3; // TODO: Increase depth to actually trigger the problem
+  constexpr size_t depth = 100; // TODO: Increase depth to actually trigger the problem
 
   // validat input, just to make sure we don't break the test with wrong input
   assert(depth >= 1);

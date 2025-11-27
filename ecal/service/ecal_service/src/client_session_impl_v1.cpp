@@ -506,7 +506,15 @@ namespace ecal_service
                                 ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
 
                                 // Call the user's callback
-                                response_cb(Error::OK, payload_buffer);
+
+                                //response_cb(Error::OK, payload_buffer);
+                                // TODO: This temporary test code must be replaced by a proper thread pool implementation.
+                                auto* tread = new std::thread(
+                                        [me, payload_buffer, response_cb]()
+                                        {
+                                          response_cb(Error::OK, payload_buffer);
+                                        });
+                                tread->detach();
 
                                 // Check if there are more items in the queue. If so, send the next request
                                 // The mutex must be locket, as we access the queue.
