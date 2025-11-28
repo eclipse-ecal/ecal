@@ -51,8 +51,8 @@ namespace eCAL
     CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_);
     ~CSyncMemoryFile();
 
-    bool Connect(const std::string& process_id_);
-    bool Disconnect(const std::string& process_id_);
+    bool Connect(int32_t process_id_);
+    bool Disconnect(int32_t process_id_);
 
     bool CheckSize(size_t size_);
     bool Write(CPayloadWriter& payload_, const SWriterAttr& data_, bool force_full_write_ = false);
@@ -81,7 +81,7 @@ namespace eCAL
       EventHandleT event_ack;
       bool         event_ack_is_invalid = false;    //!< The ack event has timeouted. Thus, we don't wait for it anymore, until the subscriber notifies us via registration layer that it is still alive.
     };
-    using EventHandleMapT = std::unordered_map<std::string, SEventHandlePair>;
+    using EventHandleMapT = std::unordered_map<int32_t, SEventHandlePair>;
     std::mutex       m_event_handle_map_sync;
     EventHandleMapT  m_event_handle_map;
   };
