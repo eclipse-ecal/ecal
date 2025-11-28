@@ -487,7 +487,7 @@ namespace eCAL
 
       SEntityId entity_id;
       entity_id.entity_id  = client_data.service_attr.sid;
-      entity_id.process_id = client_data.service_attr.pid;
+      entity_id.process_id = ProcessID{ client_data.service_attr.pid };
       entity_id.host_name  = client_data.service_attr.hname;
 
       SServiceId service_id;
@@ -542,7 +542,7 @@ namespace eCAL
     data->response->first = false;
 
     data->response->second.server_id.service_id.entity_id = client_.service_attr.sid;
-    data->response->second.server_id.service_id.process_id = client_.service_attr.pid;
+    data->response->second.server_id.service_id.process_id = ProcessID{ client_.service_attr.pid };
     data->response->second.server_id.service_id.host_name = client_.service_attr.hname;
 
     data->response->second.server_id.service_name = client_.service_attr.sname;
@@ -588,7 +588,7 @@ namespace eCAL
       const auto& response_header = response.header;
       // service/method id
       service_reponse.server_id.service_id.entity_id = client_.service_attr.sid;
-      service_reponse.server_id.service_id.process_id = client_.service_attr.pid;
+      service_reponse.server_id.service_id.process_id = ProcessID{ client_.service_attr.pid };
       service_reponse.server_id.service_id.host_name = response_header.host_name;
 
       // service and method name

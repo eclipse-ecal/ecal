@@ -149,7 +149,7 @@ namespace eCAL
   bool CMonitoringImpl::RegisterTopic(const Registration::Sample& sample_, enum ePubSub pubsub_type_)
   {
     const auto& sample_topic = sample_.topic;
-    const int          process_id = sample_.identifier.process_id;
+    const ProcessID process_id = sample_.identifier.process_id;
     const std::string& topic_name = sample_topic.topic_name;
     const int32_t      topic_size = sample_topic.topic_size;
     bool               topic_tlayer_ecal_udp(false);
@@ -279,7 +279,7 @@ namespace eCAL
     const std::string&    host_name                    = sample_.identifier.host_name;
     const std::string&    shm_transport_domain         = sample_process.shm_transport_domain;
     const std::string&    process_name                 = sample_process.process_name;
-    const int             process_id                   = sample_.identifier.process_id;
+    const ProcessID       process_id                   = sample_.identifier.process_id;
     const std::string&    process_param                = sample_process.process_parameter;
     const std::string&    unit_name                    = sample_process.unit_name;
     const auto&           sample_process_state         = sample_process.state;
@@ -342,7 +342,7 @@ namespace eCAL
   {
     const auto& sample_identifier = sample_.identifier;
     const auto&        service_id = sample_.identifier.entity_id;
-    const int32_t      process_id = sample_identifier.process_id;
+    const ProcessID    process_id = sample_identifier.process_id;
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_service = sample_.service;
@@ -408,7 +408,7 @@ namespace eCAL
   {
     const auto& sample_identifier = sample_.identifier;
     const auto&        service_id = sample_identifier.entity_id;
-    const int32_t      process_id = sample_identifier.process_id;
+    const ProcessID    process_id = sample_identifier.process_id;
     const std::string& host_name  = sample_identifier.host_name;
 
     const auto& sample_client = sample_.client;

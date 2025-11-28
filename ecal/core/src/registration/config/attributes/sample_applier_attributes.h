@@ -20,6 +20,7 @@
 #pragma once
 
 #include <string>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -33,7 +34,7 @@ namespace eCAL
         bool        loopback;
         std::string shm_transport_domain;
         std::string host_name;
-        int         process_id;
+        ProcessID   process_id{ 0 };
       };
     }
   }

@@ -20,6 +20,7 @@
 #pragma once
 
 #include <string>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -29,7 +30,7 @@ namespace eCAL
     {
       struct SAttributes
       {
-        int          process_id;
+        ProcessID    process_id{ 0 };
         unsigned int registration_timeout_ms;
       };
     }

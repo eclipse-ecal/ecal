@@ -41,7 +41,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_identifier.process_id = eCAL::Process::GetProcessID();
   // We need to set the process_id as entity_id.
   // However, we cannot send anything over the wire :(
-  process_sample_identifier.entity_id = process_sample_identifier.process_id;
+  process_sample_identifier.entity_id = static_cast<int32_t>(process_sample_identifier.process_id);
 
   auto& process_sample_process                = process_sample.process;
   process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();

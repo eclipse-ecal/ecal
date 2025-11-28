@@ -50,6 +50,8 @@
 #include <thread>
 #include <vector>
 
+#include <ecal/types.h>
+
 #ifdef ECAL_OS_WINDOWS
 #include "ecal_win_main.h"
 #include <iphlpapi.h>
@@ -301,10 +303,10 @@ namespace
 {
   void create_proc_id()
   {
-    if (eCAL::g_process_id == 0)
+    if (::eCAL::g_process_id == ::eCAL::ProcessID{ 0 })
     {
-      eCAL::g_process_id   = GetCurrentProcessId();
-      eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
+      ::eCAL::g_process_id =   ::eCAL::ProcessID{ static_cast<int32_t>(GetCurrentProcessId()) };
+      ::eCAL::g_process_id_s = std::to_string(static_cast<int32_t>(::eCAL::g_process_id));
     }
   }
 }
@@ -313,7 +315,7 @@ namespace eCAL
 {
   namespace Process
   {
-    int GetProcessID()
+    ProcessID GetProcessID()
     {
       create_proc_id();
       return(g_process_id);
@@ -588,9 +590,9 @@ namespace
 {
   void create_proc_id()
   {
-    if (eCAL::g_process_id == 0)
+    if (eCAL::g_process_id == ProcessID{ 0 })
     {
-      eCAL::g_process_id   = getpid();
+      eCAL::g_process_id = ProcessID{ getpid() };
       eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
     }
   }
@@ -683,7 +685,7 @@ namespace eCAL
 {
   namespace Process
   {
-    int GetProcessID()
+    ProcessID GetProcessID()
     {
       create_proc_id();
       return(g_process_id);

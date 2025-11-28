@@ -52,7 +52,7 @@ namespace eCAL
       auto memfile_pool = g_memfile_pool();
       if (memfile_pool)
       {
-        const std::string process_id = std::to_string(m_attributes.process_id);
+        const std::string process_id = std::to_string(static_cast<int32_t>(m_attributes.process_id));
         const std::string memfile_event = memfile_name + "_" + process_id;
 
         Payload::TopicInfo topic_info;

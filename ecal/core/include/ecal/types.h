@@ -28,6 +28,11 @@
 #include <string>
 #include <tuple>
 
+#define ECAL_USE_STRONG_TYPES 0
+#if ECAL_USE_STRONG_TYPES 
+#include <strong_type/strong_type.hpp>
+#endif
+
 namespace eCAL
 {
   /**
@@ -76,11 +81,23 @@ namespace eCAL
   };
 
   using EntityIdT = uint64_t;
+#if ECAL_USE_STRONG_TYPES
+  using ProcessID = strong::type<
+      int32_t, 
+      struct ProcessIDT, 
+      strong::ostreamable,
+      strong::convertible_to<int32_t>,
+      strong::equality,
+      strong::hashable,
+      strong::ordered>;
+# else
+  using ProcessID = int32_t;
+# endif
 
   struct SEntityId
   {
     EntityIdT    entity_id  = 0;    // unique id within that process (it should already be unique within the whole system)
-    int32_t      process_id = 0;    // process id which produced the sample
+    ProcessID    process_id{ 0 };   // process id which produced the sample
     std::string  host_name;         // host which produced the sample
 
     bool operator==(const SEntityId& other) const {

@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "ecal/types/process.h"
+#include <ecal/types.h>
 
 // Forward declaration of global accessible classes
 namespace eCAL
@@ -119,7 +120,7 @@ namespace eCAL
 
   extern std::string                   g_process_name;
   extern std::string                   g_process_par;
-  extern int                           g_process_id;
+  extern ProcessID                     g_process_id;
   extern std::string                   g_process_id_s;
 
   extern Types::Process::SProcessState g_process_state;

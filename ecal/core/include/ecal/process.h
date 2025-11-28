@@ -31,6 +31,7 @@
 #include <ecal/process_mode.h>
 #include <ecal/process_severity.h>
 #include <ecal/deprecate.h>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -111,7 +112,7 @@ namespace eCAL
      *
      * @return  The process id. 
     **/
-    ECAL_API int GetProcessID();
+    ECAL_API ProcessID GetProcessID();
 
     /**
      * @brief  Get current process id as string.

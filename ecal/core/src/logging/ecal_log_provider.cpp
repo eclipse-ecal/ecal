@@ -184,7 +184,7 @@ namespace eCAL
       if (EcalUtils::Filesystem::ToUnixSeperators(log_path).back() == '/')
         log_path.pop_back();
 
-      const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(m_attributes.process_id) + ".log";
+      const std::string file_name = tstring + "_" + m_attributes.unit_name + "_" + std::to_string(static_cast<int32_t>(m_attributes.process_id)) + ".log";
       const std::vector<std::string> file_path_components = { log_path, file_name };
       
       m_logfile_name = EcalUtils::String::Join(std::string(1, EcalUtils::Filesystem::NativeSeparator()), file_path_components);

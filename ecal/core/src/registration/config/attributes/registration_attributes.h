@@ -23,6 +23,7 @@
 #include <string>
 #include <ecal/types/custom_data_types.h>
 #include <ecal/config/configuration.h>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -59,7 +60,7 @@ namespace eCAL
       unsigned int              refresh;
       std::string               host_name;
       std::string               shm_transport_domain;
-      int                       process_id;
+      ProcessID                 process_id{ 0 };
 
       SUDPAttributes            udp;
       SSHMAttributes            shm;

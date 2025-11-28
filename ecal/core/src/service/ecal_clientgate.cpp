@@ -116,7 +116,7 @@ namespace eCAL
       {
         SEntityId service_entity;
         service_entity.entity_id  = service.sid;
-        service_entity.process_id = service.pid;
+        service_entity.process_id = ProcessID{ service.pid };
         service_entity.host_name  = service.hname;
         iter->second->RegisterService(service_entity, service);
       }
