@@ -33,6 +33,8 @@
 #include <atomic>
 #include <string>
 
+#include <ecal/types.h>
+
 namespace eCAL
 {
   class CDataWriterBase
@@ -42,8 +44,8 @@ namespace eCAL
 
     virtual SWriterInfo GetInfo() = 0;
 
-    virtual void ApplySubscription(const std::string& /*host_name_*/, const int32_t /*process_id_*/, const EntityIdT& /*topic_id_*/, const std::string& /*conn_par_*/) {};
-    virtual void RemoveSubscription(const std::string& /*host_name_*/, const int32_t /*process_id_*/, const EntityIdT& /*topic_id_*/) {};
+    virtual void ApplySubscription(const std::string& /*host_name_*/, const ProcessID /*process_id_*/, const EntityIdT& /*topic_id_*/, const std::string& /*conn_par_*/) {};
+    virtual void RemoveSubscription(const std::string& /*host_name_*/, const ProcessID /*process_id_*/, const EntityIdT& /*topic_id_*/) {};
 
     virtual Registration::ConnectionPar GetConnectionParameter() { return {}; };
 

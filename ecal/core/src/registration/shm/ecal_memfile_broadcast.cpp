@@ -231,7 +231,7 @@ namespace eCAL
       m_event_queue.SetBaseAddress(GetEventQueueAddress(memfile_address));
       const auto timestamp = CreateTimestamp();
 
-      m_event_queue.Push({g_process_id, timestamp, event_id, type});
+      m_event_queue.Push({static_cast<int32_t>(g_process_id), timestamp, event_id, type});
       GetMemfileHeader(memfile_address)->timestamp = timestamp;
 
       m_broadcast_memfile->ReleaseWriteAccess();
@@ -285,7 +285,7 @@ namespace eCAL
       const auto timestamp = broadcast_message.timestamp;
       if ((timeout && (timestamp <= timeout_threshold)) || (timestamp <= m_last_timestamp))
         break;
-      if ((broadcast_message.process_id == g_process_id) && !enable_loopback)
+      if ((ProcessID{ broadcast_message.process_id } == g_process_id) && !enable_loopback)
         continue;
       event_list.push_back(&broadcast_message);
     }

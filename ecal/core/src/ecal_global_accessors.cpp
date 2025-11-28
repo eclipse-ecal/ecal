@@ -34,18 +34,18 @@
 
 namespace eCAL
 {
-  std::shared_ptr<CGlobals>     g_globals_ctx(nullptr);
+    std::shared_ptr<CGlobals>     g_globals_ctx(nullptr);
 
-  std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
-  Configuration                 g_ecal_configuration{};
+    std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
+    Configuration                 g_ecal_configuration{};
 
-  std::string                   g_host_name;
-  std::string                   g_unit_name;
-  
-  std::string                   g_process_name;
-  std::string                   g_process_par;
-  int                           g_process_id(0);
-  std::string                   g_process_id_s;
+    std::string                   g_host_name;
+    std::string                   g_unit_name;
+
+    std::string                   g_process_name;
+    std::string                   g_process_par;
+    ProcessID                     g_process_id{0};
+    std::string                   g_process_id_s;
 
   Types::Process::SProcessState g_process_state;
   std::mutex                    g_process_state_mutex;

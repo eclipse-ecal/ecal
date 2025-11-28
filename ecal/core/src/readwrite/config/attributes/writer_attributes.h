@@ -26,6 +26,8 @@
 #include <ecal/config/configuration.h>
 #include <ecal/config/transport_layer.h>
 
+#include <ecal/types.h>
+
 namespace eCAL
 {
   namespace eCALWriter
@@ -68,7 +70,7 @@ namespace eCAL
 
       std::string          host_name;
       std::string          shm_transport_domain;
-      int                  process_id;
+      ProcessID            process_id{ 0 };
       std::string          process_name;
 
       std::string          unit_name;

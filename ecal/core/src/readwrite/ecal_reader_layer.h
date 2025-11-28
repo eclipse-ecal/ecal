@@ -35,7 +35,7 @@ namespace eCAL
   struct SReaderLayerPar
   {
     std::string                 host_name;
-    int32_t                     process_id = 0;
+    ProcessID                   process_id{ 0 };
     std::string                 topic_name;
     EntityIdT     topic_id = 0;
     Registration::ConnectionPar parameter;

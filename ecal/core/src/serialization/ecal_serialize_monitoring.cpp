@@ -51,7 +51,7 @@ namespace
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_process_.shm_transport_domain, process_.shm_transport_domain);
     // process_id
-    pb_process_.process_id = process_.process_id;
+    pb_process_.process_id = static_cast<int32_t>(process_.process_id);
     // process_name
     eCAL::nanopb::encode_string(pb_process_.process_name, process_.process_name);
     // unit_name
@@ -155,7 +155,7 @@ namespace
     // shm_transport_domain
     eCAL::nanopb::encode_string(pb_topic_.shm_transport_domain, topic_.shm_transport_domain);
     // process_id
-    pb_topic_.process_id = topic_.process_id;
+    pb_topic_.process_id = static_cast<int32_t>(topic_.process_id);
     // process_name
     eCAL::nanopb::encode_string(pb_topic_.process_name, topic_.process_name);
     // unit_name
@@ -307,7 +307,7 @@ namespace
     // unit_name
     eCAL::nanopb::encode_string(pb_service_.unit_name, service_.unit_name);
     // process_id
-    pb_service_.process_id = service_.process_id;
+    pb_service_.process_id = static_cast<int32_t>(service_.process_id);
     // service_name
     eCAL::nanopb::encode_string(pb_service_.service_name, service_.service_name);
     // service_id
@@ -368,7 +368,7 @@ namespace
     // unit_name
     eCAL::nanopb::encode_string(pb_client_.unit_name, client_.unit_name);
     // process_id
-    pb_client_.process_id = client_.process_id;
+    pb_client_.process_id = static_cast<int32_t>(client_.process_id);
     // service_name
     eCAL::nanopb::encode_string(pb_client_.service_name, client_.service_name);
     // service_id
@@ -525,7 +525,7 @@ namespace
     // registration_clock
     process_.registration_clock = pb_process_.registration_clock;
     // process_id
-    process_.process_id = pb_process_.process_id;
+    process_.process_id = eCAL::ProcessID{ pb_process_.process_id };
     // state.severity
     process_.state_severity = pb_process_.state.severity;
     // state.severity_level
@@ -637,7 +637,7 @@ namespace
     // registration_clock
     topic_.registration_clock = pb_topic_.registration_clock;
     // process_id
-    topic_.process_id = pb_topic_.process_id;
+    topic_.process_id = eCAL::ProcessID(pb_topic_.process_id);
     // topic_size
     topic_.topic_size = pb_topic_.topic_size;
     // connections_local
@@ -762,7 +762,7 @@ namespace
     // registration_clock
     service_.registration_clock = pb_service_.registration_clock;
     // process_id
-    service_.process_id = pb_service_.process_id;
+    service_.process_id = eCAL::ProcessID{ pb_service_.process_id };
     // version
     service_.version = pb_service_.version;
     // tcp_port_v0
@@ -831,7 +831,7 @@ namespace
     // registration_clock
     client_.registration_clock = pb_client_.registration_clock;
     // process_id
-    client_.process_id = pb_client_.process_id;
+    client_.process_id = eCAL::ProcessID{ pb_client_.process_id };
     // version
     client_.version = pb_client_.version;
   }
@@ -977,7 +977,7 @@ namespace{
     writer_.add_int32(+eCAL::pb::Process::optional_int32_registration_clock, source_sample_.registration_clock);
     writer_.add_string(+eCAL::pb::Process::optional_string_host_name, source_sample_.host_name);
     writer_.add_string(+eCAL::pb::Process::optional_string_shm_transport_domain, source_sample_.shm_transport_domain);
-    writer_.add_int32(+eCAL::pb::Process::optional_int32_process_id, source_sample_.process_id);
+    writer_.add_int32(+eCAL::pb::Process::optional_int32_process_id, static_cast<int32_t>(source_sample_.process_id));
     writer_.add_string(+eCAL::pb::Process::optional_string_process_name, source_sample_.process_name);
     writer_.add_string(+eCAL::pb::Process::optional_string_unit_name, source_sample_.unit_name);
     writer_.add_string(+eCAL::pb::Process::optional_string_process_parameter, source_sample_.process_parameter);
@@ -1011,7 +1011,7 @@ namespace{
         AssignString(reader, target_sample_.shm_transport_domain);
         break;
       case +eCAL::pb::Process::optional_int32_process_id:
-        target_sample_.process_id = reader.get_int32();
+        target_sample_.process_id = eCAL::ProcessID{ reader.get_int32() };
         break;
       case +eCAL::pb::Process::optional_string_process_name:
         AssignString(reader, target_sample_.process_name);
@@ -1086,7 +1086,7 @@ namespace{
     writer_.add_int32(+eCAL::pb::Topic::optional_int32_registration_clock, source_sample_.registration_clock);
     writer_.add_string(+eCAL::pb::Topic::optional_string_host_name, source_sample_.host_name);
     writer_.add_string(+eCAL::pb::Topic::optional_string_shm_transport_domain, source_sample_.shm_transport_domain);
-    writer_.add_int32(+eCAL::pb::Topic::optional_int32_process_id, source_sample_.process_id);
+    writer_.add_int32(+eCAL::pb::Topic::optional_int32_process_id, static_cast<int32_t>(source_sample_.process_id));
     writer_.add_string(+eCAL::pb::Topic::optional_string_process_name, source_sample_.process_name);
     writer_.add_string(+eCAL::pb::Topic::optional_string_unit_name, source_sample_.unit_name);
     writer_.add_string(+eCAL::pb::Topic::optional_string_topic_id, std::to_string(source_sample_.topic_id));
@@ -1126,7 +1126,7 @@ namespace{
         target_sample_.shm_transport_domain = reader_.get_string();
         break;
       case +eCAL::pb::Topic::optional_int32_process_id:
-        target_sample_.process_id = reader_.get_int32();
+          target_sample_.process_id = eCAL::ProcessID{ reader_.get_int32() };
         break;
       case +eCAL::pb::Topic::optional_string_process_name:
         target_sample_.process_name = reader_.get_string();
@@ -1223,7 +1223,7 @@ namespace{
     writer_.add_string(+eCAL::pb::Service::optional_string_host_name, source_sample_.host_name);
     writer_.add_string(+eCAL::pb::Service::optional_string_process_name, source_sample_.process_name);
     writer_.add_string(+eCAL::pb::Service::optional_string_unit_name, source_sample_.unit_name);
-    writer_.add_int32(+eCAL::pb::Service::optional_int32_process_id, source_sample_.process_id);
+    writer_.add_int32(+eCAL::pb::Service::optional_int32_process_id, static_cast<int32_t>(source_sample_.process_id));
     writer_.add_string(+eCAL::pb::Service::optional_string_service_name, source_sample_.service_name);
     writer_.add_string(+eCAL::pb::Service::optional_string_service_id, std::to_string(source_sample_.service_id));
     
@@ -1257,7 +1257,7 @@ namespace{
         target_sample_.unit_name = reader_.get_string();
         break;
       case +eCAL::pb::Service::optional_int32_process_id:
-        target_sample_.process_id = reader_.get_int32();
+        target_sample_.process_id = eCAL::ProcessID{ reader_.get_int32() };
         break;
       case +eCAL::pb::Service::optional_string_service_name:
         target_sample_.service_name = reader_.get_string();
@@ -1290,7 +1290,7 @@ namespace{
     writer_.add_string(+eCAL::pb::Client::optional_string_host_name, source_sample_.host_name);
     writer_.add_string(+eCAL::pb::Client::optional_string_process_name, source_sample_.process_name);
     writer_.add_string(+eCAL::pb::Client::optional_string_unit_name, source_sample_.unit_name);
-    writer_.add_int32(+eCAL::pb::Client::optional_int32_process_id, source_sample_.process_id);
+    writer_.add_int32(+eCAL::pb::Client::optional_int32_process_id, static_cast<int32_t>(source_sample_.process_id));
     writer_.add_string(+eCAL::pb::Client::optional_string_service_name, source_sample_.service_name);
     writer_.add_string(+eCAL::pb::Client::optional_string_service_id, std::to_string(source_sample_.service_id));
     
@@ -1322,7 +1322,7 @@ namespace{
         target_sample_.unit_name = reader_.get_string();
         break;
       case +eCAL::pb::Client::optional_int32_process_id:
-        target_sample_.process_id = reader_.get_int32();
+        target_sample_.process_id = eCAL::ProcessID{ reader_.get_int32() };
         break;
       case +eCAL::pb::Client::optional_string_service_name:
         target_sample_.service_name = reader_.get_string();

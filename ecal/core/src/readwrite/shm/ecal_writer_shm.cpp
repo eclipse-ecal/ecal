@@ -83,7 +83,7 @@ namespace eCAL
     return sent;
   }
 
-  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_, const std::string& /*conn_par_*/)
+  void CDataWriterSHM::ApplySubscription(const std::string& host_name_, const ProcessID process_id_, const EntityIdT& topic_id_, const std::string& /*conn_par_*/)
   {
     // we accept local connections only
     if (host_name_ != m_attributes.host_name) return;
@@ -97,7 +97,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Connect(std::to_string(process_id_));
+      memory_file->Connect(std::to_string(static_cast<int32_t>(process_id_)));
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
@@ -108,7 +108,7 @@ namespace eCAL
   * Potentially, a publisher has multiple subscribers within the same process
   * 
   */
-  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const int32_t process_id_, const EntityIdT& topic_id_)
+  void CDataWriterSHM::RemoveSubscription(const std::string& host_name_, const ProcessID process_id_, const EntityIdT& topic_id_)
   {
     // we accept local disconnections only
     if (host_name_ != m_attributes.host_name) return;
@@ -142,7 +142,7 @@ namespace eCAL
     // If the removed subscription was the last one, we need to temporarily disconnect the process
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Disconnect(std::to_string(process_id_));
+      memory_file->Disconnect(std::to_string(static_cast<int32_t>(process_id_)));
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif

@@ -68,7 +68,7 @@ namespace eCAL
     bool CSampleApplier::IsSameProcess(const Registration::Sample& sample_) const
     {
       // is this actually sufficient? should we also check host_name?
-      const int32_t process_id = sample_.identifier.process_id;
+      const auto process_id = sample_.identifier.process_id;
       return process_id == m_attributes.process_id;
     }
 

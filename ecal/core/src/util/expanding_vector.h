@@ -39,8 +39,9 @@ namespace eCAL
      * This class is *not* threadsafe and needs to be protected by locks / mutexes in multithreaded environments.
      * 
      * From the outside / for the user, this class acts as a regular std::vector.
-     * However, when calling clear(), a regular vector will destroy the elements which are stored in this vector.
-     * This class, will instead call the `clear()` functions on all members.
+     * clear() does not destroy or deallocate elements; instead, 
+     * it calls T::clear() on all stored elements and sets size() to 0. 
+     * Elements may still be destroyed by reallocation, resize(), or container destruction.
      */
 
      // Templated class CExpandingVector
@@ -72,8 +73,8 @@ namespace eCAL
     
         // Clear the content but not the underlying vector
         void clear() {
-            for (auto& elem : data) {
-                elem.clear();  // Call the clear() function on individual elements
+            for (size_t i = 0; i < internal_size; ++i) {
+                data[i].clear();  // Clear only active elements
             }
             // We don't modify the size of the underlying vector but keep the internal size consistent.
             internal_size = 0;

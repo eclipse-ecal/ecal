@@ -68,7 +68,7 @@ namespace eCAL
       const Monitoring::SMonitoring monitoring = GetMonitoring();
       const std::string             host_name  = Process::GetHostName();
 
-      std::vector<int> proc_id_list;
+      std::vector<ProcessID> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
         const std::string process_name = process.process_name;
@@ -80,15 +80,15 @@ namespace eCAL
         }
       }
 
-      for (auto id : proc_id_list)
+      for (const auto& id : proc_id_list)
       {
         ShutdownProcess(id);
       }
     }
 
-    void ShutdownProcess(const int process_id_)
+    void ShutdownProcess(const ProcessID process_id_)
     {
-      const std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(process_id_);
+      const std::string event_name = EVENT_SHUTDOWN_PROC + std::string("_") + std::to_string(static_cast<int32_t>(process_id_));
       EventHandleT event;
       if (gOpenNamedEvent(&event, event_name, true))
       {
@@ -103,7 +103,7 @@ namespace eCAL
       const Monitoring::SMonitoring monitoring = GetMonitoring();
       const std::string             host_name = eCAL::Process::GetHostName();
 
-      std::vector<int> proc_id_list;
+      std::vector<ProcessID> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
         const std::string unit_name = process.unit_name;
@@ -134,7 +134,7 @@ namespace eCAL
       const Monitoring::SMonitoring monitoring = GetMonitoring();
       const std::string             host_name  = Process::GetHostName();
 
-      std::vector<int> proc_id_list;
+      std::vector<ProcessID> proc_id_list;
       for (const auto& process : monitoring.processes)
       {
         const std::string unit_name = process.unit_name;
@@ -155,7 +155,7 @@ namespace eCAL
         }
       }
 
-      for (auto id : proc_id_list)
+      for (const auto& id : proc_id_list)
       {
         ShutdownProcess(id);
       }

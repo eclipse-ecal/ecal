@@ -26,6 +26,7 @@
 
 #include <ecal/os.h>
 #include <ecal/deprecate.h>
+#include <ecal/types.h>
 
 #include <string>
 #include <utility>
@@ -76,7 +77,7 @@ namespace eCAL
      *
      * @param process_id_   Process id.
     **/
-    ECAL_API void ShutdownProcess(int process_id_);
+    ECAL_API void ShutdownProcess(ProcessID process_id_);
 
     /**
      * @brief Send shutdown event to all local user processes.

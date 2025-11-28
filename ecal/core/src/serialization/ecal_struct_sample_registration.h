@@ -260,7 +260,7 @@ namespace eCAL
 
       int64_t                             data_id    = 0;               // data send id (publisher setid)
       int64_t                             data_clock = 0;               // data clock (send / receive action)
-      int32_t                             data_frequency  = 0;                   // data frequency (send / receive registrations per second) [mHz]
+      int32_t                             data_frequency  = 0;          // data frequency (send / receive registrations per second) [mHz]
 
 
       bool operator==(const Topic& other) const {
@@ -307,7 +307,7 @@ namespace eCAL
     struct SampleIdentifier
     {
       uint64_t                           entity_id = 0;                 // unique id within that process
-      int32_t                            process_id = 0;                // process id which produced the sample
+      ProcessID                          process_id{ 0 };               // process id which produced the sample
       std::string                        host_name;                     // host which produced the sample
 
       // This is a hack that assumes the entity_id is unique within the whole ecal system (which it should be)
@@ -323,7 +323,7 @@ namespace eCAL
       void clear()
       {
         entity_id = 0;
-        process_id = 0;
+        process_id = ProcessID{ 0 };
         host_name.clear();
       }
     };
@@ -350,11 +350,29 @@ namespace eCAL
       void clear()
       {
         identifier.clear();
-        cmd_type = bct_none;
-        process.clear();
-        service.clear();
-        client.clear();
-        topic.clear();
+        switch (cmd_type)
+        {
+		case bct_reg_service:
+		case bct_unreg_service:
+          service.clear();
+          break;
+		case bct_reg_client:
+        case bct_unreg_client:
+          client.clear();
+		  break;
+		case bct_reg_process:
+        case bct_unreg_process:
+          process.clear();
+		  break;
+		case bct_reg_publisher:
+		case bct_unreg_publisher:
+        case bct_reg_subscriber:
+        case bct_unreg_subscriber:
+          topic.clear();
+		  break;
+        default:
+            break;
+        }
       }
     };
 

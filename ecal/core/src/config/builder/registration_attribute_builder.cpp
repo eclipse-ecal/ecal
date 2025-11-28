@@ -23,7 +23,7 @@
 
 namespace eCAL
 {
-  Registration::SAttributes BuildRegistrationAttributes(const eCAL::Configuration& config_, int process_id_)
+  Registration::SAttributes BuildRegistrationAttributes(const eCAL::Configuration& config_, ProcessID process_id_)
   {
     const auto& reg_config    = config_.registration;
     const auto& tl_udp_config = config_.transport_layer.udp;

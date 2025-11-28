@@ -35,6 +35,8 @@
 #include <string>
 #include <vector>
 
+#include <ecal/types.h>
+
 namespace
 {
   void CreatePayloadStruct(const eCAL::Payload::Sample& payload_, eCAL::nanopb::SNanoBytes& nano_bytes_)
@@ -76,7 +78,7 @@ namespace
     // host_name
     eCAL::nanopb::encode_string(pb_sample_.topic.host_name, payload_.topic_info.host_name);
     // process_id
-    pb_sample_.topic.process_id = payload_.topic_info.process_id;
+    pb_sample_.topic.process_id = static_cast<int32_t>(payload_.topic_info.process_id);
     // topic_id
     eCAL::nanopb::encode_int_to_string(pb_sample_.topic.topic_id, payload_.topic_info.topic_id);
     // topic_name
@@ -181,7 +183,7 @@ namespace
     payload_.cmd_type = static_cast<eCAL::eCmdType>(pb_sample.cmd_type);
 
     // process_id
-    payload_.topic_info.process_id = pb_sample.topic.process_id;
+    payload_.topic_info.process_id = eCAL::ProcessID{ pb_sample.topic.process_id };
 
     // topic content
     payload_.content.id    = pb_sample.content.id;
@@ -261,7 +263,7 @@ namespace
       Writer topic_writer{ writer, +eCAL::pb::Sample::optional_message_topic };
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_name, sample.topic_info.topic_name);
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_id, std::to_string(sample.topic_info.topic_id));
-      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_process_id, sample.topic_info.process_id);
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_process_id, static_cast<int32_t>(sample.topic_info.process_id));
       topic_writer.add_string(+eCAL::pb::Topic::optional_string_host_name, sample.topic_info.host_name);
     }
     {
@@ -293,7 +295,7 @@ namespace
         }
         break;
       case +eCAL::pb::Topic::optional_int32_process_id:
-        topic_info.process_id = reader.get_int32();
+        topic_info.process_id = eCAL::ProcessID{ reader.get_int32() };
         break;
       case +eCAL::pb::Topic::optional_string_host_name:
         AssignString(reader, topic_info.host_name);

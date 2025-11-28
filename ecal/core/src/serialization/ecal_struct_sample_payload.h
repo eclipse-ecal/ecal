@@ -32,6 +32,8 @@
 #include <string>
 #include <vector>
 
+#include <ecal/types.h>
+
 namespace eCAL
 {
   namespace Payload
@@ -42,7 +44,7 @@ namespace eCAL
       std::string                         host_name;                        // host name
       uint64_t                            topic_id;                         // topic id
       std::string                         topic_name;                       // topic name
-      int32_t                             process_id = 0;                   // process id
+      ProcessID                           process_id{ 0 };                  // process id
     };
 
     // Topic content payload

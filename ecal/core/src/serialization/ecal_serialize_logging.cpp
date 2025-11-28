@@ -48,7 +48,7 @@ namespace
     // host_name
     eCAL::nanopb::encode_string(pb_log_message_.host_name, log_message_.host_name);
     // process_id
-    pb_log_message_.process_id = log_message_.process_id;
+    pb_log_message_.process_id = static_cast<int32_t>(log_message_.process_id);
     // process_name
     eCAL::nanopb::encode_string(pb_log_message_.process_name, log_message_.process_name);
     // unit_name
@@ -132,7 +132,7 @@ namespace
     // time
     log_message_.time = pb_log_message_.time;
     // process_id
-    log_message_.process_id = pb_log_message_.process_id;
+    log_message_.process_id = eCAL::ProcessID{ pb_log_message_.process_id };
     // level
     log_message_.level = static_cast<eCAL::Logging::eLogLevel>(pb_log_message_.level);
   }
@@ -358,7 +358,7 @@ namespace
   {
     writer.add_int64(+eCAL::pb::LogMessage::optional_int64_time, log_message.time);
     writer.add_string(+eCAL::pb::LogMessage::optional_string_host_name, log_message.host_name);
-    writer.add_int32(+eCAL::pb::LogMessage::optional_int32_process_id, log_message.process_id);
+    writer.add_int32(+eCAL::pb::LogMessage::optional_int32_process_id, static_cast<int32_t>(log_message.process_id));
     writer.add_string(+eCAL::pb::LogMessage::optional_string_process_name, log_message.process_name);
     writer.add_string(+eCAL::pb::LogMessage::optional_string_unit_name, log_message.unit_name);
     writer.add_int32(+eCAL::pb::LogMessage::optional_int32_level, log_message.level);
@@ -378,7 +378,7 @@ namespace
         AssignString(reader, log_message.host_name);
         break;
       case +eCAL::pb::LogMessage::optional_int32_process_id:
-        log_message.process_id = reader.get_int32();
+        log_message.process_id = eCAL::ProcessID{ reader.get_int32() };
         break;
       case +eCAL::pb::LogMessage::optional_string_process_name:
         AssignString(reader, log_message.process_name);

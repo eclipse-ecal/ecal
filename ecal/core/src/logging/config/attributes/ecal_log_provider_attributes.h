@@ -22,6 +22,7 @@
 #include <string>
 
 #include <ecal/log_level.h>
+#include <ecal/types.h>
 
 namespace eCAL
 {
@@ -57,7 +58,7 @@ namespace eCAL
       SUDP                   udp_config;
       SFile                  file_config;
 
-      int                    process_id;
+      ProcessID              process_id{ 0 };
       std::string            host_name;
       std::string            process_name;
       std::string            unit_name;
