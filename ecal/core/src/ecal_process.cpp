@@ -590,9 +590,9 @@ namespace
 {
   void create_proc_id()
   {
-    if (eCAL::g_process_id == ProcessID{ 0 })
+    if (eCAL::g_process_id == eCAL::ProcessID{ 0 })
     {
-      eCAL::g_process_id = ProcessID{ getpid() };
+      eCAL::g_process_id = eCAL::ProcessID{ getpid() };
       eCAL::g_process_id_s = std::to_string(eCAL::g_process_id);
     }
   }
