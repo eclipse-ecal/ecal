@@ -20,6 +20,10 @@
 #include "dynamic_threadpool_impl.h"
 
 #include <cassert>
+#include <cstddef>
+#include <functional>
+#include <mutex>
+#include <thread>
 
 DynamicThreadPoolImpl::DynamicThreadPoolImpl()
 {}

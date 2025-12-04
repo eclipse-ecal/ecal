@@ -18,8 +18,12 @@
 */
 
 #include <dynamic_threadpool/dynamic_threadpool.h>
-
 #include "dynamic_threadpool_impl.h"
+
+#include <cstddef>
+#include <functional>
+#include <memory>
+
 
 DynamicThreadPool::DynamicThreadPool()
   : impl(std::make_unique<DynamicThreadPoolImpl>())

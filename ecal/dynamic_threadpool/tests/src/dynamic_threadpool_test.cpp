@@ -17,14 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <gtest/gtest.h>
-
 #include <dynamic_threadpool/dynamic_threadpool.h>
 
+#include <gtest/gtest.h>
 #include "atomic_signalable.h"
 
-#include <thread>
 #include <chrono>
+#include <cstddef>
+#include <memory>
+#include <thread>
 
 TEST(DynamicThreadpool, CreateAndDelete)
 {
@@ -226,7 +227,7 @@ TEST(DynamicThreadPool, Shutdown)
   thread_pool.Shutdown();
 
   // Test that adding another task now fails
-  bool success = thread_pool.Post([&finished_tasks, delay]()
+  bool const success = thread_pool.Post([&finished_tasks, delay]()
                                   {
                                       std::this_thread::sleep_for(delay);
                                       finished_tasks++;
