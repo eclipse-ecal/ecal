@@ -48,7 +48,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CSyncMemoryFile::Connect(const std::string& process_id_)
+  bool CSyncMemoryFile::Connect(const int32_t process_id_)
   {
     if (!m_created) return false;
 
@@ -57,8 +57,9 @@ namespace eCAL
     //   we have ONE memory file per publisher and 1 or 2 events per memory file
 
     // the event names
-    const std::string event_snd_name = m_memfile_name + "_" + process_id_;
-    const std::string event_ack_name = m_memfile_name + "_" + process_id_ + "_ack";
+    const std::string process_id_string = std::to_string(process_id_);
+    const std::string event_snd_name = m_memfile_name + "_" + process_id_string;
+    const std::string event_ack_name = m_memfile_name + "_" + process_id_string + "_ack";
 
     // check for existing process
     const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
@@ -70,7 +71,7 @@ namespace eCAL
       SEventHandlePair event_pair;
       gOpenNamedEvent(&event_pair.event_snd, event_snd_name, true);
       gOpenNamedEvent(&event_pair.event_ack, event_ack_name, true);
-      m_event_handle_map.insert(std::pair<std::string, SEventHandlePair>(process_id_, event_pair));
+      m_event_handle_map.insert(std::pair<int32_t, SEventHandlePair>(process_id_, event_pair));
       return true;
     }
     else
@@ -103,7 +104,7 @@ namespace eCAL
   * Also, the disconnect does not prevent the `event_snd` not to be set when the publisher writes data. 
   * We should theoretically distinguish between not acknowledging, and not signaling send data.
   */
-  bool CSyncMemoryFile::Disconnect(const std::string& process_id_)
+  bool CSyncMemoryFile::Disconnect(const int32_t process_id_)
   {
     if (!m_created) return false;
 
@@ -315,7 +316,7 @@ namespace eCAL
   bool CSyncMemoryFile::Recreate(size_t size_)
   {
     // collect id's of the currently connected processes
-    std::vector<std::string> process_id_list;
+    std::vector<int32_t> process_id_list;
     {
       const std::lock_guard<std::mutex> lock(m_event_handle_map_sync);
       for (const auto& event_handle : m_event_handle_map)

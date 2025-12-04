@@ -97,7 +97,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Connect(std::to_string(process_id_));
+      memory_file->Connect(process_id_);
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
@@ -142,7 +142,7 @@ namespace eCAL
     // If the removed subscription was the last one, we need to temporarily disconnect the process
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Disconnect(std::to_string(process_id_));
+      memory_file->Disconnect(process_id_);
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif

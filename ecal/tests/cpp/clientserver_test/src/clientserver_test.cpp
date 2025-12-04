@@ -516,7 +516,7 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 // Test time-behavior of CallWithResponse with multiple servers when one server is slow
 TEST(core_cpp_clientserver, ClientServerCallWithResponseTimeBehavior)
 {
-  const std::chrono::milliseconds server_2_calculation_time(200);
+  const std::chrono::milliseconds server_2_calculation_time(1000);
 
   // initialize eCAL API
   eCAL::Initialize("clientserver base callback timeout time behavior test");
@@ -669,7 +669,7 @@ TEST(core_cpp_clientserver, ClientServerCallWithResponseTimeBehavior)
 // Also tests that the function only returns AFTER the user-callback has been called for all responses, even if that goes beyond the timeout.
 TEST(core_cpp_clientserver, ClientServerCallWithCallbackTimeBehavior)
 {
-  const std::chrono::milliseconds server_2_calculation_time(200);
+  const std::chrono::milliseconds server_2_calculation_time(1000);
     
   // initialize eCAL API
   eCAL::Initialize("clientserver call with callback time behavior test");
