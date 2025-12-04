@@ -44,6 +44,7 @@ endif()
 # services
 # --------------------------------------------------------
 if(ECAL_CORE_SERVICE)
+  add_subdirectory(dynamic_threadpool)
   add_subdirectory(service)
 endif()
 
