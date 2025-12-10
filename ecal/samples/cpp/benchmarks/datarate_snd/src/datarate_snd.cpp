@@ -32,7 +32,7 @@ int main(int argc, char **argv)
   // parse command line
   TCLAP::CmdLine cmd("datarate_snd");
   TCLAP::ValueArg<std::string> arg_topic_name       ("t", "topic_name",       "Topic name to publish.",                  false, "topic", "string");
-  TCLAP::ValueArg<int>         arg_size             ("s", "size",             "Message size in MB.",                     false,       1,    "int");
+  TCLAP::ValueArg<int>         arg_size             ("s", "size",             "Message size in MB.",                     false,       8,    "int");
   TCLAP::ValueArg<int>         arg_sleep            ("d", "delay",            "Delay between publication in ms.",        false,       1,    "int");
   TCLAP::SwitchArg             arg_zero_copy        ("z", "zero_copy",        "Zero copy mode on/off."                                           );
   TCLAP::ValueArg<int>         arg_buffer_count     ("b", "buffer_count",     "Number of memory file buffers.",          false,       1,    "int");
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   eCAL::CPublisher pub(topic_name, eCAL::SDataTypeInformation(), pub_config);
 
   // default send string
-  size *= 1024;
+  size *= 1024 * 1024;
   std::string send_s = "Hello World ";
   while(send_s.size() < size)
   {
