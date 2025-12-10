@@ -789,7 +789,8 @@ target_link_libraries(${TARGET_NAME}
     ecal_core_serialization
 )
 
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} INTERFACE cxx_std_14)
 
 set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
 
