@@ -24,35 +24,16 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/ecal_named_mutex.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_db.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_naming.cpp
 )
-
-if(UNIX)
-set(memfile_test_os_src
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
-)
-endif()
-
-if(WIN32)
-set(memfile_test_os_src
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/win32/ecal_memfile_os.cpp
-)
-endif()
 
 ecal_add_gtest(${PROJECT_NAME} ${memfile_test_src} ${memfile_test_os_src})
-
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
+    ecal_core_private
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

@@ -23,18 +23,16 @@ find_package(GTest REQUIRED)
 
 set(event_test_src
   src/event_test.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_event.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
-
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
+    ecal_core_private
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
