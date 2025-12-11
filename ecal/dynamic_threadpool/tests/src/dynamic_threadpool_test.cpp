@@ -250,3 +250,31 @@ TEST(DynamicThreadPool, Shutdown)
   EXPECT_LT(duration, delay * (number_of_tasks + 1));
 }
 #endif
+
+#if 1
+// Stress-test the threadpool with many fast tasks
+TEST(DynamicThreadPool, StressTest)
+{
+  constexpr int number_of_tasks = 100'000;
+  DynamicThreadPool thread_pool;
+  atomic_signalable<int> finished_tasks(0);
+  
+  for (int i = 0; i < number_of_tasks; i++)
+  {
+    thread_pool.Post([&finished_tasks]()
+                      {
+                          finished_tasks++;
+                      });
+  }
+
+  // Wait for tasks to finish
+  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, std::chrono::seconds(10));
+  EXPECT_EQ(finished_tasks.get(), number_of_tasks);
+
+  // Wait a short time for the threadpool internal workerthread to also go into idle
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+  EXPECT_GE(thread_pool.GetSize(), 1);
+  EXPECT_EQ(thread_pool.GetSize(), thread_pool.GetIdleCount()); // All workers are idle
+}
+#endif
