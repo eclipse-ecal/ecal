@@ -24,11 +24,17 @@ import "ecal/core/pb/datatype.proto";
 
 package eCAL.pb;
 
+message Statistics
+{
+  uint64 count = 1;
+  double min  = 2;
+  double max  = 3;
+  double mean = 4;
+  double variance = 5;
+}
+
 message Topic                                      // eCAL topic
 {
-  // Reserved fields in enums are not supported in protobuf 3.0
-  // reserved 9, 10, 11, 14, 15, 22 to 26, 29;
-
   int32               registration_clock    =  1;  // registration clock (heart beat)
   string              host_name             =  2;  // host name
   string              shm_transport_domain  = 28;  // shm_transport_domain
@@ -52,6 +58,7 @@ message Topic                                      // eCAL topic
   int64               data_id               = 19;  // data send id (publisher setid)
   int64               data_clock            = 20;  // data clock (send / receive action)
   int32               data_frequency        = 21;  // data frequency (send / receive samples per second) [mHz]
+  Statistics          latency_us            = 31;  // latency statistics in us
 
-  reserved 27;                                     // previously "attr" for generic topic description
+  reserved 9, 10, 11, 14, 15, 22 to 27, 29;     // previously "attr" for generic topic description
 }

@@ -469,6 +469,7 @@ set(ecal_util_src
     src/util/ecal_thread.h
     src/util/expanding_vector.h
     src/util/frequency_calculator.h
+    src/util/statistics_calculator.h
     src/util/message_drop_calculator.cpp
     src/util/message_drop_calculator.h
     src/util/getenvvar.h
