@@ -754,6 +754,7 @@ target_link_libraries(ecal_core_private
 target_compile_features(ecal_core_private PUBLIC cxx_std_14)
 
 set_property(TARGET ecal_core_private PROPERTY FOLDER core)
+set_property(TARGET ecal_core_private PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
