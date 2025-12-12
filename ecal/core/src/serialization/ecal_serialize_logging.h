@@ -32,19 +32,6 @@
 
 namespace eCAL
 {
-  namespace nanopb
-  {
-    // logmessage - serialize/deserialize
-    bool SerializeToBuffer     (const Logging::SLogMessage& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Logging::SLogMessage& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::SLogMessage& target_sample_);
-  
-    // logmessage list - serialize/deserialize
-    bool SerializeToBuffer     (const Logging::SLogging& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Logging::SLogging& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Logging::SLogging& target_sample_);
-  }
-  
   inline namespace protozero
   {
     // logmessage - serialize/deserialize

@@ -25,9 +25,6 @@
 
 #pragma once
 
-#include "nanopb/pb_encode.h"
-#include "nanopb/pb_decode.h"
-
 #include "ecal_struct_sample_payload.h"
 #include "ecal_struct_sample_registration.h"
 #include "ecal_struct_service.h"
@@ -36,37 +33,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
-namespace eCAL
-{
-  namespace nanopb
-  {
-    struct SNanoBytes
-    {
-      pb_byte_t* content = nullptr;
-      size_t     length  = 0;
-    };
-
-    void encode_string(pb_callback_t& pb_callback, const std::string& str);
-    void decode_string(pb_callback_t& pb_callback, std::string& str);
-
-    void encode_int_to_string(pb_callback_t& pb_callback, const uint64_t& int_argument);
-    void decode_int_from_string(pb_callback_t& pb_callback, uint64_t& int_argument);
-
-    void encode_bytes(pb_callback_t& pb_callback, const SNanoBytes& nano_bytes);
-    void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec);
-    void decode_bytes(pb_callback_t& pb_callback, std::vector<char>& vec);
-
-    void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map);
-    void decode_map(pb_callback_t& pb_callback, std::map<std::string, std::string>& str_map);
-
-    void encode_registration_layer(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
-    void decode_registration_layer(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
-
-    void encode_service_methods(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Service::Method>& method_vec);
-    void decode_service_methods(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Service::Method>& method_vec);
-  }
-}
 
 #include <ecal/core/pb/datatype.pbftags.h>
 #include <protozero/pbf_reader.hpp>
