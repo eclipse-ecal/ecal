@@ -51,6 +51,17 @@ namespace eCAL
       return process;
     }
 
+    SStatistics GenerateStatistics()
+    {
+      SStatistics stats;
+      stats.count  = rand() % 10000;
+      stats.min    = static_cast<double>(rand() % 1000) / 10.0;
+      stats.max    = static_cast<double>(rand() % 1000) / 10.0 + stats.min;
+      stats.mean   = (stats.min + stats.max) / 2.0;
+      stats.variance = static_cast<double>(rand() % 100) / 10.0;
+      return stats;
+    }
+
     // generate topic
     STopic GenerateTopic(const std::string& direction)
     {
@@ -73,6 +84,7 @@ namespace eCAL
       topic.data_id              = rand() % 10000;
       topic.data_clock           = rand() % 10000;
       topic.data_frequency       = rand() % 100;
+      topic.latency_us = GenerateStatistics();
       return topic;
     }
 

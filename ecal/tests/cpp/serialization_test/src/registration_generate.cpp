@@ -133,6 +133,11 @@ namespace eCAL
       topic.data_id              = rand();
       topic.data_clock           = rand();
       topic.data_frequency       = rand() % 100;
+      topic.latency_us.count = rand() % 10000;
+      topic.latency_us.min = static_cast<double>(rand() % 1000) / 10.0;
+      topic.latency_us.max = static_cast<double>(rand() % 1000) / 10.0 + topic.latency_us.min;
+      topic.latency_us.mean = (topic.latency_us.min + topic.latency_us.max) / 2.0;
+      topic.latency_us.variance = static_cast<double>(rand() % 100) / 10.0;
       return topic;
     }
 

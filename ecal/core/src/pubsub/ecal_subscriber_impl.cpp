@@ -412,7 +412,7 @@ namespace eCAL
     m_clock++;
 
     TriggerMessageDropUdate(publication_info, clock_);
-    TriggerFrequencyUpdate();
+    TriggerStatisticsUpdate(time_);
 
     // reset timeout
     m_receive_time = 0;
@@ -582,7 +582,11 @@ namespace eCAL
     ecal_reg_sample_topic.process_name   = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
     ecal_reg_sample_topic.data_clock     = m_clock;
-    ecal_reg_sample_topic.data_frequency = GetFrequency();
+    {
+      const std::lock_guard<std::mutex> lock(m_statistics_mutex);
+      ecal_reg_sample_topic.data_frequency = GetFrequency();
+      ecal_reg_sample_topic.latency_us = m_latency_us_calculator.GetStatistics();
+    }
     ecal_reg_sample_topic.message_drops  = GetMessageDropsAndFireDroppedEvents();
 
     // we do not know the number of connections ..
@@ -788,11 +792,16 @@ namespace eCAL
     return true;
   }
 
-  void CSubscriberImpl::TriggerFrequencyUpdate()
+  void CSubscriberImpl::TriggerStatisticsUpdate(long long send_time_)
   {
-    const auto receive_time = std::chrono::steady_clock::now();
-    const std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
+    const auto receive_time = eCAL::Time::ecal_clock::now();
+    
+    const std::lock_guard<std::mutex> freq_lock(m_statistics_mutex);
     m_frequency_calculator.addTick(receive_time);
+
+    eCAL::Time::ecal_clock::time_point sent_time_point{ std::chrono::milliseconds(send_time_)};
+    double latency_us = std::chrono::duration<double, std::micro>(receive_time - sent_time_point).count();
+    m_latency_us_calculator.Update(latency_us);
   }
 
   void CSubscriberImpl::TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter)
@@ -824,8 +833,7 @@ namespace eCAL
 
   int32_t CSubscriberImpl::GetFrequency()
   {
-    const auto frequency_time = std::chrono::steady_clock::now();
-    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+    const auto frequency_time = eCAL::Time::ecal_clock::now();
 
     const double frequency_in_mhz = m_frequency_calculator.getFrequency(frequency_time) * 1000;
 

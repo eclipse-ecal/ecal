@@ -194,6 +194,44 @@ namespace
   }
 
   template <typename Writer>
+  void SerializeTopicStatistics(Writer& writer, const eCAL::Registration::Statistics& sample)
+  { 
+    writer.add_uint64(+eCAL::pb::Statistics::optional_uint64_count, sample.count);
+    writer.add_double(+eCAL::pb::Statistics::optional_double_min, sample.min);
+    writer.add_double(+eCAL::pb::Statistics::optional_double_max, sample.max);
+    writer.add_double(+eCAL::pb::Statistics::optional_double_mean, sample.mean);
+    writer.add_double(+eCAL::pb::Statistics::optional_double_variance, sample.variance);
+  }
+
+  void DeserializeTopicStatistics(::protozero::pbf_reader& reader, eCAL::Registration::Statistics& sample)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Statistics::optional_uint64_count:
+        sample.count = reader.get_uint64();
+        break;
+      case +eCAL::pb::Statistics::optional_double_min:
+        sample.min = reader.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_max:
+        sample.max = reader.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_mean:
+        sample.mean = reader.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_variance:
+        sample.variance = reader.get_double();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  template <typename Writer>
   void SerializeTopicSample(Writer& writer, const eCAL::Registration::Sample& sample)
   {
     // sanity check
@@ -239,6 +277,10 @@ namespace
       topic_writer.add_int64(+eCAL::pb::Topic::optional_int64_data_id, sample.topic.data_id);
       topic_writer.add_int64(+eCAL::pb::Topic::optional_int64_data_clock, sample.topic.data_clock);
       topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_data_frequency, sample.topic.data_frequency);
+      {
+        Writer latency_writer{ topic_writer, +eCAL::pb::Topic::optional_message_latency_us };
+        SerializeTopicStatistics(latency_writer, sample.topic.latency_us);
+      }
     }
   }
 
@@ -307,6 +349,9 @@ namespace
         break;
       case +eCAL::pb::Topic::optional_int32_data_frequency:
         sample.topic.data_frequency = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_message_latency_us:
+        AssignMessage(reader, sample.topic.latency_us, DeserializeTopicStatistics);
         break;
       default:
         reader.skip();
