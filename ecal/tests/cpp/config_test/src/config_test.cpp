@@ -29,7 +29,7 @@
 #ifdef ECAL_CORE_CONFIGURATION
   #include "config/configuration_reader.h"
 #endif
-#include "default_configuration.h"
+#include "config/default_configuration.h"
 #include "ecal_def.h"
 
 template<typename MEMBER, typename VALUE>
