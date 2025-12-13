@@ -32,7 +32,7 @@ jobs:
           build_dir: _build
           apt_packages: "cmake,ninja-build,build-essential,zlib1g-dev,qtbase5-dev,libhdf5-dev,libprotobuf-dev,libprotoc-dev,protobuf-compiler,libcurl4-openssl-dev,libqwt-qt5-dev,libyaml-cpp-dev"
           config_file: ".clang-tidy"
-          exclude: "ecal/core/src/serialization/nanopb/*,thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,tests/*,lang/*"
+          exclude: "thirdparty/*,_build/*,convert_utf.cpp,convert_utf.h,tests/*,lang/*"
           split_workflow: true
           lgtm_comment_body: ""
           cmake_command: |

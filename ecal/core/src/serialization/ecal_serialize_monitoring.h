@@ -33,14 +33,6 @@
 
 namespace eCAL
 {
-  namespace nanopb
-  {
-    // monitoring - serialize/deserialize
-    bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Monitoring::SMonitoring& target_sample_);
-  }
-
   inline namespace protozero
   {
     // monitoring - serialize/deserialize

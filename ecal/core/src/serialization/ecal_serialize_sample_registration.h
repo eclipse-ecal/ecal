@@ -33,19 +33,6 @@
 
 namespace eCAL
 {
-  namespace nanopb
-  {
-    // registration sample - serialize/deserialize
-    bool SerializeToBuffer     (const Registration::Sample& registration_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Registration::Sample& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::Sample& target_sample_);
-  
-    // registration sample list - serialize/deserialize
-    bool SerializeToBuffer     (const Registration::SampleList& registration_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Registration::SampleList& source_sample_list_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::SampleList& target_sample_);
-  }
-
   inline namespace protozero
   {
     // registration sample - serialize/deserialize

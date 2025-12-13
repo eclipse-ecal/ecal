@@ -38,20 +38,6 @@ namespace
     return list;
   }
 
-  struct NanopbSerialization  {
-    template<typename T>
-    static bool SerializeToBuffer(const T& sample_, std::string& buffer_)
-    {
-      return eCAL::nanopb::SerializeToBuffer(sample_, buffer_);
-    }
-
-    template<typename T>
-    static bool DeserializeFromBuffer(const char* data_, size_t size_, T& target_sample_)
-    {
-      return eCAL::nanopb::DeserializeFromBuffer(data_, size_, target_sample_);
-    }
-  };
-
   struct ProtozeroSerialization  {
     template<typename T>
     static bool SerializeToBuffer(const T& sample_, std::string& buffer_)
@@ -134,7 +120,6 @@ int main(int argc, char** argv)
 {
   ::benchmark::Initialize(&argc, argv);
 
-  RegisterFamily<NanopbSerialization>("Nanopb");
   RegisterFamily<ProtozeroSerialization>("Protozero");
 
   ::benchmark::RunSpecifiedBenchmarks();
