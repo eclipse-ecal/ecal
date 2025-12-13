@@ -23,16 +23,14 @@ find_package(GTest REQUIRED)
 
 set(descgate_test_src
   src/descgate_getentities.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_descgate.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${descgate_test_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     Threads::Threads
+    ecal_core_private
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

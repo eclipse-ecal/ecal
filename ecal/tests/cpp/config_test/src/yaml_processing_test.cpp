@@ -28,9 +28,9 @@
 #include <string>
 
 #ifdef ECAL_CORE_CONFIGURATION
-  #include "configuration_reader.h"
+  #include "config/configuration_reader.h"
 #endif
-#include "default_configuration.h"
+#include "config/default_configuration.h"
 #include "ecal_def.h"
 
 #ifdef ECAL_CORE_CONFIGURATION

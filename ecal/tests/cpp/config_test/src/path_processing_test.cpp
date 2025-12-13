@@ -20,7 +20,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "ecal_path_processing.h"
+#include "config/ecal_path_processing.h"
 #include "ecal_utils/filesystem.h"
 #include "util/getenvvar.h"
 

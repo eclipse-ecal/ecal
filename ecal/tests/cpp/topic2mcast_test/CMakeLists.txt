@@ -27,11 +27,9 @@ set(topic2mcast_test_src
 
 ecal_add_gtest(${PROJECT_NAME} ${topic2mcast_test_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    eCAL::core
+    ecal_core_private
     Threads::Threads
 )
 

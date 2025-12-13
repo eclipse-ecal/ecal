@@ -25,17 +25,14 @@ set(util_test_src
   src/counter_cache_test.cpp
   src/expanding_vector_test.cpp
   src/message_drop_calculator_test.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/util/message_drop_calculator.cpp
   src/util_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${util_test_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>)
-
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
-    eCAL::core
+    ecal_core_private
     Threads::Threads)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

@@ -21,18 +21,13 @@ cmake_minimum_required(VERSION 3.15)
 project(ecal_benchmark_internal)
 
 add_executable(ecal_benchmark_descgate
- benchmark_descgate.cpp
- ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_descgate.cpp
-)
-
-target_include_directories(ecal_benchmark_descgate
-  PRIVATE
-    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+  benchmark_descgate.cpp
 )
 
 target_link_libraries(ecal_benchmark_descgate
   PRIVATE
     benchmark::benchmark
+    ecal_core_private
 )
 
 target_compile_features(ecal_benchmark_descgate PRIVATE cxx_std_14)
@@ -43,19 +38,14 @@ add_executable(ecal_benchmark_expired_map
   benchmark_expired_map.cpp
 )
 
-target_include_directories(ecal_benchmark_expired_map
-  PRIVATE
-    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
-)
-
 target_link_libraries(ecal_benchmark_expired_map
   PRIVATE
     benchmark::benchmark   
     generate_serialization_test_data
+    ecal_core_private
 )
 
 target_compile_features(ecal_benchmark_expired_map PRIVATE cxx_std_14)
-
 
 
 add_executable(ecal_benchmark_serialization
@@ -65,7 +55,7 @@ add_executable(ecal_benchmark_serialization
 target_link_libraries(ecal_benchmark_serialization
   PRIVATE
     benchmark::benchmark
-    ecal_core_serialization
+    ecal_core_private
     generate_serialization_test_data
 )
 

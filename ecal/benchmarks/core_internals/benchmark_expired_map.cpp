@@ -19,7 +19,7 @@
 
 #include <ecal/ecal.h>
 #include <util/ecal_expmap.h>
-#include <ecal_struct_sample_registration.h>
+#include <serialization/ecal_struct_sample_registration.h>
 
 #include <benchmark/benchmark.h>
 
