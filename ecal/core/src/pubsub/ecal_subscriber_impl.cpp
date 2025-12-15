@@ -593,7 +593,6 @@ namespace eCAL
     ecal_reg_sample_topic.connections_local = 0;
     ecal_reg_sample_topic.connections_external = 0;
 
-    //std::cout << "Latencies: (" << ecal_reg_sample_topic.latency_us.min << ", " << ecal_reg_sample_topic.latency_us.mean << ", " << ecal_reg_sample_topic.latency_us.max << ")\n";
   }
 
   void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -796,13 +795,13 @@ namespace eCAL
 
   void CSubscriberImpl::TriggerStatisticsUpdate(long long send_time_)
   {
-    const auto receive_time = eCAL::Time::ecal_clock::now();
+    const auto receive_time_us = eCAL::Time::GetMicroSeconds();
+    const eCAL::Time::ecal_clock::time_point receive_time_clock{ std::chrono::microseconds(send_time_) };
     
     const std::lock_guard<std::mutex> freq_lock(m_statistics_mutex);
-    m_frequency_calculator.addTick(receive_time);
+    m_frequency_calculator.addTick(receive_time_clock);
 
-    eCAL::Time::ecal_clock::time_point sent_time_point{ std::chrono::microseconds(send_time_)};
-    auto latency_us = std::chrono::duration_cast<std::chrono::microseconds>(receive_time - sent_time_point).count();
+    auto latency_us = receive_time_us - send_time_;
 
     m_latency_us_calculator.Update(static_cast<double>(latency_us));
   }
