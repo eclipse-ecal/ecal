@@ -85,7 +85,7 @@ namespace eCAL
       topic.data_id              = rand() % 10000;
       topic.data_clock           = rand() % 10000;
       topic.data_frequency       = rand() % 100;
-      topic.latency_us = GenerateStatistics();
+      topic.data_latency_us = GenerateStatistics();
       return topic;
     }
 

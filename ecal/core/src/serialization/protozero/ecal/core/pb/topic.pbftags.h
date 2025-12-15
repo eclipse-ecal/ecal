@@ -39,7 +39,7 @@ enum class Topic : ::protozero::pbf_tag_type {
     optional_int64_data_id = 19,
     optional_int64_data_clock = 20,
     optional_int32_data_frequency = 21,
-    optional_message_latency_us = 31
+    optional_message_data_latency_us = 31
 };
 
 inline constexpr uint32_t operator+(Topic e) {

@@ -102,7 +102,7 @@ namespace eCAL
       int64_t                             data_id{0};              //!< data send id (publisher setid)
       int64_t                             data_clock{0};           //!< data clock (send / receive action)
       int32_t                             data_frequency{0};       //!< data frequency (send / receive samples per second) [mHz]
-      SStatistics                         latency_us;              //!< latency statistics in microseconds
+      SStatistics                         data_latency_us;              //!< latency statistics in microseconds
     };
 
     struct SProcess                                                //<! eCAL Process struct

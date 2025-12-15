@@ -59,7 +59,7 @@ message Topic                                      // eCAL topic
   int64               data_id               = 19;  // data send id (publisher setid)
   int64               data_clock            = 20;  // data clock (send / receive action)
   int32               data_frequency        = 21;  // data frequency (send / receive samples per second) [mHz]
-  Statistics          latency_us            = 31;  // latency statistics in us
+  Statistics          data_latency_us       = 31;  // latency statistics in us
 
   reserved 9, 10, 11, 14, 15, 22 to 27, 29;     // previously "attr" for generic topic description
 }

@@ -241,8 +241,8 @@ namespace{
     writer_.add_int64(+eCAL::pb::Topic::optional_int64_data_clock, source_sample_.data_clock);
     writer_.add_int32(+eCAL::pb::Topic::optional_int32_data_frequency, source_sample_.data_frequency);
     {
-      Writer latency_writer{ writer_, +eCAL::pb::Topic::optional_message_latency_us };
-      SerializeStatistics(latency_writer, source_sample_.latency_us);
+      Writer latency_writer{ writer_, +eCAL::pb::Topic::optional_message_data_latency_us };
+      SerializeStatistics(latency_writer, source_sample_.data_latency_us);
     }
   }
 
@@ -306,8 +306,8 @@ namespace{
       case +eCAL::pb::Topic::optional_int32_data_frequency:
         target_sample_.data_frequency = reader_.get_int32();  
         break;
-      case +eCAL::pb::Topic::optional_message_latency_us:
-        AssignMessage(reader_, target_sample_.latency_us, DeserializeStatistics);
+      case +eCAL::pb::Topic::optional_message_data_latency_us:
+        AssignMessage(reader_, target_sample_.data_latency_us, DeserializeStatistics);
         break;
       default:
         reader_.skip();

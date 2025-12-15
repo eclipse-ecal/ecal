@@ -57,6 +57,7 @@ public:
     MESSAGE_DROPS,
     DATA_CLOCK,
     DFREQ,
+    DATA_LATENCY,
   };
 
   TopicTreeItem() = default;

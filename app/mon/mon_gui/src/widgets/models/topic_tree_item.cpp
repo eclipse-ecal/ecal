@@ -127,6 +127,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       return topic_.data_frequency();
     }
+    else if (column == Columns::DATA_LATENCY)
+    {
+      return topic_.latency_us().latest();
+    }
     else
     {
       return QVariant();
@@ -267,6 +271,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DATA_CLOCK)
       || (column == Columns::DFREQ)
+      || (column == Columns::DATA_LATENCY)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

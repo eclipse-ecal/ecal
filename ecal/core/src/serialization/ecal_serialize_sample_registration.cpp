@@ -282,7 +282,7 @@ namespace
       topic_writer.add_int64(+eCAL::pb::Topic::optional_int64_data_clock, sample.topic.data_clock);
       topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_data_frequency, sample.topic.data_frequency);
       {
-        Writer latency_writer{ topic_writer, +eCAL::pb::Topic::optional_message_latency_us };
+        Writer latency_writer{ topic_writer, +eCAL::pb::Topic::optional_message_data_latency_us };
         SerializeTopicStatistics(latency_writer, sample.topic.latency_us);
       }
     }
@@ -354,7 +354,7 @@ namespace
       case +eCAL::pb::Topic::optional_int32_data_frequency:
         sample.topic.data_frequency = reader.get_int32();
         break;
-      case +eCAL::pb::Topic::optional_message_latency_us:
+      case +eCAL::pb::Topic::optional_message_data_latency_us:
         AssignMessage(reader, sample.topic.latency_us, DeserializeTopicStatistics);
         break;
       default:
