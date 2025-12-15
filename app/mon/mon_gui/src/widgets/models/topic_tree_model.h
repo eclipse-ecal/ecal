@@ -108,7 +108,7 @@ private:
     { Columns::MESSAGE_DROPS,          "Drops" },
     { Columns::DATA_CLOCK,             "Data Clock" },
     { Columns::DATA_FREQUENCY,         "Frequency [Hz]" },
-    { Columns::DATA_LATENCY,           "Latency [us]
+    { Columns::DATA_LATENCY,           "Latency [us]"},
   };
 
   std::map<Columns, int> topic_tree_item_column_mapping =
