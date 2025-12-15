@@ -104,31 +104,6 @@ target_sources(ecal_core_serialization
     src/serialization/ecal_struct_sample_registration.h
     src/serialization/ecal_struct_service.h
   PRIVATE
-    src/serialization/nanopb/pb.h
-    src/serialization/nanopb/pb_common.c
-    src/serialization/nanopb/pb_common.h
-    src/serialization/nanopb/pb_decode.c
-    src/serialization/nanopb/pb_decode.h
-    src/serialization/nanopb/pb_encode.c
-    src/serialization/nanopb/pb_encode.h
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
-    src/serialization/nanopb/ecal/core/pb/host.npb.c
-    src/serialization/nanopb/ecal/core/pb/host.npb.h
-    src/serialization/nanopb/ecal/core/pb/layer.npb.c
-    src/serialization/nanopb/ecal/core/pb/layer.npb.h
-    src/serialization/nanopb/ecal/core/pb/logging.npb.c
-    src/serialization/nanopb/ecal/core/pb/logging.npb.h
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
-    src/serialization/nanopb/ecal/core/pb/process.npb.c
-    src/serialization/nanopb/ecal/core/pb/process.npb.h
-    src/serialization/nanopb/ecal/core/pb/service.npb.c
-    src/serialization/nanopb/ecal/core/pb/service.npb.h
-    src/serialization/nanopb/ecal/core/pb/topic.npb.c
-    src/serialization/nanopb/ecal/core/pb/topic.npb.h
     src/serialization/protozero/ecal_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/datatype.pbftags.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/ecal.pbftags.h
@@ -154,7 +129,6 @@ target_include_directories(ecal_core_serialization
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero>
 )
 
