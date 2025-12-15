@@ -9,10 +9,11 @@
 namespace eCAL { namespace pb { 
 enum class Statistics : ::protozero::pbf_tag_type {
     optional_uint64_count = 1,
-    optional_double_min = 2,
-    optional_double_max = 3,
-    optional_double_mean = 4,
-    optional_double_variance = 5
+    optional_double_latest = 2,
+    optional_double_min = 3,
+    optional_double_max = 4,
+    optional_double_mean = 5,
+    optional_double_variance = 6
 };
 
 inline constexpr uint32_t operator+(Statistics e) {

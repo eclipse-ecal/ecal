@@ -118,6 +118,7 @@ namespace eCAL
           monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency ||
           monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency ||
           monitoring1.subscribers[i].latency_us.count != monitoring2.subscribers[i].latency_us.count || 
+          monitoring1.subscribers[i].latency_us.latest != monitoring2.subscribers[i].latency_us.latest ||
           monitoring1.subscribers[i].latency_us.min != monitoring2.subscribers[i].latency_us.min ||
           monitoring1.subscribers[i].latency_us.max != monitoring2.subscribers[i].latency_us.max ||
           monitoring1.subscribers[i].latency_us.mean != monitoring2.subscribers[i].latency_us.mean ||

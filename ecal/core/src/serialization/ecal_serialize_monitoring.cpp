@@ -175,6 +175,7 @@ namespace{
   void SerializeStatistics(Writer& writer_, const eCAL::Monitoring::SStatistics& source_sample_)
   {
     writer_.add_uint64(+eCAL::pb::Statistics::optional_uint64_count, source_sample_.count);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_latest, source_sample_.latest);
     writer_.add_double(+eCAL::pb::Statistics::optional_double_min, source_sample_.min);
     writer_.add_double(+eCAL::pb::Statistics::optional_double_max, source_sample_.max);
     writer_.add_double(+eCAL::pb::Statistics::optional_double_mean, source_sample_.mean);
@@ -189,6 +190,9 @@ namespace{
       {
       case +eCAL::pb::Statistics::optional_uint64_count:
         target_sample_.count = reader_.get_int64();
+        break;
+      case +eCAL::pb::Statistics::optional_double_latest:
+        target_sample_.latest = reader_.get_double();
         break;
       case +eCAL::pb::Statistics::optional_double_min:
         target_sample_.min = reader_.get_double();

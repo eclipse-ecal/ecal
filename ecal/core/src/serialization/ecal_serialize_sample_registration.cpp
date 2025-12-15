@@ -197,6 +197,7 @@ namespace
   void SerializeTopicStatistics(Writer& writer, const eCAL::Registration::Statistics& sample)
   { 
     writer.add_uint64(+eCAL::pb::Statistics::optional_uint64_count, sample.count);
+    writer.add_double(+eCAL::pb::Statistics::optional_double_latest, sample.latest);
     writer.add_double(+eCAL::pb::Statistics::optional_double_min, sample.min);
     writer.add_double(+eCAL::pb::Statistics::optional_double_max, sample.max);
     writer.add_double(+eCAL::pb::Statistics::optional_double_mean, sample.mean);
@@ -211,6 +212,9 @@ namespace
       {
       case +eCAL::pb::Statistics::optional_uint64_count:
         sample.count = reader.get_uint64();
+        break;
+      case +eCAL::pb::Statistics::optional_double_latest:
+        sample.latest = reader.get_double();
         break;
       case +eCAL::pb::Statistics::optional_double_min:
         sample.min = reader.get_double();

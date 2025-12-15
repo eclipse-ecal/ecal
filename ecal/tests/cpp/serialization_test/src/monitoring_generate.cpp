@@ -55,6 +55,7 @@ namespace eCAL
     {
       SStatistics stats;
       stats.count  = rand() % 10000;
+      stats.latest = static_cast<double>(rand() % 1000) / 10.0;
       stats.min    = static_cast<double>(rand() % 1000) / 10.0;
       stats.max    = static_cast<double>(rand() % 1000) / 10.0 + stats.min;
       stats.mean   = (stats.min + stats.max) / 2.0;

@@ -72,6 +72,7 @@ namespace eCAL
     struct SStatistics                                            //<! eCAL Statistics struct
     {
       int64_t                             count{0};                //!< number of samples
+      double                              latest{ 0.0 };           //!< latest value
       double                              min{0.0};                //!< minimum value
       double                              max{0.0};                //!< maximum value
       double                              mean{0.0};               //!< mean value

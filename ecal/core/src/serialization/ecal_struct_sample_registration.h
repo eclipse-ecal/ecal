@@ -245,6 +245,7 @@ namespace eCAL
     struct Statistics
     {
       uint64_t count{ 0 };
+      double latest{ 0.0 };
       double min{ std::numeric_limits<double>::infinity() };
       double max{ -std::numeric_limits<double>::infinity() };
       double mean{ 0.0 };
@@ -252,6 +253,7 @@ namespace eCAL
 
       bool operator==(const Statistics& other) const {
         return count == other.count &&
+          latest == other.latest &&
           min == other.min &&
           max == other.max &&
           mean == other.mean &&
@@ -261,6 +263,7 @@ namespace eCAL
       void clear()
       {
         count = 0;
+        latest = 0.0;
         min = std::numeric_limits<double>::infinity();
         max = -std::numeric_limits<double>::infinity();
         mean = 0.0;

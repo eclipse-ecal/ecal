@@ -27,10 +27,11 @@ package eCAL.pb;
 message Statistics
 {
   uint64 count = 1;
-  double min  = 2;
-  double max  = 3;
-  double mean = 4;
-  double variance = 5;
+  double latest = 2;
+  double min  = 3;
+  double max  = 4;
+  double mean = 5;
+  double variance = 6;
 }
 
 message Topic                                      // eCAL topic
