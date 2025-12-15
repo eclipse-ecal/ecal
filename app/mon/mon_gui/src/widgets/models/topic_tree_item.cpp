@@ -129,7 +129,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::DATA_LATENCY)
     {
-      return topic_.latency_us().latest();
+      return topic_.data_latency_us().latest();
     }
     else
     {
