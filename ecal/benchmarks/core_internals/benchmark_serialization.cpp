@@ -18,8 +18,8 @@
 */
 
 #include <benchmark/benchmark.h>
-#include "ecal_serialize_service.h"
-#include "ecal_serialize_sample_registration.h"
+#include "serialization/ecal_serialize_service.h"
+#include "serialization/ecal_serialize_sample_registration.h"
 #include "service_generate.h"
 #include "registration_generate.h"
 
