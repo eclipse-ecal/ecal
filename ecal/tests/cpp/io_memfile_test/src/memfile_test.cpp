@@ -32,7 +32,6 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-/*
 namespace eCAL
 {
   std::shared_ptr<CMemFileMap> g_memfile_map()
@@ -41,7 +40,6 @@ namespace eCAL
     return m;
   }
 }
-*/
 
 TEST(core_cpp_core, MemFile_ReadWrite)
 {
