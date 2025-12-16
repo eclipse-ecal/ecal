@@ -726,7 +726,7 @@ target_link_libraries(ecal_core_private
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
 )
 
-target_compile_features(ecal_core_private PUBLIC cxx_std_14)
+target_compile_features(ecal_core_private PUBLIC cxx_std_17)
 
 set_property(TARGET ecal_core_private PROPERTY FOLDER core)
 set_property(TARGET ecal_core_private PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -791,6 +791,9 @@ set_target_properties(core
     C_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
 )
+
+target_compile_features(core INTERFACE cxx_std_14)
+target_compile_features(core PRIVATE cxx_std_17)
 
 set_property(TARGET core PROPERTY FOLDER core)
 endmacro()
