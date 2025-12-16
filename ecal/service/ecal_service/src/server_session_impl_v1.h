@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE ===== ============================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +47,7 @@ namespace ecal_service
   public:
     static std::shared_ptr<ServerSessionV1> create(const std::shared_ptr<asio::io_context>&          io_context
                                                   , const ServerServiceCallbackT&                    service_callback
-                                                  , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
+                                                  , const PostToServiceCallbackExecutorFunctionT&    post_to_service_callback_executor
                                                   , const ServerEventCallbackT&                      event_callback
                                                   , const ShutdownCallbackT&                         shutdown_callback
                                                   , const LoggerT&                                   logger);
@@ -54,7 +55,7 @@ namespace ecal_service
   protected:
     ServerSessionV1(const std::shared_ptr<asio::io_context>&         io_context
                   , const ServerServiceCallbackT&                    service_callback
-                  , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
+                  , const PostToServiceCallbackExecutorFunctionT&    post_to_service_callback_executor
                   , const ServerEventCallbackT&                      event_callback
                   , const ShutdownCallbackT&                         shutdown_callback
                   , const LoggerT&                                   logger);
@@ -97,6 +98,7 @@ namespace ecal_service
     std::atomic<State>      state_;
     std::uint8_t            accepted_protocol_version_;
 
-    const LoggerT logger_;
+    const PostToServiceCallbackExecutorFunctionT post_to_service_callback_executor_;
+    const LoggerT                                logger_;
   };
 }

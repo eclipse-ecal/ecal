@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,9 +72,16 @@ int main(int /*argc*/, char** /*argv*/)
   auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
   auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
+  // Server Service Callback Executor
+  auto server_service_callback_executor = [](const std::function<void()>& callback) -> void
+                                          {
+                                            // Directly execute the callback in this thread
+                                            callback();
+                                          };
+
   // Create server
   // The server will choose a free port automatically.
-  auto server = server_manager->create_server(1, 0, server_service_callback, true, server_event_callback);
+  auto server = server_manager->create_server(1, 0, server_service_callback, server_service_callback_executor, server_event_callback);
 
   // Create client
   // The client will connect to the server on the given port.

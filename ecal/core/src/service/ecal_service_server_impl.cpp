@@ -282,7 +282,12 @@ namespace eCAL
       };
 
     // Start service
-    m_tcp_server = server_manager->create_server(1, 0, service_callback, true, event_callback);
+    ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
+            = [threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool()](const std::function<void()>& task)
+              {
+                threadpool->Post(task);
+              };
+    m_tcp_server = server_manager->create_server(1, 0, service_callback, service_callback_executor, event_callback);
 
     if (!m_tcp_server)
     {

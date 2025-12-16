@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,7 @@
 #include <cstddef>
 #include <ecal_service/client_manager.h>
 #include <ecal_service/server_manager.h>
+#include <dynamic_threadpool/dynamic_threadpool.h>
 
 #include <memory>
 #include <mutex>
@@ -61,6 +63,7 @@ namespace eCAL
     public:
       std::shared_ptr<ecal_service::ClientManager> get_client_manager();
       std::shared_ptr<ecal_service::ServerManager> get_server_manager();
+      std::shared_ptr<DynamicThreadPool>           get_dynamic_threadpool();
 
       void stop();
       void reset();
@@ -79,6 +82,8 @@ namespace eCAL
 
       std::shared_ptr<ecal_service::ClientManager> m_client_manager;
       std::shared_ptr<ecal_service::ServerManager> m_server_manager;
+
+      std::shared_ptr<DynamicThreadPool>           m_dynamic_thread_pool;
     };
 
   }

@@ -746,6 +746,7 @@ if(ECAL_CORE_SERVICE)
   target_link_libraries(${TARGET_NAME}
     PRIVATE
       ecal_service
+      dynamic_threadpool
   )
 endif()
 

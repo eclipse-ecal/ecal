@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,19 +132,19 @@ namespace ecal_service
      * server (and all other servers, that have been created by this manager)
      * can be stopped via the stop() method.
      * 
-     * @param protocol_version                The protocol version, that will be used by this server
-     * @param port                            The port, that the server will listen on. If 0, the OS will choose a free port.
-     * @param service_callback                The callback, that will be called for each incoming service call. The callback will be executed in the io_context thread.
-     * @param parallel_service_calls_enabled  If true, the server will handle incoming service calls in parallel. If false, the server will handle incoming service calls sequentially.
-     * @param event_callback                  The callback, that will be called whenever a client connects or disconnects. The callback will be executed in the io_context thread.
+     * @param protocol_version                   The protocol version, that will be used by this server
+     * @param port                               The port, that the server will listen on. If 0, the OS will choose a free port.
+     * @param service_callback                   The callback, that will be called for each incoming service call. The callback will be executed by using the post_to_service_callback_executor.
+     * @param post_to_service_callback_executor  A function, that is used to execute the service_callback. Can be used to e.g. post the service callback to a different thread or threadpool.
+     * @param event_callback                     The callback, that will be called whenever a client connects or disconnects. The callback will be executed in the io_context thread.
      * 
      * @return a shared pointer to the created server
      */
-    std::shared_ptr<Server> create_server(std::uint8_t                    protocol_version
-                                        , std::uint16_t                   port
-                                        , const Server::ServiceCallbackT& service_callback
-                                        , bool                            parallel_service_calls_enabled
-                                        , const Server::EventCallbackT&   event_callback);
+    std::shared_ptr<Server> create_server(std::uint8_t                                  protocol_version
+                                        , std::uint16_t                                 port
+                                        , const Server::ServiceCallbackT&               service_callback
+                                        , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                        , const Server::EventCallbackT&                 event_callback);
 
     /**
      * @brief Get the number of servers, that are currently managed by this server manager
