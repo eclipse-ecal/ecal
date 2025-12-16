@@ -77,7 +77,7 @@ namespace eCAL
       double                              min{0.0};                //!< minimum value
       double                              max{0.0};                //!< maximum value
       double                              mean{0.0};               //!< mean value
-      double                              variance{0.0};             //!< standard deviation
+      double                              variance{0.0};           //!< variance
     };
 
     struct STopic                                                  //<! eCAL Topic struct
