@@ -18,8 +18,8 @@
 */
 
 #include <benchmark/benchmark.h>
-#include "ecal_serialize_service.h"
-#include "ecal_serialize_sample_registration.h"
+#include "serialization/ecal_serialize_service.h"
+#include "serialization/ecal_serialize_sample_registration.h"
 #include "service_generate.h"
 #include "registration_generate.h"
 
@@ -37,20 +37,6 @@ namespace
     list.push_back(eCAL::Registration::GenerateTopicSample());
     return list;
   }
-
-  struct NanopbSerialization  {
-    template<typename T>
-    static bool SerializeToBuffer(const T& sample_, std::string& buffer_)
-    {
-      return eCAL::nanopb::SerializeToBuffer(sample_, buffer_);
-    }
-
-    template<typename T>
-    static bool DeserializeFromBuffer(const char* data_, size_t size_, T& target_sample_)
-    {
-      return eCAL::nanopb::DeserializeFromBuffer(data_, size_, target_sample_);
-    }
-  };
 
   struct ProtozeroSerialization  {
     template<typename T>
@@ -134,7 +120,6 @@ int main(int argc, char** argv)
 {
   ::benchmark::Initialize(&argc, argv);
 
-  RegisterFamily<NanopbSerialization>("Nanopb");
   RegisterFamily<ProtozeroSerialization>("Protozero");
 
   ::benchmark::RunSpecifiedBenchmarks();

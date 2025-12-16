@@ -32,29 +32,18 @@ set(config_test_src
   src/config_test.cpp
   src/path_processing_test.cpp
   src/yaml_processing_test.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
-
-if(ECAL_CORE_CONFIGURATION)
-  list(APPEND config_test_src
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_reader.cpp
-    ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_to_yaml.cpp
-  )
-endif()
 
 ecal_add_gtest(${PROJECT_NAME} ${config_test_src})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
-  $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
   ${CMAKE_CURRENT_LIST_DIR}/src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config
 )
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
-    eCAL::core
+    ecal_core_private
     eCAL::ecal-utils
     Threads::Threads
     tclap::tclap

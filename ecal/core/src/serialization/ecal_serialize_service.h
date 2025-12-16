@@ -33,18 +33,6 @@
 
 namespace eCAL
 {
-  namespace nanopb
-  {
-    bool SerializeToBuffer(const Service::Request& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer(const Service::Request& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Request& target_sample_);
-
-    // service response - serialize/deserialize
-    bool SerializeToBuffer(const Service::Response& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer(const Service::Response& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer(const char* data_, size_t size_, Service::Response& target_sample_);
-  }
-
   inline namespace protozero
   {
     bool SerializeToBuffer(const Service::Request& source_sample_, std::vector<char>& target_buffer_);

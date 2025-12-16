@@ -193,18 +193,6 @@ eCAL makes use of the following external components:
   - Git Submodule `/thirdparty/nanobind/nanobind`
   - Python wheels
 
-### nanopb
-
-- **License**: Zlib
-- **Copyright**: Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
-- **Homepage**: https://jpa.kapsi.fi/nanopb/
-- **Repository**: https://github.com/nanopb/nanopb
-- **Included in**:
-  - Copy in Repository `/thirdparty/external/ecal/ecal/core/src/serialization`
-  - Windows builds
-  - Linux builds
-  - Python wheels
-
 ### Npcap
 
 - **License**: npcap

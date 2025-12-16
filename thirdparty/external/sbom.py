@@ -143,34 +143,6 @@ def get_sbom_modpath():
 
     return sbom
 
-def get_sbom_nanopb():
-    component_name = "nanopb"
-
-    license_dir  = os.path.join(os.path.dirname(os.path.realpath(__file__)), "license_files/nanopb")
-    nanopb_dir   = os.path.join(os.path.dirname(os.path.realpath(__file__)), "ecal/ecal/core/src/serialization/")
-
-    sbom = {}
-    sbom[component_name] =  {}
-    sbom[component_name]["include_type"] =              [
-                                                            ecal_license_utils.include_type.COPY_IN_REPO,
-                                                            ecal_license_utils.include_type.WINDOWS_BUILDS,
-                                                            ecal_license_utils.include_type.LINUX_BUILDS,
-                                                            ecal_license_utils.include_type.PYTHON_BINDINGS,
-                                                        ]
-    sbom[component_name]["path"] =                      nanopb_dir
-    sbom[component_name]["license"] =                   "Zlib"
-    sbom[component_name]["license_files"] =             [
-                                                            os.path.join(license_dir, "LICENSE.txt")
-                                                        ]
-    sbom[component_name]["thirdparty_license_files"] =  []
-    sbom[component_name]["copyright"] =                 ecal_license_utils.get_copyright_from_file(sbom[component_name]["license_files"][0])
-    sbom[component_name]["homepage"] =                  "https://jpa.kapsi.fi/nanopb/"
-    sbom[component_name]["repo_url"] =                  "https://github.com/nanopb/nanopb"
-    sbom[component_name]["git_version"] =               None
-    sbom[component_name]["git_version_url"] =           None
-
-    return sbom
-
 def get_sbom():
     sbom = {}
     sbom.update(get_sbom_qt())
@@ -178,6 +150,5 @@ def get_sbom():
     sbom.update(get_sbom_convertutf())
     sbom.update(get_sbom_flaticon())
     sbom.update(get_sbom_modpath())
-    sbom.update(get_sbom_nanopb())
 
     return sbom
