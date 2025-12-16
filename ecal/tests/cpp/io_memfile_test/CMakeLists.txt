@@ -30,6 +30,13 @@ set(memfile_test_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_naming.cpp
 )
 
+if(UNIX)
+set(memfile_test_os_src
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
+)
+endif()
+
 if(WIN32)
 set(memfile_test_os_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/win32/ecal_named_mutex_impl.cpp
