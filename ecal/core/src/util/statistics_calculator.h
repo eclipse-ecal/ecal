@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ namespace eCAL
       statistics_.latest = value;
       statistics_.min = std::min(statistics_.min, value);
       statistics_.max = std::max(statistics_.max, value);
-      double delta = value - statistics_.mean;
+      const double delta = value - statistics_.mean;
       statistics_.mean += delta / static_cast<double>(statistics_.count);
-      double delta2 = value - statistics_.mean;
+      const double delta2 = value - statistics_.mean;
       statistics_.variance += delta * delta2;
     }
 
