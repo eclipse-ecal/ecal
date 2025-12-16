@@ -615,6 +615,7 @@ set(ecal_public_headers
     include/ecal/monitoring.h
     include/ecal/namespace.h
     include/ecal/process.h
+    include/ecal/process_mode.h
     include/ecal/process_severity.h
     include/ecal/registration.h
     include/ecal/time.h
