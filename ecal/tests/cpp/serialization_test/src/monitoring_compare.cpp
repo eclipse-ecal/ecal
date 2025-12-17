@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +116,15 @@ namespace eCAL
           monitoring1.subscribers[i].message_drops != monitoring2.subscribers[i].message_drops ||
           monitoring1.subscribers[i].data_id != monitoring2.subscribers[i].data_id ||
           monitoring1.subscribers[i].data_clock != monitoring2.subscribers[i].data_clock ||
-          monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency)
+          monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency ||
+          monitoring1.subscribers[i].data_frequency != monitoring2.subscribers[i].data_frequency ||
+          monitoring1.subscribers[i].data_latency_us.count != monitoring2.subscribers[i].data_latency_us.count || 
+          monitoring1.subscribers[i].data_latency_us.latest != monitoring2.subscribers[i].data_latency_us.latest ||
+          monitoring1.subscribers[i].data_latency_us.min != monitoring2.subscribers[i].data_latency_us.min ||
+          monitoring1.subscribers[i].data_latency_us.max != monitoring2.subscribers[i].data_latency_us.max ||
+          monitoring1.subscribers[i].data_latency_us.mean != monitoring2.subscribers[i].data_latency_us.mean ||
+          monitoring1.subscribers[i].data_latency_us.variance != monitoring2.subscribers[i].data_latency_us.variance
+          )
         {
           return false;
         }

@@ -167,6 +167,7 @@ namespace eCAL
     const int64_t      data_clock = sample_topic.data_clock;
     const int32_t      message_drops = sample_topic.message_drops;
     const int32_t      data_frequency = sample_topic.data_frequency;
+    const auto&        data_latency_us = sample_topic.latency_us;
 
     /////////////////////////////////
     // register in topic map
@@ -250,6 +251,12 @@ namespace eCAL
       TopicInfo.data_clock           = data_clock;
       TopicInfo.message_drops        = message_drops;
       TopicInfo.data_frequency       = data_frequency;
+      TopicInfo.data_latency_us.count     = data_latency_us.count;
+      TopicInfo.data_latency_us.latest    = data_latency_us.latest;
+      TopicInfo.data_latency_us.min       = data_latency_us.min;
+      TopicInfo.data_latency_us.max       = data_latency_us.max;
+      TopicInfo.data_latency_us.mean      = data_latency_us.mean;
+      TopicInfo.data_latency_us.variance  = data_latency_us.variance;
     }
 
     return(true);

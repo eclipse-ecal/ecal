@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,6 +127,10 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     else if (column == Columns::DFREQ)
     {
       return topic_.data_frequency();
+    }
+    else if (column == Columns::DATA_LATENCY)
+    {
+      return topic_.data_latency_us().latest();
     }
     else
     {
@@ -267,6 +272,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
       || (column == Columns::MESSAGE_DROPS)
       || (column == Columns::DATA_CLOCK)
       || (column == Columns::DFREQ)
+      || (column == Columns::DATA_LATENCY)
       )
     {
       return Qt::AlignmentFlag::AlignRight;

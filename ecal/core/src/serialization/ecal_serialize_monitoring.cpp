@@ -172,6 +172,47 @@ namespace{
   }
 
   template <typename Writer>
+  void SerializeStatistics(Writer& writer_, const eCAL::Monitoring::SStatistics& source_sample_)
+  {
+    writer_.add_uint64(+eCAL::pb::Statistics::optional_uint64_count, source_sample_.count);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_latest, source_sample_.latest);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_min, source_sample_.min);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_max, source_sample_.max);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_mean, source_sample_.mean);
+    writer_.add_double(+eCAL::pb::Statistics::optional_double_variance, source_sample_.variance);
+  }
+
+  void DeserializeStatistics(protozero::pbf_reader& reader_, eCAL::Monitoring::SStatistics& target_sample_)
+  {
+    while (reader_.next())
+    {
+      switch (reader_.tag())
+      {
+      case +eCAL::pb::Statistics::optional_uint64_count:
+        target_sample_.count = reader_.get_int64();
+        break;
+      case +eCAL::pb::Statistics::optional_double_latest:
+        target_sample_.latest = reader_.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_min:
+        target_sample_.min = reader_.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_max:
+        target_sample_.max = reader_.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_mean:
+        target_sample_.mean = reader_.get_double();
+        break;
+      case +eCAL::pb::Statistics::optional_double_variance:
+        target_sample_.variance = reader_.get_double();
+        break;
+      default:
+        reader_.skip();
+      }
+    }
+  }
+
+  template <typename Writer>
   void SerializeTopic(Writer& writer_, const eCAL::Monitoring::STopic& source_sample_)
   {
     writer_.add_int32(+eCAL::pb::Topic::optional_int32_registration_clock, source_sample_.registration_clock);
@@ -199,6 +240,10 @@ namespace{
     writer_.add_int64(+eCAL::pb::Topic::optional_int64_data_id, source_sample_.data_id);
     writer_.add_int64(+eCAL::pb::Topic::optional_int64_data_clock, source_sample_.data_clock);
     writer_.add_int32(+eCAL::pb::Topic::optional_int32_data_frequency, source_sample_.data_frequency);
+    {
+      Writer latency_writer{ writer_, +eCAL::pb::Topic::optional_message_data_latency_us };
+      SerializeStatistics(latency_writer, source_sample_.data_latency_us);
+    }
   }
 
   void DeserializeTopic(protozero::pbf_reader& reader_, eCAL::Monitoring::STopic& target_sample_)
@@ -260,6 +305,9 @@ namespace{
         break;
       case +eCAL::pb::Topic::optional_int32_data_frequency:
         target_sample_.data_frequency = reader_.get_int32();  
+        break;
+      case +eCAL::pb::Topic::optional_message_data_latency_us:
+        AssignMessage(reader_, target_sample_.data_latency_us, DeserializeStatistics);
         break;
       default:
         reader_.skip();
