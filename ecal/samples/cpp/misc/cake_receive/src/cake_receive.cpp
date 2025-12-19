@@ -60,7 +60,7 @@ int main()
 
     This will overwrite the settings that were set in the ecal.yaml file.
   */
-  my_config.communication_mode = eCAL::eCommunicationMode::network;
+  //my_config.communication_mode = eCAL::eCommunicationMode::network;
   my_config.subscriber.layer.shm.enable = true;
   my_config.subscriber.layer.udp.enable = false;
   my_config.subscriber.layer.tcp.enable = false;
