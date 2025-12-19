@@ -66,7 +66,7 @@ namespace eCAL
     void RegisterClient(const std::string& key_, const v5::SClientAttr& client_);
 
     // Called by the registration provider to get a registration sample
-    Registration::Sample GetRegistration();
+    void UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_);
 
     // Retrieves the service id
     const SServiceId& GetServiceId() const;

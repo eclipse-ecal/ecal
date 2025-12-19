@@ -88,7 +88,7 @@ namespace eCAL
     return(ret_state);
   }
 
-  void CServiceGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
+  void CServiceGate::UpdateRegistrationDatabase(Registration::SampleDatabase& reg_sample_db_)
   {
     if (!m_created) return;
 
@@ -97,7 +97,7 @@ namespace eCAL
       const std::shared_lock<std::shared_timed_mutex> lock(m_service_server_map_mutex);
       for (const auto& iter : m_service_server_map)
       {
-        reg_sample_list_.push_back(iter.second->GetRegistration());
+        iter.second->UpdateRegistrationDatabase(reg_sample_db_);
       }
     }
   }

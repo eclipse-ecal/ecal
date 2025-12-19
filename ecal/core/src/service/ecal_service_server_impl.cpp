@@ -219,12 +219,12 @@ namespace eCAL
     // client registration logic is not implemented, as it is not required for service servers
   }
 
-  Registration::Sample CServiceServerImpl::GetRegistration()
+  void CServiceServerImpl::UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl:::GetRegistration: Generating registration sample for: " + m_service_name);
 #endif
-    return GetRegistrationSample();
+    sample_db_[m_server_id] = GetRegistrationSample();
   }
 
   const SServiceId& CServiceServerImpl::GetServiceId() const

@@ -278,7 +278,7 @@ namespace eCAL
     }
   }
 
-  void CSubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
+  void CSubGate::UpdateRegistrationDatabase(Registration::SampleDatabase& reg_sample_db_)
   {
     if (!m_created) return;
 
@@ -286,7 +286,7 @@ namespace eCAL
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     for (const auto& iter : m_topic_name_subscriber_map)
     {
-      iter.second->GetRegistration(reg_sample_list_.push_back());
+      iter.second->UpdateRegistrationDatabase(reg_sample_db_);
     }
   }
 }

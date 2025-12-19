@@ -31,6 +31,12 @@
 #include "ecal_globals.h"
 #include "time/ecal_timegate.h"
 
+void eCAL::Registration::UpdateProcessRegistration(eCAL::Registration::SampleDatabase& sample_db_)
+{
+  static uint64_t process_id{ static_cast<uint64_t>(eCAL::Process::GetProcessID()) };
+  InsertOrUpdateDB(sample_db_, process_id, &GetProcessRegisterSample, &UpdateProcessRegisterSample);
+}
+
 eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
 {
   Registration::Sample process_sample;
@@ -47,13 +53,41 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   process_sample_process.shm_transport_domain = eCAL::Process::GetShmTransportDomain();
   process_sample_process.process_name         = eCAL::Process::GetProcessName();
   process_sample_process.unit_name            = eCAL::Process::GetUnitName();
-  process_sample_process.process_parameter               = eCAL::Process::GetProcessParameter();
+  process_sample_process.process_parameter    = eCAL::Process::GetProcessParameter();
 
+  // eCAL initialization state
+  unsigned int comp_state = 0;
+  auto globals = g_globals();
+  if (globals)
+  {
+    comp_state = globals->GetComponents();
+  }
+  process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
+  std::string component_info;
+  if ((comp_state & eCAL::Init::Publisher) != 0u) component_info += "|pub";
+  if ((comp_state & eCAL::Init::Subscriber) != 0u) component_info += "|sub";
+  if ((comp_state & eCAL::Init::Logging) != 0u) component_info += "|log";
+  if ((comp_state & eCAL::Init::TimeSync) != 0u) component_info += "|time";
+  if (!component_info.empty()) component_info = component_info.substr(1);
+  process_sample_process.component_init_info = component_info;
+
+  process_sample_process.ecal_runtime_version = eCAL::GetVersionString();
+  process_sample_process.config_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
+
+  // Fill dynamic information
+  UpdateProcessRegisterSample(process_sample);
+
+  return process_sample;
+}
+
+void eCAL::Registration::UpdateProcessRegisterSample(eCAL::Registration::Sample& process_sample)
+{
+  auto& process_sample_process = process_sample.process;
   {
     const std::lock_guard<std::mutex> lock(g_process_state_mutex);
-    process_sample_process.state.severity       = static_cast<Registration::eProcessSeverity>(g_process_state.severity);
+    process_sample_process.state.severity = static_cast<Registration::eProcessSeverity>(g_process_state.severity);
     process_sample_process.state.severity_level = static_cast<Registration::eProcessSeverityLevel>(g_process_state.severity_level);
-    process_sample_process.state.info           = g_process_state.info;
+    process_sample_process.state.info = g_process_state.info;
   }
 #if ECAL_CORE_TIMEPLUGIN
   auto timegate = g_timegate();
@@ -85,28 +119,8 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
     process_sample_process.time_sync_module_name = timegate->GetName();
   }
 #endif
-
-  // eCAL initialization state
-  unsigned int comp_state = 0;
-  auto globals = g_globals();
-  if (globals)
-  {
-    comp_state = globals->GetComponents();
-  }
-  process_sample_process.component_init_state = static_cast<int32_t>(comp_state);
-  std::string component_info;
-  if ((comp_state & eCAL::Init::Publisher) != 0u) component_info += "|pub";
-  if ((comp_state & eCAL::Init::Subscriber) != 0u) component_info += "|sub";
-  if ((comp_state & eCAL::Init::Logging) != 0u) component_info += "|log";
-  if ((comp_state & eCAL::Init::TimeSync) != 0u) component_info += "|time";
-  if (!component_info.empty()) component_info = component_info.substr(1);
-  process_sample_process.component_init_info = component_info;
-
-  process_sample_process.ecal_runtime_version = eCAL::GetVersionString();
-  process_sample_process.config_file_path = eCAL::GetConfiguration().GetConfigurationFilePath();
-
-  return process_sample;
 }
+
 
 eCAL::Registration::Sample eCAL::Registration::GetProcessUnregisterSample()
 {

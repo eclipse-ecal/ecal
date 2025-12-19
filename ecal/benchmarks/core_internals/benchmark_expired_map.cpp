@@ -30,6 +30,7 @@
 #include <condition_variable>
 #include <map>
 #include <unordered_map>
+#include <tsl/robin_map.h>
 
 
 using namespace eCAL;
@@ -232,7 +233,7 @@ namespace
   // ------------------------- Registration -------------------------
   using SampleTrackerMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, std::chrono::steady_clock, std::map>;
   using SampleTrackerUnorderedMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, std::chrono::steady_clock, std::unordered_map>;
-
+  using SampleTrackerTSLMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, std::chrono::steady_clock, tsl::robin_map>;
 
   // Adjust the argument list to your dataset sizes
   template<class ExpiredMap>
@@ -279,6 +280,8 @@ int main(int argc, char** argv)
 
   RegisterFamily<SampleTrackerMap>("ExpiredMap using std::map");
   RegisterFamily<SampleTrackerUnorderedMap>("ExpiredMap using std::unordered_map");
+  RegisterFamily<SampleTrackerTSLMap>("ExpiredMap using tsl::robin_map");
+
   // We can potentially register other implementations to compare the benchmarks.
 
   ::benchmark::RunSpecifiedBenchmarks();

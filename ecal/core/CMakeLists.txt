@@ -43,6 +43,7 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 find_package(protozero        REQUIRED)
+find_package(tsl-robin-map    REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
@@ -133,7 +134,10 @@ target_include_directories(ecal_core_serialization
 target_link_libraries(ecal_core_serialization 
   PRIVATE
     protozero::protozero
+    tsl::robin_map #probably remove this
 )
+
+target_compile_features(ecal_core_serialization PUBLIC cxx_std_17)
 
 set_target_properties(ecal_core_serialization PROPERTIES 
   POSITION_INDEPENDENT_CODE ON  
@@ -704,7 +708,7 @@ target_include_directories(ecal_core_private
 )
 
 target_link_libraries(ecal_core_private 
-  PRIVATE
+  PUBLIC
     $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
     $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
     $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
@@ -725,6 +729,7 @@ target_link_libraries(ecal_core_private
     eCAL::ecal-utils
     # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
+    tsl::robin_map
 )
 
 target_compile_features(ecal_core_private PUBLIC cxx_std_17)

@@ -50,12 +50,12 @@ bool eCAL::CRegistrationSenderSHM::SendSample(const Registration::Sample& sample
 }
 */
 
-bool eCAL::CRegistrationSenderSHM::SendSampleList(const Registration::SampleList& sample_list)
+bool eCAL::CRegistrationSenderSHM::SendSamples(const Registration::SampleDatabase& sample_db)
 {
   bool return_value{true};
   // serialize whole sample list
   m_sample_list_buffer.clear();
-  if (SerializeToBuffer(sample_list, m_sample_list_buffer))
+  if (SerializeToBuffer(sample_db, m_sample_list_buffer))
   {
     if (!m_sample_list_buffer.empty())
     {

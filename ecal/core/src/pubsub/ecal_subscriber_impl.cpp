@@ -479,8 +479,7 @@ namespace eCAL
   void CSubscriberImpl::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    Registration::Sample sample;
-    GetRegistrationSample(sample);
+    Registration::Sample sample{ GetRegistrationSample() };
     auto registration_provider = g_registration_provider();
     if (registration_provider) registration_provider->RegisterSample(sample);
 
@@ -494,8 +493,7 @@ namespace eCAL
   void CSubscriberImpl::Unregister()
   {
 #if ECAL_CORE_REGISTRATION
-    Registration::Sample sample;
-    GetUnregistrationSample(sample);
+    Registration::Sample sample{ GetUnregistrationSample ()};
     auto registration_provider = g_registration_provider();
     if (registration_provider) registration_provider->UnregisterSample(sample);
 
@@ -506,10 +504,13 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  void CSubscriberImpl::GetRegistration(Registration::Sample& sample)
+  void CSubscriberImpl::UpdateRegistrationDatabase(Registration::SampleDatabase& sample_database_)
   {
-    // return registration
-    return GetRegistrationSample(sample);
+    InsertOrUpdateDB(sample_database_, 
+      m_subscriber_id, 
+      [this] { return GetRegistrationSample(); },
+      [this](Registration::Sample& s) { UpdateRegistrationSample(s); }
+      );
   }
 
   bool CSubscriberImpl::IsPublished() const
@@ -522,8 +523,9 @@ namespace eCAL
     return m_connection_count;
   }
     
-  void CSubscriberImpl::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
+  Registration::Sample CSubscriberImpl::GetRegistrationSample()
   {
+    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -541,16 +543,27 @@ namespace eCAL
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
+    ecal_reg_sample_topic.process_name = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name = m_attributes.unit_name;
+
+    UpdateRegistrationSample(ecal_reg_sample);
+    return ecal_reg_sample;
+  }
+
+  void CSubscriberImpl::UpdateRegistrationSample(Registration::Sample& ecal_reg_sample)
+  {
+    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
     ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
+    ecal_reg_sample_topic.transport_layer.clear();
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
     {
       Registration::TLayer udp_tlayer;
-      udp_tlayer.type      = tl_ecal_udp;
-      udp_tlayer.version   = ecal_transport_layer_version;
-      udp_tlayer.enabled   = m_layers.udp.read_enabled;
-      udp_tlayer.active    = m_layers.udp.active;
+      udp_tlayer.type = tl_ecal_udp;
+      udp_tlayer.version = ecal_transport_layer_version;
+      udp_tlayer.enabled = m_layers.udp.read_enabled;
+      udp_tlayer.active = m_layers.udp.active;
       ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
@@ -559,10 +572,10 @@ namespace eCAL
     // shm layer
     {
       Registration::TLayer shm_tlayer;
-      shm_tlayer.type      = tl_ecal_shm;
-      shm_tlayer.version   = ecal_transport_layer_version;
-      shm_tlayer.enabled   = m_layers.shm.read_enabled;
-      shm_tlayer.active    = m_layers.shm.active;
+      shm_tlayer.type = tl_ecal_shm;
+      shm_tlayer.version = ecal_transport_layer_version;
+      shm_tlayer.enabled = m_layers.shm.read_enabled;
+      shm_tlayer.active = m_layers.shm.active;
       ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
@@ -571,32 +584,30 @@ namespace eCAL
     // tcp layer
     {
       Registration::TLayer tcp_tlayer;
-      tcp_tlayer.type      = tl_ecal_tcp;
-      tcp_tlayer.version   = ecal_transport_layer_version;
-      tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-      tcp_tlayer.active    = m_layers.tcp.active;
+      tcp_tlayer.type = tl_ecal_tcp;
+      tcp_tlayer.version = ecal_transport_layer_version;
+      tcp_tlayer.enabled = m_layers.tcp.read_enabled;
+      tcp_tlayer.active = m_layers.tcp.active;
       ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
 
-    ecal_reg_sample_topic.process_name   = m_attributes.process_name;
-    ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_clock     = m_clock;
+    ecal_reg_sample_topic.data_clock = m_clock;
     {
       const std::lock_guard<std::mutex> lock(m_statistics_mutex);
       ecal_reg_sample_topic.data_frequency = GetFrequency();
       ecal_reg_sample_topic.latency_us = m_latency_us_calculator.GetStatistics();
     }
-    ecal_reg_sample_topic.message_drops  = GetMessageDropsAndFireDroppedEvents();
+    ecal_reg_sample_topic.message_drops = GetMessageDropsAndFireDroppedEvents();
 
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_local = 0;
     ecal_reg_sample_topic.connections_external = 0;
-
   }
 
-  void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
+  Registration::Sample CSubscriberImpl::GetUnregistrationSample()
   {
+    Registration::Sample ecal_unreg_sample;
     ecal_unreg_sample.cmd_type = bct_unreg_subscriber;
 
     auto& ecal_reg_sample_identifier = ecal_unreg_sample.identifier;
@@ -609,6 +620,7 @@ namespace eCAL
     ecal_reg_sample_topic.process_name         = m_attributes.process_name;
     ecal_reg_sample_topic.topic_name           = m_attributes.topic_name;
     ecal_reg_sample_topic.unit_name            = m_attributes.unit_name;
+    return ecal_unreg_sample;
   }
   
   void CSubscriberImpl::StartTransportLayer()

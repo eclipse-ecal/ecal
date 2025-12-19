@@ -757,16 +757,16 @@ namespace
   }
 
   template<typename Writer>
-  void SerializeRegistrationSampleList(Writer& writer, const ::eCAL::Registration::SampleList& sample_list)
+  void SerializeRegistrationSamples(Writer& writer, const ::eCAL::Registration::SampleDatabase& sample_db)
   {
-    for (const auto& sample : sample_list)
+    for (const auto& sample : sample_db)
     {
       Writer sample_writer{ writer, +eCAL::pb::SampleList::repeated_message_samples };
-      SerializeRegistrationSample(sample_writer, sample);
+      SerializeRegistrationSample(sample_writer, sample.second);
     }
   }
 
-  void DeserializeRegistrationSampleList(::protozero::pbf_reader& reader, ::eCAL::Registration::SampleList& sample_list)
+  void DeserializeRegistrationSamples(::protozero::pbf_reader& reader, ::eCAL::Registration::SampleList& sample_list)
   {
     while (reader.next())
     {
@@ -820,19 +820,19 @@ namespace protozero
     }
   }
   
-  bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::vector<char>& target_buffer_)
+  bool SerializeToBuffer(const::eCAL::Registration::SampleDatabase& source_sample_db_, std::vector<char>& target_buffer_)
   {
     target_buffer_.clear();
     ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
-    SerializeRegistrationSampleList(writer, source_sample_list_);
+    SerializeRegistrationSamples(writer, source_sample_db_);
     return true;
   }
 
-  bool SerializeToBuffer(const ::eCAL::Registration::SampleList& source_sample_list_, std::string& target_buffer_)
+  bool SerializeToBuffer(const::eCAL::Registration::SampleDatabase& source_sample_db_, std::string& target_buffer_)
   {
     target_buffer_.clear();
     ::protozero::pbf_writer writer{ target_buffer_ };
-    SerializeRegistrationSampleList(writer, source_sample_list_);
+    SerializeRegistrationSamples(writer, source_sample_db_);
     return true;
   }
   
@@ -842,7 +842,7 @@ namespace protozero
     {
       target_sample_list_.clear();
       ::protozero::pbf_reader message{ data_, size_ };
-      DeserializeRegistrationSampleList(message, target_sample_list_);
+      DeserializeRegistrationSamples(message, target_sample_list_);
       return true;
     }
     catch (const std::exception& exception)

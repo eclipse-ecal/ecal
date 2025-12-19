@@ -49,7 +49,7 @@ namespace eCAL
     bool Register  (const std::string& service_name_, const std::shared_ptr<eCAL::CServiceServerImpl>& server_);
     bool Unregister(const std::string& service_name_, const std::shared_ptr<eCAL::CServiceServerImpl>& server_);
 
-    void GetRegistrations(Registration::SampleList& reg_sample_list_);
+    void UpdateRegistrationDatabase(Registration::SampleDatabase& reg_sample_db_);
 
   protected:
     static std::atomic<bool>      m_created;

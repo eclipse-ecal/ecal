@@ -41,8 +41,8 @@ namespace eCAL
     bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::Sample& target_sample_);
   
     // registration sample list - serialize/deserialize
-    bool SerializeToBuffer     (const Registration::SampleList& registration_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Registration::SampleList& source_sample_list_, std::string& target_buffer_);
+    bool SerializeToBuffer(const::eCAL::Registration::SampleDatabase & source_sample_db_, std::vector<char>& target_buffer_);
+    bool SerializeToBuffer(const::eCAL::Registration::SampleDatabase& source_sample_db_, std::string& target_buffer_);
     bool DeserializeFromBuffer (const char* data_, size_t size_, Registration::SampleList& target_sample_);
   }
 }

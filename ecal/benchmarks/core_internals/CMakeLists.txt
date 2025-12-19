@@ -20,6 +20,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(ecal_benchmark_internal)
 
+find_package(tsl-robin-map REQUIRED)
+
 add_executable(ecal_benchmark_descgate
   benchmark_descgate.cpp
 )
@@ -43,6 +45,7 @@ target_link_libraries(ecal_benchmark_expired_map
     benchmark::benchmark   
     generate_serialization_test_data
     ecal_core_private
+    tsl::robin_map
 )
 
 target_compile_features(ecal_benchmark_expired_map PRIVATE cxx_std_14)

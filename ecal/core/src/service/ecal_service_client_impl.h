@@ -75,8 +75,8 @@ namespace eCAL
       // Called by the registration receiver to process a service registration
       void RegisterService(const SEntityId& entity_id_, const v5::SServiceAttr& service_);
 
-      // Called by the registration provider to get a registration sample
-      Registration::Sample GetRegistration();
+      // Called by the registration provider to update the registration database
+      void UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_);
 
       // Retrieves the service id
       const SServiceId& GetServiceId() const;

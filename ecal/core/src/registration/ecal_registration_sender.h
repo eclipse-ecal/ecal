@@ -52,6 +52,6 @@ namespace eCAL
     CRegistrationSender& operator=(CRegistrationSender && other) noexcept = delete;
 
     //virtual bool SendSample(const Registration::Sample& sample_) = 0;
-    virtual bool SendSampleList(const Registration::SampleList& sample_list) = 0;
+    virtual bool SendSamples(const Registration::SampleDatabase& sample_db) = 0;
   };
 }

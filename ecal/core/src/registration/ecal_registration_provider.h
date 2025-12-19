@@ -37,10 +37,12 @@
 #include <memory>
 #include <mutex>
 
-#include "util/ecal_thread.h"
+#include <tsl/robin_map.h>
 
 namespace eCAL
 {
+
+
   class CRegistrationProvider
   {
   public:
@@ -62,11 +64,9 @@ namespace eCAL
     std::unique_ptr<CRegistrationSender> m_reg_sender;
     std::shared_ptr<CCallbackThread>     m_reg_sample_snd_thread;
 
-    std::mutex                           m_applied_sample_list_mtx;
-    Registration::SampleList             m_applied_sample_list;
+    std::mutex                           m_sample_db_mtx;
+    Registration::SampleDatabase         m_sample_db;
 
-    Registration::SampleList             m_send_thread_sample_list;
-
-    Registration::SAttributes                  m_attributes;
+    Registration::SAttributes            m_attributes;
   };
 }

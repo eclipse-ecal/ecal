@@ -30,8 +30,10 @@ namespace eCAL
 {
   namespace Registration
   {
-    Sample GetProcessRegisterSample();
+    void UpdateProcessRegistration(SampleDatabase& process_db);
 
+    Sample GetProcessRegisterSample();
+    void UpdateProcessRegisterSample(Sample& process_sample);    
     Sample GetProcessUnregisterSample();
   }
 }

@@ -39,6 +39,8 @@
 #include <tuple>
 #include <limits>
 
+#include <tsl/robin_map.h>
+
 namespace eCAL
 {
   namespace Registration
@@ -394,6 +396,23 @@ namespace eCAL
 
     // Registration sample list
     using SampleList = Util::CExpandingVector<Sample>;
+    using SampleDatabase = tsl::robin_map<uint64_t, Registration::Sample>;
+
+    template <class InsertFn, class UpdateFn>
+    void InsertOrUpdateDB(
+      SampleDatabase& db,
+      const SampleDatabase::key_type& key,
+      InsertFn&& insert_function,
+      UpdateFn&& update_function)
+    {
+      // Fast path: most calls are updates.
+      if (auto it = db.find(key); it != db.end()) {
+        std::forward<UpdateFn>(update_function)(it.value());   // robin_map: it.value() is mapped value
+        return;
+      }
+
+      db.emplace(key, std::forward<InsertFn>(insert_function)());
+    }
   }
 }
 

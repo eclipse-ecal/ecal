@@ -31,6 +31,7 @@
 
 #include <registration/ecal_registration_types.h>
 #include <util/ecal_expmap.h>
+#include <tsl/robin_map.h>
 
 #include <mutex>
 
@@ -115,7 +116,7 @@ namespace eCAL
         }
       }
 
-      using SampleTrackerMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, ClockType>;
+      using SampleTrackerMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, ClockType, tsl::robin_map>;
       SampleTrackerMap                 sample_tracker;
       std::mutex                       sample_tracker_mutex;
 

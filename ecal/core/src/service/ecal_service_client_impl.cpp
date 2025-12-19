@@ -335,13 +335,13 @@ namespace eCAL
   }
 
   // Retrieves registration information for the client
-  Registration::Sample CServiceClientImpl::GetRegistration()
+  void eCAL::CServiceClientImpl::UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_)
   {
 #ifndef NDEBUG
     Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl:::GetRegistration: Generating registration sample for: " + m_service_name);
 #endif
     UpdateConnectionStates();
-    return GetRegistrationSample();
+    sample_db_[m_client_id] = GetRegistrationSample();
   }
 
   const SServiceId& CServiceClientImpl::GetServiceId() const

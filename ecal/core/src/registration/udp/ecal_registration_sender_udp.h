@@ -45,7 +45,7 @@ namespace eCAL
     CRegistrationSenderUDP(CRegistrationSenderUDP&& other) noexcept = delete;
     CRegistrationSenderUDP& operator=(CRegistrationSenderUDP&& other) noexcept = delete;
 
-    bool SendSampleList(const Registration::SampleList& sample_list) override;
+    bool SendSamples(const Registration::SampleDatabase & sample_db) override;
 
   private:
     bool SendSample(const Registration::Sample& sample_);

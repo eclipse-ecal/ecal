@@ -537,8 +537,7 @@ namespace eCAL
   void CPublisherImpl::Register()
   {
 #if ECAL_CORE_REGISTRATION
-    Registration::Sample registration_sample;
-    GetRegistrationSample(registration_sample);
+    Registration::Sample registration_sample{ GetRegistrationSample() };
     auto registration_provider = g_registration_provider();
     if (registration_provider) registration_provider->RegisterSample(registration_sample);
 
@@ -562,13 +561,18 @@ namespace eCAL
 #endif // ECAL_CORE_REGISTRATION
   }
 
-  void CPublisherImpl::GetRegistration(Registration::Sample& sample)
+  void CPublisherImpl::UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_)
   {
-    GetRegistrationSample(sample);
+    InsertOrUpdateDB(sample_db_,
+      m_publisher_id,
+      [this] { return GetRegistrationSample(); },
+      [this](Registration::Sample& s) { UpdateRegistrationSample(s); }
+    );
   }
 
-  void CPublisherImpl::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
+  Registration::Sample CPublisherImpl::GetRegistrationSample()
   {
+    Registration::Sample ecal_reg_sample;
     ecal_reg_sample.cmd_type = bct_reg_publisher;
 
     auto& ecal_reg_sample_identifier = ecal_reg_sample.identifier;
@@ -587,8 +591,20 @@ namespace eCAL
       ecal_reg_sample_tdatatype.name       = m_topic_info.name;
       ecal_reg_sample_tdatatype.descriptor = m_topic_info.descriptor;
     }
+    ecal_reg_sample_topic.process_name = m_attributes.process_name;
+    ecal_reg_sample_topic.unit_name = m_attributes.unit_name;
+
+    UpdateRegistrationSample(ecal_reg_sample);
+
+    return ecal_reg_sample;
+  }
+
+  void CPublisherImpl::UpdateRegistrationSample(Registration::Sample& ecal_reg_sample)
+  {
+    auto& ecal_reg_sample_topic = ecal_reg_sample.topic;
     ecal_reg_sample_topic.topic_size = static_cast<int32_t>(m_topic_size);
 
+    ecal_reg_sample_topic.transport_layer.clear();
 #if ECAL_CORE_TRANSPORT_UDP
     // udp multicast layer
     if (m_writer_udp)
@@ -631,11 +647,9 @@ namespace eCAL
     }
 #endif
 
-    ecal_reg_sample_topic.process_name = m_attributes.process_name;
-    ecal_reg_sample_topic.unit_name    = m_attributes.unit_name;
-    ecal_reg_sample_topic.data_id      = m_id;
-    ecal_reg_sample_topic.data_clock       = m_clock;
-    ecal_reg_sample_topic.data_frequency        = GetFrequency();
+    ecal_reg_sample_topic.data_id = m_id;
+    ecal_reg_sample_topic.data_clock = m_clock;
+    ecal_reg_sample_topic.data_frequency = GetFrequency();
 
     size_t loc_connections(0);
     size_t ext_connections(0);
@@ -652,6 +666,7 @@ namespace eCAL
     }
     ecal_reg_sample_topic.connections_local = static_cast<int32_t>(loc_connections);
     ecal_reg_sample_topic.connections_external = static_cast<int32_t>(ext_connections);
+    
   }
 
   void CPublisherImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)

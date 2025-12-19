@@ -136,52 +136,42 @@ namespace eCAL
 
   void CRegistrationProvider::AddSingleSample(const Registration::Sample& sample_)
   {
-    const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-    m_applied_sample_list.push_back(sample_);
+    const std::lock_guard<std::mutex> lock(m_sample_db_mtx);
+    m_sample_db.insert_or_assign(sample_.identifier.entity_id, sample_);
   }
 
   void CRegistrationProvider::RegisterSendThread()
   {
     // collect all registrations and send them out cyclic
     {
-      // create sample list
-      m_send_thread_sample_list.clear();
-
+      const std::lock_guard<std::mutex> lock(m_sample_db_mtx);
       // and add process registration sample
-      m_send_thread_sample_list.push_back(Registration::GetProcessRegisterSample());
+      UpdateProcessRegistration(m_sample_db);
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
       auto subgate = g_subgate();
-      if (subgate) subgate->GetRegistrations(m_send_thread_sample_list);
+      if (subgate) subgate->UpdateRegistrationDatabase(m_sample_db);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
       auto pubgate = g_pubgate();
-      if (pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
+      if (pubgate) pubgate->UpdateRegistrationDatabase(m_sample_db);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
       auto servicegate = g_servicegate();
-      if (servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
+      if (servicegate) servicegate->UpdateRegistrationDatabase(m_sample_db);
 
       // add client registrations
       auto clientgate = g_clientgate();
-      if (clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
+      if (clientgate) clientgate->UpdateRegistrationDatabase(m_sample_db);
 #endif
 
-      // append applied samples list to sample list
-      if (!m_applied_sample_list.empty())
-      {
-        const std::lock_guard<std::mutex> lock(m_applied_sample_list_mtx);
-        std::copy(m_applied_sample_list.begin(), m_applied_sample_list.end(), std::back_inserter(m_send_thread_sample_list));
-        m_applied_sample_list.clear();
-      }
-
       // send collected registration sample list
-      m_reg_sender->SendSampleList(m_send_thread_sample_list);
+      m_reg_sender->SendSamples(m_sample_db);
     }
   }
 }

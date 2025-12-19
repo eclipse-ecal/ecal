@@ -64,7 +64,9 @@ int main()
   PublisherCreator publishers(10000);
   std::cout << "Done Initializing" << std::endl;
 
-  while (eCAL::Ok())
+  std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
+
+  while (eCAL::Ok() && (std::chrono::steady_clock::now() - start_time < std::chrono::seconds(30)))
   {
     publishers.SendAll();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

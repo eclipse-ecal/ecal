@@ -55,12 +55,12 @@ namespace eCAL
     return false;
   }
 
-  bool CRegistrationSenderUDP::SendSampleList(const Registration::SampleList& sample_list)
+  bool eCAL::CRegistrationSenderUDP::SendSamples(const Registration::SampleDatabase& sample_db)
   {
     bool return_value{ true };
-    for (const auto& sample : sample_list)
+    for (const auto& sample : sample_db)
     {
-      return_value &= SendSample(sample);
+      return_value &= SendSample(sample.second);
     }
     return return_value;
   }

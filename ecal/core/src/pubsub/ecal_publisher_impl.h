@@ -87,7 +87,7 @@ namespace eCAL
     void ApplySubscriberRegistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& sub_layer_states_, const std::string& reader_par_);
     void ApplySubscriberUnregistration(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
-    void GetRegistration(Registration::Sample& sample);
+    void UpdateRegistrationDatabase(Registration::SampleDatabase& sample_db_);
     void RefreshSendCounter();
 
     bool IsCreated() const { return(m_created); }
@@ -104,7 +104,9 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void GetRegistrationSample(Registration::Sample& sample);
+    Registration::Sample GetRegistrationSample();
+    void UpdateRegistrationSample(Registration::Sample& sample);
+
     void GetUnregistrationSample(Registration::Sample& sample);
 
     bool StartUdpLayer();

@@ -95,7 +95,7 @@ namespace eCAL
 
     void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
 
-    void GetRegistration(Registration::Sample& sample);
+    void UpdateRegistrationDatabase(Registration::SampleDatabase& sample_database_);
     bool IsCreated() const { return(m_created); }
 
     bool IsPublished() const;
@@ -112,8 +112,9 @@ namespace eCAL
     void Register();
     void Unregister();
 
-    void GetRegistrationSample(Registration::Sample& sample);
-    void GetUnregistrationSample(Registration::Sample& sample);
+    Registration::Sample GetRegistrationSample();
+    void UpdateRegistrationSample(Registration::Sample& sample);
+    Registration::Sample GetUnregistrationSample();
 
     void StartTransportLayer();
     void StopTransportLayer();

@@ -52,7 +52,7 @@ namespace eCAL
     CRegistrationSenderSHM& operator=(CRegistrationSenderSHM&& other) noexcept = delete;
 
     //bool SendSample(const Registration::Sample& sample_) override;
-    bool SendSampleList(const Registration::SampleList& sample_list) override;
+    bool SendSamples(const Registration::SampleDatabase& sample_db) override;
 
   private:
     CMemoryFileBroadcast                m_memfile_broadcast;
