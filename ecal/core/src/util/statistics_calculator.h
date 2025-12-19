@@ -25,6 +25,7 @@
 #pragma once
 
 #include <ecal_struct_sample_registration.h>
+#include <algorithm>
 
 namespace eCAL
 {
