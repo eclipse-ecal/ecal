@@ -263,3 +263,70 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
 
   eCAL::Finalize();
 }
+
+TEST(core_cpp_pubsub, MultipleSubscriberDifferentSettings)
+{
+  // default send string
+  const std::string send_s = "Hello";
+
+  // initialize eCAL API
+  eCAL::Initialize("pubsub_test");
+
+  eCAL::Subscriber::Configuration sub_config_shm_disabled;
+  sub_config_shm_disabled.layer.shm.enable = false;
+  sub_config_shm_disabled.layer.udp.enable = false;
+  sub_config_shm_disabled.layer.tcp.enable = false;
+
+  eCAL::Subscriber::Configuration sub_config_shm_enabled;
+  sub_config_shm_enabled.layer.shm.enable = true;
+  sub_config_shm_enabled.layer.udp.enable = false;
+  sub_config_shm_enabled.layer.tcp.enable = false;
+
+  // create subscriber for topic "A"
+  eCAL::CSubscriber sub_disabled("A", {}, sub_config_shm_disabled);
+  eCAL::CSubscriber sub_enabled("A", {}, sub_config_shm_enabled);
+  
+  // create publisher config
+  eCAL::Publisher::Configuration pub_config;
+  // set transport layer
+  pub_config.layer.shm.enable = true;
+  pub_config.layer.udp.enable = false;
+  pub_config.layer.tcp.enable = false;
+
+  // create publisher for topic "A" (no zero copy)
+  eCAL::CPublisher pub1("A", eCAL::SDataTypeInformation(), pub_config);
+
+  // add callback
+  int sub_enabled_callback_count = 0;
+  int sub_disabled_callback_count = 0;
+  sub_enabled.SetReceiveCallback([&sub_enabled_callback_count](...) {++sub_enabled_callback_count; });
+  sub_disabled.SetReceiveCallback([&sub_disabled_callback_count](...) {++sub_disabled_callback_count; });
+
+  // let's match them
+  eCAL::Process::SleepMS(2 * CMN_REGISTRATION_REFRESH_MS);
+  int count = 0;
+  while (pub1.GetSubscriberCount() < 1)
+  {
+    ++count;
+    if (count > 50)
+    {
+      FAIL() << "Couldn't match subscribers";
+      break;
+    }
+    eCAL::Process::SleepMS(100);
+  }
+
+  // send without zero copy
+  EXPECT_TRUE(pub1.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
+
+  EXPECT_TRUE(pub1.Send(send_s));
+  eCAL::Process::SleepMS(DATA_FLOW_TIME_MS);
+
+  // check callback receive
+  EXPECT_EQ(sub_enabled_callback_count, 2) << "Enabled subscriber should have received data";
+  EXPECT_EQ(sub_disabled_callback_count, 0) << "Disabled subscriber should not have received data";
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}

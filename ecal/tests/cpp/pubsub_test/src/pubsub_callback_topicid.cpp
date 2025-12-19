@@ -23,88 +23,14 @@
 #include <ecal/pubsub/subscriber.h>
 
 #include <gtest/gtest.h>
+#include <configuration_helper.h>
 #include <ostream>
 #include <string>
 #include <thread>
 #include <vector>
 
-namespace eCAL
-{
-  void PrintTo(const Configuration& config, std::ostream* os) {
-    *os << "Config Layers: ";
-    if (config.publisher.layer.shm.enable)
-      *os << "SHM ";
-    if (config.publisher.layer.tcp.enable)
-      *os << "TCP ";
-    if (config.publisher.layer.udp.enable)
-      *os << "UDP ";
-  }
-}
-
-
 enum {
   DATA_FLOW_TIME_MS = 100
-};
-
-eCAL::Configuration GetTestingConfig()
-{
-  eCAL::Configuration config;
-  config.registration.registration_refresh = 100;
-  config.registration.registration_timeout = 200;
-
-  config.publisher.layer.shm.enable = false;
-  config.publisher.layer.udp.enable = false;
-  config.publisher.layer.tcp.enable = false;
-
-  config.subscriber.layer.shm.enable = false;
-  config.subscriber.layer.udp.enable = false;
-  config.subscriber.layer.tcp.enable = false;
-
-  return config;
-}
-
-eCAL::Configuration EnableUDP(const eCAL::Configuration& config_)
-{
-  eCAL::Configuration config(config_);
-  config.publisher.layer.udp.enable = true;
-  config.subscriber.layer.udp.enable = true;
-  return config;
-}
-
-
-eCAL::Configuration EnableTCP(const eCAL::Configuration& config_)
-{
-  eCAL::Configuration config(config_);
-  config.publisher.layer.tcp.enable = true;
-  config.subscriber.layer.tcp.enable = true;
-  return config;
-}
-
-eCAL::Configuration EnableSHM(const eCAL::Configuration& config_)
-{
-  eCAL::Configuration config(config_);
-  config.publisher.layer.shm.enable = true;
-  config.subscriber.layer.shm.enable = true;
-  return config;
-}
-
-
-// test fixture class
-class TestFixture : public ::testing::TestWithParam<eCAL::Configuration>
-{
-protected:
-  eCAL::Configuration config;
-
-  void SetUp() override
-  {
-    config = GetParam();
-    eCAL::Initialize(config, "callback_topic_id");
-  }
-
-  void TearDown() override
-  {
-    eCAL::Finalize();
-  }
 };
 
 TEST_P(TestFixture, OnePubSub)
@@ -188,13 +114,57 @@ TEST_P(TestFixture, MultiplePubSub)
   }
 }
 
+TEST_P(TestFixture, DestroyOneOfTwoSubscribers)
+{
+  int callback_count{ 0 };
+  int callback_count_destroyable{ 0 };
+  eCAL::CPublisher publisher("foo");
+  eCAL::CSubscriber subscriber("foo");
+  subscriber.SetReceiveCallback([&callback_count](...) {++callback_count; });
+  std::unique_ptr<eCAL::CSubscriber> destroyable_subscriber = std::make_unique<eCAL::CSubscriber>("foo");
+  destroyable_subscriber->SetReceiveCallback([&callback_count_destroyable](...) {++callback_count_destroyable; });
+
+  // let them match
+  eCAL::Process::SleepMS(2 * config.registration.registration_refresh);
+  
+  int count = 0;
+  while (publisher.GetSubscriberCount() < 2)
+  {
+    ++count;
+    if (count > 50)
+    {
+      FAIL() << "Couldn't match subscribers, current count" << publisher.GetSubscriberCount();
+      break;
+    }
+    eCAL::Process::SleepMS(100);
+  }
+
+
+  publisher.Send("abc");
+  std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
+  publisher.Send("abc");
+  std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
+
+  // destroy one subscriber
+  destroyable_subscriber.reset();
+  eCAL::Process::SleepMS(2 * config.registration.registration_refresh);
+
+  publisher.Send("abc");
+  std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
+  publisher.Send("abc");
+  std::this_thread::sleep_for(std::chrono::milliseconds(DATA_FLOW_TIME_MS));
+
+  EXPECT_EQ(callback_count, 4) << "Destroyed subscriber should receive 4 messages";
+  EXPECT_EQ(callback_count_destroyable, 2) << "Destroyed subscriber should receive 2 messages";
+}
+
 // Define the test parameters
 INSTANTIATE_TEST_SUITE_P(
   core_cpp_pubsub_callback_topid_id,
   TestFixture,
   ::testing::Values(
-    EnableSHM(GetTestingConfig()),
-    EnableUDP(GetTestingConfig()),
-    EnableTCP(GetTestingConfig())
+    TestParams{ EnableSHM(GetTestingConfig()) , "Callback TopicID SHM" },
+    TestParams{ EnableUDP(GetTestingConfig()) , "Callback TopicID UDP" },
+    TestParams{ EnableTCP(GetTestingConfig()) , "Callback TopicID TCP" }
   )
 );

@@ -37,6 +37,8 @@ if(ECAL_CORE_TRANSPORT_UDP)
 endif()
 
 set(pubsub_test_src
+  src/configuration_helper.h
+  src/configuration_helper.cpp
   src/pubsub_callback_topicid.cpp
   src/pubsub_event_callback_test.cpp
   src/pubsub_test.cpp
@@ -45,6 +47,11 @@ set(pubsub_test_src
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${pubsub_test_src})
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
