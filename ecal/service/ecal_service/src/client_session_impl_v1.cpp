@@ -468,13 +468,10 @@ namespace ecal_service
                                                                         {
                                                                           // Call the callback with an error
                                                                           response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
-                                
-                                                                          // Further handle the error, e.g. unwinding pending service calls and calling the event callback
-                                                                          // 
-                                                                          // TODO: Check whether this can be executed in the user-thread, or if I should use asio::post to give it back to asio
-                                                                          // TODO: Maybe this can also be executed outside of this lambda. That would make it asynchronously, but it should even speed up the error callbacks
-                                                                          me->handle_connection_loss_error(message);
                                                                         });
+                                
+                                // Further handle the error, e.g. unwinding pending service calls and calling the event callback
+                                me->handle_connection_loss_error(message);
                               })
                             , [me = shared_from_this(), response_cb]()
                               {
@@ -501,12 +498,9 @@ namespace ecal_service
                                                                           // Call the callback with an error
                                                                           response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
 
-                                                                          // Further handle the error, e.g. unwinding pending service calls and calling the event callback
-                                                                          // 
-                                                                          // TODO: Check whether this can be executed in the user-thread, or if I should use asio::post to give it back to asio
-                                                                          // TODO: Maybe this can also be executed outside of this lambda. That would make it asynchronously, but it should even speed up the error callbacks
-                                                                          me->handle_connection_loss_error(message);
                                                                         });
+                              // Further handle the error, e.g. unwinding pending service calls and calling the event callback
+                              me->handle_connection_loss_error(message);
                             })
                           , service_call_queue_strand_.wrap([me = shared_from_this(), response_cb](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                             {
@@ -525,13 +519,10 @@ namespace ecal_service
                                                                           {
                                                                             // Call the callback with an error
                                                                             response_cb(Error(Error::ErrorCode::PROTOCOL_ERROR, message), nullptr);
-
-                                                                            // Further handle the error, e.g. unwinding pending service calls and calling the event callback
-                                                                            // 
-                                                                            // TODO: Check whether this can be executed in the user-thread, or if I should use asio::post to give it back to asio
-                                                                            // TODO: Maybe this can also be executed outside of this lambda. That would make it asynchronously, but it should even speed up the error callbacks
-                                                                            me->handle_connection_loss_error(message);
                                                                           });
+
+                                // Further handle the error, e.g. unwinding pending service calls and calling the event callback
+                                me->handle_connection_loss_error(message);
                                 return;
                               }
                               else
@@ -675,13 +666,12 @@ namespace ecal_service
 
       // Set the state to FAILED
       state_ = State::FAILED;
+    }
 
-      // call all callbacks from the queue with an error
-      if (!service_call_queue_.empty())
-      {
-        ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Calling " + std::to_string(service_call_queue_.size()) + " service callbacks with error");
-        call_all_callbacks_with_error();
-      }
+    // call all callbacks from the queue with an error
+    {
+      ECAL_SERVICE_LOG_DEBUG(logger_, "[" + get_connection_info_string(socket_) + "] " + "Calling " + std::to_string(service_call_queue_.size()) + " service callbacks with error");
+      call_all_callbacks_with_error();
     }
 
     if (call_event_callback && event_callback_)
@@ -692,36 +682,26 @@ namespace ecal_service
 
   void ClientSessionV1::call_all_callbacks_with_error()
   {
-    // TODO: Decide whether I can replace this with a simple for loop
-    asio::post(service_call_queue_strand_
-            , [me = shared_from_this()]()
-                                    {
-                                      ServiceCall first_service_call;
-                                      bool        more_service_calls(false);
-
-                                      {
-                                        // Lock the mutex and manipulate the queue. We want the mutex unlocked for the event callback call.
-                                        const std::lock_guard<std::mutex> lock(me->service_state_mutex_);
+    while(true)
+    {
+      ServiceCall current_service_call;
+      {
+        // Lock the mutex and manipulate the queue. We want the mutex unlocked for the event callback call.
+        const std::lock_guard<std::mutex> lock(service_state_mutex_);
                                         
-                                        if (me->service_call_queue_.empty())
-                                          return;
+        if (service_call_queue_.empty())
+          return;
 
-                                        first_service_call = std::move(me->service_call_queue_.front());
-                                        me->service_call_queue_.pop_front();
+        current_service_call = std::move(service_call_queue_.front());
+        service_call_queue_.pop_front();
+      }
 
-                                        more_service_calls = (!me->service_call_queue_.empty());
-                                      }
-
-                                      // Execute the callback with an error
-                                      me->response_callback_executor_function_([first_service_call]()
-                                                                                {
-                                                                                  first_service_call.response_cb(ecal_service::Error::ErrorCode::CONNECTION_CLOSED, nullptr); // TODO: I should probably store the error that lead to this somewhere and tell the actual error.
-                                                                                });
-
-                                      // If there are more sevice calls, call those with an error, as well
-                                      if (more_service_calls)
-                                        me->call_all_callbacks_with_error();
-                                    });
+      // Execute the callback with an error
+      response_callback_executor_function_([current_service_call]()
+                                            {
+                                              current_service_call.response_cb(ecal_service::Error::ErrorCode::CONNECTION_CLOSED, nullptr); // TODO: I should probably store the error that lead to this somewhere and tell the actual error.
+                                            });
+    }
   }
 
   void ClientSessionV1::stop()
