@@ -598,7 +598,7 @@ namespace eCAL
       udp_tlayer.version = ecal_transport_layer_version;
       udp_tlayer.enabled = m_layers.udp.write_enabled;
       udp_tlayer.active = m_layers.udp.active;
-      udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter().layer_par_udpmc;
+      udp_tlayer.par_layer.layer_par_udpmc = m_writer_udp->GetConnectionParameter();
       ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
@@ -612,7 +612,7 @@ namespace eCAL
       shm_tlayer.version = ecal_transport_layer_version;
       shm_tlayer.enabled = m_layers.shm.write_enabled;
       shm_tlayer.active = m_layers.shm.active;
-      shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter().layer_par_shm;
+      shm_tlayer.par_layer.layer_par_shm = m_writer_shm->GetConnectionParameter();
       ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
@@ -626,7 +626,7 @@ namespace eCAL
       tcp_tlayer.version = ecal_transport_layer_version;
       tcp_tlayer.enabled = m_layers.tcp.write_enabled;
       tcp_tlayer.active = m_layers.tcp.active;
-      tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter().layer_par_tcp;
+      tcp_tlayer.par_layer.layer_par_tcp = m_writer_tcp->GetConnectionParameter();
       ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif

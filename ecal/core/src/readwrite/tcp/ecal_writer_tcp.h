@@ -37,7 +37,7 @@
 namespace eCAL
 {
   // ecal tcp writer
-  class CDataWriterTCP : public CDataWriterBase
+  class CDataWriterTCP : public CDataWriterBase<Registration::LayerParTcp>
   {
   public:
     CDataWriterTCP(const eCAL::eCALWriter::TCP::SAttributes& attr_);
@@ -46,7 +46,7 @@ namespace eCAL
 
     bool Write(const void* buf_, const SWriterAttr& attr_) override;
 
-    Registration::ConnectionPar GetConnectionParameter() override;
+    Registration::LayerParTcp GetConnectionParameter() override;
 
   private:
     eCAL::eCALWriter::TCP::SAttributes           m_attributes;

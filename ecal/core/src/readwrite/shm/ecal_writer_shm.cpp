@@ -149,14 +149,14 @@ namespace eCAL
     }
   }
 
-  Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()
+  Registration::LayerParShm CDataWriterSHM::GetConnectionParameter()
   {
-    Registration::ConnectionPar connection_par;
+    Registration::LayerParShm layer_par_shm;
     for (auto& memory_file : m_memory_file_vec)
     {
-      connection_par.layer_par_shm.memory_file_list.push_back(memory_file->GetName());
+      layer_par_shm.memory_file_list.push_back(memory_file->GetName());
     }
-    return connection_par;
+    return layer_par_shm;
   }
 
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)
