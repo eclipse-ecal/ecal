@@ -134,9 +134,16 @@ int main(int argc, char** argv)
   // Event callbacks (empty)
   auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
+  // Synchronous callback executor
+  auto synchronous_callback_executor = [](const std::function<void()>& callback) -> void
+                                        {
+                                          // Directly execute the callback in this thread
+                                          callback();
+                                        };
+
   // Create client
   // The client will connect to the server on the given port.
-  auto client = client_manager->create_client(protocol_version, server_list, client_event_callback);
+  auto client = client_manager->create_client(protocol_version, server_list, synchronous_callback_executor, client_event_callback);
 
   // Call the service non-blocking. The response will be passed to the callback.
   int counter = 1;

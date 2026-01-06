@@ -72,8 +72,8 @@ int main(int /*argc*/, char** /*argv*/)
   auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
   auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
-  // Server Service Callback Executor
-  auto server_service_callback_executor = [](const std::function<void()>& callback) -> void
+  // Synchronous Callback Executor
+  auto synchronous_callback_executor = [](const std::function<void()>& callback) -> void
                                           {
                                             // Directly execute the callback in this thread
                                             callback();
@@ -81,11 +81,11 @@ int main(int /*argc*/, char** /*argv*/)
 
   // Create server
   // The server will choose a free port automatically.
-  auto server = server_manager->create_server(1, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+  auto server = server_manager->create_server(1, 0, server_service_callback, synchronous_callback_executor, server_event_callback);
 
   // Create client
   // The client will connect to the server on the given port.
-  auto client = client_manager->create_client(1, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+  auto client = client_manager->create_client(1, {{ "127.0.0.1", server->get_port() }}, synchronous_callback_executor, client_event_callback);
 
   // Call the service non-blocking. The response will be passed to the callback.
   for (int i = 1; i <= 10; i++)
