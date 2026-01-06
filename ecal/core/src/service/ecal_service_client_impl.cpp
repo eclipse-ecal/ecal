@@ -316,6 +316,13 @@ namespace eCAL
         // TODO: Replace current connect/disconnect state logic with this client event callback logic
       };
 
+      // Callback executor: Use dynamic threadpool executor
+      const ecal_service::PostToClientResponseCallbackExecutorFunctionT response_callback_executor_function
+              = [threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool()](const std::function<void()>& task) -> void
+                {
+                  threadpool->Post(task);
+                };
+
       // use protocol version 1
       const auto protocol_version = 1;
       const auto port_to_use = service_.tcp_port_v1;
@@ -325,7 +332,7 @@ namespace eCAL
         {service_.hname, port_to_use},
         {service_.hname + ".local", port_to_use},
       };
-      client.client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), endpoint_list, event_callback);
+      client.client_session = client_manager->create_client(static_cast<uint8_t>(protocol_version), endpoint_list, response_callback_executor_function, event_callback);
 
       if (client.client_session)
       {

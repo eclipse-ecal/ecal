@@ -144,6 +144,7 @@ namespace ecal_service
     static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
                                                 , std::uint8_t                                              protocol_version
                                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                 , const EventCallbackT&                                     event_callback
                                                 , const LoggerT&                                            logger
                                                 , const DeleteCallbackT&                                    delete_callback);
@@ -151,12 +152,14 @@ namespace ecal_service
     static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
                                                 , std::uint8_t                                              protocol_version
                                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                 , const EventCallbackT&                                     event_callback
                                                 , const LoggerT&                                            logger = default_logger("Service Client"));
 
     static std::shared_ptr<ClientSession> create(const std::shared_ptr<asio::io_context>&                   io_context
                                                 , std::uint8_t                                              protocol_version
                                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                 , const EventCallbackT&                                     event_callback
                                                 , const DeleteCallbackT&                                    delete_callback);
 
@@ -164,6 +167,7 @@ namespace ecal_service
     ClientSession(const std::shared_ptr<asio::io_context>&                    io_context
                   , std::uint8_t                                              protocol_version
                   , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                  , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                   , const EventCallbackT&                                     event_callback
                   , const LoggerT&                                            logger);
 

@@ -38,12 +38,13 @@
 
 namespace ecal_service
 {
-  std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                  io_context
-                                                     , std::uint8_t                                              protocol_version
-                                                     , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
-                                                     , const EventCallbackT&                                     event_callback
-                                                     , const LoggerT&                                            logger
-                                                     , const DeleteCallbackT&                                    delete_callback)
+  std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                   io_context
+                                                      , std::uint8_t                                              protocol_version
+                                                      , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                      , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
+                                                      , const EventCallbackT&                                     event_callback
+                                                      , const LoggerT&                                            logger
+                                                      , const DeleteCallbackT&                                    delete_callback)
   {
     auto deleter = [delete_callback](ClientSession* session)
     {
@@ -51,35 +52,38 @@ namespace ecal_service
       delete session; // NOLINT(cppcoreguidelines-owning-memory)
     };
 
-    return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list, event_callback, logger), deleter);
+    return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list,response_callback_executor_function, event_callback, logger), deleter);
   }
 
   std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                   io_context
                                                       , std::uint8_t                                              protocol_version
                                                       , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                      , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                       , const EventCallbackT&                                     event_callback
                                                       , const LoggerT&                                            logger)
   {
-    return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list, event_callback, logger));
+    return std::shared_ptr<ClientSession>(new ClientSession(io_context, protocol_version, server_list,response_callback_executor_function, event_callback, logger));
   }
 
   std::shared_ptr<ClientSession> ClientSession::create(const std::shared_ptr<asio::io_context>&                  io_context
                                                      , std::uint8_t                                              protocol_version
                                                      , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                     , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                      , const EventCallbackT&                                     event_callback
                                                      , const DeleteCallbackT&                                    delete_callback)
   {
-    return ClientSession::create(io_context, protocol_version, server_list, event_callback, default_logger("Service Client"), delete_callback);
+    return ClientSession::create(io_context, protocol_version, server_list, response_callback_executor_function, event_callback, default_logger("Service Client"), delete_callback);
   }
 
   ClientSession::ClientSession(const std::shared_ptr<asio::io_context>&                   io_context
                               , std::uint8_t                                              /*protocol_version*/
                               , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                              , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                               , const EventCallbackT&                                     event_callback
                               , const LoggerT&                                            logger)
   {
     // we support v1 protocol only
-    impl_ = ClientSessionV1::create(io_context, server_list, event_callback, logger);
+    impl_ = ClientSessionV1::create(io_context, server_list, response_callback_executor_function, event_callback, logger);
   }
 
   ClientSession::~ClientSession()

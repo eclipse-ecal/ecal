@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,4 +36,12 @@ namespace ecal_service
  
   using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
   using ClientResponseCallbackT = std::function<void (const ecal_service::Error&, const std::shared_ptr<std::string>&)>;
+
+  /**
+   * @brief A function that posts a task to the client response callback executor.
+   * 
+   * This is used to execute client response callbacks in a specific context, e.g., a
+   * thread pool or a strand.
+   */
+  using PostToClientResponseCallbackExecutorFunctionT  = std::function<void(const std::function<void()>&)>;
 } // namespace eCAL

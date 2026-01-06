@@ -61,6 +61,24 @@ ecal_service::LoggerT critical_logger(const std::string& node_name)
 constexpr std::uint8_t min_protocol_version = 1;
 constexpr std::uint8_t max_protocol_version = 1;
 
+// Simple response callback executors that directly executes the callback in the calling thread.
+// This is fine for testing purposes.
+// In a real-world application, you would probably want to use a thread pool to execute the callbacks.
+const ecal_service::PostToClientResponseCallbackExecutorFunctionT default_client_response_callback_executor_function
+        = [](const std::function<void()>& callback) -> void
+          {
+            // Directly execute the callback in this thread
+            callback();
+          };
+const ecal_service::PostToServiceCallbackExecutorFunctionT default_server_service_callback_executor_function
+          = [](const std::function<void()>& callback) -> void
+            {
+              // Directly execute the callback in this thread
+              callback();
+            };
+
+// TODO: I should add a test that uses a dynamic threadpool executor for the server service callback execution.
+
 #if 1
 TEST(ecal_service, RAII_TcpServiceServer) // NOLINT
 {
@@ -142,7 +160,7 @@ TEST(ecal_service, RAII_TcpServiceClient) // NOLINT
                                                 io_context->run();
                                               });
 
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", 12345 }}, client_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", 12345 }}, default_client_response_callback_executor_function, client_event_callback);
 
     io_context->stop();
     io_thread->join();
@@ -198,14 +216,7 @@ TEST(ecal_service, RAII_TcpServiceServerAndClient) // NOLINT
       std::chrono::steady_clock::time_point         start_time;
 
       {
-        const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-        const std::shared_ptr<ecal_service::Server> tcp_server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+        const std::shared_ptr<ecal_service::Server> tcp_server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
         tcp_server_weak = tcp_server;
 
         io_thread = std::make_unique<std::thread>([&io_context]()
@@ -215,7 +226,7 @@ TEST(ecal_service, RAII_TcpServiceServerAndClient) // NOLINT
 
         EXPECT_EQ(tcp_server->get_connection_count(), 0);
 
-        auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", tcp_server->get_port() }}, client_event_callback);
+        auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", tcp_server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
         tcp_client_weak = client_v1;
 
         client_v1->async_call_service(std::make_shared<std::string>("Hello World"), client_slow_response_callback);
@@ -289,14 +300,7 @@ TEST(ecal_service, RAII_StopDuringServiceCall) // NOLINT
       std::weak_ptr<ecal_service::ClientSession> tcp_client_weak;
 
       {
-        const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-        const std::shared_ptr<ecal_service::Server> tcp_server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+        const std::shared_ptr<ecal_service::Server> tcp_server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
         tcp_server_weak = tcp_server;
 
         io_thread = std::make_unique<std::thread>([&io_context]()
@@ -304,7 +308,7 @@ TEST(ecal_service, RAII_StopDuringServiceCall) // NOLINT
                                                     io_context->run();
                                                   });
 
-        auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", tcp_server->get_port() }}, client_event_callback);
+        auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", tcp_server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
         tcp_client_weak = client_v1;
 
         client_v1->async_call_service(std::make_shared<std::string>("Hello World"), client_slow_response_callback);
@@ -369,14 +373,7 @@ TEST(ecal_service, Communication_SlowCommunication) // NOLINT
               (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
 
     EXPECT_NE(server->get_port(), 0);
 
@@ -387,7 +384,7 @@ TEST(ecal_service, Communication_SlowCommunication) // NOLINT
       EXPECT_EQ(server->get_connection_count(), 0);
     }
 
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -497,15 +494,8 @@ TEST(ecal_service, CallbacksConnectDisconnect_ClientDisconnectsFirst) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function,client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -621,14 +611,7 @@ TEST(ecal_service, CommunicationAndCallbacks_ClientsDisconnectFirst) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
 
     EXPECT_NE(server->get_port(), 0);
 
@@ -646,7 +629,7 @@ TEST(ecal_service, CommunicationAndCallbacks_ClientsDisconnectFirst) // NOLINT
       EXPECT_EQ(server->get_connection_count(), 0);
     }
 
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -818,15 +801,8 @@ TEST(ecal_service, CommunicationAndCallbacks_ServerDisconnectsFirst) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server    = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server    = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -957,14 +933,7 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunication) // NOLINT
                 num_server_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, server_service_callback_executor, server_event_callback, critical_logger("Server"));
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, default_server_service_callback_executor_function, server_event_callback, critical_logger("Server"));
 
     {
       EXPECT_EQ(num_server_service_callback_called.get()     , 0);
@@ -1002,7 +971,8 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunication) // NOLINT
 
                 num_client_event_callback_called++; 
               };
-      client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback, critical_logger("Client " + std::to_string(c))));
+
+      client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback, critical_logger("Client " + std::to_string(c))));
     }
     
     // Directly run a bunch of clients and call each client a bunch of times
@@ -1125,14 +1095,7 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationMassivePayloa
                 num_server_event_callback_called_disconnected++;
             };
 
-  const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-  auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, server_service_callback_executor, server_event_callback, critical_logger("Server"));
+  auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, default_server_service_callback_executor_function, server_event_callback, critical_logger("Server"));
 
   {
     EXPECT_EQ(num_server_service_callback_called.get()     , 0);
@@ -1170,7 +1133,8 @@ TEST(ecal_service, CommunicationAndCallbacks_StressfulCommunicationMassivePayloa
 
               num_client_event_callback_called++; 
             };
-    client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback, critical_logger("Client " + std::to_string(c))));
+
+    client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback, critical_logger("Client " + std::to_string(c))));
   }
 
   // Directly run a bunch of clients and call each client a bunch of times
@@ -1283,20 +1247,13 @@ TEST(ecal_service, Callback_ServerAndClientManagers) // NOLINT
       };
     };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
+    auto server1 = server_manager->create_server(protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, increment_atomic_signalable(server1_event_callback_called));
+    auto server2 = server_manager->create_server(protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, increment_atomic_signalable(server2_event_callback_called));
 
-    auto server1 = server_manager->create_server(protocol_version, 0, server_service_callback, server_service_callback_executor, increment_atomic_signalable(server1_event_callback_called));
-    auto server2 = server_manager->create_server(protocol_version, 0, server_service_callback, server_service_callback_executor, increment_atomic_signalable(server2_event_callback_called));
-
-    auto client1_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, increment_atomic_signalable(client1_1_event_callback_called));
-    auto client1_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, increment_atomic_signalable(client1_2_event_callback_called));
-    auto client2_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, increment_atomic_signalable(client2_1_event_callback_called));
-    auto client2_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, increment_atomic_signalable(client2_2_event_callback_called));
+    auto client1_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, default_client_response_callback_executor_function, increment_atomic_signalable(client1_1_event_callback_called));
+    auto client1_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, default_client_response_callback_executor_function, increment_atomic_signalable(client1_2_event_callback_called));
+    auto client2_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, default_client_response_callback_executor_function, increment_atomic_signalable(client2_1_event_callback_called));
+    auto client2_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, default_client_response_callback_executor_function, increment_atomic_signalable(client2_2_event_callback_called));
 
     // Wait for the clients to be connected
     client1_1_event_callback_called.wait_for([&](int value) { return value >= 1; }, std::chrono::seconds(5));
@@ -1410,20 +1367,13 @@ TEST(ecal_service, Callback_ServiceCallFromCallback) // NOLINT
               (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
 
     EXPECT_EQ(num_server_service_callback_called, 0);
     EXPECT_EQ(num_client_response_callback1_called, 0);
     EXPECT_EQ(num_client_response_callback2_called, 0);
 
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     const ecal_service::ClientSession::ResponseCallbackT response_callback
             = [&num_client_response_callback1_called, &num_client_response_callback2_called, client_v1]
@@ -1554,21 +1504,14 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   num_client_event_callback_called++;
                 };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+    server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
 
     EXPECT_EQ(num_server_service_callback_called.get(),  0);
     EXPECT_EQ(num_server_event_callback_called.get(),    0);
     EXPECT_EQ(num_client_response_callback_called.get(), 0);
     EXPECT_EQ(num_client_event_callback_called.get(),    0);
 
-    client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -1646,14 +1589,7 @@ TEST(ecal_service, BackupHost)
               num_client_event_callback_called++;
             };
     
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
     
     EXPECT_EQ(num_server_service_callback_called, 0);
     EXPECT_EQ(num_server_event_callback_called,   0);
@@ -1667,7 +1603,7 @@ TEST(ecal_service, BackupHost)
                   { "127.0.0.1",           server->get_port() }     // This endpoint is the correct one and will be tried last
                 };
 
-    auto client = ecal_service::ClientSession::create(io_context, protocol_version, server_list, client_event_callback);
+    auto client = ecal_service::ClientSession::create(io_context, protocol_version, server_list, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -1728,7 +1664,7 @@ TEST(ecal_service, EmptyServerList)
   for (std::uint8_t protocol_version = min_protocol_version; protocol_version <= max_protocol_version; protocol_version++)
   {
     const auto io_context = std::make_shared<asio::io_context>();    
-    EXPECT_THROW(ecal_service::ClientSession::create(io_context, protocol_version, {}, [](ecal_service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
+    EXPECT_THROW(ecal_service::ClientSession::create(io_context, protocol_version, {},default_client_response_callback_executor_function,  [](ecal_service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
   }
 
   // Client manager
@@ -1736,7 +1672,7 @@ TEST(ecal_service, EmptyServerList)
   {
     const auto io_context = std::make_shared<asio::io_context>();
     auto client_manager = ecal_service::ClientManager::create(io_context);
-    EXPECT_THROW(client_manager->create_client(protocol_version, {}, [](ecal_service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
+    EXPECT_THROW(client_manager->create_client(protocol_version, {}, default_client_response_callback_executor_function, [](ecal_service::ClientEventType, const std::string&) -> void {}), std::invalid_argument);
   }
 }
 #endif
@@ -1770,7 +1706,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackNoServer) // NOLINT
 
     EXPECT_EQ(num_client_response_callback_called.get(), 0);
 
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "NonExistingEndpoint", 12345 }}, client_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "NonExistingEndpoint", 12345 }},default_client_response_callback_executor_function,  client_event_callback);
 
     // Run the io_service
     std::thread io_thread([&io_context]()
@@ -1844,15 +1780,8 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackServerHasDisconnected) // NOLINT
                 num_client_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }},default_client_response_callback_executor_function,  client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -1998,15 +1927,8 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackClientDisconnects) // NOLINT
               (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server    = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server    = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client_v1 = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }},default_client_response_callback_executor_function,  client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -2121,14 +2043,7 @@ TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThrough) // NOLINT
                 num_server_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, server_service_callback_executor, server_event_callback, critical_logger("Server"));
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, service_callback, default_server_service_callback_executor_function, server_event_callback, critical_logger("Server"));
 
     {
       EXPECT_EQ(num_server_service_callback_called           , 0);
@@ -2168,7 +2083,7 @@ TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThrough) // NOLINT
 
                 num_client_event_callback_called++; 
               };
-      client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback, critical_logger("Client " + std::to_string(c))));
+      client_list.push_back(ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }},default_client_response_callback_executor_function,  client_event_callback, critical_logger("Client " + std::to_string(c))));
     }
 
     // Directly run a bunch of clients and call each client a bunch of times
@@ -2312,14 +2227,7 @@ TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThroughWithManagers) // N
                 num_server_event_callback_called++; 
               };
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = server_manager->create_server(protocol_version, 0, service_callback, server_service_callback_executor, server_event_callback);
+    auto server = server_manager->create_server(protocol_version, 0, service_callback, default_server_service_callback_executor_function, server_event_callback);
 
     {
       EXPECT_EQ(num_server_service_callback_called           , 0);
@@ -2359,7 +2267,7 @@ TEST(ecal_service, ErrorCallback_StressfulErrorsHalfwayThroughWithManagers) // N
 
                 num_client_event_callback_called++; 
               };
-      client_list.push_back(client_manager->create_client(protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback));
+      client_list.push_back(client_manager->create_client(protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback));
     }
 
     // Directly run a bunch of clients and call each client a bunch of times
@@ -2484,15 +2392,8 @@ TEST(ecal_service, BlockingCall_RegularBlockingCall) // NOLINT
               (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }},default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -2563,15 +2464,8 @@ TEST(ecal_service, BlockingCall_BlockingCallWithErrorHalfwayThrough) // NOLINT
               (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
               {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server = ecal_service::Server::create(io_context, protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client = ecal_service::ClientSession::create(io_context, protocol_version, {{ "127.0.0.1", server->get_port() }},default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {
@@ -2703,15 +2597,8 @@ TEST(ecal_service, BlockingCall_Stopped)  // NOLINT // This test shows the prope
                       (ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
                       {};
 
-    const ecal_service::PostToServiceCallbackExecutorFunctionT server_service_callback_executor
-                  = [](const std::function<void()>& callback) -> void
-                    {
-                      // Directly execute the callback in this thread
-                      callback();
-                    };
-
-    auto server = server_manager->create_server(protocol_version, 0, server_service_callback, server_service_callback_executor, server_event_callback);
-    auto client = client_manager->create_client(protocol_version, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+    auto server = server_manager->create_server(protocol_version, 0, server_service_callback, default_server_service_callback_executor_function, server_event_callback);
+    auto client = client_manager->create_client(protocol_version, {{ "127.0.0.1", server->get_port() }}, default_client_response_callback_executor_function, client_event_callback);
 
     std::thread io_thread([&io_context]()
                           {

@@ -60,6 +60,7 @@ namespace ecal_service
   ///////////////////////////////////////////////////////
   std::shared_ptr<ClientSession> ClientManager::create_client(std::uint8_t                                               protocol_version
                                                              , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                             , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                              , const ClientSession::EventCallbackT&                      event_callback)
   {
     const std::lock_guard<std::mutex> lock(client_manager_mutex_);
@@ -79,7 +80,7 @@ namespace ecal_service
       }
     };
 
-    auto client = ClientSession::create(io_context_, protocol_version, server_list, event_callback, logger_, deleter);
+    auto client = ClientSession::create(io_context_, protocol_version, server_list, response_callback_executor_function, event_callback, logger_, deleter);
     sessions_.emplace(client.get(), client);
     return client;
   }

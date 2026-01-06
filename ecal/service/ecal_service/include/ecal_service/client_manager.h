@@ -152,6 +152,7 @@ namespace ecal_service
      */
     std::shared_ptr<ClientSession> create_client(std::uint8_t                                               protocol_version
                                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                 , const ClientSession::EventCallbackT&                      event_callback);
 
     /**
