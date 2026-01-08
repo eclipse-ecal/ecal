@@ -23,8 +23,6 @@
 
 #pragma once
 
-#include "pubsub/ecal_subscriber_impl.h"
-
 #include <atomic>
 #include <cstddef>
 #include <memory>
@@ -32,27 +30,31 @@
 #include <string>
 #include <unordered_map>
 
+#include "serialization/ecal_struct_sample_registration.h"
+
 namespace eCAL
 {
+  class CSubscriberImpl;
+
+  /*
+  * Manages only subscribers and their registrations, but not dataflow.
+  */
   class CSubGate
   {
   public:
     CSubGate();
-    ~CSubGate();
+    ~CSubGate();                             
+
+    CSubGate(const CSubGate&) = delete;               
+    CSubGate& operator=(const CSubGate&) = delete;
+    CSubGate(CSubGate&&) noexcept = delete;
+    CSubGate& operator=(CSubGate&&) noexcept = delete;
 
     void Start();
     void Stop();
 
     bool Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_);
     bool Unregister(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_);
-
-    bool HasSample(const std::string& sample_name_);
-
-    bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_, eTLayerType layer_);
-    bool ApplySample(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
-
-    void ApplyPublisherRegistration(const Registration::Sample& ecal_sample_);
-    void ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_);
 
     void GetRegistrations(Registration::SampleList& reg_sample_list_);
 

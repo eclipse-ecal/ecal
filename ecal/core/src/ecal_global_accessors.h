@@ -68,6 +68,7 @@ namespace eCAL
   class  CMemFileThreadPool;
   class  CMemFileMap;
 #endif
+  class CReaderManager;
 
   void SetGlobalUnitName(const char *unit_name_);
 
@@ -105,8 +106,8 @@ namespace eCAL
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
   std::shared_ptr<CMemFileThreadPool>     g_memfile_pool();
   std::shared_ptr<CMemFileMap>            g_memfile_map();
-
 #endif
+  std::shared_ptr<CReaderManager>         g_reader_manager();
 
   // declaration of globally accessible variables
   extern std::shared_ptr<CGlobals>     g_globals_ctx;

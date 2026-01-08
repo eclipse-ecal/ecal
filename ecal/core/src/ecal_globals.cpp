@@ -249,6 +249,12 @@ namespace eCAL
     initialized =  true;
     components  |= components_;
 
+    if (!reader_manager_instance)
+    {
+      reader_manager_instance = std::make_shared<CReaderManager>();
+      new_initialization = true;
+    }
+
     return new_initialization;
   }
 
@@ -292,6 +298,9 @@ namespace eCAL
   bool CGlobals::Finalize()
   {
     if (!initialized) return false;
+
+    // First, stop all transport
+    reader_manager_instance.reset();
 
     // start destruction
 #if ECAL_CORE_MONITORING

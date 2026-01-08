@@ -28,7 +28,6 @@
 #include "ecal_global_accessors.h"
 
 #include "io/udp/ecal_udp_configurations.h"
-#include "pubsub/ecal_subgate.h"
 #include "config/builder/udp_attribute_builder.h"
 
 #include <functional>
@@ -101,15 +100,19 @@ namespace eCAL
   
   bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
   {
+    /*
     auto subgate = g_subgate();
     if (subgate) return subgate->HasSample(sample_name_);
+    */
     return false;
   }
 
   bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
+    /*
     auto subgate = g_subgate();
     if (subgate) return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    */
     return false;
   }
 }

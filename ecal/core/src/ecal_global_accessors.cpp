@@ -190,4 +190,11 @@ namespace eCAL
     return nullptr;
   }
 #endif
+
+  std::shared_ptr<CReaderManager> g_reader_manager()
+  {
+    auto globals = g_globals();
+    if (globals) return globals->reader_manager();
+    return nullptr;
+  }
 }
