@@ -537,10 +537,6 @@ namespace ecal_service
                                                                           response_cb(Error::OK, payload_buffer);
                                                                         });
 
-                                // TODO: Check whether the following code must wait for the callback to finish.
-                                // Initially, that was the case, as the callback was executed in the io_context thread.
-                                // Now (2025-12-16) however, the callback may be executed in a user-defined thread.
-
                                 // Check if there are more items in the queue. If so, send the next request
                                 // The mutex must be locket, as we access the queue.
                                 {
