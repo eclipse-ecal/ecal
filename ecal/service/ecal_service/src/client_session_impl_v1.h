@@ -34,6 +34,7 @@
 
 #include <asio.hpp>
 
+#include <ecal_service/client_session_types.h>
 #include <ecal_service/logger.h>
 #include <ecal_service/state.h>
 

@@ -32,6 +32,7 @@
 #include <ecal_service/error.h>
 #include <ecal_service/logger.h>
 #include <ecal_service/state.h>
+#include <ecal_service/client_session_types.h>
 
 #include "client_session_impl_v1.h"
 #include "condition_variable_signaler.h"

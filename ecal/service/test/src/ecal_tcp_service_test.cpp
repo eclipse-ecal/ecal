@@ -18,6 +18,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstdint>
+#include <functional>
 #include <gtest/gtest.h>
 
 #include <asio.hpp>
@@ -25,17 +28,26 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <stdexcept>
 #include <string>
 #include <thread>
-#include <stdexcept>
 
 #include <ecal_service/server.h> // Should not be needed, when I use the server manager / client manager
 #include <ecal_service/client_session.h> // Should not be needed, when I use the server manager / client manager
 
 #include <ecal_service/client_manager.h>
 #include <ecal_service/server_manager.h>
+#include <utility>
+#include <vector>
 
 #include "atomic_signalable.h"
+#include "ecal_service/client_session_types.h"
+#include "ecal_service/error.h"
+#include "ecal_service/logger.h"
+#include "ecal_service/server_session_types.h"
+#include "ecal_service/state.h"
 
 ecal_service::LoggerT critical_logger(const std::string& node_name)
 {
