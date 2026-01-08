@@ -22,6 +22,8 @@
 **/
 
 #include "pubsub/ecal_subgate.h"
+#include "pubsub/ecal_subscriber_impl.h"
+
 #include "ecal_globals.h"
 
 #include <algorithm>
@@ -97,6 +99,7 @@ namespace eCAL
     return(ret_state);
   }
 
+  /*
   bool CSubGate::HasSample(const std::string& sample_name_)
   {
     const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
@@ -204,79 +207,8 @@ namespace eCAL
 
     return (applied_size > 0);
   }
+  */
 
-  void CSubGate::ApplyPublisherRegistration(const Registration::Sample& ecal_sample_)
-  {
-    if(!m_created) return;
-
-    const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.topic_name;
-
-    // check topic name
-    if (topic_name.empty()) return;
-
-    const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
-
-    CSubscriberImpl::SLayerStates layer_states;
-    for (const auto& layer : ecal_topic.transport_layer)
-    {
-      // transport layer versions 0 and 1 did not support dynamic layer enable feature
-      // so we set assume layer is enabled if we receive a registration in this case
-      if (layer.enabled || layer.version < 2)
-      {
-        switch (layer.type)
-        {
-        case tl_ecal_udp:
-          layer_states.udp.write_enabled = true;
-          break;
-        case tl_ecal_shm:
-          layer_states.shm.write_enabled = true;
-          break;
-        case tl_ecal_tcp:
-          layer_states.tcp.write_enabled = true;
-          break;
-        default:
-          break;
-        }
-      }
-    }
-
-    // register publisher
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-    auto res = m_topic_name_subscriber_map.equal_range(topic_name);
-    for (auto iter = res.first; iter != res.second; ++iter)
-    {
-      // apply layer specific parameter
-      for (const auto& transport_layer : ecal_sample_.topic.transport_layer)
-      {
-        iter->second->ApplyLayerParameter(publication_info, transport_layer.type, transport_layer.par_layer);
-      }
-      iter->second->ApplyPublisherRegistration(publication_info, topic_information, layer_states);
-    }
-  }
-
-  void CSubGate::ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_)
-  {
-    if (!m_created) return;
-
-    const auto&        ecal_topic = ecal_sample_.topic;
-    const std::string& topic_name = ecal_topic.topic_name;
-
-    // check topic name
-    if (topic_name.empty()) return;
-
-    const auto& publication_info = ecal_sample_.identifier;
-    const SDataTypeInformation& topic_information = ecal_topic.datatype_information;
-
-    // unregister publisher
-    const std::shared_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
-    auto res = m_topic_name_subscriber_map.equal_range(topic_name);
-    for (auto iter = res.first; iter != res.second; ++iter)
-    {
-      iter->second->ApplyPublisherUnregistration(publication_info, topic_information);
-    }
-  }
 
   void CSubGate::GetRegistrations(Registration::SampleList& reg_sample_list_)
   {

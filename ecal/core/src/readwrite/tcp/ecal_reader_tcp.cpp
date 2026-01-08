@@ -29,8 +29,6 @@
 #include "ecal_reader_tcp.h"
 #include "ecal_tcp_pubsub_logger.h"
 
-#include "pubsub/ecal_subgate.h"
-
 #include "ecal_utils/portable_endian.h"
 
 namespace eCAL
@@ -109,6 +107,8 @@ namespace eCAL
     // extract data payload
     const char* data_payload   = header_payload + header_size;
 
+    // TODO: We need to trigger a callback instead of going through the subgate here!
+    /*
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
@@ -130,6 +130,7 @@ namespace eCAL
           tl_ecal_tcp);
       }
     }
+    */
   }
   
   ////////////////

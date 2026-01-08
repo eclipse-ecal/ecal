@@ -52,6 +52,7 @@
 #include "service/ecal_clientgate.h"
 #endif
 #include "ecal_descgate.h"
+#include "readwrite/ecal_reader_manager.h"
 
 #include <memory>
 
@@ -100,6 +101,8 @@ namespace eCAL
     
 #endif
     const std::shared_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
+    const std::shared_ptr<CReaderManager>&                                reader_manager()         { return reader_manager_instance; };
+
 
   private:
     bool                                                                  initialized;
@@ -132,5 +135,7 @@ namespace eCAL
     
 #endif
     std::shared_ptr<CDescGate>                                            descgate_instance;
+
+    std::shared_ptr<CReaderManager>                                       reader_manager_instance;
   };
 }

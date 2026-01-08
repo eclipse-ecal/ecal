@@ -72,6 +72,8 @@ namespace eCAL
 
   size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
   {
+    // TODO: We need actual datacallbacks instead of calling subgate here!    
+    /*
     auto subgate = g_subgate();
     if (subgate)
     {
@@ -80,6 +82,7 @@ namespace eCAL
         return len_;
       }
     }
+    */
     return 0;
   }
 }
