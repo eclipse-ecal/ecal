@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,37 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
-/**
- * @brief  Global eCAL configuration interface
-**/
-
 #pragma once
 
-#include <ecal/config/configuration.h>
+#include "launch_configuration.h"
+
 #ifndef YAML_CPP_STATIC_DEFINE 
 #define YAML_CPP_STATIC_DEFINE 
 #endif
 #include <yaml-cpp/yaml.h>
 
-#include "configuration_to_yaml.h"
-
-#include <fstream>
-#include <utility>
+#include <vector>
 
 namespace eCAL
 {
   namespace Config
-  {    
-    // Read a yaml file and convert it to an eCAL configuration
-    void YamlFileToConfig(const std::string& filename_, eCAL::Configuration& config_);
-
-    // Read a yaml string and convert it to an eCAL configuration
-    void YamlStringToConfig(const std::string& yaml_string_, eCAL::Configuration& config_);
-
-    // Write an eCAL configuration to a yaml file
-    bool ConfigToYamlFile(const std::string& file_name_, const eCAL::Configuration& config_);
-
-    // Merge a yaml file into an existing eCAL configuration
-    bool MergeYamlIntoConfiguration(const std::string& file_name_ , eCAL::Configuration& config_);
-  }  
-}
+  {
+    YAML::Node ReadLaunchYaml(const std::string& path_);
+  } // Config
+} // eCAL

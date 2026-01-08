@@ -468,6 +468,7 @@ set(ecal_util_src
     src/util/message_drop_calculator.h
     src/util/getenvvar.h
     src/util/counter_cache.h
+    src/util/yaml_functions.cpp
 )
 if (ECAL_CORE_COMMAND_LINE)
   list(APPEND ecal_util_src
