@@ -17,10 +17,11 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
-#include <chrono>
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <stdexcept>

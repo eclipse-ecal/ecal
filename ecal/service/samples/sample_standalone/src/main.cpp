@@ -26,6 +26,7 @@
 #include <ecal_service/server_session_types.h>
 
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <string>

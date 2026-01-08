@@ -239,7 +239,7 @@ namespace ecal_service
      * 
      * @return The host that this client is connected to.
      */
-    std::string get_host() const;
+    [[nodiscard]] std::string get_host() const;
 
     /**
      * @brief Get the port that this client session is connected to.
@@ -251,7 +251,7 @@ namespace ecal_service
      * 
      * @return The port that this client is connected to
      */
-    std::uint16_t get_port()                     const;
+    [[nodiscard]] std::uint16_t get_port() const;
 
     /**
      * @brief Get the remote endpoint that this client session is connected to.
@@ -260,14 +260,14 @@ namespace ecal_service
      * valid, if the client session is actually connected to a server. If a
      * hostname was given, this function will return the resolved IP address.
      */
-    asio::ip::tcp::endpoint get_remote_endpoint() const;
+    [[nodiscard]] asio::ip::tcp::endpoint get_remote_endpoint() const;
 
     /**
      * @brief Get the state of this client session.
      * 
      * @return the state of this client session.
      */
-    State         get_state()                     const;
+    [[nodiscard]] State get_state() const;
 
     /**
      * @brief Get the accepted protocol version that the server and client have agreed on.
@@ -276,14 +276,14 @@ namespace ecal_service
      * 
      * @return The accepted protocol version that the server and client have agreed on.
      */
-    std::uint8_t  get_accepted_protocol_version() const;
+    [[nodiscard]] std::uint8_t get_accepted_protocol_version() const;
 
     /**
      * @brief Get the number of pending requests
      * 
      * @return The number of pending requests
      */
-    int           get_queue_size()                const;
+    [[nodiscard]] int get_queue_size() const;
 
     /**
      * @brief Stops the client session.

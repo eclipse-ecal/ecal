@@ -22,14 +22,16 @@
 
 #include <atomic>
 #include <cstddef>
-#include <ecal_service/client_manager.h>
-#include <ecal_service/server_manager.h>
-#include <dynamic_threadpool/dynamic_threadpool.h>
-
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <vector>
+
+#include <asio.hpp>
+
+#include <ecal_service/client_manager.h>
+#include <ecal_service/server_manager.h>
+#include <dynamic_threadpool/dynamic_threadpool.h>
 
 namespace eCAL
 {

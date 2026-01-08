@@ -19,6 +19,12 @@
 */
 
 #include "ecal_service_singleton_manager.h"
+#include "dynamic_threadpool/dynamic_threadpool.h"
+#include "ecal_service/client_manager.h"
+#include "ecal_service/logger.h"
+#include "ecal_service/server_manager.h"
+
+#include <asio.hpp>
 
 #include <cstddef>
 #include <ecal/log.h>

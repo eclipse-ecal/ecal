@@ -29,7 +29,7 @@
 #include <asio.hpp>
 
 #include <ecal_service/logger.h>
-
+#include <ecal_service/server_session_types.h>
 #include <ecal_service/server.h> // IWYU pragma: export
 
 namespace ecal_service

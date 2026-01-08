@@ -33,8 +33,7 @@ DynamicThreadPool::DynamicThreadPool(unsigned int max_size_)
   : impl(std::make_unique<DynamicThreadPoolImpl>(max_size_))
 {}
 
-DynamicThreadPool::~DynamicThreadPool()
-{}
+DynamicThreadPool::~DynamicThreadPool() = default;
 
 bool DynamicThreadPool::Post(const std::function<void()>& task_)
 {

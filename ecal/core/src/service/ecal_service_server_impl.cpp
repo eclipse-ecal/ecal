@@ -25,12 +25,17 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <functional>
+#include <string>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 #include "ecal_service_singleton_manager.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
+
+#include <ecal_service/server_manager.h>
+#include <ecal_service/server_session_types.h>
 
 namespace eCAL
 {
@@ -282,7 +287,7 @@ namespace eCAL
       };
 
     // Start service
-    ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
+    const ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
             = [threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool()](const std::function<void()>& task)
               {
                 threadpool->Post(task);

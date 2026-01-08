@@ -18,6 +18,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#include <cstddef>
+#include <cstdint>
+#include <functional>
 #include <gtest/gtest.h>
 
 #include <asio.hpp>
@@ -25,17 +28,26 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
+#include <memory>
+#include <mutex>
+#include <stdexcept>
 #include <string>
 #include <thread>
-#include <stdexcept>
 
 #include <ecal_service/server.h> // Should not be needed, when I use the server manager / client manager
 #include <ecal_service/client_session.h> // Should not be needed, when I use the server manager / client manager
 
 #include <ecal_service/client_manager.h>
 #include <ecal_service/server_manager.h>
+#include <utility>
+#include <vector>
 
 #include "atomic_signalable.h"
+#include "ecal_service/client_session_types.h"
+#include "ecal_service/error.h"
+#include "ecal_service/logger.h"
+#include "ecal_service/server_session_types.h"
+#include "ecal_service/state.h"
 
 ecal_service::LoggerT critical_logger(const std::string& node_name)
 {
@@ -91,7 +103,7 @@ public:
 
   ~SimpleThreadpool()
   {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> const lock(mutex_);
     for (auto& thread : threads_)
     {
       thread.join();
@@ -102,7 +114,7 @@ public:
 private:
   void post(const std::function<void()>& func)
   {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> const lock(mutex_);
     threads_.emplace_back([func]() { func(); });
   }
 
@@ -1278,16 +1290,14 @@ TEST(ecal_service, Callback_ServerAndClientManagers) // NOLINT
                               }));
     }
 
-    const ecal_service::Server::ServiceCallbackT         server_service_callback  = [](auto, auto) -> void {};
-    const ecal_service::ClientSession::ResponseCallbackT client_response_callback = [](auto, auto) -> void {};
+    const ecal_service::Server::ServiceCallbackT server_service_callback =
+        [](const auto &, const auto &) -> void {};
+    const ecal_service::ClientSession::ResponseCallbackT client_response_callback =
+        [](const auto &, const auto &) -> void {};
 
     // Lambda function that on call returns another lambda function that will increment the given atomic_signalable
-    auto increment_atomic_signalable = [](auto& atomic_signalable) -> auto
-    {
-      return [&atomic_signalable](auto, auto) -> void
-      {
-        atomic_signalable++;
-      };
+    auto increment_atomic_signalable = [](auto &atomic_signalable) -> auto {
+      return [&atomic_signalable](auto, const auto &) -> void { atomic_signalable++; };
     };
 
     auto server1 = server_manager->create_server(protocol_version, 0, server_service_callback, synchronous_server_service_callback_executor_function, increment_atomic_signalable(server1_event_callback_called));
@@ -1476,9 +1486,9 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                 {
                   if (server)
                   {
-                    bool is_connected     = server->is_connected();
-                    int  connection_count = server->get_connection_count();
-                    uint16_t port         = server->get_port();
+                    bool const is_connected = server->is_connected();
+                    int const connection_count = server->get_connection_count();
+                    uint16_t const port = server->get_port();
 
                     EXPECT_EQ(is_connected, true);
                     EXPECT_EQ(connection_count, 1);
@@ -1492,9 +1502,9 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                 {
                   if (server)
                   {
-                    bool is_connected     = server->is_connected();
-                    int  connection_count = server->get_connection_count();
-                    uint16_t port         = server->get_port();
+                    bool const is_connected = server->is_connected();
+                    int const connection_count = server->get_connection_count();
+                    uint16_t const port = server->get_port();
 
                     if (event == ecal_service::ServerEventType::Connected)
                     {
@@ -1638,13 +1648,12 @@ TEST(ecal_service, BackupHost)
     EXPECT_EQ(num_server_event_callback_called,   0);
     EXPECT_EQ(num_client_response_callback_called, 0);
     EXPECT_EQ(num_client_event_callback_called,   0);
-    
-    std::vector<std::pair<std::string, std::uint16_t>> server_list = 
-                {
-                  { "NonExistingEndpoint", 123 },                   // This endpoint cannot be resolved
-                  { "127.0.0.1",           123 },                   // This endpoint can be resolved, but the port is wrong
-                  { "127.0.0.1",           server->get_port() }     // This endpoint is the correct one and will be tried last
-                };
+
+    std::vector<std::pair<std::string, std::uint16_t>> const server_list = {
+        {"NonExistingEndpoint", 123},     // This endpoint cannot be resolved
+        {"127.0.0.1", 123},               // This endpoint can be resolved, but the port is wrong
+        {"127.0.0.1", server->get_port()} // This endpoint is the correct one and will be tried last
+    };
 
     auto client = ecal_service::ClientSession::create(io_context, protocol_version, server_list, synchronous_client_response_callback_executor_function, client_event_callback);
 
