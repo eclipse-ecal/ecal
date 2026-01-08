@@ -464,7 +464,7 @@ namespace ecal_service
                                 // Call the callback with an error in the response callback executor.
                                 // Note: The callback creates a work guard to ensure that the io_context
                                 //       does not stop while executing the callback.
-                                me->response_callback_executor_function_([me, response_cb, message, work_guard = asio::make_work_guard(*me->io_context_)]()
+                                me->response_callback_executor_function_([response_cb, message]()
                                                                         {
                                                                           // Call the callback with an error
                                                                           response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
@@ -493,7 +493,7 @@ namespace ecal_service
                               // Call the callback with an error in the response callback executor.
                               // Note: The callback creates a work guard to ensure that the io_context
                               //       does not stop while executing the callback.
-                              me->response_callback_executor_function_([me, response_cb, message, work_guard = asio::make_work_guard(*me->io_context_)]()
+                              me->response_callback_executor_function_([response_cb, message]()
                                                                         {
                                                                           // Call the callback with an error
                                                                           response_cb(Error(Error::ErrorCode::CONNECTION_CLOSED, message), nullptr);
@@ -515,7 +515,7 @@ namespace ecal_service
                                 // Call the callback with an error in the response callback executor.
                                 // Note: The callback creates a work guard to ensure that the io_context
                                 //       does not stop while executing the callback.
-                                me->response_callback_executor_function_([me, response_cb, message, work_guard = asio::make_work_guard(*me->io_context_)]()
+                                me->response_callback_executor_function_([response_cb, message]()
                                                                           {
                                                                             // Call the callback with an error
                                                                             response_cb(Error(Error::ErrorCode::PROTOCOL_ERROR, message), nullptr);
@@ -531,7 +531,7 @@ namespace ecal_service
                                 ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Successfully received service response of " + std::to_string(payload_buffer->size()) + " bytes");
 
                                 // Call the user's callback using the response callback executor
-                                me->response_callback_executor_function_([me, payload_buffer, response_cb, work_guard = asio::make_work_guard(*me->io_context_)]()
+                                me->response_callback_executor_function_([payload_buffer, response_cb]()
                                                                         {
                                                                           // Call the user's callback with the received payload
                                                                           response_cb(Error::OK, payload_buffer);
