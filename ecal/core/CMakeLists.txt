@@ -352,6 +352,8 @@ endif()
 if(ECAL_CORE_SUBSCRIBER)
   set(ecal_reader_src
       src/readwrite/ecal_reader_layer.h
+      src/readwrite/ecal_reader_manager.cpp
+      src/readwrite/ecal_reader_manager.h
   )
   if(ECAL_CORE_TRANSPORT_UDP)
     list(APPEND ecal_reader_src
@@ -674,6 +676,7 @@ target_compile_definitions(ecal_core_private
     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
     ECAL_NO_DEPRECATION_WARNINGS
+    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS #Asio issues hundreds of deprecation warnings with VS2017
 )
 
 set(ECAL_CORE_FEATURES

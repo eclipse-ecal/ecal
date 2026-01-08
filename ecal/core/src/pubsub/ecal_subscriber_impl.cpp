@@ -39,20 +39,7 @@
 #include "readwrite/ecal_reader_layer.h"
 #include "readwrite/ecal_transport_layer.h"
 
-#if ECAL_CORE_TRANSPORT_UDP
-#include "readwrite/udp/ecal_reader_udp.h"
-#include "readwrite/config/builder/udp_attribute_builder.h"
-#endif
-
-#if ECAL_CORE_TRANSPORT_SHM
-#include "readwrite/shm/ecal_reader_shm.h"
-#include "readwrite/config/builder/shm_attribute_builder.h"
-#endif
-
-#if ECAL_CORE_TRANSPORT_TCP
-#include "readwrite/tcp/ecal_reader_tcp.h"
-#include "readwrite/config/builder/tcp_attribute_builder.h"
-#endif
+#include "readwrite/ecal_reader_manager.h"
 
 #include <algorithm>
 #include <chrono>
@@ -96,7 +83,6 @@ namespace eCAL
     m_topic_id.topic_id.process_id = m_attributes.process_id;
 
     // start transport layers
-    InitializeLayers();
     StartTransportLayer();
 
     // mark as created
@@ -244,6 +230,7 @@ namespace eCAL
     m_id_set = filter_ids_;
   }
 
+  /*
   void CSubscriberImpl::ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_)
   {
     // flag write enabled from publisher side (information not used yet)
@@ -319,7 +306,9 @@ namespace eCAL
     if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
 #endif
   }
+  */
 
+  /*
   void CSubscriberImpl::ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_)
   {
     SReaderLayerPar par;
@@ -333,12 +322,12 @@ namespace eCAL
     {
     case tl_ecal_shm:
 #if ECAL_CORE_TRANSPORT_SHM
-      if (m_global_context.shm_layer) m_global_context.shm_layer->SetConnectionParameter(par);
+      CSHMReaderLayer::Get()->SetConnectionParameter(par);
 #endif
       break;
     case tl_ecal_tcp:
 #if ECAL_CORE_TRANSPORT_TCP
-      if (m_global_context.tcp_layer) m_global_context.tcp_layer->SetConnectionParameter(par);
+      CTCPReaderLayer::Get()->SetConnectionParameter(par);
 #endif
       break;
     default:
@@ -346,64 +335,24 @@ namespace eCAL
     }
   }
 
-  void CSubscriberImpl::InitializeLayers()
+  */
+
+  //size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
+  void CSubscriberImpl::InternalDataCallback(const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
   {
-    // initialize udp layer
-#if ECAL_CORE_TRANSPORT_UDP
-    if (m_attributes.udp.enable)
-    {
-      if (m_global_context.udp_layer) m_global_context.udp_layer->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
-    }
-#endif
+    if (!m_created) return;
 
-    // initialize shm layer
-#if ECAL_CORE_TRANSPORT_SHM
-    if (m_attributes.shm.enable)
-    {
-      if (m_global_context.shm_layer) m_global_context.shm_layer->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
-    }
-#endif
-
-    // initialize tcp layer
-#if ECAL_CORE_TRANSPORT_TCP
-    if (m_attributes.tcp.enable)
-    {
-      if (m_global_context.tcp_layer) m_global_context.tcp_layer->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
-    }
-#endif
-  }
-
-  size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
-  {
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
-    if (!m_created) return(0);
-
-    // We don't want to apply samples which are received on layers which are not activated for this subscriber
-    if (!ShouldApplySampleBasedOnLayer(layer_))
-    {
-      return 0;
-    }
-
-    auto publication_info = PublicationInfoFromTopicInfo(topic_info_);
-
-    // We do not want to apply duplicate / old samples
-    if (!ShouldApplySampleBasedOnClock(publication_info, clock_))
-    {
-      // not clear why we are returning the size_ if we are not applying the sample, but why not...
-      return size_;
-    }
-
+       
     // We might not want to apply samples sent with a given ID (deprecated!)
+    // TODO
+    /*
     if (!ShouldApplySampleBasedOnId(id_))
     {
       return 0;
     }
-
-    // store receive layer
-    m_layers.udp.active |= layer_ == tl_ecal_udp;
-    m_layers.shm.active |= layer_ == tl_ecal_shm;
-    m_layers.tcp.active |= layer_ == tl_ecal_tcp;
+    */
 
 #ifndef NDEBUG
     // log it
@@ -413,14 +362,14 @@ namespace eCAL
     // increase read clock
     m_clock++;
 
-    TriggerMessageDropUdate(publication_info, clock_);
-    TriggerStatisticsUpdate(time_);
+    TriggerMessageDropUdate(publisher_id_, data_.send_clock);
+    TriggerStatisticsUpdate(data_.send_timestamp);
 
     // reset timeout
     m_receive_time = 0;
 
     // store size
-    m_topic_size = size_;
+    m_topic_size = data_.buffer_size;
 
     // execute callback
     bool processed = false;
@@ -432,27 +381,9 @@ namespace eCAL
         // log it
         if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
 #endif
-        // prepare data struct
-        SReceiveCallbackData cb_data;
-        cb_data.buffer   = static_cast<const void*>(payload_);
-        cb_data.buffer_size  = size_;
-        cb_data.send_timestamp  = time_;
-        cb_data.send_clock = clock_;
-
-        STopicId topic_id;
-        topic_id.topic_name          = topic_info_.topic_name;
-        topic_id.topic_id.host_name  = topic_info_.host_name;
-        topic_id.topic_id.entity_id  = topic_info_.topic_id;
-        topic_id.topic_id.process_id = topic_info_.process_id;
-
-        SPublicationInfo pub_info;
-        pub_info.entity_id  = topic_info_.topic_id;
-        pub_info.host_name  = topic_info_.host_name;
-        pub_info.process_id = topic_info_.process_id;
 
         // execute it
-        const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
-        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
+        (m_receive_callback)(publisher_id_, data_type_info_, data_);
         processed = true;
       }
     }
@@ -463,8 +394,9 @@ namespace eCAL
       // push sample into read buffer
       const std::lock_guard<std::mutex> read_buffer_lock(m_read_buf_mutex);
       m_read_buf.clear();
-      m_read_buf.assign(payload_, payload_ + size_);
-      m_read_time = time_;
+      m_read_buf.assign((char*) data_.buffer, (char*)data_.buffer + data_.buffer_size);
+      // TODO: this is a bit weird, shouldn't we store the current time?
+      m_read_time = data_.send_timestamp;
       m_read_buf_received = true;
 
       // inform receive
@@ -474,8 +406,6 @@ namespace eCAL
       if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
 #endif
     }
-
-    return(size_);
   }
 
   void CSubscriberImpl::Register()
@@ -514,12 +444,14 @@ namespace eCAL
 
   bool CSubscriberImpl::IsPublished() const
   {
-    return m_connection_count > 0;
+    std::lock_guard<std::mutex> lock(m_connection_info_mutex);
+    return m_connection_info.IsConnected();
   }
 
   size_t CSubscriberImpl::GetPublisherCount() const
   {
-    return m_connection_count;
+    std::lock_guard<std::mutex> lock(m_connection_info_mutex);
+    return m_connection_info.ConnectionCount();
   }
     
   void CSubscriberImpl::GetRegistrationSample(Registration::Sample& ecal_reg_sample)
@@ -549,8 +481,8 @@ namespace eCAL
       Registration::TLayer udp_tlayer;
       udp_tlayer.type      = tl_ecal_udp;
       udp_tlayer.version   = ecal_transport_layer_version;
-      udp_tlayer.enabled   = m_layers.udp.read_enabled;
-      udp_tlayer.active    = m_layers.udp.active;
+      udp_tlayer.enabled   = m_attributes.udp.enable;
+      //udp_tlayer.active    = m_layers.udp.active;
       ecal_reg_sample_topic.transport_layer.push_back(udp_tlayer);
     }
 #endif
@@ -561,8 +493,8 @@ namespace eCAL
       Registration::TLayer shm_tlayer;
       shm_tlayer.type      = tl_ecal_shm;
       shm_tlayer.version   = ecal_transport_layer_version;
-      shm_tlayer.enabled   = m_layers.shm.read_enabled;
-      shm_tlayer.active    = m_layers.shm.active;
+      shm_tlayer.enabled   = m_attributes.shm.enable;
+      //shm_tlayer.active    = m_layers.shm.active;
       ecal_reg_sample_topic.transport_layer.push_back(shm_tlayer);
     }
 #endif
@@ -573,8 +505,8 @@ namespace eCAL
       Registration::TLayer tcp_tlayer;
       tcp_tlayer.type      = tl_ecal_tcp;
       tcp_tlayer.version   = ecal_transport_layer_version;
-      tcp_tlayer.enabled   = m_layers.tcp.read_enabled;
-      tcp_tlayer.active    = m_layers.tcp.active;
+      tcp_tlayer.enabled   = m_attributes.tcp.enable;
+      //tcp_tlayer.active    = m_layers.tcp.active;
       ecal_reg_sample_topic.transport_layer.push_back(tcp_tlayer);
     }
 #endif
@@ -613,173 +545,92 @@ namespace eCAL
   
   void CSubscriberImpl::StartTransportLayer()
   {
-#if ECAL_CORE_TRANSPORT_UDP
-    if (m_attributes.udp.enable)
+    ActiveLayers layers;
+    if (m_attributes.udp.enable) layers.set(LayerType::UDP);
+    if (m_attributes.shm.enable) layers.set(LayerType::SHM);
+    if (m_attributes.tcp.enable) layers.set(LayerType::TCP);
+
+    //TODO
+    //  TODO: fill subscription parameters
+    SSubscriptionParameters subscription_parameters;
+    subscription_parameters.topic.topic_id.entity_id = m_subscriber_id;
+    subscription_parameters.topic.topic_id.process_id = m_attributes.process_id;
+    subscription_parameters.topic.topic_id.host_name = m_attributes.host_name;
+    subscription_parameters.topic.topic_name = m_attributes.topic_name;
+    subscription_parameters.layers = layers;
+        
+    subscription_parameters.data_callback = [this](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
     {
-      // flag enabled
-      m_layers.udp.read_enabled = true;
+      this->InternalDataCallback(publisher_id_, data_type_info_, data_);
+    };
 
-      // subscribe to layer (if supported)
-      if (m_global_context.udp_layer) m_global_context.udp_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
-    }
-#endif
-
-#if ECAL_CORE_TRANSPORT_SHM
-    if (m_attributes.shm.enable)
+    subscription_parameters.connection_changed_callback = [this](SubscriberConnectionChange change_, const SubscriberConnectionInstance& instance_)
     {
-      // flag enabled
-      m_layers.shm.read_enabled = true;
+      switch (change_)
+      {
+      case SubscriberConnectionChange::NewConnection:
+      {
+        {
+          std::lock_guard<std::mutex> lock(this->m_connection_info_mutex);
+          this->m_connection_info.AddConnection(instance_);
+        }
+        this->FireConnectEvent(instance_.publisher_id, instance_.publisher_datatype_info);
+      }
+      break;
+      case SubscriberConnectionChange::RemovedConnection:
+        {
+          {
+            std::lock_guard<std::mutex> lock(this->m_connection_info_mutex);
+            this->m_connection_info.RemoveConnection(instance_);
+          }
+          this->FireDisconnectEvent(instance_.publisher_id, instance_.publisher_datatype_info);
+        }
+        break;
+      default:
+        break;
+      }
+      };
 
-      // subscribe to layer (if supported)
-      if (m_global_context.shm_layer) m_global_context.shm_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
-    }
-#endif
-
-#if ECAL_CORE_TRANSPORT_TCP
-    if (m_attributes.tcp.enable)
-    {
-      // flag enabled
-      m_layers.tcp.read_enabled = true;
-
-      // subscribe to layer (if supported)
-      if (m_global_context.tcp_layer) m_global_context.tcp_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
-    }
-#endif
+    m_reader_handle = m_global_context.connection_manager->AddSubscription(subscription_parameters);
   }
   
   void CSubscriberImpl::StopTransportLayer()
   {
-#if ECAL_CORE_TRANSPORT_UDP
-    if (m_attributes.udp.enable)
-    {
-      // flag disabled
-      m_layers.udp.read_enabled = false;
-
-      // unsubscribe from layer (if supported)
-      if (m_global_context.udp_layer) m_global_context.udp_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+    if (m_reader_handle) {
+      m_global_context.connection_manager->RemoveSubscription(*m_reader_handle);
+      m_reader_handle.reset();
     }
-#endif
-
-#if ECAL_CORE_TRANSPORT_SHM
-    if (m_attributes.shm.enable)
-    {
-      // flag disabled
-      m_layers.shm.read_enabled = false;
-
-      // unsubscribe from layer (if supported)
-      if (m_global_context.shm_layer) m_global_context.shm_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
-    }
-#endif
-
-#if ECAL_CORE_TRANSPORT_TCP
-    if (m_attributes.tcp.enable)
-    {
-      // flag disabled
-      m_layers.tcp.read_enabled = false;
-
-      // unsubscribe from layer (if supported)
-      if (m_global_context.tcp_layer) m_global_context.tcp_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
-    }
-#endif
   }
 
-  void CSubscriberImpl::FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void eCAL::CSubscriberImpl::FireEvent(const eSubscriberEvent type_, const STopicId& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     // new event handling with topic id
     if (m_event_id_callback)
     {
       SSubEventCallbackData data;
-      data.event_type         = type_;
+      data.event_type = type_;
       data.event_time         = eCAL::Time::GetMicroSeconds();
       data.publisher_datatype = data_type_info_;
 
-      STopicId topic_id;
-      topic_id.topic_id.entity_id  = publication_info_.entity_id;
-      topic_id.topic_id.process_id = publication_info_.process_id;
-      topic_id.topic_id.host_name  = publication_info_.host_name;
-      topic_id.topic_name          = m_attributes.topic_name;
       const std::lock_guard<std::mutex> lock(m_event_id_callback_mutex);
-
       // call event callback
-      m_event_id_callback(topic_id, data);
+      m_event_id_callback(publication_info_, data);
     }
   }
 
-  void CSubscriberImpl::FireConnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void CSubscriberImpl::FireConnectEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(eSubscriberEvent::connected, publication_info_, data_type_info_);
   }
 
-  void CSubscriberImpl::FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void CSubscriberImpl::FireDisconnectEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(eSubscriberEvent::disconnected, publication_info_, data_type_info_);
   }
 
-  void CSubscriberImpl::FireDroppedEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_)
+  void CSubscriberImpl::FireDroppedEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_)
   {
     FireEvent(eSubscriberEvent::dropped, publication_info_, data_type_info_);
-  }
-
-  CSubscriberImpl::SPublicationInfo CSubscriberImpl::PublicationInfoFromTopicInfo(const Payload::TopicInfo& topic_info_)
-  {
-    SPublicationInfo publication_info;
-    publication_info.entity_id = topic_info_.topic_id;
-    publication_info.host_name = topic_info_.host_name;
-    publication_info.process_id = topic_info_.process_id;
-    return publication_info;
-  }
-
-  size_t CSubscriberImpl::GetConnectionCount()
-  {
-    // no need to lock map here for now, map locked by caller
-    size_t count(0);
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        count++;
-      }
-    }
-    return count;
-  }
-
-  bool CSubscriberImpl::ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const
-  {
-    // If counter is already present (duplicate), or unsure if it was present, the sample is not applied
-    if (m_publisher_message_counter_map.HasCounter(publication_info_, clock_) != CounterCacheMapT::CounterInCache::False)
-    {
-#ifndef NDEBUG
-      // log it
-      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
-#endif
-
-      return false;
-    }
-
-    // The sample counter is strictly monotonically increasing. If not so, we received an old message.
-    // If it is applied or not depends on the configuration. Anyways, a message at low debug level is logged.
-    if (!m_publisher_message_counter_map.IsMonotonic(publication_info_, clock_))
-    {
-#ifndef NDEBUG
-      std::string msg = "Subscriber: \'";
-      msg += m_attributes.topic_name;
-      msg += "\'";
-      msg += " received a message in the wrong order";
-      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_warning, msg);
-#endif
-
-      // @TODO: We should not have a global config call here. This should be an attribute of the subscriber!
-      if (Config::GetDropOutOfOrderMessages())
-      {
-        return false;
-      }
-      else
-      {
-        return true;
-      }
-    }
-
-    return true;
   }
 
   bool CSubscriberImpl::ShouldApplySampleBasedOnId(long long id_) const
@@ -806,32 +657,10 @@ namespace eCAL
     m_latency_us_calculator.Update(static_cast<double>(latency_us));
   }
 
-  void CSubscriberImpl::TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter)
+  void CSubscriberImpl::TriggerMessageDropUdate(const STopicId& publication_info_, uint64_t message_counter)
   {
     const std::lock_guard<std::mutex> lock(m_message_drop_map_mutex);
     m_message_drop_map.RegisterReceivedMessage(publication_info_, message_counter);
-    m_publisher_message_counter_map.SetCounter(publication_info_, message_counter);
-  }
-
-  bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_) const
-  {
-    // check receive layer configuration
-    switch (layer_)
-    {
-    case tl_ecal_udp:
-      if (!m_attributes.udp.enable) return false;
-      break;
-    case tl_ecal_shm:
-      if (!m_attributes.shm.enable) return false;
-      break;
-    case tl_ecal_tcp:
-      if (!m_attributes.tcp.enable) return false;
-      break;
-    default:
-      break;
-    }
-
-    return true;
   }
 
   int32_t CSubscriberImpl::GetFrequency()
@@ -852,7 +681,6 @@ namespace eCAL
   int32_t CSubscriberImpl::GetMessageDropsAndFireDroppedEvents()
   {
     const std::lock_guard<std::mutex> lock_drops(m_message_drop_map_mutex);
-    const std::lock_guard<std::mutex> lock_connections(m_connection_map_mtx);
 
     auto message_drop_summary_map = m_message_drop_map.GetSummary();
     int32_t accumulated_message_drops = 0;
@@ -865,7 +693,8 @@ namespace eCAL
       if (message_drop_summary.new_drops)
       {
         // @TODO: Firing dropped events should happen from a different thread, we should queue this somehow...
-        FireDroppedEvent(publisher_info, m_connection_map[publisher_info].data_type_info);
+        // TODO: We no longer have information about potentially dropped messages
+        FireDroppedEvent(publisher_info, {});
       }
 
       accumulated_message_drops += message_drop_summary.drops;

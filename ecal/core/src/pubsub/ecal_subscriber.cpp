@@ -43,9 +43,7 @@ namespace eCAL
     {
       global_context.registration_provider = globals->registration_provider();
       global_context.log_provider          = globals->log_provider();
-      global_context.shm_layer             = globals->shm_reader_layer();
-      global_context.udp_layer             = globals->udp_reader_layer();
-      global_context.tcp_layer             = globals->tcp_reader_layer();
+      global_context.connection_manager    = globals->subscriber_connection_manager();
     }
     
 

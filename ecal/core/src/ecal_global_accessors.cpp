@@ -167,16 +167,17 @@ namespace eCAL
 #endif
 
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  std::shared_ptr<CMemFileThreadPool> g_memfile_pool()
-  {
-    if (auto globals = g_globals(); globals) return globals->memfile_pool();
-    return nullptr;
-  }
-
   std::shared_ptr<CMemFileMap> g_memfile_map()
   {
     if (auto globals = g_globals(); globals) return globals->memfile_map();
     return nullptr;
   }
 #endif
+
+  std::shared_ptr<CSubscriberConnectionManager> g_reader_manager()
+  {
+    auto globals = g_globals();
+    if (globals) return globals->subscriber_connection_manager();
+    return nullptr;
+  }
 }

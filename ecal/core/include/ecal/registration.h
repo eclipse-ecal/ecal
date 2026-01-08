@@ -90,7 +90,7 @@ namespace eCAL
      * @brief Unregister the publisher callback using the provided token.
      *
      * @param token_  The token returned by AddPublisherCallback.
-    */
+    *
     ECAL_API void RemPublisherEventCallback(CallbackToken token_);
 
     /**

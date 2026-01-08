@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,87 +22,33 @@
  * @brief  tcp reader and layer
 **/
 
-#include <ecal/config.h>
-#include "config/builder/data_reader_tcp_attribute_builder.h"
-
-#include "ecal_global_accessors.h"
 #include "ecal_reader_tcp.h"
+
+#include <cassert>
+
 #include "ecal_tcp_pubsub_logger.h"
-
-#include "pubsub/ecal_subgate.h"
-
 #include "ecal_utils/portable_endian.h"
+#include <ecal_serialize_sample_payload.h>
 
 namespace eCAL
 {
-  ////////////////
-  // READER
-  ////////////////
-  CDataReaderTCP::CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_) 
-    : m_callback_active(false)
-    , m_attributes(attr_)
-  {}
-
-  CDataReaderTCP::~CDataReaderTCP()
+  CDataReaderTCP::CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_, const STCPConnectionParameters& conn_params_, std::shared_ptr<tcp_pubsub::Executor>& executor_, DataCallback on_data_)
+    : m_attributes(attr_)
+    , m_on_data(on_data_)
+    , m_subscriber(std::make_unique<tcp_pubsub::Subscriber>(executor_))
   {
-    Destroy();
-  }
+    // The port must be valid
+    assert(conn_params_.port != 0);
 
-  bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_, std::shared_ptr<eCAL::CSubGate> subgate_)
-  {
-    // create tcp subscriber
-    m_subscriber = std::make_shared<tcp_pubsub::Subscriber>(executor_);
-    m_subgate = std::move(subgate_);
-    return true;
-  }
-
-  bool CDataReaderTCP::Destroy()
-  {
-    if (!m_subscriber) return false;
-    m_subscriber.reset();
-    m_callback_active = false;
-    m_subgate.reset();
-    return true;
-  }
-
-  bool CDataReaderTCP::AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_)
-  {
-    if (!m_subscriber) return false;
-    if (port_ == 0)    return false;
-
-    // check for new session
-    bool new_session(true);
-    auto sessions = m_subscriber->getSessions();
-    for (const auto& session : sessions)
-    {
-      // Get list of possible publishers of this session. We assume, that the
-      // first element holds the hostname, while the second elements holds
-      // hostname.local
-      auto publisher_list = session->getPublisherList();
-      if ((publisher_list.front().first == host_name_) && (publisher_list.front().second == port_))
-      {
-        new_session = false;
-        break;
-      }
-    }
-
-    // add new session and activate callback if we add the first session
-    if (new_session)
-    {
-      // Add possible hostnames:
-      // 1. hostname:port
-      // 2. hostname.local:port (-> i.e. the mDNS variant)
-      const std::vector<std::pair<std::string, uint16_t>> publishers = { { host_name_, port_ } , {host_name_ + ".local", port_} };
-
-      m_subscriber->addSession(publishers, m_attributes.max_reconnection_attempts);
-      if (!m_callback_active)
-      {
-        m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
-        m_callback_active = true;
-      }
-    }
-
-    return true;
+    // Add possible hostnames:
+    // 1. hostname:port
+    // 2. hostname.local:port (-> i.e. the mDNS variant)
+    const auto& host_name_ = conn_params_.host_name;
+    const auto& port_ = conn_params_.port;
+    const std::vector<std::pair<std::string, uint16_t>> publishers = { { host_name_, port_ } , {host_name_ + ".local", port_} };
+    m_subscriber->addSession(publishers, m_attributes.max_reconnection_attempts);
+    // TODO: is it not possible to miss data since we're setting the callback after adding the session?
+    m_subscriber->setCallback(std::bind(&CDataReaderTCP::OnTcpMessage, this, std::placeholders::_1));
   }
 
   void CDataReaderTCP::OnTcpMessage(const tcp_pubsub::CallbackData& data_)
@@ -119,85 +65,60 @@ namespace eCAL
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
-      if (m_subgate)
-      {
-        // use this intermediate variables as optimization
-        const auto& ecal_header_topic_info = m_ecal_header.topic_info;
-        const auto& ecal_header_content    = m_ecal_header.content;
+      // use this intermediate variables as optimization
+      const auto& ecal_header_topic_info = m_ecal_header.topic_info;
+      const auto& ecal_header_content    = m_ecal_header.content;
 
-        m_subgate->ApplySample(
-          ecal_header_topic_info,
-          data_payload,
-          static_cast<size_t>(ecal_header_content.size),
-          ecal_header_content.id,
-          ecal_header_content.clock,
-          ecal_header_content.time,
-          ecal_header_content.hash,
-          tl_ecal_tcp);
-      }
+      SReceiveCallbackData callback_data_;
+      callback_data_.buffer = data_payload;
+      callback_data_.buffer_size = static_cast<size_t>(ecal_header_content.size);
+      callback_data_.send_clock = ecal_header_content.clock;
+      callback_data_.send_timestamp = ecal_header_content.time;
+      // id & hash currently unused
+      m_on_data(callback_data_);
     }
   }
   
-  ////////////////
-  // LAYER
-  ////////////////
-  CTCPReaderLayer::CTCPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_)
-    : m_initialized(false)
-    , m_subgate(std::move(subgate_))
-  {}
-
-  void CTCPReaderLayer::Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_)
+  CTCPReaderLayer::CTCPReaderLayer(const eCAL::eCALReader::TCP::SAttributes& attr_)
+    : CTransportLayerInstance(LayerType::TCP)
+    , m_attributes(attr_)
   {
-    m_attributes = attr_; 
-    if (m_initialized) return;
-    m_initialized = true;
-
     const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
     m_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, tcp_pubsub_logger);
   }
 
-  void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
+  bool CTCPReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const
   {
-    const std::string& map_key(topic_name_);
-
-    const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
-
-    const std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>(eCAL::eCALReader::TCP::BuildTCPReaderAttributes(m_attributes));
-    reader->Create(m_executor, m_subgate);
-
-    m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
+    return LayerEnabledForPublisherAndSubscriber(m_layer_type, publisher, subscriber);
   }
 
-  void CTCPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
+  CTransportLayerInstance::ConnectionToken CTCPReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
   {
-    const std::string& map_key(topic_name_);
+    STCPConnectionParameters conn_params;
+    conn_params.host_name = publisher.GetHostName();
+    conn_params.port     = static_cast<uint16_t>(publisher.GetLayerParameter(LayerType::TCP).par_layer.layer_par_tcp.port);
+    
+    STopicId publisher_topic_id = publisher.GetTopicId();
+    SDataTypeInformation publisher_datatype_info = publisher.GetDataTypeInformation();
+    auto data_callback = [on_data, publisher_topic_id, publisher_datatype_info](const SReceiveCallbackData& data_)
+    {
+      on_data(publisher_topic_id, publisher_datatype_info, data_);
+    };
 
     const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
-    if (iter == m_datareadertcp_map.end()) return;
 
-    auto reader = iter->second;
-    reader->Destroy();
+    // make sure we do not have this connection already
+    assert (m_datareadertcp_map.find(conn_params) == m_datareadertcp_map.end());
 
-    m_datareadertcp_map.erase(iter);
-  }
+    m_datareadertcp_map.insert(std::make_pair(conn_params, std::make_unique<CDataReaderTCP>(m_attributes, conn_params, m_executor, data_callback)));
 
-  void CTCPReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
-  {
-    //////////////////////////////////
-    // get parameter from a new writer
-    //////////////////////////////////
-    const auto& remote_hostname = par_.host_name;
-    auto        remote_port     = par_.parameter.layer_par_tcp.port;
+    auto erase_data_reader = [this, conn_params]()
+    {
+      const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
+      m_datareadertcp_map.erase(conn_params);
+      };
 
-    const std::string map_key(par_.topic_name);
-
-    const std::lock_guard<std::mutex> lock(m_datareadertcp_sync);
-    const DataReaderTCPMapT::iterator iter = m_datareadertcp_map.find(map_key);
-    if (iter == m_datareadertcp_map.end()) return;
-
-    auto& reader = iter->second;
-    reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
+    // for deletion, we need to be able to erase the connection from the map
+    return CTransportLayerInstance::ConnectionToken::Make(erase_data_reader);
   }
 }

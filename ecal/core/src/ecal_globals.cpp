@@ -213,11 +213,6 @@ namespace eCAL
     }
 #endif // ECAL_CORE_MONITORING
 
-
-    m_shm_reader_layer_instance = std::make_shared<eCAL::CSHMReaderLayer>(subgate_instance, memfile_pool_instance);
-    m_udp_reader_layer_instance = std::make_shared<eCAL::CUDPReaderLayer>(subgate_instance);
-    m_tcp_reader_layer_instance = std::make_shared<eCAL::CTCPReaderLayer>(subgate_instance);
-
     /////////////////////
     // START ALL
     /////////////////////
@@ -277,6 +272,12 @@ namespace eCAL
     }
 #endif // ECAL_CORE_TIMEPLUGIN
 
+    if (!subscriber_connection_manager_instance)
+    {
+      subscriber_connection_manager_instance = std::make_shared<CSubscriberConnectionManager>();
+      new_initialization = true;
+    }
+
     return new_initialization;
   }
 
@@ -328,6 +329,9 @@ namespace eCAL
     // We expect true to return, otherwise intialization was not done or
     // another call to finalize is already in progress.
     if (!initialized.exchange(false)) return false;
+
+    // First, stop all transport
+    subscriber_connection_manager_instance.reset();
 
     // start destruction
 #if ECAL_CORE_MONITORING
@@ -391,10 +395,6 @@ namespace eCAL
 #endif
     log_provider_instance.reset();
     log_udp_receiver_instance.reset();
-
-    m_udp_reader_layer_instance.reset();
-    m_tcp_reader_layer_instance.reset();
-    m_shm_reader_layer_instance.reset();
 
     {
       std::lock_guard<std::mutex> lock(m_instance_mutex);

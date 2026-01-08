@@ -35,6 +35,7 @@
 #include "util/statistics_calculator.h"
 #include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
+#include "readwrite/ecal_reader_manager.h"
 
 #include <atomic>
 #include <chrono>
@@ -43,6 +44,7 @@
 #include <deque>
 #include <map>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <set>
 #include <string>
@@ -50,12 +52,8 @@
 
 namespace eCAL
 {
-  
-  class CSHMReaderLayer;
-  class CUDPReaderLayer;
-  class CTCPReaderLayer;
   class CRegistrationProvider;
-  
+    
   namespace Logging
   {
     class CLogProvider;
@@ -63,32 +61,14 @@ namespace eCAL
 
   struct SSubscriberGlobalContext // SSubscriberContext, SSubscriberGlobalDependencies
   {
-    std::shared_ptr<eCAL::CUDPReaderLayer>       udp_layer;
-    std::shared_ptr<eCAL::CSHMReaderLayer>       shm_layer;
-    std::shared_ptr<eCAL::CTCPReaderLayer>       tcp_layer;
     std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
     std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
+    std::shared_ptr<eCAL::CSubscriberConnectionManager> connection_manager;
   };
 
   class CSubscriberImpl
   {
   public:
-    struct SLayerState
-    {
-      bool write_enabled = false;   // is publisher enabled to write data on this layer?
-      bool read_enabled  = false;   // is this subscriber configured to read data from this layer?
-      bool active        = false;   // data has been received on this layer
-    };
- 
-    struct SLayerStates
-    {
-      SLayerState udp;
-      SLayerState shm;
-      SLayerState tcp;
-    };
-
-    using SPublicationInfo = Registration::SampleIdentifier;
-
     CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberGlobalContext global_context_);
     ~CSubscriberImpl();
 
@@ -110,11 +90,6 @@ namespace eCAL
 
     void SetFilterIDs(const std::set<long long>& filter_ids_);
 
-    void ApplyPublisherRegistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_, const SLayerStates& pub_layer_states_);
-    void ApplyPublisherUnregistration(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-
-    void ApplyLayerParameter(const SPublicationInfo& publication_info_, eTLayerType type_, const Registration::ConnectionPar& parameter_);
-
     void GetRegistration(Registration::Sample& sample);
     bool IsCreated() const { return(m_created); }
 
@@ -124,9 +99,6 @@ namespace eCAL
     const STopicId& GetTopicId() const { return m_topic_id; }
     const std::string& GetTopicName() const { return(m_attributes.topic_name); }
     const SDataTypeInformation& GetDataTypeInformation() const { return(m_topic_info); }
-
-    void InitializeLayers();
-    size_t ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t hash_, eTLayerType layer_);
 
   protected:
     void Register();
@@ -138,22 +110,17 @@ namespace eCAL
     void StartTransportLayer();
     void StopTransportLayer();
 
-    void FireEvent(const eSubscriberEvent type_, const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireEvent(const eSubscriberEvent type_, const STopicId& publication_info_, const SDataTypeInformation& data_type_info_);
 
-    void FireConnectEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    void FireDisconnectEvent(const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
-    void FireDroppedEvent   (const SPublicationInfo& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireConnectEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireDisconnectEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_);
+    void FireDroppedEvent(const STopicId& publication_info_, const SDataTypeInformation& data_type_info_);
 
-    static SPublicationInfo PublicationInfoFromTopicInfo(const Payload::TopicInfo& topic_info_);
-
-    size_t GetConnectionCount();
-
-    bool ShouldApplySampleBasedOnClock(const SPublicationInfo& publication_info_, long long clock_) const;
-    bool ShouldApplySampleBasedOnLayer(eTLayerType layer_) const;
+    void InternalDataCallback(const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_);
     bool ShouldApplySampleBasedOnId(long long id_) const;
 
     void TriggerStatisticsUpdate(long long send_time_);
-    void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
+    void TriggerMessageDropUdate(const STopicId& publication_info_, uint64_t message_counter);
 
     int32_t GetFrequency();
     int32_t GetMessageDropsAndFireDroppedEvents();
@@ -162,17 +129,6 @@ namespace eCAL
     SDataTypeInformation                      m_topic_info;
     STopicId                                  m_topic_id;
     std::atomic<size_t>                       m_topic_size;
-
-    struct SConnection
-    {
-      SDataTypeInformation data_type_info;
-      SLayerStates         layer_states;
-      bool                 state = false;
-    };
-    using ConnectionMapT = std::map<SPublicationInfo, SConnection>;
-    mutable std::mutex                        m_connection_map_mtx;
-    ConnectionMapT                            m_connection_map;
-    std::atomic<size_t>                       m_connection_count{ 0 };
 
     mutable std::mutex                        m_read_buf_mutex;
     std::condition_variable                   m_read_buf_cv;
@@ -196,19 +152,17 @@ namespace eCAL
     StatisticsCalculator                      m_latency_us_calculator;
 
     std::mutex                                m_message_drop_map_mutex;
-    using MessageDropMapT = MessageDropCalculatorMap<SPublicationInfo>;
+    using MessageDropMapT = MessageDropCalculatorMap<STopicId>;
     MessageDropMapT                           m_message_drop_map;
-    
-    using CounterCacheMapT = CounterCacheMap<SPublicationInfo>;
-    CounterCacheMapT                          m_publisher_message_counter_map;
-    
+      
     std::set<long long>                       m_id_set;
 
-    SLayerStates                              m_layers;
     std::atomic<bool>                         m_created;
 
     eCAL::eCALReader::SAttributes             m_attributes;
-
+    std::optional<eCAL::SubscriptionHandle>   m_reader_handle;
     SSubscriberGlobalContext                  m_global_context;
+    mutable std::mutex                        m_connection_info_mutex;
+    SubscriberConnectionInfo                  m_connection_info;
   };
 }

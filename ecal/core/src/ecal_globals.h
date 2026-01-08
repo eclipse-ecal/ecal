@@ -54,10 +54,7 @@
 #include "service/ecal_clientgate.h"
 #endif
 #include "ecal_descgate.h"
-
-#include "readwrite/udp/ecal_reader_udp.h"
-#include "readwrite/tcp/ecal_reader_tcp.h"
-#include "readwrite/shm/ecal_reader_shm.h"
+#include "readwrite/ecal_reader_manager.h"
 
 #include <memory>
 
@@ -107,10 +104,9 @@ namespace eCAL
     
 #endif
     const std::shared_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
+    const std::shared_ptr<CSubscriberConnectionManager>&        subscriber_connection_manager()    { return subscriber_connection_manager_instance; };
 
-    const std::shared_ptr<eCAL::CUDPReaderLayer>&                         udp_reader_layer()       { return m_udp_reader_layer_instance; };
-    const std::shared_ptr<eCAL::CTCPReaderLayer>&                         tcp_reader_layer()       { return m_tcp_reader_layer_instance; };
-    const std::shared_ptr<eCAL::CSHMReaderLayer>&                         shm_reader_layer()       { return m_shm_reader_layer_instance; };
+
 
   private:
     CGlobals() = default;
@@ -149,8 +145,7 @@ namespace eCAL
     
 #endif
     std::shared_ptr<CDescGate>                                            descgate_instance;
-    std::shared_ptr<eCAL::CUDPReaderLayer>                                m_udp_reader_layer_instance;
-    std::shared_ptr<eCAL::CTCPReaderLayer>                                m_tcp_reader_layer_instance;
-    std::shared_ptr<eCAL::CSHMReaderLayer>                                m_shm_reader_layer_instance;
+
+    std::shared_ptr<CSubscriberConnectionManager>                         subscriber_connection_manager_instance;
   };
 }

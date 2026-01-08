@@ -20,7 +20,7 @@
 
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "ecal_global_accessors.h"
-#include "pubsub/ecal_subgate.h"
+#include "readwrite/ecal_reader_manager.h"
 #include "pubsub/ecal_pubgate.h"
 #include "service/ecal_clientgate.h"
 
@@ -70,14 +70,14 @@ namespace eCAL
 #if ECAL_CORE_SUBSCRIBER
       case bct_reg_publisher:
         {
-          auto subgate = g_subgate();
-          if (subgate) subgate->ApplyPublisherRegistration(sample_);
+          auto reader_manager = g_reader_manager();
+          if (reader_manager) reader_manager->ApplyPublisherRegistration(sample_);
           break;
         }
       case bct_unreg_publisher:
         {
-          auto subgate = g_subgate();
-          if (subgate) subgate->ApplyPublisherUnregistration(sample_);
+          auto reader_manager = g_reader_manager();
+          if (reader_manager) reader_manager->ApplyPublisherUnregistration(sample_);
           break;
         }
 #endif

@@ -1,7 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,39 +23,34 @@
 
 #pragma once
 
-#include "ecal_def.h"
-#include "readwrite/ecal_reader_layer.h"
-#include "serialization/ecal_struct_sample_payload.h"
-#include "config/attributes/reader_shm_attributes.h"
-
 #include <cstddef>
 #include <memory>
 #include <string>
 
+#include "readwrite/ecal_reader_layer.h"
+#include "config/attributes/reader_shm_attributes.h"
+
 namespace eCAL
 {
-  class CSubGate;
-  class CMemfileThreadPool;
+  class CMemFileThreadPool;
 
   ////////////////
   // LAYER
   ////////////////
-  class CSHMReaderLayer : public CReaderLayer<CSHMReaderLayer, eCAL::eCALReader::SHM::SAttributes>
+  class CSHMReaderLayer : CTransportLayerInstance
   {
   public:
-    CSHMReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_, std::shared_ptr<eCAL::CMemFileThreadPool> memfile_thread_pool_);
+    CSHMReaderLayer(const eCAL::eCALReader::SHM::SAttributes& attr_, std::shared_ptr<CMemFileThreadPool> memfile_thread_pool_);
+    ~CSHMReaderLayer() override = default;
 
-    void Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_) override;
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}
-
-    void SetConnectionParameter(SReaderLayerPar& par_) override;
+    bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const override;
+    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
+    // How about updating the connection (SHM memfile list changed?)
+    // Maybe via connection token?
+    // void RemoveConnection(ConnectionToken connection_handle_) override;
 
   private:
-    size_t OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_);
-
-    eCAL::eCALReader::SHM::SAttributes        m_attributes;
-    std::shared_ptr<eCAL::CSubGate>           m_subgate;
-    std::shared_ptr<eCAL::CMemFileThreadPool> m_memfile_thread_pool;
+    eCAL::eCALReader::SHM::SAttributes m_attributes;
+    std::shared_ptr<CMemFileThreadPool> m_memfile_thread_pool;
   };
 }
