@@ -25,8 +25,7 @@
 #include <mutex>
 #include <thread>
 
-DynamicThreadPoolImpl::DynamicThreadPoolImpl()
-{}
+DynamicThreadPoolImpl::DynamicThreadPoolImpl() = default;
 
 DynamicThreadPoolImpl::DynamicThreadPoolImpl(size_t max_size_)
   : max_size(max_size_)

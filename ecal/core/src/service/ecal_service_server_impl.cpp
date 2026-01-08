@@ -282,7 +282,7 @@ namespace eCAL
       };
 
     // Start service
-    ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
+    const ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
             = [threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool()](const std::function<void()>& task)
               {
                 threadpool->Post(task);

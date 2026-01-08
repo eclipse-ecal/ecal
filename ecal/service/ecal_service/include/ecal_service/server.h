@@ -168,16 +168,16 @@ namespace ecal_service
      * 
      * @return true, when at least one client is connected. False otherwise.
      */
-    bool          is_connected()         const;
+      [[nodiscard]] bool is_connected() const;
 
-    /**
+      /**
      * @brief Get the number of currently connected clients.
      * 
      * @return the number of connected clients
      */
-    int           get_connection_count() const;
+      [[nodiscard]] int get_connection_count() const;
 
-    /**
+      /**
      * @brief Returns the port the server is listening on.
      * 
      * When the server was created with port 0, this will return the port the
@@ -185,9 +185,9 @@ namespace ecal_service
      * 
      * @return The port
      */
-    std::uint16_t get_port()             const;
-    
-    /**
+      [[nodiscard]] std::uint16_t get_port() const;
+
+      /**
      * @brief Stops the server
      * 
      * This closes the socket and stops the server. After the server has been
@@ -197,11 +197,11 @@ namespace ecal_service
      * A server that has been stopped cannot be restarted. Create a new
      * server, when desired.
      */
-    void          stop();
+      void stop();
 
-  ///////////////////////////////////////////
-  // Member Variables
-  ///////////////////////////////////////////
+      ///////////////////////////////////////////
+      // Member Variables
+      ///////////////////////////////////////////
   private:
     std::shared_ptr<ServerImpl> impl_;        //!< The private implementation
   };

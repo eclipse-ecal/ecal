@@ -76,13 +76,13 @@ public:
    * @brief Get the current number of threads in the pool.
    * @return The number of threads in the pool.
    */
-  size_t GetSize() const;
+  [[nodiscard]] size_t GetSize() const;
 
   /**
     * @brief Get the current number of idle threads in the pool.
     * @return The number of idle threads in the pool.
     */
-  size_t GetIdleCount() const;
+  [[nodiscard]] size_t GetIdleCount() const;
 
   /**
    * @brief Shuts down the thread pool, allowing all queued tasks to finish.
