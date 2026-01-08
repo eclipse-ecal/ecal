@@ -37,6 +37,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <limits>
 
 namespace eCAL
 {
@@ -240,6 +241,36 @@ namespace eCAL
       }
     };
 
+
+    struct Statistics
+    {
+      uint64_t count{ 0 };
+      double latest{ 0.0 };
+      double min{ std::numeric_limits<double>::infinity() };
+      double max{ -std::numeric_limits<double>::infinity() };
+      double mean{ 0.0 };
+      double variance{ 0.0 };
+
+      bool operator==(const Statistics& other) const {
+        return count == other.count &&
+          latest == other.latest &&
+          min == other.min &&
+          max == other.max &&
+          mean == other.mean &&
+          variance == other.variance;
+      }
+
+      void clear()
+      {
+        count = 0;
+        latest = 0.0;
+        min = std::numeric_limits<double>::infinity();
+        max = -std::numeric_limits<double>::infinity();
+        mean = 0.0;
+        variance = 0.0;
+      }
+    };
+
     // eCAL topic information
     struct Topic
     {
@@ -261,7 +292,7 @@ namespace eCAL
       int64_t                             data_id    = 0;               // data send id (publisher setid)
       int64_t                             data_clock = 0;               // data clock (send / receive action)
       int32_t                             data_frequency  = 0;                   // data frequency (send / receive registrations per second) [mHz]
-
+      Statistics                          latency_us;                   // latency statistics for receiving data in microseconds
 
       bool operator==(const Topic& other) const {
         return registration_clock == other.registration_clock &&
@@ -278,7 +309,8 @@ namespace eCAL
           message_drops == other.message_drops &&
           data_id == other.data_id &&
           data_clock == other.data_clock &&
-          data_frequency == other.data_frequency;
+          data_frequency == other.data_frequency &&
+          latency_us == other.latency_us;
       }
 
       void clear()
@@ -301,6 +333,8 @@ namespace eCAL
         data_id = 0;
         data_clock = 0;
         data_frequency = 0;
+
+        latency_us.clear();
       }
     };
 

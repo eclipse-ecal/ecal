@@ -88,9 +88,7 @@ if(UNIX)
   endif()
 endif()
 
-macro(add_ecal_core_library TARGET_NAME)
-
-
+macro(add_ecal_serialization_object_library)
 add_library(ecal_core_serialization OBJECT)
 target_sources(ecal_core_serialization 
   PUBLIC
@@ -104,41 +102,16 @@ target_sources(ecal_core_serialization
     src/serialization/ecal_struct_sample_registration.h
     src/serialization/ecal_struct_service.h
   PRIVATE
-    src/serialization/nanopb/pb.h
-    src/serialization/nanopb/pb_common.c
-    src/serialization/nanopb/pb_common.h
-    src/serialization/nanopb/pb_decode.c
-    src/serialization/nanopb/pb_decode.h
-    src/serialization/nanopb/pb_encode.c
-    src/serialization/nanopb/pb_encode.h
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.c
-    src/serialization/nanopb/ecal/core/pb/datatype.npb.h
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.c
-    src/serialization/nanopb/ecal/core/pb/ecal.npb.h
-    src/serialization/nanopb/ecal/core/pb/host.npb.c
-    src/serialization/nanopb/ecal/core/pb/host.npb.h
-    src/serialization/nanopb/ecal/core/pb/layer.npb.c
-    src/serialization/nanopb/ecal/core/pb/layer.npb.h
-    src/serialization/nanopb/ecal/core/pb/logging.npb.c
-    src/serialization/nanopb/ecal/core/pb/logging.npb.h
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.c
-    src/serialization/nanopb/ecal/core/pb/monitoring.npb.h
-    src/serialization/nanopb/ecal/core/pb/process.npb.c
-    src/serialization/nanopb/ecal/core/pb/process.npb.h
-    src/serialization/nanopb/ecal/core/pb/service.npb.c
-    src/serialization/nanopb/ecal/core/pb/service.npb.h
-    src/serialization/nanopb/ecal/core/pb/topic.npb.c
-    src/serialization/nanopb/ecal/core/pb/topic.npb.h
     src/serialization/protozero/ecal_helper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/datatype.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/ecal.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/host.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/layer.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/logging.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/monitoring.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/process.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/service.pbftags.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero/ecal/core/pb/topic.pbftags.h
+    src/serialization/protozero/ecal/core/pb/datatype.pbftags.h
+    src/serialization/protozero/ecal/core/pb/ecal.pbftags.h
+    src/serialization/protozero/ecal/core/pb/host.pbftags.h
+    src/serialization/protozero/ecal/core/pb/layer.pbftags.h
+    src/serialization/protozero/ecal/core/pb/logging.pbftags.h
+    src/serialization/protozero/ecal/core/pb/monitoring.pbftags.h
+    src/serialization/protozero/ecal/core/pb/process.pbftags.h
+    src/serialization/protozero/ecal/core/pb/service.pbftags.h
+    src/serialization/protozero/ecal/core/pb/topic.pbftags.h
     src/serialization/ecal_serialize_common.cpp
     src/serialization/ecal_serialize_common.h
     src/serialization/ecal_serialize_logging.cpp
@@ -154,7 +127,6 @@ target_include_directories(ecal_core_serialization
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/nanopb>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/serialization/protozero>
 )
 
@@ -167,8 +139,9 @@ set_target_properties(ecal_core_serialization PROPERTIES
   POSITION_INDEPENDENT_CODE ON  
   FOLDER core
 )
+endmacro()
 
-
+macro(add_ecal_core_object_library)
 
 ######################################
 # config
@@ -440,13 +413,6 @@ if (ECAL_CORE_REGISTRATION)
 endif()
 
 ######################################
-# serialization
-######################################
-set(ecal_serialization_src
-
-)
-
-######################################
 # service
 ######################################
 if(ECAL_CORE_SERVICE)
@@ -495,6 +461,7 @@ set(ecal_util_src
     src/util/ecal_thread.h
     src/util/expanding_vector.h
     src/util/frequency_calculator.h
+    src/util/statistics_calculator.h
     src/util/message_drop_calculator.cpp
     src/util/message_drop_calculator.h
     src/util/getenvvar.h
@@ -592,7 +559,7 @@ set (ecal_builder_src
 ######################################
 # public header
 ######################################
-set(ecal_header_cmn
+set(ecal_public_headers
     include/ecal/config/application.h
     include/ecal/config/configuration.h
     include/ecal/config/logging.h
@@ -613,8 +580,6 @@ set(ecal_header_cmn
     include/ecal/types/logging.h
     include/ecal/types/monitoring.h
     include/ecal/ecal.h
-    include/ecal/v5/ecal_callback.h
-    include/ecal/v5/ecal_client.h
     include/ecal/config.h
     include/ecal/core.h
     include/ecal/deprecate.h
@@ -625,16 +590,23 @@ set(ecal_header_cmn
     include/ecal/monitoring.h
     include/ecal/namespace.h
     include/ecal/process.h
+    include/ecal/process_mode.h
     include/ecal/process_severity.h
     include/ecal/registration.h
-    include/ecal/v5/ecal_publisher.h
-    include/ecal/v5/ecal_server.h
-    include/ecal/v5/ecal_subscriber.h
     include/ecal/time.h
     include/ecal/timer.h
     include/ecal/types.h
     include/ecal/util.h
 )
+
+set(ecal_public_v5_headers
+    include/ecal/v5/ecal_callback.h
+    include/ecal/v5/ecal_client.h
+    include/ecal/v5/ecal_publisher.h
+    include/ecal/v5/ecal_server.h
+    include/ecal/v5/ecal_subscriber.h
+)
+
 
 set(ecal_sources
     ${ecal_config_src}
@@ -660,30 +632,33 @@ set(ecal_sources
     ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_builder_src}
-    ${ecal_header_cmn}
+)
+
+set(ecal_generated_public_headers
+  ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
 )
 
 set(ecal_generated_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/include/ecal/defs.h
     ${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h
 )
 
-ecal_add_shared_library(${TARGET_NAME}
+add_library(ecal_core_private OBJECT
+    ${ecal_public_headers}
+    ${ecal_public_v5_headers}
+    ${ecal_generated_public_headers}
     ${ecal_sources}
     ${ecal_generated_sources}
 )
 
 if (ECAL_CORE_CONFIGURATION)
-  target_compile_definitions(${TARGET_NAME} PRIVATE ECAL_CORE_CONFIGURATION)
+  target_compile_definitions(ecal_core_private PRIVATE ECAL_CORE_CONFIGURATION)
 endif()
 
 if(UNIX)
   set_source_files_properties(src/util/convert_utf.cpp PROPERTIES COMPILE_FLAGS -Wno-implicit-fallthrough)
 endif()
 
-add_library(eCAL::${TARGET_NAME}   ALIAS ${TARGET_NAME})
-
-target_compile_definitions(${TARGET_NAME}
+target_compile_definitions(ecal_core_private
   PUBLIC
     ASIO_STANDALONE
     ASIO_DISABLE_VISIBILITY
@@ -693,15 +668,6 @@ target_compile_definitions(${TARGET_NAME}
     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
     ECAL_NO_DEPRECATION_WARNINGS
-  INTERFACE
-    ECAL_CORE_IMPORTS
-)
-
-set_target_properties(${TARGET_NAME}
-  PROPERTIES 
-    CXX_VISIBILITY_PRESET hidden
-    C_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN ON
 )
 
 set(ECAL_CORE_FEATURES
@@ -723,57 +689,28 @@ set(ECAL_CORE_FEATURES
 
 foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
   if(${CORE_FEATURE})
-    target_compile_definitions(${TARGET_NAME}
+    target_compile_definitions(ecal_core_private
       PUBLIC ${CORE_FEATURE})
   endif()
 endforeach()
 
-if(ECAL_CORE_CONFIGURATION)
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      yaml-cpp::yaml-cpp
-  )
-endif()
-
-if(ECAL_CORE_COMMAND_LINE)
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      tclap::tclap
-  )
-endif()
-
-if(ECAL_CORE_SERVICE)
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      ecal_service
-      dynamic_threadpool
-  )
-endif()
-
-if(ECAL_CORE_TRANSPORT_TCP)
-  target_link_libraries(${TARGET_NAME}
-    PRIVATE
-      tcp_pubsub::tcp_pubsub
-  )
-endif()
-
-target_link_libraries(${TARGET_NAME}
-  PRIVATE
-    ecaludp::ecaludp
-)
-
-target_include_directories(${TARGET_NAME}
-  PRIVATE 
+target_include_directories(ecal_core_private
+  PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
-  PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${TARGET_NAME} 
+target_link_libraries(ecal_core_private 
   PRIVATE
+    $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
+    $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
+    $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
+    ecaludp::ecaludp
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
@@ -787,59 +724,96 @@ target_link_libraries(${TARGET_NAME}
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
-    ecal_core_serialization
+    # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
+    ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
 )
 
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
+target_compile_features(ecal_core_private PUBLIC cxx_std_17)
 
-set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
-
-ecal_install_shared_library(${TARGET_NAME})
+set_property(TARGET ecal_core_private PROPERTY FOLDER core)
+set_property(TARGET ecal_core_private PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+    ${ecal_public_headers}
+    ${ecal_public_v5_headers}
     ${ecal_sources}
   )
   source_group(TREE "${CMAKE_CURRENT_BINARY_DIR}" FILES 
+    ${ecal_generated_public_headers}
+    ${ecal_generated_sources}
     ${ecal_binary_sources}
   )
 endif()
 
 endmacro()
 
-#######################################
-# We now create two libraries
-# One of them is a compatibility version that should facilitate easier migration.
-# ecal_core, ecal_core_v5.
-# We removed again the compatibility libraries.
-# We might reintroduce it, but then for *ALL* functionality.
-#######################################
 
-add_ecal_core_library(${PROJECT_NAME})
+macro(add_ecal_core_library)
 
-#target_compile_definitions(${PROJECT_NAME}
-#  PUBLIC 
-#    ECAL_CORE_V5_FUNCTIONALTIY=1
-#)
+ecal_add_shared_library(core)
+add_library(eCAL::core ALIAS core)
+# We "just" link the objects to the ecal_core.dll/.so -> we manually need to set the linker language
+set_target_properties(core PROPERTIES LINKER_LANGUAGE CXX)
 
-#add_ecal_core_library(core_v5)
-#target_compile_definitions(core_v5 
-#  PUBLIC
-#    ECAL_CORE_NAMESPACE_V5_INLINE=1
-#    ECAL_CORE_V5_FUNCTIONALTIY=1
-#)
+target_sources(core
+  PUBLIC
+    FILE_SET core_headers
+    TYPE HEADERS
+    BASE_DIRS 
+      ./include
+      ${CMAKE_CURRENT_BINARY_DIR}/include
+    FILES 
+      ${ecal_public_headers}
+      ${ecal_generated_public_headers}
+  PRIVATE
+    src/dummy.cpp
+)
 
-###
-## Iinstall header files only once...
-## 
-install(DIRECTORY
-   "include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h" PATTERN "v5" EXCLUDE)
+target_link_libraries(core
+  PRIVATE
+    ecal_core_private
+)
 
-# install generated defs.h file    
-install(DIRECTORY
-   "${CMAKE_CURRENT_BINARY_DIR}/include/" DESTINATION "${eCAL_install_include_dir}" COMPONENT sdk
-    FILES_MATCHING PATTERN "*.h")
+target_compile_definitions(core
+  INTERFACE
+    ECAL_CORE_IMPORTS
+)
+
+foreach(CORE_FEATURE ${ECAL_CORE_FEATURES})
+  if(${CORE_FEATURE})
+    target_compile_definitions(core
+      PUBLIC ${CORE_FEATURE})
+  endif()
+endforeach()
+
+set_target_properties(core
+  PROPERTIES 
+    CXX_VISIBILITY_PRESET hidden
+    C_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+)
+
+target_compile_features(core INTERFACE cxx_std_14)
+target_compile_features(core PRIVATE cxx_std_17)
+
+set_property(TARGET core PROPERTY FOLDER core)
+endmacro()
+
+
+add_ecal_serialization_object_library()
+add_ecal_core_object_library()
+add_ecal_core_library()
+
+
+install(TARGETS core
+  EXPORT eCALCoreTargets
+  RUNTIME       DESTINATION "${eCAL_install_bin_dir}"         COMPONENT runtime
+  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"         COMPONENT sdk
+  ARCHIVE       DESTINATION "${eCAL_install_archive_dyn_dir}" COMPONENT sdk
+  FILE_SET core_headers
+)
+ecal_install_pdbs(TARGET core DESTINATION "${eCAL_install_bin_dir}" COMPONENT runtime) 
 
 # eCAL process stub
 if(UNIX)

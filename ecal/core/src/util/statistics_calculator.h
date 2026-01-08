@@ -1,14 +1,13 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2025 Continental Corporation
  * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,25 +18,42 @@
 */
 
 /**
- * @file   ecal_serialize_monitoring.h
- * @brief  eCAL monitoring serialization / deserialization
+ * @brief This file provides classes to calculate statistics.
+ *        These classes are NOT threadsafe!
 **/
 
 #pragma once
 
-#include <cstddef>
-#include <ecal/types/monitoring.h>
-
-#include <string>
-#include <vector>
+#include <ecal_struct_sample_registration.h>
+#include <algorithm>
 
 namespace eCAL
 {
-  inline namespace protozero
+  class StatisticsCalculator
   {
-    // monitoring - serialize/deserialize
-    bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::vector<char>& target_buffer_);
-    bool SerializeToBuffer     (const Monitoring::SMonitoring& source_sample_, std::string& target_buffer_);
-    bool DeserializeFromBuffer (const char* data_, size_t size_, Monitoring::SMonitoring& target_sample_);
-  }
+  public:
+    void Update(double value)
+    {
+      statistics_.count++;
+      statistics_.latest = value;
+      statistics_.min = std::min(statistics_.min, value);
+      statistics_.max = std::max(statistics_.max, value);
+      const double delta = value - statistics_.mean;
+      statistics_.mean += delta / static_cast<double>(statistics_.count);
+      const double delta2 = value - statistics_.mean;
+      statistics_.variance += delta * delta2;
+    }
+
+    Registration::Statistics GetStatistics() const
+    {
+      return statistics_;
+    }
+  private:
+    Registration::Statistics statistics_;
+  };
 }
+
+
+
+
+

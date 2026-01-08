@@ -51,7 +51,10 @@ target_sources(generate_serialization_test_data
 target_include_directories(generate_serialization_test_data
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+)
+target_link_libraries(generate_serialization_test_data
+  PRIVATE
+    ecal_core_private
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${unit_test_src})
@@ -68,7 +71,7 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     Threads::Threads
-    ecal_core_serialization
+    ecal_core_private
     generate_serialization_test_data
 )
 

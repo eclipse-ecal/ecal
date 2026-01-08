@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +66,7 @@ public:
     MESSAGE_DROPS,
     DATA_CLOCK,
     DATA_FREQUENCY,
+    DATA_LATENCY,
 
     COLUMN_COUNT
   };
@@ -107,6 +109,7 @@ private:
     { Columns::MESSAGE_DROPS,          "Drops" },
     { Columns::DATA_CLOCK,             "Data Clock" },
     { Columns::DATA_FREQUENCY,         "Frequency [Hz]" },
+    { Columns::DATA_LATENCY,           "Latency [us]"},
   };
 
   std::map<Columns, int> topic_tree_item_column_mapping =
@@ -131,6 +134,7 @@ private:
     { Columns::MESSAGE_DROPS,          (int)TopicTreeItem::Columns::MESSAGE_DROPS },
     { Columns::DATA_CLOCK,             (int)TopicTreeItem::Columns::DATA_CLOCK },
     { Columns::DATA_FREQUENCY,         (int)TopicTreeItem::Columns::DFREQ },
+    { Columns::DATA_LATENCY,           (int)TopicTreeItem::Columns::DATA_LATENCY },
   };
 
   struct STopicTreeEntry

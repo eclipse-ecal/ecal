@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +25,14 @@
 #pragma once
 
 #include <ecal/pubsub/types.h>
+#include <ecal/time.h>
 #include <ecal/v5/ecal_callback.h>
 
 #include "serialization/ecal_serialize_sample_payload.h"
 #include "serialization/ecal_serialize_sample_registration.h"
 #include "util/frequency_calculator.h"
 #include "util/message_drop_calculator.h"
+#include "util/statistics_calculator.h"
 #include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
@@ -129,7 +132,7 @@ namespace eCAL
     bool ShouldApplySampleBasedOnLayer(eTLayerType layer_) const;
     bool ShouldApplySampleBasedOnId(long long id_) const;
 
-    void TriggerFrequencyUpdate();
+    void TriggerStatisticsUpdate(long long send_time_);
     void TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter);
 
     int32_t GetFrequency();
@@ -168,8 +171,9 @@ namespace eCAL
 
     std::atomic<long long>                    m_clock;
 
-    std::mutex                                m_frequency_calculator_mutex;
-    ResettableFrequencyCalculator<std::chrono::steady_clock> m_frequency_calculator;
+    std::mutex                                m_statistics_mutex;
+    ResettableFrequencyCalculator<eCAL::Time::ecal_clock> m_frequency_calculator;
+    StatisticsCalculator                      m_latency_us_calculator;
 
     std::mutex                                m_message_drop_map_mutex;
     using MessageDropMapT = MessageDropCalculatorMap<SPublicationInfo>;

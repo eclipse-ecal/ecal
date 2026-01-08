@@ -27,6 +27,7 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <optional>
 #include <numeric>
 
 namespace eCAL
@@ -99,11 +100,11 @@ namespace eCAL
     {
       if (!calculator)
       {
-        calculator = std::make_unique<FrequencyCalculator<T>>(now);
+        calculator = FrequencyCalculator<T>(now);
       }
       else
       {
-        calculator->addTick(now);
+        calculator.value().addTick(now);
       }
       last_tick_time = now;
       received_tick_since_get_frequency_called = true;
@@ -137,7 +138,7 @@ namespace eCAL
       time_point timeout_time = last_tick_time + std::chrono::duration_cast<std::chrono::nanoseconds>(expected_time_in_seconds_between_last_and_next_tick * reset_factor);
       if (now > timeout_time)
       {
-        calculator.reset();
+        calculator = std::nullopt;
         return 0.0;
       }
 
@@ -148,7 +149,7 @@ namespace eCAL
     float reset_factor;
     time_point last_tick_time;
     bool received_tick_since_get_frequency_called = false;
-    std::unique_ptr<FrequencyCalculator<T>> calculator;
+    std::optional<FrequencyCalculator<T>> calculator;
   };
 }
 

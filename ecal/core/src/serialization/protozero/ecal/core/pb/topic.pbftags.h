@@ -7,6 +7,19 @@
 #include <cstdint>
 
 namespace eCAL { namespace pb { 
+enum class Statistics : ::protozero::pbf_tag_type {
+    optional_uint64_count = 1,
+    optional_double_latest = 2,
+    optional_double_min = 3,
+    optional_double_max = 4,
+    optional_double_mean = 5,
+    optional_double_variance = 6
+};
+
+inline constexpr uint32_t operator+(Statistics e) {
+    return static_cast<uint32_t>(e);
+}
+
 enum class Topic : ::protozero::pbf_tag_type {
     optional_int32_registration_clock = 1,
     optional_string_host_name = 2,
@@ -25,7 +38,8 @@ enum class Topic : ::protozero::pbf_tag_type {
     optional_int32_message_drops = 18,
     optional_int64_data_id = 19,
     optional_int64_data_clock = 20,
-    optional_int32_data_frequency = 21
+    optional_int32_data_frequency = 21,
+    optional_message_data_latency_us = 31
 };
 
 inline constexpr uint32_t operator+(Topic e) {

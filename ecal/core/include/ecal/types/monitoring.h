@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +70,16 @@ namespace eCAL
       bool         active  = false;                                //<! transport layer used?
     };
 
+    struct SStatistics                                            //<! eCAL Statistics struct
+    {
+      int64_t                             count{0};                //!< number of samples
+      double                              latest{ 0.0 };           //!< latest value
+      double                              min{0.0};                //!< minimum value
+      double                              max{0.0};                //!< maximum value
+      double                              mean{0.0};               //!< mean value
+      double                              variance{0.0};           //!< variance
+    };
+
     struct STopic                                                  //<! eCAL Topic struct
     {
       int32_t                             registration_clock{0};   //!< registration clock (heart beat)
@@ -92,6 +103,7 @@ namespace eCAL
       int64_t                             data_id{0};              //!< data send id (publisher setid)
       int64_t                             data_clock{0};           //!< data clock (send / receive action)
       int32_t                             data_frequency{0};       //!< data frequency (send / receive samples per second) [mHz]
+      SStatistics                         data_latency_us;              //!< latency statistics in microseconds
     };
 
     struct SProcess                                                //<! eCAL Process struct
