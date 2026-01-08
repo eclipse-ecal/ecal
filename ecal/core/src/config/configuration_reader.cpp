@@ -1,4 +1,5 @@
 #include "configuration_reader.h"
+#include "util/yaml_functions.h"
 
 namespace 
 {
@@ -41,55 +42,6 @@ namespace eCAL
       return false;
     }
 
-    void MergeYamlNodes(YAML::Node& base, const YAML::Node& other) 
-    {
-      std::stack<std::pair<YAML::Node, YAML::Node>> nodes;
-      nodes.emplace(base, other);
-
-      while (!nodes.empty()) 
-      {
-        const std::pair<YAML::Node, YAML::Node> nodePair = nodes.top();
-        nodes.pop();
-
-        YAML::Node baseNode = nodePair.first;
-        YAML::Node otherNode = nodePair.second;
-
-        for (YAML::const_iterator it = otherNode.begin(); it != otherNode.end(); ++it) 
-        {
-          const YAML::Node key = it->first;
-          const YAML::Node value = it->second;
-          
-          std::string key_as_string;
-
-          switch (key.Type())
-          {
-            case YAML::NodeType::Scalar:
-              key_as_string = key.as<std::string>();
-              break;
-            default:
-              continue;
-              break;
-          }
-
-          if (baseNode[key_as_string]) 
-          {
-            if (value.IsMap() && baseNode[key_as_string].IsMap()) 
-            {
-              nodes.emplace(baseNode[key_as_string], value); // Push nested nodes to stack
-            } 
-            else 
-            {
-              baseNode[key_as_string] = value; // Overwrite value for non-map nodes
-            }
-          } 
-          else 
-          {
-            baseNode[key_as_string] = value; // Add new key-value pairs
-          }
-        }
-      }
-    }
-
     bool MergeYamlIntoConfiguration(const std::string& file_name_ , eCAL::Configuration& config_)
     {
       YAML::Node config_node(config_);
@@ -105,7 +57,7 @@ namespace eCAL
         return false;
       }
 
-      eCAL::Config::MergeYamlNodes(config_node, node_to_merge);
+      eCAL::Util::MergeYamlNodes(config_node, node_to_merge);
       MapConfiguration(config_node, config_);
 
       return true;
