@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE ===== ============================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,7 @@
 
 #include <asio.hpp>
 
+#include <ecal_service/client_session_types.h>
 #include <ecal_service/logger.h>
 #include <ecal_service/state.h>
 
@@ -58,12 +60,14 @@ namespace ecal_service
   public:
     static std::shared_ptr<ClientSessionV1> create(const std::shared_ptr<asio::io_context>&                   io_context
                                                   , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                  , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                   , const EventCallbackT&                                     event_callback
                                                   , const LoggerT&                                            logger_ = default_logger("Service Client V1"));
 
   protected:
     ClientSessionV1(const std::shared_ptr<asio::io_context>&                  io_context
                   , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                  , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                   , const EventCallbackT&                                     event_callback
                   , const LoggerT&                                            logger);
 
@@ -151,6 +155,8 @@ namespace ecal_service
 
     const std::vector<std::pair<std::string, std::uint16_t>> server_list_;    //!< The list of servers that this client was created with. They will be tried in order.
     
+    const PostToClientResponseCallbackExecutorFunctionT response_callback_executor_function_; //!< A function that will be used to execute response callbacks. Can be user-set i.e. for executing the response callback in a different thread.
+
     mutable std::mutex                    chosen_endpoint_mutex_;             //!< Protects the chosen_endpoint_ variable.
     std::pair<std::string, std::uint16_t> chosen_endpoint_;                   //!< The endpoint that the client is currently connected to. Protected by chosen_endpoint_mutex_.
 

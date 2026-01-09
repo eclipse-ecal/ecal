@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,13 +65,11 @@ namespace ecal_service
   protected:
     ServerSessionBase(const std::shared_ptr<asio::io_context>&         io_context
                     , const ServerServiceCallbackT&                    service_callback
-                    , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
                     , const ServerEventCallbackT&                      event_callback
                     , const ShutdownCallbackT&                         shutdown_callback)
       : io_context_             (io_context)
       , socket_                 (*io_context)
       , service_callback_       (service_callback)
-      , service_callback_strand_(service_callback_strand)
       , event_callback_         (event_callback)
       , shutdown_callback_      (shutdown_callback)
     {}
@@ -94,7 +93,6 @@ namespace ecal_service
     mutable std::mutex                              socket_mutex_;
 
     const ServerServiceCallbackT                    service_callback_;
-    const std::shared_ptr<asio::io_context::strand> service_callback_strand_;
     const ServerEventCallbackT                      event_callback_;
     const ShutdownCallbackT                         shutdown_callback_;
   };

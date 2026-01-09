@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +19,12 @@
 */
 
 #include "ecal_service_singleton_manager.h"
+#include "dynamic_threadpool/dynamic_threadpool.h"
+#include "ecal_service/client_manager.h"
+#include "ecal_service/logger.h"
+#include "ecal_service/server_manager.h"
+
+#include <asio.hpp>
 
 #include <cstddef>
 #include <ecal/log.h>
@@ -159,6 +166,29 @@ namespace eCAL
       return nullptr;
     }
 
+    std::shared_ptr<DynamicThreadPool> ServiceManager::get_dynamic_threadpool()
+    {
+      // Quickly check the atomic stopped boolean before actually locking the
+      // mutex. It can theoretically change before we got mutex access, so we
+      // will have to check it again.
+      if (m_stopped)
+        return nullptr;
+
+      // Lock the mutex to actually make it thread safe
+      const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
+
+      if (!m_stopped)
+      {
+        // Create dynamic thread pool, if it didn't exist, yet
+        if (!m_dynamic_thread_pool)
+        {
+          m_dynamic_thread_pool = std::make_shared<DynamicThreadPool>();
+        }
+        return m_dynamic_thread_pool;
+      }
+      return nullptr;
+    }
+
     void ServiceManager::stop()
     {
       const std::lock_guard<std::mutex> singleton_lock(m_singleton_mutex);
@@ -174,10 +204,14 @@ namespace eCAL
       for (const auto& thread : m_io_threads)
         thread->join();
 
+      if (m_dynamic_thread_pool)
+        m_dynamic_thread_pool->Shutdown();
+
       m_server_manager.reset();
       m_client_manager.reset();
       m_io_threads.clear();
       m_io_context.reset();
+      m_dynamic_thread_pool.reset();
     }
 
     void ServiceManager::reset()

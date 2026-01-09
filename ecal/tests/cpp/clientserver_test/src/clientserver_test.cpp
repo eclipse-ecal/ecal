@@ -46,6 +46,8 @@
 #define ClientServerBaseAsyncTest                     1
 
 #define NestedRPCCallTest                             1
+#define NestedBlockingCallFromServerCallbackTest      1
+#define NestedBlockingCallFromClientCallbackTest      1
 
 #define ClientServerBaseBlockingTest                  1
 
@@ -1138,3 +1140,175 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 }
 
 #endif /* NestedRPCCallTest */
+
+#if NestedBlockingCallFromServerCallbackTest
+
+// This test injects blocking server callbacks into the service call. 
+TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
+{
+  constexpr size_t depth = 100;
+  
+  // validate input, just to make sure we don't break the test with wrong input
+  assert(depth >= 1);
+
+  // initialize eCAL API
+  eCAL::Initialize("nested blocking call from server callback test");
+
+  // Create servers and clients. We build a chain of depth amount of servers with each having a client that can call it.
+  std::vector<eCAL::CServiceServer> servers;
+  std::vector<eCAL::CServiceClient> clients;
+  servers.reserve(depth);
+  clients.reserve(depth);
+  for (size_t i = 0; i < depth; i++)
+  {
+    servers.emplace_back("service#" + std::to_string(i));
+    clients.emplace_back("service#" + std::to_string(i));
+
+    // Add a callback to the server that blocking-calls the next service
+    servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
+          [&clients, service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          {
+#if DO_LOGGING
+            // Print thread ID
+            std::cout << "[Server " << service_index << "] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+            PrintRequest(method_info_, request_);
+#endif // DO_LOGGING
+            EXPECT_EQ(request_, std::to_string(service_index));
+
+            // Use according client to call the next server
+            if ((service_index + 1) < clients.size())
+            {
+              eCAL::ServiceResponseVecT service_response_vec;
+              clients[service_index + 1].CallWithResponse("my_method", std::to_string(service_index + 1), service_response_vec);
+
+              EXPECT_EQ(service_response_vec.size(), 1);
+              EXPECT_EQ(service_response_vec.begin()->response, "Response from " + std::to_string(service_index + 1));
+            }
+
+            response_ = "Response from " + std::to_string(service_index);
+            return 0;
+          }
+    );
+  }
+
+  // Wait for servers and clients to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      for (const auto& client : clients)
+      {
+        if (client.GetClientInstances().size() == 0)
+        {
+          continue;
+        }
+      }
+      break;
+    }
+  }
+
+  // Call the first client
+  eCAL::ServiceResponseVecT service_response_vec;
+  clients.front().CallWithResponse("my_method", "0", service_response_vec);
+
+  ASSERT_EQ(service_response_vec.size(), 1);
+  ASSERT_EQ(service_response_vec.begin()->response, "Response from 0");
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* NestedBlockingCallFromServerCallbackTest */
+
+#if NestedBlockingCallFromClientCallbackTest
+
+TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
+{
+  constexpr size_t depth = 100;
+
+  // validat input, just to make sure we don't break the test with wrong input
+  assert(depth >= 1);
+
+  // initialize eCAL API
+  eCAL::Initialize("nested blocking call from client callback test");
+
+  // Create servers and clients. We build a chain of depth amount of servers with each having a client that can call it.
+  std::vector<eCAL::CServiceServer> servers;
+  std::vector<eCAL::CServiceClient> clients;
+  servers.reserve(depth);
+  clients.reserve(depth);
+  for (size_t i = 0; i < depth; i++)
+  {
+    servers.emplace_back("service#" + std::to_string(i));
+    clients.emplace_back("service#" + std::to_string(i));
+    // Add a callback to the server that just returns the request as response
+    servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
+          [service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          {
+#if DO_LOGGING
+            // Print thread ID
+            std::cout << "[Server] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+            PrintRequest(method_info_, request_);
+#endif // DO_LOGGING
+            EXPECT_EQ(request_, std::to_string(service_index));
+
+            response_ = "Response from " + std::to_string(service_index);
+            return 0;
+          }
+    );
+  }
+
+  // Wait for servers and clients to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      for (const auto& client : clients)
+      {
+        if (client.GetClientInstances().size() == 0)
+        {
+          continue;
+        }
+      }
+      break;
+    }
+  }
+
+
+  // Helper function (as lambda) that creates a callback for a client that calls the next client in the chain with a callback again
+  std::function<eCAL::ResponseCallbackT(size_t)> create_client_callback_that_calls_next_service;
+  create_client_callback_that_calls_next_service
+          = [&clients, &create_client_callback_that_calls_next_service, depth](size_t client_index) -> eCAL::ResponseCallbackT
+            {
+              return [&clients, &create_client_callback_that_calls_next_service, client_index, depth](const struct eCAL::SServiceResponse& service_response_)
+                      {
+#if DO_LOGGING
+                        // Print thread ID
+                        std::cout << "[Client " << client_index << "] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+                        PrintResponse(service_response_);
+#endif // DO_LOGGING
+                        EXPECT_EQ(service_response_.response, "Response from " + std::to_string(client_index));
+                        // If not the last client, call the next one
+                        if ((client_index + 1) < depth)
+                        {
+                          auto client_callback = create_client_callback_that_calls_next_service(client_index + 1);
+                          clients[client_index + 1].CallWithCallback("my_method", std::to_string(client_index + 1), client_callback);
+                        }
+                      };
+            };
+
+  // Start the chain by calling the first client
+  auto first_client_callback = create_client_callback_that_calls_next_service(0);
+  clients.front().CallWithCallback("my_method", "0", first_client_callback);
+
+  // The call is blocking, so once we are here, all callbacks must have been executed
+  // The fact that we are here is already a sign that everything worked as expected.
+
+  // Finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* NestedBlockingCallFromClientCallbackTest */

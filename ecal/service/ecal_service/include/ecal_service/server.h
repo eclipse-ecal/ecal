@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,49 +104,49 @@ namespace ecal_service
      *              a single place when performing an application shutdown.
      * =========================================================================
      * 
-     * @param io_context                      The io_context to use for the server and all callbacks
-     * @param protocol_version                The protocol version to use. When this is 0, the buggy protocol version 0 will be used.
-     * @param port                            The port to listen on. When this is 0, the OS will chose a free port.
-     * @param service_callback                The callback to use for service calls. Will be executed in the context of the io_context.
-     * @param parallel_service_calls_enabled  When true, service calls will be executed in parallel. When false, service calls will be executed sequentially.
-     * @param event_callback                  The callback to use for events (clients connect or clients disconnect). Will be executed in the context of the io_context.
-     * @param logger                          A function used for logging.
-     * @param delete_callback                 A callback that will be executed when the server is deleted.
+     * @param io_context                         The io_context to use for the server and event callbacks
+     * @param protocol_version                   The protocol version to use. When this is 0, the buggy protocol version 0 will be used.
+     * @param port                               The port to listen on. When this is 0, the OS will chose a free port.
+     * @param service_callback                   The callback to use for service calls. Will be executed using the post_to_service_callback_executor function.
+     * @param post_to_service_callback_executor  A function that can be used to post the service callback to a different thread or threadpool.
+     * @param event_callback                     The callback to use for events (clients connect or clients disconnect). Will be executed in the context of the io_context.
+     * @param logger                             A function used for logging.
+     * @param delete_callback                    A callback that will be executed when the server is deleted.
      * 
      * @return The new server instance.
      */
-    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
-                                        , std::uint8_t                             protocol_version
-                                        , std::uint16_t                            port
-                                        , const ServiceCallbackT&                  service_callback
-                                        , bool                                     parallel_service_calls_enabled
-                                        , const EventCallbackT&                    event_callback
-                                        , const LoggerT&                           logger
-                                        , const DeleteCallbackT&                   delete_callback);
+    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>&      io_context
+                                        , std::uint8_t                                  protocol_version
+                                        , std::uint16_t                                 port
+                                        , const ServiceCallbackT&                       service_callback
+                                        , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                        , const EventCallbackT&                         event_callback
+                                        , const LoggerT&                                logger
+                                        , const DeleteCallbackT&                        delete_callback);
 
-    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
-                                        , std::uint8_t                             protocol_version
-                                        , std::uint16_t                            port
-                                        , const ServiceCallbackT&                  service_callback
-                                        , bool                                     parallel_service_calls_enabled
-                                        , const EventCallbackT&                    event_callback
-                                        , const LoggerT&                           logger = default_logger("Service Server"));
+    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>&      io_context
+                                        , std::uint8_t                                  protocol_version
+                                        , std::uint16_t                                 port
+                                        , const ServiceCallbackT&                       service_callback
+                                        , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                        , const EventCallbackT&                         event_callback
+                                        , const LoggerT&                                logger = default_logger("Service Server"));
 
-    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>& io_context
-                                        , std::uint8_t                             protocol_version
-                                        , std::uint16_t                            port
-                                        , const ServiceCallbackT&                  service_callback
-                                        , bool                                     parallel_service_calls_enabled
-                                        , const EventCallbackT&                    event_callback
-                                        , const DeleteCallbackT&                   delete_callback);
+    static std::shared_ptr<Server> create(const std::shared_ptr<asio::io_context>&      io_context
+                                        , std::uint8_t                                  protocol_version
+                                        , std::uint16_t                                 port
+                                        , const ServiceCallbackT&                       service_callback
+                                        , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                        , const EventCallbackT&                         event_callback
+                                        , const DeleteCallbackT&                        delete_callback);
   protected:
-    Server(const std::shared_ptr<asio::io_context>& io_context
-          , std::uint8_t                            protocol_version
-          , std::uint16_t                           port
-          , const ServiceCallbackT&                 service_callback
-          , bool                                    parallel_service_calls_enabled
-          , const EventCallbackT&                   event_callback
-          , const LoggerT&                          logger);
+    Server(const std::shared_ptr<asio::io_context>&       io_context
+          , std::uint8_t                                  protocol_version
+          , std::uint16_t                                 port
+          , const ServiceCallbackT&                       service_callback
+          , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+          , const EventCallbackT&                         event_callback
+          , const LoggerT&                                logger);
 
   public:
     Server(const Server&)            = delete;                  // Copy construct
@@ -167,16 +168,16 @@ namespace ecal_service
      * 
      * @return true, when at least one client is connected. False otherwise.
      */
-    bool          is_connected()         const;
+      [[nodiscard]] bool is_connected() const;
 
-    /**
+      /**
      * @brief Get the number of currently connected clients.
      * 
      * @return the number of connected clients
      */
-    int           get_connection_count() const;
+      [[nodiscard]] int get_connection_count() const;
 
-    /**
+      /**
      * @brief Returns the port the server is listening on.
      * 
      * When the server was created with port 0, this will return the port the
@@ -184,9 +185,9 @@ namespace ecal_service
      * 
      * @return The port
      */
-    std::uint16_t get_port()             const;
-    
-    /**
+      [[nodiscard]] std::uint16_t get_port() const;
+
+      /**
      * @brief Stops the server
      * 
      * This closes the socket and stops the server. After the server has been
@@ -196,11 +197,11 @@ namespace ecal_service
      * A server that has been stopped cannot be restarted. Create a new
      * server, when desired.
      */
-    void          stop();
+      void stop();
 
-  ///////////////////////////////////////////
-  // Member Variables
-  ///////////////////////////////////////////
+      ///////////////////////////////////////////
+      // Member Variables
+      ///////////////////////////////////////////
   private:
     std::shared_ptr<ServerImpl> impl_;        //!< The private implementation
   };

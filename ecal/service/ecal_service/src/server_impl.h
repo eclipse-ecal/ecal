@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +23,6 @@
 #include <cstdint>
 #include <memory>
 #include <mutex>
-#include <string>
 #include <vector>
 
 #ifdef _MSC_VER
@@ -48,20 +48,20 @@ namespace ecal_service
   ///////////////////////////////////////////
 
   public:
-    static std::shared_ptr<ServerImpl> create(const std::shared_ptr<asio::io_context>& io_context
-                                            , std::uint8_t                             protocol_version
-                                            , std::uint16_t                            port
-                                            , const ServerServiceCallbackT&            service_callback
-                                            , bool                                     parallel_service_calls_enabled
-                                            , const ServerEventCallbackT&              event_callback
-                                            , const LoggerT&                           logger = default_logger("Service Server"));
+    static std::shared_ptr<ServerImpl> create(const std::shared_ptr<asio::io_context>&      io_context
+                                            , std::uint8_t                                  protocol_version
+                                            , std::uint16_t                                 port
+                                            , const ServerServiceCallbackT&                 service_callback
+                                            , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                            , const ServerEventCallbackT&                   event_callback
+                                            , const LoggerT&                                logger);
 
   protected:
-    ServerImpl(const std::shared_ptr<asio::io_context>& io_context
-              , const ServerServiceCallbackT&           service_callback
-              , bool                                    parallel_service_calls_enabled
-              , const ServerEventCallbackT&             event_callback
-              , const LoggerT&                          logger);
+    ServerImpl(const std::shared_ptr<asio::io_context>&       io_context
+              , const ServerServiceCallbackT&                 service_callback
+              , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+              , const ServerEventCallbackT&                   event_callback
+              , const LoggerT&                                logger);
 
   public:
     ServerImpl(const ServerImpl&)            = delete;                  // Copy construct
@@ -96,9 +96,8 @@ namespace ecal_service
     asio::ip::tcp::acceptor                         acceptor_;
     mutable std::mutex                              acceptor_mutex_;                                //!< Mutex for stopping the server. The stop() function is both used externally (via API) and from within the server itself. Closing the acceptor is not thread-safe, so we need to protect it.
 
-    const bool                                      parallel_service_calls_enabled_;
-    const std::shared_ptr<asio::io_context::strand> service_callback_common_strand_;
     const ServerServiceCallbackT                    service_callback_;
+    const PostToServiceCallbackExecutorFunctionT    post_to_service_callback_executor_;
     const ServerEventCallbackT                      event_callback_;
 
     mutable std::mutex                              session_list_mutex_;

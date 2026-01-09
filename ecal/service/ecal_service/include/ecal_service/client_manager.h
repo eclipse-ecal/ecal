@@ -31,7 +31,7 @@
 #include <asio.hpp>
 
 #include <ecal_service/logger.h>
-
+#include <ecal_service/client_session_types.h>
 #include <ecal_service/client_session.h> // IWYU pragma: export
 
 namespace ecal_service
@@ -146,12 +146,14 @@ namespace ecal_service
      * 
      * @param protocol_version  The protocol version to use for the client session. If 0, the legacy buggy protocol will be used.
      * @param server_list       A list of endpoints to connect to. Must not be empty. The endpoints will be tried in the given order until a working endpoint is found.
+     * @param response_callback_executor_function The callback executor function used for responses. Can be used e.g. to execute the response callback in a different thread.
      * @param event_callback    The callback, that will be called, when the client has connected to the server or disconnected from it. The callback will be executed in the io_context thread.
      * 
      * @return A shared_ptr to the newly created ClientSession instance
      */
     std::shared_ptr<ClientSession> create_client(std::uint8_t                                               protocol_version
                                                 , const std::vector<std::pair<std::string, std::uint16_t>>& server_list
+                                                , const PostToClientResponseCallbackExecutorFunctionT&      response_callback_executor_function
                                                 , const ClientSession::EventCallbackT&                      event_callback);
 
     /**

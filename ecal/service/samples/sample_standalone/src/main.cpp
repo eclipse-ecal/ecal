@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@
 #include <ecal_service/server_session_types.h>
 
 #include <chrono>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -71,13 +73,20 @@ int main(int /*argc*/, char** /*argv*/)
   auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
   auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
+  // Synchronous Callback Executor
+  auto synchronous_callback_executor = [](const std::function<void()>& callback) -> void
+                                          {
+                                            // Directly execute the callback in this thread
+                                            callback();
+                                          };
+
   // Create server
   // The server will choose a free port automatically.
-  auto server = server_manager->create_server(1, 0, server_service_callback, true, server_event_callback);
+  auto server = server_manager->create_server(1, 0, server_service_callback, synchronous_callback_executor, server_event_callback);
 
   // Create client
   // The client will connect to the server on the given port.
-  auto client = client_manager->create_client(1, {{ "127.0.0.1", server->get_port() }}, client_event_callback);
+  auto client = client_manager->create_client(1, {{ "127.0.0.1", server->get_port() }}, synchronous_callback_executor, client_event_callback);
 
   // Call the service non-blocking. The response will be passed to the callback.
   for (int i = 1; i <= 10; i++)

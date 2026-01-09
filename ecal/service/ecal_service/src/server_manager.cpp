@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +28,7 @@
 
 #include <asio.hpp>
 
+#include <ecal_service/server_session_types.h>
 #include <ecal_service/server.h>
 #include <ecal_service/logger.h>
 
@@ -55,11 +57,11 @@ namespace ecal_service
   ///////////////////////////////////////////////////////
   // Public API
   ///////////////////////////////////////////////////////
-  std::shared_ptr<Server> ServerManager::create_server(std::uint8_t                     protocol_version
-                                                      , std::uint16_t                   port
-                                                      , const Server::ServiceCallbackT& service_callback
-                                                      , bool                            parallel_service_calls_enabled
-                                                      , const Server::EventCallbackT&   event_callback)
+  std::shared_ptr<Server> ServerManager::create_server(std::uint8_t                                   protocol_version
+                                                      , std::uint16_t                                 port
+                                                      , const Server::ServiceCallbackT&               service_callback
+                                                      , const PostToServiceCallbackExecutorFunctionT& post_to_service_callback_executor
+                                                      , const Server::EventCallbackT&                 event_callback)
   {
     const std::lock_guard<std::mutex> lock(server_manager_mutex_);
     if (stopped_)
@@ -77,7 +79,7 @@ namespace ecal_service
                                 me->sessions_.erase(server);
                               }
                             };
-    auto server = Server::create(io_context_, protocol_version, port, service_callback, parallel_service_calls_enabled, event_callback, logger_, delete_callback);
+    auto server = Server::create(io_context_, protocol_version, port, service_callback, post_to_service_callback_executor, event_callback, logger_, delete_callback);
     sessions_.emplace(server.get(), server);
     return server;
   }

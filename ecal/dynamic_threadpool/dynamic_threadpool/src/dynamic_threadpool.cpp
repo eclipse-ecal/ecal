@@ -1,6 +1,5 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2025 Continental Corporation
  * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,30 +17,45 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+#include <dynamic_threadpool/dynamic_threadpool.h>
+#include "dynamic_threadpool_impl.h"
 
+#include <cstddef>
 #include <functional>
 #include <memory>
-#include <string>
 
-#include <ecal_service/error.h>
 
-namespace ecal_service
+DynamicThreadPool::DynamicThreadPool()
+  : impl(std::make_unique<DynamicThreadPoolImpl>())
+{}
+
+DynamicThreadPool::DynamicThreadPool(unsigned int max_size_)
+  : impl(std::make_unique<DynamicThreadPoolImpl>(max_size_))
+{}
+
+DynamicThreadPool::~DynamicThreadPool() = default;
+
+bool DynamicThreadPool::Post(const std::function<void()>& task_)
 {
-  enum class ClientEventType: int
-  {
-    Connected,
-    Disconnected,
-  };
- 
-  using ClientEventCallbackT    = std::function<void (ClientEventType, const std::string &)>;
-  using ClientResponseCallbackT = std::function<void (const ecal_service::Error&, const std::shared_ptr<std::string>&)>;
+  return impl->Post(task_);
+}
 
-  /**
-   * @brief A function that posts a task to the client response callback executor.
-   * 
-   * This is used to execute client response callbacks in a specific context, e.g., a
-   * thread pool or a strand.
-   */
-  using PostToClientResponseCallbackExecutorFunctionT  = std::function<void(const std::function<void()>&)>;
-} // namespace eCAL
+void DynamicThreadPool::Shutdown()
+{
+  impl->Shutdown();
+}
+
+void DynamicThreadPool::Join()
+{
+  impl->Join();
+}
+
+size_t DynamicThreadPool::GetSize() const
+{
+  return impl->GetSize();
+}
+
+size_t DynamicThreadPool::GetIdleCount() const
+{
+  return impl->GetIdleCount();
+}
