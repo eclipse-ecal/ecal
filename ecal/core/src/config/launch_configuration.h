@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,13 @@
 #include <string>
 #include <unordered_map>
 
+#ifndef YAML_CPP_STATIC_DEFINE 
+#define YAML_CPP_STATIC_DEFINE 
+#endif
+#include <yaml-cpp/yaml.h>
+
+#include "launch_reader.h"
+
 namespace eCAL
 {
   namespace Config
@@ -34,5 +41,9 @@ namespace eCAL
       ReMap client_calls;
       ReMap server_methods;
     };
+
+    // Create a launch configuration from a launch yaml node
+    LaunchConfiguration CreateLaunchConfiguration(const YAML::Node& launch_yaml_);
+
   } // Config
 } // eCAL

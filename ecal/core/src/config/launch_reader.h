@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 */
 
 #pragma once
-
-#include "launch_configuration.h"
 
 #ifndef YAML_CPP_STATIC_DEFINE 
 #define YAML_CPP_STATIC_DEFINE 
