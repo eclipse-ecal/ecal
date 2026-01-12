@@ -42,6 +42,9 @@ namespace eCAL
       ReMap server_methods;
     };
 
+    // returns topic name from ReMap if exists, otherwise return the original topic name
+    std::string GetRemappedTopicName(const ReMap& topic_map_, const std::string& topic_name_);
+
     // Create a launch configuration from a launch yaml node
     LaunchConfiguration CreateLaunchConfiguration(const YAML::Node& launch_yaml_);
 

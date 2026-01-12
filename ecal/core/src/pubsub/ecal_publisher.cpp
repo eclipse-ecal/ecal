@@ -44,13 +44,7 @@ namespace eCAL
     auto config = eCAL::GetConfiguration();
     config.publisher = config_;
 
-    auto topic_name = topic_name_;
-
-    auto it = g_ecal_launch_configuration.publisher_topics.find(topic_name_);
-    if (it != g_ecal_launch_configuration.publisher_topics.end())
-    {
-      topic_name = it->second;
-    }
+    auto topic_name = Config::GetRemappedTopicName(g_ecal_launch_configuration.publisher_topics, topic_name_);
 
     // create publisher implementation
     auto publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name, config));

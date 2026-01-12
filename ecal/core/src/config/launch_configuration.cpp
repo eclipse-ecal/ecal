@@ -104,5 +104,15 @@ namespace eCAL
       return launch_configuration;
     }
 
+    std::string GetRemappedTopicName(const ReMap& topic_map_, const std::string& topic_name_)
+    {
+      auto it = topic_map_.find(topic_name_);
+      if (it != topic_map_.end())
+      {
+        return it->second;
+      }
+      return topic_name_;
+    }
+
   } // Config
 } // eCAL
