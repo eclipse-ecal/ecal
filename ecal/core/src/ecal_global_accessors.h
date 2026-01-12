@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 
+#include "config/launch_configuration.h"
 #include "ecal/types/process.h"
 
 // Forward declaration of global accessible classes
@@ -108,7 +109,9 @@ namespace eCAL
 
   // declaration of globally accessible variables
   extern std::string                   g_default_ini_file;
+  extern std::string                   g_default_launch_file;
   extern Configuration                 g_ecal_configuration;
+  extern Config::LaunchConfiguration   g_ecal_launch_configuration;
 
   extern std::string                   g_host_name;
   extern std::string                   g_unit_name;

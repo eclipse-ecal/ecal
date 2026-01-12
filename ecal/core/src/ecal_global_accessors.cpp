@@ -35,7 +35,9 @@
 namespace eCAL
 {
   std::string                   g_default_ini_file(ECAL_DEFAULT_CFG);
+  std::string                   g_default_launch_file(ECAL_DEFAULT_LAUNCH_YAML);
   Configuration                 g_ecal_configuration{};
+  Config::LaunchConfiguration   g_ecal_launch_configuration{};
 
   std::string                   g_host_name;
   std::string                   g_unit_name;
@@ -178,5 +180,6 @@ namespace eCAL
     if (auto globals = g_globals(); globals) return globals->memfile_map();
     return nullptr;
   }
+
 #endif
 }

@@ -37,6 +37,8 @@
 #include "ecal_config_internal.h"
 #include "config/builder/registration_attribute_builder.h"
 #include "config/builder/logging_attribute_builder.h"
+#include "config/launch_reader.h"
+#include "config/launch_configuration.h"
 
 namespace eCAL
 {

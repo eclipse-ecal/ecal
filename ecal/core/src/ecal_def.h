@@ -47,6 +47,7 @@ constexpr const char* ECAL_FOLDER_RELATIVE_ETC      = "..";
 
 /* ini file name */
 constexpr const char* ECAL_DEFAULT_CFG              = "ecal.yaml";
+constexpr const char* ECAL_DEFAULT_LAUNCH_YAML      = "ecal_launch.yaml";
 
 /* environment variables */
 constexpr const char* ECAL_DATA_VAR                 = "ECAL_DATA";
