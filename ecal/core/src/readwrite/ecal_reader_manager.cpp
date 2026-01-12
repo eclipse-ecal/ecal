@@ -21,23 +21,26 @@
 
 using namespace eCAL;
 
-SubscriptionHandle eCAL::CReaderManager::AddSubscription(const SSubscriptionParameters& parameters_, ReceiveCallbackT data_callback, ConnectionChangeCallback connection_changed_callback)
+SubscriptionHandle CReaderManager::AddSubscription(const SSubscriptionParameters& parameters_)
 {
-  return SubscriptionHandle();
   // We need to cache the subscription parameters and the callbacks.
   // When a publisher registration comes in, we need to check if any subscription matches and then create the necessary layer readers.
   // We also need to track which subscriber communicates on which layer
   // 
   // We then need an efficient way to filter the publisher registrations
   // If nothing changed, there is no need to apply anything
+  return subscription_map_.AddSubscription(parameters_);
 }
 
-void eCAL::CReaderManager::RemoveSubscription(SubscriptionHandle handle_)
+void CReaderManager::RemoveSubscription(SubscriptionHandle handle_)
 {
   // Let's see what we have to do here.
   // we need to remove the subscription to all applied layers.
+  auto removed_subscription = subscription_map_.RemoveSubscription(handle_);
+  // Here we can also handle any necessary cleanup related to the layers.
+  // For example, notify layers about the unsubscription or clear resources.
 
-  // 
+
 }
 
 

@@ -19,6 +19,8 @@
 
 #pragma once
 #include <functional>
+#include <string>
+#include <map>
 
 #include <readwrite/ecal_reader_layer.h>
 #include <serialization/ecal_struct_sample_registration.h>
@@ -31,12 +33,10 @@ namespace eCAL
 
   struct SSubscriptionParameters
   {
-    std::string                 host_name;
-    int32_t                     process_id = 0;
-    std::string                 topic_name;
-    EntityIdT                   topic_id = 0;
-
+    STopicId                    topic;
     ActiveLayers                layers;
+    ReceiveCallbackT            data_callback;
+    ConnectionChangeCallback    connection_changed_callback;
   };
 
   enum class ConnectionState
@@ -51,13 +51,102 @@ namespace eCAL
   // E.g. a subscriber can receive data from multiple publishers
   // We need to track that information for each subscriber, e.g. a list / vector / map
 
+  class SubscriptionHandle
+  {
+    friend class SubscriptionMap;
+  public:
+    SubscriptionHandle(EntityIdT id, std::string topic)
+      : subscriber_id(id), subscriber_topic_name(std::move(topic)) {
+    }
+
+  private:
+    EntityIdT subscriber_id;
+    std::string subscriber_topic_name;
+  };
+
+  using TopicName = std::string;
+
+  class SubscriptionMap
+  {
+  public:
+    using TopicName = std::string;
+    using Storage = std::multimap<TopicName, SSubscriptionParameters>;
+
+    class Subscriptions
+    {
+      using StorageIterator = Storage::const_iterator;
+
+      class Iterator
+      {
+      public:
+        explicit Iterator(StorageIterator cursor) : cursor_(cursor) {}
+
+        const SSubscriptionParameters& operator*() const { return cursor_->second; }
+        const SSubscriptionParameters* operator->() const { return &cursor_->second; }
+
+        Iterator& operator++() { ++cursor_; return *this; }
+
+        bool operator==(const Iterator& other) const { return cursor_ == other.cursor_; }
+        bool operator!=(const Iterator& other) const { return !(*this == other); }
+
+      private:
+        StorageIterator cursor_;
+      };
+
+    public:
+      Subscriptions(StorageIterator begin, StorageIterator end)
+        : begin_(begin), end_(end) {
+      }
+
+      Iterator begin() const { return Iterator(begin_); }
+      Iterator end()   const { return Iterator(end_); }
+
+      bool empty() const { return begin_ == end_; }
+
+    private:
+      StorageIterator begin_;
+      StorageIterator end_;
+    };
+
+    SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_)
+    {
+      subscriptions_.emplace(parameters_.topic.topic_name, parameters_);
+      return SubscriptionHandle{ parameters_.topic.topic_id.entity_id, parameters_.topic.topic_name };
+    }
+
+    SSubscriptionParameters RemoveSubscription(const SubscriptionHandle& handle)
+    {
+      auto it = subscriptions_.equal_range(handle.subscriber_topic_name);
+      for (auto map_it = it.first; map_it != it.second; ++map_it)
+      {
+        if (map_it->second.topic.topic_id.entity_id == handle.subscriber_id) {
+          SSubscriptionParameters removed_subscription = map_it->second;
+          subscriptions_.erase(map_it); 
+          return removed_subscription;
+        }
+      }
+
+      throw std::logic_error("RemoveSubscription: subscription not found");
+    }
+
+    Subscriptions SubscriptionsFor(const TopicName& topic) const
+    {
+      auto range = subscriptions_.equal_range(topic);
+      return Subscriptions(range.first, range.second);
+    }
+
+  private:
+    Storage subscriptions_;
+  };
+
+
   class CReaderManager
   {
   public:
     CReaderManager() {}
 
     // A subscriber calls this function to request to receive data / unsubscribe
-    SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_, ReceiveCallbackT data_callback, ConnectionChangeCallback connection_changed_callback);
+    SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_);
     void RemoveSubscription(SubscriptionHandle handle_);
 
     // The global registration receiver calls this function to notify about new / removed publications
@@ -67,12 +156,14 @@ namespace eCAL
 
   private:
     // We need to track connection states of each subscription.
-
-
-    std::unordered_map<SubscriptionHandle, ConnectionState> m_connection_states;
-
+    SubscriptionMap subscription_map_;
   };
+
+
+ 
+
 }
+
 
 
 
