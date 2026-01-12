@@ -49,14 +49,7 @@ namespace eCAL
     }
     
 
-    auto topic_name = topic_name_;
-
-    auto it = g_ecal_launch_configuration.subscriber_topics.find(topic_name_);
-    if (it != g_ecal_launch_configuration.subscriber_topics.end())
-    {
-      topic_name = it->second;
-    }
-
+    auto topic_name = Config::GetRemappedTopicName(g_ecal_launch_configuration.subscriber_topics, topic_name_);
 
     // create subscriber implementation
     auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name, config), global_context);
