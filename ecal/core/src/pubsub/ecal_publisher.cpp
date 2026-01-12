@@ -48,14 +48,22 @@ namespace eCAL
     global_context.registration_provider = g_registration_provider();
     global_context.log_provider = g_log_provider();
 
+    auto topic_name = topic_name_;
+
+    auto it = g_ecal_launch_configuration.publisher_topics.find(topic_name_);
+    if (it != g_ecal_launch_configuration.publisher_topics.end())
+    {
+      topic_name = it->second;
+    }
+
     // create publisher implementation
-    auto publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config), std::move(global_context));
+    auto publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name, config), std::move(global_context));
     if (!publisher_impl) return;
     
     m_publisher_impl = publisher_impl;
 
     // register publisher
-    if (auto pubgate = g_pubgate(); pubgate) pubgate->Register(topic_name_, publisher_impl);
+    if (auto pubgate = g_pubgate(); pubgate) pubgate->Register(topic_name, publisher_impl);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_) :

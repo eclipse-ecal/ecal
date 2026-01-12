@@ -49,13 +49,22 @@ namespace eCAL
     }
     
 
+    auto topic_name = topic_name_;
+
+    auto it = g_ecal_launch_configuration.subscriber_topics.find(topic_name_);
+    if (it != g_ecal_launch_configuration.subscriber_topics.end())
+    {
+      topic_name = it->second;
+    }
+
+
     // create subscriber implementation
-    auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config), global_context);
+    auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name, config), global_context);
     m_subscriber_impl = subscriber_impl;
 
     // register subscriber
     auto subgate = g_subgate();
-    if (subgate) subgate->Register(topic_name_, subscriber_impl);
+    if (subgate) subgate->Register(topic_name, subscriber_impl);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_) :
