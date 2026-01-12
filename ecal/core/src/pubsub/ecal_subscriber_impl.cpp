@@ -551,13 +551,20 @@ namespace eCAL
     if (m_attributes.tcp.enable) layers.set(LayerType::TCP);
 
     //TODO
-
-    auto data_callback = [this](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
+    //  TODO: fill subscription parameters
+    SSubscriptionParameters subscription_parameters;
+    subscription_parameters.topic.topic_id.entity_id = m_subscriber_id;
+    subscription_parameters.topic.topic_id.process_id = m_attributes.process_id;
+    subscription_parameters.topic.topic_id.host_name = m_attributes.host_name;
+    subscription_parameters.topic.topic_name = m_attributes.topic_name;
+    subscription_parameters.layers = layers;
+        
+    subscription_parameters.data_callback = [this](const STopicId& publisher_id_, const SDataTypeInformation& data_type_info_, const SReceiveCallbackData& data_)
     {
       this->InternalDataCallback(publisher_id_, data_type_info_, data_);
     };
 
-    auto connection_change_callback = [this](SubscriberConnectionChange change_, const SubscriberConnectionInstance& instance_)
+    subscription_parameters.connection_changed_callback = [this](SubscriberConnectionChange change_, const SubscriberConnectionInstance& instance_)
     {
       switch (change_)
       {
@@ -584,16 +591,15 @@ namespace eCAL
       }
       };
 
-    //  TODO: fill subscription parameters
-    SSubscriptionParameters subscription_parameters;
-    subscription_parameters.host_name = m_attributes.host_name;
-    subscription_parameters.layers = layers;
-    m_reader_handle = g_reader_manager()->AddSubscription(subscription_parameters, data_callback, connection_change_callback);
+    m_reader_handle = g_reader_manager()->AddSubscription(subscription_parameters);
   }
   
   void CSubscriberImpl::StopTransportLayer()
   {
-    g_reader_manager()->RemoveSubscription(m_reader_handle);
+    if (m_reader_handle) {
+      g_reader_manager()->RemoveSubscription(*m_reader_handle);
+      m_reader_handle.reset();
+    }
   }
 
   void eCAL::CSubscriberImpl::FireEvent(const eSubscriberEvent type_, const STopicId& publication_info_, const SDataTypeInformation& data_type_info_)

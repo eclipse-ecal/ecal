@@ -40,6 +40,7 @@ namespace eCAL
   // transmitted from a writer to a reader
   using SPublicationInfo = Registration::SampleIdentifier;
 
+  /*
   struct SReaderLayerPar
   {
     std::string                 host_name;
@@ -48,16 +49,8 @@ namespace eCAL
     EntityIdT                   topic_id = 0;
     Registration::ConnectionPar parameter;
   };
+  */
 
-  enum class SubscriptionHandle
-    : EntityIdT
-  {
-  };
-
-  enum class ConnectionHandle
-    : EntityIdT
-  {
-  };
 
   enum class LayerType
   {
@@ -161,6 +154,43 @@ namespace eCAL
       "ActiveLayers::Storage too small for LayerType::COUNT");
   };
 
+  // TODO: GetSHMTransportDomain should rather be a layer parameter
+  class SubscriberConnectionParameters
+  {
+    STopicId                    id;
+    SDataTypeInformation        datatype_info;
+    ActiveLayers                active_layers;
+    std::string                 shm_transport_domain;
+  public:
+    const std::string& GetTopicName() const { return id.topic_name; }
+    const std::string& GetSHMTransportDomain() const { return shm_transport_domain; }
+    bool IsLayerActive(LayerType layer) const { return active_layers.has(layer); }
+    Registration::TLayer GetLayerParameter(LayerType layer) const {}
+  };
+
+  class PublisherConnectionParameters
+  {
+  public:
+    PublisherConnectionParameters(const Registration::Sample& ecal_sample_)
+      : publisher_sample(ecal_sample_)
+    {
+    }
+
+    const std::string& GetTopicName() const { return publisher_sample.topic.topic_name; }
+    const SDataTypeInformation& GetDataTypeInformation() const { return publisher_sample.topic.datatype_information; }
+    const STopicId& GetTopicId() const {
+      return {}; //TODO Obviously this is wrong
+    }
+    const std::string& GetSHMTransportDomain() const { return publisher_sample.topic.shm_transport_domain; }
+    bool IsLayerActive(LayerType layer) const { return true; }
+    Registration::TLayer GetLayerParameter(LayerType layer) const { return {}; }
+
+
+  private:
+    const Registration::Sample& publisher_sample;
+
+  };
+
   struct SubscriberConnectionInstance
   {
     STopicId                    publisher_id;
@@ -227,40 +257,105 @@ namespace eCAL
 
   // SSubscriptionParameters = SReaderLayerPar;
 
-  // ecal data layer base class
-  template <typename T, typename U>
-  class CReaderLayer
-  {
-  public:
-    CReaderLayer() = default;
-
-    virtual ~CReaderLayer() = default;
-
-    // initialize layer
-    // will be called one time on eCAL initialization
-    virtual void Initialize(const U& attr_) = 0;
-
-    // activate / create a specific subscription
-    virtual void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) = 0;
-
-    // deactivate / destroy a specific subscription
-    virtual void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) = 0;
-
-    // connection parameter from writer side
-    virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
-  };
-
+  // This class manages all connections for a specific layer type
   class CLayerConnectionManager
   {
-    CLayerConnectionManager();
+  public:
+    // This the base class for a connection token
+    // When the token is destroyed, the connection is removed automatically
+    // therefore the different layers must implement their own connection token class
+    // and destructors that will clean up resources
+    /*
+    class ConnectionToken
+    {
+    public:
+      virtual ~ConnectionToken() = default;
+
+      // Currently only SHM might update its connection parameters, when resizing the memory file.
+      // All other connection parameters are static.
+      virtual void UpdateConnection(const PublisherConnectionParameters& publisher) {}; // TODO make abstract
+    };*/
+
+    class ConnectionToken
+    {
+    public:
+      ConnectionToken() = default;
+
+      // Move-only
+      ConnectionToken(ConnectionToken&& other) noexcept
+        : disconnect_(std::move(other.disconnect_))
+        , update_(std::move(other.update_))
+      {
+        other.disconnect_ = {};
+        other.update_ = {};
+      }
+
+      ConnectionToken& operator=(ConnectionToken&& other) = delete;
+      ConnectionToken(const ConnectionToken&) = delete;
+      ConnectionToken& operator=(const ConnectionToken&) = delete;
+
+      ~ConnectionToken()
+      {
+        if (disconnect_)
+        {
+          try { disconnect_(); }
+          catch (...) {}
+        }
+      }
+
+      // Infrequent updates
+      void UpdateConnection(const PublisherConnectionParameters& publisher)
+      {
+        if (update_) update_(publisher);
+      }
+
+      // Factories
+      template <typename DisconnectFn, typename UpdateFn>
+      static ConnectionToken Make(DisconnectFn&& disconnect, UpdateFn&& update)
+      {
+        ConnectionToken t;
+        t.disconnect_ = std::forward<DisconnectFn>(disconnect);
+        t.update_ = std::forward<UpdateFn>(update);
+        return t;
+      }
+
+      template <typename DisconnectFn>
+      static ConnectionToken Make(DisconnectFn&& disconnect)
+      {
+        ConnectionToken t;
+        t.disconnect_ = std::forward<DisconnectFn>(disconnect);
+        return t;
+      }
+
+    private:
+      std::function<void()> disconnect_;
+      std::function<void(const PublisherConnectionParameters&)> update_;
+    };
+
+
+    CLayerConnectionManager(LayerType layer_type)
+      : m_layer_type(layer_type)
+    {
+    }
     virtual ~CLayerConnectionManager() = default;
-    
-    virtual LayerType GetLayer() = 0;
+
+    LayerType GetLayer() const {
+      return m_layer_type;
+    }
+
     // We need to pass in publisher & subscriber information
-    virtual void AcceptsConnection() = 0;
-    virtual ConnectionHandle AddConnection() = 0;
-    virtual void RemoveConnection(ConnectionHandle connection_handle_) = 0;
+    virtual bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) = 0;
+    virtual ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) = 0;
+    // How about updating the connection (SHM memfile list changed?)
+    // Maybe via connection token?
+    virtual void RemoveConnection(ConnectionToken connection_handle_) = 0;
+
+  protected:
+    LayerType m_layer_type;
   };
 
-
+  bool LayerEnabledForPublisherAndSubscriber(LayerType layer, const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber)
+  {
+    return publisher.IsLayerActive(layer) && subscriber.IsLayerActive(layer);
+  }
 }

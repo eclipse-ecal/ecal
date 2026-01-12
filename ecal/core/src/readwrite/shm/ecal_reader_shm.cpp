@@ -36,53 +36,63 @@
 
 namespace eCAL
 {
-  ////////////////
-  // LAYER
-  ////////////////
-  void CSHMReaderLayer::Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_)
+  CSHMReaderLayer::CSHMReaderLayer(const eCAL::eCALReader::SHM::SAttributes& attr_) :
+    CLayerConnectionManager(LayerType::SHM),
+    m_attributes(attr_)
   {
-    m_attributes = attr_;
   }
 
-  void CSHMReaderLayer::SetConnectionParameter(SReaderLayerPar& par_)
+  bool CSHMReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber)
   {
-    for (const auto& memfile_name : par_.parameter.layer_par_shm.memory_file_list)
+    // We need to check if publisher and subscriber both have SHM layer active
+    // We also need to check if they are the same SHM memory domain, otherwise they will not be able to communicate
+    
+    if (!LayerEnabledForPublisherAndSubscriber(m_layer_type, publisher, subscriber))
+    {
+      return false;
+    }
+    if (publisher.GetSHMTransportDomain() != subscriber.GetSHMTransportDomain())
+    {
+      return false;
+    }
+    return true;
+  }
+
+  CLayerConnectionManager::ConnectionToken CSHMReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
+  {
+    for (const auto& memfile_name : publisher.GetLayerParameter(m_layer_type).par_layer.layer_par_shm.memory_file_list)
     {
       // start memory file receive thread if topic is subscribed in this process
+      // TODO we should be able to eliminate the g_memfile_pool. Instead the CSHMReaderLayer should own a memfile pool instance.
       auto memfile_pool = g_memfile_pool();
       if (memfile_pool)
       {
         const std::string process_id = std::to_string(m_attributes.process_id);
         const std::string memfile_event = memfile_name + "_" + process_id;
 
-        Payload::TopicInfo topic_info;
-        topic_info.topic_name = par_.topic_name;
-        topic_info.host_name  = par_.host_name;
-        topic_info.topic_id   = par_.topic_id;
-        topic_info.process_id = par_.process_id;
+        STopicId publisher_topic_id = publisher.GetTopicId();
+        SDataTypeInformation publisher_datatype_info = publisher.GetDataTypeInformation();
 
-        auto data_callback = [this, topic_info](const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)->size_t
+        auto data_callback = [on_data, publisher_topic_id, publisher_datatype_info](const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)->size_t
         {
-          return OnNewShmFileContent(topic_info, buf_, len_, id_, clock_, time_, hash_);
+          SReceiveCallbackData data;
+          data.buffer = buf_;
+          data.buffer_size = len_;
+          data.send_clock = clock_;
+          data.send_timestamp = time_;
+          on_data(publisher_topic_id, publisher_datatype_info, data);
+          return len_;
         };
         memfile_pool->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
+        // TODO: when is a connection actually established? We also need to trigger the connection callback
       }
     }
+
+    return ConnectionToken();
   }
 
-  size_t CSHMReaderLayer::OnNewShmFileContent(const Payload::TopicInfo& topic_info_, const char* buf_, size_t len_, long long id_, long long clock_, long long time_, size_t hash_)
+  void CSHMReaderLayer::RemoveConnection(ConnectionToken connection_handle_)
   {
-    // TODO: We need actual datacallbacks instead of calling subgate here!    
-    /*
-    auto subgate = g_subgate();
-    if (subgate)
-    {
-      if (subgate->ApplySample(topic_info_, buf_, len_, id_, clock_, time_, hash_, tl_ecal_shm))
-      {
-        return len_;
-      }
-    }
-    */
-    return 0;
+    // The SHM layer does not currently remove any connections, they are cleaned up at process shutdown.
   }
 }

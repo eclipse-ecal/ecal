@@ -35,7 +35,7 @@
 #include "util/statistics_calculator.h"
 #include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
-#include "readwrite/ecal_reader_layer.h"
+#include "readwrite/ecal_reader_manager.h"
 
 #include <atomic>
 #include <chrono>
@@ -44,6 +44,7 @@
 #include <deque>
 #include <map>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <set>
 #include <string>
@@ -145,7 +146,7 @@ namespace eCAL
     std::atomic<bool>                         m_created;
 
     eCAL::eCALReader::SAttributes             m_attributes;
-    eCAL::SubscriptionHandle                  m_reader_handle;
+    std::optional<eCAL::SubscriptionHandle>   m_reader_handle;
 
     mutable std::mutex                        m_connection_info_mutex;
     SubscriberConnectionInfo                  m_connection_info;
