@@ -153,6 +153,10 @@ set(ecal_config_src
     src/config/configuration.cpp
     src/config/ecal_path_processing.cpp
     src/config/ecal_path_processing.h
+    src/config/launch_configuration.cpp
+    src/config/launch_configuration.h
+    src/config/launch_reader.cpp
+    src/config/launch_reader.h
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)

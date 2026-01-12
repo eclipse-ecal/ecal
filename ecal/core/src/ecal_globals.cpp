@@ -37,6 +37,8 @@
 #include "ecal_config_internal.h"
 #include "config/builder/registration_attribute_builder.h"
 #include "config/builder/logging_attribute_builder.h"
+#include "config/launch_reader.h"
+#include "config/launch_configuration.h"
 
 namespace eCAL
 {
@@ -247,6 +249,12 @@ namespace eCAL
 #if ECAL_CORE_MONITORING
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))    monitoring_instance->Start();
 #endif
+
+    // read launch configuration
+    auto launch_node = eCAL::Config::ReadLaunchYaml(g_default_launch_file);
+
+    g_ecal_launch_configuration = Config::CreateLaunchConfiguration(launch_node);
+
     initialized =  true;
     components  |= components_;
 
