@@ -321,8 +321,7 @@ namespace eCAL
     {
 #if ECAL_CORE_REGISTRATION
       // stop registration receiver utilization to get descriptions
-      auto registration_receiver = g_registration_receiver();
-      if (registration_receiver) registration_receiver->RemCustomApplySampleCallback("descgate");
+      if (registration_receiver_instance) registration_receiver_instance->RemCustomApplySampleCallback("descgate");
 #endif
     }
 #if ECAL_CORE_REGISTRATION
