@@ -220,9 +220,8 @@ namespace eCAL
     {
 #if ECAL_CORE_REGISTRATION
       // utilize registration receiver to get descriptions
-      auto registration_receiver = g_registration_receiver();
-      if (registration_receiver)
-        registration_receiver->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {
+      if (registration_receiver_instance)
+        registration_receiver_instance->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {
           auto descgate = g_descgate();
           if (descgate) descgate->ApplySample(sample_, tl_none);
         });
