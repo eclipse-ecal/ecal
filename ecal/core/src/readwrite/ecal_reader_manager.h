@@ -18,7 +18,9 @@
 */
 
 #pragma once
+#include <array>
 #include <functional>
+#include <memory>
 #include <string>
 #include <map>
 
@@ -139,15 +141,27 @@ namespace eCAL
     Storage subscriptions_;
   };
 
-
-  class CReaderManager
+  /*
+  * Manages and creates subscriber connections on different transport layers, based on incoming publisher registrations.
+  * In the future, if we have a registration cache, we might want to subscribe to Registration updates instead of applying them directly here.
+  */
+  class CSubscriberConnectionManager
   {
   public:
-    CReaderManager() {}
+    // Variadic: pass any number of layer instances
+    template <typename... LayerPtrs>
+    explicit CSubscriberConnectionManager(LayerPtrs&&... layers)
+      : transport_layers_(std::forward<LayerPtrs>(layers)...)
+    {
+      static_assert(
+        (std::is_same_v<std::decay_t<LayerPtrs>, LayerPtr> && ...),
+        "CSubscriberConnectionManager ctor only accepts LayerPtr arguments"
+        );
+    }
 
     // A subscriber calls this function to request to receive data / unsubscribe
     SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_);
-    void RemoveSubscription(SubscriptionHandle handle_);
+    //void RemoveSubscription(SubscriptionHandle handle_);
 
     // The global registration receiver calls this function to notify about new / removed publications
     // The reader manager can go ahead and apply this information to actually establish connections.
@@ -155,13 +169,81 @@ namespace eCAL
     void ApplyPublisherUnregistration(const Registration::Sample& unregistration_sample);
 
   private:
+    // Important, layers constructed before subscription map, as it stores tokens which need the layers to be valid during destruction
+    CTransportLayerRegistry layers_manager_;
     // We need to track connection states of each subscription.
     SubscriptionMap subscription_map_;
   };
 
+  class CTransportLayerRegistry
+  {
+  public:
+    using LayerPtr = std::unique_ptr<CTransportLayerInstance>;
 
+    template <typename... LayerPtrs>
+    explicit CTransportLayerRegistry(LayerPtrs&&... layers)
+    {
+      static_assert(
+        (std::is_same_v<std::decay_t<LayerPtrs>, LayerPtr> && ...),
+        "TransportLayersManager constructor only accepts LayerPtr arguments"
+        );
+
+      // Expand the pack
+      (add_layer(std::forward<LayerPtrs>(layers)), ...);
+    }
+
+    CTransportLayerInstance* GetLayer(LayerType layer_type_)
+    {
+      return layers_[to_index(layer_type_)].get();
+    }
+
+  private:
+    static constexpr std::size_t LAYER_COUNT = static_cast<std::size_t>(LayerType::COUNT);
+    static constexpr std::size_t to_index(LayerType t) noexcept
+    {
+      return static_cast<std::size_t>(t);
+    }
+
+    void add_layer(LayerPtr layer)
+    {
+      if (!layer)
+        return;
+
+      const LayerType t = layer->GetLayer();
+      const auto idx = to_index(t);
+
+      if (idx >= LAYER_COUNT)
+        throw std::logic_error("TransportLayersManager: invalid LayerType");
+
+      if (layers_[idx])
+        throw std::logic_error("TransportLayersManager: duplicate layer type");
+
+      layers_[idx] = std::move(layer);
+    }
+
+    std::array<LayerPtr, LAYER_COUNT> layers_{};
+  };
  
+  /*
+  // This class manages all connections for a specific layer
+  class CLayerConnections
+  {
+  public:
+    CLayerConnections() = default;
 
+    // This makes absolutely no sense, but I do not know how to model it
+    AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
+    {
+    }
+
+  private:
+    std::set<PublisherConnectionParameters> active_publishers_;
+    std::set<SubscriberConnectionParameters> active_subscribers_;
+
+    std::map<EntityIdT, CTransportLayerInstance::ConnectionToken> active_connections_;
+    std::map<EntityIdT, ReceiveCallbackT> receive_callbacks;
+  };
+  */
 }
 
 

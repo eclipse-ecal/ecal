@@ -670,6 +670,7 @@ target_compile_definitions(ecal_core_private
     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
     ECAL_NO_DEPRECATION_WARNINGS
+    _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS #Asio issues hundreds of deprecation warnings with VS2017
 )
 
 set(ECAL_CORE_FEATURES

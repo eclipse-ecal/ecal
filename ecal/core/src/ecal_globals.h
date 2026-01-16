@@ -101,7 +101,7 @@ namespace eCAL
     
 #endif
     const std::shared_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
-    const std::shared_ptr<CReaderManager>&                                reader_manager()         { return reader_manager_instance; };
+    const std::shared_ptr<CSubscriberConnectionManager>&                                reader_manager()         { return reader_manager_instance; };
 
 
   private:
@@ -136,6 +136,6 @@ namespace eCAL
 #endif
     std::shared_ptr<CDescGate>                                            descgate_instance;
 
-    std::shared_ptr<CReaderManager>                                       reader_manager_instance;
+    std::shared_ptr<CSubscriberConnectionManager>                                       reader_manager_instance;
   };
 }

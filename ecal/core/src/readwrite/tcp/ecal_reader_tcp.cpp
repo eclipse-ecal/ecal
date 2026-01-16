@@ -133,23 +133,6 @@ namespace eCAL
     */
   }
   
-  ////////////////
-  // LAYER
-  ////////////////
-  CTCPReaderLayer::CTCPReaderLayer() 
-    : m_initialized(false)
-  {}
-
-  void CTCPReaderLayer::Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_)
-  {
-    m_attributes = attr_; 
-    if (m_initialized) return;
-    m_initialized = true;
-
-    const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
-    m_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, tcp_pubsub_logger);
-  }
-
   void CTCPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     const std::string& map_key(topic_name_);
@@ -193,5 +176,12 @@ namespace eCAL
 
     auto& reader = iter->second;
     reader->AddConnectionIfNecessary(remote_hostname, static_cast<uint16_t>(remote_port));
+  }
+
+  CTCPReaderLayer::CTCPReaderLayer(const eCAL::eCALReader::TCP::SAttributes& attr_)
+    : m_attributes(attr_)
+  {
+    const tcp_pubsub::logger::logger_t tcp_pubsub_logger = std::bind(TcpPubsubLogger, std::placeholders::_1, std::placeholders::_2);
+    m_executor = std::make_shared<tcp_pubsub::Executor>(m_attributes.thread_pool_size, tcp_pubsub_logger);
   }
 }

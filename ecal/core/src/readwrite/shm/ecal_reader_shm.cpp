@@ -37,7 +37,7 @@
 namespace eCAL
 {
   CSHMReaderLayer::CSHMReaderLayer(const eCAL::eCALReader::SHM::SAttributes& attr_) :
-    CLayerConnectionManager(LayerType::SHM),
+    CTransportLayerInstance(LayerType::SHM),
     m_attributes(attr_)
   {
   }
@@ -58,7 +58,7 @@ namespace eCAL
     return true;
   }
 
-  CLayerConnectionManager::ConnectionToken CSHMReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
+  CTransportLayerInstance::ConnectionToken CSHMReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
   {
     for (const auto& memfile_name : publisher.GetLayerParameter(m_layer_type).par_layer.layer_par_shm.memory_file_list)
     {
@@ -91,8 +91,4 @@ namespace eCAL
     return ConnectionToken();
   }
 
-  void CSHMReaderLayer::RemoveConnection(ConnectionToken connection_handle_)
-  {
-    // The SHM layer does not currently remove any connections, they are cleaned up at process shutdown.
-  }
 }
