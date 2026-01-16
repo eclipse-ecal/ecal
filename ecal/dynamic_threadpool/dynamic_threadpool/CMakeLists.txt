@@ -73,6 +73,8 @@ target_include_directories(${PROJECT_NAME}
     src/
 )
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${PROJECT_NAME}
     FOLDER core/dynamic_threadpool

@@ -22,6 +22,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package(Threads REQUIRED)
 
 set (ecal_utils_includes
+  include/ecal_utils/barrier.h
   include/ecal_utils/command_line.h
   include/ecal_utils/filesystem.h
   include/ecal_utils/ecal_utils.h

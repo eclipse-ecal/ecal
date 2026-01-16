@@ -27,7 +27,9 @@
 #include <memory>
 #include <thread>
 
-TEST(DynamicThreadpool, CreateAndDelete)
+#include <ecal_utils/barrier.h>
+
+TEST(DynamicThreadPool, CreateAndDelete)
 {
   // Create and delete an empty thread pool
   {
@@ -83,9 +85,9 @@ TEST(DynamicThreadPool, BasicExecution)
 TEST(DynamicThreadPool, ParallelExecution)
 {
   constexpr int number_of_tasks = 4;
-  const std::chrono::milliseconds delay(500);
 
   DynamicThreadPool thread_pool;
+  Barrier barrier(number_of_tasks + 1); // +1 for the main thread
 
   atomic_signalable<int> finished_tasks(0);
   
@@ -93,25 +95,26 @@ TEST(DynamicThreadPool, ParallelExecution)
 
   for (int i = 0; i < number_of_tasks; i++)
   {
-    thread_pool.Post([&finished_tasks, delay]()
+    thread_pool.Post([&finished_tasks, &barrier]()
                       {
-                        std::this_thread::sleep_for(delay);
+                        barrier.wait();
+                        barrier.wait();
                         finished_tasks++;
                       });
 
   }
 
   // Wait a short time, so that the tasks have not finished yet
-  std::this_thread::sleep_for(delay / 2);
+  barrier.wait();
 
   EXPECT_EQ(finished_tasks.get(),       0);
   EXPECT_EQ(thread_pool.GetSize(),      number_of_tasks);
   EXPECT_EQ(thread_pool.GetIdleCount(), 0);
 
-  // Wait for tasks to finish
-  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, delay * 4);
+  barrier.wait();
 
-  auto end = std::chrono::steady_clock::now();
+  // Wait for tasks to finish
+  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, std::chrono::milliseconds(1000));
 
   // Wait a short time for the threadpool internal workerthread to also go into idle
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -120,24 +123,20 @@ TEST(DynamicThreadPool, ParallelExecution)
   EXPECT_EQ(thread_pool.GetSize(),      number_of_tasks);
   EXPECT_EQ(thread_pool.GetIdleCount(), number_of_tasks);
 
-  // Check that the total time taken is "not much" more than the delay (i.e. tasks were executed in parallel)
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  EXPECT_GE(duration, delay);
-  EXPECT_LT(duration, delay * 2);
-
   // Post again to verify that the threadpool reuses threads
   finished_tasks = 0;
   for (int i = 0; i < number_of_tasks; i++)
   {
-    thread_pool.Post([&finished_tasks, delay]()
+    thread_pool.Post([&finished_tasks, &barrier]()
                       {
-                          std::this_thread::sleep_for(delay);
+                          barrier.wait();
                           finished_tasks++;
                       });
     
   }
-  
-  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, delay * 4);
+
+  barrier.wait();
+  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, std::chrono::milliseconds(1000));
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
   EXPECT_EQ(finished_tasks.get(),       number_of_tasks);
@@ -153,32 +152,36 @@ TEST(DynamicThreadPool, MaxSize)
   constexpr size_t max_threadpool_size = 4;
   constexpr int number_of_tasks        = max_threadpool_size * 2;
 
-  const std::chrono::milliseconds delay(500);
-
   DynamicThreadPool thread_pool(max_threadpool_size);
+
+  Barrier barrier(max_threadpool_size + 1);
 
   atomic_signalable<int> finished_tasks(0);
   auto start = std::chrono::steady_clock::now();
   for (int i = 0; i < number_of_tasks; i++)
   {
-    thread_pool.Post([&finished_tasks, delay]()
+    thread_pool.Post([&finished_tasks, &barrier]()
                       {
-                          std::this_thread::sleep_for(delay);
+                          barrier.wait();
+                          barrier.wait();
                           finished_tasks++;
                       });
   }
 
-  // Wait a short time, so that the tasks have not finished yet
-  std::this_thread::sleep_for(delay / 2);
+  barrier.wait();
 
   EXPECT_EQ(finished_tasks.get(),       0);
   EXPECT_EQ(thread_pool.GetSize(),      max_threadpool_size);
   EXPECT_EQ(thread_pool.GetIdleCount(), 0);
 
-  // Wait for tasks to finish
-  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, delay * 4 * 2);
+  barrier.wait();
 
-  auto end = std::chrono::steady_clock::now();
+  // unlock tasks 5-8
+  barrier.wait(); 
+  barrier.wait();
+
+  // Wait for tasks to finish
+  finished_tasks.wait_for([number_of_tasks](int val) { return val >= number_of_tasks; }, std::chrono::milliseconds(1000));
 
   // Wait a short time for the threadpool internal workerthread to also go into idle
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -186,11 +189,6 @@ TEST(DynamicThreadPool, MaxSize)
   EXPECT_EQ(finished_tasks.get(),       number_of_tasks);
   EXPECT_EQ(thread_pool.GetSize(),      max_threadpool_size);
   EXPECT_EQ(thread_pool.GetIdleCount(), max_threadpool_size);
-
-  // Check that the total time taken is "not much" more than two times the delay (We had twice amount of tasks than max threads)
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  EXPECT_GE(duration, delay * 2);
-  EXPECT_LT(duration, delay * 3);
 }
 #endif
 
@@ -199,55 +197,52 @@ TEST(DynamicThreadPool, MaxSize)
 TEST(DynamicThreadPool, Shutdown)
 {
   constexpr int number_of_tasks = 2;
-  const std::chrono::milliseconds delay(500);
 
   DynamicThreadPool thread_pool(1); // Max size 1 to ensure tasks are queued
+  Barrier barrier(2);
 
   atomic_signalable<int> finished_tasks(0);
 
-  auto start = std::chrono::steady_clock::now();
-
   for (int i = 0; i < number_of_tasks; i++)
   {
-    thread_pool.Post([&finished_tasks, delay]()
+    thread_pool.Post([&finished_tasks, &barrier]()
                       {
-                          std::this_thread::sleep_for(delay);
+                          barrier.wait();
+                          barrier.wait();
                           finished_tasks++;
                       });
   }
 
   // Wait a short time, so that the tasks have not finished yet
-  std::this_thread::sleep_for(delay / 2);
-  
+  barrier.wait();
+
   EXPECT_EQ(finished_tasks.get(),       0);
   EXPECT_EQ(thread_pool.GetSize(),      1);
   EXPECT_EQ(thread_pool.GetIdleCount(), 0);
-  
+
   // Shutdown the threadpool while tasks are running
   thread_pool.Shutdown();
 
+  barrier.wait();
+
   // Test that adding another task now fails
-  bool const success = thread_pool.Post([&finished_tasks, delay]()
+  bool const success = thread_pool.Post([&finished_tasks, &barrier]()
                                   {
-                                      std::this_thread::sleep_for(delay);
+                                      barrier.wait();
                                       finished_tasks++;
                                   });
 
   EXPECT_FALSE(success);
 
+  barrier.wait();
+  barrier.wait();
+
   // Join the thread-pool, which makes this thread block until all remaining tasks are executed
   thread_pool.Join();
-
-  auto end = std::chrono::steady_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
   EXPECT_EQ(finished_tasks.get(),       number_of_tasks); // All queued tasks should have been executed
   EXPECT_EQ(thread_pool.GetSize(),      0);
   EXPECT_EQ(thread_pool.GetIdleCount(), 0);
-
-  // Check that the total time taken is "not much" more than all tasks combined
-  EXPECT_GE(duration, delay * number_of_tasks);
-  EXPECT_LT(duration, delay * (number_of_tasks + 1));
 }
 #endif
 

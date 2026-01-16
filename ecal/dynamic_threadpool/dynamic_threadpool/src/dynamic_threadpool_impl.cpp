@@ -55,7 +55,7 @@ bool DynamicThreadPoolImpl::Post(const std::function<void()>& task)
     cv.notify_one();
   }
   // If no idle workers and we can create more, spawn a new worker
-  else if (max_size <= 0 || (workers.size() < max_size))
+  else if (max_size == 0 || (workers.size() < max_size))
   {
     workers.emplace_back([this]()
                           {
