@@ -35,17 +35,17 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CSHMReaderLayer : CLayerConnectionManager
+  class CSHMReaderLayer : CTransportLayerInstance
   {
   public:
     CSHMReaderLayer(const eCAL::eCALReader::SHM::SAttributes& attr_);
     ~CSHMReaderLayer() override = default;
 
     bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) override;
-    CLayerConnectionManager::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
+    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
     // How about updating the connection (SHM memfile list changed?)
     // Maybe via connection token?
-    void RemoveConnection(ConnectionToken connection_handle_) override;
+    // void RemoveConnection(ConnectionToken connection_handle_) override;
 
   private:
     eCAL::eCALReader::SHM::SAttributes m_attributes;

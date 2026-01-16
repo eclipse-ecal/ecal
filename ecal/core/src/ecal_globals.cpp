@@ -251,7 +251,7 @@ namespace eCAL
 
     if (!reader_manager_instance)
     {
-      reader_manager_instance = std::make_shared<CReaderManager>();
+      reader_manager_instance = std::make_shared<CSubscriberConnectionManager>();
       new_initialization = true;
     }
 

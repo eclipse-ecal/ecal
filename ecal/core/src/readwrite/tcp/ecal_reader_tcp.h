@@ -64,25 +64,25 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer, eCAL::eCALReader::TCPLayer::SAttributes>
+  class CTCPReaderLayer : CTransportLayerInstance
   {
   public:
-    CTCPReaderLayer();
+    CTCPReaderLayer(const eCAL::eCALReader::TCP::SAttributes& attr_);
+    ~CTCPReaderLayer() override = default;
 
-    void Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_) override;
-
-    void AddSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) override;
-    void RemSubscription(const std::string& host_name_, const std::string& topic_name_, const EntityIdT& topic_id_) override;
-
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/) override;
+    bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) override;
+    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
+    // How about updating the connection (SHM memfile list changed?)
+    // Maybe via connection token?
+    // void RemoveConnection(ConnectionToken connection_handle_) override;
 
   private:
-    std::atomic<bool> m_initialized;
     std::shared_ptr<tcp_pubsub::Executor> m_executor;
 
     using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
     std::mutex        m_datareadertcp_sync;
     DataReaderTCPMapT m_datareadertcp_map;
     eCAL::eCALReader::TCPLayer::SAttributes m_attributes;
+
   };
 }

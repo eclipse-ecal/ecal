@@ -40,18 +40,6 @@ namespace eCAL
   // transmitted from a writer to a reader
   using SPublicationInfo = Registration::SampleIdentifier;
 
-  /*
-  struct SReaderLayerPar
-  {
-    std::string                 host_name;
-    int32_t                     process_id = 0;
-    std::string                 topic_name;
-    EntityIdT                   topic_id = 0;
-    Registration::ConnectionPar parameter;
-  };
-  */
-
-
   enum class LayerType
   {
     UDP,
@@ -255,27 +243,12 @@ namespace eCAL
 
   using SubscriberDataCallback = std::function<void(const eCAL::Payload::Sample& sample_, const void* /*user_data_*/)>;
 
-  // SSubscriptionParameters = SReaderLayerPar;
-
   // This class manages all connections for a specific layer type
-  class CLayerConnectionManager
+  class CTransportLayerInstance
   {
   public:
-    // This the base class for a connection token
     // When the token is destroyed, the connection is removed automatically
-    // therefore the different layers must implement their own connection token class
     // and destructors that will clean up resources
-    /*
-    class ConnectionToken
-    {
-    public:
-      virtual ~ConnectionToken() = default;
-
-      // Currently only SHM might update its connection parameters, when resizing the memory file.
-      // All other connection parameters are static.
-      virtual void UpdateConnection(const PublisherConnectionParameters& publisher) {}; // TODO make abstract
-    };*/
-
     class ConnectionToken
     {
     public:
@@ -333,11 +306,12 @@ namespace eCAL
     };
 
 
-    CLayerConnectionManager(LayerType layer_type)
+    CTransportLayerInstance(LayerType layer_type)
       : m_layer_type(layer_type)
     {
     }
-    virtual ~CLayerConnectionManager() = default;
+
+    virtual ~CTransportLayerInstance() = default;
 
     LayerType GetLayer() const {
       return m_layer_type;
@@ -348,7 +322,7 @@ namespace eCAL
     virtual ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) = 0;
     // How about updating the connection (SHM memfile list changed?)
     // Maybe via connection token?
-    virtual void RemoveConnection(ConnectionToken connection_handle_) = 0;
+    //virtual void RemoveConnection(ConnectionToken connection_handle_) = 0;
 
   protected:
     LayerType m_layer_type;

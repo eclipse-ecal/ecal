@@ -21,7 +21,7 @@
 
 using namespace eCAL;
 
-SubscriptionHandle CReaderManager::AddSubscription(const SSubscriptionParameters& parameters_)
+SubscriptionHandle CSubscriberConnectionManager::AddSubscription(const SSubscriptionParameters& parameters_)
 {
   // We need to cache the subscription parameters and the callbacks.
   // When a publisher registration comes in, we need to check if any subscription matches and then create the necessary layer readers.
@@ -32,7 +32,7 @@ SubscriptionHandle CReaderManager::AddSubscription(const SSubscriptionParameters
   return subscription_map_.AddSubscription(parameters_);
 }
 
-void CReaderManager::RemoveSubscription(SubscriptionHandle handle_)
+void CSubscriberConnectionManager::RemoveSubscription(SubscriptionHandle handle_)
 {
   // Let's see what we have to do here.
   // we need to remove the subscription to all applied layers.
@@ -44,7 +44,7 @@ void CReaderManager::RemoveSubscription(SubscriptionHandle handle_)
 }
 
 
-void CReaderManager::ApplyPublisherRegistration(const Registration::Sample& ecal_sample_)
+void CSubscriberConnectionManager::ApplyPublisherRegistration(const Registration::Sample& ecal_sample_)
 {
   // Later on, we probably want to decouple this, e.g. push registrations int queue and process the queue
 
@@ -69,7 +69,19 @@ void CReaderManager::ApplyPublisherRegistration(const Registration::Sample& ecal
     */
   }
 
+/*
+if (auto layer = layers_manager.GetLayer(layerType))
+{
+  auto& inst = layer->get();
+  if (inst.AcceptsConnection(pub, sub))
+  {
+    auto token = inst.AddConnection(...);
+    // store token
+  }
+}
 
+
+*/
 
 
 
@@ -122,7 +134,7 @@ void CReaderManager::ApplyPublisherRegistration(const Registration::Sample& ecal
 }
   */
 
-void CReaderManager::ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_)
+void CSubscriberConnectionManager::ApplyPublisherUnregistration(const Registration::Sample& ecal_sample_)
 {
   /*
   const auto& ecal_topic = ecal_sample_.topic;
