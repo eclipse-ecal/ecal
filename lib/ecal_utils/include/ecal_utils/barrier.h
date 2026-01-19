@@ -17,9 +17,9 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <atomic>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+#include <stdexcept>
 
 /*
 * A reusable barrier for synchronizing a set of threads.
@@ -29,9 +29,7 @@
 class Barrier {
 public:
   explicit Barrier(std::size_t required_thread_count)
-    : required_thread_count(required_thread_count),
-    arrived_thread_count(0),
-    generation(0)
+    : required_thread_count(required_thread_count)
   {
     if (required_thread_count == 0) {
       throw std::invalid_argument("Barrier requires at least one thread");
@@ -57,8 +55,8 @@ public:
 
 private:
   const std::size_t required_thread_count;
-  std::size_t arrived_thread_count;
-  std::uint64_t generation;
+  std::size_t arrived_thread_count{0};
+  std::uint64_t generation{0};
 
   std::mutex mutex;
   std::condition_variable condition;
