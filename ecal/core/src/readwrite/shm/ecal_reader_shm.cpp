@@ -42,7 +42,7 @@ namespace eCAL
   {
   }
 
-  bool CSHMReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber)
+  bool CSHMReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const
   {
     // We need to check if publisher and subscriber both have SHM layer active
     // We also need to check if they are the same SHM memory domain, otherwise they will not be able to communicate
@@ -58,7 +58,7 @@ namespace eCAL
     return true;
   }
 
-  CTransportLayerInstance::ConnectionToken CSHMReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
+  CTransportLayerInstance::ConnectionToken CSHMReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
   {
     for (const auto& memfile_name : publisher.GetLayerParameter(m_layer_type).par_layer.layer_par_shm.memory_file_list)
     {

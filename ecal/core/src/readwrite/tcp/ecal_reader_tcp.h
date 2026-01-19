@@ -24,41 +24,55 @@
 #pragma once
 
 #include "readwrite/ecal_reader_layer.h"
-#include "config/attributes/data_reader_tcp_attributes.h"
-#include "config/attributes/tcp_reader_layer_attributes.h"
+
+#include <map>
+#include <mutex>
 
 #include <tcp_pubsub/executor.h>
 #include <tcp_pubsub/subscriber.h>
 
+#include "config/attributes/data_reader_tcp_attributes.h"
 #include "serialization/ecal_struct_sample_payload.h"
-
-#include <atomic>
-#include <mutex>
-#include <unordered_map>
 
 namespace eCAL
 {
   ////////////////
   // READER
   ////////////////
+  struct STCPConnectionParameters
+  {
+    std::string host_name;
+    uint16_t    port{ 0 };
+
+    bool operator<(const STCPConnectionParameters& other) const
+    {
+      return std::tie(port, host_name) < std::tie(other.port, other.host_name);
+    }
+
+    bool operator==(const STCPConnectionParameters& other) const
+    {
+      return std::tie(port, host_name) == std::tie(other.port, other.host_name);
+    }
+  };
+
   class CDataReaderTCP
   {
   public:
-    CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_);
+    using DataCallback = std::function<void(const SReceiveCallbackData& /*data_*/)>;
 
-    bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
-    bool Destroy();
-
-    bool AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_);
+    CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_, 
+      const STCPConnectionParameters& conn_params_,
+      std::shared_ptr<tcp_pubsub::Executor>& executor_,
+      DataCallback on_data_);
 
   private:
     void OnTcpMessage(const tcp_pubsub::CallbackData& callback_data);
-
     Payload::Sample                         m_ecal_header;
 
-    std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
-    bool                                    m_callback_active;
     eCAL::eCALReader::TCP::SAttributes      m_attributes;
+    DataCallback                            m_on_data;
+
+    std::unique_ptr<tcp_pubsub::Subscriber> m_subscriber;
   };
 
   ////////////////
@@ -70,19 +84,17 @@ namespace eCAL
     CTCPReaderLayer(const eCAL::eCALReader::TCP::SAttributes& attr_);
     ~CTCPReaderLayer() override = default;
 
-    bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) override;
-    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
-    // How about updating the connection (SHM memfile list changed?)
-    // Maybe via connection token?
-    // void RemoveConnection(ConnectionToken connection_handle_) override;
+    bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const override;
+    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
 
   private:
+    // global, per process TCP attributes
+    eCAL::eCALReader::TCP::SAttributes m_attributes;
+
     std::shared_ptr<tcp_pubsub::Executor> m_executor;
 
-    using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
+    using DataReaderTCPMapT = std::map<STCPConnectionParameters, std::unique_ptr<CDataReaderTCP>>;
     std::mutex        m_datareadertcp_sync;
     DataReaderTCPMapT m_datareadertcp_map;
-    eCAL::eCALReader::TCPLayer::SAttributes m_attributes;
-
   };
 }

@@ -169,6 +169,8 @@ namespace eCAL
     const STopicId& GetTopicId() const {
       return {}; //TODO Obviously this is wrong
     }
+    // TODO: GetHostName() and GetSHMTransportDomain() should rather be layer parameters
+    const std::string& GetHostName() const { return publisher_sample.identifier.host_name; }
     const std::string& GetSHMTransportDomain() const { return publisher_sample.topic.shm_transport_domain; }
     bool IsLayerActive(LayerType layer) const { return true; }
     Registration::TLayer GetLayerParameter(LayerType layer) const { return {}; }
@@ -318,8 +320,8 @@ namespace eCAL
     }
 
     // We need to pass in publisher & subscriber information
-    virtual bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) = 0;
-    virtual ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) = 0;
+    virtual bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const = 0;
+    virtual ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) = 0;
     // How about updating the connection (SHM memfile list changed?)
     // Maybe via connection token?
     //virtual void RemoveConnection(ConnectionToken connection_handle_) = 0;
