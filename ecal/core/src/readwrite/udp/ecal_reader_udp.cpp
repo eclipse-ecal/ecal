@@ -23,11 +23,8 @@
 **/
 
 #include <ecal/config.h>
-
 #include "ecal_reader_udp.h"
-#include "ecal_global_accessors.h"
 
-#include "io/udp/ecal_udp_configurations.h"
 #include "config/builder/udp_attribute_builder.h"
 #include <ecal_serialize_sample_payload.h>
 
@@ -38,51 +35,7 @@
 
 namespace eCAL
 {
-
-  void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
-  {
-    if (!m_started)
-    {      
-      // start payload sample receiver
-
-      m_started = true;
-    }
-
-    // we use udp broadcast in local mode
-    if (m_attributes.broadcast) return;
-
-    // add topic name based multicast address
-    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
-    if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())
-    {
-      m_topic_name_mcast_map.emplace(std::pair<std::string, int>(mcast_address, 0));
-      m_payload_receiver->AddMultiCastGroup(mcast_address.c_str());
-    }
-    m_topic_name_mcast_map[mcast_address]++;
-  }
-
-  void CUDPReaderLayer::RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
-  {
-    // we use udp broadcast in local mode
-    if (m_attributes.broadcast) return;
-
-    const std::string mcast_address = UDP::GetTopicPayloadAddress(topic_name_);
-    if (m_topic_name_mcast_map.find(mcast_address) == m_topic_name_mcast_map.end())
-    {
-      // this should never happen
-    }
-    else
-    {
-      m_topic_name_mcast_map[mcast_address]--;
-      if (m_topic_name_mcast_map[mcast_address] == 0)
-      {
-        m_payload_receiver->RemMultiCastGroup(mcast_address.c_str());
-        m_topic_name_mcast_map.erase(mcast_address);
-      }
-    }
-  }
-  
-
+ 
   CUDPReaderLayer::CUDPReaderLayer(const eCAL::eCALReader::UDP::SAttributes& attr_)
     : CTransportLayerInstance(LayerType::UDP)
     , m_attributes(attr_)
@@ -92,35 +45,52 @@ namespace eCAL
       [](const std::string& sample_name_) {return true; },
       [this](const char* serialized_sample_data_, size_t serialized_sample_size_) { return OnUDPMessage(serialized_sample_data_, serialized_sample_size_); }
     );
-
   }
 
   bool CUDPReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const
   {
-    return false;
+    return LayerEnabledForPublisherAndSubscriber(m_layer_type, publisher, subscriber);
   }
 
   CTransportLayerInstance::ConnectionToken CUDPReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
   {
+    const std::string topic_name = publisher.GetTopicName();
 
-
-
-
-
-    auto on_remove_subscription = [this, publisher](const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
+    if (!m_attributes.broadcast)
     {
-      
+      auto new_multicast_address = m_mcast_address_tracker.AddTopic(topic_name);
+      if (new_multicast_address.has_value())
+      {
+        m_payload_receiver->AddMultiCastGroup(new_multicast_address.value().c_str());
+      }
+    }
+
+    auto publisher_callback_handle = m_callback_storage.AddCallback(
+      publisher.GetTopicId(),
+      publisher.GetDataTypeInformation(),
+      on_data);
+
+    auto on_remove_subscription = [this, topic_name, publisher_callback_handle]()
+    {
+      m_callback_storage.RemoveCallback(publisher_callback_handle);
+
+      if (!m_attributes.broadcast)
+      {
+        auto removed_multicast_address = m_mcast_address_tracker.RemoveTopic(topic_name);
+        if (removed_multicast_address.has_value())
+        {
+          m_payload_receiver->RemMultiCastGroup(removed_multicast_address.value().c_str());
+        }
+      }
     };
     return CTransportLayerInstance::ConnectionToken::Make(on_remove_subscription);
   }
 
-
   void CUDPReaderLayer::OnUDPMessage(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
     Payload::Sample ecal_sample;
-    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return false;
+    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return;
 
-    size_t applied_size(0);
     switch (ecal_sample.cmd_type)
     {
     case bct_set_sample:
@@ -151,20 +121,16 @@ namespace eCAL
         break;
       }
 
-    // Find correct callback
-    auto publisher_callback_information = m_receive_callbacks.find(ecal_sample.topic_info.topic_id);
-    if (publisher_callback_information != m_receive_callbacks.end())
-    {
-      const auto& callback_data = publisher_callback_information->second;
       SReceiveCallbackData data;
       data.buffer = payload_addr;
       data.buffer_size = payload_size;
       data.send_clock = ecal_sample.content.clock;
       data.send_timestamp = ecal_sample.content.time;
-      // id & hash currently unused
-      // Call data callback
-      callback_data.data_callback(callback_data.id, callback_data.data_type_info, data);
-    }
 
+      m_callback_storage.Invoke(ecal_sample.topic_info.topic_id, data);
+    }
+    default:
+      return;
+    }
   }
 }

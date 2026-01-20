@@ -36,10 +36,6 @@
 
 namespace eCAL
 {
-  // ecal data layer specific parameters
-  // transmitted from a writer to a reader
-  using SPublicationInfo = Registration::SampleIdentifier;
-
   enum class LayerType
   {
     UDP,
@@ -153,7 +149,7 @@ namespace eCAL
     const std::string& GetTopicName() const { return id.topic_name; }
     const std::string& GetSHMTransportDomain() const { return shm_transport_domain; }
     bool IsLayerActive(LayerType layer) const { return active_layers.has(layer); }
-    Registration::TLayer GetLayerParameter(LayerType layer) const {}
+    //Registration::TLayer GetLayerParameter(LayerType layer) const {}
   };
 
   class PublisherConnectionParameters
@@ -166,8 +162,13 @@ namespace eCAL
 
     const std::string& GetTopicName() const { return publisher_sample.topic.topic_name; }
     const SDataTypeInformation& GetDataTypeInformation() const { return publisher_sample.topic.datatype_information; }
-    const STopicId& GetTopicId() const {
-      return {}; //TODO Obviously this is wrong
+    const STopicId GetTopicId() const {
+      STopicId topic_id;
+      topic_id.topic_name = publisher_sample.topic.topic_name;
+      topic_id.topic_id.entity_id = publisher_sample.identifier.entity_id;
+      topic_id.topic_id.process_id = publisher_sample.identifier.process_id;
+      topic_id.topic_id.host_name = publisher_sample.identifier.host_name;
+      return topic_id;
     }
     // TODO: GetHostName() and GetSHMTransportDomain() should rather be layer parameters
     const std::string& GetHostName() const { return publisher_sample.identifier.host_name; }
@@ -178,7 +179,6 @@ namespace eCAL
 
   private:
     const Registration::Sample& publisher_sample;
-
   };
 
   struct SubscriberConnectionInstance
@@ -242,8 +242,6 @@ namespace eCAL
   private:
     std::map<EntityIdT, SubscriberConnectionInstance> connections;
   };
-
-  using SubscriberDataCallback = std::function<void(const eCAL::Payload::Sample& sample_, const void* /*user_data_*/)>;
 
   // This class manages all connections for a specific layer type
   class CTransportLayerInstance

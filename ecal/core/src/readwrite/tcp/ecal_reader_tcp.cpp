@@ -89,7 +89,7 @@ namespace eCAL
 
   bool CTCPReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const
   {
-    return false;
+    return LayerEnabledForPublisherAndSubscriber(m_layer_type, publisher, subscriber);
   }
 
   CTransportLayerInstance::ConnectionToken CTCPReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)

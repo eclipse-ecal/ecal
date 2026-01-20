@@ -141,40 +141,6 @@ namespace eCAL
     Storage subscriptions_;
   };
 
-  /*
-  * Manages and creates subscriber connections on different transport layers, based on incoming publisher registrations.
-  * In the future, if we have a registration cache, we might want to subscribe to Registration updates instead of applying them directly here.
-  */
-  class CSubscriberConnectionManager
-  {
-  public:
-    // Variadic: pass any number of layer instances
-    template <typename... LayerPtrs>
-    explicit CSubscriberConnectionManager(LayerPtrs&&... layers)
-      : transport_layers_(std::forward<LayerPtrs>(layers)...)
-    {
-      static_assert(
-        (std::is_same_v<std::decay_t<LayerPtrs>, LayerPtr> && ...),
-        "CSubscriberConnectionManager ctor only accepts LayerPtr arguments"
-        );
-    }
-
-    // A subscriber calls this function to request to receive data / unsubscribe
-    SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_);
-    //void RemoveSubscription(SubscriptionHandle handle_);
-
-    // The global registration receiver calls this function to notify about new / removed publications
-    // The reader manager can go ahead and apply this information to actually establish connections.
-    void ApplyPublisherRegistration(const Registration::Sample& sample);
-    void ApplyPublisherUnregistration(const Registration::Sample& unregistration_sample);
-
-  private:
-    // Important, layers constructed before subscription map, as it stores tokens which need the layers to be valid during destruction
-    CTransportLayerRegistry layers_manager_;
-    // We need to track connection states of each subscription.
-    SubscriptionMap subscription_map_;
-  };
-
   class CTransportLayerRegistry
   {
   public:
@@ -223,7 +189,43 @@ namespace eCAL
 
     std::array<LayerPtr, LAYER_COUNT> layers_{};
   };
- 
+
+
+  /*
+  * Manages and creates subscriber connections on different transport layers, based on incoming publisher registrations.
+  * In the future, if we have a registration cache, we might want to subscribe to Registration updates instead of applying them directly here.
+  */
+  class CSubscriberConnectionManager
+  {
+  public:
+    // Variadic: pass any number of layer instances
+    template <typename... LayerPtrs>
+    explicit CSubscriberConnectionManager(LayerPtrs&&... layers)
+      : transport_layers_(std::forward<LayerPtrs>(layers)...)
+    {
+      static_assert(
+        (std::is_same_v<std::decay_t<LayerPtrs>, LayerPtr> && ...),
+        "CSubscriberConnectionManager ctor only accepts LayerPtr arguments"
+        );
+    }
+
+    // A subscriber calls this function to request to receive data / unsubscribe
+    SubscriptionHandle AddSubscription(const SSubscriptionParameters& parameters_);
+    //void RemoveSubscription(SubscriptionHandle handle_);
+
+    // The global registration receiver calls this function to notify about new / removed publications
+    // The reader manager can go ahead and apply this information to actually establish connections.
+    void ApplyPublisherRegistration(const Registration::Sample& sample);
+    void ApplyPublisherUnregistration(const Registration::Sample& unregistration_sample);
+
+  private:
+    // Important, layers constructed before subscription map, as it stores tokens which need the layers to be valid during destruction
+    CTransportLayerRegistry layers_manager_;
+    // We need to track connection states of each subscription.
+    SubscriptionMap subscription_map_;
+  };
+
+
   /*
   // This class manages all connections for a specific layer
   class CLayerConnections
