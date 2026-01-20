@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +22,18 @@
 
 #include <CustomQt/QBytesToPrettyStringUtils.h>
 
-#include "models/tree_item_types.h"
 #include "models/item_data_roles.h"
+#include "models/tree_item_types.h"
+#include "rec_client_core/state.h"
 
+#include <Qt>
 #include <QFont>
+#include <QString>
+
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
 
 ///////////////////////////////////////////
 // Constructor & Destructor
@@ -52,7 +61,9 @@ JobHistoryRecorderItem::JobHistoryRecorderItem(const QString& hostname, const QS
   , still_online_              (false)
   , info_last_command_response_{true, ""}
   , length_                    { std::chrono::steady_clock::duration(0), 0 }
+  , total_size_bytes_          (0)
   , unflushed_frame_count_     (0)
+  , unflushed_size_bytes_      (0)
   , state_                     (eCAL::rec::JobState::NotStarted)
   , info_                      {true, ""}
   , is_deleted_                (false)
@@ -169,6 +180,40 @@ QVariant JobHistoryRecorderItem::data(int column, Qt::ItemDataRole role) const
     }
   }
 
+  else if (column == (int)Columns::DISK_WRITER_INFORMATION)
+  {
+    if (!isAddonItem()) // Addons don't provide disk writer information at the moment (2026-01-22)
+    {
+      if (role == Qt::ItemDataRole::DisplayRole)
+      {
+        const bool display_throughput
+          =  (state_ == eCAL::rec::JobState::Recording)
+              || (state_ == eCAL::rec::JobState::Flushing)
+              || (write_throughput_.bytes_per_second_ > 0)
+              || (unflushed_size_bytes_ > 0);
+
+        QString display_string = bytesToPrettyString(total_size_bytes_ - unflushed_size_bytes_);
+
+        if (display_throughput)
+        {
+          display_string = display_string
+            +" (" + bytesToPrettyString(write_throughput_.bytes_per_second_) + "/s, "
+            + bytesToPrettyString(unflushed_size_bytes_) + " remaining)";
+        }
+
+        return display_string;
+      }
+      else if (role == ItemDataRoles::SortRole)
+      {
+        return static_cast<qint64>(total_size_bytes_ - unflushed_size_bytes_);
+      }
+    }
+    else
+    {
+      return QVariant();
+    }
+  }
+
   else if (column == (int)Columns::STATUS)
   {
     if (role == Qt::ItemDataRole::DisplayRole)
@@ -277,11 +322,14 @@ const QString&                                          JobHistoryRecorderItem::
 const QString&                                          JobHistoryRecorderItem::addonName()               const { return addon_name_; }
 bool                                                    JobHistoryRecorderItem::isAddonItem()             const { return !addon_id_.isEmpty(); }
 
-int                                                     JobHistoryRecorderItem::process_id()                     const { return pid_; }
+int                                                     JobHistoryRecorderItem::process_id()              const { return pid_; }
 bool                                                    JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
 std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
+uint64_t                                                JobHistoryRecorderItem::totalSizeBytes()          const { return total_size_bytes_; }
 int64_t                                                 JobHistoryRecorderItem::unflushedFrameCount()     const { return unflushed_frame_count_; }
+uint64_t                                                JobHistoryRecorderItem::unflushedSizeBytes()      const { return unflushed_size_bytes_; }
+eCAL::rec::Throughput                                   JobHistoryRecorderItem::writeThroughput()         const { return write_throughput_; }
 eCAL::rec::JobState                                     JobHistoryRecorderItem::state()                   const { return state_; }
 eCAL::rec::UploadStatus                                 JobHistoryRecorderItem::uploadStatus()            const { return upload_status_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::info()                    const { return info_; }
@@ -305,11 +353,14 @@ const std::pair<bool, std::string>&                     JobHistoryRecorderItem::
     return info_;
 }
 
-void JobHistoryRecorderItem::setPid                    (int process_id)                                                               { pid_ = process_id; }
+void JobHistoryRecorderItem::setPid                    (int process_id)                                                        { pid_ = process_id; }
 void JobHistoryRecorderItem::setStillOnline            (bool still_online)                                                     { still_online_ = still_online; }
 void JobHistoryRecorderItem::setInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response)        { info_last_command_response_ = info_last_command_response; }
 void JobHistoryRecorderItem::setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length) { length_ = length; }
+void JobHistoryRecorderItem::setTotalSizeBytes         (uint64_t total_size_bytes)                                             { total_size_bytes_ = total_size_bytes; }
 void JobHistoryRecorderItem::setUnflushedFrameCount    (int64_t unflushed_frame_count)                                         { unflushed_frame_count_ = unflushed_frame_count; }
+void JobHistoryRecorderItem::setUnflushedSizeBytes     (uint64_t unflushed_size_bytes)                                         { unflushed_size_bytes_ = unflushed_size_bytes; }
+void JobHistoryRecorderItem::setWriteThroughput        (const eCAL::rec::Throughput& write_throughput)                         { write_throughput_ = write_throughput; }
 void JobHistoryRecorderItem::setState                  (eCAL::rec::JobState state)                                             { state_ = state; }
 void JobHistoryRecorderItem::setUploadStatus           (const eCAL::rec::UploadStatus& upload_status)                          { upload_status_ = upload_status; }
 void JobHistoryRecorderItem::setInfo                   (const std::pair<bool, std::string>& info)                              { info_ = info; }
@@ -355,6 +406,16 @@ bool JobHistoryRecorderItem::updateLength(const std::pair<std::chrono::steady_cl
   return false;
 }
 
+bool JobHistoryRecorderItem::updateTotalSizeBytes(uint64_t total_size_bytes)
+{
+  if (total_size_bytes_ != total_size_bytes)
+  {
+    total_size_bytes_ = total_size_bytes;
+    return true;
+  }
+  return false;
+}
+
 bool JobHistoryRecorderItem::updateUnflushedFrameCount(int64_t unflushed_frame_count)
 {
   if (unflushed_frame_count_ != unflushed_frame_count)
@@ -364,6 +425,28 @@ bool JobHistoryRecorderItem::updateUnflushedFrameCount(int64_t unflushed_frame_c
   }
   return false;
 }
+
+bool JobHistoryRecorderItem::updateUnflushedSizeBytes(uint64_t unflushed_size_bytes)
+{
+  if (unflushed_size_bytes_ != unflushed_size_bytes)
+  {
+    unflushed_size_bytes_ = unflushed_size_bytes;
+    return true;
+  }
+  return false;
+}
+
+bool JobHistoryRecorderItem::updateWriteThroughput(const eCAL::rec::Throughput& write_throughput)
+{
+  if (write_throughput_ != write_throughput)
+  {
+    write_throughput_ = write_throughput;
+    return true;
+  }
+  return false;
+}
+
+
 
 bool JobHistoryRecorderItem::updateState(eCAL::rec::JobState state)
 {

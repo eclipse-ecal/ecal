@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +21,21 @@
 #pragma once
 #include <ThreadingUtils/InterruptibleThread.h>
 
-#include <ecalhdf5/eh5_meas.h>
-
-#include <mutex>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <cstddef>
+#include <cstdint>
 #include <deque>
 #include <map>
+#include <memory>
+#include <mutex>
+#include <string>
 
+#include "ecalhdf5/eh5_meas_api_v2.h"
 #include "frame.h"
+#include "throughput_statistics.h"
+
 #include "rec_client_core/job_config.h"
 #include "rec_client_core/topic_info.h"
 #include "rec_client_core/state.h"
@@ -86,18 +95,23 @@ namespace eCAL
       mutable std::mutex                    input_mutex_;                       /**< Mutex protecting every input variables (notably the variables below). */
       mutable std::condition_variable       input_cv_;                          /**< condition variable for notifying the internal worker thread that new input data is available */
       std::deque<std::shared_ptr<Frame>>    frame_buffer_;
-      size_t                                written_frames_;
+      uint64_t                              total_size_bytes_;
+      uint64_t                              written_size_bytes_;
+      size_t                                written_frames_count_;
       std::chrono::steady_clock::time_point first_written_frame_timestamp_;
       std::chrono::steady_clock::time_point last_written_frame_timestamp_;
       std::map<std::string, TopicInfo>      new_topic_info_map_;                /**< The new topic info map that shall be set to the HDF5 writer */
       bool                                  new_topic_info_map_available_;      /**< Telling that a new topic info map has been set from the outside. */
+
       mutable RecHdf5JobStatus              last_status_;
 
       mutable std::mutex                                    hdf5_writer_mutex_;
       std::unique_ptr<eCAL::eh5::v2::HDF5Meas>              hdf5_writer_;
 
-
       std::atomic<bool> flushing_;
+
+      mutable std::mutex           throughput_statistics_mutex_;
+      mutable ThroughputStatistics throughput_statistics_;
     };
   }
 }

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +20,28 @@
 
 #include "job_history_model.h"
 
+#include "CustomQt/QAbstractTreeItem.h"
+#include "CustomQt/QAbstractTreeModel.h"
 #include "models/tree_item_types.h"
+#include "rec_client_core/state.h"
+#include "rec_server_core/rec_server_types.h"
+#include "rec_server_core/status.h"
+#include "widgets/recording_history_widget/job_history_jobitem.h"
+#include "widgets/recording_history_widget/job_history_recorderitem.h"
+
+#include <algorithm>
+#include <chrono>
+#include <cstdint>
+#include <list>
+#include <string>
 
 #include <qecalrec.h>
 
+#include <Qt>
 #include <QList>
 #include <QSet>
-
-#include <algorithm>
+#include <QObject>
+#include <QVariant>
 
 ///////////////////////////////////////////
 // Constructor & Destructor
@@ -74,6 +89,8 @@ int JobHistoryModel::mapColumnToItem(int model_column, int tree_item_type) const
       return (int)JobHistoryJobItem::Columns::JOB_ID;
     case (int)Columns::LENGTH:
       return (int)JobHistoryJobItem::Columns::LENGTH;
+    case (int)Columns::DISK_WRITER_INFORMATION:
+      return (int)JobHistoryJobItem::Columns::DISK_WRITERS_INFORMATION;
     case (int)Columns::STATUS:
       return (int)JobHistoryJobItem::Columns::STATUS;
     case (int)Columns::LOCAL_PATH:
@@ -107,6 +124,8 @@ int JobHistoryModel::mapColumnToItem(int model_column, int tree_item_type) const
       return (int)JobHistoryRecorderItem::Columns::STILL_ONLINE;
     case (int)Columns::LENGTH:
       return (int)JobHistoryRecorderItem::Columns::LENGTH;
+    case (int)Columns::DISK_WRITER_INFORMATION:
+      return (int)JobHistoryRecorderItem::Columns::DISK_WRITER_INFORMATION;
     case (int)Columns::STATUS:
       return (int)JobHistoryRecorderItem::Columns::STATUS;
     case (int)Columns::LOCAL_PATH:
@@ -143,7 +162,7 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
     {
       // Data that is needed by HDF5 Items _and_ addon items
       std::string hostname              = client_job_status.first;
-      int         process_id                   = client_job_status.second.client_pid_;
+      int         process_id            = client_job_status.second.client_pid_;
       bool        is_deleted            = client_job_status.second.job_status_.is_deleted_;
       auto        recorder_status_it    = std::find_if(recorder_statuses.begin(), recorder_statuses.end(),
                                                 [process_id = client_job_status.second.client_pid_] (const auto& rec_status) -> bool
@@ -162,7 +181,10 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
       update_needed_hdf5_rec = hdf5_recorder_item->updatePid                    (process_id) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ }) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateTotalSizeBytes         (client_job_status.second.job_status_.rec_hdf5_status_.total_size_bytes_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedSizeBytes     (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_size_bytes_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateWriteThroughput        (client_job_status.second.job_status_.rec_hdf5_status_.write_throughput_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateState                  (client_job_status.second.job_status_.state_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUploadStatus           (client_job_status.second.job_status_.upload_status_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfo                   (client_job_status.second.job_status_.rec_hdf5_status_.info_) || update_needed_hdf5_rec;
@@ -263,6 +285,7 @@ void JobHistoryModel::recordJobCreated(const eCAL::rec_server::JobHistoryEntry& 
       hdf5_item->setInfoLastCommandResponse(client_status.second.info_last_command_response_);
       hdf5_item->setLength                 ({client_status.second.job_status_.rec_hdf5_status_.total_length_, client_status.second.job_status_.rec_hdf5_status_.total_frame_count_ });
       hdf5_item->setUnflushedFrameCount    (client_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_);
+      hdf5_item->setWriteThroughput        (client_status.second.job_status_.rec_hdf5_status_.write_throughput_);
       hdf5_item->setState                  (client_status.second.job_status_.state_);
       hdf5_item->setUploadStatus           (client_status.second.job_status_.upload_status_);
       hdf5_item->setInfo                   (client_status.second.job_status_.rec_hdf5_status_.info_);

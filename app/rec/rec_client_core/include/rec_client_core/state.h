@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +20,13 @@
 
 #pragma once
 
-#include <string>
-#include <utility>
+#include <chrono>
+#include <cstdint>
 #include <map>
 #include <set>
+#include <string>
+#include <utility>
 #include <vector>
-#include <chrono>
 
 #include <ecal/time.h>
 
@@ -32,14 +34,52 @@ namespace eCAL
 {
   namespace rec
   {
+    struct Throughput
+    {
+      uint64_t bytes_per_second_  { 0 };
+      uint64_t frames_per_second_ { 0 };
+      
+      // Equality operator
+      bool operator==(const Throughput& other) const
+      {
+          return bytes_per_second_  == other.bytes_per_second_
+              && frames_per_second_ == other.frames_per_second_;
+      }
+  
+      // Inequality operator
+      bool operator!=(const Throughput& other) const
+      {
+          return !(*this == other);
+      }
+
+      // Operator+
+      Throughput operator+(const Throughput& other) const
+      {
+        return Throughput
+                {
+                  bytes_per_second_ + other.bytes_per_second_,
+                  frames_per_second_ + other.frames_per_second_
+                };
+      }
+
+      // Operator+=
+      Throughput& operator+=(const Throughput& other)
+      {
+        bytes_per_second_  += other.bytes_per_second_;
+        frames_per_second_ += other.frames_per_second_;
+        return *this;
+      }
+    };
+
     struct RecHdf5JobStatus
     {
-      RecHdf5JobStatus() : total_length_(0), total_frame_count_(0), unflushed_frame_count_(0), info_{ true, "" } {}
-
-      std::chrono::steady_clock::duration total_length_;
-      int64_t                             total_frame_count_;
-      int64_t                             unflushed_frame_count_;
-      std::pair<bool, std::string>        info_;
+      std::chrono::steady_clock::duration total_length_           { 0 };
+      int64_t                             total_frame_count_      { 0 };
+      uint64_t                            total_size_bytes_       { 0 };
+      int64_t                             unflushed_frame_count_  { 0 };
+      uint64_t                            unflushed_size_bytes_   { 0 };
+      Throughput                          write_throughput_;
+      std::pair<bool, std::string>        info_                   { true, "" };
 
       bool operator==(const RecHdf5JobStatus& other) const { return (total_length_ == other.total_length_) && (total_frame_count_ == other.total_frame_count_) && (unflushed_frame_count_ == other.unflushed_frame_count_) && (info_ == other.info_); }
       bool operator!=(const RecHdf5JobStatus& other) const { return !operator==(other); }
@@ -151,6 +191,7 @@ namespace eCAL
       bool                                                    initialized_;
       std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
       std::set<std::string>                                   subscribed_topics_;
+      Throughput                                              subscriber_throughput_;
       std::vector<RecorderAddonStatus>                        addon_statuses_;
       std::vector<JobStatus>                                  job_statuses_;
       std::pair<bool, std::string>                            info_;

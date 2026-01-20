@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +21,20 @@
 #pragma once
 
 #include <CustomQt/QAbstractTreeModel.h>
+#include <cstdint>
+#include <list>
 #include <map>
-#include <QString>
 
-#include <rec_server_core/rec_server_config.h>
+#include <Qt>
+#include <QString>
+#include <QObject>
+#include <QVariant>
 
 #include "job_history_jobitem.h"
 #include "job_history_recorderitem.h"
 
-#include <rec_client_core/state.h>
 #include <rec_server_core/rec_server_types.h>
 #include <rec_server_core/status.h>
-
-#include <map>
-#include <string>
-#include <memory>
 
 class JobHistoryModel : public QAbstractTreeModel
 {
@@ -96,6 +96,7 @@ public:
     LOCAL_PATH,
     MAX_HDF5_FILE_SIZE_MIB,
     LENGTH,
+    DISK_WRITER_INFORMATION,
     COMMENT,
     UPLOAD,
     INFO,
@@ -116,6 +117,7 @@ private:
     { Columns::LOCAL_PATH,             "Path (this PC)" } ,
     { Columns::MAX_HDF5_FILE_SIZE_MIB, "HDF5 file size" } ,
     { Columns::LENGTH,                 "Length" } ,
+    { Columns::DISK_WRITER_INFORMATION,"Storage" },
     { Columns::COMMENT,                "Comment" } ,
     { Columns::UPLOAD,                 "Upload" } ,
     { Columns::INFO,                   "Info" } ,

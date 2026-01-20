@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,8 @@
 
 #pragma once
 
+#include <string>
+#include <utility>
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
@@ -40,6 +43,7 @@ namespace eCAL
       /// To Protobuf
       /////////////////////////////////
 
+      void ToProtobuf(const eCAL::rec::Throughput&              throughput,                  eCAL::pb::rec_client::State::Throughput&               throughput_pb);
       void ToProtobuf(const eCAL::rec::RecHdf5JobStatus&        hdf5_job_status,             eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_status_pb);
       void ToProtobuf(const eCAL::rec::RecAddonJobStatus&       rec_addon_job_status,        eCAL::pb::rec_client::State::RecAddonJobStatus&        rec_addon_job_status_pb);
       void ToProtobuf(const eCAL::rec::RecAddonJobStatus::State rec_addon_job_status_state , eCAL::pb::rec_client::State::RecAddonJobStatus::State& rec_addon_job_status_state_pb);
@@ -49,6 +53,7 @@ namespace eCAL
       void ToProtobuf(const eCAL::rec::RecorderAddonStatus&     rec_addon_status,            eCAL::pb::rec_client::State::RecorderAddonStatus&      rec_addon_status_pb);
       void ToProtobuf(const eCAL::rec::RecorderStatus& rec_status, const std::string& hostname, eCAL::pb::rec_client::State&                        rec_status_pb);
 
+      eCAL::pb::rec_client::State::Throughput               ToProtobuf(const eCAL::rec::Throughput&              throughput);
       eCAL::pb::rec_client::State::RecHdf5Status            ToProtobuf(const eCAL::rec::RecHdf5JobStatus&        hdf5_job_status);
       eCAL::pb::rec_client::State::RecAddonJobStatus        ToProtobuf(const eCAL::rec::RecAddonJobStatus&       rec_addon_job_status);
       eCAL::pb::rec_client::State::RecAddonJobStatus::State ToProtobuf(const eCAL::rec::RecAddonJobStatus::State rec_addon_job_status_state);
@@ -62,6 +67,7 @@ namespace eCAL
       /// From Protobuf
       /////////////////////////////////
 
+      void FromProtobuf(const eCAL::pb::rec_client::State::Throughput&              throughput_pb,                 eCAL::rec::Throughput&               throughput);
       void FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status&           hdf5_status_pb,                eCAL::rec::RecHdf5JobStatus&         hdf5_job_status);
       void FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus&       rec_addon_job_status_pb,       eCAL::rec::RecAddonJobStatus&        rec_addon_job_status);
       void FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus::State rec_addon_job_status_state_pb, eCAL::rec::RecAddonJobStatus::State& rec_addon_job_status_state);
@@ -71,6 +77,7 @@ namespace eCAL
       void FromProtobuf(const eCAL::pb::rec_client::State::RecorderAddonStatus&     rec_addon_status_pb,           eCAL::rec::RecorderAddonStatus&      rec_addon_status);
       void FromProtobuf(const eCAL::pb::rec_client::State&                          rec_status_pb,                 std::string& hostname, eCAL::rec::RecorderStatus& rec_status);
 
+      eCAL::rec::Throughput                             FromProtobuf(const eCAL::pb::rec_client::State::Throughput&               throughput);
       eCAL::rec::RecHdf5JobStatus                       FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_job_status_pb);
       eCAL::rec::RecAddonJobStatus                      FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus&        rec_addon_job_status_pb);
       eCAL::rec::RecAddonJobStatus::State               FromProtobuf(const eCAL::pb::rec_client::State::RecAddonJobStatus::State& rec_addon_job_status_state_pb);

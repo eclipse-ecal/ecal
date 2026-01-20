@@ -21,11 +21,11 @@
  * @brief  eCAL handle helper class
 **/
 
+#include "ecal_event.h"
+
 #include <chrono>
 #include <cstdint>
 #include <ecal/os.h>
-
-#include "ecal_event.h"
 
 #include <sstream>
 #include <string>
@@ -111,6 +111,7 @@ namespace eCAL
 
 #ifdef ECAL_OS_LINUX
 
+#include "io/shm/linux/posix_shm_region.h"
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -135,104 +136,32 @@ namespace
   };
   typedef struct named_event named_event_t;
 
-  named_event_t* named_event_open(const char* event_name_)
+  bool named_event_initialize(named_event_t* evt)
   {
-    // create shared memory file
-    const int previous_umask = umask(000);  // set umask to nothing, so we can create files with all possible permission bits
-    int fd = ::shm_open(event_name_, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    umask(previous_umask);            // reset umask to previous permissions
-
-    // in case of creation failed, open the existing file
-    if (fd == -1)
-      fd = ::shm_open(event_name_, O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-
-    // if this still fails, return a nullptr
-    if (fd == -1)
-    {
-      ::perror("shm_open");
-      return nullptr;
-    }
-
-    // flock the file
-    if(flock(fd, LOCK_EX) == -1)
-    {
-      perror("flock()");
-      ::close(fd);
-      return nullptr;
-    }
-    struct stat st;
-    if(fstat(fd, &st) == -1)
-    {
-      perror("fstat()");
-      ::close(fd);
-      return nullptr;
-    }
-
-    named_event_t *evt = nullptr;
-    if(st.st_size == 0) // initialize shared memory file
-    {
-      // set size to size of named mutex struct
-      if (ftruncate(fd, sizeof(named_event_t)) == -1)
-      {
-        perror("ftruncate()");
-        ::close(fd);
-        return nullptr;
-      }
-
-      // create mutex
-      pthread_mutexattr_t shmtx;
-      pthread_mutexattr_init(&shmtx);
-      pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
-
-      // create condition variable
-      pthread_condattr_t shattr;
-      pthread_condattr_init(&shattr);
-      pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
+    // create mutex
+    pthread_mutexattr_t shmtx;
+    pthread_mutexattr_init(&shmtx);
+    pthread_mutexattr_setpshared(&shmtx, PTHREAD_PROCESS_SHARED);
+    
+    // create condition variable
+    pthread_condattr_t shattr;
+    pthread_condattr_init(&shattr);
+    pthread_condattr_setpshared(&shattr, PTHREAD_PROCESS_SHARED);
 #ifndef ECAL_OS_MACOS
-      pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
+    pthread_condattr_setclock(&shattr, CLOCK_MONOTONIC);
 #endif // ECAL_OS_MACOS
-      evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-      if(reinterpret_cast<void*>(evt) == MAP_FAILED)
-      {
-        perror("mmap()");
-        ::close(fd);
-        return nullptr;
-      }
+    
+    // map them into shared memory
+    pthread_mutex_init(&evt->mtx, &shmtx);
+    pthread_cond_init(&evt->cvar, &shattr);
 
-      // map them into shared memory
-      pthread_mutex_init(&evt->mtx, &shmtx);
-      pthread_cond_init(&evt->cvar, &shattr);
-
-      // start with unset state
-      evt->set = 0;
-    }
-    else // only mmap() the shared memory file
-    {
-      evt = static_cast<named_event_t*>(mmap(nullptr, sizeof(named_event_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
-      if(reinterpret_cast<void*>(evt) == MAP_FAILED)
-      {
-        perror("mmap()");
-        ::close(fd);
-        return nullptr;
-      }
-    }
-
-    flock(fd, LOCK_UN);
-    ::close(fd);
-
-    return evt;
-  }
-
-  int named_event_destroy(const char* event_name_)
-  {
-    // destroy (unlink) shared memory file
-    return(::shm_unlink(event_name_));
-  }
-
-  void named_event_close(named_event_t* evt_)
-  {
-    // unmap condition mutex from shared memory file
-    munmap(static_cast<void*>(evt_), sizeof(named_event_t));
+    // clean up initialization resources
+    pthread_mutexattr_destroy(&shmtx);
+    pthread_condattr_destroy(&shattr);
+    
+    // start with unset state
+    evt->set = 0;
+    return true;
   }
 
   void named_event_set(named_event_t* evt_)
@@ -356,51 +285,54 @@ namespace eCAL
   class CNamedEvent
   {
   public:
-    explicit CNamedEvent(const std::string& name_, bool ownership_) :
-      m_name(name_ + "_evt"),
-      m_event(nullptr),
-      m_owner(ownership_)
+    explicit CNamedEvent(const std::string& name_, bool ownership_)
     {
-      m_name = (m_name[0] != '/') ? "/" + m_name : m_name; // make memory file path compatible for all posix systems
-      m_event = named_event_open(m_name.c_str());
+      const std::string event_name = name_ + "_evt";
+      m_shm_region = eCAL::posix::open_or_create_mapped_region<named_event_t>(event_name, named_event_initialize);
+      // In theory, the process that initializes the shm file will become the owner 
+      // and is responsible for unlinking it later on.
+      // However, for named events we want explicit ownership, this is why we change ownership
+      // after creating the files.
+      // TODO: check if this behavior is really necessary
+      m_shm_region.region.owner = ownership_;
     }
 
     ~CNamedEvent()
     {
-      if(m_event == nullptr) return;
-      named_event_close(m_event);
-      if(m_owner)
+      if(m_shm_region.ptr() == nullptr) return;
+      eCAL::posix::close_region(m_shm_region);
+      if(m_shm_region.owner())
       {
-        named_event_destroy(m_name.c_str());
+        eCAL::posix::unlink_region(m_shm_region);
       }
     }
 
     void set()
     {
-      if(m_event == nullptr) return;
-      named_event_set(m_event);
+      if(m_shm_region.ptr() == nullptr) return;
+      named_event_set(m_shm_region.ptr());
     }
 
     bool wait()
     {
-      if(m_event == nullptr) return false;
-      return(named_event_wait(m_event, nullptr));
+      if(m_shm_region.ptr() == nullptr) return false;
+      return(named_event_wait(m_shm_region.ptr(), nullptr));
     }
 
     bool wait(long timeout_)
     {
       // check event handle
-      if (m_event == nullptr) return false;
+      if (m_shm_region.ptr() == nullptr) return false;
 
       // timeout_ < 0 -> wait infinite
       if (timeout_ < 0)
       {
-        return(named_event_wait(m_event, nullptr));
+        return(named_event_wait(m_shm_region.ptr(), nullptr));
       }
       // timeout_ == 0 -> check state only
       else if (timeout_ == 0)
       {
-        return(named_event_trywait(m_event));
+        return(named_event_trywait(m_shm_region.ptr()));
       }
       // timeout_ > 0 -> wait timeout_ ms
       else
@@ -415,16 +347,14 @@ namespace eCAL
           abstime.tv_nsec -= 1000000000;
           abstime.tv_sec++;
         }
-        return(named_event_wait(m_event, &abstime));
+        return(named_event_wait(m_shm_region.ptr(), &abstime));
       }
     }
   private:
     CNamedEvent(const CNamedEvent&);             // prevent copy-construction
     CNamedEvent& operator=(const CNamedEvent&);  // prevent assignment
 
-    std::string     m_name;
-    named_event_t*  m_event;
-    bool            m_owner;
+    eCAL::posix::ShmTypedRegion<named_event_t> m_shm_region;
   };
 
   bool gOpenNamedEvent(EventHandleT* event_, const std::string& event_name_, bool ownership_)

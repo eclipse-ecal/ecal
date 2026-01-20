@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +20,27 @@
 
 #include "hdf5_writer_thread.h"
 
-#include "rec_client_core/ecal_rec_logger.h"
+#include <ecal/ecal.h>
+#include <ecal/measurement/base/types.h>
+#include <ecalhdf5/eh5_meas_api_v2.h>
+#include <ecalhdf5/eh5_types.h>
 
+#include "ThreadingUtils/InterruptibleThread.h"
+
+#include "frame.h"
+#include "rec_client_core/ecal_rec_logger.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/topic_info.h"
+
+#include <chrono>
+#include <cstdint>
+#include <deque>
 #include <ecal_utils/filesystem.h>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {
@@ -36,11 +55,20 @@ namespace eCAL
       : InterruptibleThread          ()
       , job_config_                  (job_config)
       , frame_buffer_                (initial_frame_buffer)
-      , written_frames_              (0)
+      , total_size_bytes_            (0)
+      , written_size_bytes_          (0)
+      , written_frames_count_        (0)
       , new_topic_info_map_          (initial_topic_info_map)
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
+      , throughput_statistics_       (2)
     {
+      // Initialize total size in bytes
+      for (const auto& frame : frame_buffer_)
+      {
+        total_size_bytes_ += frame->data_.size();
+      }
+
       hdf5_writer_ = std::make_unique<eCAL::eh5::v2::HDF5Meas>();
     }
 
@@ -73,6 +101,7 @@ namespace eCAL
       if (!flushing_)
       {
         frame_buffer_.push_back(frame);
+        total_size_bytes_ += frame->data_.size();
         input_cv_.notify_one();
         return true;
       }
@@ -153,12 +182,13 @@ namespace eCAL
             // take one frame from the framebuffer
             frame = frame_buffer_.front();
             frame_buffer_.pop_front();
-            if (written_frames_ == 0)
+            if (written_frames_count_ == 0)
             {
               first_written_frame_timestamp_ = frame->system_receive_time_;
             }
             last_written_frame_timestamp_ = frame->system_receive_time_;
-            written_frames_++;
+            written_frames_count_++;
+            written_size_bytes_ += frame->data_.size();
           }
         }
 
@@ -180,15 +210,20 @@ namespace eCAL
             break;
 
           // Write Frame element to HDF5
-          if (!hdf5_writer_->AddEntryToFile(
+          if (hdf5_writer_->AddEntryToFile(
             frame->data_.data(),
             frame->data_.size(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
             std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_, 
+            frame->topic_name_,
             frame->id_,
             frame->clock_
           ))
+          {
+            const std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
+            throughput_statistics_.AddFrame(static_cast<uint64_t>(frame->data_.size()));
+          }
+          else
           {
             last_status_.info_ = { false, "Error adding frame to measurement" };
             EcalRecLogger::Instance()->error("Hdf5WriterThread::Run(): Unable to add Frame to measurement");
@@ -244,8 +279,15 @@ namespace eCAL
           last_status_.total_length_        = last_written_frame_timestamp_ - first_written_frame_timestamp_;
         }
 
+        last_status_.total_size_bytes_      = total_size_bytes_;
         last_status_.unflushed_frame_count_ = frame_buffer_.size();
-        last_status_.total_frame_count_     = written_frames_ + frame_buffer_.size();
+        last_status_.unflushed_size_bytes_  = total_size_bytes_ - written_size_bytes_;
+        last_status_.total_frame_count_     = written_frames_count_ + frame_buffer_.size();
+      }
+
+      {
+        const std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
+        last_status_.write_throughput_ = throughput_statistics_.GetThroughput();
       }
 
       return last_status_;

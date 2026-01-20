@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +22,17 @@
 
 #include <CustomQt/QAbstractTreeItem.h>
 
+#include <Qt>
 #include <QString>
 #include <QIcon>
+#include <QVariant>
 
 #include <chrono>
+#include <utility>
+#include <cstdint>
 
-#include <rec_client_core/state.h>
 #include <rec_client_core/job_config.h>
+#include <rec_client_core/state.h>
 
 class JobHistoryJobItem : public QAbstractTreeItem
 {
@@ -59,9 +64,12 @@ public:
 
   bool updateIsDeleted(bool is_deleted);
 
-  eCAL::rec::JobState                                     combinedJobState()         const;
+  eCAL::rec::JobState                                     combinedJobState()        const;
   std::pair<std::chrono::steady_clock::duration, int64_t> combinedLength()          const;
+  uint64_t                                                combinedTotalSizeBytes()  const;
   int64_t                                                 combinedUnflushedFrames() const;
+  uint64_t                                                combinedUnflushedSizeBytes()const;
+  eCAL::rec::Throughput                                   combinedWriterThroughput()const;
   eCAL::rec::UploadStatus                                 combinedUploadStatus()    const;
   std::pair<bool, QString>                                combinedInfo()            const;
 
@@ -75,6 +83,7 @@ public:
     JOB,
     INVOLVED_HOSTS,
     LENGTH,
+    DISK_WRITERS_INFORMATION,
     STATUS,
     LOCAL_PATH,
     MAX_HDF5_FILE_SIZE_MIB,

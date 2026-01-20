@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,14 @@
 
 #include <rec_client_core/proto_helpers.h>
 
+#include "ecal/app/pb/rec/client_state.pb.h"
+#include "ecal/time.h"
+#include "rec_client_core/state.h"
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
+
 namespace eCAL
 {
   namespace rec
@@ -29,6 +38,15 @@ namespace eCAL
       /// To Protobuf
       /////////////////////////////////
 
+      void ToProtobuf(const eCAL::rec::Throughput& throughput, eCAL::pb::rec_client::State::Throughput& throughput_pb)
+      {
+        // bytes_per_sec
+        throughput_pb.set_bytes_per_sec(throughput.bytes_per_second_);
+
+        // frames_per_sec
+        throughput_pb.set_frames_per_sec(throughput.frames_per_second_);
+      }
+
       void ToProtobuf(const eCAL::rec::RecHdf5JobStatus&        hdf5_job_status,             eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_status_pb)
       {
         // total_length_secs
@@ -36,10 +54,19 @@ namespace eCAL
         
         // total_frame_count
         hdf5_status_pb.set_total_frame_count    (hdf5_job_status.total_frame_count_);
+
+        // total_size_bytes
+        hdf5_status_pb.set_total_size_bytes     (hdf5_job_status.total_size_bytes_);
         
         // unflushed_frame_count
         hdf5_status_pb.set_unflushed_frame_count(hdf5_job_status.unflushed_frame_count_);
-        
+
+        // unflushed_size_bytes
+        hdf5_status_pb.set_unflushed_size_bytes (hdf5_job_status.unflushed_size_bytes_);
+
+        // write_throughput
+        ToProtobuf(hdf5_job_status.write_throughput_, *hdf5_status_pb.mutable_write_throughput());
+
         // info_ok
         hdf5_status_pb.set_info_ok              (hdf5_job_status.info_.first);
         
@@ -141,10 +168,10 @@ namespace eCAL
       void ToProtobuf(const eCAL::rec::RecorderStatus& rec_status, const std::string& hostname, eCAL::pb::rec_client::State&                        rec_status_pb)
       {
         // hostname
-        rec_status_pb.set_host_name                            (hostname);
+        rec_status_pb.set_host_name                           (hostname);
 
         // process_id
-        rec_status_pb.set_process_id                                 (rec_status.pid_);
+        rec_status_pb.set_process_id                          (rec_status.pid_);
 
         // initialized
         rec_status_pb.set_initialized                         (rec_status.initialized_);
@@ -160,6 +187,9 @@ namespace eCAL
         {
           rec_status_pb.add_subscribed_topics(subscribed_topic);
         }
+
+        // subscriber_throughput
+        ToProtobuf(rec_status.subscriber_throughput_, *rec_status_pb.mutable_subscriber_throughput());
 
         // addon_statuses
         for (const eCAL::rec::RecorderAddonStatus& rec_addon_status : rec_status.addon_statuses_)
@@ -185,6 +215,13 @@ namespace eCAL
         rec_status_pb.set_timestamp_nsecs                     (std::chrono::duration_cast<std::chrono::nanoseconds>(rec_status.timestamp_.time_since_epoch()).count());
       }
 
+
+      eCAL::pb::rec_client::State::Throughput               ToProtobuf(const eCAL::rec::Throughput&              throughput)
+      {
+        eCAL::pb::rec_client::State::Throughput result;
+        ToProtobuf(throughput, result);
+        return result;
+      }
 
       eCAL::pb::rec_client::State::RecHdf5Status            ToProtobuf(const eCAL::rec::RecHdf5JobStatus&        hdf5_job_status)
       {
@@ -274,11 +311,20 @@ namespace eCAL
       /// From Protobuf
       /////////////////////////////////
 
+      void FromProtobuf(const eCAL::pb::rec_client::State::Throughput& throughput_pb, eCAL::rec::Throughput& throughput)
+      {
+        throughput.bytes_per_second_  = throughput_pb.bytes_per_sec();
+        throughput.frames_per_second_ = throughput_pb.frames_per_sec();
+      }
+
       void FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status& hdf5_status_pb, eCAL::rec::RecHdf5JobStatus& hdf5_job_status)
       {
         hdf5_job_status.total_frame_count_     = hdf5_status_pb.total_frame_count();
         hdf5_job_status.total_length_          = std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(hdf5_status_pb.total_length_secs()));
+        hdf5_job_status.total_size_bytes_      = hdf5_status_pb.total_size_bytes();
         hdf5_job_status.unflushed_frame_count_ = hdf5_status_pb.unflushed_frame_count();
+        hdf5_job_status.unflushed_size_bytes_  = hdf5_status_pb.unflushed_size_bytes();
+        FromProtobuf(hdf5_status_pb.write_throughput(), hdf5_job_status.write_throughput_);
         hdf5_job_status.info_                  = std::make_pair(hdf5_status_pb.info_ok(), hdf5_status_pb.info_message());
       }
 
@@ -367,6 +413,9 @@ namespace eCAL
           rec_status.subscribed_topics_.emplace(subscribed_topic);
         }
 
+        // subscriber_throughput_
+        FromProtobuf(rec_status_pb.subscriber_throughput(), rec_status.subscriber_throughput_);
+
         // addon_statuses_
         rec_status.addon_statuses_.clear();
         rec_status.addon_statuses_.reserve(rec_status_pb.addon_statuses_size());
@@ -385,6 +434,13 @@ namespace eCAL
         // info_
         rec_status.info_.first  = rec_status_pb.info_ok();
         rec_status.info_.second = rec_status_pb.info_message();
+      }
+
+      eCAL::rec::Throughput                             FromProtobuf(const eCAL::pb::rec_client::State::Throughput&               throughput_pb)
+      {
+        eCAL::rec::Throughput output;
+        FromProtobuf(throughput_pb, output);
+        return output;
       }
 
       eCAL::rec::RecHdf5JobStatus                       FromProtobuf(const eCAL::pb::rec_client::State::RecHdf5Status&            hdf5_job_status_pb)

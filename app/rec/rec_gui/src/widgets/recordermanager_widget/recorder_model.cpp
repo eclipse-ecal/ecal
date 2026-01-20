@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +19,25 @@
 */
 
 #include "recorder_model.h"
+#include "rec_client_core/state.h"
+#include "rec_server_core/rec_server_config.h"
+#include "rec_server_core/rec_server_types.h"
+#include "rec_server_core/status.h"
 
+#include <Qt>
+#include <QAbstractItemModel>
 #include <QFont>
 #include <QStyle>
+#include <QStringList>
+
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+#include <list>
+#include <map>
+#include <set>
+#include <utility>
+#include <vector>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   #include <QDesktopWidget>
@@ -31,6 +48,7 @@
 #include <QStyleOption>
 #include <QBrush>
 #include <QVariant>
+#include <QTimeZone>
 #include <QDateTime>
 
 #include "qecalrec.h"
@@ -38,8 +56,9 @@
 #include <chrono>
 
 #include <ecal/ecal.h>
-#include <ecal_utils/string.h>
 #include "models/item_data_roles.h"
+
+#include <CustomQt/QBytesToPrettyStringUtils.h>
 
 //////////////////////////////////////////////////////
 // Constructor & destructor
@@ -349,7 +368,8 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
         {
             if (role == Qt::ItemDataRole::DisplayRole)
             {
-              return tr("Recording");
+              return tr("Recording")
+                + " (" + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr("/s)");
             }
             else if (role == Qt::ItemDataRole::DecorationRole)
             {
@@ -360,7 +380,8 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
         {
           if (role == Qt::ItemDataRole::DisplayRole)
           {
-            return tr("Subscribing (") + QString::number(recorder_list_[row].subscribed_topics_.size()) + tr(" Topics)");
+            return tr("Subscribing (") + QString::number(recorder_list_[row].subscribed_topics_.size()) + tr(" Topics, ")
+                 + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr("/s)");
           }
           else if (role == Qt::ItemDataRole::DecorationRole)
           {
@@ -397,6 +418,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
             else
             {
               tooltip += "\nSubscribed to " + QString::number(recorder_list_[row].subscribed_topics_.size()) + " Topics";
+              tooltip += "\nReceiving " + bytesToPrettyString(recorder_list_[row].subscriber_throughput_.bytes_per_second_) + tr(" / s");
             }
           }
 
@@ -525,7 +547,7 @@ QVariant RecorderModel::data(const QModelIndex &index, int role) const
       {
         if (role == Qt::ItemDataRole::DisplayRole)
         {
-          QDateTime time = QDateTime::fromMSecsSinceEpoch(std::chrono::duration_cast<std::chrono::milliseconds>(recorder_list_[row].timestamp_.time_since_epoch()).count(), Qt::TimeSpec::UTC);
+          const QDateTime time = QDateTime::fromMSecsSinceEpoch(std::chrono::duration_cast<std::chrono::milliseconds>(recorder_list_[row].timestamp_.time_since_epoch()).count(), QTimeZone("UTC"));
           return time.toString("yyyy-MM-dd hh:mm:ss.zzz");
         }
         else if (role == ItemDataRoles::SortRole)
@@ -1216,6 +1238,13 @@ void RecorderModel::recorderStatusUpdate(const eCAL::rec_server::RecorderStatusM
           if (recorder_list_[i].subscribed_topics_ != recorder_status_it->second.first.subscribed_topics_)
           {
             recorder_list_[i].subscribed_topics_ = recorder_status_it->second.first.subscribed_topics_;
+            update_view = true;
+          }
+
+          // subscriber_throughput_ (HDF5)
+          if (recorder_list_[i].subscriber_throughput_ != recorder_status_it->second.first.subscriber_throughput_)
+          {
+            recorder_list_[i].subscriber_throughput_ = recorder_status_it->second.first.subscriber_throughput_;
             update_view = true;
           }
 

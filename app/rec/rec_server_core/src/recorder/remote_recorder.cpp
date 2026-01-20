@@ -93,10 +93,8 @@ namespace eCAL
 
             QueueSetCommand_NoLock(initialize_command);
           }
-          else
-          {
-            should_be_connected_to_ecal_ = connect_to_ecal;
-          }
+
+          should_be_connected_to_ecal_ = true;
         }
 
         // Inform the thread about the settings AND the initialize command
@@ -114,6 +112,8 @@ namespace eCAL
 
         if (should_be_connected_to_ecal_ && (connected_service_client_id_.entity_id != 0))
         {
+          should_be_connected_to_ecal_ = false;
+
           // De-initialize the recorder
           RecorderCommand de_initialize_command;
           de_initialize_command.type_ = RecorderCommand::Type::DE_INITIALIZE;

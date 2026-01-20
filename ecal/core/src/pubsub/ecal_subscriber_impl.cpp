@@ -810,6 +810,7 @@ namespace eCAL
   {
     const std::lock_guard<std::mutex> lock(m_message_drop_map_mutex);
     m_message_drop_map.RegisterReceivedMessage(publication_info_, message_counter);
+    m_publisher_message_counter_map.SetCounter(publication_info_, message_counter);
   }
 
   bool CSubscriberImpl::ShouldApplySampleBasedOnLayer(eTLayerType layer_) const

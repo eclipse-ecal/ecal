@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +21,20 @@
 #include "rec_client_core/ecal_rec.h"
 
 #include "ecal_rec_impl.h"
-#include "rec_client_core/ecal_rec_logger.h"
 
-#include "EcalParser/EcalParser.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/rec_error.h"
+#include "rec_client_core/record_mode.h"
+#include "rec_client_core/state.h"
+#include "rec_client_core/upload_config.h"
 
-#include <iostream>
-#include <fstream>
-
-#include <ecal_utils/filesystem.h>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <utility>
+#include <set>
+#include <string>
 
 namespace eCAL
 {
@@ -178,6 +185,11 @@ namespace eCAL
     std::set<std::string> EcalRec::GetSubscribedTopics() const
     {
       return recorder_->GetSubscribedTopics();
+    }
+
+    Throughput EcalRec::GetSubscriberThroughput() const
+    {
+      return recorder_->GetSubscriberThroughput();
     }
   }
 }

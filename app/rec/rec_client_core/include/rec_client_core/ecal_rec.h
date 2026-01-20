@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +18,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once 
+#pragma once
 
-#include <memory>
-#include <vector>
 #include <chrono>
-#include <map>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
 #include <set>
-#include <thread>
+#include <string>
+#include <utility>
 
 #include <rec_client_core/state.h>
-#include <rec_client_core/topic_info.h>
 
 #include <rec_client_core/record_mode.h>
 #include <rec_client_core/job_config.h>
@@ -45,6 +46,9 @@ namespace eCAL
 
     class EcalRec
     {
+    //////////////////////////////////////
+    /// EcalRec class                 ////
+    //////////////////////////////////////
     public:
       EcalRec();
       ~EcalRec();
@@ -109,6 +113,8 @@ namespace eCAL
       bool IsConnectedToEcal() const;
 
       std::set<std::string> GetSubscribedTopics() const;
+
+      Throughput GetSubscriberThroughput() const;
 
     private:
       std::unique_ptr<EcalRecImpl> recorder_;

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +20,31 @@
 
 #pragma once
 
-#include "frame.h"
+#include <ecal/ecal.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <chrono>
-#include <mutex>
+#include <cstdint>
 #include <list>
 #include <map>
+#include <memory>
+#include <mutex>
 #include <set>
-#include <thread>
+#include <shared_mutex>
+#include <string>
+#include <utility>
 
-#include <ecal_utils/ecal_utils.h>
-
+#include <rec_client_core/job_config.h>
+#include <rec_client_core/record_mode.h>
 #include <rec_client_core/state.h>
 #include <rec_client_core/topic_info.h>
-#include <rec_client_core/record_mode.h>
-#include <rec_client_core/job_config.h>
 #include <rec_client_core/upload_config.h>
+#include <rec_client_core/rec_error.h>
 
-#include "job/record_job.h"
-
+#include "ecal/pubsub/types.h"
 #include "frame_buffer.h"
-
-#include <ecal/pubsub/subscriber.h>
+#include "job/record_job.h"
+#include "throughput_statistics.h"
 
 namespace eCAL
 {
@@ -49,6 +53,13 @@ namespace eCAL
     class GarbageCollectorTriggerThread;
     class MonitoringThread;
     class AddonManager;
+
+    struct SubscriberStatisticsEntry
+    {
+      std::chrono::steady_clock::time_point start_of_statistics;
+      uint64_t                              bytes_since_start = 0;
+      uint64_t                              frames_since_start = 0;
+    };
 
     class EcalRecImpl
     {
@@ -116,6 +127,8 @@ namespace eCAL
 
       void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
 
+      Throughput GetSubscriberThroughput() const;
+
       //////////////////////////////////////
       //// API for external threads     ////
       //////////////////////////////////////
@@ -164,6 +177,11 @@ namespace eCAL
       RecordMode                                                record_mode_;       /**< All / Blacklist / Whitelist */
       std::set<std::string>                                     listed_topics_;     /**< When in Blacklist or Whitelist mode, this list holds the according topic list */
       std::set<std::string>                                     hosts_filter_;      /**< Only subscribe to topics published by there hosts*/
+
+    // Subscriber throughput statistics
+    private:
+      mutable ThroughputStatistics          subscriber_throughput_statistics_;// todo don't make mutable
+      mutable std::mutex                    subscriber_throughput_mutex_;
     };
   }
 }
