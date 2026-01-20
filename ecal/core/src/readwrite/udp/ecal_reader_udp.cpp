@@ -29,6 +29,7 @@
 
 #include "io/udp/ecal_udp_configurations.h"
 #include "config/builder/udp_attribute_builder.h"
+#include <ecal_serialize_sample_payload.h>
 
 #include <functional>
 #include <memory>
@@ -37,29 +38,12 @@
 
 namespace eCAL
 {
-  ////////////////
-  // LAYER
-  ////////////////
-  CUDPReaderLayer::CUDPReaderLayer() : m_started(false)
-  {}
-
-  CUDPReaderLayer::~CUDPReaderLayer() = default;
-
-  void CUDPReaderLayer::Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_)
-  {
-     m_attributes = attr_;
-  }
 
   void CUDPReaderLayer::AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
   {
     if (!m_started)
     {      
       // start payload sample receiver
-      m_payload_receiver = std::make_shared<UDP::CSampleReceiver>(
-        eCALReader::UDP::ConvertToIOUDPReceiverAttributes(m_attributes), 
-        std::bind(&CUDPReaderLayer::HasSample, this, std::placeholders::_1), 
-        std::bind(&CUDPReaderLayer::ApplySample, this, std::placeholders::_1, std::placeholders::_2)
-      );
 
       m_started = true;
     }
@@ -98,21 +82,89 @@ namespace eCAL
     }
   }
   
-  bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
+
+  CUDPReaderLayer::CUDPReaderLayer(const eCAL::eCALReader::UDP::SAttributes& attr_)
+    : CTransportLayerInstance(LayerType::UDP)
+    , m_attributes(attr_)
   {
-    /*
-    auto subgate = g_subgate();
-    if (subgate) return subgate->HasSample(sample_name_);
-    */
+    m_payload_receiver = std::make_unique<UDP::CSampleReceiver>(
+      eCALReader::UDP::ConvertToIOUDPReceiverAttributes(m_attributes),
+      [](const std::string& sample_name_) {return true; },
+      [this](const char* serialized_sample_data_, size_t serialized_sample_size_) { return OnUDPMessage(serialized_sample_data_, serialized_sample_size_); }
+    );
+
+  }
+
+  bool CUDPReaderLayer::AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const
+  {
     return false;
   }
 
-  bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
+  CTransportLayerInstance::ConnectionToken CUDPReaderLayer::AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed)
   {
-    /*
-    auto subgate = g_subgate();
-    if (subgate) return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
-    */
-    return false;
+
+
+
+
+
+    auto on_remove_subscription = [this, publisher](const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/)
+    {
+      
+    };
+    return CTransportLayerInstance::ConnectionToken::Make(on_remove_subscription);
+  }
+
+
+  void CUDPReaderLayer::OnUDPMessage(const char* serialized_sample_data_, size_t serialized_sample_size_)
+  {
+    Payload::Sample ecal_sample;
+    if (!DeserializeFromBuffer(serialized_sample_data_, serialized_sample_size_, ecal_sample)) return false;
+
+    size_t applied_size(0);
+    switch (ecal_sample.cmd_type)
+    {
+    case bct_set_sample:
+    {
+#ifndef NDEBUG
+      // check layer
+      if (layer_ == eTLayerType::tl_none)
+      {
+        // log it
+        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
+      }
+#endif
+
+      // extract payload
+      const char* payload_addr = nullptr;
+      size_t      payload_size = 0;
+      switch (ecal_sample.content.payload.type)
+      {
+      case eCAL::Payload::pl_raw:
+        payload_addr = ecal_sample.content.payload.raw_addr;
+        payload_size = ecal_sample.content.payload.raw_size;
+        break;
+      case eCAL::Payload::pl_vec:
+        payload_addr = ecal_sample.content.payload.vec.data();
+        payload_size = ecal_sample.content.payload.vec.size();
+        break;
+      default:
+        break;
+      }
+
+    // Find correct callback
+    auto publisher_callback_information = m_receive_callbacks.find(ecal_sample.topic_info.topic_id);
+    if (publisher_callback_information != m_receive_callbacks.end())
+    {
+      const auto& callback_data = publisher_callback_information->second;
+      SReceiveCallbackData data;
+      data.buffer = payload_addr;
+      data.buffer_size = payload_size;
+      data.send_clock = ecal_sample.content.clock;
+      data.send_timestamp = ecal_sample.content.time;
+      // id & hash currently unused
+      // Call data callback
+      callback_data.data_callback(callback_data.id, callback_data.data_type_info, data);
+    }
+
   }
 }

@@ -37,27 +37,30 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer, eCAL::eCALReader::UDP::SAttributes>
+  class CUDPReaderLayer : CTransportLayerInstance
   {
   public:
-    CUDPReaderLayer();
-    ~CUDPReaderLayer() override;
+    CUDPReaderLayer(const eCAL::eCALReader::UDP::SAttributes& attr_);
+    ~CUDPReaderLayer() override = default;
 
-    void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
-
-    void AddSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/) override;
-    void RemSubscription(const std::string& /*host_name_*/, const std::string& topic_name_, const EntityIdT& /*topic_id_*/) override;
-
-    void SetConnectionParameter(SReaderLayerPar& /*par_*/) override {}
+    bool AcceptsConnection(const PublisherConnectionParameters& publisher, const SubscriberConnectionParameters& subscriber) const override;
+    CTransportLayerInstance::ConnectionToken AddConnection(const PublisherConnectionParameters& publisher, const ReceiveCallbackT& on_data, const ConnectionChangeCallback& on_connection_changed) override;
 
   private:
-    bool HasSample(const std::string& sample_name_);
-    bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_);
+    void OnUDPMessage(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
-    bool                                   m_started;
-    std::shared_ptr<UDP::CSampleReceiver>  m_payload_receiver;
-    std::map<std::string, int>             m_topic_name_mcast_map;
-
+    // global, per process UDP attributes
     eCAL::eCALReader::UDP::SAttributes     m_attributes;
+    std::unique_ptr<UDP::CSampleReceiver>  m_payload_receiver;
+    std::map<std::string, int>             m_topic_name_mcast_map;
+    
+    struct PublisherReceiveCallbackData
+    {
+      STopicId                    id;
+      SDataTypeInformation        data_type_info;
+      ReceiveCallbackT            data_callback;
+    };
+    std::map<EntityIdT, PublisherReceiveCallbackData> m_receive_callbacks;
   };
+
 }
