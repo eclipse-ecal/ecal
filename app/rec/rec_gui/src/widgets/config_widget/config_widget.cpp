@@ -21,6 +21,7 @@
 
 #include <QDir>
 #include <QFileDialog>
+#include <QCheckBox>
 #include "qecalrec.h"
 
 #include <EcalParser/EcalParser.h>
@@ -35,7 +36,14 @@ ConfigWidget::ConfigWidget(QWidget *parent)
   connect(ui_.measurement_name_lineedit,      &QLineEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setMeasName   (ui_.measurement_name_lineedit->text().toStdString()); });
   connect(ui_.description_textedit,           &QTextEdit::textChanged,  QEcalRec::instance(), [this]() {QEcalRec::instance()->setDescription(ui_.description_textedit->toPlainText().toStdString()); });
   connect(ui_.max_file_size_spinbox, static_cast<void (QSpinBox:: *)(int)>(&QSpinBox::valueChanged), QEcalRec::instance(), [](int megabytes) {QEcalRec::instance()->setMaxFileSizeMib(megabytes); });
-  connect(ui_.one_file_per_topic_checkbox,    &QCheckBox::checkStateChanged, QEcalRec::instance(), [this]() {QEcalRec::instance()->setOneFilePerTopicEnabled(ui_.one_file_per_topic_checkbox->isChecked()); });
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
+#define QCHECKBOX_STATE_CHANGED_SIGNAL checkStateChanged
+#else
+#define QCHECKBOX_STATE_CHANGED_SIGNAL stateChanged
+#endif
+
+  connect(ui_.one_file_per_topic_checkbox,    &QCheckBox::QCHECKBOX_STATE_CHANGED_SIGNAL, QEcalRec::instance(), [this]() {QEcalRec::instance()->setOneFilePerTopicEnabled(ui_.one_file_per_topic_checkbox->isChecked()); });
   connect(ui_.user_meass_rec_path_toolButton, &QToolButton::clicked, this, &ConfigWidget::userRecPathButtonPressed);
 
   connect(ui_.refresh_path_preview_button,    &QAbstractButton::clicked,            QEcalRec::instance(), [this]() { updatePathPreviewAndWarningLabel(); });
