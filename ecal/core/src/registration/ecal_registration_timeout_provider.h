@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +70,7 @@ namespace eCAL
         }
         else
         {
-          UpdateSample(sample_);
+          UpdateOrInsertSample(sample_);
         }
         return true;
       }
@@ -87,8 +88,7 @@ namespace eCAL
 
         for (const auto& registration_sample : expired_samples)
         {
-          Sample unregistration_sample = CreateUnregisterSample(registration_sample.second);
-          apply_sample_callback(unregistration_sample);
+          apply_sample_callback(registration_sample.second);
         }
       }
 
@@ -99,10 +99,20 @@ namespace eCAL
         sample_tracker.erase(sample_.identifier);
       }
 
-      void UpdateSample(const Sample& sample_)
+      void UpdateOrInsertSample(const Sample& sample_)
       {
         std::lock_guard<std::mutex> lock(sample_tracker_mutex);
-        sample_tracker[sample_.identifier] = sample_;
+        
+        typename SampleTrackerMap::iterator element = sample_tracker.find(sample_.identifier);
+
+        if (element == sample_tracker.end())
+        {
+          sample_tracker.insert({ sample_.identifier, CreateUnregisterSample(sample_) });
+        }
+        else
+        {
+          sample_tracker.update(element);
+        }
       }
 
       using SampleTrackerMap = Util::CExpirationMap<Registration::SampleIdentifier, Registration::Sample, ClockType>;

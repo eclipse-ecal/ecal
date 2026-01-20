@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -209,6 +210,11 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                     "Use native mutex with monot
 # ecal core configuration
 # --------------------------------------------------------
 set(ECAL_CORE_USE_PROTOBUF                                                                                              ON)
+if (CMAKE_CROSSCOMPILING)
+set(ECAL_CORE_GENERATE_PBFTAGS                                                                                         OFF)
+else()
+set(ECAL_CORE_GENERATE_PBFTAGS                                                                                          ON)
+endif()
 set(ECAL_CORE_BUILD_SAMPLES                                                                          ${ECAL_BUILD_SAMPLES})
 set(ECAL_CORE_BUILD_TESTS                                                                              ${ECAL_BUILD_TESTS})
 set(ECAL_CORE_CONFIGURATION                                                                                             ON)
@@ -552,7 +558,7 @@ if(ECAL_BUILD_TESTS)
   # ------------------------------------------------------
   # test apps
   # ------------------------------------------------------
-  if (ECAL_USE_HDF5 AND ECAL_USE_QT)
+  if (ECAL_BUILD_APPS AND ECAL_USE_HDF5 AND ECAL_USE_QT)
     add_subdirectory(app/rec/rec_tests/rec_rpc_tests)
   endif()
 endif()
@@ -648,6 +654,7 @@ message(STATUS "ECAL_THIRDPARTY_BUILD_GTEST                         : ${ECAL_THI
 message(STATUS "ECAL_THIRDPARTY_BUILD_HDF5                          : ${ECAL_THIRDPARTY_BUILD_HDF5}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_NANOBIND                      : ${ECAL_THIRDPARTY_BUILD_NANOBIND}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOBUF                      : ${ECAL_THIRDPARTY_BUILD_PROTOBUF}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_PROTOZERO                     : ${ECAL_THIRDPARTY_BUILD_PROTOZERO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_QWT                           : ${ECAL_THIRDPARTY_BUILD_QWT}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_RECYCLE                       : ${ECAL_THIRDPARTY_BUILD_RECYCLE}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_SPDLOG                        : ${ECAL_THIRDPARTY_BUILD_SPDLOG}")

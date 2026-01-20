@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,7 +171,8 @@ namespace eCAL
       m_callback_adapter = std::make_shared<CSubscriberEventCallbackAdapater>(m_subscriber_impl);
 
       // register datareader
-      g_subgate()->Register(topic_name_, m_subscriber_impl);
+      auto subgate = g_subgate();
+      if (subgate) subgate->Register(topic_name_, m_subscriber_impl);
 
       // we made it :-)
       return(true);
@@ -189,7 +191,8 @@ namespace eCAL
       RemReceiveCallback();
 
       // unregister datareader
-      if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
+      auto subgate = g_subgate();
+      if (subgate) subgate->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
 
 #ifndef NDEBUG
       // log it
@@ -210,14 +213,14 @@ namespace eCAL
       return(true);
     }
 
-    bool CSubscriber::SetAttribute(const std::string& attr_name_, const std::string& attr_value_)
+    bool CSubscriber::SetAttribute(const std::string& /*attr_name_*/, const std::string& /*attr_value_*/)
     {
       if (m_subscriber_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");
       return false;
     }
 
-    bool CSubscriber::ClearAttribute(const std::string& attr_name_)
+    bool CSubscriber::ClearAttribute(const std::string& /*attr_name_*/)
     {
       if (m_subscriber_impl == nullptr) return false;
       Logging::Log(Logging::log_level_warning, m_subscriber_impl->GetTopicName() + "::CSubscriber::SetAttribute - Setting subscriber attributes no longer has an effect.");

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,15 +112,17 @@ namespace eCAL
   {
     bool initialized{ false };
 
-    if (g_globals_ctx == nullptr)
+    auto globals = g_globals();
+    if (!globals)
     {
-      g_ecal_configuration = config_;
+      SetGlobalEcalConfiguration(config_);
       SetGlobalUnitName(unit_name_.c_str());
 
-      g_globals_ctx = std::make_unique<CGlobals>();
-      initialized = g_globals()->Initialize(components_);
-      if (!initialized)
-        g_globals_ctx.reset();
+      auto globals_instance = CreateGlobalsInstance();
+      if (!globals_instance) return false;
+
+      initialized = globals_instance->Initialize(components_);
+      if (!initialized) ResetGlobalsInstance();
     }
     
     return initialized;
@@ -134,10 +137,9 @@ namespace eCAL
   **/
   bool IsInitialized()
   {
-    if (g_globals_ctx == nullptr)
-      return false;
-
-    return g_globals()->IsInitialized();
+    auto globals = g_globals();
+    if (globals) return globals->IsInitialized();
+    return false;
   }
 
   /**
@@ -149,10 +151,9 @@ namespace eCAL
   **/
   bool IsInitialized(unsigned int component_)
   {
-    if (g_globals_ctx == nullptr)
-      return false;
-
-    return g_globals()->IsInitialized(component_);
+    auto globals = g_globals();
+    if (globals ) return globals->IsInitialized(component_);
+    return false ;
   }
 
   /**
@@ -163,11 +164,14 @@ namespace eCAL
   bool Finalize()
   {
     bool finalized{ false };
-    if (g_globals_ctx != nullptr)
+    auto globals = g_globals();
+    if (globals)
     {
-      finalized = g_globals()->Finalize();
-      g_globals_ctx.reset();
+      finalized = globals->Finalize();
+      ResetGlobalsInstance();
     }
+    ResetGlobalEcalConfiguration();
+
     return finalized;
   }
 
@@ -178,7 +182,8 @@ namespace eCAL
   **/
   bool Ok()
   {
-    const bool ecal_is_ok = (g_globals_ctx != nullptr) && !gWaitForEvent(ShutdownProcEvent(), 0);
+    auto globals = g_globals();
+    const bool ecal_is_ok = globals && !gWaitForEvent(ShutdownProcEvent(), 0);
     return(ecal_is_ok);
   }
 }

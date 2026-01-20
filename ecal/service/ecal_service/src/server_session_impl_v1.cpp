@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,25 +56,26 @@ namespace ecal_service
 
   std::shared_ptr<ServerSessionV1> ServerSessionV1::create(const std::shared_ptr<asio::io_context>&          io_context
                                                           , const ServerServiceCallbackT&                    service_callback
-                                                          , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
+                                                          , const PostToServiceCallbackExecutorFunctionT&    post_to_service_callback_executor
                                                           , const ServerEventCallbackT&                      event_callback
                                                           , const ShutdownCallbackT&                         shutdown_callback
                                                           , const LoggerT&                                   logger)
   {
-    std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context, service_callback, service_callback_strand, event_callback, shutdown_callback, logger));
+    std::shared_ptr<ServerSessionV1> instance = std::shared_ptr<ServerSessionV1>(new ServerSessionV1(io_context, service_callback, post_to_service_callback_executor, event_callback, shutdown_callback, logger));
     return instance;
   }
 
   ServerSessionV1::ServerSessionV1(const std::shared_ptr<asio::io_context>&          io_context
                                   , const ServerServiceCallbackT&                    service_callback
-                                  , const std::shared_ptr<asio::io_context::strand>& service_callback_strand
+                                  , const PostToServiceCallbackExecutorFunctionT&    post_to_service_callback_executor
                                   , const ServerEventCallbackT&                      event_callback
                                   , const ShutdownCallbackT&                         shutdown_callback
                                   , const LoggerT&                                   logger)
-    : ServerSessionBase(io_context, service_callback, service_callback_strand, event_callback, shutdown_callback)
-    , state_                    (State::NOT_CONNECTED)
-    , accepted_protocol_version_(0)
-    , logger_                   (logger)
+    : ServerSessionBase(io_context, service_callback, event_callback, shutdown_callback)
+    , state_                            (State::NOT_CONNECTED)
+    , accepted_protocol_version_        (0)
+    , post_to_service_callback_executor_(post_to_service_callback_executor)
+    , logger_                           (logger)
   {
     ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Server Session Created");
   }
@@ -270,7 +272,7 @@ namespace ecal_service
                               me->event_callback_(ecal_service::ServerEventType::Disconnected, message);
                               me->shutdown_callback_(me);
                             }
-                          , service_callback_strand_->wrap([me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
+                          , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
                             {
                               TcpHeaderV1* header = reinterpret_cast<TcpHeaderV1*>(header_buffer->data());
                               if (header->message_type != ecal_service::MessageType::ServiceRequest)
@@ -295,14 +297,22 @@ namespace ecal_service
                                 
                                 ECAL_SERVICE_LOG_DEBUG(me->logger_, "[" + get_connection_info_string(me->socket_) + "] " + "Received service request of " + std::to_string(payload_buffer->size()) + " bytes");
 
-                                // Call the service callback
+                                // Prepare a buffer for the response
                                 const std::shared_ptr<std::string> response_buffer = std::make_shared<std::string>();
-                                me->service_callback_(payload_buffer, response_buffer);
 
-                                // Send the response to the client
-                                me->send_service_response(response_buffer);
+                                // Post the service callback to the user-defined executor.
+                                // Note: The capture contains a dummy work guard to keep the io_context alive,
+                                //       even if the user passes the service callback to another thread.
+                                me->post_to_service_callback_executor_([me, payload_buffer, response_buffer, dummy_work = asio::make_work_guard(me->io_context_)]()
+                                                                      {
+                                                                        me->service_callback_(payload_buffer, response_buffer);
+
+                                                                        // Send the response to the client
+                                                                        me->send_service_response(response_buffer);
+                                                                      }
+                                ); 
                               }
-                            }));
+                            });
 
   }
 

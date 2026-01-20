@@ -53,44 +53,53 @@ namespace ecal_service
   // Public API
   //////////////////////////////////////////
   public:
-    inline std::string GetDescription() const
-    {
-      switch (error_code_)
+      [[nodiscard]] std::string GetDescription() const
       {
-      // Generic
-      case OK:                                    return "OK";                                            break;
-      case GENERIC_ERROR:                         return "Error";                                         break;
+        switch (error_code_) {
+        // Generic
+        case OK:
+          return "OK";
+          break;
+        case GENERIC_ERROR:
+          return "Error";
+          break;
 
-      // Client Calls
-      case CONNECTION_CLOSED:                     return "Connection closed";                             break;  
-      case UNKNOWN_SERVER:                        return "Unknown server";                                break;
-      case PROTOCOL_ERROR:                        return "Protocol error";                                break;
-      case STOPPED_BY_USER:                       return "Stopped by user";                               break;
+        // Client Calls
+        case CONNECTION_CLOSED:
+          return "Connection closed";
+          break;
+        case UNKNOWN_SERVER:
+          return "Unknown server";
+          break;
+        case PROTOCOL_ERROR:
+          return "Protocol error";
+          break;
+        case STOPPED_BY_USER:
+          return "Stopped by user";
+          break;
 
-      default:                                    return "Unknown error";
-      }
+        default:
+          return "Unknown error";
+        }
     }
 
-    inline std::string ToString() const
+    [[nodiscard]] std::string ToString() const
     {
       return (message_.empty() ? GetDescription() : GetDescription() + " (" + message_ + ")");
     }
 
-    const inline std::string& GetMessage() const
-    {
-      return message_;
-    }
+    [[nodiscard]] const std::string &GetMessage() const { return message_; }
 
-  //////////////////////////////////////////
-  // Operators
-  //////////////////////////////////////////
-    inline operator bool() const { return error_code_ != ErrorCode::OK; }
-    inline bool operator== (const Error& other)    const { return error_code_ == other.error_code_; }
-    inline bool operator== (const ErrorCode other) const { return error_code_ == other; }
-    inline bool operator!= (const Error& other)    const { return error_code_ != other.error_code_; }
-    inline bool operator!= (const ErrorCode other) const { return error_code_ != other; }
+    //////////////////////////////////////////
+    // Operators
+    //////////////////////////////////////////
+    operator bool() const { return error_code_ != ErrorCode::OK; }
+    bool operator==(const Error &other) const { return error_code_ == other.error_code_; }
+    bool operator==(const ErrorCode other) const { return error_code_ == other; }
+    bool operator!=(const Error &other) const { return error_code_ != other.error_code_; }
+    bool operator!=(const ErrorCode other) const { return error_code_ != other; }
 
-    inline Error& operator=(ErrorCode error_code)
+    Error &operator=(ErrorCode error_code)
     {
       error_code_ = error_code;
       return *this;

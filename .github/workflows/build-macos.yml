@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-macos:
-    runs-on: macos-13
+    runs-on: macos-15
 
     steps:
       # XProtect can cause random failures if it decides that the DMG we create
@@ -46,6 +46,7 @@ jobs:
           thirdparty/qwt/qwt \
           thirdparty/recycle/recycle \
           thirdparty/spdlog/spdlog \
+          thirdparty/protozero/protozero \
           thirdparty/tclap/tclap \
           thirdparty/tcp_pubsub/tcp_pubsub \
           thirdparty/termcolor/termcolor \
@@ -69,6 +70,10 @@ jobs:
     - name: CMake
       id: cmake-configure
       run: |
+        HDF5_PREFIX="$(brew --prefix hdf5@1.10)"
+        QT5_PREFIX="$(brew --prefix qt@5)"
+        PB_PREFIX="$(brew --prefix protobuf@29)"
+      
         cmake -S . -B _build -G "Ninja" \
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
         -DECAL_USE_HDF5=ON \
@@ -98,7 +103,7 @@ jobs:
         -DECAL_THIRDPARTY_BUILD_QWT=ON \
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH="/usr/local/opt/hdf5@1.10;/usr/local/opt/qt@5;/usr/local/opt/protobuf@29" \
+        -DCMAKE_PREFIX_PATH="$HDF5_PREFIX;$QT5_PREFIX;$PB_PREFIX" \
         -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
         -DPython_FIND_STRATEGY=LOCATION \

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,16 +196,20 @@ namespace eCAL
       sstream << "Synchronization realtime : " << Config::GetTimesyncModuleName() << '\n';
       sstream << "Synchronization replay   : " << Config::GetTimesyncModuleReplay() << '\n';
       sstream << "State                    : ";
-      if (g_timegate()->IsSynchronized()) sstream << " synchronized " << '\n';
-      else                                sstream << " not synchronized " << '\n';
-      sstream << "Master / Slave           : ";
-      if (g_timegate()->IsMaster())       sstream << " Master " << '\n';
-      else                                sstream << " Slave " << '\n';
-      int         status_state = 0;
-      std::string status_msg;
-      g_timegate()->GetStatus(status_state, &status_msg);
-      sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << '\n';
-      sstream << '\n';
+      auto timegate = g_timegate();
+      if (timegate)
+      {
+        if (timegate->IsSynchronized()) sstream << " synchronized " << '\n';
+        else                            sstream << " not synchronized " << '\n';
+        sstream << "Master / Slave           : ";
+        if (timegate->IsMaster())       sstream << " Master " << '\n';
+        else                            sstream << " Slave " << '\n';
+        int         status_state = 0;
+        std::string status_msg;
+        timegate->GetStatus(status_state, &status_msg);
+        sstream << "Status (Code)            : \"" << status_msg << "\" (" << status_state << ")" << '\n';
+        sstream << '\n';
+      }
 #endif
 #if ECAL_CORE_SUBSCRIBER
       sstream << "------------------------- SUBSCRIPTION LAYER DEFAULTS ------------" << '\n';

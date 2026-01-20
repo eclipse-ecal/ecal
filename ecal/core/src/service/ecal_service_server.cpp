@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,22 +31,25 @@
 namespace eCAL
 {
   CServiceServer::CServiceServer(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-    : m_service_server_impl(nullptr)
   {
     // create server implementation
-    m_service_server_impl = CServiceServerImpl::CreateInstance(service_name_, event_callback_);
+    auto service_server_impl = CServiceServerImpl::CreateInstance(service_name_, event_callback_);
+    m_service_server_impl = service_server_impl;
 
     // register server
-    if (g_servicegate() != nullptr) g_servicegate()->Register(service_name_, m_service_server_impl);
+    auto servicegate = g_servicegate();
+    if (servicegate) servicegate->Register(service_name_, service_server_impl);
   }
 
   CServiceServer::~CServiceServer()
   {
+    auto service_server_impl = m_service_server_impl.lock();
     // could be already destroyed by move
-    if (m_service_server_impl == nullptr) return;
+    if (service_server_impl == nullptr) return;
 
     // unregister server
-    if (g_servicegate() != nullptr) g_servicegate()->Unregister(m_service_server_impl->GetServiceName(), m_service_server_impl);
+    auto servicegate = g_servicegate();
+    if (servicegate) servicegate->Unregister(service_server_impl->GetServiceName(), service_server_impl);
   }
 
   CServiceServer::CServiceServer(CServiceServer&& rhs) noexcept
@@ -64,33 +68,38 @@ namespace eCAL
 
   bool CServiceServer::SetMethodCallback(const SServiceMethodInformation& method_info_, const ServiceMethodCallbackT& callback_)
   {
-    if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->SetMethodCallback(method_info_, callback_);
+    auto service_server_impl = m_service_server_impl.lock();
+    if (service_server_impl) return service_server_impl->SetMethodCallback(method_info_, callback_);
+    return false;
   }
 
   bool CServiceServer::RemoveMethodCallback(const std::string& method_)
   {
-    if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->RemoveMethodCallback(method_);
+    auto service_server_impl = m_service_server_impl.lock();
+    if (service_server_impl) return service_server_impl->RemoveMethodCallback(method_);
+    return false;
   }
 
   const std::string& CServiceServer::GetServiceName() const
   {
+    auto service_server_impl = m_service_server_impl.lock();
     static const std::string empty_service_name {};
-    if (m_service_server_impl == nullptr) return empty_service_name;
-    return m_service_server_impl->GetServiceName();
+    if (service_server_impl) return service_server_impl->GetServiceName();
+    return empty_service_name;
   }
 
   const SServiceId& CServiceServer::GetServiceId() const
   {
+    auto service_server_impl = m_service_server_impl.lock();
     static const SServiceId empty_service_id {};
-    if (m_service_server_impl == nullptr) return empty_service_id;
-    return m_service_server_impl->GetServiceId();
+    if (service_server_impl) return service_server_impl->GetServiceId();
+    return empty_service_id;
   }
 
   bool CServiceServer::IsConnected() const
   {
-    if (m_service_server_impl == nullptr) return false;
-    return m_service_server_impl->IsConnected();
+    auto service_server_impl = m_service_server_impl.lock();
+    if (service_server_impl) return service_server_impl->IsConnected();
+    return false;
   }
 }

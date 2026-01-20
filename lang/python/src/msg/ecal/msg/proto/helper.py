@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -72,4 +73,10 @@ def get_type_from_descriptor(typename : str, descriptor : bytes):
   for file_desc_proto in file_desc_set.file:
     desc_pool.Add(file_desc_proto)
   desc = desc_pool.FindMessageTypeByName(typename)
-  return google.protobuf.message_factory.MessageFactory(desc_pool).GetPrototype(desc)
+
+  try: # Protobuf >= 5.0
+    return google.protobuf.message_factory.GetMessageClass(desc)
+  except: # Protobuf < 5.0
+    return google.protobuf.message_factory.MessageFactory(desc_pool).GetPrototype(desc)
+
+

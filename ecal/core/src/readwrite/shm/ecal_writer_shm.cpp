@@ -97,7 +97,7 @@ namespace eCAL
 
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Connect(std::to_string(process_id_));
+      memory_file->Connect(process_id_);
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::ApplySubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
@@ -142,21 +142,21 @@ namespace eCAL
     // If the removed subscription was the last one, we need to temporarily disconnect the process
     for (auto& memory_file : m_memory_file_vec)
     {
-      memory_file->Disconnect(std::to_string(process_id_));
+      memory_file->Disconnect(process_id_);
 #ifndef NDEBUG
       Logging::Log(Logging::log_level_debug1, std::string("CDataWriterSHM::RemoveSubscription - Memory FileName: ") + memory_file->GetName() + " to ProcessId " + std::to_string(process_id_));
 #endif
     }
   }
 
-  Registration::ConnectionPar CDataWriterSHM::GetConnectionParameter()
+  Registration::LayerParShm CDataWriterSHM::GetConnectionParameter()
   {
-    Registration::ConnectionPar connection_par;
+    Registration::LayerParShm layer_par_shm;
     for (auto& memory_file : m_memory_file_vec)
     {
-      connection_par.layer_par_shm.memory_file_list.push_back(memory_file->GetName());
+      layer_par_shm.memory_file_list.push_back(memory_file->GetName());
     }
-    return connection_par;
+    return layer_par_shm;
   }
 
   bool CDataWriterSHM::SetBufferCount(size_t buffer_count_)

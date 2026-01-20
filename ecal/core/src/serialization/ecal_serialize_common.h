@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +25,6 @@
 
 #pragma once
 
-#include "nanopb/pb_encode.h"
-#include "nanopb/pb_decode.h"
-
 #include "ecal_struct_sample_payload.h"
 #include "ecal_struct_sample_registration.h"
 #include "ecal_struct_service.h"
@@ -36,33 +34,46 @@
 #include <string>
 #include <vector>
 
+#include <ecal/core/pb/datatype.pbftags.h>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/ecal_helper.h>
+
 namespace eCAL
 {
-  namespace nanopb
+  inline namespace protozero
   {
-    struct SNanoBytes
+    template <typename Writer>
+    void SerializeDataTypeInformation(Writer& writer, const eCAL::SDataTypeInformation& data_type_info)
     {
-      pb_byte_t* content = nullptr;
-      size_t     length  = 0;
-    };
+      writer.add_string(+eCAL::pb::DataTypeInformation::optional_string_name, data_type_info.name);
+      writer.add_string(+eCAL::pb::DataTypeInformation::optional_string_encoding, data_type_info.encoding);
+      writer.add_bytes(+eCAL::pb::DataTypeInformation::optional_bytes_descriptor_information, data_type_info.descriptor);
+    }
 
-    void encode_string(pb_callback_t& pb_callback, const std::string& str);
-    void decode_string(pb_callback_t& pb_callback, std::string& str);
+    inline bool DeserializeDataTypeInformation(::protozero::pbf_reader& reader, eCAL::SDataTypeInformation& data_type_info)
+    {
+      while (reader.next())
+      {
+        switch (reader.tag())
+        {
+        case +eCAL::pb::DataTypeInformation::optional_string_name:
+          AssignString(reader, data_type_info.name);
+          break;
+        case +eCAL::pb::DataTypeInformation::optional_string_encoding:
+          AssignString(reader, data_type_info.encoding);
+          break;
+        case +eCAL::pb::DataTypeInformation::optional_bytes_descriptor_information:
+          AssignBytes(reader, data_type_info.descriptor);
+          break;
+        default:
+          reader.skip();
+        }
+      }
+      return true;
+    }
 
-    void encode_int_to_string(pb_callback_t& pb_callback, const uint64_t& int_argument);
-    void decode_int_from_string(pb_callback_t& pb_callback, uint64_t& int_argument);
-
-    void encode_bytes(pb_callback_t& pb_callback, const SNanoBytes& nano_bytes);
-    void encode_bytes(pb_callback_t& pb_callback, const std::vector<char>& vec);
-    void decode_bytes(pb_callback_t& pb_callback, std::vector<char>& vec);
-
-    void encode_map(pb_callback_t& pb_callback, const std::map<std::string, std::string>& str_map);
-    void decode_map(pb_callback_t& pb_callback, std::map<std::string, std::string>& str_map);
-
-    void encode_registration_layer(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
-    void decode_registration_layer(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Registration::TLayer>& layer_vec);
-
-    void encode_service_methods(pb_callback_t& pb_callback, const Util::CExpandingVector<eCAL::Service::Method>& method_vec);
-    void decode_service_methods(pb_callback_t& pb_callback, Util::CExpandingVector<eCAL::Service::Method>& method_vec);
+    void LogDeserializationException(const std::exception& exception, const std::string& context);
   }
 }
+
+

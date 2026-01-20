@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +18,40 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <atomic>
-#include <chrono>
 #include <ecal/ecal.h>
 
+#include <gtest/gtest.h>
+
+#include <atomic>
+#include <chrono>
 #include <functional>
 #include <iostream>
-
-#include <gtest/gtest.h>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "atomic_signalable.h"
 
-#define ClientConnectEventTest                    1
-#define ServerConnectEventTest                    1
+#define ClientConnectEventTest                        1
+#define ServerConnectEventTest                        1
 
-#define ClientServerBaseCallbackTest              1
-#define ClientServerBaseCallbackTimeoutTest       1
+#define ClientServerBaseCallbackTest                  1
+#define ClientServerBaseCallbackTimeoutTest           1
 
-#define ClientServerBaseAsyncCallbackTest         1
-#define ClientServerBaseAsyncTest                 1
+#define ClientServerCallWithResponseTimeBehaviorTest  1
+#define ClientServerCallWithCallbackTimeBehaviorTest  1
 
-#define NestedRPCCallTest                         1
+#define ClientServerBaseAsyncCallbackTest             1
+#define ClientServerBaseAsyncTest                     1
 
-#define ClientServerBaseBlockingTest              1
+#define NestedRPCCallTest                             1
+#define NestedBlockingCallFromServerCallbackTest      1
+#define NestedBlockingCallFromClientCallbackTest      1
 
-#define DO_LOGGING                                0
+#define ClientServerBaseBlockingTest                  1
+
+#define DO_LOGGING                                    0
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000
@@ -382,33 +389,31 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
     service->SetMethodCallback(method2_info, method_callback);
   }
 
-  // event callback for timeout event
-  std::atomic<int> timeout_fired(0);
-  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_) -> void
-    {
-      if (data_.type == eCAL::eClientEvent::timeout)
-      {
-#if DO_LOGGING        
-        std::cout << "event timeouted fired" << std::endl;
-#endif
-        timeout_fired++;
-      }
-    };
-
   // create service clients
   ClientVecT client_vec;
   for (auto s = 0; s < num_clients; ++s)
   {
-    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInformationSetT(), event_callback));
+    client_vec.push_back(std::make_shared<eCAL::CServiceClient>("service", eCAL::ServiceMethodInformationSetT()));
   }
 
   // response callback function
-  std::atomic<int> responses_executed(0);
+  std::atomic<int> call_executed_sucessfully(0);
+  std::atomic<int> call_returned_timeout(0);
   auto response_callback = [&](const struct eCAL::SServiceResponse& service_response_)
-    {
-      PrintResponse(service_response_);
-      responses_executed++;
-    };
+                          {
+                            if (service_response_.call_state == eCAL::eCallState::timeouted)
+                            {
+#if DO_LOGGING
+                              std::cout << "response timeouted fired" << std::endl;
+#endif
+                              call_returned_timeout++;
+                            }
+                            else
+                            {
+                              PrintResponse(service_response_);
+                              call_executed_sucessfully++;
+                            }
+                          };
 
   // let's match them -> wait REGISTRATION_REFRESH_CYCLE (ecal_def.h)
   eCAL::Process::SleepMS(2000);
@@ -436,15 +441,15 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 
   EXPECT_EQ(true, success);
   EXPECT_EQ(methods_called * num_services, methods_executed);
-  EXPECT_EQ(methods_called * num_services, responses_executed);
-  EXPECT_EQ(0, timeout_fired);
+  EXPECT_EQ(methods_called * num_services, call_executed_sucessfully);
+  EXPECT_EQ(0, call_returned_timeout);
 
   // reset all
   success = true;
   methods_called = 0;
   methods_executed = 0;
-  responses_executed = 0;
-  timeout_fired = 0;
+  call_executed_sucessfully = 0;
+  call_returned_timeout = 0;
 
   // some calls with service_callback_time_ms sleep in the method callback and a proper timeout parameter
   method_process_time = 50;
@@ -465,15 +470,15 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 
   EXPECT_EQ(true, success);
   EXPECT_EQ(methods_called * num_services, methods_executed);
-  EXPECT_EQ(methods_called * num_services, responses_executed);
-  EXPECT_EQ(0, timeout_fired);
+  EXPECT_EQ(methods_called * num_services, call_executed_sucessfully);
+  EXPECT_EQ(0, call_returned_timeout);
 
   // reset all
   success = true;
   methods_called = 0;
   methods_executed = 0;
-  responses_executed = 0;
-  timeout_fired = 0;
+  call_executed_sucessfully = 0;
+  call_returned_timeout = 0;
 
   // some calls with service_callback_time_ms sleep in the method callback and to small timeout parameter
   method_process_time = 50;
@@ -496,14 +501,288 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   eCAL::Process::SleepMS(CMN_REGISTRATION_REFRESH_MS);
 
   EXPECT_EQ(false, success);
-  EXPECT_EQ(0, responses_executed);
-  EXPECT_EQ(methods_executed, timeout_fired);
+  EXPECT_EQ(0, call_executed_sucessfully);
+  EXPECT_EQ(methods_executed, call_returned_timeout);
 
   // finalize eCAL API
   eCAL::Finalize();
 }
 
 #endif /* ClientServerBaseCallbackTimeoutTest */
+
+#if ClientServerCallWithResponseTimeBehaviorTest
+
+// Test time-behavior of CallWithResponse with multiple servers when one server is slow
+TEST(core_cpp_clientserver, ClientServerCallWithResponseTimeBehavior)
+{
+  const std::chrono::milliseconds server_2_calculation_time(1000);
+
+  // initialize eCAL API
+  eCAL::Initialize("clientserver base callback timeout time behavior test");
+  
+  // Create 2 servers
+  eCAL::CServiceServer server1("service");
+  eCAL::CServiceServer server2("service");
+
+  atomic_signalable<int> server1_callback_finished(0);
+  atomic_signalable<int> server2_callback_finished(0);
+
+  // give server1 a fast and server2 a slow method callback
+  eCAL::SServiceMethodInformation method_info{ "mymethod", {}, {} };
+  server1.SetMethodCallback(method_info,
+                            [&server1_callback_finished](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& request_, std::string& response_) -> int
+                            {
+                              response_ = "Server1 response on " + request_;
+                              server1_callback_finished++;
+                              return 1;
+                            });
+
+  server2.SetMethodCallback(method_info,
+                            [&server2_callback_finished, server_2_calculation_time](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& request_, std::string& response_) -> int
+                            {
+                              std::this_thread::sleep_for(server_2_calculation_time);
+                              response_ = "Server2 response on " + request_;
+                              server2_callback_finished++;
+                              return 1;
+                            });
+  
+  // Create a service client that calls both servers
+  eCAL::CServiceClient client("service", eCAL::ServiceMethodInformationSetT());
+
+  // Wait for server and client to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      if (client.GetClientInstances().size() >= 2)
+      {
+        break;
+      }
+    }
+  }
+
+  // Call without timeout to test that it waits for all servers
+  {
+    server1_callback_finished = 0;
+    server2_callback_finished = 0;
+
+    eCAL::ServiceResponseVecT response_vec;
+
+    auto start = std::chrono::steady_clock::now();
+    client.CallWithResponse("mymethod", "Hello World", response_vec);
+    auto end = std::chrono::steady_clock::now();
+
+    EXPECT_EQ(server1_callback_finished.get(), 1);
+    EXPECT_EQ(server2_callback_finished.get(), 1);
+    EXPECT_GE(end - start, server_2_calculation_time);
+
+    EXPECT_EQ(response_vec.size(), 2);
+    // Check response verctor
+    {
+      bool server1_response_found = false;
+      bool server2_response_found = false;
+      for (const auto& response : response_vec)
+      {
+        if (response.response == "Server1 response on Hello World")
+        {
+          server1_response_found = true;
+        }
+        else if (response.response == "Server2 response on Hello World")
+        {
+          server2_response_found = true;
+        }
+      }
+      EXPECT_EQ(server1_response_found, true);
+      EXPECT_EQ(server2_response_found, true);
+    }
+  }
+
+  // Call with a timeout to test that it does not wait
+  {
+    server1_callback_finished = 0;
+    server2_callback_finished = 0;
+
+    eCAL::ServiceResponseVecT response_vec;
+
+    int timeout_ms = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(server_2_calculation_time / 2).count());
+
+    auto start = std::chrono::steady_clock::now();
+    client.CallWithResponse("mymethod", "Hello World", response_vec, timeout_ms);
+    auto end = std::chrono::steady_clock::now();
+
+    // Directly after service call
+    EXPECT_EQ(server1_callback_finished.get(), 1);
+    EXPECT_EQ(server2_callback_finished.get(), 0);
+    EXPECT_GE(end - start, server_2_calculation_time / 2); // >= timeout
+    EXPECT_LE(end - start, server_2_calculation_time);     // <= calculation time of server 2
+    EXPECT_EQ(response_vec.size(), 2);                     // both servers returned, but one timed out
+
+    // Check response verctor
+    {
+      int timeouts = 0;
+      for (const auto& response : response_vec)
+      {
+        if (response.call_state == eCAL::eCallState::timeouted)
+        {
+          EXPECT_EQ(response.response, "");               // response is empty on timeout
+          timeouts++;
+        }
+        else
+        {
+          EXPECT_EQ(response.response, "Server1 response on Hello World");
+        }
+      }
+      EXPECT_EQ(timeouts, 1);                                // exactly one timeout
+    }
+
+    // Wait the remaining time and verify that the response vec still reports the timeout
+    std::this_thread::sleep_for(server_2_calculation_time);
+
+    {
+      int timeouts = 0;
+      for (const auto& response : response_vec)
+      {
+        if (response.call_state == eCAL::eCallState::timeouted)
+        {
+          EXPECT_EQ(response.response, "");               // response is empty on timeout
+          timeouts++;
+        }
+        else
+        {
+          EXPECT_EQ(response.response, "Server1 response on Hello World");
+        }
+      }
+      EXPECT_EQ(timeouts, 1);                                // exactly one timeout
+    }
+  }
+
+  eCAL::Finalize();
+}
+
+#endif //ClientServerCallWithResponseTimeBehaviorTest
+
+#if ClientServerCallWithCallbackTimeBehaviorTest
+
+// Test time-behavior of CallWithCallback with multiple servers when one server is slow.
+// Also tests that the function only returns AFTER the user-callback has been called for all responses, even if that goes beyond the timeout.
+TEST(core_cpp_clientserver, ClientServerCallWithCallbackTimeBehavior)
+{
+  const std::chrono::milliseconds server_2_calculation_time(1000);
+    
+  // initialize eCAL API
+  eCAL::Initialize("clientserver call with callback time behavior test");
+    
+  // Create 2 servers
+  eCAL::CServiceServer server1("service");
+  eCAL::CServiceServer server2("service");
+    
+  atomic_signalable<int> server1_callback_finished(0);
+  atomic_signalable<int> server2_callback_finished(0);
+    
+  // give server1 a fast and server2 a slow method callback
+  eCAL::SServiceMethodInformation method_info{ "mymethod", {}, {} };
+  server1.SetMethodCallback(method_info,
+        [&server1_callback_finished](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& request_, std::string& response_) -> int
+        {
+          response_ = "Server1 response on " + request_;
+          server1_callback_finished++;
+          return 1;
+        });
+    
+  server2.SetMethodCallback(method_info,
+        [&server2_callback_finished, server_2_calculation_time](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& request_, std::string& response_) -> int
+        {
+          std::this_thread::sleep_for(server_2_calculation_time);
+          response_ = "Server2 response on " + request_;
+          server2_callback_finished++;
+          return 1;
+        });
+    
+  // Create a service client that calls both servers
+  eCAL::CServiceClient client("service", eCAL::ServiceMethodInformationSetT());
+    
+  // Wait for server and client to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      if (client.GetClientInstances().size() >= 2)
+      {
+        break;
+      }
+    }
+  }
+    
+  // Call without a timeout to test that it waits for all servers
+  {
+    server1_callback_finished = 0;
+    server2_callback_finished = 0;
+    
+    atomic_signalable<int> user_callback_finished(0);
+    
+    auto start = std::chrono::steady_clock::now();
+    client.CallWithCallback("mymethod", "Hello World",
+            [&user_callback_finished](const struct eCAL::SServiceResponse& service_response_)
+            {
+              ASSERT_EQ(service_response_.call_state, eCAL::eCallState::executed);
+              user_callback_finished++;
+            });
+    auto end = std::chrono::steady_clock::now();
+    
+    EXPECT_EQ(server1_callback_finished.get(), 1);
+    EXPECT_EQ(server2_callback_finished.get(), 1);
+    EXPECT_EQ(user_callback_finished.get(), 2);
+    EXPECT_GE(end - start, server_2_calculation_time);
+  }
+
+  // Call with a timeout to test that it DOES NOT wait for all servers, but still calls the user-callback for all responses
+  {
+    server1_callback_finished = 0;
+    server2_callback_finished = 0;
+    
+    atomic_signalable<int> user_callback_finished_successful(0);
+    atomic_signalable<int> user_callback_finished_timeout(0);
+    
+    int timeout_ms = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(server_2_calculation_time / 2).count());
+
+    auto start = std::chrono::steady_clock::now();
+    client.CallWithCallback("mymethod"
+                , "Hello World",
+                  [&user_callback_finished_successful, &user_callback_finished_timeout, server_2_calculation_time](const struct eCAL::SServiceResponse& service_response_)
+                  {
+                    std::this_thread::sleep_for(server_2_calculation_time * 2); // simulate long user callback to verify that CallWithCallback waits for it
+                    if (service_response_.call_state == eCAL::eCallState::timeouted)
+                    {
+                      ASSERT_EQ(service_response_.response, ""); // response is empty on timeout
+                      user_callback_finished_timeout++;
+                    }
+                    else
+                    {
+                      ASSERT_EQ(service_response_.response, "Server1 response on Hello World");
+                      user_callback_finished_successful++;
+                    }
+
+                  }
+                , timeout_ms);
+    auto end = std::chrono::steady_clock::now();
+    
+    // Directly after service call
+    EXPECT_EQ(server1_callback_finished.get(), 1); // We only know that server 1 finished so far
+    // We cannot be sure if server 2 already finished or not (there are no guarantees), so we do not check server2_callback_finished here
+
+    EXPECT_GE(end - start, server_2_calculation_time * 2 + server_2_calculation_time / 2); // even though we set a timeout, it had to wait for the long user callback to finish
+
+    // 1 Callback has timeouted, the other one returned success
+    EXPECT_EQ(user_callback_finished_successful.get(), 1);
+    EXPECT_EQ(user_callback_finished_timeout.get(),    1);
+  }
+
+  eCAL::Finalize();
+}
+
+#endif //ClientServerCallWithCallbackTimeBehaviorTest
 
 #if ClientServerBaseAsyncCallbackTest
 
@@ -585,7 +864,7 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
   const int calls(5);
 
   // initialize eCAL API
-  eCAL::Initialize("clientserver base async callback test with timeout");
+  eCAL::Initialize("clientserver base async callback");
 
   // create service server
   eCAL::CServiceServer server("service");
@@ -861,3 +1140,175 @@ TEST(core_cpp_clientserver, NestedRPCCall)
 }
 
 #endif /* NestedRPCCallTest */
+
+#if NestedBlockingCallFromServerCallbackTest
+
+// This test injects blocking server callbacks into the service call. 
+TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
+{
+  constexpr size_t depth = 100;
+  
+  // validate input, just to make sure we don't break the test with wrong input
+  assert(depth >= 1);
+
+  // initialize eCAL API
+  eCAL::Initialize("nested blocking call from server callback test");
+
+  // Create servers and clients. We build a chain of depth amount of servers with each having a client that can call it.
+  std::vector<eCAL::CServiceServer> servers;
+  std::vector<eCAL::CServiceClient> clients;
+  servers.reserve(depth);
+  clients.reserve(depth);
+  for (size_t i = 0; i < depth; i++)
+  {
+    servers.emplace_back("service#" + std::to_string(i));
+    clients.emplace_back("service#" + std::to_string(i));
+
+    // Add a callback to the server that blocking-calls the next service
+    servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
+          [&clients, service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          {
+#if DO_LOGGING
+            // Print thread ID
+            std::cout << "[Server " << service_index << "] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+            PrintRequest(method_info_, request_);
+#endif // DO_LOGGING
+            EXPECT_EQ(request_, std::to_string(service_index));
+
+            // Use according client to call the next server
+            if ((service_index + 1) < clients.size())
+            {
+              eCAL::ServiceResponseVecT service_response_vec;
+              clients[service_index + 1].CallWithResponse("my_method", std::to_string(service_index + 1), service_response_vec);
+
+              EXPECT_EQ(service_response_vec.size(), 1);
+              EXPECT_EQ(service_response_vec.begin()->response, "Response from " + std::to_string(service_index + 1));
+            }
+
+            response_ = "Response from " + std::to_string(service_index);
+            return 0;
+          }
+    );
+  }
+
+  // Wait for servers and clients to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      for (const auto& client : clients)
+      {
+        if (client.GetClientInstances().size() == 0)
+        {
+          continue;
+        }
+      }
+      break;
+    }
+  }
+
+  // Call the first client
+  eCAL::ServiceResponseVecT service_response_vec;
+  clients.front().CallWithResponse("my_method", "0", service_response_vec);
+
+  ASSERT_EQ(service_response_vec.size(), 1);
+  ASSERT_EQ(service_response_vec.begin()->response, "Response from 0");
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* NestedBlockingCallFromServerCallbackTest */
+
+#if NestedBlockingCallFromClientCallbackTest
+
+TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
+{
+  constexpr size_t depth = 100;
+
+  // validat input, just to make sure we don't break the test with wrong input
+  assert(depth >= 1);
+
+  // initialize eCAL API
+  eCAL::Initialize("nested blocking call from client callback test");
+
+  // Create servers and clients. We build a chain of depth amount of servers with each having a client that can call it.
+  std::vector<eCAL::CServiceServer> servers;
+  std::vector<eCAL::CServiceClient> clients;
+  servers.reserve(depth);
+  clients.reserve(depth);
+  for (size_t i = 0; i < depth; i++)
+  {
+    servers.emplace_back("service#" + std::to_string(i));
+    clients.emplace_back("service#" + std::to_string(i));
+    // Add a callback to the server that just returns the request as response
+    servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
+          [service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          {
+#if DO_LOGGING
+            // Print thread ID
+            std::cout << "[Server] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+            PrintRequest(method_info_, request_);
+#endif // DO_LOGGING
+            EXPECT_EQ(request_, std::to_string(service_index));
+
+            response_ = "Response from " + std::to_string(service_index);
+            return 0;
+          }
+    );
+  }
+
+  // Wait for servers and clients to match
+  {
+    auto start = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < (start + std::chrono::seconds(2)))
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      for (const auto& client : clients)
+      {
+        if (client.GetClientInstances().size() == 0)
+        {
+          continue;
+        }
+      }
+      break;
+    }
+  }
+
+
+  // Helper function (as lambda) that creates a callback for a client that calls the next client in the chain with a callback again
+  std::function<eCAL::ResponseCallbackT(size_t)> create_client_callback_that_calls_next_service;
+  create_client_callback_that_calls_next_service
+          = [&clients, &create_client_callback_that_calls_next_service, depth](size_t client_index) -> eCAL::ResponseCallbackT
+            {
+              return [&clients, &create_client_callback_that_calls_next_service, client_index, depth](const struct eCAL::SServiceResponse& service_response_)
+                      {
+#if DO_LOGGING
+                        // Print thread ID
+                        std::cout << "[Client " << client_index << "] Callback thread ID: " << std::this_thread::get_id() << std::endl;
+                        PrintResponse(service_response_);
+#endif // DO_LOGGING
+                        EXPECT_EQ(service_response_.response, "Response from " + std::to_string(client_index));
+                        // If not the last client, call the next one
+                        if ((client_index + 1) < depth)
+                        {
+                          auto client_callback = create_client_callback_that_calls_next_service(client_index + 1);
+                          clients[client_index + 1].CallWithCallback("my_method", std::to_string(client_index + 1), client_callback);
+                        }
+                      };
+            };
+
+  // Start the chain by calling the first client
+  auto first_client_callback = create_client_callback_that_calls_next_service(0);
+  clients.front().CallWithCallback("my_method", "0", first_client_callback);
+
+  // The call is blocking, so once we are here, all callbacks must have been executed
+  // The fact that we are here is already a sign that everything worked as expected.
+
+  // Finalize eCAL API
+  eCAL::Finalize();
+}
+
+#endif /* NestedBlockingCallFromClientCallbackTest */

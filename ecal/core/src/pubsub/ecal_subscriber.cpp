@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,26 +38,29 @@ namespace eCAL
     config.subscriber = config_;
 
     // create subscriber implementation
-    m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
+    auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
+    m_subscriber_impl = subscriber_impl;
 
     // register subscriber
-    if (g_subgate() != nullptr) g_subgate()->Register(topic_name_, m_subscriber_impl);
+    auto subgate = g_subgate();
+    if (subgate) subgate->Register(topic_name_, subscriber_impl);
   }
 
   CSubscriber::CSubscriber(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const SubEventCallbackT& event_callback_, const Subscriber::Configuration& config_) :
     CSubscriber(topic_name_, data_type_info_, config_)
   {
+    auto subscriber_impl = m_subscriber_impl.lock();
     // add event callback for all current event types
-    m_subscriber_impl->SetEventCallback(event_callback_);
+    if (subscriber_impl) subscriber_impl->SetEventCallback(event_callback_);
   }
 
   CSubscriber::~CSubscriber()
   {
-    // could be already destroyed by move
-    if (m_subscriber_impl == nullptr) return;
+    auto subscriber_impl = m_subscriber_impl.lock();
 
     // unregister subscriber
-    if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
+    auto subgate = g_subgate();
+    if (subgate && subscriber_impl) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
   }
 
   CSubscriber::CSubscriber(CSubscriber&& rhs) noexcept
@@ -66,49 +70,56 @@ namespace eCAL
 
   CSubscriber& CSubscriber::operator=(CSubscriber&& rhs) noexcept
   {
-    // clean-up existing m_subscriber_impl before swapping with rhs
-    if (g_subgate() != nullptr) g_subgate()->Unregister(m_subscriber_impl->GetTopicName(), m_subscriber_impl);
-    m_subscriber_impl = nullptr;
+    {
+      auto subscriber_impl = m_subscriber_impl.lock();
+      // clean-up existing m_subscriber_impl before swapping with rhs
+      auto subgate = g_subgate();
+      if (subgate && subscriber_impl) subgate->Unregister(subscriber_impl->GetTopicName(), subscriber_impl);
+    }
     std::swap(m_subscriber_impl, rhs.m_subscriber_impl);
     return *this;
   }
 
   void CSubscriber::SetReceiveCallback(ReceiveCallbackT callback_)
   {
-    if (m_subscriber_impl == nullptr) return;
-    static_cast<void>(m_subscriber_impl->SetReceiveCallback(std::move(callback_)));
+    auto subscriber_impl = m_subscriber_impl.lock();
+    if (subscriber_impl) static_cast<void>(subscriber_impl->SetReceiveCallback(callback_));
   }
 
   void CSubscriber::RemoveReceiveCallback()
   {
-    if (m_subscriber_impl == nullptr) return;
-    static_cast<void>(m_subscriber_impl->RemoveReceiveCallback());
+    auto subscriber_impl = m_subscriber_impl.lock();
+    if (subscriber_impl) static_cast<void>(subscriber_impl->RemoveReceiveCallback());
   }
 
   size_t CSubscriber::GetPublisherCount() const
   {
-    if (m_subscriber_impl == nullptr) return 0;
-    return m_subscriber_impl->GetPublisherCount();
+    auto subscriber_impl = m_subscriber_impl.lock();
+    if (subscriber_impl) return subscriber_impl->GetPublisherCount();
+    return 0;
   }
 
   const std::string& CSubscriber::GetTopicName() const
   {
+    auto subscriber_impl = m_subscriber_impl.lock();
     static const std::string empty_topic_name{};
-    if (m_subscriber_impl == nullptr) return empty_topic_name;
-    return m_subscriber_impl->GetTopicName();
+    if (subscriber_impl) return subscriber_impl->GetTopicName();
+    return empty_topic_name;
   }
 
   const STopicId& CSubscriber::GetTopicId() const
   {
+    auto subscriber_impl = m_subscriber_impl.lock();
     static const STopicId empty_topic_id{};
-    if (m_subscriber_impl == nullptr) return empty_topic_id;
-    return m_subscriber_impl->GetTopicId();
+    if (subscriber_impl) return subscriber_impl->GetTopicId();
+    return empty_topic_id;
   }
 
   const SDataTypeInformation& CSubscriber::GetDataTypeInformation() const
   {
+    auto subscriber_impl = m_subscriber_impl.lock();
     static const SDataTypeInformation empty_data_type_information{};
-    if (m_subscriber_impl == nullptr) return empty_data_type_information;
-    return m_subscriber_impl->GetDataTypeInformation();
+    if (subscriber_impl) return subscriber_impl->GetDataTypeInformation();
+    return empty_data_type_information;
   }
 }

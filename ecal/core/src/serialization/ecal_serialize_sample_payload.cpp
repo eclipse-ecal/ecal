@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +23,6 @@
  * @brief  eCAL payload sample (de)serialization
 **/
 
-#include "nanopb/pb_encode.h"
-#include "nanopb/pb_decode.h"
-#include "nanopb/ecal/core/pb/ecal.npb.h"
-
 #include "ecal_serialize_common.h"
 #include "ecal_struct_sample_payload.h"
 
@@ -34,179 +31,189 @@
 #include <string>
 #include <vector>
 
+#include <ecal/core/pb/ecal.pbftags.h>
+#include <ecal/core/pb/layer.pbftags.h>
+#include <ecal/core/pb/topic.pbftags.h>
+#include <protozero/pbf_writer.hpp>
+#include <protozero/buffer_vector.hpp>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/ecal_helper.h>
+
 namespace
 {
-  void CreatePayloadStruct(const eCAL::Payload::Sample& payload_, eCAL::nanopb::SNanoBytes& nano_bytes_)
+  template<typename Writer>
+  void SerializePayload(Writer& writer, const ::eCAL::Payload::Payload& payload)
   {
-    // extract payload
-    // payload may be stored as std::vector<char> or raw pointer + size
     const char* payload_addr = nullptr;
     size_t      payload_size = 0;
-    switch (payload_.content.payload.type)
+    switch (payload.type)
     {
     case eCAL::Payload::pl_raw:
-      payload_addr = payload_.content.payload.raw_addr;
-      payload_size = payload_.content.payload.raw_size;
+      payload_addr = payload.raw_addr;
+      payload_size = payload.raw_size;
       break;
     case eCAL::Payload::pl_vec:
-      payload_addr = payload_.content.payload.vec.data();
-      payload_size = payload_.content.payload.vec.size();
+      payload_addr = payload.vec.data();
+      payload_size = payload.vec.size();
       break;
     default:
       break;
     }
-
-    // topic content payload
     if ((payload_addr != nullptr) && (payload_size > 0))
     {
-      nano_bytes_.content = (pb_byte_t*)(payload_addr); // NOLINT(*-pro-type-cstyle-cast)
-      nano_bytes_.length  = payload_size;
+      writer.add_bytes(+eCAL::pb::Content::optional_bytes_payload, payload_addr, payload_size);
     }
   }
+
+  template<typename Writer>
+  void SerializePayloadSample(Writer& writer, const ::eCAL::Payload::Sample& sample)
+  {
+    // we need to properly match the enums / make sure that they have the same values
+    writer.add_enum(+eCAL::pb::Sample::optional_enum_cmd_type, sample.cmd_type);
+    // Additional information is not written to the content but the topic field.
+    {
+      Writer topic_writer{ writer, +eCAL::pb::Sample::optional_message_topic };
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_name, sample.topic_info.topic_name);
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_topic_id, std::to_string(sample.topic_info.topic_id));
+      topic_writer.add_int32(+eCAL::pb::Topic::optional_int32_process_id, sample.topic_info.process_id);
+      topic_writer.add_string(+eCAL::pb::Topic::optional_string_host_name, sample.topic_info.host_name);
+    }
+    {
+      Writer content_writer{ writer, +eCAL::pb::Sample::optional_message_content };
+      content_writer.add_int64(+eCAL::pb::Content::optional_int64_id, sample.content.id);
+      content_writer.add_int64(+eCAL::pb::Content::optional_int64_clock, sample.content.clock);
+      content_writer.add_int64(+eCAL::pb::Content::optional_int64_time,  sample.content.time);
+      content_writer.add_int32(+eCAL::pb::Content::optional_int32_size, sample.content.size);
+      SerializePayload(content_writer, sample.content.payload);
+      content_writer.add_int64(+eCAL::pb::Content::optional_int64_hash,  sample.content.hash);
+    }
+    writer.add_bytes(+eCAL::pb::Sample::optional_bytes_padding, sample.padding.data(), sample.padding.size());
+  }
+
+  void DeserializeTopicInfo(protozero::pbf_reader& reader, ::eCAL::Payload::TopicInfo& topic_info)
+  {
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Topic::optional_string_topic_name:
+        AssignString(reader, topic_info.topic_name);
+        break;
+      case +eCAL::pb::Topic::optional_string_topic_id:
+        {
+          static thread_local std::string topic_id_string;
+          AssignString(reader, topic_id_string);
+          topic_info.topic_id = std::stoull(topic_id_string);
+        }
+        break;
+      case +eCAL::pb::Topic::optional_int32_process_id:
+        topic_info.process_id = reader.get_int32();
+        break;
+      case +eCAL::pb::Topic::optional_string_host_name:
+        AssignString(reader, topic_info.host_name);
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
+  }
+
+  void DeserializeContent(::protozero::pbf_reader& reader, ::eCAL::Payload::Content& content)
+  {
+    // We always need to set it (at least for the current testcases...)
+    content.payload.type = eCAL::Payload::pl_vec;
     
-  // TODO: The size must be a multiple of 8.
-  size_t PayloadStruct2PbSample(const eCAL::Payload::Sample& payload_, const eCAL::nanopb::SNanoBytes& nano_bytes_, eCAL_pb_Sample& pb_sample_)
-  {
-    // command type
-    pb_sample_.cmd_type = static_cast<eCAL_pb_eCmdType>(payload_.cmd_type);
-
-    // topic information
-    pb_sample_.has_topic = true;
-    // host_name
-    eCAL::nanopb::encode_string(pb_sample_.topic.host_name, payload_.topic_info.host_name);
-    // process_id
-    pb_sample_.topic.process_id = payload_.topic_info.process_id;
-    // topic_id
-    eCAL::nanopb::encode_int_to_string(pb_sample_.topic.topic_id, payload_.topic_info.topic_id);
-    // topic_name
-    eCAL::nanopb::encode_string(pb_sample_.topic.topic_name, payload_.topic_info.topic_name);
-
-    // topic content
-    pb_sample_.has_content = true;
-    pb_sample_.content.id    = payload_.content.id;
-    pb_sample_.content.clock = payload_.content.clock;
-    pb_sample_.content.time  = payload_.content.time;
-    pb_sample_.content.hash  = payload_.content.hash;
-    pb_sample_.content.size  = payload_.content.size;
-
-    // topic content payload
-    eCAL::nanopb::encode_bytes(pb_sample_.content.payload, nano_bytes_);
-
-    // padding
-    eCAL::nanopb::encode_bytes(pb_sample_.padding, payload_.padding);
-
-    ///////////////////////////////////////////////
-    // evaluate byte size
-    ///////////////////////////////////////////////
-    pb_ostream_t pb_sizestream = { nullptr, nullptr, 0, 0, nullptr};
-    pb_encode(&pb_sizestream, eCAL_pb_Sample_fields, &pb_sample_);
-
-    // return encoding byte size
-    return pb_sizestream.bytes_written;
+    while (reader.next())
+    {
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Content::optional_int64_id:
+        content.id = reader.get_int64();
+        break;
+      case +eCAL::pb::Content::optional_int64_clock:
+        content.clock = reader.get_int64();
+        break;
+      case +eCAL::pb::Content::optional_int64_time:
+        content.time = reader.get_int64();
+        break;
+      case +eCAL::pb::Content::optional_int32_size:
+        content.size = reader.get_int32();
+        break;
+      case +eCAL::pb::Content::optional_bytes_payload:
+        AssignBytes(reader, content.payload.vec);
+        break;
+      case +eCAL::pb::Content::optional_int64_hash:
+        content.hash = reader.get_int64();
+        break;
+      default:
+        reader.skip();
+        break;
+      }
+    }
   }
 
-  template <typename T>
-  bool PayloadStruct2Buffer(const eCAL::Payload::Sample& payload_, T& target_buffer_)
+  void DeserializePayloadSample(::protozero::pbf_reader& reader, ::eCAL::Payload::Sample& sample)
   {
-    target_buffer_.clear();
-
-    // create payload helper struct
-    eCAL::nanopb::SNanoBytes nano_bytes;
-    CreatePayloadStruct(payload_, nano_bytes);
-
-    ///////////////////////////////////////////////
-    // prepare sample for encoding
-    ///////////////////////////////////////////////
-    eCAL_pb_Sample pb_sample = eCAL_pb_Sample_init_default;
-    size_t target_size = PayloadStruct2PbSample(payload_, nano_bytes, pb_sample);
-
-    ///////////////////////////////////////////////
-    // encode it
-    ///////////////////////////////////////////////
-    target_buffer_.resize(target_size);
-    pb_ostream_t pb_ostream;
-    pb_ostream = pb_ostream_from_buffer((pb_byte_t*)(target_buffer_.data()), target_buffer_.size());
-    if (!pb_encode(&pb_ostream, eCAL_pb_Sample_fields, &pb_sample))
+    while (reader.next())
     {
-      std::cerr << "NanoPb eCAL::Payload::Sample encode failed: " << pb_ostream.errmsg << '\n';
+      switch (reader.tag())
+      {
+      case +eCAL::pb::Sample::optional_enum_cmd_type:
+        sample.cmd_type = static_cast<eCAL::eCmdType>(reader.get_enum());
+        break;
+      case +eCAL::pb::Sample::optional_message_topic:
+        AssignMessage(reader, sample.topic_info, DeserializeTopicInfo);
+        break;
+      case +eCAL::pb::Sample::optional_message_content:
+        AssignMessage(reader, sample.content, DeserializeContent);
+        break;
+      case +eCAL::pb::Sample::optional_bytes_padding:
+        AssignBytes(reader, sample.padding);
+        break;
+      default:
+        reader.skip();
+      }
     }
-    else
-    {
-      return true;
-    }
-    
-    return false;
-  }
-
-  bool Buffer2PayloadStruct(const char* data_, size_t size_, eCAL::Payload::Sample& payload_)
-  {
-    if (data_ == nullptr) return false;
-    if (size_ == 0)       return false;
-
-    // initialize
-    eCAL_pb_Sample pb_sample = eCAL_pb_Sample_init_default;
-
-    ///////////////////////////////////////////////
-    // assign decoder
-    ///////////////////////////////////////////////
-    // host_name
-    eCAL::nanopb::decode_string(pb_sample.topic.host_name, payload_.topic_info.host_name);
-    // topic_id
-    eCAL::nanopb::decode_int_from_string(pb_sample.topic.topic_id, payload_.topic_info.topic_id);
-    // topic_name
-    eCAL::nanopb::decode_string(pb_sample.topic.topic_name, payload_.topic_info.topic_name);
-    // topic content payload
-    payload_.content.payload.type = eCAL::Payload::pl_vec;
-    eCAL::nanopb::decode_bytes(pb_sample.content.payload, payload_.content.payload.vec);
-
-    // padding
-    eCAL::nanopb::decode_bytes(pb_sample.padding, payload_.padding);
-
-    ///////////////////////////////////////////////
-    // decode it
-    ///////////////////////////////////////////////
-    pb_istream_t pb_istream;
-    pb_istream = pb_istream_from_buffer((pb_byte_t*)data_, size_); // NOLINT(*-pro-type-cstyle-cast)
-    if (!pb_decode(&pb_istream, eCAL_pb_Sample_fields, &pb_sample))
-    {
-      std::cerr << "NanoPb eCAL::Payload::Sample decode failed: " << pb_istream.errmsg << '\n';
-      return false;
-    }
-
-    ///////////////////////////////////////////////
-    // assign values
-    ///////////////////////////////////////////////
-    // command type
-    payload_.cmd_type = static_cast<eCAL::eCmdType>(pb_sample.cmd_type);
-
-    // process_id
-    payload_.topic_info.process_id = pb_sample.topic.process_id;
-
-    // topic content
-    payload_.content.id    = pb_sample.content.id;
-    payload_.content.clock = pb_sample.content.clock;
-    payload_.content.time  = pb_sample.content.time;
-    payload_.content.hash  = pb_sample.content.hash;
-    payload_.content.size  = pb_sample.content.size;
-
-    return true;
   }
 }
 
+
 namespace eCAL
 {
-  bool SerializeToBuffer(const Payload::Sample& source_sample_, std::vector<char>& target_buffer_)
+  namespace protozero
   {
-    return PayloadStruct2Buffer(source_sample_, target_buffer_);
-  }
-
-  bool SerializeToBuffer(const Payload::Sample& source_sample_, std::string& target_buffer_)
-  {
-    return PayloadStruct2Buffer(source_sample_, target_buffer_);
-  }
-
-  bool DeserializeFromBuffer(const char* data_, size_t size_, Payload::Sample& target_sample_)
-  {
-    return Buffer2PayloadStruct(data_, size_, target_sample_);
+    bool SerializeToBuffer(const Payload::Sample& source_sample_, std::vector<char>& target_buffer_)
+    {
+      target_buffer_.clear();
+      ::protozero::basic_pbf_writer<std::vector<char>> writer{ target_buffer_ };
+      SerializePayloadSample(writer, source_sample_);
+      return true;
+    }
+  
+    bool SerializeToBuffer(const Payload::Sample& source_sample_, std::string& target_buffer_)
+    {
+      target_buffer_.clear();
+      ::protozero::pbf_writer writer{ target_buffer_ };
+      SerializePayloadSample(writer, source_sample_);
+      return true;
+    }
+  
+    bool DeserializeFromBuffer(const char* data_, size_t size_, Payload::Sample& target_sample_)
+    {
+      try
+      {
+        // @todo we clear the target sample before deserialization, but Payload::Sample doesn't have a clear function
+        // we should check this;
+        ::protozero::pbf_reader message{ data_, size_ };
+        DeserializePayloadSample(message, target_sample_);
+        return true;
+      }
+      catch (const std::exception& exception)
+      {
+        LogDeserializationException(exception, "eCAL::Payload::Sample");
+        return false;
+      }
+    }
   }
 }

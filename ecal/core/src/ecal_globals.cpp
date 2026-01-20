@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,18 +58,18 @@ namespace eCAL
     /////////////////////
     // REGISTRATION PROVIDER
     /////////////////////
-    if (registration_provider_instance == nullptr)
+    if (!registration_provider_instance)
     {
-      registration_provider_instance = std::make_unique<CRegistrationProvider>(registration_attr);
+      registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_attr);
       new_initialization = true;
     }
 
     /////////////////////
     // REGISTRATION RECEIVER
     /////////////////////
-    if(registration_receiver_instance == nullptr) 
+    if(!registration_receiver_instance) 
     {
-      registration_receiver_instance = std::make_unique<CRegistrationReceiver>(registration_attr);
+      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_attr);
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
@@ -76,10 +77,10 @@ namespace eCAL
     /////////////////////
     // DESCRIPTION GATE
     /////////////////////
-    if (descgate_instance == nullptr)
+    if (!descgate_instance)
     {
       // create description gate with configured expiration timeout
-      descgate_instance = std::make_unique<CDescGate>();
+      descgate_instance = std::make_shared<CDescGate>();
       new_initialization = true;
     }
 
@@ -87,18 +88,18 @@ namespace eCAL
     /////////////////////
     // MEMFILE MAP
     /////////////////////
-    if (memfile_map_instance == nullptr)
+    if (!memfile_map_instance)
     {
-      memfile_map_instance = std::make_unique<CMemFileMap>();
+      memfile_map_instance = std::make_shared<CMemFileMap>();
       new_initialization = true;
     }
 
     /////////////////////
     // MEMFILE POOL
     /////////////////////
-    if (memfile_pool_instance == nullptr)
+    if (!memfile_pool_instance)
     {
-      memfile_pool_instance = std::make_unique<CMemFileThreadPool>();
+      memfile_pool_instance = std::make_shared<CMemFileThreadPool>();
       new_initialization = true;
     }
 #endif // defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
@@ -109,9 +110,9 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Subscriber) != 0u)
     {
-      if (subgate_instance == nullptr)
+      if (!subgate_instance)
       {
-        subgate_instance = std::make_unique<CSubGate>();
+        subgate_instance = std::make_shared<CSubGate>();
         new_initialization = true;
       }
     }
@@ -123,9 +124,9 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Publisher) != 0u)
     {
-      if (pubgate_instance == nullptr)
+      if (!pubgate_instance)
       {
-        pubgate_instance = std::make_unique<CPubGate>();
+        pubgate_instance = std::make_shared<CPubGate>();
         new_initialization = true;
       }
     }
@@ -140,18 +141,18 @@ namespace eCAL
       /////////////////////
       // SERVICE GATE
       /////////////////////
-      if (servicegate_instance == nullptr)
+      if (!servicegate_instance)
       {
-        servicegate_instance = std::make_unique<CServiceGate>();
+        servicegate_instance = std::make_shared<CServiceGate>();
         new_initialization = true;
       }
 
       /////////////////////
       // CLIENT GATE
       /////////////////////
-      if (clientgate_instance == nullptr)
+      if (!clientgate_instance)
       {
-        clientgate_instance = std::make_unique<CClientGate>();
+        clientgate_instance = std::make_shared<CClientGate>();
         new_initialization = true;
       }
     }
@@ -165,7 +166,7 @@ namespace eCAL
     {
       if (timegate_instance == nullptr)
       {
-        timegate_instance = std::make_unique<CTimeGate>();
+        timegate_instance = std::make_shared<CTimeGate>();
         new_initialization = true;
       }
     }
@@ -177,9 +178,9 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Monitoring) != 0u)
     {
-      if (monitoring_instance == nullptr)
+      if (!monitoring_instance)
       {
-        monitoring_instance = std::make_unique<CMonitoring>();
+        monitoring_instance = std::make_shared<CMonitoring>();
         new_initialization = true;
       }
     }
@@ -190,15 +191,15 @@ namespace eCAL
     /////////////////////
     if ((components_ & Init::Logging) != 0u)
     {
-      if (log_provider_instance == nullptr)
+      if (!log_provider_instance)
       {
-        log_provider_instance = std::make_unique<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
+        log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
         new_initialization = true;
       }
 
-      if (log_udp_receiver_instance == nullptr)
+      if (!log_udp_receiver_instance)
       {
-        log_udp_receiver_instance = std::make_unique<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
+        log_udp_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
         new_initialization = true;
       }
     }
@@ -219,7 +220,11 @@ namespace eCAL
     {
 #if ECAL_CORE_REGISTRATION
       // utilize registration receiver to get descriptions
-      g_registration_receiver()->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {g_descgate()->ApplySample(sample_, tl_none); });
+      if (registration_receiver_instance)
+        registration_receiver_instance->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {
+          auto descgate = g_descgate();
+          if (descgate) descgate->ApplySample(sample_, tl_none);
+        });
 #endif
     }
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
@@ -315,7 +320,7 @@ namespace eCAL
     {
 #if ECAL_CORE_REGISTRATION
       // stop registration receiver utilization to get descriptions
-      g_registration_receiver()->RemCustomApplySampleCallback("descgate");
+      if (registration_receiver_instance) registration_receiver_instance->RemCustomApplySampleCallback("descgate");
 #endif
     }
 #if ECAL_CORE_REGISTRATION
@@ -330,37 +335,34 @@ namespace eCAL
     if (log_provider_instance)           log_provider_instance->Stop();
 
 #if ECAL_CORE_MONITORING
-    monitoring_instance             = nullptr;
+    monitoring_instance.reset();
 #endif
 #if ECAL_CORE_TIMEPLUGIN
-    timegate_instance               = nullptr;
+    timegate_instance.reset();
 #endif
 #if ECAL_CORE_SERVICE
-    servicegate_instance            = nullptr;
-    clientgate_instance             = nullptr;
+    servicegate_instance.reset();
+    clientgate_instance.reset();
 #endif
 #if ECAL_CORE_PUBLISHER
-    pubgate_instance                = nullptr;
+    pubgate_instance.reset();
 #endif
 #if ECAL_CORE_SUBSCRIBER
-    subgate_instance                = nullptr;
+    subgate_instance.reset();
 #endif
 #if ECAL_CORE_REGISTRATION
-    registration_receiver_instance  = nullptr;
-    registration_provider_instance  = nullptr;
+    registration_receiver_instance.reset();
+    registration_provider_instance.reset();
 #endif
-    descgate_instance               = nullptr;
+    descgate_instance.reset();
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-    memfile_pool_instance           = nullptr;
-    memfile_map_instance            = nullptr;
+    memfile_pool_instance.reset();
+    memfile_map_instance.reset();
 #endif
-    log_provider_instance           = nullptr;
-    log_udp_receiver_instance       = nullptr;
+    log_provider_instance.reset();
+    log_udp_receiver_instance.reset();
     
     initialized = false;
-
-    // reset configuration to default values
-    g_ecal_configuration = Configuration();
 
     return true;
   }

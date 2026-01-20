@@ -147,10 +147,10 @@ namespace eCAL
     return success;
   }
 
-  Registration::ConnectionPar CDataWriterTCP::GetConnectionParameter()
+  Registration::LayerParTcp CDataWriterTCP::GetConnectionParameter()
   {
-    Registration::ConnectionPar connection_par;
-    connection_par.layer_par_tcp.port = m_port;
+    Registration::LayerParTcp connection_par;
+    connection_par.port = m_port;
     return connection_par;
   }
 }

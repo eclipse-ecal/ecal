@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +32,14 @@ namespace ecal_service
     Disconnected,       //!< The connection to a client has been closed for any reason.
   };
 
-  using ServerServiceCallbackT = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
-  using ServerEventCallbackT   = std::function<void(ServerEventType, const std::string&)>;
+  using ServerServiceCallbackT                  = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
+  using ServerEventCallbackT                    = std::function<void(ServerEventType, const std::string&)>;
+
+  /**
+   * @brief A function that posts a task to the service callback executor.
+   * 
+   * This is used to execute service callbacks in a specific context, e.g., a
+   * thread pool or a strand.
+   */
+  using PostToServiceCallbackExecutorFunctionT  = std::function<void(const std::function<void()>&)>;
 } // namespace ecal_service

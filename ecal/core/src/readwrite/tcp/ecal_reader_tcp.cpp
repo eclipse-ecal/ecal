@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,13 +112,14 @@ namespace eCAL
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
-      if (g_subgate() != nullptr)
+      auto subgate = g_subgate();
+      if (subgate)
       {
         // use this intermediate variables as optimization
         const auto& ecal_header_topic_info = m_ecal_header.topic_info;
         const auto& ecal_header_content    = m_ecal_header.content;
 
-        g_subgate()->ApplySample(
+        subgate->ApplySample(
           ecal_header_topic_info,
           data_payload,
           static_cast<size_t>(ecal_header_content.size),

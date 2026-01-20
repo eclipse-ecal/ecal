@@ -102,12 +102,6 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - BSD-3-Clause
 
-   * - :ref:`nanopb <thirdparty_licenses_nanopb>`
-
-     - Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>
-
-     - Zlib
-
    * - :ref:`Npcap <thirdparty_licenses_npcap>`
 
      - copyright (c) 2013-2025 by Nmap Software LLC ("The Nmap Project").  All rights reserved.
@@ -127,6 +121,14 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
      - Copyright 2008 Google Inc.  All rights reserved.
 
      - BSD-3-Clause
+
+   * - :ref:`protozero <thirdparty_licenses_protozero>`
+
+     - Copyright (C) 2022, Mapbox.   All rights reserved.
+
+     - BSD-2-Clause
+
+       *(+ 1 thirdparty license files)*
 
    * - :ref:`Qt <thirdparty_licenses_qt>`
 
@@ -226,13 +228,13 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
    thirdparty_licenses/nanobind
 
-   thirdparty_licenses/nanopb
-
    thirdparty_licenses/npcap
 
    thirdparty_licenses/pcapplusplus
 
    thirdparty_licenses/protobuf
+
+   thirdparty_licenses/protozero
 
    thirdparty_licenses/qt
 

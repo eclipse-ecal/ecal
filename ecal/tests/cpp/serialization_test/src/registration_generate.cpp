@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,13 +90,25 @@ namespace eCAL
     }
 
     // generate TLayer
-    TLayer GenerateTLayer()
+    TLayer GenerateTLayer(eTLayerType type)
     {
       TLayer layer;
-      layer.type      = static_cast<eTLayerType>(rand() % (tl_all + 1));
+      layer.type      = type;
       layer.version   = rand() % 100;
       layer.enabled   = rand() % 2 == 1;
       layer.active    = rand() % 2 == 1;
+      switch (type)
+      {
+      case eTLayerType::tl_ecal_shm:
+        layer.par_layer.layer_par_shm.memory_file_list.push_back(GenerateString(5));
+        layer.par_layer.layer_par_shm.memory_file_list.push_back(GenerateString(10));
+        break;
+      case eTLayerType::tl_ecal_tcp:
+        layer.par_layer.layer_par_tcp.port = rand();
+        break;
+      default:
+        break;
+      }
       return layer;
     }
 
@@ -110,8 +123,9 @@ namespace eCAL
       topic.topic_name           = GenerateString(8);
       topic.direction            = GenerateString(5);
       topic.datatype_information = GenerateDataTypeInformation();
-      topic.transport_layer.push_back(GenerateTLayer());
-      topic.transport_layer.push_back(GenerateTLayer());
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_shm));
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_udp));
+      topic.transport_layer.push_back(GenerateTLayer(eTLayerType::tl_ecal_tcp));
       topic.topic_size           = rand() % 1000;
       topic.connections_local    = rand() % 50;
       topic.connections_external = rand() % 50;
@@ -119,6 +133,12 @@ namespace eCAL
       topic.data_id              = rand();
       topic.data_clock           = rand();
       topic.data_frequency       = rand() % 100;
+      topic.latency_us.count = rand() % 10000;
+      topic.latency_us.latest = static_cast<double>(rand() % 1000) / 10.0;
+      topic.latency_us.min = static_cast<double>(rand() % 1000) / 10.0;
+      topic.latency_us.max = static_cast<double>(rand() % 1000) / 10.0 + topic.latency_us.min;
+      topic.latency_us.mean = (topic.latency_us.min + topic.latency_us.max) / 2.0;
+      topic.latency_us.variance = static_cast<double>(rand() % 100) / 10.0;
       return topic;
     }
 
@@ -156,7 +176,7 @@ namespace eCAL
       Sample sample;
       sample.cmd_type   = bct_reg_process;
       sample.identifier = GenerateIdentifier();
-      // Process samples don't have an id internally, hence it must be 0.
+      // Process samples don't have an id internally, hence it must be equal to the process id.
       sample.identifier.entity_id = sample.identifier.process_id;
       sample.process    = GenerateProcess();
       return sample;

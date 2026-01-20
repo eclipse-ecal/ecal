@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -411,7 +412,7 @@ namespace eCAL
     m_clock++;
 
     TriggerMessageDropUdate(publication_info, clock_);
-    TriggerFrequencyUpdate();
+    TriggerStatisticsUpdate(time_);
 
     // reset timeout
     m_receive_time = 0;
@@ -480,7 +481,8 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample sample;
     GetRegistrationSample(sample);
-    if (g_registration_provider() != nullptr) g_registration_provider()->RegisterSample(sample);
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -494,7 +496,8 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample sample;
     GetUnregistrationSample(sample);
-    if (g_registration_provider() != nullptr) g_registration_provider()->UnregisterSample(sample);
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it
@@ -579,12 +582,17 @@ namespace eCAL
     ecal_reg_sample_topic.process_name   = m_attributes.process_name;
     ecal_reg_sample_topic.unit_name      = m_attributes.unit_name;
     ecal_reg_sample_topic.data_clock     = m_clock;
-    ecal_reg_sample_topic.data_frequency = GetFrequency();
+    {
+      const std::lock_guard<std::mutex> lock(m_statistics_mutex);
+      ecal_reg_sample_topic.data_frequency = GetFrequency();
+      ecal_reg_sample_topic.latency_us = m_latency_us_calculator.GetStatistics();
+    }
     ecal_reg_sample_topic.message_drops  = GetMessageDropsAndFireDroppedEvents();
 
     // we do not know the number of connections ..
     ecal_reg_sample_topic.connections_local = 0;
     ecal_reg_sample_topic.connections_external = 0;
+
   }
 
   void CSubscriberImpl::GetUnregistrationSample(Registration::Sample& ecal_unreg_sample)
@@ -785,11 +793,17 @@ namespace eCAL
     return true;
   }
 
-  void CSubscriberImpl::TriggerFrequencyUpdate()
+  void CSubscriberImpl::TriggerStatisticsUpdate(long long send_time_)
   {
-    const auto receive_time = std::chrono::steady_clock::now();
-    const std::lock_guard<std::mutex> freq_lock(m_frequency_calculator_mutex);
-    m_frequency_calculator.addTick(receive_time);
+    const auto receive_time_us = eCAL::Time::GetMicroSeconds();
+    const eCAL::Time::ecal_clock::time_point receive_time_clock{ std::chrono::microseconds(send_time_) };
+    
+    const std::lock_guard<std::mutex> freq_lock(m_statistics_mutex);
+    m_frequency_calculator.addTick(receive_time_clock);
+
+    auto latency_us = receive_time_us - send_time_;
+
+    m_latency_us_calculator.Update(static_cast<double>(latency_us));
   }
 
   void CSubscriberImpl::TriggerMessageDropUdate(const SPublicationInfo& publication_info_, uint64_t message_counter)
@@ -821,8 +835,7 @@ namespace eCAL
 
   int32_t CSubscriberImpl::GetFrequency()
   {
-    const auto frequency_time = std::chrono::steady_clock::now();
-    const std::lock_guard<std::mutex> lock(m_frequency_calculator_mutex);
+    const auto frequency_time = eCAL::Time::ecal_clock::now();
 
     const double frequency_in_mhz = m_frequency_calculator.getFrequency(frequency_time) * 1000;
 

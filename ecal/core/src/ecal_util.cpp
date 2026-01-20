@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +56,11 @@ namespace eCAL
         Process::SleepMS(1000);
       }
 
-      Monitoring::SMonitoring monitoring;
-      if (g_monitoring() != nullptr) g_monitoring()->GetMonitoring(monitoring);
+      Monitoring::SMonitoring monitoring_type;
+      auto monitoring = g_monitoring();
+      if (monitoring) monitoring->GetMonitoring(monitoring_type);
 
-      return(monitoring);
+      return monitoring_type;
     }
 
     void ShutdownProcess(const std::string& process_name_)

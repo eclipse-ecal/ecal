@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +25,17 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <functional>
+#include <string>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 #include "ecal_service_singleton_manager.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
+
+#include <ecal_service/server_manager.h>
+#include <ecal_service/server_session_types.h>
 
 namespace eCAL
 {
@@ -281,7 +287,12 @@ namespace eCAL
       };
 
     // Start service
-    m_tcp_server = server_manager->create_server(1, 0, service_callback, true, event_callback);
+    const ecal_service::PostToServiceCallbackExecutorFunctionT service_callback_executor
+            = [threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool()](const std::function<void()>& task)
+              {
+                threadpool->Post(task);
+              };
+    m_tcp_server = server_manager->create_server(1, 0, service_callback, service_callback_executor, event_callback);
 
     if (!m_tcp_server)
     {
@@ -290,8 +301,8 @@ namespace eCAL
     }
 
     // Send registration sample
-    if (g_registration_provider())
-      g_registration_provider()->RegisterSample(GetRegistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->RegisterSample(GetRegistrationSample());
 
     m_created = true;
 #ifndef NDEBUG
@@ -334,8 +345,8 @@ namespace eCAL
     }
 
     // Send unregistration sample
-    if (g_registration_provider())
-      g_registration_provider()->UnregisterSample(GetUnregistrationSample());
+    auto registration_provider = g_registration_provider();
+    if (registration_provider) registration_provider->UnregisterSample(GetUnregistrationSample());
 
     m_created = false;
 #ifndef NDEBUG

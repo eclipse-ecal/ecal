@@ -58,3 +58,6 @@
 [submodule "thirdparty/benchmark/benchmark"]
 	path = thirdparty/benchmark/benchmark
 	url = https://github.com/google/benchmark.git
+[submodule "thirdparty/protozero/protozero"]
+	path = thirdparty/protozero/protozero
+	url = https://github.com/mapbox/protozero.git

@@ -33,7 +33,7 @@
 
 namespace eCAL
 {
-  class CDataWriterUdpMC : public CDataWriterBase
+  class CDataWriterUdpMC : public CDataWriterBase<Registration::LayerParUdpMC>
   {
   public:
     CDataWriterUdpMC(const eCALWriter::UDP::SAttributes& attr_);

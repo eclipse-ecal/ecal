@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,15 +50,23 @@ namespace eCAL
     if (m_init) return;
 
     // utilize registration receiver to enrich monitor information
-    g_registration_receiver()->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
-    m_init = true;
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+    {
+      registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+      m_init = true;
+    }
   }
 
   void CMonitoringImpl::Destroy()
   {
     // stop registration receiver utilization to enrich monitor information
-    g_registration_receiver()->RemCustomApplySampleCallback("monitoring");
-    m_init = false;
+    auto registration_receiver = g_registration_receiver();
+    if (registration_receiver)
+    {
+      registration_receiver->RemCustomApplySampleCallback("monitoring");
+      m_init = false;
+    }
   }
 
   bool CMonitoringImpl::ApplySample(const Registration::Sample& sample_, eTLayerType /*layer_*/)
@@ -158,6 +167,7 @@ namespace eCAL
     const int64_t      data_clock = sample_topic.data_clock;
     const int32_t      message_drops = sample_topic.message_drops;
     const int32_t      data_frequency = sample_topic.data_frequency;
+    const auto&        data_latency_us = sample_topic.latency_us;
 
     /////////////////////////////////
     // register in topic map
@@ -241,6 +251,12 @@ namespace eCAL
       TopicInfo.data_clock           = data_clock;
       TopicInfo.message_drops        = message_drops;
       TopicInfo.data_frequency       = data_frequency;
+      TopicInfo.data_latency_us.count     = data_latency_us.count;
+      TopicInfo.data_latency_us.latest    = data_latency_us.latest;
+      TopicInfo.data_latency_us.min       = data_latency_us.min;
+      TopicInfo.data_latency_us.max       = data_latency_us.max;
+      TopicInfo.data_latency_us.mean      = data_latency_us.mean;
+      TopicInfo.data_latency_us.variance  = data_latency_us.variance;
     }
 
     return(true);

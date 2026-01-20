@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -265,7 +266,7 @@ TEST(core_cpp_pubsub, TestChainedPublisherSubscriberCallback)
   auto subscriber2_callback = [&subscriber2_received_count](const eCAL::STopicId& /*topic_id_*/, const eCAL::SDataTypeInformation& /*data_type_info_*/, const eCAL::SReceiveCallbackData& /*data_*/) {
     // Count each received message from Publisher2
     subscriber2_received_count++;
-    //std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buf), data_.size) << std::endl;
+    // std::cout << "Subscriber2 Receiving " << std::string(static_cast<const char*>(data_.buffer), data_.buffer_size) << std::endl;
     };
   sub2.SetReceiveCallback(subscriber2_callback);
 

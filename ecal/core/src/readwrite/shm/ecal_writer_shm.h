@@ -38,7 +38,7 @@
 
 namespace eCAL
 {
-  class CDataWriterSHM : public CDataWriterBase
+  class CDataWriterSHM : public CDataWriterBase<Registration::LayerParShm>
   {
   public:
     CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_);
@@ -52,7 +52,7 @@ namespace eCAL
     void ApplySubscription(const std::string& host_name_, int32_t process_id_, const EntityIdT& topic_id_, const std::string& conn_par_) override;
     void RemoveSubscription(const std::string& host_name_, int32_t process_id_, const EntityIdT& topic_id_) override;
 
-    Registration::ConnectionPar GetConnectionParameter() override;
+    Registration::LayerParShm GetConnectionParameter() override;
 
   protected:
     bool SetBufferCount(size_t buffer_count_);
