@@ -65,6 +65,13 @@ namespace eCAL
 
     ECAL_API Configuration();
 
+    ECAL_API ~Configuration();
+
+    ECAL_API Configuration(const Configuration&);
+    ECAL_API Configuration(Configuration&&) noexcept;
+    ECAL_API Configuration& operator=(const Configuration&);
+    ECAL_API Configuration& operator=(Configuration&&) noexcept;
+
     ECAL_API void InitFromConfig();
     ECAL_API void InitFromFile(const std::string& yaml_path_);
 
