@@ -21,43 +21,9 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include <mutex>
-#include <condition_variable>
-#include <atomic>
 #include <thread>
 
-class Barrier 
-{
-public:
-  Barrier(int count) : thread_count(count), waiting(0), step(0) 
-  {
-  }
-
-  void wait() 
-  {
-    std::unique_lock<std::mutex> lock(mtx);
-    int current_step = step;
-
-    if (++waiting == thread_count) 
-    {
-      waiting = 0;       // Reset for the next use
-      ++step;            // Increment the step to release all threads
-      cv.notify_all();   // Release all waiting threads
-    }
-    else 
-    {
-      cv.wait(lock, [this, current_step] { return current_step != step; });
-    }
-  }
-
-private:
-  int thread_count;
-  std::atomic<int> waiting;
-  int step;
-  std::mutex mtx;
-  std::condition_variable cv;
-};
-
+#include <ecal_utils/barrier.h>
 
 TEST(core_cpp_core, Event_EventSetGet)
 { 

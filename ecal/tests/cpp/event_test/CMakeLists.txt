@@ -35,6 +35,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
+    eCAL::ecal-utils
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
