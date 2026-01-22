@@ -45,8 +45,10 @@ message State
   {
     double        total_length_secs            =  1;
     int64         total_frame_count            =  2;
+    uint64        total_size_bytes             =  7; // Since eCAL 6.2
     int64         unflushed_frame_count        =  3;
-    Throughput    write_throughput             =  6;
+    uint64        unflushed_size_bytes         =  8; // Since eCAL 6.2
+    Throughput    write_throughput             =  6; // Since eCAL 6.2
     bool          info_ok                      =  4;
     string        info_message                 =  5;
   }

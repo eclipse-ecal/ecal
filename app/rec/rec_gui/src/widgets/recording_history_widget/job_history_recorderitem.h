@@ -56,7 +56,9 @@ public:
   bool                                                    stillOnline()             const;
   std::pair<bool, std::string>                            infoLastCommandResponse() const;
   std::pair<std::chrono::steady_clock::duration, int64_t> length()                  const;
+  uint64_t                                                totalSizeBytes()          const;
   int64_t                                                 unflushedFrameCount()     const;
+  uint64_t                                                unflushedSizeBytes()      const;
   eCAL::rec::Throughput                                   writeThroughput()         const;
   eCAL::rec::JobState                                     state()                   const;
   eCAL::rec::UploadStatus                                 uploadStatus()            const;
@@ -68,23 +70,27 @@ public:
   void setStillOnline            (bool                                  still_online);
   void setInfoLastCommandResponse(const std::pair<bool, std::string>&   info_last_command_response);
   void setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
+  void setTotalSizeBytes         (uint64_t                              total_size_bytes);
   void setUnflushedFrameCount    (int64_t                               unflushed_frame_count);
+  void setUnflushedSizeBytes     (uint64_t                              total_size_bytes);
   void setWriteThroughput        (const eCAL::rec::Throughput&          write_throughput);
   void setState                  (eCAL::rec::JobState                   state);
   void setUploadStatus           (const eCAL::rec::UploadStatus&        upload_status);
   void setInfo                   (const std::pair<bool, std::string>&   info);
-  void setIsDeleted              (bool is_deleted);
+  void setIsDeleted              (bool                                  is_deleted);
 
   bool updatePid                    (int                                 process_id);
   bool updateStillOnline            (bool                                still_online);
   bool updateInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response);
   bool updateLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length);
+  bool updateTotalSizeBytes         (uint64_t                            total_size_bytes);
   bool updateUnflushedFrameCount    (int64_t                             unflushed_frame_count);
+  bool updateUnflushedSizeBytes     (uint64_t                            total_size_bytes);
   bool updateWriteThroughput        (const eCAL::rec::Throughput&        write_throughput);
   bool updateState                  (eCAL::rec::JobState                 state);
   bool updateUploadStatus           (const eCAL::rec::UploadStatus&      upload_status);
   bool updateInfo                   (const std::pair<bool, std::string>& info);
-  bool updateIsDeleted              (bool is_deleted);
+  bool updateIsDeleted              (bool                                is_deleted);
 
 
 ///////////////////////////////////////////
@@ -100,6 +106,7 @@ public:
     PROCESS_ID,
     STILL_ONLINE,
     LENGTH,
+    DISK_WRITER_INFORMATION,
     STATUS,
     INFO,
   };
@@ -130,7 +137,9 @@ private:
   std::pair<bool, std::string>                            info_last_command_response_;
 
   std::pair<std::chrono::steady_clock::duration, int64_t> length_;
+  uint64_t                                                total_size_bytes_;
   int64_t                                                 unflushed_frame_count_;
+  uint64_t                                                unflushed_size_bytes_;
   eCAL::rec::Throughput                                   write_throughput_;
   eCAL::rec::JobState                                     state_;
   eCAL::rec::UploadStatus                                 upload_status_;

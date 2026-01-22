@@ -59,9 +59,12 @@ public:
 
   bool updateIsDeleted(bool is_deleted);
 
-  eCAL::rec::JobState                                     combinedJobState()         const;
+  eCAL::rec::JobState                                     combinedJobState()        const;
   std::pair<std::chrono::steady_clock::duration, int64_t> combinedLength()          const;
+  uint64_t                                                combinedTotalSizeBytes()  const;
   int64_t                                                 combinedUnflushedFrames() const;
+  uint64_t                                                combinedUnflushedSizeBytes()const;
+  eCAL::rec::Throughput                                   combinedWriterThroughput()const;
   eCAL::rec::UploadStatus                                 combinedUploadStatus()    const;
   std::pair<bool, QString>                                combinedInfo()            const;
 
@@ -75,6 +78,7 @@ public:
     JOB,
     INVOLVED_HOSTS,
     LENGTH,
+    DISK_WRITERS_INFORMATION,
     STATUS,
     LOCAL_PATH,
     MAX_HDF5_FILE_SIZE_MIB,

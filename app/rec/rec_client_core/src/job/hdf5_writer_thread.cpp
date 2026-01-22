@@ -36,12 +36,20 @@ namespace eCAL
       : InterruptibleThread          ()
       , job_config_                  (job_config)
       , frame_buffer_                (initial_frame_buffer)
-      , written_frames_              (0)
+      , total_size_bytes_            (0)
+      , written_size_bytes_          (0)
+      , written_frames_count_        (0)
       , new_topic_info_map_          (initial_topic_info_map)
       , new_topic_info_map_available_(true)
       , flushing_                    (false)
       , throughput_statistics_       (2)
     {
+      // Initialize total size in bytes
+      for (const auto& frame : frame_buffer_)
+      {
+        total_size_bytes_ += frame->data_.size();
+      }
+
       hdf5_writer_ = std::make_unique<eCAL::eh5::v2::HDF5Meas>();
     }
 
@@ -74,6 +82,7 @@ namespace eCAL
       if (!flushing_)
       {
         frame_buffer_.push_back(frame);
+        total_size_bytes_ += frame->data_.size();
         input_cv_.notify_one();
         return true;
       }
@@ -154,12 +163,13 @@ namespace eCAL
             // take one frame from the framebuffer
             frame = frame_buffer_.front();
             frame_buffer_.pop_front();
-            if (written_frames_ == 0)
+            if (written_frames_count_ == 0)
             {
               first_written_frame_timestamp_ = frame->system_receive_time_;
             }
             last_written_frame_timestamp_ = frame->system_receive_time_;
-            written_frames_++;
+            written_frames_count_++;
+            written_size_bytes_ += frame->data_.size();
           }
         }
 
@@ -250,8 +260,10 @@ namespace eCAL
           last_status_.total_length_        = last_written_frame_timestamp_ - first_written_frame_timestamp_;
         }
 
+        last_status_.total_size_bytes_      = total_size_bytes_;
         last_status_.unflushed_frame_count_ = frame_buffer_.size();
-        last_status_.total_frame_count_     = written_frames_ + frame_buffer_.size();
+        last_status_.unflushed_size_bytes_  = total_size_bytes_ - written_size_bytes_;
+        last_status_.total_frame_count_     = written_frames_count_ + frame_buffer_.size();
       }
 
       {

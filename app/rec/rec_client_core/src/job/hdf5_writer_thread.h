@@ -88,11 +88,14 @@ namespace eCAL
       mutable std::mutex                    input_mutex_;                       /**< Mutex protecting every input variables (notably the variables below). */
       mutable std::condition_variable       input_cv_;                          /**< condition variable for notifying the internal worker thread that new input data is available */
       std::deque<std::shared_ptr<Frame>>    frame_buffer_;
-      size_t                                written_frames_;
+      uint64_t                              total_size_bytes_;
+      uint64_t                              written_size_bytes_;
+      size_t                                written_frames_count_;
       std::chrono::steady_clock::time_point first_written_frame_timestamp_;
       std::chrono::steady_clock::time_point last_written_frame_timestamp_;
       std::map<std::string, TopicInfo>      new_topic_info_map_;                /**< The new topic info map that shall be set to the HDF5 writer */
       bool                                  new_topic_info_map_available_;      /**< Telling that a new topic info map has been set from the outside. */
+
       mutable RecHdf5JobStatus              last_status_;
 
       mutable std::mutex                                    hdf5_writer_mutex_;

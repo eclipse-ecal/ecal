@@ -52,7 +52,9 @@ JobHistoryRecorderItem::JobHistoryRecorderItem(const QString& hostname, const QS
   , still_online_              (false)
   , info_last_command_response_{true, ""}
   , length_                    { std::chrono::steady_clock::duration(0), 0 }
+  , total_size_bytes_          (0)
   , unflushed_frame_count_     (0)
+  , unflushed_size_bytes_      (0)
   , state_                     (eCAL::rec::JobState::NotStarted)
   , info_                      {true, ""}
   , is_deleted_                (false)
@@ -169,6 +171,28 @@ QVariant JobHistoryRecorderItem::data(int column, Qt::ItemDataRole role) const
     }
   }
 
+  else if (column == (int)Columns::DISK_WRITER_INFORMATION)
+  {
+    if (!isAddonItem()) // Addons don't provide disk writer information at the moment (2026-01-22)
+    {
+      if (role == Qt::ItemDataRole::DisplayRole)
+      {
+        return bytesToPrettyString(write_throughput_.bytes_per_second_) + "/s"
+          + " (" + bytesToPrettyString(total_size_bytes_ - unflushed_size_bytes_)
+          + " of " + bytesToPrettyString(total_size_bytes_)
+          + ")";
+      }
+      else if (role == ItemDataRoles::SortRole)
+      {
+        return static_cast<qint64>(write_throughput_.bytes_per_second_);
+      }
+    }
+    else
+    {
+      return QVariant();
+    }
+  }
+
   else if (column == (int)Columns::STATUS)
   {
     if (role == Qt::ItemDataRole::DisplayRole)
@@ -281,7 +305,9 @@ int                                                     JobHistoryRecorderItem::
 bool                                                    JobHistoryRecorderItem::stillOnline()             const { return still_online_; }
 std::pair<bool, std::string>                            JobHistoryRecorderItem::infoLastCommandResponse() const { return info_last_command_response_; }
 std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryRecorderItem::length()                  const { return length_; }
+uint64_t                                                JobHistoryRecorderItem::totalSizeBytes()          const { return total_size_bytes_; }
 int64_t                                                 JobHistoryRecorderItem::unflushedFrameCount()     const { return unflushed_frame_count_; }
+uint64_t                                                JobHistoryRecorderItem::unflushedSizeBytes()      const { return unflushed_size_bytes_; }
 eCAL::rec::Throughput                                   JobHistoryRecorderItem::writeThroughput()         const { return write_throughput_; }
 eCAL::rec::JobState                                     JobHistoryRecorderItem::state()                   const { return state_; }
 eCAL::rec::UploadStatus                                 JobHistoryRecorderItem::uploadStatus()            const { return upload_status_; }
@@ -310,7 +336,9 @@ void JobHistoryRecorderItem::setPid                    (int process_id)         
 void JobHistoryRecorderItem::setStillOnline            (bool still_online)                                                     { still_online_ = still_online; }
 void JobHistoryRecorderItem::setInfoLastCommandResponse(const std::pair<bool, std::string>& info_last_command_response)        { info_last_command_response_ = info_last_command_response; }
 void JobHistoryRecorderItem::setLength                 (const std::pair<std::chrono::steady_clock::duration, int64_t>& length) { length_ = length; }
+void JobHistoryRecorderItem::setTotalSizeBytes         (uint64_t total_size_bytes)                                             { total_size_bytes_ = total_size_bytes; }
 void JobHistoryRecorderItem::setUnflushedFrameCount    (int64_t unflushed_frame_count)                                         { unflushed_frame_count_ = unflushed_frame_count; }
+void JobHistoryRecorderItem::setUnflushedSizeBytes     (uint64_t unflushed_size_bytes)                                         { unflushed_size_bytes_ = unflushed_size_bytes; }
 void JobHistoryRecorderItem::setWriteThroughput        (const eCAL::rec::Throughput& write_throughput)                         { write_throughput_ = write_throughput; }
 void JobHistoryRecorderItem::setState                  (eCAL::rec::JobState state)                                             { state_ = state; }
 void JobHistoryRecorderItem::setUploadStatus           (const eCAL::rec::UploadStatus& upload_status)                          { upload_status_ = upload_status; }
@@ -357,11 +385,31 @@ bool JobHistoryRecorderItem::updateLength(const std::pair<std::chrono::steady_cl
   return false;
 }
 
+bool JobHistoryRecorderItem::updateTotalSizeBytes(uint64_t total_size_bytes)
+{
+  if (total_size_bytes_ != total_size_bytes)
+  {
+    total_size_bytes_ = total_size_bytes;
+    return true;
+  }
+  return false;
+}
+
 bool JobHistoryRecorderItem::updateUnflushedFrameCount(int64_t unflushed_frame_count)
 {
   if (unflushed_frame_count_ != unflushed_frame_count)
   {
     unflushed_frame_count_ = unflushed_frame_count;
+    return true;
+  }
+  return false;
+}
+
+bool JobHistoryRecorderItem::updateUnflushedSizeBytes(uint64_t unflushed_size_bytes)
+{
+  if (unflushed_size_bytes_ != unflushed_size_bytes)
+  {
+    unflushed_size_bytes_ = unflushed_size_bytes;
     return true;
   }
   return false;

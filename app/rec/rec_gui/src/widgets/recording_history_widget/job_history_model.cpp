@@ -74,6 +74,8 @@ int JobHistoryModel::mapColumnToItem(int model_column, int tree_item_type) const
       return (int)JobHistoryJobItem::Columns::JOB_ID;
     case (int)Columns::LENGTH:
       return (int)JobHistoryJobItem::Columns::LENGTH;
+    case (int)Columns::DISK_WRITER_INFORMATION:
+      return (int)JobHistoryJobItem::Columns::DISK_WRITERS_INFORMATION;
     case (int)Columns::STATUS:
       return (int)JobHistoryJobItem::Columns::STATUS;
     case (int)Columns::LOCAL_PATH:
@@ -107,6 +109,8 @@ int JobHistoryModel::mapColumnToItem(int model_column, int tree_item_type) const
       return (int)JobHistoryRecorderItem::Columns::STILL_ONLINE;
     case (int)Columns::LENGTH:
       return (int)JobHistoryRecorderItem::Columns::LENGTH;
+    case (int)Columns::DISK_WRITER_INFORMATION:
+      return (int)JobHistoryRecorderItem::Columns::DISK_WRITER_INFORMATION;
     case (int)Columns::STATUS:
       return (int)JobHistoryRecorderItem::Columns::STATUS;
     case (int)Columns::LOCAL_PATH:
@@ -162,7 +166,9 @@ void JobHistoryModel::setRecorderStatuses(const eCAL::rec_server::RecorderStatus
       update_needed_hdf5_rec = hdf5_recorder_item->updatePid                    (process_id) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateInfoLastCommandResponse(client_job_status.second.info_last_command_response_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateLength                 ({ client_job_status.second.job_status_.rec_hdf5_status_.total_length_, client_job_status.second.job_status_.rec_hdf5_status_.total_frame_count_ }) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateTotalSizeBytes         (client_job_status.second.job_status_.rec_hdf5_status_.total_size_bytes_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedFrameCount    (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_frame_count_) || update_needed_hdf5_rec;
+      update_needed_hdf5_rec = hdf5_recorder_item->updateUnflushedSizeBytes     (client_job_status.second.job_status_.rec_hdf5_status_.unflushed_size_bytes_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateWriteThroughput        (client_job_status.second.job_status_.rec_hdf5_status_.write_throughput_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateState                  (client_job_status.second.job_status_.state_) || update_needed_hdf5_rec;
       update_needed_hdf5_rec = hdf5_recorder_item->updateUploadStatus           (client_job_status.second.job_status_.upload_status_) || update_needed_hdf5_rec;

@@ -34,8 +34,8 @@ namespace eCAL
   {
     struct Throughput
     {
-      uint64_t bytes_per_second_{ 0 };
-      uint64_t frames_per_second_{ 0 };
+      uint64_t bytes_per_second_  { 0 };
+      uint64_t frames_per_second_ { 0 };
       
       // Equality operator
       bool operator==(const Throughput& other) const
@@ -71,13 +71,13 @@ namespace eCAL
 
     struct RecHdf5JobStatus
     {
-      RecHdf5JobStatus() : total_length_(0), total_frame_count_(0), unflushed_frame_count_(0), info_{ true, "" } {}
-
-      std::chrono::steady_clock::duration total_length_;
-      int64_t                             total_frame_count_;
-      int64_t                             unflushed_frame_count_;
+      std::chrono::steady_clock::duration total_length_           { 0 };
+      int64_t                             total_frame_count_      { 0 };
+      uint64_t                            total_size_bytes_       { 0 };
+      int64_t                             unflushed_frame_count_  { 0 };
+      uint64_t                            unflushed_size_bytes_   { 0 };
       Throughput                          write_throughput_;
-      std::pair<bool, std::string>        info_;
+      std::pair<bool, std::string>        info_                   { true, "" };
 
       bool operator==(const RecHdf5JobStatus& other) const { return (total_length_ == other.total_length_) && (total_frame_count_ == other.total_frame_count_) && (unflushed_frame_count_ == other.unflushed_frame_count_) && (info_ == other.info_); }
       bool operator!=(const RecHdf5JobStatus& other) const { return !operator==(other); }
