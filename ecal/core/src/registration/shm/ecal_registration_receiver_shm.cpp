@@ -40,14 +40,14 @@ namespace eCAL
   // CMemfileRegistrationReceiver
   //////////////////////////////////////////////////////////////////
 
-  CRegistrationReceiverSHM::CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_)
+  CRegistrationReceiverSHM::CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_)
    : m_apply_sample_callback(apply_sample_callback)
   {
-    m_memfile_broadcast = std::make_unique<CMemoryFileBroadcast>();
+    m_memfile_broadcast = std::make_unique<CMemoryFileBroadcast>(memfile_map_);
     m_memfile_broadcast->Create(attr_);
     m_memfile_broadcast->FlushLocalEventQueue();
 
-    m_memfile_broadcast_reader = std::make_unique<CMemoryFileBroadcastReader>();
+    m_memfile_broadcast_reader = std::make_unique<CMemoryFileBroadcastReader>(std::move(memfile_map_));
     // This is a bit unclean to take the raw adress of the reader here.
     m_memfile_broadcast_reader->Bind(m_memfile_broadcast.get());
 

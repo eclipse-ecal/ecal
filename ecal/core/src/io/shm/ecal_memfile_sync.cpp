@@ -36,9 +36,10 @@
 
 namespace eCAL
 {
-  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_) :
+  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_, std::shared_ptr<CMemFileMap> memfile_map_) :
     m_attr(attr_),
-    m_created(false)
+    m_created(false),
+    m_memfile(std::move(memfile_map_))
   {
     Create(base_name_, size_);
   }

@@ -41,8 +41,9 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase<Registration::LayerParShm>
   {
   public:
-    CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_);
-
+    CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_, std::shared_ptr<CMemFileMap> memfile_map_);
+    ~CDataWriterSHM() override;
+    
     SWriterInfo GetInfo() override;
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
@@ -66,5 +67,7 @@ namespace eCAL
     using ProcessIDTopicIDSetT = std::map<int32_t, std::set<EntityIdT>>;
     std::mutex                                    m_process_id_topic_id_set_map_sync;
     ProcessIDTopicIDSetT                          m_process_id_topic_id_set_map;
+
+    std::shared_ptr<CMemFileMap>                  m_memfile_map;
   };
 }

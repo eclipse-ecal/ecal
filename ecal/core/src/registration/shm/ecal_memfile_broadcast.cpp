@@ -59,7 +59,11 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
+  CMemoryFileBroadcast::CMemoryFileBroadcast(std::shared_ptr<CMemFileMap> memfile_map_)
+  : m_created(false)
+  , m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>(std::move(memfile_map_)))
+  , m_event_queue()
+  , m_last_timestamp(0)
   {
   }
 

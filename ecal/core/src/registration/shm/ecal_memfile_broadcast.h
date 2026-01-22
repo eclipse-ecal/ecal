@@ -78,7 +78,7 @@ namespace eCAL
   class CMemoryFileBroadcast
   {
   public:
-    CMemoryFileBroadcast();
+    CMemoryFileBroadcast(std::shared_ptr<CMemFileMap> memfile_map_);
 
     bool Create(const Registration::SHM::SAttributes& attr_);
     bool Destroy();

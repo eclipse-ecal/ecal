@@ -48,7 +48,7 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_);
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_, std::shared_ptr<CMemFileMap> memfile_map_);
     ~CSyncMemoryFile();
 
     bool Connect(int32_t process_id_);

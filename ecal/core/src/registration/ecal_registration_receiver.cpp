@@ -52,13 +52,14 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CRegistrationReceiver::m_created;
 
-  CRegistrationReceiver::CRegistrationReceiver(const Registration::SAttributes& attr_)
+  CRegistrationReceiver::CRegistrationReceiver(const Registration::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_)
     : m_timeout_provider(nullptr)
     , m_timeout_provider_thread(nullptr)
     , m_registration_receiver_udp(nullptr)
     , m_registration_receiver_shm(nullptr)   
     , m_sample_applier(Registration::SampleApplier::BuildSampleApplierAttributes(attr_))
     , m_attributes(attr_)
+    , m_memfile_map(std::move(memfile_map_))
   {
     // Connect User registration callback and gates callback with the sample applier
     m_sample_applier.SetCustomApplySampleCallback("gates", [](const eCAL::Registration::Sample& sample_)
@@ -73,6 +74,8 @@ namespace eCAL
 
     m_sample_applier.RemCustomApplySampleCallback("custom_registration");
     m_sample_applier.RemCustomApplySampleCallback("gates");
+
+    m_memfile_map.reset();
   }
 
   void CRegistrationReceiver::Start()
@@ -96,7 +99,7 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION_SHM
     if (m_attributes.transport_mode == Registration::eTransportMode::shm)
     {
-      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes));
+      m_registration_receiver_shm = std::make_unique<CRegistrationReceiverSHM>([this](const Registration::Sample& sample_) {return m_sample_applier.ApplySample(sample_); }, Registration::BuildSHMAttributes(m_attributes), m_memfile_map);
     } else
 #endif
     if (m_attributes.transport_mode == Registration::eTransportMode::udp)    

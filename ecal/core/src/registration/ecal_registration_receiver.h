@@ -35,6 +35,8 @@
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "config/attributes/registration_attributes.h"
 
+#include "io/shm/ecal_memfile_db.h"
+
 #include <atomic>
 #include <functional>
 #include <map>
@@ -58,7 +60,7 @@ namespace eCAL
   class CRegistrationReceiver
   {
   public:
-    CRegistrationReceiver(const Registration::SAttributes& attr_);
+    CRegistrationReceiver(const Registration::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
     ~CRegistrationReceiver();
 
     //what about the rest of the rule of 5?
@@ -87,5 +89,7 @@ namespace eCAL
     Registration::CSampleApplier     m_sample_applier;
 
     Registration::SAttributes        m_attributes;
+
+    std::shared_ptr<eCAL::CMemFileMap>  m_memfile_map;
   };
 }

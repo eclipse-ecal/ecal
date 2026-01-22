@@ -57,13 +57,11 @@ namespace eCAL
 
   void CSubGate::Stop()
   {
-    if(!m_created) return;
+    if(!m_created.exchange(false)) return;
 
     // stop & destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     m_topic_name_subscriber_map.clear();
-
-    m_created = false;
   }
 
   bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)

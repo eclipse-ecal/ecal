@@ -40,21 +40,28 @@ namespace eCAL
   ////////////////
   CDataReaderTCP::CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_) 
     : m_callback_active(false)
-    , m_attributes(attr_) 
+    , m_attributes(attr_)
   {}
 
-  bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_)
+  CDataReaderTCP::~CDataReaderTCP()
+  {
+    Destroy();
+  }
+
+  bool CDataReaderTCP::Create(std::shared_ptr<tcp_pubsub::Executor>& executor_, std::shared_ptr<eCAL::CSubGate> subgate_)
   {
     // create tcp subscriber
     m_subscriber = std::make_shared<tcp_pubsub::Subscriber>(executor_);
+    m_subgate = std::move(subgate_);
     return true;
   }
 
   bool CDataReaderTCP::Destroy()
   {
     if (!m_subscriber) return false;
-    m_subscriber      = nullptr;
+    m_subscriber.reset();
     m_callback_active = false;
+    m_subgate.reset();
     return true;
   }
 
@@ -112,14 +119,13 @@ namespace eCAL
     // parse header
     if (DeserializeFromBuffer(header_payload, header_size, m_ecal_header))
     {
-      auto subgate = g_subgate();
-      if (subgate)
+      if (m_subgate)
       {
         // use this intermediate variables as optimization
         const auto& ecal_header_topic_info = m_ecal_header.topic_info;
         const auto& ecal_header_content    = m_ecal_header.content;
 
-        subgate->ApplySample(
+        m_subgate->ApplySample(
           ecal_header_topic_info,
           data_payload,
           static_cast<size_t>(ecal_header_content.size),
@@ -135,9 +141,15 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CTCPReaderLayer::CTCPReaderLayer() 
+  CTCPReaderLayer::CTCPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_)
     : m_initialized(false)
+    , m_subgate(std::move(subgate_))
   {}
+
+  CTCPReaderLayer::~CTCPReaderLayer()
+  {
+    m_subgate.reset();
+  }
 
   void CTCPReaderLayer::Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_)
   {
@@ -157,7 +169,7 @@ namespace eCAL
     if (m_datareadertcp_map.find(map_key) != m_datareadertcp_map.end()) return;
 
     const std::shared_ptr<CDataReaderTCP> reader = std::make_shared<CDataReaderTCP>(eCAL::eCALReader::TCP::BuildTCPReaderAttributes(m_attributes));
-    reader->Create(m_executor);
+    reader->Create(m_executor, m_subgate);
 
     m_datareadertcp_map.insert(std::pair<std::string, std::shared_ptr<CDataReaderTCP>>(map_key, reader));
   }

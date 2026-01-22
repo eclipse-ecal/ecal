@@ -30,6 +30,7 @@
 #include <string>
 
 #include <ecal/pubsub/payload_writer.h>
+#include "io/shm/ecal_memfile_db.h"
 
 #include "ecal_memfile_info.h"
 #include "io/mtx/ecal_named_mutex.h"
@@ -45,7 +46,7 @@ namespace eCAL
     /**
      * @brief Constructor. 
     **/
-    CMemoryFile();
+    CMemoryFile(std::shared_ptr<CMemFileMap> memfile_map_);
 
     /**
      * @brief Destructor. 
@@ -227,5 +228,7 @@ namespace eCAL
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction
     CMemoryFile& operator=(const CMemoryFile&);      // prevent assignment
+
+    std::shared_ptr<CMemFileMap>  m_memfile_map;
   };
 }

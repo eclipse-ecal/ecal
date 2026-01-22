@@ -41,10 +41,15 @@ namespace eCAL
   ////////////////
   // LAYER
   ////////////////
-  CUDPReaderLayer::CUDPReaderLayer() : m_started(false)
+  CUDPReaderLayer::CUDPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_) 
+    : m_started(false)
+    , m_subgate(std::move(subgate_))
   {}
 
-  CUDPReaderLayer::~CUDPReaderLayer() = default;
+  CUDPReaderLayer::~CUDPReaderLayer()
+  {
+    m_subgate.reset();
+  }
 
   void CUDPReaderLayer::Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_)
   {
@@ -101,15 +106,13 @@ namespace eCAL
   
   bool CUDPReaderLayer::HasSample(const std::string& sample_name_)
   {
-    auto subgate = g_subgate();
-    if (subgate) return subgate->HasSample(sample_name_);
+    if (m_subgate) return m_subgate->HasSample(sample_name_);
     return false;
   }
 
   bool CUDPReaderLayer::ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_)
   {
-    auto subgate = g_subgate();
-    if (subgate) return subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
+    if (m_subgate) return m_subgate->ApplySample(serialized_sample_data_, serialized_sample_size_, tl_ecal_udp);
     return false;
   }
 }

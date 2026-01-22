@@ -51,6 +51,9 @@ namespace eCAL
       std::int64_t                  timestamp;
     };
   public:
+    CMemoryFileBroadcastReader(std::shared_ptr<CMemFileMap> memfile_map_);
+    ~CMemoryFileBroadcastReader();
+
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
     bool Unbind();
 
@@ -60,5 +63,6 @@ namespace eCAL
     std::unordered_map<std::uint64_t, SPayloadMemfile> m_payload_memfiles;
     MemfileBroadcastEventListT                         m_broadcast_event_list;
     bool                                               m_bound = false;
+    std::shared_ptr<CMemFileMap>                       m_memfile_map;
   };
 }

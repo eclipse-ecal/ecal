@@ -37,11 +37,12 @@ namespace eCAL
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
-  CMemFileObserver::CMemFileObserver() :
+  CMemFileObserver::CMemFileObserver(std::shared_ptr<CMemFileMap> memfile_map_) :
     m_created(false),
     m_do_stop(false),
     m_is_observing(false),
-    m_time_of_last_life_signal(std::chrono::steady_clock::now())
+    m_time_of_last_life_signal(std::chrono::steady_clock::now()),
+    m_memfile(std::move(memfile_map_))
   {
   }
 
@@ -319,15 +320,17 @@ namespace eCAL
   ////////////////////////////////////////
   // CMemFileThreadPool
   ////////////////////////////////////////
-  CMemFileThreadPool::CMemFileThreadPool() :
+  CMemFileThreadPool::CMemFileThreadPool(std::shared_ptr<CMemFileMap> memfile_map_) :
   m_created(false),
-  m_do_cleanup(false)
+  m_do_cleanup(false),
+  m_memfile_map(std::move(memfile_map_))
   {
   }
 
   CMemFileThreadPool::~CMemFileThreadPool()
   {
     Stop();
+    m_memfile_map.reset();
   }
 
   void CMemFileThreadPool::Start()
@@ -396,7 +399,7 @@ namespace eCAL
     // okay, we need to start a new observer
     else
     {
-      auto observer = std::make_shared<CMemFileObserver>();
+      auto observer = std::make_shared<CMemFileObserver>(m_memfile_map);
       observer->Create(memfile_name_, memfile_event_);
       observer->Start(timeout_observation_ms, callback_);
       m_observer_pool[memfile_name_] = observer;

@@ -31,6 +31,8 @@
 #include <registration/ecal_registration_types.h>
 #include "config/attributes/registration_shm_attributes.h"
 
+#include "io/shm/ecal_memfile_db.h"
+
 namespace eCAL
 {
   class CCallbackThread;
@@ -40,7 +42,7 @@ namespace eCAL
   class CRegistrationReceiverSHM
   {
   public:
-    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_);
+    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
     ~CRegistrationReceiverSHM();
 
     // default copy constructor
@@ -61,6 +63,6 @@ namespace eCAL
 
     eCAL::Registration::SampleList              m_sample_list;
 
-    RegistrationApplySampleCallbackT m_apply_sample_callback;
+    RegistrationApplySampleCallbackT            m_apply_sample_callback;
   };
 }

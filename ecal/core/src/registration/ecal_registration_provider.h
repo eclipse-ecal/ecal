@@ -33,6 +33,12 @@
 #include "util/ecal_thread.h"
 #include "config/attributes/registration_attributes.h"
 
+#include "pubsub/ecal_subgate.h"
+#include "pubsub/ecal_pubgate.h"
+#include "service/ecal_servicegate.h"
+#include "service/ecal_clientgate.h"
+#include "io/shm/ecal_memfile_db.h"
+
 #include <atomic>
 #include <memory>
 #include <mutex>
@@ -41,10 +47,20 @@
 
 namespace eCAL
 {
+  struct SRegistrationProviderInputs
+  {
+    Registration::SAttributes           attributes;
+    std::shared_ptr<eCAL::CMemFileMap>  memfile_map;
+    std::shared_ptr<eCAL::CSubGate>     subgate;
+    std::shared_ptr<eCAL::CPubGate>     pubgate;
+    std::shared_ptr<eCAL::CServiceGate> servicegate;
+    std::shared_ptr<eCAL::CClientGate>  clientgate;
+  };
+
   class CRegistrationProvider
   {
   public:
-    CRegistrationProvider(const Registration::SAttributes& attr_);
+    CRegistrationProvider(SRegistrationProviderInputs& inputs_);
     ~CRegistrationProvider();
 
     void Start();
@@ -67,6 +83,6 @@ namespace eCAL
 
     Registration::SampleList             m_send_thread_sample_list;
 
-    Registration::SAttributes                  m_attributes;
+    SRegistrationProviderInputs          m_inputs;
   };
 }

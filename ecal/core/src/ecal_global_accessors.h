@@ -72,7 +72,7 @@ namespace eCAL
   void SetGlobalUnitName(const char *unit_name_);
 
   std::shared_ptr<CGlobals> CreateGlobalsInstance();
-  void                      ResetGlobalsInstance();
+  bool                      FinalizeGlobals();
 
   void                      SetGlobalEcalConfiguration(const Configuration& config_);
   void                      ResetGlobalEcalConfiguration(); 
@@ -109,8 +109,6 @@ namespace eCAL
 #endif
 
   // declaration of globally accessible variables
-  extern std::shared_ptr<CGlobals>     g_globals_ctx;
-
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;
 

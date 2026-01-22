@@ -62,15 +62,5 @@ namespace eCAL
 
     // connection parameter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
-
-    static std::shared_ptr<T> Get()
-    {
-      static std::shared_ptr<T> layer = nullptr;
-      if (!layer)
-      {
-        layer = std::make_shared<T>();
-      }
-      return layer;
-    }
   };
 }

@@ -50,7 +50,7 @@ namespace eCAL
   class CMemFileObserver
   {
   public:
-    CMemFileObserver();
+    CMemFileObserver(std::shared_ptr<CMemFileMap> memfile_map_);
     ~CMemFileObserver();
 
     CMemFileObserver(const CMemFileObserver&) = delete;
@@ -91,7 +91,7 @@ namespace eCAL
   class CMemFileThreadPool
   {
   public:
-    CMemFileThreadPool();
+    CMemFileThreadPool(std::shared_ptr<CMemFileMap> memfile_map_);
     ~CMemFileThreadPool();
 
     void Start();
@@ -111,5 +111,7 @@ namespace eCAL
     std::condition_variable                                   m_do_cleanup_cv;
     std::mutex                                                m_do_cleanup_mtx;
     std::thread                                               m_cleanup_thread;
+    
+    std::shared_ptr<CMemFileMap>                              m_memfile_map;
   };
 }

@@ -34,6 +34,7 @@
 
 #include "ecal_subscriber_impl.h"
 #include "ecal_global_accessors.h"
+#include "ecal_globals.h"
 
 #include "readwrite/ecal_reader_layer.h"
 #include "readwrite/ecal_transport_layer.h"
@@ -331,12 +332,12 @@ namespace eCAL
     {
     case tl_ecal_shm:
 #if ECAL_CORE_TRANSPORT_SHM
-      CSHMReaderLayer::Get()->SetConnectionParameter(par);
+      if (auto globals = g_globals()) globals->shm_reader_layer()->SetConnectionParameter(par);
 #endif
       break;
     case tl_ecal_tcp:
 #if ECAL_CORE_TRANSPORT_TCP
-      CTCPReaderLayer::Get()->SetConnectionParameter(par);
+      if (auto globals = g_globals()) globals->tcp_reader_layer()->SetConnectionParameter(par);
 #endif
       break;
     default:
@@ -346,11 +347,13 @@ namespace eCAL
 
   void CSubscriberImpl::InitializeLayers()
   {
+    auto globals = g_globals();
+    if (!globals) return;
     // initialize udp layer
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_attributes.udp.enable)
     {
-      CUDPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
+      globals->udp_reader_layer()->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
     }
 #endif
 
@@ -358,7 +361,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_SHM
     if (m_attributes.shm.enable)
     {
-      CSHMReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
+      globals->shm_reader_layer()->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
     }
 #endif
 
@@ -366,7 +369,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_TCP
     if (m_attributes.tcp.enable)
     {
-      CTCPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
+      globals->tcp_reader_layer()->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
     }
 #endif
   }
@@ -613,6 +616,9 @@ namespace eCAL
   
   void CSubscriberImpl::StartTransportLayer()
   {
+    auto globals = g_globals();
+    if (!globals) return;
+    
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_attributes.udp.enable)
     {
@@ -620,7 +626,7 @@ namespace eCAL
       m_layers.udp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->udp_reader_layer()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -631,7 +637,7 @@ namespace eCAL
       m_layers.shm.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->shm_reader_layer()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -642,13 +648,16 @@ namespace eCAL
       m_layers.tcp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->tcp_reader_layer()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
   
   void CSubscriberImpl::StopTransportLayer()
   {
+    auto globals = g_globals();
+    if (!globals) return;
+
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_attributes.udp.enable)
     {
@@ -656,7 +665,7 @@ namespace eCAL
       m_layers.udp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->udp_reader_layer()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -667,7 +676,7 @@ namespace eCAL
       m_layers.shm.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->shm_reader_layer()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -678,7 +687,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      globals->tcp_reader_layer()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }

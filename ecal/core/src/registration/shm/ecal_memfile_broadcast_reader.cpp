@@ -32,6 +32,16 @@
 
 namespace eCAL
 {
+  CMemoryFileBroadcastReader::CMemoryFileBroadcastReader(std::shared_ptr<CMemFileMap> memfile_map_)
+    : m_memfile_map(std::move(memfile_map_))
+  {
+  }
+
+  CMemoryFileBroadcastReader::~CMemoryFileBroadcastReader()
+  {
+    m_memfile_map.reset();
+  }
+
   bool CMemoryFileBroadcastReader::Bind(CMemoryFileBroadcast *memfile_broadcast)
   {
     if (m_bound) return false;
@@ -67,7 +77,7 @@ namespace eCAL
       decltype(m_payload_memfiles)::iterator iterator;
       bool is_new_payload_memfile {false};
       std::tie(iterator, is_new_payload_memfile) = m_payload_memfiles.insert(
-        {event_id, {std::make_shared<CMemoryFile>(), std::vector<char>(), 0}});
+        {event_id, {std::make_shared<CMemoryFile>(m_memfile_map), std::vector<char>(), 0}});
 
       auto &memfile_broadcast_payload = iterator->second;
       if (is_new_payload_memfile && broadcast_event->type != eMemfileBroadcastEventType::EVENT_REMOVED)

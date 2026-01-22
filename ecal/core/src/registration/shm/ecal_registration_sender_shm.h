@@ -42,7 +42,7 @@ namespace eCAL
   class CRegistrationSenderSHM : public CRegistrationSender
   {
   public:
-    CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_);
+    CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
     ~CRegistrationSenderSHM() override;
 
     // Special member functionss

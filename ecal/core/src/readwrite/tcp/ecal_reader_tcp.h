@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include "pubsub/ecal_subgate.h"
 #include "readwrite/ecal_reader_layer.h"
 #include "config/attributes/data_reader_tcp_attributes.h"
 #include "config/attributes/tcp_reader_layer_attributes.h"
@@ -45,8 +46,9 @@ namespace eCAL
   {
   public:
     CDataReaderTCP(const eCAL::eCALReader::TCP::SAttributes& attr_);
+    ~CDataReaderTCP();
 
-    bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_);
+    bool Create(std::shared_ptr<tcp_pubsub::Executor>& executor_, std::shared_ptr<eCAL::CSubGate> subgate_);
     bool Destroy();
 
     bool AddConnectionIfNecessary(const std::string& host_name_, uint16_t port_);
@@ -59,6 +61,7 @@ namespace eCAL
     std::shared_ptr<tcp_pubsub::Subscriber> m_subscriber;
     bool                                    m_callback_active;
     eCAL::eCALReader::TCP::SAttributes      m_attributes;
+    std::shared_ptr<eCAL::CSubGate>         m_subgate;
   };
 
   ////////////////
@@ -67,7 +70,8 @@ namespace eCAL
   class CTCPReaderLayer : public CReaderLayer<CTCPReaderLayer, eCAL::eCALReader::TCPLayer::SAttributes>
   {
   public:
-    CTCPReaderLayer();
+    CTCPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_);
+    ~CTCPReaderLayer() override;
 
     void Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_) override;
 
@@ -78,11 +82,13 @@ namespace eCAL
 
   private:
     std::atomic<bool> m_initialized;
-    std::shared_ptr<tcp_pubsub::Executor> m_executor;
+    std::shared_ptr<tcp_pubsub::Executor>   m_executor;
 
     using DataReaderTCPMapT = std::unordered_map<std::string, std::shared_ptr<CDataReaderTCP>>;
-    std::mutex        m_datareadertcp_sync;
-    DataReaderTCPMapT m_datareadertcp_map;
+    std::mutex                              m_datareadertcp_sync;
+    DataReaderTCPMapT                       m_datareadertcp_map;
     eCAL::eCALReader::TCPLayer::SAttributes m_attributes;
+    
+    std::shared_ptr<eCAL::CSubGate>         m_subgate;
   };
 }

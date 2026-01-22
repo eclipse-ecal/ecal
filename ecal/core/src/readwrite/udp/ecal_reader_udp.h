@@ -24,6 +24,7 @@
 #pragma once
 
 #include "io/udp/ecal_udp_sample_receiver.h"
+#include "pubsub/ecal_subgate.h"
 #include "readwrite/ecal_reader_layer.h"
 #include "config/attributes/reader_udp_attributes.h"
 
@@ -40,7 +41,7 @@ namespace eCAL
   class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer, eCAL::eCALReader::UDP::SAttributes>
   {
   public:
-    CUDPReaderLayer();
+    CUDPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_);
     ~CUDPReaderLayer() override;
 
     void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
@@ -59,5 +60,7 @@ namespace eCAL
     std::map<std::string, int>             m_topic_name_mcast_map;
 
     eCAL::eCALReader::UDP::SAttributes     m_attributes;
+
+    std::shared_ptr<eCAL::CSubGate>        m_subgate;
   };
 }

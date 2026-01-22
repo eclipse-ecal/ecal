@@ -40,8 +40,19 @@
 
 namespace eCAL
 {
-  CGlobals::CGlobals() : initialized(false), components(0)
-  {}
+  std::shared_ptr<CGlobals> CGlobals::instance()
+  {
+    auto instance = m_instance;
+    if (instance) return instance;
+
+    std::lock_guard<std::mutex> lock(m_instance_mutex);
+    if (!m_instance)
+    {
+      m_instance = std::shared_ptr<CGlobals>(new CGlobals());
+    }
+
+    return m_instance;
+  }
 
   CGlobals::~CGlobals()
   {
@@ -52,27 +63,6 @@ namespace eCAL
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
-
-#if ECAL_CORE_REGISTRATION
-    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
-    /////////////////////
-    // REGISTRATION PROVIDER
-    /////////////////////
-    if (!registration_provider_instance)
-    {
-      registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_attr);
-      new_initialization = true;
-    }
-
-    /////////////////////
-    // REGISTRATION RECEIVER
-    /////////////////////
-    if(!registration_receiver_instance) 
-    {
-      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_attr);
-      new_initialization = true;
-    }
-#endif // ECAL_CORE_REGISTRATION
 
     /////////////////////
     // DESCRIPTION GATE
@@ -99,7 +89,7 @@ namespace eCAL
     /////////////////////
     if (!memfile_pool_instance)
     {
-      memfile_pool_instance = std::make_shared<CMemFileThreadPool>();
+      memfile_pool_instance = std::make_shared<CMemFileThreadPool>(memfile_map_instance);
       new_initialization = true;
     }
 #endif // defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
@@ -204,6 +194,38 @@ namespace eCAL
       }
     }
 
+#if ECAL_CORE_REGISTRATION
+    const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
+    /////////////////////
+    // REGISTRATION PROVIDER
+    /////////////////////
+    if (!registration_provider_instance)
+    {
+      SRegistrationProviderInputs registration_inputs;
+      registration_inputs.attributes = registration_attr;
+      registration_inputs.memfile_map = memfile_map_instance;
+      registration_inputs.subgate     = subgate_instance;
+      registration_inputs.pubgate     = pubgate_instance;
+      registration_inputs.servicegate = servicegate_instance;
+      registration_inputs.clientgate  = clientgate_instance;
+      registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_inputs);
+      new_initialization = true;
+    }
+
+    /////////////////////
+    // REGISTRATION RECEIVER
+    /////////////////////
+    if(!registration_receiver_instance) 
+    {
+      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_attr, memfile_map_instance);
+      new_initialization = true;
+    }
+#endif // ECAL_CORE_REGISTRATION
+
+    m_shm_reader_layer_instance = std::make_shared<eCAL::CSHMReaderLayer>(subgate_instance, memfile_pool_instance);
+    m_udp_reader_layer_instance = std::make_shared<eCAL::CUDPReaderLayer>(subgate_instance);
+    m_tcp_reader_layer_instance = std::make_shared<eCAL::CTCPReaderLayer>(subgate_instance);
+
     /////////////////////
     // START ALL
     /////////////////////
@@ -221,9 +243,8 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
       // utilize registration receiver to get descriptions
       if (registration_receiver_instance)
-        registration_receiver_instance->SetCustomApplySampleCallback("descgate", [](const auto& sample_) {
-          auto descgate = g_descgate();
-          if (descgate) descgate->ApplySample(sample_, tl_none);
+        registration_receiver_instance->SetCustomApplySampleCallback("descgate", [this](const auto& sample_) {
+          if (descgate_instance) descgate_instance->ApplySample(sample_, tl_none);
         });
 #endif
     }
@@ -246,15 +267,16 @@ namespace eCAL
 #if ECAL_CORE_MONITORING
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))    monitoring_instance->Start();
 #endif
-    initialized =  true;
+    
     components  |= components_;
+    initialized.store(true);
 
     return new_initialization;
   }
 
   bool CGlobals::IsInitialized()
   {
-    return initialized;
+    return initialized.load();
   }
 
   bool CGlobals::IsInitialized(unsigned int component_)
@@ -291,7 +313,9 @@ namespace eCAL
 
   bool CGlobals::Finalize()
   {
-    if (!initialized) return false;
+    // We expect true to return, otherwise intialization was not done or
+    // another call to finalize is already in progress.
+    if (!initialized.exchange(false)) return false;
 
     // start destruction
 #if ECAL_CORE_MONITORING
@@ -361,9 +385,16 @@ namespace eCAL
 #endif
     log_provider_instance.reset();
     log_udp_receiver_instance.reset();
-    
-    initialized = false;
 
+    m_udp_reader_layer_instance.reset();
+    m_tcp_reader_layer_instance.reset();
+    m_shm_reader_layer_instance.reset();
+
+    {
+      std::lock_guard<std::mutex> lock(m_instance_mutex);
+      m_instance.reset();
+    }
+    
     return true;
   }
 }
