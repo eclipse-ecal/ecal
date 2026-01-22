@@ -82,7 +82,7 @@ namespace eCAL
   {
     if (auto globals_instance = CGlobals::instance()) 
     {
-      return globals_instance->IsInitialized() ? globals_instance : nullptr;
+      return globals_instance->IsInitialized() ? std::move(globals_instance) : nullptr;
     }
     
     return nullptr;

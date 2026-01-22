@@ -36,12 +36,6 @@
 #include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
-// #include "readwrite/shm/ecal_reader_shm.h"
-// #include "readwrite/udp/ecal_reader_udp.h"
-// #include "readwrite/tcp/ecal_reader_tcp.h"
-// #include "registration/ecal_registration_provider.h"
-// #include "logging/ecal_log_provider.h"
-
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -66,6 +60,7 @@ namespace eCAL
   {
     class CLogProvider;
   }
+  
   struct SSubscriberInputs
   {
     std::shared_ptr<eCAL::CUDPReaderLayer>       udp_layer;

@@ -56,8 +56,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
     process_sample_process.state.info           = g_process_state.info;
   }
 #if ECAL_CORE_TIMEPLUGIN
-  auto timegate = g_timegate();
-  if (!timegate)
+  if (auto timegate = g_timegate(); !timegate)
   {
     process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }

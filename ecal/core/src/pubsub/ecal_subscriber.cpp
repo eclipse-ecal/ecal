@@ -38,11 +38,16 @@ namespace eCAL
     config.subscriber = config_;
 
     eCAL::SSubscriberInputs inputs;
-    inputs.registration_provider = g_globals()->registration_provider();
-    inputs.log_provider = g_globals()->log_provider();
-    inputs.shm_layer = g_globals()->shm_reader_layer();
-    inputs.udp_layer = g_globals()->udp_reader_layer();
-    inputs.tcp_layer = g_globals()->tcp_reader_layer();
+    
+    if (auto globals = g_globals())
+    {
+      inputs.registration_provider = globals->registration_provider();
+      inputs.log_provider          = globals->log_provider();
+      inputs.shm_layer             = globals->shm_reader_layer();
+      inputs.udp_layer             = globals->udp_reader_layer();
+      inputs.tcp_layer             = globals->tcp_reader_layer();
+    }
+    
 
     // create subscriber implementation
     auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config), inputs);

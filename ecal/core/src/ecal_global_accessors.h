@@ -103,9 +103,7 @@ namespace eCAL
   std::shared_ptr<CClientGate>            g_clientgate();
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  std::shared_ptr<CMemFileThreadPool>     g_memfile_pool();
   std::shared_ptr<CMemFileMap>            g_memfile_map();
-
 #endif
 
   // declaration of globally accessible variables
