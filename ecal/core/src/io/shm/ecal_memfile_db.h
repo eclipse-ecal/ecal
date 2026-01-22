@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,15 +50,4 @@ namespace eCAL
     std::mutex  m_memfile_map_mtx;
     MemFileMapT m_memfile_map;
   };
-
-  namespace memfile
-  {
-    namespace db
-    {
-      bool AddFile(const std::string& name_, bool create_, size_t len_, std::shared_ptr<SMemFileInfo>& memfile_info_);
-      bool RemoveFile(const std::string& name_, bool remove_);
-
-      bool CheckFileSize(size_t len_, std::shared_ptr<SMemFileInfo>& memfile_info_);
-    }
-  }
 }
