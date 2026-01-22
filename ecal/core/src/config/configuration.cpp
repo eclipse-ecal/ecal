@@ -74,7 +74,13 @@ namespace eCAL
       InitFromFile(g_default_ini_file);
     }
 
-    Configuration::Configuration() = default;
+    Configuration::Configuration()  = default;
+    Configuration::~Configuration() = default;
+    
+    Configuration::Configuration(const Configuration&) = default;
+    Configuration::Configuration(Configuration&&) noexcept = default;
+    Configuration& Configuration::operator=(const Configuration&) = default;
+    Configuration& Configuration::operator=(Configuration&&) noexcept = default;
 
     const std::string& Configuration::GetConfigurationFilePath() const
     {
