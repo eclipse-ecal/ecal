@@ -28,6 +28,9 @@
 #include "serialization/ecal_struct_sample_payload.h"
 #include "config/attributes/reader_shm_attributes.h"
 
+#include "pubsub/ecal_subgate.h"
+#include "io/shm/ecal_memfile_pool.h"
+
 #include <cstddef>
 #include <memory>
 #include <string>

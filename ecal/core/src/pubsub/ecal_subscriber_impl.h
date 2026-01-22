@@ -36,6 +36,12 @@
 #include "util/counter_cache.h"
 #include "readwrite/config/attributes/reader_attributes.h"
 
+// #include "readwrite/shm/ecal_reader_shm.h"
+// #include "readwrite/udp/ecal_reader_udp.h"
+// #include "readwrite/tcp/ecal_reader_tcp.h"
+// #include "registration/ecal_registration_provider.h"
+// #include "logging/ecal_log_provider.h"
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -50,6 +56,25 @@
 
 namespace eCAL
 {
+  
+  class CSHMReaderLayer;
+  class CUDPReaderLayer;
+  class CTCPReaderLayer;
+  class CRegistrationProvider;
+  
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+  struct SSubscriberInputs
+  {
+    std::shared_ptr<eCAL::CUDPReaderLayer>       udp_layer;
+    std::shared_ptr<eCAL::CSHMReaderLayer>       shm_layer;
+    std::shared_ptr<eCAL::CTCPReaderLayer>       tcp_layer;
+    std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
+    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
+  };
+
   class CSubscriberImpl
   {
   public:
@@ -69,7 +94,7 @@ namespace eCAL
 
     using SPublicationInfo = Registration::SampleIdentifier;
 
-    CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_);
+    CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberInputs transport_layers_);
     ~CSubscriberImpl();
 
     // Delete copy constructor and copy assignment operator
@@ -188,5 +213,7 @@ namespace eCAL
     std::atomic<bool>                         m_created;
 
     eCAL::eCALReader::SAttributes             m_attributes;
+
+    SSubscriberInputs                         m_inputs;
   };
 }
