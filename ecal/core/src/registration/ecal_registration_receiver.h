@@ -36,8 +36,6 @@
 #include "registration/ecal_registration_sample_applier_gates.h"
 #include "config/attributes/registration_attributes.h"
 
-#include "io/shm/ecal_memfile_db.h"
-
 #include <atomic>
 #include <functional>
 #include <map>
@@ -50,6 +48,7 @@ namespace eCAL
 {
   class CRegistrationReceiverUDP;
   class CRegistrationReceiverSHM;
+  class CMemFileMap;
 
   namespace Registration
   {

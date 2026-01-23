@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include "pubsub/ecal_subgate.h"
 #include "readwrite/ecal_reader_layer.h"
 #include "config/attributes/data_reader_tcp_attributes.h"
 #include "config/attributes/tcp_reader_layer_attributes.h"
@@ -40,6 +39,8 @@
 
 namespace eCAL
 {
+  class CSubGate;
+  
   ////////////////
   // READER
   ////////////////

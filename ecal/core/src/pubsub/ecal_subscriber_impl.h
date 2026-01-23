@@ -61,7 +61,7 @@ namespace eCAL
     class CLogProvider;
   }
 
-  struct SSubscriberInputs
+  struct SSubscriberGlobalContext // SSubscriberContext, SSubscriberGlobalDependencies
   {
     std::shared_ptr<eCAL::CUDPReaderLayer>       udp_layer;
     std::shared_ptr<eCAL::CSHMReaderLayer>       shm_layer;
@@ -89,7 +89,7 @@ namespace eCAL
 
     using SPublicationInfo = Registration::SampleIdentifier;
 
-    CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberInputs transport_layers_);
+    CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberGlobalContext global_context_);
     ~CSubscriberImpl();
 
     // Delete copy constructor and copy assignment operator
@@ -209,6 +209,6 @@ namespace eCAL
 
     eCAL::eCALReader::SAttributes             m_attributes;
 
-    SSubscriberInputs                         m_inputs;
+    SSubscriberGlobalContext                  m_global_context;
   };
 }

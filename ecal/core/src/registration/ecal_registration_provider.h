@@ -34,12 +34,6 @@
 #include "util/ecal_thread.h"
 #include "config/attributes/registration_attributes.h"
 
-#include "pubsub/ecal_subgate.h"
-#include "pubsub/ecal_pubgate.h"
-#include "service/ecal_servicegate.h"
-#include "service/ecal_clientgate.h"
-#include "io/shm/ecal_memfile_db.h"
-
 #include <atomic>
 #include <memory>
 #include <mutex>
@@ -48,6 +42,12 @@
 
 namespace eCAL
 {
+  class CMemFileMap;
+  class CSubGate;
+  class CPubGate;
+  class CServiceGate;
+  class CClientGate;
+
   struct SRegistrationProviderInputs
   {
     Registration::SAttributes           attributes;

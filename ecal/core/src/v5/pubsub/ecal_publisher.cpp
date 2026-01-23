@@ -175,8 +175,12 @@ namespace eCAL
       auto config = eCAL::GetConfiguration();
       config.publisher = config_;
 
+      SPublisherGlobalContext global_context;
+      global_context.registration_provider = g_registration_provider();
+      global_context.log_provider = g_log_provider();
+
       // create publisher
-      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config), g_registration_provider(), g_log_provider());
+      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config), std::move(global_context));
       m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher

@@ -166,18 +166,18 @@ namespace eCAL
       auto config = eCAL::GetConfiguration();
       config.subscriber = config_;
 
-      SSubscriberInputs inputs;
+      SSubscriberGlobalContext global_context;
       if (auto globals = g_globals())
       {
-        inputs.udp_layer = globals->udp_reader_layer();
-        inputs.shm_layer = globals->shm_reader_layer();
-        inputs.tcp_layer = globals->tcp_reader_layer();
-        inputs.registration_provider = globals->registration_provider();
-        inputs.log_provider = globals->log_provider();
+        global_context.udp_layer = globals->udp_reader_layer();
+        global_context.shm_layer = globals->shm_reader_layer();
+        global_context.tcp_layer = globals->tcp_reader_layer();
+        global_context.registration_provider = globals->registration_provider();
+        global_context.log_provider = globals->log_provider();
       }
 
       // create datareader
-      m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config), inputs);
+      m_subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config), std::move(global_context));
       m_callback_adapter = std::make_shared<CSubscriberEventCallbackAdapater>(m_subscriber_impl);
 
       // register datareader

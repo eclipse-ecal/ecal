@@ -32,13 +32,12 @@
 #include <registration/ecal_registration_types.h>
 #include "config/attributes/registration_shm_attributes.h"
 
-#include "io/shm/ecal_memfile_db.h"
-
 namespace eCAL
 {
   class CCallbackThread;
   class CMemoryFileBroadcast;
   class CMemoryFileBroadcastReader;
+  class CMemFileMap;
 
   class CRegistrationReceiverSHM
   {

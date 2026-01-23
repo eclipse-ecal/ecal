@@ -25,7 +25,6 @@
 #pragma once
 
 #include "io/udp/ecal_udp_sample_receiver.h"
-#include "pubsub/ecal_subgate.h"
 #include "readwrite/ecal_reader_layer.h"
 #include "config/attributes/reader_udp_attributes.h"
 
@@ -36,6 +35,8 @@
 
 namespace eCAL
 {
+  class CSubGate;
+  
   ////////////////
   // LAYER
   ////////////////

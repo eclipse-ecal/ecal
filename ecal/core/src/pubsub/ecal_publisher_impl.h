@@ -62,6 +62,12 @@ namespace eCAL
     class CLogProvider;
   }
 
+  struct SPublisherGlobalContext
+  {
+    std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
+    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
+  };
+
   class CPublisherImpl
   {
   public:
@@ -81,7 +87,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, std::shared_ptr<eCAL::CRegistrationProvider> registration_provider_, std::shared_ptr<eCAL::Logging::CLogProvider> log_provider_);
+    CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, SPublisherGlobalContext global_context_);
     ~CPublisherImpl();
 
     bool Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
@@ -174,7 +180,6 @@ namespace eCAL
     SLayerStates                           m_layers;
     std::atomic<bool>                      m_created;
 
-    std::shared_ptr<eCAL::CRegistrationProvider> m_registration_provider;
-    std::shared_ptr<eCAL::Logging::CLogProvider> m_logger;
+    SPublisherGlobalContext                m_global_context;
   };
 }

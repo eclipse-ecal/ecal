@@ -208,7 +208,7 @@ namespace eCAL
       registration_inputs.pubgate     = pubgate_instance;
       registration_inputs.servicegate = servicegate_instance;
       registration_inputs.clientgate  = clientgate_instance;
-      registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_inputs);
+      registration_provider_instance = std::make_shared<CRegistrationProvider>(std::move(registration_inputs));
       new_initialization = true;
     }
 
