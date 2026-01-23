@@ -57,31 +57,47 @@ TEST(core_cpp_io, MutexLockUnlock)
   mutex.Unlock();
 }
 
-// Parallel creation and locking of a named mutex should work without deadlocks or lost locks.
+/**
+ * Verifies that two synchronized threads can concurrently create, lock,
+ * and destroy named mutex instances without contention or failure.
+ *
+ * Each thread attempts to lock a uniquely named mutex in every iteration
+ * and must succeed exactly once per iteration.
+ */
 TEST(core_cpp_io, MutexParallelCreate)
 {
   // parameter
   const std::string mutex_name = RandomMutexName20();
-  const int runs = 10000;
+  const int runs = 1000;
 
   Barrier barrier(2);
 
-  auto mutex = [&barrier, &mutex_name, runs]()
+  auto mutex_create_function = [&barrier, &mutex_name, runs](int& number_times_locked)
     {
-      barrier.wait();
-      eCAL::CNamedMutex mutex(mutex_name);
-      barrier.wait();
-      if (mutex.Lock(0))
+      for (int i = 0; i < runs; ++i)
       {
-        mutex.Unlock();
+        barrier.wait();
+        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i));
+        barrier.wait();
+        if (mutex.Lock(100))
+        {
+          ++number_times_locked;
+          mutex.Unlock();
+        }
+        barrier.wait();
       }
-      barrier.wait();
     };
 
-  std::thread mutex_thread_1(mutex);
-  std::thread mutex_thread_2(mutex);
+  int number_times_locked_1{ 0 };
+  int number_times_locked_2{ 0 };
+
+  std::thread mutex_thread_1(mutex_create_function, std::ref(number_times_locked_1));
+  std::thread mutex_thread_2(mutex_create_function, std::ref(number_times_locked_2));
   mutex_thread_1.join();
   mutex_thread_2.join();
+
+  ASSERT_EQ(number_times_locked_1, runs);
+  ASSERT_EQ(number_times_locked_2, runs);
 }
 
 // Only one thread should be able to lock the mutex at a time.
