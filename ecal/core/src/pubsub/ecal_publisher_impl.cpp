@@ -105,11 +105,11 @@ namespace
 namespace eCAL
 {
   CPublisherImpl::CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, SPublisherGlobalContext global_context_)
-    : m_global_context(std::move(global_context_))
-    , m_topic_info(topic_info_)
+    : m_topic_info(topic_info_)
     , m_attributes(attr_)
     , m_frequency_calculator(3.0f)
     , m_created(false)
+    , m_global_context(std::move(global_context_))
   {
 #ifndef NDEBUG
     if (auto& logger = m_global_context.log_provider) logger->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::Constructor");

@@ -209,7 +209,7 @@ namespace eCAL
       registration_provider_context.servicegate  = servicegate_instance;
       registration_provider_context.clientgate   = clientgate_instance;
       registration_provider_context.log_provider = log_provider_instance;
-      registration_provider_instance = std::make_shared<CRegistrationProvider>(std::move(registration_provider_context));
+      registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_provider_context);
       new_initialization = true;
     }
 
@@ -222,7 +222,7 @@ namespace eCAL
       registration_receiver_context.attributes    = registration_attr;
       registration_receiver_context.memfile_map   = memfile_map_instance;
       registration_receiver_context.log_provider  = log_provider_instance;
-      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(std::move(registration_receiver_context));
+      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_receiver_context);
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
