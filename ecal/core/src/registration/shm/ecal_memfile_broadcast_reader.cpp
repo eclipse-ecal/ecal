@@ -38,11 +38,6 @@ namespace eCAL
   {
   }
 
-  CMemoryFileBroadcastReader::~CMemoryFileBroadcastReader()
-  {
-    m_memfile_map.reset();
-  }
-
   bool CMemoryFileBroadcastReader::Bind(CMemoryFileBroadcast *memfile_broadcast)
   {
     if (m_bound) return false;

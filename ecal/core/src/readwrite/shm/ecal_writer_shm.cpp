@@ -42,11 +42,6 @@ namespace eCAL
     SetBufferCount(m_attributes.memfile_buffer_count);
   }
 
-  CDataWriterSHM::~CDataWriterSHM()
-  {
-    m_memfile_map.reset();
-  }
-
   SWriterInfo CDataWriterSHM::GetInfo()
   {
     SWriterInfo info_;

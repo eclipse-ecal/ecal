@@ -42,7 +42,9 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CSubGate::m_created;
 
-  CSubGate::CSubGate() = default;
+  CSubGate::CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_)
+  : m_log_provider(std::move(log_provider_))
+  {};
 
   CSubGate::~CSubGate()
   {
@@ -118,7 +120,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
+        if (m_log_provider) m_log_provider->Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
       }
 #endif
 

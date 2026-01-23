@@ -44,7 +44,6 @@ namespace eCAL
   {
   public:
     CUDPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_);
-    ~CUDPReaderLayer() override;
 
     void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
 

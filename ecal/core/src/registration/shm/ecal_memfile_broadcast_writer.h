@@ -36,7 +36,6 @@ namespace eCAL
   {
   public:
     CMemoryFileBroadcastWriter(std::shared_ptr<CMemFileMap> memfile_map_);
-    ~CMemoryFileBroadcastWriter();
 
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
     void Unbind();

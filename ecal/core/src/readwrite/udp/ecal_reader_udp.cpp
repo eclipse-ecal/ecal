@@ -47,11 +47,6 @@ namespace eCAL
     , m_subgate(std::move(subgate_))
   {}
 
-  CUDPReaderLayer::~CUDPReaderLayer()
-  {
-    m_subgate.reset();
-  }
-
   void CUDPReaderLayer::Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_)
   {
      m_attributes = attr_;

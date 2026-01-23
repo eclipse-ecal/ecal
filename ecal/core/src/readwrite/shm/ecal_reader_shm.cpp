@@ -41,12 +41,6 @@ namespace eCAL
     , m_memfile_thread_pool(std::move(memfile_thread_pool_))
   {}
 
-  CSHMReaderLayer::~CSHMReaderLayer()
-  {
-    m_subgate.reset();
-    m_memfile_thread_pool.reset();
-  }
-
   ////////////////
   // LAYER
   ////////////////

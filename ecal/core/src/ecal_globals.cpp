@@ -65,6 +65,24 @@ namespace eCAL
     bool new_initialization(false);
 
     /////////////////////
+    // LOGGING
+    /////////////////////
+    if ((components_ & Init::Logging) != 0u)
+    {
+      if (!log_provider_instance)
+      {
+        log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
+        new_initialization = true;
+      }
+
+      if (!log_udp_receiver_instance)
+      {
+        log_udp_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
+        new_initialization = true;
+      }
+    }
+
+    /////////////////////
     // DESCRIPTION GATE
     /////////////////////
     if (!descgate_instance)
@@ -89,7 +107,7 @@ namespace eCAL
     /////////////////////
     if (!memfile_pool_instance)
     {
-      memfile_pool_instance = std::make_shared<CMemFileThreadPool>(memfile_map_instance);
+      memfile_pool_instance = std::make_shared<CMemFileThreadPool>(memfile_map_instance, log_provider_instance);
       new_initialization = true;
     }
 #endif // defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
@@ -102,7 +120,7 @@ namespace eCAL
     {
       if (!subgate_instance)
       {
-        subgate_instance = std::make_shared<CSubGate>();
+        subgate_instance = std::make_shared<CSubGate>(log_provider_instance);
         new_initialization = true;
       }
     }
@@ -170,29 +188,11 @@ namespace eCAL
     {
       if (!monitoring_instance)
       {
-        monitoring_instance = std::make_shared<CMonitoring>();
+        monitoring_instance = std::make_shared<CMonitoring>(log_provider_instance);
         new_initialization = true;
       }
     }
 #endif // ECAL_CORE_MONITORING
-
-    /////////////////////
-    // LOGGING
-    /////////////////////
-    if ((components_ & Init::Logging) != 0u)
-    {
-      if (!log_provider_instance)
-      {
-        log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
-        new_initialization = true;
-      }
-
-      if (!log_udp_receiver_instance)
-      {
-        log_udp_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
-        new_initialization = true;
-      }
-    }
 
 #if ECAL_CORE_REGISTRATION
     const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
@@ -201,14 +201,15 @@ namespace eCAL
     /////////////////////
     if (!registration_provider_instance)
     {
-      SRegistrationProviderInputs registration_inputs;
-      registration_inputs.attributes = registration_attr;
-      registration_inputs.memfile_map = memfile_map_instance;
-      registration_inputs.subgate     = subgate_instance;
-      registration_inputs.pubgate     = pubgate_instance;
-      registration_inputs.servicegate = servicegate_instance;
-      registration_inputs.clientgate  = clientgate_instance;
-      registration_provider_instance = std::make_shared<CRegistrationProvider>(std::move(registration_inputs));
+      SRegistrationProviderContext registration_provider_context;
+      registration_provider_context.attributes   = registration_attr;
+      registration_provider_context.memfile_map  = memfile_map_instance;
+      registration_provider_context.subgate      = subgate_instance;
+      registration_provider_context.pubgate      = pubgate_instance;
+      registration_provider_context.servicegate  = servicegate_instance;
+      registration_provider_context.clientgate   = clientgate_instance;
+      registration_provider_context.log_provider = log_provider_instance;
+      registration_provider_instance = std::make_shared<CRegistrationProvider>(std::move(registration_provider_context));
       new_initialization = true;
     }
 
@@ -217,7 +218,11 @@ namespace eCAL
     /////////////////////
     if(!registration_receiver_instance) 
     {
-      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_attr, memfile_map_instance);
+      SRegistrationReceiverContext registration_receiver_context;
+      registration_receiver_context.attributes    = registration_attr;
+      registration_receiver_context.memfile_map   = memfile_map_instance;
+      registration_receiver_context.log_provider  = log_provider_instance;
+      registration_receiver_instance = std::make_shared<CRegistrationReceiver>(std::move(registration_receiver_context));
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION

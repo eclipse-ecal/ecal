@@ -126,12 +126,6 @@ namespace eCAL
 
     // and unregister
     Unregister();
-
-    m_global_context.log_provider.reset();
-    m_global_context.registration_provider.reset();
-    m_global_context.udp_layer.reset();
-    m_global_context.shm_layer.reset();
-    m_global_context.tcp_layer.reset();
   }
 
   bool CSubscriberImpl::Read(std::string& buf_, long long* time_ /* = nullptr */, int rcv_timeout_ms_ /* = 0 */)

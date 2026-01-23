@@ -43,7 +43,6 @@ namespace eCAL
   {
   public:
     CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_, std::shared_ptr<CMemFileMap> memfile_map_);
-    ~CDataWriterSHM() override;
     
     SWriterInfo GetInfo() override;
 

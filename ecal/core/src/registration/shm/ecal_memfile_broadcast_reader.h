@@ -53,7 +53,6 @@ namespace eCAL
     };
   public:
     CMemoryFileBroadcastReader(std::shared_ptr<CMemFileMap> memfile_map_);
-    ~CMemoryFileBroadcastReader();
 
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
     bool Unbind();

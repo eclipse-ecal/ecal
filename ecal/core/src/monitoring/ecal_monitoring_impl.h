@@ -37,13 +37,17 @@
 
 namespace eCAL
 {
+  namespace Logging
+  {
+    class CLogProvider;
+  }
   ////////////////////////////////////////
   // Monitoring Declaration
   ////////////////////////////////////////
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl();
+    CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_);
     ~CMonitoringImpl() = default;
 
     void Create();
@@ -132,5 +136,7 @@ namespace eCAL
     STopicMap                                 m_subscriber_map;
     SServerMap                                m_server_map;
     SClientMap                                m_client_map;
+    
+    std::shared_ptr<Logging::CLogProvider>    m_log_provider;
   };
 }

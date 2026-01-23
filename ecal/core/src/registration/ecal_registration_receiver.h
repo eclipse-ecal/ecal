@@ -49,6 +49,17 @@ namespace eCAL
   class CRegistrationReceiverUDP;
   class CRegistrationReceiverSHM;
   class CMemFileMap;
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+
+  struct SRegistrationReceiverContext
+  {
+    Registration::SAttributes                    attributes;
+    std::shared_ptr<eCAL::CMemFileMap>           memfile_map;
+    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
+  };
 
   namespace Registration
   {
@@ -60,7 +71,7 @@ namespace eCAL
   class CRegistrationReceiver
   {
   public:
-    CRegistrationReceiver(const Registration::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
+    CRegistrationReceiver(SRegistrationReceiverContext context_);
     ~CRegistrationReceiver();
 
     //what about the rest of the rule of 5?
@@ -88,8 +99,6 @@ namespace eCAL
     // This class distributes samples to all everyone who is interested in being notified about samples
     Registration::CSampleApplier     m_sample_applier;
 
-    Registration::SAttributes        m_attributes;
-
-    std::shared_ptr<eCAL::CMemFileMap>  m_memfile_map;
+    SRegistrationReceiverContext     m_context;
   };
 }

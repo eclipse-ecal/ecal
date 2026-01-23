@@ -53,20 +53,14 @@ namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider(SRegistrationProviderInputs& inputs_) 
-    : m_inputs(std::move(inputs_))
+  CRegistrationProvider::CRegistrationProvider(SRegistrationProviderContext& context_) 
+    : m_context(std::move(context_))
   {
   }
 
   CRegistrationProvider::~CRegistrationProvider()
   {
     Stop();
-    m_inputs.memfile_map.reset();
-    m_inputs.subgate.reset();
-    m_inputs.pubgate.reset();
-    m_inputs.servicegate.reset();
-    m_inputs.clientgate.reset();
-    m_inputs.attributes = Registration::SAttributes();
   }
 
   void CRegistrationProvider::Start()
@@ -74,24 +68,24 @@ namespace eCAL
     if(m_created) return;
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_inputs.memfile_map && m_inputs.attributes.transport_mode == Registration::eTransportMode::shm)
+    if (m_context.memfile_map && m_context.attributes.transport_mode == Registration::eTransportMode::shm)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_inputs.attributes), m_inputs.memfile_map);
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_context.attributes), m_context.memfile_map);
     } else
 #endif
-    if (m_inputs.attributes.transport_mode == Registration::eTransportMode::udp)
+    if (m_context.attributes.transport_mode == Registration::eTransportMode::udp)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_inputs.attributes));
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_context.attributes));
     }
     else
     {
-      eCAL::Logging::Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
+      if (auto& logger = m_context.log_provider) logger->Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
       return;
     }
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_inputs.attributes.refresh));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_context.attributes.refresh));
 
     m_created = true;
   }
@@ -158,20 +152,20 @@ namespace eCAL
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      if (m_inputs.subgate) m_inputs.subgate->GetRegistrations(m_send_thread_sample_list);
+      if (auto& subgate = m_context.subgate) subgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      if (m_inputs.pubgate) m_inputs.pubgate->GetRegistrations(m_send_thread_sample_list);
+      if (auto& pubgate = m_context.pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      if (m_inputs.servicegate) m_inputs.servicegate->GetRegistrations(m_send_thread_sample_list);
+      if (auto& servicegate = m_context.servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
-      if (m_inputs.clientgate) m_inputs.clientgate->GetRegistrations(m_send_thread_sample_list);
+      if (auto& clientgate = m_context.clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list

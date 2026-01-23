@@ -46,8 +46,6 @@ namespace eCAL
   public:
     CSHMReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_, std::shared_ptr<eCAL::CMemFileThreadPool> memfile_thread_pool_);
 
-    ~CSHMReaderLayer() override;
-
     void Initialize(const eCAL::eCALReader::SHM::SAttributes& attr_) override;
     void AddSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}
     void RemSubscription(const std::string& /*host_name_*/, const std::string& /*topic_name_*/, const EntityIdT& /*topic_id_*/) override {}

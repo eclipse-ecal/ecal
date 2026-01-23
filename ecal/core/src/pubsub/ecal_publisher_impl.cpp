@@ -150,9 +150,6 @@ namespace eCAL
 
     // and unregister
     Unregister();
-
-    m_global_context.log_provider.reset();
-    m_global_context.registration_provider.reset();
   }
 
   bool CPublisherImpl::Write(CPayloadWriter& payload_, long long time_, long long filter_id_)

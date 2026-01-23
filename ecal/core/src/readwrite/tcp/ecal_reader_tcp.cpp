@@ -146,11 +146,6 @@ namespace eCAL
     , m_subgate(std::move(subgate_))
   {}
 
-  CTCPReaderLayer::~CTCPReaderLayer()
-  {
-    m_subgate.reset();
-  }
-
   void CTCPReaderLayer::Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_)
   {
     m_attributes = attr_; 

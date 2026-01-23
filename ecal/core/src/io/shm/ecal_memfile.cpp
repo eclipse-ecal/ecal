@@ -54,7 +54,6 @@ namespace eCAL
   CMemoryFile::~CMemoryFile()
   {
     Destroy(false);
-    m_memfile_map.reset();
   }
 
   bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_, bool auto_sanitizing_)

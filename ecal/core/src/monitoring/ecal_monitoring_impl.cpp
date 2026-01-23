@@ -29,6 +29,7 @@
 #include "ecal_monitoring_impl.h"
 #include "ecal_global_accessors.h"
 
+#include "logging/ecal_log_provider.h"
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
 
@@ -40,8 +41,9 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl() :
-    m_init(false)
+  CMonitoringImpl::CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_)
+  : m_init(false)
+  , m_log_provider(log_provider_)
   {
   }
 
@@ -138,7 +140,7 @@ namespace eCAL
     break;
     default:
     {
-      Logging::Log(Logging::log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");
+      if (m_log_provider) m_log_provider->Log(Logging::log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");
     }
     break;
     }

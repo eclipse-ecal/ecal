@@ -47,21 +47,26 @@ namespace eCAL
   class CPubGate;
   class CServiceGate;
   class CClientGate;
-
-  struct SRegistrationProviderInputs
+  namespace Logging
   {
-    Registration::SAttributes           attributes;
-    std::shared_ptr<eCAL::CMemFileMap>  memfile_map;
-    std::shared_ptr<eCAL::CSubGate>     subgate;
-    std::shared_ptr<eCAL::CPubGate>     pubgate;
-    std::shared_ptr<eCAL::CServiceGate> servicegate;
-    std::shared_ptr<eCAL::CClientGate>  clientgate;
+    class CLogProvider;
+  }
+
+  struct SRegistrationProviderContext
+  {
+    Registration::SAttributes              attributes;
+    std::shared_ptr<eCAL::CMemFileMap>     memfile_map;
+    std::shared_ptr<eCAL::CSubGate>        subgate;
+    std::shared_ptr<eCAL::CPubGate>        pubgate;
+    std::shared_ptr<eCAL::CServiceGate>    servicegate;
+    std::shared_ptr<eCAL::CClientGate>     clientgate;
+    std::shared_ptr<Logging::CLogProvider> log_provider;
   };
 
   class CRegistrationProvider
   {
   public:
-    CRegistrationProvider(SRegistrationProviderInputs& inputs_);
+    CRegistrationProvider(SRegistrationProviderContext& context_);
     ~CRegistrationProvider();
 
     void Start();
@@ -84,6 +89,6 @@ namespace eCAL
 
     Registration::SampleList             m_send_thread_sample_list;
 
-    SRegistrationProviderInputs          m_inputs;
+    SRegistrationProviderContext         m_context;
   };
 }

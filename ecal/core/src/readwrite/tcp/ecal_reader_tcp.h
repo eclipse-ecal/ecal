@@ -73,7 +73,6 @@ namespace eCAL
   {
   public:
     CTCPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_);
-    ~CTCPReaderLayer() override;
 
     void Initialize(const eCAL::eCALReader::TCPLayer::SAttributes& attr_) override;
 

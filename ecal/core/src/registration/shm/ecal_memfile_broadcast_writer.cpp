@@ -36,11 +36,6 @@ namespace eCAL
   {
   }
 
-  CMemoryFileBroadcastWriter::~CMemoryFileBroadcastWriter()
-  {
-    m_memfile_map.reset();
-  }
-
   bool CMemoryFileBroadcastWriter::Bind(CMemoryFileBroadcast *memfile_broadcast)
   {
     if (m_bound) return false;
