@@ -122,8 +122,8 @@ namespace eCAL::posix
       if (static_cast<size_t>(st.st_size) < size)
       {
         // Don’t resize existing objects implicitly — that can corrupt other processes.
-        ::perror("file size too small");
         errno = EINVAL;
+        ::perror("file size too small");
         return out;
       }
     }
