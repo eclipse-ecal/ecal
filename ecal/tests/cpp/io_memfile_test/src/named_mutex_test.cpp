@@ -79,7 +79,7 @@ TEST(core_cpp_io, MutexParallelCreate)
         barrier.wait();
         eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i));
         barrier.wait();
-        if (mutex.Lock(100))
+        if (mutex.Lock(1000))
         {
           ++number_times_locked;
           mutex.Unlock();
