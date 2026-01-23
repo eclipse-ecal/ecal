@@ -78,7 +78,7 @@ namespace eCAL::posix
   ShmRegion open_or_create_mapped_region(
       std::string shm_name,
       size_t size,
-      const InitFn init_fn)
+      InitFn init_fn)
   {
     ShmRegion out;
     out.name = normalize_shm_name(std::move(shm_name));
@@ -122,6 +122,7 @@ namespace eCAL::posix
       if (static_cast<size_t>(st.st_size) < size)
       {
         // Don’t resize existing objects implicitly — that can corrupt other processes.
+        ::perror("file size too small");
         errno = EINVAL;
         return out;
       }

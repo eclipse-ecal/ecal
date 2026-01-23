@@ -154,6 +154,10 @@ namespace
     // map them into shared memory
     pthread_mutex_init(&evt->mtx, &shmtx);
     pthread_cond_init(&evt->cvar, &shattr);
+
+    // clean up initialization resources
+    pthread_mutexattr_destroy(&shmtx);
+    pthread_condattr_destroy(&shattr);
     
     // start with unset state
     evt->set = 0;
@@ -285,6 +289,12 @@ namespace eCAL
     {
       const std::string event_name = name_ + "_evt";
       m_shm_region = eCAL::posix::open_or_create_typed_mapped_region<named_event_t>(event_name, named_event_initialize);
+      // In theory, the process that initializes the shm file will become the owner 
+      // and is responsible for unlinking it later on.
+      // However, for named events we want explicit ownership, this is why we change ownership
+      // after creating the files.
+      // TODO: check if this behavior is really necessary
+      m_shm_region.region.owner = ownership_;
     }
 
     ~CNamedEvent()

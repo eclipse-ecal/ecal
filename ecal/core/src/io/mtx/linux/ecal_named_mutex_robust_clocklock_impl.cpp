@@ -55,6 +55,9 @@ namespace
     // initialize mutex
     pthread_mutex_init(&mtx->mtx, &attr);
 
+    // clean up initialization resources
+    pthread_mutexattr_destroy(&attr);
+
     // return new mutex
     return true;
   }

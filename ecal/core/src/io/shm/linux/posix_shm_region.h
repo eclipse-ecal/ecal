@@ -19,7 +19,7 @@ namespace eCAL::posix
   ShmRegion open_or_create_mapped_region(
       std::string shm_name,
       size_t size,
-      const InitFn init_fn);
+      InitFn init_fn);
 
   void close_region(const ShmRegion& r);
   int  unlink_region(const std::string& name);

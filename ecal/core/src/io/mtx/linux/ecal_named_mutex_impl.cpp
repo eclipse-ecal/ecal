@@ -68,6 +68,10 @@ namespace
     // start with unlocked mutex
     mtx->locked = 0;
 
+    // clean up initialization resources
+    pthread_mutexattr_destroy(&shmtx);
+    pthread_condattr_destroy(&shattr);
+
     return true;
   }
 
