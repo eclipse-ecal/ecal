@@ -218,6 +218,8 @@ if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
   if(UNIX)
     set(ecal_io_shm_linux_src
         src/io/shm/linux/ecal_memfile_os.cpp
+        src/io/shm/linux/posix_shm_region.cpp
+        src/io/shm/linux/posix_shm_region.h
     )
   endif()
 

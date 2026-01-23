@@ -35,6 +35,8 @@ if(UNIX)
 set(memfile_test_os_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h
 )
 endif()
 

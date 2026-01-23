@@ -72,14 +72,15 @@ TEST(core_cpp_io, MutexParallelCreate)
 
   Barrier barrier(2);
 
-  auto mutex_create_function = [&barrier, &mutex_name, runs](int& number_times_locked)
+  auto mutex_create_function = [&barrier, &mutex_name, runs](int& number_times_created, int& number_times_locked)
     {
       for (int i = 0; i < runs; ++i)
       {
         barrier.wait();
-        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i));
+        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i), false);
+        if (mutex.IsCreated()){++number_times_created;}
         barrier.wait();
-        if (mutex.Lock(1000))
+        if (mutex.Lock(100))
         {
           ++number_times_locked;
           mutex.Unlock();
@@ -88,16 +89,20 @@ TEST(core_cpp_io, MutexParallelCreate)
       }
     };
 
+  int number_times_created_1{ 0 };
   int number_times_locked_1{ 0 };
+  int number_times_created_2{ 0 };
   int number_times_locked_2{ 0 };
 
-  std::thread mutex_thread_1(mutex_create_function, std::ref(number_times_locked_1));
-  std::thread mutex_thread_2(mutex_create_function, std::ref(number_times_locked_2));
+  std::thread mutex_thread_1(mutex_create_function, std::ref(number_times_created_1), std::ref(number_times_locked_1));
+  std::thread mutex_thread_2(mutex_create_function, std::ref(number_times_created_2), std::ref(number_times_locked_2));
   mutex_thread_1.join();
   mutex_thread_2.join();
 
-  ASSERT_EQ(number_times_locked_1, runs);
-  ASSERT_EQ(number_times_locked_2, runs);
+  EXPECT_EQ(number_times_created_1, runs);
+  EXPECT_EQ(number_times_locked_1, runs);
+  EXPECT_EQ(number_times_created_2, runs);
+  EXPECT_EQ(number_times_locked_2, runs);
 }
 
 // Only one thread should be able to lock the mutex at a time.
