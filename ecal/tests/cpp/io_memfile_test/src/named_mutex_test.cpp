@@ -64,7 +64,7 @@ TEST(core_cpp_io, MutexLockUnlock)
  * Each thread attempts to lock a uniquely named mutex in every iteration
  * and must succeed exactly once per iteration.
  */
-TEST(core_cpp_io, MutexParallelCreate)
+void MutexParallelCreateTest(bool robust)
 {
   // parameter
   const std::string mutex_name = RandomMutexName20();
@@ -72,12 +72,12 @@ TEST(core_cpp_io, MutexParallelCreate)
 
   Barrier barrier(2);
 
-  auto mutex_create_function = [&barrier, &mutex_name, runs](int& number_times_created, int& number_times_locked)
+  auto mutex_create_function = [&barrier, &mutex_name, runs, robust](int& number_times_created, int& number_times_locked)
     {
       for (int i = 0; i < runs; ++i)
       {
         barrier.wait();
-        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i), false);
+        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i), robust);
         if (mutex.IsCreated()){++number_times_created;}
         barrier.wait();
         if (mutex.Lock(100))
@@ -103,10 +103,21 @@ TEST(core_cpp_io, MutexParallelCreate)
   EXPECT_EQ(number_times_locked_1, runs);
   EXPECT_EQ(number_times_created_2, runs);
   EXPECT_EQ(number_times_locked_2, runs);
+
 }
 
-// Only one thread should be able to lock the mutex at a time.
-TEST(core_cpp_io, MutexParallelLockUnlock)
+
+TEST(core_cpp_io, MutexParallelCreate)
+{
+  MutexParallelCreateTest(false);
+}
+
+TEST(core_cpp_io, RobustMutexParallelCreate)
+{
+  MutexParallelCreateTest(true);
+}
+
+void MutexParallelLockUnlock(bool robust)
 {
   // parameter
   const std::string mutex_name = RandomMutexName20();
@@ -115,10 +126,10 @@ TEST(core_cpp_io, MutexParallelLockUnlock)
   Barrier barrier(3);
   std::atomic<int> lock_count{ 0 };
 
-  auto mutex = [&barrier, &mutex_name, runs, &lock_count]()
+  auto mutex = [&barrier, &mutex_name, runs, robust, &lock_count]()
     {
       barrier.wait();
-      eCAL::CNamedMutex mutex(mutex_name);
+      eCAL::CNamedMutex mutex(mutex_name, robust);
       for (int i = 1; i <= runs; ++i)
       {
         barrier.wait();
@@ -157,4 +168,15 @@ TEST(core_cpp_io, MutexParallelLockUnlock)
   mutex_thread_1.join();
   mutex_thread_2.join();
   gtest_thread.join();
+}
+
+// Only one thread should be able to lock the mutex at a time.
+TEST(core_cpp_io, MutexParallelLockUnlock)
+{
+  MutexParallelLockUnlock(false);
+}
+
+TEST(core_cpp_io, RobustMutexParallelLockUnlock)
+{
+  MutexParallelLockUnlock(true);
 }
