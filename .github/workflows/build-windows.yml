@@ -169,7 +169,7 @@ jobs:
     - name: SDK Integration test
       run: |
         cmake --install "${{ runner.workspace }}/_build/sdk" --prefix "${{ runner.workspace }}/_install/sdk" --config Debug
-        cmake -G "Visual Studio 16 2019" -A x64 -T v142 ^
+        cmake -G "Ninja" ^
         -S serialization/protobuf/samples/pubsub/person_loopback ^
         -B _integration_test_build ^
         -DCMAKE_CONFIGURATION_TYPES="Debug" ^
