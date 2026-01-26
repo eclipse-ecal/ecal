@@ -19,10 +19,10 @@ namespace eCAL::posix
   ShmRegion open_or_create_mapped_region(
       std::string shm_name,
       size_t size,
-      InitFn init_fn);
+      const InitFn& init_fn);
 
-  void close_region(const ShmRegion& r);
-  int  unlink_region(const std::string& name);
+  void close_region(ShmRegion& region);
+  int  unlink_region(const ShmRegion& region);
 
 
   template <typename T>
@@ -32,12 +32,12 @@ namespace eCAL::posix
 
     explicit operator bool() const { return region.addr != nullptr; }
     T* ptr() const {return static_cast<T*>(region.addr); }
-    bool owner() const { return region.owner; }
-    const std::string& name() const { return region.name; }
+    [[nodiscard]] bool owner() const { return region.owner; }
+    [[nodiscard]] const std::string& name() const { return region.name; }
   };
 
   template <typename T, typename Init>
-  ShmTypedRegion<T> open_or_create_typed_mapped_region(std::string name, Init&& init)
+  ShmTypedRegion<T> open_or_create_mapped_region(std::string name, Init&& init)
   {
     static_assert(std::is_standard_layout_v<T>,
       "T should be standard-layout for shared memory compatibility");
@@ -53,4 +53,17 @@ namespace eCAL::posix
 
     return out;
   }
+
+  template <typename T>
+  void close_region(ShmTypedRegion<T>& shm_region)
+  {
+    close_region(shm_region.region);
+  }  
+
+  template <typename T>
+  int unlink_region(ShmTypedRegion<T>& shm_region)
+  {
+    return unlink_region(shm_region.region);
+  }
+
 }

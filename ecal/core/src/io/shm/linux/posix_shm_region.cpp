@@ -5,8 +5,8 @@
 #include <sys/file.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstdio>
 
 
 namespace eCAL::posix
@@ -30,7 +30,8 @@ namespace eCAL::posix
     {
       int fd = -1;
       bool locked = false;
-      explicit FlockExclusive(const Fd& f) : fd(f.fd)
+      explicit FlockExclusive(const Fd& f) 
+       : fd(f.fd)
       {
         locked = (::flock(fd, LOCK_EX) != -1);
       }
@@ -38,6 +39,12 @@ namespace eCAL::posix
       {
         if (locked) ::flock(fd, LOCK_UN);
       }
+
+      FlockExclusive(const FlockExclusive&) = delete;
+      FlockExclusive& operator=(const FlockExclusive&) = delete;
+      FlockExclusive(FlockExclusive&&) = delete;
+      FlockExclusive& operator=(FlockExclusive&&) = delete;
+
       explicit operator bool() const { return locked; }
     };
 
@@ -78,20 +85,20 @@ namespace eCAL::posix
   ShmRegion open_or_create_mapped_region(
       std::string shm_name,
       size_t size,
-      InitFn init_fn)
+      const InitFn& init_fn)
   {
     ShmRegion out;
     out.name = normalize_shm_name(std::move(shm_name));
     out.size = size;
 
-    detail::Fd fd{ detail::shm_open_create_or_open(out.name)};
+    const detail::Fd fd{ detail::shm_open_create_or_open(out.name)};
     if (!fd)
     {
       ::perror("shm_open");
       return out;
     }
 
-    detail::FlockExclusive flock{fd};
+    const detail::FlockExclusive flock{fd};
     if (!flock)
     {
       ::perror("flock");
@@ -129,7 +136,7 @@ namespace eCAL::posix
     }
 
     out.addr = detail::map_shared(fd, size);
-    if (!out.addr)
+    if (out.addr == nullptr)
     {
       ::perror("mmap");
       return out;
@@ -150,16 +157,19 @@ namespace eCAL::posix
     return out;
   }
 
-  void close_region(const ShmRegion& region)
+  void close_region(ShmRegion& region)
   {
-    if (region.addr && region.size)
+    if (region.addr != nullptr && region.size != 0)
+    {
       ::munmap(region.addr, region.size);
+    }
+    region.addr = nullptr;
+    region.size = 0;
   }
 
-  int unlink_region(const std::string& shm_name)
+  int unlink_region(const ShmRegion& region)
   {
-    const auto normalized = normalize_shm_name(shm_name);
-    return ::shm_unlink(normalized.c_str());
+    return ::shm_unlink(region.name.c_str());
   }
 
 } // namespace ecal::posix

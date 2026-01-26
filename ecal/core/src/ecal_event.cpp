@@ -288,7 +288,7 @@ namespace eCAL
     explicit CNamedEvent(const std::string& name_, bool ownership_)
     {
       const std::string event_name = name_ + "_evt";
-      m_shm_region = eCAL::posix::open_or_create_typed_mapped_region<named_event_t>(event_name, named_event_initialize);
+      m_shm_region = eCAL::posix::open_or_create_mapped_region<named_event_t>(event_name, named_event_initialize);
       // In theory, the process that initializes the shm file will become the owner 
       // and is responsible for unlinking it later on.
       // However, for named events we want explicit ownership, this is why we change ownership
@@ -300,10 +300,10 @@ namespace eCAL
     ~CNamedEvent()
     {
       if(m_shm_region.ptr() == nullptr) return;
-      eCAL::posix::close_region(m_shm_region.region);
+      eCAL::posix::close_region(m_shm_region);
       if(m_shm_region.owner())
       {
-        eCAL::posix::unlink_region(m_shm_region.name());
+        eCAL::posix::unlink_region(m_shm_region);
       }
     }
 

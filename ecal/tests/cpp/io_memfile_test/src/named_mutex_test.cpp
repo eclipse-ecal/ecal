@@ -33,8 +33,12 @@ namespace
   // Best-effort unique name for each test instance.
   inline std::string RandomMutexName20()
   {
-    static constexpr char alphabet[] = "abcdefghijklmnopqrstuvwxyz0123456789";
-    static constexpr size_t alphabet_size = sizeof(alphabet) - 1;
+    static constexpr std::array<char, 36> alphabet{
+      'a','b','c','d','e','f','g','h','i','j','k','l','m',
+      'n','o','p','q','r','s','t','u','v','w','x','y','z',
+      '0','1','2','3','4','5','6','7','8','9'
+    };
+    static constexpr size_t alphabet_size = alphabet.size();
     static constexpr size_t name_length = 20;
 
     thread_local std::mt19937_64 rng{ std::random_device{}() };

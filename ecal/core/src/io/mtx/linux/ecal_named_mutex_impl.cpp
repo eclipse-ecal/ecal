@@ -180,7 +180,7 @@ namespace eCAL
     // build shm file name
     const std::string mutex_name = named_mutex_buildname(name_);
 
-    m_shm_region = eCAL::posix::open_or_create_typed_mapped_region<named_mutex_t>(mutex_name, named_mutex_initialize);
+    m_shm_region = eCAL::posix::open_or_create_mapped_region<named_mutex_t>(mutex_name, named_mutex_initialize);
   }
 
   CNamedMutexImpl::~CNamedMutexImpl()
@@ -192,11 +192,13 @@ namespace eCAL
     named_mutex_unlock(m_shm_region.ptr());
 
     // close mutex
-    eCAL::posix::close_region(m_shm_region.region);
+    eCAL::posix::close_region(m_shm_region);
 
     // clean-up if mutex instance has ownership
     if(m_shm_region.owner())
-      eCAL::posix::unlink_region(m_shm_region.name());
+    {
+      eCAL::posix::unlink_region(m_shm_region);
+    }
   }
 
   bool CNamedMutexImpl::IsCreated() const
