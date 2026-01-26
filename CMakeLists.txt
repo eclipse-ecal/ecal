@@ -312,18 +312,18 @@ if(ECAL_USE_FTXUI)
   set(_ECAL_CXX_STD 17)
 endif()
 
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
-  # eCAL is being compiled as the root project, and no standard version is set
-  set(CMAKE_CXX_STANDARD "${_ECAL_CXX_STD}")
-  message(STATUS "eCAL is using C++ ${_ECAL_CXX_STD}")
-else()
-  # eCAL is part of a larger build or the standard was externally set
-endif()
+# if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
+#   # eCAL is being compiled as the root project, and no standard version is set
+#   set(CMAKE_CXX_STANDARD "${_ECAL_CXX_STD}")
+#   message(STATUS "eCAL is using C++ ${_ECAL_CXX_STD}")
+# else()
+#   # eCAL is part of a larger build or the standard was externally set
+# endif()
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_CXX_STD}")
-  message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
-endif()
+# if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_CXX_STD}")
+#   message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
+# endif()
 
 find_package(CMakeFunctions REQUIRED)
 
