@@ -177,14 +177,26 @@ QVariant JobHistoryRecorderItem::data(int column, Qt::ItemDataRole role) const
     {
       if (role == Qt::ItemDataRole::DisplayRole)
       {
-        return bytesToPrettyString(write_throughput_.bytes_per_second_) + "/s"
-          + " (" + bytesToPrettyString(total_size_bytes_ - unflushed_size_bytes_)
-          + " of " + bytesToPrettyString(total_size_bytes_)
-          + ")";
+        bool display_throughput
+          =  (state_ == eCAL::rec::JobState::Recording)
+              || (state_ == eCAL::rec::JobState::Flushing)
+              || (write_throughput_.bytes_per_second_ > 0)
+              || (unflushed_size_bytes_ > 0);
+
+        QString display_string = bytesToPrettyString(total_size_bytes_ - unflushed_size_bytes_);
+
+        if (display_throughput)
+        {
+          display_string = display_string
+            +" (" + bytesToPrettyString(write_throughput_.bytes_per_second_) + "/s, "
+            + bytesToPrettyString(unflushed_size_bytes_) + " remaining)";
+        }
+
+        return display_string;
       }
       else if (role == ItemDataRoles::SortRole)
       {
-        return static_cast<qint64>(write_throughput_.bytes_per_second_);
+        return static_cast<qint64>(total_size_bytes_ - unflushed_size_bytes_);
       }
     }
     else

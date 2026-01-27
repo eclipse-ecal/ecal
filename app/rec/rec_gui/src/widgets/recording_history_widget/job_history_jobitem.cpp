@@ -125,18 +125,33 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
   {
     if (role == Qt::ItemDataRole::DisplayRole)
     {
+      eCAL::rec::JobState combined_state = combinedJobState();
       auto combined_writer_throughput    = combinedWriterThroughput();
       auto combined_total_size_bytes     = combinedTotalSizeBytes();
       auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
-      return bytesToPrettyString(combined_writer_throughput.bytes_per_second_) + "/s"
-        + " (" + bytesToPrettyString(combined_total_size_bytes - combined_unflushed_size_bytes)
-        + " of " + bytesToPrettyString(combined_total_size_bytes)
-        + ")";
+
+      bool display_throughput
+        = (combined_state == eCAL::rec::JobState::Recording)
+        || (combined_state == eCAL::rec::JobState::Flushing)
+        || (combined_writer_throughput.bytes_per_second_ > 0)
+        || (combined_unflushed_size_bytes > 0);
+
+      QString display_string = bytesToPrettyString(combined_total_size_bytes - combined_unflushed_size_bytes);
+
+      if (display_throughput)
+      {
+        display_string = display_string
+          + " (" + bytesToPrettyString(combined_writer_throughput.bytes_per_second_) + "/s, "
+          + bytesToPrettyString(combined_unflushed_size_bytes) + " remaining)";
+      }
+
+      return display_string;
     }
     else if (role == ItemDataRoles::SortRole)
     {
-      auto combined_writer_throughput = combinedWriterThroughput(); 
-      return static_cast<qint64>(combined_writer_throughput.bytes_per_second_);
+      auto combined_total_size_bytes     = combinedTotalSizeBytes();
+      auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
+      return static_cast<qint64>(combined_total_size_bytes - combined_unflushed_size_bytes);
     }
   }
 
