@@ -24,6 +24,7 @@ find_package(GTest REQUIRED)
 set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
+    src/named_mutex_test.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/ecal_named_mutex.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_db.cpp
@@ -34,6 +35,8 @@ if(UNIX)
 set(memfile_test_os_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/linux/ecal_named_mutex_impl.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h
 )
 endif()
 
@@ -53,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
+    eCAL::ecal-utils
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)

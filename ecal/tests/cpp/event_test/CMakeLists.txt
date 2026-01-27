@@ -24,6 +24,8 @@ find_package(GTest REQUIRED)
 set(event_test_src
   src/event_test.cpp
   ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_event.cpp
+  $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp>
+  $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h>
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
