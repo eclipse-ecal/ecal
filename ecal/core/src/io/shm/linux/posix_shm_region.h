@@ -32,8 +32,8 @@ namespace eCAL::posix
 
     explicit operator bool() const { return region.addr != nullptr; }
     T* ptr() const {return static_cast<T*>(region.addr); }
-    [[nodiscard]] bool owner() const { return region.owner; }
-    [[nodiscard]] const std::string& name() const { return region.name; }
+    bool owner() const { return region.owner; }
+    const std::string& name() const { return region.name; }
   };
 
   template <typename T, typename Init>
