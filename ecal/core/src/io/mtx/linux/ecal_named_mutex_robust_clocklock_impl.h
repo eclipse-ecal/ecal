@@ -24,6 +24,7 @@
 #pragma once
 
 #include "io/mtx/ecal_named_mutex_base.h"
+#include "io/shm/linux/posix_shm_region.h"
 #include <cstdint>
 #include <string>
 
@@ -53,10 +54,8 @@ namespace eCAL
 
     struct named_mutex_t;
   private:
-    named_mutex_t* m_mutex_handle;
-    std::string m_named;
+    eCAL::posix::ShmTypedRegion<named_mutex_t> m_shm_region;
     bool m_recoverable;
     bool m_was_recovered;
-    bool m_has_ownership;
   };
 }
