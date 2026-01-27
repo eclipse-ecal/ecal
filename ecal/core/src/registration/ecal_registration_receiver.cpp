@@ -107,7 +107,7 @@ namespace eCAL
     }
     else
     {
-      if (auto& logger = m_context.log_provider) logger->Log(Logging::log_level_error, "[CRegistrationReceiver] No registration layer enabled.");
+      if (m_context.log_provider) m_context.log_provider->Log(Logging::log_level_error, "[CRegistrationReceiver] No registration layer enabled.");
     }
 
     m_created = true;

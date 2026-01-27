@@ -184,7 +184,7 @@ namespace eCAL
       m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher
-      if (auto pubgate = g_pubgate()) pubgate->Register(topic_name_, m_publisher_impl);
+      if (auto pubgate = g_pubgate(); pubgate) pubgate->Register(topic_name_, m_publisher_impl);
 
       // we made it :-)
       return(true);

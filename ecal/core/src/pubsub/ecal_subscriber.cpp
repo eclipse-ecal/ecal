@@ -39,7 +39,7 @@ namespace eCAL
 
     eCAL::SSubscriberGlobalContext global_context;
     
-    if (auto globals = g_globals())
+    if (auto globals = g_globals(); globals)
     {
       global_context.registration_provider = globals->registration_provider();
       global_context.log_provider          = globals->log_provider();

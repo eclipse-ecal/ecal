@@ -55,7 +55,7 @@ namespace eCAL
     m_publisher_impl = publisher_impl;
 
     // register publisher
-    if (auto pubgate = g_pubgate()) pubgate->Register(topic_name_, publisher_impl);
+    if (auto pubgate = g_pubgate(); pubgate) pubgate->Register(topic_name_, publisher_impl);
   }
 
   CPublisher::CPublisher(const std::string& topic_name_, const SDataTypeInformation& data_type_info_, const PubEventCallbackT& event_callback_, const Publisher::Configuration& config_) :

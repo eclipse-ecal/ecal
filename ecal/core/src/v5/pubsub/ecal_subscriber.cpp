@@ -167,7 +167,7 @@ namespace eCAL
       config.subscriber = config_;
 
       SSubscriberGlobalContext global_context;
-      if (auto globals = g_globals())
+      if (auto globals = g_globals(); globals)
       {
         global_context.udp_layer = globals->udp_reader_layer();
         global_context.shm_layer = globals->shm_reader_layer();

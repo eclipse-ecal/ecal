@@ -88,7 +88,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
   // eCAL initialization state
   unsigned int comp_state = 0;
   
-  if (auto globals = g_globals())
+  if (auto globals = g_globals(); globals)
   {
     comp_state = globals->GetComponents();
   }

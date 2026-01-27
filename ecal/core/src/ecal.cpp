@@ -136,7 +136,7 @@ namespace eCAL
   **/
   bool IsInitialized()
   {
-    if (auto globals = g_globals()) return globals->IsInitialized();
+    if (auto globals = g_globals(); globals) return globals->IsInitialized();
     return false;
   }
 
@@ -149,7 +149,7 @@ namespace eCAL
   **/
   bool IsInitialized(unsigned int component_)
   {
-    if (auto globals = g_globals()) return globals->IsInitialized(component_);
+    if (auto globals = g_globals(); globals) return globals->IsInitialized(component_);
     return false ;
   }
 
@@ -161,7 +161,7 @@ namespace eCAL
   bool Finalize()
   {
     bool finalized{ false };
-    if (auto globals = g_globals())
+    if (auto globals = g_globals(); globals)
     {
       finalized = FinalizeGlobals();
     }

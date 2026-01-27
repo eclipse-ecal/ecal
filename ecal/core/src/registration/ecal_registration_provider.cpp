@@ -79,7 +79,7 @@ namespace eCAL
     }
     else
     {
-      if (auto& logger = m_context.log_provider) logger->Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
+      if (m_context.log_provider) m_context.log_provider->Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
       return;
     }
 
@@ -152,20 +152,20 @@ namespace eCAL
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      if (auto& subgate = m_context.subgate) subgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.subgate) m_context.subgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      if (auto& pubgate = m_context.pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.pubgate) m_context.pubgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      if (auto& servicegate = m_context.servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.servicegate) m_context.servicegate->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
-      if (auto& clientgate = m_context.clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.clientgate) m_context.clientgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list
