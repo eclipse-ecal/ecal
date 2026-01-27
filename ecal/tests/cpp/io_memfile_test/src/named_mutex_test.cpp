@@ -20,6 +20,7 @@
 #include "io/mtx/ecal_named_mutex.h"
 
 #include <gtest/gtest.h>
+#include <array>
 #include <atomic>
 #include <random>
 #include <string>
