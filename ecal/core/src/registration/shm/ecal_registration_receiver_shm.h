@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,11 +37,12 @@ namespace eCAL
   class CCallbackThread;
   class CMemoryFileBroadcast;
   class CMemoryFileBroadcastReader;
+  class CMemFileMap;
 
   class CRegistrationReceiverSHM
   {
   public:
-    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_);
+    CRegistrationReceiverSHM(RegistrationApplySampleCallbackT apply_sample_callback, const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
     ~CRegistrationReceiverSHM();
 
     // default copy constructor
@@ -61,6 +63,6 @@ namespace eCAL
 
     eCAL::Registration::SampleList              m_sample_list;
 
-    RegistrationApplySampleCallbackT m_apply_sample_callback;
+    RegistrationApplySampleCallbackT            m_apply_sample_callback;
   };
 }

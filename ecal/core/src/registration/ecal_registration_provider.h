@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +42,31 @@
 
 namespace eCAL
 {
+  class CMemFileMap;
+  class CSubGate;
+  class CPubGate;
+  class CServiceGate;
+  class CClientGate;
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+
+  struct SRegistrationProviderContext
+  {
+    Registration::SAttributes              attributes;
+    std::shared_ptr<eCAL::CMemFileMap>     memfile_map;
+    std::shared_ptr<eCAL::CSubGate>        subgate;
+    std::shared_ptr<eCAL::CPubGate>        pubgate;
+    std::shared_ptr<eCAL::CServiceGate>    servicegate;
+    std::shared_ptr<eCAL::CClientGate>     clientgate;
+    std::shared_ptr<Logging::CLogProvider> log_provider;
+  };
+
   class CRegistrationProvider
   {
   public:
-    CRegistrationProvider(const Registration::SAttributes& attr_);
+    CRegistrationProvider(SRegistrationProviderContext& context_);
     ~CRegistrationProvider();
 
     void Start();
@@ -67,6 +89,6 @@ namespace eCAL
 
     Registration::SampleList             m_send_thread_sample_list;
 
-    Registration::SAttributes                  m_attributes;
+    SRegistrationProviderContext         m_context;
   };
 }

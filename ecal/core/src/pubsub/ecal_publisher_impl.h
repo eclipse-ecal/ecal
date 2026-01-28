@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +56,18 @@
 
 namespace eCAL
 {
+  class CRegistrationProvider;
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+
+  struct SPublisherGlobalContext
+  {
+    std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
+    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
+  };
+
   class CPublisherImpl
   {
   public:
@@ -74,7 +87,7 @@ namespace eCAL
 
     using SSubscriptionInfo = Registration::SampleIdentifier;
 
-    CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_);
+    CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, SPublisherGlobalContext global_context_);
     ~CPublisherImpl();
 
     bool Write(CPayloadWriter& payload_, long long time_, long long filter_id_);
@@ -166,5 +179,7 @@ namespace eCAL
 
     SLayerStates                           m_layers;
     std::atomic<bool>                      m_created;
+
+    SPublisherGlobalContext                m_global_context;
   };
 }

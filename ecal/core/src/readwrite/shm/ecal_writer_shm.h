@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +42,8 @@ namespace eCAL
   class CDataWriterSHM : public CDataWriterBase<Registration::LayerParShm>
   {
   public:
-    CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_);
-
+    CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_, std::shared_ptr<CMemFileMap> memfile_map_);
+    
     SWriterInfo GetInfo() override;
 
     bool PrepareWrite(const SWriterAttr& attr_) override;
@@ -66,5 +67,7 @@ namespace eCAL
     using ProcessIDTopicIDSetT = std::map<int32_t, std::set<EntityIdT>>;
     std::mutex                                    m_process_id_topic_id_set_map_sync;
     ProcessIDTopicIDSetT                          m_process_id_topic_id_set_map;
+
+    std::shared_ptr<CMemFileMap>                  m_memfile_map;
   };
 }

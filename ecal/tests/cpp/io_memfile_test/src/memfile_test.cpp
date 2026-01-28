@@ -43,7 +43,7 @@ namespace eCAL
 
 TEST(core_cpp_core, MemFile_ReadWrite)
 {
-  eCAL::CMemoryFile mem_file;
+  eCAL::CMemoryFile mem_file(eCAL::g_memfile_map());
 
   // global parameter
   const std::string memfile_name = "my_memory_file";
@@ -145,7 +145,7 @@ TEST(core_cpp_core, MemFile_ReadWrite)
 
 TEST(core_cpp_core, MemFile_Perf)
 {
-  eCAL::CMemoryFile mem_file;
+  eCAL::CMemoryFile mem_file(eCAL::g_memfile_map());
 
   // global parameter
   const std::string memfile_name = "my_memory_file";
@@ -205,7 +205,7 @@ TEST(core_cpp_core, MemFile_Perf)
 
 TEST(core_cpp_core, MemFile_Concurrency)
 {
-  eCAL::CMemoryFile mem_file;
+  eCAL::CMemoryFile mem_file(eCAL::g_memfile_map());
 
   // global parameter
   const std::string memfile_name = "my_memory_file";

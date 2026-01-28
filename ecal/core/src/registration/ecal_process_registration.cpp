@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
     process_sample_process.state.info           = g_process_state.info;
   }
 #if ECAL_CORE_TIMEPLUGIN
-  auto timegate = g_timegate();
-  if (!timegate)
+  if (auto timegate = g_timegate(); !timegate)
   {
     process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
   }
@@ -88,8 +87,8 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
 
   // eCAL initialization state
   unsigned int comp_state = 0;
-  auto globals = g_globals();
-  if (globals)
+  
+  if (auto globals = g_globals(); globals)
   {
     comp_state = globals->GetComponents();
   }

@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ namespace eCAL
   void SetGlobalUnitName(const char *unit_name_);
 
   std::shared_ptr<CGlobals> CreateGlobalsInstance();
-  void                      ResetGlobalsInstance();
+  bool                      FinalizeGlobals();
 
   void                      SetGlobalEcalConfiguration(const Configuration& config_);
   void                      ResetGlobalEcalConfiguration(); 
@@ -103,14 +103,10 @@ namespace eCAL
   std::shared_ptr<CClientGate>            g_clientgate();
 #endif
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
-  std::shared_ptr<CMemFileThreadPool>     g_memfile_pool();
   std::shared_ptr<CMemFileMap>            g_memfile_map();
-
 #endif
 
   // declaration of globally accessible variables
-  extern std::shared_ptr<CGlobals>     g_globals_ctx;
-
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;
 

@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +49,7 @@ namespace eCAL
   class CSyncMemoryFile
   {
   public:
-    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_);
+    CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_, std::shared_ptr<CMemFileMap> memfile_map_);
     ~CSyncMemoryFile();
 
     bool Connect(int32_t process_id_);

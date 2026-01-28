@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +35,15 @@
 
 namespace eCAL
 {
+  class CSubGate;
+  
   ////////////////
   // LAYER
   ////////////////
   class CUDPReaderLayer : public CReaderLayer<CUDPReaderLayer, eCAL::eCALReader::UDP::SAttributes>
   {
   public:
-    CUDPReaderLayer();
-    ~CUDPReaderLayer() override;
+    CUDPReaderLayer(std::shared_ptr<eCAL::CSubGate> subgate_);
 
     void Initialize(const eCAL::eCALReader::UDP::SAttributes& attr_) override;
 
@@ -59,5 +61,7 @@ namespace eCAL
     std::map<std::string, int>             m_topic_name_mcast_map;
 
     eCAL::eCALReader::UDP::SAttributes     m_attributes;
+
+    std::shared_ptr<eCAL::CSubGate>        m_subgate;
   };
 }

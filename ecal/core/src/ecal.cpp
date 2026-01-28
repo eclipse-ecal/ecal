@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,8 +112,7 @@ namespace eCAL
   {
     bool initialized{ false };
 
-    auto globals = g_globals();
-    if (!globals)
+    if (auto globals = g_globals(); !globals)
     {
       SetGlobalEcalConfiguration(config_);
       SetGlobalUnitName(unit_name_.c_str());
@@ -122,7 +121,7 @@ namespace eCAL
       if (!globals_instance) return false;
 
       initialized = globals_instance->Initialize(components_);
-      if (!initialized) ResetGlobalsInstance();
+      if (!initialized) FinalizeGlobals();
     }
     
     return initialized;
@@ -137,8 +136,7 @@ namespace eCAL
   **/
   bool IsInitialized()
   {
-    auto globals = g_globals();
-    if (globals) return globals->IsInitialized();
+    if (auto globals = g_globals(); globals) return globals->IsInitialized();
     return false;
   }
 
@@ -151,8 +149,7 @@ namespace eCAL
   **/
   bool IsInitialized(unsigned int component_)
   {
-    auto globals = g_globals();
-    if (globals ) return globals->IsInitialized(component_);
+    if (auto globals = g_globals(); globals) return globals->IsInitialized(component_);
     return false ;
   }
 
@@ -164,11 +161,9 @@ namespace eCAL
   bool Finalize()
   {
     bool finalized{ false };
-    auto globals = g_globals();
-    if (globals)
+    if (auto globals = g_globals(); globals)
     {
-      finalized = globals->Finalize();
-      ResetGlobalsInstance();
+      finalized = FinalizeGlobals();
     }
     ResetGlobalEcalConfiguration();
 
@@ -182,8 +177,7 @@ namespace eCAL
   **/
   bool Ok()
   {
-    auto globals = g_globals();
-    const bool ecal_is_ok = globals && !gWaitForEvent(ShutdownProcEvent(), 0);
+    const bool ecal_is_ok = g_globals() && !gWaitForEvent(ShutdownProcEvent(), 0);
     return(ecal_is_ok);
   }
 }

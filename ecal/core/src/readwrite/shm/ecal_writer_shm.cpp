@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +33,9 @@ namespace eCAL
 {
   const std::string CDataWriterSHM::m_memfile_base_name = "ecal_";
 
-  CDataWriterSHM::CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_) :
-    m_attributes(attr_)
+  CDataWriterSHM::CDataWriterSHM(const eCALWriter::SHM::SAttributes& attr_, std::shared_ptr<CMemFileMap> memfile_map_) 
+    : m_attributes(attr_)
+    , m_memfile_map(std::move(memfile_map_))
   {
     // initialize memory file buffer
     if (m_attributes.memfile_buffer_count < 1) m_attributes.memfile_buffer_count = 1;
@@ -193,7 +195,7 @@ namespace eCAL
     m_memory_file_vec.clear();
     while (m_memory_file_vec.size() < buffer_count_)
     {
-      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, memory_file_attr);
+      auto sync_memfile = std::make_shared<CSyncMemoryFile>(m_memfile_base_name, memory_file_size, memory_file_attr, m_memfile_map);
       if (sync_memfile->IsCreated())
       {
         m_memory_file_vec.push_back(sync_memfile);

@@ -42,7 +42,9 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CSubGate::m_created;
 
-  CSubGate::CSubGate() = default;
+  CSubGate::CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_)
+  : m_log_provider(std::move(log_provider_))
+  {};
 
   CSubGate::~CSubGate()
   {
@@ -57,13 +59,11 @@ namespace eCAL
 
   void CSubGate::Stop()
   {
-    if(!m_created) return;
+    if(!m_created.exchange(false)) return;
 
     // stop & destroy all remaining subscriber
     const std::unique_lock<std::shared_timed_mutex> lock(m_topic_name_subscriber_mutex);
     m_topic_name_subscriber_map.clear();
-
-    m_created = false;
   }
 
   bool CSubGate::Register(const std::string& topic_name_, const std::shared_ptr<CSubscriberImpl>& datareader_)
@@ -120,7 +120,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
+        if (m_log_provider) m_log_provider->Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
       }
 #endif
 

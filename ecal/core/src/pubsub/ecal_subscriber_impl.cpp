@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@
 
 #include "ecal_subscriber_impl.h"
 #include "ecal_global_accessors.h"
+#include "logging/ecal_log_provider.h"
 
 #include "readwrite/ecal_reader_layer.h"
 #include "readwrite/ecal_transport_layer.h"
@@ -70,18 +71,19 @@ namespace eCAL
   ////////////////////////////////////////
   // CSubscriberImpl
   ////////////////////////////////////////
-  CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
+  CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberGlobalContext global_context_) :
                  m_topic_info(topic_info_),
                  m_topic_size(0),
                  m_receive_time(0),
                  m_clock(0),
                  m_frequency_calculator(3.0f),
                  m_created(false),
-                 m_attributes(attr_)
+                 m_attributes(attr_),
+                 m_global_context(std::move(global_context_))
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
 
     // build subscriber id
@@ -105,7 +107,7 @@ namespace eCAL
   {
 #ifndef NDEBUG
     // log it
-    Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Destructor");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Destructor");
 #endif
 
     if (!m_created) return;
@@ -150,7 +152,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Read");
+      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::Read");
 #endif
       // copy content to target string
       buf_.clear();
@@ -172,7 +174,7 @@ namespace eCAL
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetReceiveCallback");
 #endif
 
     // set receive callback
@@ -189,7 +191,7 @@ namespace eCAL
     if (!m_created) return(false);
 
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveReceiveCallback");
 #endif
 
     // remove receive callback
@@ -206,7 +208,7 @@ namespace eCAL
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetEventIDCallback");
 #endif
 
     // set event id callback
@@ -222,7 +224,7 @@ namespace eCAL
     if (!m_created) return false;
 
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::RemoveEventCallback");
 #endif
 
     // remove event id callback
@@ -236,7 +238,7 @@ namespace eCAL
   void CSubscriberImpl::SetFilterIDs(const std::set<long long>& filter_ids_)
   {
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug2, m_attributes.topic_name + "::CSubscriberImpl::SetFilterIDs");
 #endif
 
     m_id_set = filter_ids_;
@@ -294,7 +296,7 @@ namespace eCAL
     }
 
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherRegistration");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherRegistration");
 #endif
   }
 
@@ -314,7 +316,7 @@ namespace eCAL
     FireDisconnectEvent(publication_info_, data_type_info_);
     
 #ifndef NDEBUG
-    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplyPublisherUnregistration");
 #endif
   }
 
@@ -331,12 +333,12 @@ namespace eCAL
     {
     case tl_ecal_shm:
 #if ECAL_CORE_TRANSPORT_SHM
-      CSHMReaderLayer::Get()->SetConnectionParameter(par);
+      if (m_global_context.shm_layer) m_global_context.shm_layer->SetConnectionParameter(par);
 #endif
       break;
     case tl_ecal_tcp:
 #if ECAL_CORE_TRANSPORT_TCP
-      CTCPReaderLayer::Get()->SetConnectionParameter(par);
+      if (m_global_context.tcp_layer) m_global_context.tcp_layer->SetConnectionParameter(par);
 #endif
       break;
     default:
@@ -350,7 +352,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_UDP
     if (m_attributes.udp.enable)
     {
-      CUDPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
+      if (m_global_context.udp_layer) m_global_context.udp_layer->Initialize(eCAL::eCALReader::BuildUDPAttributes(m_attributes));
     }
 #endif
 
@@ -358,7 +360,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_SHM
     if (m_attributes.shm.enable)
     {
-      CSHMReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
+      if (m_global_context.shm_layer) m_global_context.shm_layer->Initialize(eCAL::eCALReader::BuildSHMAttributes(m_attributes));
     }
 #endif
 
@@ -366,7 +368,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_TCP
     if (m_attributes.tcp.enable)
     {
-      CTCPReaderLayer::Get()->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
+      if (m_global_context.tcp_layer) m_global_context.tcp_layer->Initialize(eCAL::eCALReader::BuildTCPLayerAttributes(m_attributes));
     }
 #endif
   }
@@ -405,7 +407,7 @@ namespace eCAL
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample");
 #endif
 
     // increase read clock
@@ -428,7 +430,7 @@ namespace eCAL
       {
 #ifndef NDEBUG
         // log it
-        Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
+        if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::ReceiveCallback");
 #endif
         // prepare data struct
         SReceiveCallbackData cb_data;
@@ -469,7 +471,7 @@ namespace eCAL
       m_read_buf_cv.notify_one();
 #ifndef NDEBUG
       // log it
-      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
+      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::ApplySample::Receive::Buffered");
 #endif
     }
 
@@ -481,12 +483,11 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample sample;
     GetRegistrationSample(sample);
-    auto registration_provider = g_registration_provider();
-    if (registration_provider) registration_provider->RegisterSample(sample);
+    if (m_global_context.registration_provider) m_global_context.registration_provider->RegisterSample(sample);
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Register");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Register");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -496,12 +497,11 @@ namespace eCAL
 #if ECAL_CORE_REGISTRATION
     Registration::Sample sample;
     GetUnregistrationSample(sample);
-    auto registration_provider = g_registration_provider();
-    if (registration_provider) registration_provider->UnregisterSample(sample);
+    if (m_global_context.registration_provider) m_global_context.registration_provider->UnregisterSample(sample);
 
 #ifndef NDEBUG
     // log it
-    Logging::Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Unregister");
+    if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug4, m_attributes.topic_name + "::CSubscriberImpl::Unregister");
 #endif
 #endif // ECAL_CORE_REGISTRATION
   }
@@ -620,7 +620,7 @@ namespace eCAL
       m_layers.udp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CUDPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.udp_layer) m_global_context.udp_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -631,7 +631,7 @@ namespace eCAL
       m_layers.shm.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CSHMReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.shm_layer) m_global_context.shm_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -642,7 +642,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = true;
 
       // subscribe to layer (if supported)
-      CTCPReaderLayer::Get()->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.tcp_layer) m_global_context.tcp_layer->AddSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
@@ -656,7 +656,7 @@ namespace eCAL
       m_layers.udp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CUDPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.udp_layer) m_global_context.udp_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -667,7 +667,7 @@ namespace eCAL
       m_layers.shm.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CSHMReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.shm_layer) m_global_context.shm_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
 
@@ -678,7 +678,7 @@ namespace eCAL
       m_layers.tcp.read_enabled = false;
 
       // unsubscribe from layer (if supported)
-      CTCPReaderLayer::Get()->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
+      if (m_global_context.tcp_layer) m_global_context.tcp_layer->RemSubscription(m_attributes.host_name, m_attributes.topic_name, m_subscriber_id);
     }
 #endif
   }
@@ -750,7 +750,7 @@ namespace eCAL
     {
 #ifndef NDEBUG
       // log it
-      Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
+      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_debug3, m_attributes.topic_name + "::CSubscriberImpl::AddSample discard sample because of multiple receive");
 #endif
 
       return false;
@@ -765,7 +765,7 @@ namespace eCAL
       msg += m_attributes.topic_name;
       msg += "\'";
       msg += " received a message in the wrong order";
-      Logging::Log(Logging::log_level_warning, msg);
+      if (m_global_context.log_provider) m_global_context.log_provider->Log(Logging::log_level_warning, msg);
 #endif
 
       // @TODO: We should not have a global config call here. This should be an attribute of the subscriber!

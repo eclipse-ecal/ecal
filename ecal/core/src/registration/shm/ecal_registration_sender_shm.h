@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +43,7 @@ namespace eCAL
   class CRegistrationSenderSHM : public CRegistrationSender
   {
   public:
-    CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_);
+    CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_);
     ~CRegistrationSenderSHM() override;
 
     // Special member functionss

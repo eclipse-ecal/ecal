@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,12 @@ namespace eCAL
   // Memory file handling class
   /////////////////////////////////////////////////////////////////////////////////
 
-  CMemoryFile::CMemoryFile() :
+  CMemoryFile::CMemoryFile(std::shared_ptr<CMemFileMap> memfile_map_) :
     m_created(false),
     m_auto_sanitizing(false),
     m_payload_initialized(false),
-    m_access_state(access_state::closed)
+    m_access_state(access_state::closed),
+    m_memfile_map(std::move(memfile_map_))
   {
   }
 
@@ -86,7 +87,7 @@ namespace eCAL
       m_memfile_info = std::make_shared<SMemFileInfo>();
 
       // create memory file
-      if (!memfile::db::AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
+      if (!m_memfile_map->AddFile(name_, create_, create_ ? len_ + m_header.int_hdr_size : SIZEOF_PARTIAL_STRUCT(SInternalHeader, int_hdr_size), m_memfile_info))
       {
 #ifndef NDEBUG
         printf("Could not create memory file: %s.\n", name_);
@@ -141,7 +142,7 @@ namespace eCAL
       {
         // read internal header size of memory file
         const auto header_size = static_cast<SInternalHeader*>(m_memfile_info->mem_address)->int_hdr_size;
-        memfile::db::CheckFileSize(header_size, m_memfile_info);
+        m_memfile_map->CheckFileSize(header_size, m_memfile_info);
 
         // copy compatible header part into m_header
         memcpy(&m_header, m_memfile_info->mem_address, std::min(sizeof(SInternalHeader), static_cast<std::size_t>(header_size)));
@@ -169,7 +170,7 @@ namespace eCAL
       m_memfile_mutex.DropOwnership();
 
     // destroy memory file
-    ret_state &= memfile::db::RemoveFile(m_name, remove_);
+    ret_state &= m_memfile_map->RemoveFile(m_name, remove_);
 
     // Destroy mutex
     m_memfile_mutex.Destroy();
@@ -387,7 +388,7 @@ namespace eCAL
     if (len > memfile_info->size)
     {
       // check file size and update memory file map
-      memfile::db::CheckFileSize(len, memfile_info);
+      m_memfile_map->CheckFileSize(len, memfile_info);
 
       // check size again and give up if it is still too small
       if (len > memfile_info->size)

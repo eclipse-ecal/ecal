@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +37,10 @@
 
 namespace eCAL
 {
-  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_) :
-    m_attr(attr_),
-    m_created(false)
+  CSyncMemoryFile::CSyncMemoryFile(const std::string& base_name_, size_t size_, SSyncMemoryFileAttr attr_, std::shared_ptr<CMemFileMap> memfile_map_)
+    : m_attr(attr_)
+    , m_memfile(std::move(memfile_map_))
+    , m_created(false)
   {
     Create(base_name_, size_);
   }
