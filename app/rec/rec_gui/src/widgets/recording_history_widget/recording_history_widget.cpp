@@ -271,12 +271,13 @@ void RecordingHistoryWidget::showEvent(QShowEvent* /*event*/)
     {
       { JobHistoryModel::Columns::JOB,                    { false,  "[22:22:22] Measurement" }},
       { JobHistoryModel::Columns::ID,                     { false,  "68719476736" }},
-      { JobHistoryModel::Columns::STATUS,                 { true,   "Uploading (99 MiB of 99 GiB)" }},
+      { JobHistoryModel::Columns::STATUS,                 { true,   "Uploading (99 MiB ..." }},
       { JobHistoryModel::Columns::HOSTNAME,               { false,  "CARPC01, CARPC02," }},
       { JobHistoryModel::Columns::ADDON_NAME,             { false,  "eCAL CAN rec" }},
       { JobHistoryModel::Columns::LOCAL_PATH,             { false,  "C:\\ecal_meas\\long_path" }},
       { JobHistoryModel::Columns::MAX_HDF5_FILE_SIZE_MIB, { false,  "9999" }},
       { JobHistoryModel::Columns::LENGTH,                 { false,  "999.9 s / 99999 frames" }},
+      { JobHistoryModel::Columns::DISK_WRITER_INFORMATION,{ false,   "99.9 MiB (99.9 KiB/s, ..." }},
       { JobHistoryModel::Columns::INFO,                   { true,   "No information available (This is a very long error message)" }},
     };
 
@@ -304,6 +305,7 @@ void RecordingHistoryWidget::showEvent(QShowEvent* /*event*/)
     {
       JobHistoryModel::Columns::JOB,
       JobHistoryModel::Columns::LENGTH,
+      JobHistoryModel::Columns::DISK_WRITER_INFORMATION,
       JobHistoryModel::Columns::STATUS,
       JobHistoryModel::Columns::COMMENT,
       JobHistoryModel::Columns::UPLOAD,
