@@ -53,10 +53,11 @@
 #include <iomanip>
 #include <string>
 #include <utility>
-#include <unistd.h>
 
 #ifdef _WIN32
-#include <process.h>
+#include <process.h> // _getpid()
+#else // _WIN32
+#include <unistd.h> // getpid()
 #endif // _WIN32
 
 
