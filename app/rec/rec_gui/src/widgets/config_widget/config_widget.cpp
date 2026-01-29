@@ -29,7 +29,6 @@
 #include <QSpinBox>
 #include <QTextEdit>
 #include <QToolButton>
-#include <QtVersionChecks>
 #include <QWidget>
 
 #include "qecalrec.h"
