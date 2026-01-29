@@ -28,7 +28,6 @@
 
 #include <Qt>
 #include <QFont>
-#include <QtTypes>
 #include <QString>
 
 #include <chrono>

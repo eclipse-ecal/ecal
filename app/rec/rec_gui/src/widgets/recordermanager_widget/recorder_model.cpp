@@ -29,7 +29,6 @@
 #include <QFont>
 #include <QStyle>
 #include <QStringList>
-#include <QtTypes>
 
 #include <cstddef>
 #include <cstdint>

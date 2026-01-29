@@ -42,7 +42,6 @@
 #include <Qt>
 #include <QFont>
 #include <QTime>
-#include <QtTypes>
 #include <set>
 #include <string>
 #include <utility>
