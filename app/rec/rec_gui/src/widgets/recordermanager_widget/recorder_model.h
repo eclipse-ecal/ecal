@@ -20,14 +20,27 @@
 
 #pragma once
 
+#include <Qt>
 #include <QAbstractItemModel>
+#include <QObject>
+#include <QVariant>
+#include <QIcon>
+#include <QStringList>
+
+#include <ecal/ecal.h>
+
+#include <chrono>
+#include <cstdint>
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <rec_client_core/state.h>
 #include <rec_server_core/rec_server_config.h>
 #include <rec_server_core/rec_server_types.h>
 
-#include <vector>
-#include <QIcon>
 
 class RecorderModel : public QAbstractItemModel
 {

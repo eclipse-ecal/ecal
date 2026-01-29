@@ -20,20 +20,40 @@
 
 #include "ecal_rec_impl.h"
 
+#include <ecal/ecal.h>
+#include <ecal/pubsub/types.h>
+
+#include "frame.h"
+#include "job/record_job.h"
 #include "rec_client_core/ecal_rec_logger.h"
 
 #include <ecal_utils/filesystem.h>
-#include <EcalParser/EcalParser.h>
-
-#include <algorithm>
+#include <ecal_utils/string.h>
 
 #include <garbage_collector_trigger_thread.h>
 #include <monitoring_thread.h>
-
 #include "addons/addon_manager.h"
+#include "rec_client_core/rec_error.h"
+#include "rec_client_core/record_mode.h"
+#include "rec_client_core/state.h"
+#include "rec_client_core/topic_info.h"
+#include "rec_client_core/upload_config.h"
 
+#include <chrono>
+#include <cstdint>
+#include <algorithm>
+#include <functional>
+#include <ios>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <set>
 #include <sstream>
 #include <iomanip>
+#include <string>
+#include <utility>
+#include <unistd.h>
 
 #ifdef _WIN32
 #include <process.h>

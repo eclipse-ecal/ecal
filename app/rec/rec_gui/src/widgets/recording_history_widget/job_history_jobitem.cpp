@@ -22,15 +22,30 @@
 
 #include "job_history_recorderitem.h"
 
-#include "models/tree_item_types.h"
 #include "models/item_data_roles.h"
+#include "models/tree_item_types.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/state.h"
 
+#include <CustomQt/QAbstractTreeItem.h>
 #include <CustomQt/QBytesToPrettyStringUtils.h>
 
 #include <qecalrec.h>
 
-#include <QTime>
+#include <algorithm>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <ctime>
+#include <map>
+
+#include <Qt>
 #include <QFont>
+#include <QTime>
+#include <QtTypes>
+#include <set>
+#include <string>
+#include <utility>
 
 ///////////////////////////////////////////
 // Constructor & Destructor

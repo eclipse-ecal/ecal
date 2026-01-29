@@ -22,13 +22,17 @@
 
 #include <CustomQt/QAbstractTreeItem.h>
 
+#include <Qt>
 #include <QString>
 #include <QIcon>
+#include <QVariant>
 
 #include <chrono>
+#include <utility>
+#include <cstdint>
 
-#include <rec_client_core/state.h>
 #include <rec_client_core/job_config.h>
+#include <rec_client_core/state.h>
 
 class JobHistoryJobItem : public QAbstractTreeItem
 {

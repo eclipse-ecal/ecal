@@ -21,14 +21,20 @@
 #include "rec_client_core/ecal_rec.h"
 
 #include "ecal_rec_impl.h"
-#include "rec_client_core/ecal_rec_logger.h"
 
-#include "EcalParser/EcalParser.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/rec_error.h"
+#include "rec_client_core/record_mode.h"
+#include "rec_client_core/state.h"
+#include "rec_client_core/upload_config.h"
 
-#include <iostream>
-#include <fstream>
-
-#include <ecal_utils/filesystem.h>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
+#include <utility>
+#include <set>
+#include <string>
 
 namespace eCAL
 {

@@ -20,6 +20,14 @@
 
 #include <rec_client_core/proto_helpers.h>
 
+#include "ecal/app/pb/rec/client_state.pb.h"
+#include "ecal/time.h"
+#include "rec_client_core/state.h"
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
+
 namespace eCAL
 {
   namespace rec

@@ -21,12 +21,18 @@
 #pragma once
 #include <ThreadingUtils/InterruptibleThread.h>
 
-#include <ecalhdf5/eh5_meas.h>
-
-#include <mutex>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <cstddef>
+#include <cstdint>
 #include <deque>
 #include <map>
+#include <memory>
+#include <mutex>
+#include <string>
 
+#include "ecalhdf5/eh5_meas_api_v2.h"
 #include "frame.h"
 #include "throughput_statistics.h"
 

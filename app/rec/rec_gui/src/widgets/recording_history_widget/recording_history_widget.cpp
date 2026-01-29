@@ -20,15 +20,42 @@
 
 #include "recording_history_widget.h"
 
+#include <Qt>
+#include <QAbstractItemModel>
+#include <QModelIndex>
+#include <QAbstractItemView>
 #include <QMenu>
 #include <QInputDialog>
 #include <QSettings>
-#include <QDesktopServices> 
+#include <QDesktopServices>
+#include <QAction>
+#include <QEvent>
+#include <QFontMetrics>
+#include <QHeaderView>
+#include <QIcon>
+#include <QList>
+#include <QPoint>
+#include <QStringView>
+#include <QTreeView>
+#include <QWidget>
 
+#include "CustomQt/QStableSortFilterProxyModel.h"
 #include "models/item_data_roles.h"
 #include "models/tree_item_types.h"
 
 #include "qecalrec.h"
+#include "rec_server_core/status.h"
+#include "widgets/recording_history_widget/job_history_jobitem.h"
+#include "widgets/recording_history_widget/job_history_model.h"
+#include "widgets/recording_history_widget/push_button_delegate.h"
+
+#include <algorithm>
+#include <cstdint>
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <rec_client_core/ecal_rec_defs.h>
 

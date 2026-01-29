@@ -19,9 +19,27 @@
 */
 
 #include "recorder_model.h"
+#include "rec_client_core/state.h"
+#include "rec_server_core/rec_server_config.h"
+#include "rec_server_core/rec_server_types.h"
+#include "rec_server_core/status.h"
 
+#include <Qt>
+#include <QAbstractItemModel>
 #include <QFont>
 #include <QStyle>
+#include <QStringList>
+#include <QtVersionChecks>
+#include <QtTypes>
+
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+#include <list>
+#include <map>
+#include <set>
+#include <utility>
+#include <vector>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
   #include <QDesktopWidget>
@@ -40,7 +58,6 @@
 #include <chrono>
 
 #include <ecal/ecal.h>
-#include <ecal_utils/string.h>
 #include "models/item_data_roles.h"
 
 #include <CustomQt/QBytesToPrettyStringUtils.h>

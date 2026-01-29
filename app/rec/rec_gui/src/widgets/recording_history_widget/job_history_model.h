@@ -21,21 +21,20 @@
 #pragma once
 
 #include <CustomQt/QAbstractTreeModel.h>
+#include <cstdint>
+#include <list>
 #include <map>
-#include <QString>
 
-#include <rec_server_core/rec_server_config.h>
+#include <Qt>
+#include <QString>
+#include <QObject>
+#include <QVariant>
 
 #include "job_history_jobitem.h"
 #include "job_history_recorderitem.h"
 
-#include <rec_client_core/state.h>
 #include <rec_server_core/rec_server_types.h>
 #include <rec_server_core/status.h>
-
-#include <map>
-#include <string>
-#include <memory>
 
 class JobHistoryModel : public QAbstractTreeModel
 {

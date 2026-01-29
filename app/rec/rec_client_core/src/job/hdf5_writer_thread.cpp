@@ -20,9 +20,27 @@
 
 #include "hdf5_writer_thread.h"
 
-#include "rec_client_core/ecal_rec_logger.h"
+#include <ecal/ecal.h>
+#include <ecal/measurement/base/types.h>
+#include <ecalhdf5/eh5_meas_api_v2.h>
+#include <ecalhdf5/eh5_types.h>
 
+#include "ThreadingUtils/InterruptibleThread.h"
+
+#include "frame.h"
+#include "rec_client_core/ecal_rec_logger.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/topic_info.h"
+
+#include <chrono>
+#include <cstdint>
+#include <deque>
 #include <ecal_utils/filesystem.h>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <utility>
 
 namespace eCAL
 {

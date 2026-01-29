@@ -22,8 +22,15 @@
 
 #include <CustomQt/QAbstractTreeItem.h>
 
+#include <Qt>
 #include <QString>
 #include <QIcon>
+#include <QVariant>
+
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
 
 #include <rec_client_core/state.h>
 

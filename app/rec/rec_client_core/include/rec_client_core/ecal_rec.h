@@ -18,17 +18,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once 
+#pragma once
 
-#include <memory>
-#include <vector>
 #include <chrono>
-#include <map>
+#include <cstddef>
+#include <cstdint>
+#include <memory>
 #include <set>
-#include <thread>
+#include <string>
+#include <utility>
 
 #include <rec_client_core/state.h>
-#include <rec_client_core/topic_info.h>
 
 #include <rec_client_core/record_mode.h>
 #include <rec_client_core/job_config.h>

@@ -22,10 +22,19 @@
 
 #include <CustomQt/QBytesToPrettyStringUtils.h>
 
-#include "models/tree_item_types.h"
 #include "models/item_data_roles.h"
+#include "models/tree_item_types.h"
+#include "rec_client_core/state.h"
 
+#include <Qt>
 #include <QFont>
+#include <QtTypes>
+#include <QString>
+
+#include <chrono>
+#include <cstdint>
+#include <string>
+#include <utility>
 
 ///////////////////////////////////////////
 // Constructor & Destructor

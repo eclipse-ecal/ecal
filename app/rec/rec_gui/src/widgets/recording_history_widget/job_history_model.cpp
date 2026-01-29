@@ -20,14 +20,28 @@
 
 #include "job_history_model.h"
 
+#include "CustomQt/QAbstractTreeItem.h"
+#include "CustomQt/QAbstractTreeModel.h"
 #include "models/tree_item_types.h"
+#include "rec_client_core/state.h"
+#include "rec_server_core/rec_server_types.h"
+#include "rec_server_core/status.h"
+#include "widgets/recording_history_widget/job_history_jobitem.h"
+#include "widgets/recording_history_widget/job_history_recorderitem.h"
+
+#include <algorithm>
+#include <chrono>
+#include <cstdint>
+#include <list>
+#include <string>
 
 #include <qecalrec.h>
 
+#include <Qt>
 #include <QList>
 #include <QSet>
-
-#include <algorithm>
+#include <QObject>
+#include <QVariant>
 
 ///////////////////////////////////////////
 // Constructor & Destructor

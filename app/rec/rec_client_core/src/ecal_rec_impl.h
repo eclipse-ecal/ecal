@@ -20,30 +20,31 @@
 
 #pragma once
 
-#include "frame.h"
+#include <ecal/ecal.h>
+#include <ecal/pubsub/subscriber.h>
 
 #include <chrono>
-#include <mutex>
+#include <cstdint>
 #include <list>
 #include <map>
+#include <memory>
+#include <mutex>
 #include <set>
-#include <thread>
+#include <shared_mutex>
+#include <string>
+#include <utility>
 
-#include <ecal_utils/ecal_utils.h>
-
+#include <rec_client_core/job_config.h>
+#include <rec_client_core/record_mode.h>
 #include <rec_client_core/state.h>
 #include <rec_client_core/topic_info.h>
-#include <rec_client_core/record_mode.h>
-#include <rec_client_core/job_config.h>
 #include <rec_client_core/upload_config.h>
+#include <rec_client_core/rec_error.h>
 
-#include "throughput_statistics.h"
-
-#include "job/record_job.h"
-
+#include "ecal/pubsub/types.h"
 #include "frame_buffer.h"
-
-#include <ecal/pubsub/subscriber.h>
+#include "job/record_job.h"
+#include "throughput_statistics.h"
 
 namespace eCAL
 {

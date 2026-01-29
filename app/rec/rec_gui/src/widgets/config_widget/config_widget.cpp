@@ -20,12 +20,23 @@
 
 #include "config_widget.h"
 
+#include <Qt>
+#include <QAbstractButton>
 #include <QDir>
 #include <QFileDialog>
 #include <QCheckBox>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QTextEdit>
+#include <QToolButton>
+#include <QtVersionChecks>
+#include <QWidget>
+
 #include "qecalrec.h"
 
 #include <EcalParser/EcalParser.h>
+#include <chrono>
+#include <string>
 
 ConfigWidget::ConfigWidget(QWidget *parent)
   : QWidget(parent)
