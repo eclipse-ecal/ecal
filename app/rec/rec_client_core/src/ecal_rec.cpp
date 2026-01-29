@@ -187,7 +187,7 @@ namespace eCAL
       return recorder_->GetSubscribedTopics();
     }
 
-    Throughput EcalRec::GetSubscriberThroughput()
+    Throughput EcalRec::GetSubscriberThroughput() const
     {
       return recorder_->GetSubscriberThroughput();
     }

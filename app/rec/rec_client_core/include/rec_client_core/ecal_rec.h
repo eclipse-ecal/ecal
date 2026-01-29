@@ -114,7 +114,7 @@ namespace eCAL
 
       std::set<std::string> GetSubscribedTopics() const;
 
-      Throughput GetSubscriberThroughput();
+      Throughput GetSubscriberThroughput() const;
 
     private:
       std::unique_ptr<EcalRecImpl> recorder_;

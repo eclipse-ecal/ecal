@@ -106,12 +106,12 @@ namespace eCAL
       size_t           bin_count_;
       std::vector<Bin> bins_;
 
-      size_t GetBinIndexForTimepoint(time_point_t time) const
+      [[nodiscard]] size_t GetBinIndexForTimepoint(time_point_t time) const
       {
         return (time.time_since_epoch() / bin_width_) % bin_count_;
       }
 
-      time_point_t GetTimePointForBinIndex(size_t index,time_point_t now) const
+      [[nodiscard]] time_point_t GetTimePointForBinIndex(size_t index, time_point_t now) const
       {
         const auto current_bin_index      = GetBinIndexForTimepoint(now);
         const auto current_bin_time_point = now - (now.time_since_epoch() % bin_width_);

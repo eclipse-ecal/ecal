@@ -187,7 +187,7 @@ QVariant JobHistoryRecorderItem::data(int column, Qt::ItemDataRole role) const
     {
       if (role == Qt::ItemDataRole::DisplayRole)
       {
-        bool display_throughput
+        const bool display_throughput
           =  (state_ == eCAL::rec::JobState::Recording)
               || (state_ == eCAL::rec::JobState::Flushing)
               || (write_throughput_.bytes_per_second_ > 0)

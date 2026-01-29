@@ -741,14 +741,14 @@ namespace eCAL
 
       {
         // Add to the subscriber statistics
-        std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
+        const std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
         subscriber_throughput_statistics_.AddFrame(data_.buffer_size);
       }
     }
 
     Throughput EcalRecImpl::GetSubscriberThroughput() const
     {
-      std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
+      const std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
       return subscriber_throughput_statistics_.GetThroughput();
     }
     //////////////////////////////////////

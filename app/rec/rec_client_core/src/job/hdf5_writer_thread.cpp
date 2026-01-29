@@ -220,7 +220,7 @@ namespace eCAL
             frame->clock_
           ))
           {
-            std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
+            const std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
             throughput_statistics_.AddFrame(static_cast<uint64_t>(frame->data_.size()));
           }
           else
@@ -286,7 +286,7 @@ namespace eCAL
       }
 
       {
-        std::lock_guard<std::mutex> throughput_statistics_lock_(throughput_statistics_mutex_);
+        const std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
         last_status_.write_throughput_ = throughput_statistics_.GetThroughput();
       }
 

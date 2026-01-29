@@ -131,7 +131,7 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
   {
     if (role == Qt::ItemDataRole::DisplayRole)
     {
-      auto combined_length = combinedLength();
+      const auto combined_length = combinedLength();
       return QString::number(std::chrono::duration_cast<std::chrono::duration<double>>(combined_length.first).count(), 'f', 1) + " s / "
        + QString::number(combined_length.second) + " frames";
     }
@@ -141,12 +141,12 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
   {
     if (role == Qt::ItemDataRole::DisplayRole)
     {
-      eCAL::rec::JobState combined_state = combinedJobState();
-      auto combined_writer_throughput    = combinedWriterThroughput();
-      auto combined_total_size_bytes     = combinedTotalSizeBytes();
-      auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
+      const eCAL::rec::JobState combined_state = combinedJobState();
+      const auto combined_writer_throughput    = combinedWriterThroughput();
+      const auto combined_total_size_bytes     = combinedTotalSizeBytes();
+      const auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
 
-      bool display_throughput
+      const bool display_throughput
         = (combined_state == eCAL::rec::JobState::Recording)
         || (combined_state == eCAL::rec::JobState::Flushing)
         || (combined_writer_throughput.bytes_per_second_ > 0)
@@ -165,8 +165,8 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
     }
     else if (role == ItemDataRoles::SortRole)
     {
-      auto combined_total_size_bytes     = combinedTotalSizeBytes();
-      auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
+      const auto combined_total_size_bytes     = combinedTotalSizeBytes();
+      const auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
       return static_cast<qint64>(combined_total_size_bytes - combined_unflushed_size_bytes);
     }
   }
