@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,13 +175,16 @@ namespace eCAL
       auto config = eCAL::GetConfiguration();
       config.publisher = config_;
 
+      SPublisherGlobalContext global_context;
+      global_context.registration_provider = g_registration_provider();
+      global_context.log_provider = g_log_provider();
+
       // create publisher
-      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config));
+      m_publisher_impl = std::make_shared<CPublisherImpl>(data_type_info_, BuildWriterAttributes(topic_name_, config), std::move(global_context));
       m_callback_adapter = std::make_shared<CPublisherEventCallbackAdapater>(m_publisher_impl);
 
       // register publisher
-      auto pubgate = g_pubgate();
-      if (pubgate) pubgate->Register(topic_name_, m_publisher_impl);
+      if (auto pubgate = g_pubgate(); pubgate) pubgate->Register(topic_name_, m_publisher_impl);
 
       // we made it :-)
       return(true);

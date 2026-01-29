@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +60,11 @@ namespace eCAL
     return reinterpret_cast<void *>(static_cast<char *>(address) + GetMemfileHeader(address)->message_queue_offset);
   }
 
-  CMemoryFileBroadcast::CMemoryFileBroadcast(): m_created(false), m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>()), m_event_queue(), m_last_timestamp(0)
+  CMemoryFileBroadcast::CMemoryFileBroadcast(std::shared_ptr<CMemFileMap> memfile_map_)
+  : m_created(false)
+  , m_broadcast_memfile(std::make_unique<eCAL::CMemoryFile>(std::move(memfile_map_)))
+  , m_event_queue()
+  , m_last_timestamp(0)
   {
   }
 

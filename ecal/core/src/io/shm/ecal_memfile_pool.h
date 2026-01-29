@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +45,18 @@ namespace eCAL
 {
   using MemFileDataCallbackT = std::function<size_t (const char *, size_t, long long, long long, long long, size_t)>;
 
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
   class CMemFileObserver
   {
   public:
-    CMemFileObserver();
+    CMemFileObserver(std::shared_ptr<CMemFileMap> memfile_map_, std::shared_ptr<Logging::CLogProvider> log_provider_);
     ~CMemFileObserver();
 
     CMemFileObserver(const CMemFileObserver&) = delete;
@@ -83,6 +89,8 @@ namespace eCAL
     EventHandleT            m_event_snd;
     EventHandleT            m_event_ack;
     CMemoryFile             m_memfile;
+
+    std::shared_ptr<Logging::CLogProvider> m_log_provider;
   };
 
   ////////////////////////////////////////
@@ -91,7 +99,7 @@ namespace eCAL
   class CMemFileThreadPool
   {
   public:
-    CMemFileThreadPool();
+    CMemFileThreadPool(std::shared_ptr<CMemFileMap> memfile_map_, std::shared_ptr<Logging::CLogProvider> log_provider_);
     ~CMemFileThreadPool();
 
     void Start();
@@ -111,5 +119,8 @@ namespace eCAL
     std::condition_variable                                   m_do_cleanup_cv;
     std::mutex                                                m_do_cleanup_mtx;
     std::thread                                               m_cleanup_thread;
+    
+    std::shared_ptr<CMemFileMap>                              m_memfile_map;
+    std::shared_ptr<Logging::CLogProvider>                    m_log_provider;
   };
 }

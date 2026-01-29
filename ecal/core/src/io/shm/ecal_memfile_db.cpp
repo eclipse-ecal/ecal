@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,32 +163,5 @@ namespace eCAL
     memfile::os::CheckFileSize(len_, false, *mem_file_info_);
 
     return(true);
-  }
-
-  namespace memfile
-  {
-    namespace db
-    {
-      bool AddFile(const std::string& name_, const bool create_, const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
-      {
-        auto memfile_map = g_memfile_map();
-        if (memfile_map) return memfile_map->AddFile(name_, create_, len_, mem_file_info_);
-        return false;
-      }
-
-      bool RemoveFile(const std::string& name_, const bool remove_)
-      {
-        auto memfile_map = g_memfile_map();
-        if (memfile_map) return memfile_map->RemoveFile(name_, remove_);
-        return false;
-      }
-
-      bool CheckFileSize(const size_t len_, std::shared_ptr<SMemFileInfo>& mem_file_info_)
-      {
-        auto memfile_map = g_memfile_map();
-        if (memfile_map) return memfile_map->CheckFileSize(len_, mem_file_info_);
-        return false;
-      }
-    }
   }
 }

@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,10 @@
 #endif
 #include "ecal_descgate.h"
 
+#include "readwrite/udp/ecal_reader_udp.h"
+#include "readwrite/tcp/ecal_reader_tcp.h"
+#include "readwrite/shm/ecal_reader_shm.h"
+
 #include <memory>
 
 namespace eCAL
@@ -60,7 +64,8 @@ namespace eCAL
   class CGlobals
   {
   public:
-    CGlobals();
+    static std::shared_ptr<CGlobals> instance();
+
     ~CGlobals();
 
     bool Initialize    ( unsigned int components_);
@@ -101,9 +106,19 @@ namespace eCAL
 #endif
     const std::shared_ptr<CDescGate>&                                     descgate()               { return descgate_instance; };
 
+    const std::shared_ptr<eCAL::CUDPReaderLayer>&                         udp_reader_layer()       { return m_udp_reader_layer_instance; };
+    const std::shared_ptr<eCAL::CTCPReaderLayer>&                         tcp_reader_layer()       { return m_tcp_reader_layer_instance; };
+    const std::shared_ptr<eCAL::CSHMReaderLayer>&                         shm_reader_layer()       { return m_shm_reader_layer_instance; };
+
   private:
-    bool                                                                  initialized;
-    unsigned int                                                          components;
+    CGlobals() = default;
+    CGlobals(const CGlobals&) = delete;
+    CGlobals& operator=(const CGlobals&) = delete;
+    inline static std::shared_ptr<CGlobals>                               m_instance;
+    inline static std::mutex                                              m_instance_mutex;
+
+    std::atomic<bool>                                                     initialized {false};
+    unsigned int                                                          components {0};
     std::shared_ptr<Logging::CLogProvider>                                log_provider_instance;
     std::shared_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
@@ -132,5 +147,8 @@ namespace eCAL
     
 #endif
     std::shared_ptr<CDescGate>                                            descgate_instance;
+    std::shared_ptr<eCAL::CUDPReaderLayer>                                m_udp_reader_layer_instance;
+    std::shared_ptr<eCAL::CTCPReaderLayer>                                m_tcp_reader_layer_instance;
+    std::shared_ptr<eCAL::CSHMReaderLayer>                                m_shm_reader_layer_instance;
   };
 }

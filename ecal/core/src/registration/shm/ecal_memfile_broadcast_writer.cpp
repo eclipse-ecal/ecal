@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +31,17 @@
 
 namespace eCAL
 {
+  CMemoryFileBroadcastWriter::CMemoryFileBroadcastWriter(std::shared_ptr<CMemFileMap> memfile_map_)
+    : m_memfile_map(std::move(memfile_map_))
+  {
+  }
+
   bool CMemoryFileBroadcastWriter::Bind(CMemoryFileBroadcast *memfile_broadcast)
   {
     if (m_bound) return false;
     m_memfile_broadcast = memfile_broadcast;
     m_event_id = CreateEventId();
-    m_payload_memfile = std::make_unique<CMemoryFile>();
+    m_payload_memfile = std::make_unique<CMemoryFile>(m_memfile_map);
     if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_event_id).c_str(), true, 1024))
     {
 #ifndef NDEBUG
@@ -56,7 +62,7 @@ namespace eCAL
 
     if ((m_payload_memfile->MaxDataSize() < size) || m_reset)
     {
-      auto payload_memfile = std::make_unique<CMemoryFile>();
+      auto payload_memfile = std::make_unique<CMemoryFile>(m_memfile_map);
       const auto event_id = CreateEventId();
       if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), true, size * 2))
       {

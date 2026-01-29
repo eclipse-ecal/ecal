@@ -34,10 +34,15 @@
 
 namespace eCAL
 {
+  namespace Logging
+  {
+    class CLogProvider;
+  }
+
   class CSubGate
   {
   public:
-    CSubGate();
+    CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_);
     ~CSubGate();
 
     void Start();
@@ -62,5 +67,7 @@ namespace eCAL
     using TopicNameSubscriberMapT = std::unordered_multimap<std::string, std::shared_ptr<CSubscriberImpl>>;
     std::shared_timed_mutex  m_topic_name_subscriber_mutex;
     TopicNameSubscriberMapT  m_topic_name_subscriber_map;
+
+    std::shared_ptr<Logging::CLogProvider> m_log_provider;
   };
 }

@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,20 @@ namespace eCAL
     auto config = eCAL::GetConfiguration();
     config.subscriber = config_;
 
+    eCAL::SSubscriberGlobalContext global_context;
+    
+    if (auto globals = g_globals(); globals)
+    {
+      global_context.registration_provider = globals->registration_provider();
+      global_context.log_provider          = globals->log_provider();
+      global_context.shm_layer             = globals->shm_reader_layer();
+      global_context.udp_layer             = globals->udp_reader_layer();
+      global_context.tcp_layer             = globals->tcp_reader_layer();
+    }
+    
+
     // create subscriber implementation
-    auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config));
+    auto subscriber_impl = std::make_shared<CSubscriberImpl>(data_type_info_, BuildReaderAttributes(topic_name_, config), global_context);
     m_subscriber_impl = subscriber_impl;
 
     // register subscriber

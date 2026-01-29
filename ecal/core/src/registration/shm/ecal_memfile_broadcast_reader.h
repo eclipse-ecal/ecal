@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +52,8 @@ namespace eCAL
       std::int64_t                  timestamp;
     };
   public:
+    CMemoryFileBroadcastReader(std::shared_ptr<CMemFileMap> memfile_map_);
+
     bool Bind(CMemoryFileBroadcast *memfile_broadcast);
     bool Unbind();
 
@@ -60,5 +63,6 @@ namespace eCAL
     std::unordered_map<std::uint64_t, SPayloadMemfile> m_payload_memfiles;
     MemfileBroadcastEventListT                         m_broadcast_event_list;
     bool                                               m_bound = false;
+    std::shared_ptr<CMemFileMap>                       m_memfile_map;
   };
 }

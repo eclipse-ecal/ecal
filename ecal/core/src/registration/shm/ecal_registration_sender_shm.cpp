@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +31,9 @@
 #include "serialization/ecal_serialize_sample_registration.h"
 
 
-eCAL::CRegistrationSenderSHM::CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_)
+eCAL::CRegistrationSenderSHM::CRegistrationSenderSHM(const Registration::SHM::SAttributes& attr_, std::shared_ptr<eCAL::CMemFileMap> memfile_map_)
+  : m_memfile_broadcast(memfile_map_)
+  , m_memfile_broadcast_writer(std::move(memfile_map_))
 {
   std::cout << "Shared memory monitoring is enabled (domain: " << attr_.domain << " - queue size: " << attr_.queue_size << ")" << '\n';
   m_memfile_broadcast.Create(attr_);

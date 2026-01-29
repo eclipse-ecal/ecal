@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,15 +63,5 @@ namespace eCAL
 
     // connection parameter from writer side
     virtual void SetConnectionParameter(SReaderLayerPar& par_) = 0;
-
-    static std::shared_ptr<T> Get()
-    {
-      static std::shared_ptr<T> layer = nullptr;
-      if (!layer)
-      {
-        layer = std::make_shared<T>();
-      }
-      return layer;
-    }
   };
 }

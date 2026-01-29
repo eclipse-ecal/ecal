@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ namespace eCAL
 {
   std::atomic<bool> CRegistrationProvider::m_created;
 
-  CRegistrationProvider::CRegistrationProvider(const Registration::SAttributes& attr_) :
-                    m_attributes(attr_)
+  CRegistrationProvider::CRegistrationProvider(SRegistrationProviderContext& context_) 
+    : m_context(std::move(context_))
   {
   }
 
@@ -68,24 +68,24 @@ namespace eCAL
     if(m_created) return;
 
 #if ECAL_CORE_REGISTRATION_SHM
-    if (m_attributes.transport_mode == Registration::eTransportMode::shm)
+    if (m_context.memfile_map && m_context.attributes.transport_mode == Registration::eTransportMode::shm)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_attributes));
+      m_reg_sender = std::make_unique<CRegistrationSenderSHM>(Registration::BuildSHMAttributes(m_context.attributes), m_context.memfile_map);
     } else
 #endif
-    if (m_attributes.transport_mode == Registration::eTransportMode::udp)
+    if (m_context.attributes.transport_mode == Registration::eTransportMode::udp)
     {
-      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_attributes));
+      m_reg_sender = std::make_unique<CRegistrationSenderUDP>(Registration::BuildUDPSenderAttributes(m_context.attributes));
     }
     else
     {
-      eCAL::Logging::Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
+      if (m_context.log_provider) m_context.log_provider->Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
       return;
     }
 
     // start cyclic registration thread
     m_reg_sample_snd_thread = std::make_shared<CCallbackThread>(std::bind(&CRegistrationProvider::RegisterSendThread, this));
-    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_attributes.refresh));
+    m_reg_sample_snd_thread->start(std::chrono::milliseconds(m_context.attributes.refresh));
 
     m_created = true;
   }
@@ -152,24 +152,20 @@ namespace eCAL
 
 #if ECAL_CORE_SUBSCRIBER
       // add subscriber registrations
-      auto subgate = g_subgate();
-      if (subgate) subgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.subgate) m_context.subgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_PUBLISHER
       // add publisher registrations
-      auto pubgate = g_pubgate();
-      if (pubgate) pubgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.pubgate) m_context.pubgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
 #if ECAL_CORE_SERVICE
       // add server registrations
-      auto servicegate = g_servicegate();
-      if (servicegate) servicegate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.servicegate) m_context.servicegate->GetRegistrations(m_send_thread_sample_list);
 
       // add client registrations
-      auto clientgate = g_clientgate();
-      if (clientgate) clientgate->GetRegistrations(m_send_thread_sample_list);
+      if (m_context.clientgate) m_context.clientgate->GetRegistrations(m_send_thread_sample_list);
 #endif
 
       // append applied samples list to sample list
