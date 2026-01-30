@@ -1,0 +1,14 @@
+.. _exhale_function_log_8h_1ac41d3c193623d4ad374f71172adf8333:
+
+Function eCAL::Logging::Log
+===========================
+
+- Defined in :ref:`file_ecal_core_include_ecal_log.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Logging::Log(eLogLevel, const std::string&)
+   :project: eCAL

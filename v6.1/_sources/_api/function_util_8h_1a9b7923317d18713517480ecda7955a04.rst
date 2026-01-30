@@ -1,0 +1,14 @@
+.. _exhale_function_util_8h_1a9b7923317d18713517480ecda7955a04:
+
+Function eCAL::Util::GeteCALLogDir
+==================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_util.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Util::GeteCALLogDir()
+   :project: eCAL

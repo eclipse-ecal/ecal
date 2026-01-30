@@ -1,0 +1,14 @@
+.. _exhale_define_os_8h_1a546b32f89f9cf15da312d39f6252f29e:
+
+Define ECAL_API_EXPORTED_MEMBER
+===============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_os.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ECAL_API_EXPORTED_MEMBER
+   :project: eCAL

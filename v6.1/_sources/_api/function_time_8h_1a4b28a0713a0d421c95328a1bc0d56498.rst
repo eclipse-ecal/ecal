@@ -1,0 +1,14 @@
+.. _exhale_function_time_8h_1a4b28a0713a0d421c95328a1bc0d56498:
+
+Function eCAL::Time::GetName
+============================
+
+- Defined in :ref:`file_ecal_core_include_ecal_time.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Time::GetName()
+   :project: eCAL

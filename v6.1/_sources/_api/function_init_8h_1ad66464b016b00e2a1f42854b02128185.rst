@@ -1,0 +1,14 @@
+.. _exhale_function_init_8h_1ad66464b016b00e2a1f42854b02128185:
+
+Function eCAL::Init::Configuration
+==================================
+
+- Defined in :ref:`file_ecal_core_include_ecal_init.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: eCAL::Init::Configuration()
+   :project: eCAL
