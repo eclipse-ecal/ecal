@@ -1,6 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,6 +52,7 @@ set(source_files
     src/monitoring_thread.cpp
     src/monitoring_thread.h
     src/proto_helpers.cpp
+    src/throughput_statistics.h
 
     src/addons/addon.cpp
     src/addons/addon.h

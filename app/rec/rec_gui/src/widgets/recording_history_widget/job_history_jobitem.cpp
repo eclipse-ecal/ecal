@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +22,29 @@
 
 #include "job_history_recorderitem.h"
 
-#include "models/tree_item_types.h"
 #include "models/item_data_roles.h"
+#include "models/tree_item_types.h"
+#include "rec_client_core/job_config.h"
+#include "rec_client_core/state.h"
 
+#include <CustomQt/QAbstractTreeItem.h>
 #include <CustomQt/QBytesToPrettyStringUtils.h>
 
 #include <qecalrec.h>
 
-#include <QTime>
+#include <algorithm>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <ctime>
+#include <map>
+
+#include <Qt>
 #include <QFont>
+#include <QTime>
+#include <set>
+#include <string>
+#include <utility>
 
 ///////////////////////////////////////////
 // Constructor & Destructor
@@ -115,9 +130,43 @@ QVariant JobHistoryJobItem::data(int column, Qt::ItemDataRole role) const
   {
     if (role == Qt::ItemDataRole::DisplayRole)
     {
-      auto combined_length = combinedLength();
+      const auto combined_length = combinedLength();
       return QString::number(std::chrono::duration_cast<std::chrono::duration<double>>(combined_length.first).count(), 'f', 1) + " s / "
        + QString::number(combined_length.second) + " frames";
+    }
+  }
+
+  else if (column == (int)Columns::DISK_WRITERS_INFORMATION)
+  {
+    if (role == Qt::ItemDataRole::DisplayRole)
+    {
+      const eCAL::rec::JobState combined_state = combinedJobState();
+      const auto combined_writer_throughput    = combinedWriterThroughput();
+      const auto combined_total_size_bytes     = combinedTotalSizeBytes();
+      const auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
+
+      const bool display_throughput
+        = (combined_state == eCAL::rec::JobState::Recording)
+        || (combined_state == eCAL::rec::JobState::Flushing)
+        || (combined_writer_throughput.bytes_per_second_ > 0)
+        || (combined_unflushed_size_bytes > 0);
+
+      QString display_string = bytesToPrettyString(combined_total_size_bytes - combined_unflushed_size_bytes);
+
+      if (display_throughput)
+      {
+        display_string = display_string
+          + " (" + bytesToPrettyString(combined_writer_throughput.bytes_per_second_) + "/s, "
+          + bytesToPrettyString(combined_unflushed_size_bytes) + " remaining)";
+      }
+
+      return display_string;
+    }
+    else if (role == ItemDataRoles::SortRole)
+    {
+      const auto combined_total_size_bytes     = combinedTotalSizeBytes();
+      const auto combined_unflushed_size_bytes = combinedUnflushedSizeBytes();
+      return static_cast<qint64>(combined_total_size_bytes - combined_unflushed_size_bytes);
     }
   }
 
@@ -359,6 +408,19 @@ std::pair<std::chrono::steady_clock::duration, int64_t> JobHistoryJobItem::combi
   return { duration, frame_count };
 }
 
+uint64_t JobHistoryJobItem::combinedTotalSizeBytes() const
+{
+  uint64_t byte_count(0);
+  for (int i = 0; i < childCount(); i++)
+  {
+    QAbstractTreeItem* tree_item = child(i);
+    if (tree_item->type() != (int)TreeItemType::JobHistoryRecorderItem)
+      continue;
+    byte_count += static_cast<JobHistoryRecorderItem*>(tree_item)->totalSizeBytes();
+  }
+  return byte_count;
+}
+
 int64_t JobHistoryJobItem::combinedUnflushedFrames() const
 {
   int64_t frame_count(0);
@@ -374,6 +436,36 @@ int64_t JobHistoryJobItem::combinedUnflushedFrames() const
   }
 
   return frame_count;
+}
+
+uint64_t JobHistoryJobItem::combinedUnflushedSizeBytes() const
+{
+  uint64_t unflushed_size_bytes(0);
+  for (int i = 0; i < childCount(); i++)
+  {
+    QAbstractTreeItem* tree_item = child(i);
+    if (tree_item->type() != (int)TreeItemType::JobHistoryRecorderItem)
+      continue;
+    unflushed_size_bytes += static_cast<JobHistoryRecorderItem*>(tree_item)->unflushedSizeBytes();
+  }
+  return unflushed_size_bytes;
+}
+
+eCAL::rec::Throughput JobHistoryJobItem::combinedWriterThroughput() const
+{
+  eCAL::rec::Throughput combined_writer_throughput;
+
+  for (int i = 0; i < childCount(); i++)
+  {
+    QAbstractTreeItem* tree_item = child(i);
+
+    if (tree_item->type() != (int)TreeItemType::JobHistoryRecorderItem)
+      continue;
+
+    combined_writer_throughput += static_cast<JobHistoryRecorderItem*>(tree_item)->writeThroughput();
+  }
+
+  return combined_writer_throughput;
 }
 
 eCAL::rec::UploadStatus JobHistoryJobItem::combinedUploadStatus() const

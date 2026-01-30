@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +20,27 @@
 
 #pragma once
 
+#include <Qt>
 #include <QAbstractItemModel>
+#include <QObject>
+#include <QVariant>
+#include <QIcon>
+#include <QStringList>
+
+#include <ecal/ecal.h>
+
+#include <chrono>
+#include <cstdint>
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <rec_client_core/state.h>
 #include <rec_server_core/rec_server_config.h>
 #include <rec_server_core/rec_server_types.h>
 
-#include <vector>
-#include <QIcon>
 
 class RecorderModel : public QAbstractItemModel
 {
@@ -166,6 +180,7 @@ private:
     bool                                                    time_error_warning_;
     std::pair<int64_t, std::chrono::steady_clock::duration> pre_buffer_length_;
     std::set<std::string>                                   subscribed_topics_;
+    eCAL::rec::Throughput                                   subscriber_throughput_;
     bool                                                    recording_;
     std::pair<bool, std::string>                            info_;
   };
