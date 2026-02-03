@@ -27,11 +27,11 @@ tclap
 
    * - **Repository**
 
-     - https://github.com/xguerin/tclap
+     - https://github.com/DAarno/tclap
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `v1.2.5 <https://github.com/xguerin/tclap/tree/v1.2.5>`_
+     - `v1.2.5 <https://github.com/DAarno/tclap/tree/v1.2.5>`_
 
    * - **Integration**
 
