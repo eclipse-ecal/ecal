@@ -290,7 +290,7 @@ eCAL makes use of the following external components:
 - **License**: MIT
 - **Copyright**: Copyright (c) 2003 Michael E. Smoot   Copyright (c) 2004 Daniel Aarno   Copyright (c) 2017 Google Inc.
 - **Homepage**: https://tclap.sourceforge.net/
-- **Repository**: https://github.com/DAarno/tclap.git
+- **Repository**: https://github.com/DAarno/tclap
 - **Included in**:
   - Git Submodule `/thirdparty/tclap/tclap`
   - Windows builds
