@@ -6,7 +6,7 @@
 	url = https://github.com/chriskohlhoff/asio.git
 [submodule "thirdparty/tclap"]
 	path = thirdparty/tclap/tclap
-	url = https://github.com/xguerin/tclap.git
+	url = https://github.com/DAarno/tclap.git
 [submodule "thirdparty/simpleini"]
 	path = thirdparty/simpleini/simpleini
 	url = https://github.com/brofield/simpleini.git
@@ -55,3 +55,4 @@
 [submodule "thirdparty/udpcap"]
 	path = thirdparty/udpcap/udpcap
 	url = https://github.com/eclipse-ecal/udpcap.git
+
