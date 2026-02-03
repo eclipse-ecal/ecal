@@ -72,8 +72,8 @@ namespace eCAL
 
     std::string         m_base_name;
     std::string         m_memfile_name;
-    CMemoryFile         m_memfile;
     SSyncMemoryFileAttr m_attr;
+    CMemoryFile         m_memfile;
     bool                m_created;
 
     struct SEventHandlePair

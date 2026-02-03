@@ -44,7 +44,7 @@ namespace eCAL
 
   CSubGate::CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_)
   : m_log_provider(std::move(log_provider_))
-  {};
+  {}
 
   CSubGate::~CSubGate()
   {
