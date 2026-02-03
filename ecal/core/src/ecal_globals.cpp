@@ -180,20 +180,6 @@ namespace eCAL
     }
 #endif // ECAL_CORE_TIMEPLUGIN
 
-#if ECAL_CORE_MONITORING
-    /////////////////////
-    // MONITORING
-    /////////////////////
-    if ((components_ & Init::Monitoring) != 0u)
-    {
-      if (!monitoring_instance)
-      {
-        monitoring_instance = std::make_shared<CMonitoring>(log_provider_instance);
-        new_initialization = true;
-      }
-    }
-#endif // ECAL_CORE_MONITORING
-
 #if ECAL_CORE_REGISTRATION
     const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
     /////////////////////
@@ -226,6 +212,21 @@ namespace eCAL
       new_initialization = true;
     }
 #endif // ECAL_CORE_REGISTRATION
+
+#if ECAL_CORE_MONITORING
+    /////////////////////
+    // MONITORING
+    /////////////////////
+    if ((components_ & Init::Monitoring) != 0u)
+    {
+      if (!monitoring_instance)
+      {
+        monitoring_instance = std::make_shared<CMonitoring>(log_provider_instance, registration_receiver_instance);
+        new_initialization = true;
+      }
+    }
+#endif // ECAL_CORE_MONITORING
+
 
     m_shm_reader_layer_instance = std::make_shared<eCAL::CSHMReaderLayer>(subgate_instance, memfile_pool_instance);
     m_udp_reader_layer_instance = std::make_shared<eCAL::CUDPReaderLayer>(subgate_instance);
