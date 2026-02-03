@@ -208,18 +208,6 @@ jobs:
       shell: cmd
       working-directory: ${{ runner.workspace }}/_build/complete
 
-    - name: Build Python 3.9 Wheel
-      run: |
-        mkdir ".venv_39"
-        py -3.9 -m venv ".venv_39"
-        CALL ".venv_39\Scripts\activate.bat"
-        pip install wheel
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=FIRST
-        cmake %GITHUB_WORKSPACE% -G "Visual Studio 17 2022" -A x64 -T v142 -DPython_FIND_VIRTUALENV=ONLY
-        cmake --build . --target create_python_wheel --config Release
-      shell: cmd
-      working-directory: ${{ runner.workspace }}/_build/complete
-
 #    - name: Build Documentation C
 #      run: cmake --build . --target documentation_c
 #      working-directory: ${{ runner.workspace }}/_build
