@@ -42,7 +42,7 @@ namespace eCAL
     {
       TopicInfoMap topic_info_snapshot;
       std::set<STopicId> publisher_ids;
-      auto got_publisher_ids = eCAL::Registration::GetPublisherIDs(publisher_ids);
+      std::ignore = eCAL::Registration::GetPublisherIDs(publisher_ids);
 
       for (const auto& publisher_id : publisher_ids)
       {
