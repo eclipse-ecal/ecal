@@ -41,9 +41,10 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_)
+  CMonitoringImpl::CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver)
   : m_init(false)
-  , m_log_provider(log_provider_)
+  , m_log_provider(std::move(log_provider_))
+  , m_registration_receiver(std::move(registration_receiver))
   {
   }
 
@@ -52,10 +53,9 @@ namespace eCAL
     if (m_init) return;
 
     // utilize registration receiver to enrich monitor information
-    auto registration_receiver = g_registration_receiver();
-    if (registration_receiver)
+    if (m_registration_receiver)
     {
-      registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
+      m_registration_receiver->SetCustomApplySampleCallback("monitoring", [this](const auto& sample_){this->ApplySample(sample_, tl_none);});
       m_init = true;
     }
   }
@@ -63,10 +63,9 @@ namespace eCAL
   void CMonitoringImpl::Destroy()
   {
     // stop registration receiver utilization to enrich monitor information
-    auto registration_receiver = g_registration_receiver();
-    if (registration_receiver)
+    if (m_registration_receiver)
     {
-      registration_receiver->RemCustomApplySampleCallback("monitoring");
+      m_registration_receiver->RemCustomApplySampleCallback("monitoring");
       m_init = false;
     }
   }
