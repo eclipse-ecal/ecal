@@ -43,8 +43,8 @@ namespace eCAL
   ////////////////////////////////////////
   CMonitoringImpl::CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver)
   : m_init(false)
-  , m_log_provider(log_provider_)
-  , m_registration_receiver(registration_receiver)
+  , m_log_provider(std::move(log_provider_))
+  , m_registration_receiver(std::move(registration_receiver))
   {
   }
 
