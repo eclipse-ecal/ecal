@@ -41,13 +41,15 @@ namespace eCAL
   {
     class CLogProvider;
   }
+  class CRegistrationReceiver;
+
   ////////////////////////////////////////
   // Monitoring Declaration
   ////////////////////////////////////////
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_);
+    CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver);
     ~CMonitoringImpl() = default;
 
     void Create();
@@ -138,5 +140,6 @@ namespace eCAL
     SClientMap                                m_client_map;
     
     std::shared_ptr<Logging::CLogProvider>    m_log_provider;
+    std::shared_ptr<CRegistrationReceiver>    m_registration_receiver;
   };
 }
