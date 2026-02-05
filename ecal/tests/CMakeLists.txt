@@ -53,3 +53,7 @@ endif()
 if(ECAL_CORE_SERVICE)
   add_subdirectory(cpp/clientserver_test)
 endif()
+
+if (ECAL_CORE_MONITORING)
+  add_subdirectory(cpp/monitoring_test)
+endif()
