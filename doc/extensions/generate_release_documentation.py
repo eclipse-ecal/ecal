@@ -20,6 +20,7 @@ ubuntu_default_python_version_dict = \
 # eCAL installers only use the codename in the filename, so we need to map them to a semantic version.
 ubuntu_codename_dict = \
 {
+    "resolute":semantic_version.Version("26.4.0"),
     "noble":   semantic_version.Version("24.4.0"),
     "jammy":   semantic_version.Version("22.4.0"),
     "focal":   semantic_version.Version("20.4.0"),
