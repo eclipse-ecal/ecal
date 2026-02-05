@@ -30,14 +30,11 @@
 #include <string>
 #include <thread>
 
-enum {
-  CMN_MONITORING_TIMEOUT_MS = (5000 + 100),
-  CMN_REGISTRATION_REFRESH_MS = (1000)
-};
+constexpr int CMN_REGISTRATION_REFRESH_MS = 1000;
 
 void AssertMonitoringHasOwnProcess(const eCAL::Monitoring::SMonitoring& monitoring)
 {
-  int process_id = eCAL::Process::GetProcessID();
+  const int process_id = eCAL::Process::GetProcessID();
 
   for (const auto& proc : monitoring.processes)
   {
@@ -77,7 +74,7 @@ void AssertMonitoringHasSubscriber(const eCAL::Monitoring::SMonitoring& monitori
   FAIL() << "Could not find subscriber in monitoring";
 }
 
-void AssertMonitoringHasServer(const eCAL::Monitoring::SMonitoring& monitoring, const eCAL::SServiceId server_id, int call_counter)
+void AssertMonitoringHasServer(const eCAL::Monitoring::SMonitoring& monitoring, const eCAL::SServiceId& server_id, int call_counter)
 {
   for (const auto& server : monitoring.servers)
   {
@@ -91,7 +88,7 @@ void AssertMonitoringHasServer(const eCAL::Monitoring::SMonitoring& monitoring, 
   FAIL() << "Could not find server in monitoring";
 }
 
-void AssertMonitoringHasClient(const eCAL::Monitoring::SMonitoring& monitoring, const eCAL::SServiceId client_id, int call_counter)
+void AssertMonitoringHasClient(const eCAL::Monitoring::SMonitoring& monitoring, const eCAL::SServiceId& client_id, int call_counter)
 {
   for (const auto& client : monitoring.clients)
   {
@@ -114,7 +111,7 @@ TEST(core_cpp_monitoring, MonitoringNotActivatedByDefault)
   eCAL::Initialize("core_cpp_monitoring_monitoring_not_activated");
 
   eCAL::Monitoring::SMonitoring mon;
-  bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
+  const bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
 
   ASSERT_FALSE(got_monitoring) << "GetMonitoring should fail when monitoring is not activated by default";
 
@@ -132,7 +129,7 @@ TEST(core_cpp_monitoring, OwnProcessInMonitoring)
   std::this_thread::sleep_for(std::chrono::milliseconds(2 * CMN_REGISTRATION_REFRESH_MS));
 
   eCAL::Monitoring::SMonitoring mon;
-  bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
+  const bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
   ASSERT_TRUE(got_monitoring) << "GetMonitoring failed";
   AssertMonitoringHasOwnProcess(mon);
 
@@ -153,7 +150,7 @@ TEST(core_cpp_monitoring, PublisherSubscriberInMonitoring)
   std::this_thread::sleep_for(std::chrono::milliseconds(2 * CMN_REGISTRATION_REFRESH_MS));
 
   eCAL::Monitoring::SMonitoring mon;
-  bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
+  const bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
   ASSERT_TRUE(got_monitoring) << "GetMonitoring failed after delay";
   AssertMonitoringHasPublisher(mon, pub.GetTopicId(), 2);
   AssertMonitoringHasSubscriber(mon, sub.GetTopicId(), 2);
@@ -183,7 +180,7 @@ TEST(core_cpp_monitoring, ClientServerInMonitoring)
   std::this_thread::sleep_for(std::chrono::milliseconds(2 * CMN_REGISTRATION_REFRESH_MS));
 
   eCAL::Monitoring::SMonitoring mon;
-  bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
+  const bool got_monitoring = eCAL::Monitoring::GetMonitoring(mon);
   ASSERT_TRUE(got_monitoring) << "GetMonitoring failed after delay";
   AssertMonitoringHasServer(mon, server.GetServiceId(), 2);
   AssertMonitoringHasClient(mon, client.GetServiceId(), 2);
