@@ -57,3 +57,7 @@ ecal_install_time_plugin(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib/ecaltime)
 set_property(TARGET ${PROJECT_NAME} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/${ECAL_TIME_PLUGIN_DIR})
+
+if (ECAL_BUILD_TESTS)
+add_subdirectory(tests)
+endif()
