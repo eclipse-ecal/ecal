@@ -178,30 +178,6 @@ namespace
     
   #endif
   }
-
-  std::string getLibraryPath(const eCAL::Util::IDirManager& dir_manager_) 
-  {
-    std::string return_path = {};
-  #ifdef ECAL_OS_WINDOWS
-    
-    HMODULE hModule = NULL;
-    char path[MAX_PATH];
-    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)getLibraryPath, &hModule);
-    GetModuleFileName(hModule, path, sizeof(path));
-    return_path = dir_manager_.getDirectoryPath(path);
-  
-  #elif defined(ECAL_OS_LINUX)
-    
-    Dl_info dl_info;
-    if (dladdr((void *)getLibraryPath, &dl_info)) 
-    {
-      return_path = dir_manager_.getDirectoryPath(dl_info.dli_fname);
-    }
-
-  #endif
-
-    return return_path;
-  }
 }
 
 namespace eCAL
@@ -358,11 +334,6 @@ namespace eCAL
         
       return eCALPlatformSpecificFolder(system_dir, ECAL_FOLDER_NAME_LINUX);
     }
-
-    std::string DirProvider::eCALLibraryDir(const Util::IDirManager& dir_manager_) const
-    {
-      return getLibraryPath(dir_manager_);
-    }
   } // namespace Util
 
   namespace Config
@@ -431,15 +402,6 @@ namespace eCAL
       // precedence 3: eCAL data system path 
       // -----------------------------------------------------------
       ecal_default_paths.emplace_back(dir_provider_.eCALDataSystemDir(dir_manager_));
-
-      // -----------------------------------------------------------
-      // precedence 4: library path
-      // -----------------------------------------------------------
-      const std::string library_dir = dir_provider_.eCALLibraryDir(dir_manager_);
-      if (!library_dir.empty())
-      {
-        ecal_default_paths.emplace_back(buildPath(library_dir, ECAL_FOLDER_RELATIVE_ETC));
-      }
 
       return ecal_default_paths;
     }
