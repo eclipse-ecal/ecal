@@ -267,15 +267,19 @@ namespace eCAL
     if (servicegate_instance && ((components_ & Init::Service) != 0u))      servicegate_instance->Start();
     if (clientgate_instance && ((components_ & Init::Service) != 0u))       clientgate_instance->Start();
 #endif
-#if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))        timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
-#endif
 #if ECAL_CORE_MONITORING
     if (monitoring_instance && ((components_ & Init::Monitoring) != 0u))    monitoring_instance->Start();
 #endif
     
     components  |= components_;
     initialized.store(true);
+
+    // eCAL needs to be marked as initialized, so that the timegate can register 
+    // possible subscribers.
+    // This is very fragile, and we should think about how it can be reworked
+#if ECAL_CORE_TIMEPLUGIN
+    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))        timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
+#endif
 
     return new_initialization;
   }
@@ -319,6 +323,12 @@ namespace eCAL
 
   bool CGlobals::Finalize()
   {
+    // The timegate needs to be stopped first, 
+    // but eCAL still treated as running
+#if ECAL_CORE_TIMEPLUGIN
+    if (timegate_instance)               timegate_instance->Stop();
+#endif
+
     // We expect true to return, otherwise intialization was not done or
     // another call to finalize is already in progress.
     if (!initialized.exchange(false)) return false;
@@ -326,9 +336,6 @@ namespace eCAL
     // start destruction
 #if ECAL_CORE_MONITORING
     if (monitoring_instance)             monitoring_instance->Stop();
-#endif
-#if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance)               timegate_instance->Stop();
 #endif
 #if ECAL_CORE_SERVICE
     // The order here is EXTREMELY important! First, the actual service
