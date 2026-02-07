@@ -18,7 +18,7 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(time)
+project(ecal_time)
 
 find_package(eCAL REQUIRED)
 
