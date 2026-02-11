@@ -539,7 +539,7 @@ endif()
 #endif()
 
 # Protobuf
-if(ECAL_CORE_USE_PROTOBUF)
+if(ECAL_USE_PROTOBUF)
   set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${ECAL_BUILD_SAMPLES})
   set(ECAL_PROTOBUF_BUILD_TESTS                                                                          ${ECAL_BUILD_TESTS})
   add_subdirectory(serialization/protobuf)
