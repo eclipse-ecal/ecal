@@ -21,7 +21,6 @@ cmake_minimum_required(VERSION 3.15)
 project(hello_measurement)
 
 find_package(eCAL REQUIRED)
-find_package(Protobuf REQUIRED)
 
 macro(create_measurement_sample target_name sample_sources)
   ecal_add_sample(${target_name} ${sample_sources})
