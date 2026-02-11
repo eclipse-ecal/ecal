@@ -361,7 +361,7 @@ endif()
 # --------------------------------------------------------
 # ecal app protobuf interface
 # --------------------------------------------------------
-if(ECAL_CORE_USE_PROTOBUF)
+if(ECAL_USE_PROTOBUF)
   add_subdirectory(app/app_pb)
 endif()
 
