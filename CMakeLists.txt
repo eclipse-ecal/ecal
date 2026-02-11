@@ -183,6 +183,7 @@ option(ECAL_USE_CURL                                "Build with CURL (i.e. uploa
 option(ECAL_USE_FTXUI                               "Platform supports FTXUI library. Requires C++17 and up."           ON)
 
 # Serialization format support
+option(ECAL_USE_PROTOBUF                            "Platform supports protobuf library"                                ON)
 option(ECAL_USE_CAPNPROTO                           "Platform supports Cap'n Proto library"                            OFF)
 option(ECAL_USE_FLATBUFFERS                         "Platform supports flatbuffers library"                            OFF)
 option(ECAL_USE_MESSAGEPACK                         "Platform supports messagepack library"                            OFF)
@@ -209,7 +210,7 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                     "Use native mutex with monot
 # --------------------------------------------------------
 # ecal core configuration
 # --------------------------------------------------------
-set(ECAL_CORE_USE_PROTOBUF                                                                                              ON)
+set(ECAL_CORE_USE_PROTOBUF                                                                            ${ECAL_USE_PROTOBUF})
 if (CMAKE_CROSSCOMPILING)
 set(ECAL_CORE_GENERATE_PBFTAGS                                                                                         OFF)
 else()
@@ -360,7 +361,9 @@ endif()
 # --------------------------------------------------------
 # ecal app protobuf interface
 # --------------------------------------------------------
-add_subdirectory(app/app_pb)
+if(ECAL_USE_PROTOBUF)
+  add_subdirectory(app/app_pb)
+endif()
 
 # --------------------------------------------------------
 # ecal core
@@ -416,6 +419,7 @@ if(ECAL_USE_HDF5)
 endif()
 add_subdirectory(contrib/measurement/base)
 
+
 # --------------------------------------------------------
 # ecal core python binding
 # --------------------------------------------------------
@@ -436,6 +440,10 @@ if(ECAL_BUILD_C_BINDING)
   set(ECAL_C_BUILD_SAMPLES  ${ECAL_BUILD_SAMPLES})
   set(ECAL_C_BUILD_TESTS    ${ECAL_BUILD_TESTS})
   add_subdirectory(lang/c)
+endif()
+
+if(ECAL_BUILD_APPS AND NOT ECAL_USE_PROTOBUF)
+  message(FATAL_ERROR "Invalid CMake option: ECAL_BUILD_APPS has to be configured with ECAL_USE_PROTOBUF enabled.")
 endif()
 
 # --------------------------------------------------------
@@ -531,9 +539,11 @@ endif()
 #endif()
 
 # Protobuf
-set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${ECAL_BUILD_SAMPLES})
-set(ECAL_PROTOBUF_BUILD_TESTS                                                                          ${ECAL_BUILD_TESTS})
-add_subdirectory(serialization/protobuf)
+if(ECAL_USE_PROTOBUF)
+  set(ECAL_PROTOBUF_BUILD_SAMPLES                                                                      ${ECAL_BUILD_SAMPLES})
+  set(ECAL_PROTOBUF_BUILD_TESTS                                                                          ${ECAL_BUILD_TESTS})
+  add_subdirectory(serialization/protobuf)
+endif()
 
 # String
 set(ECAL_STRING_BUILD_SAMPLES                                                                        ${ECAL_BUILD_SAMPLES})
@@ -627,6 +637,7 @@ message(STATUS "CMAKE_EXPORT_COMPILE_COMMANDS                       : ${CMAKE_EX
 message(STATUS "ECAL_USE_HDF5                                       : ${ECAL_USE_HDF5}")
 message(STATUS "ECAL_USE_QT                                         : ${ECAL_USE_QT}")
 message(STATUS "ECAL_USE_CURL                                       : ${ECAL_USE_CURL}")
+message(STATUS "ECAL_USE_PROTOBUF                                   : ${ECAL_USE_PROTOBUF}")
 message(STATUS "ECAL_USE_CAPNPROTO                                  : ${ECAL_USE_CAPNPROTO}")
 message(STATUS "ECAL_USE_FLATBUFFERS                                : ${ECAL_USE_FLATBUFFERS}")
 message(STATUS "ECAL_USE_FTXUI                                      : ${ECAL_USE_FTXUI}")
