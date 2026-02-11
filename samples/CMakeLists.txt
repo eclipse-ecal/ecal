@@ -34,7 +34,7 @@ add_subdirectory(cpp/measurement/measurement_write)
 endif(ECAL_USE_HDF5)
 
 # services
-if(ECAL_CORE_USE_PROTOBUF)
+if(ECAL_USE_PROTOBUF)
   add_subdirectory(cpp/services/ecalplayer_client)
   if(ECAL_USE_QT)
     add_subdirectory(cpp/services/ecalplayer_gui_client)
