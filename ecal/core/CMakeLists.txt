@@ -452,6 +452,10 @@ if(ECAL_CORE_TIMEPLUGIN)
   list(APPEND ecal_time_src
       src/time/ecal_timegate.cpp
       src/time/ecal_timegate.h
+      src/time/ecal_time_base.h
+      src/time/ecal_time_localtime.h
+      src/time/ecal_time_plugin.cpp
+      src/time/ecal_time_plugin.h
   )
 endif()
 
@@ -680,7 +684,6 @@ set(ECAL_CORE_FEATURES
   ECAL_CORE_PUBLISHER
   ECAL_CORE_SUBSCRIBER
   ECAL_CORE_SERVICE
-  ECAL_CORE_TIMEGATE
   ECAL_CORE_TIMEPLUGIN
   ECAL_CORE_REGISTRATION_SHM
   ECAL_CORE_TRANSPORT_UDP
@@ -712,6 +715,7 @@ target_link_libraries(ecal_core_private
     $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
     $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
+    $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>

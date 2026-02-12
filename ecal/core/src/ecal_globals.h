@@ -31,7 +31,9 @@
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
 #endif 
+#if ECAL_CORE_TIMEPLUGIN
 #include "time/ecal_timegate.h"
+#endif
 #include "logging/ecal_log_provider.h"
 #include "logging/ecal_log_receiver.h"
 #if ECAL_CORE_MONITORING

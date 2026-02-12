@@ -23,52 +23,34 @@
 
 #pragma once
 
-#include <ecal/ecal.h>
-
-#include "ecal_global_accessors.h"
-
-#include <atomic>
+#include <memory>
 #include <string>
 
-#ifdef ECAL_OS_WINDOWS
-
-#include "ecal_win_main.h"
-
-typedef int       (__cdecl *etime_initialize)           (void);
-typedef int       (__cdecl *etime_finalize)             (void);
-typedef long long (__cdecl *etime_get_nanoseconds)      (void);
-typedef int       (__cdecl *etime_set_nanoseconds)      (long long time_);
-typedef int       (__cdecl *etime_is_synchronized)      (void);
-typedef int       (__cdecl *etime_is_master)            (void);
-typedef int       (__cdecl *etime_sleep_for_nanoseconds)(long long duration_nsecs_);
-typedef void      (__cdecl *etime_get_status)           (int*, char*, const int);
-
-#endif // ECAL_OS_WINDOWS
-
-#ifdef ECAL_OS_LINUX
-typedef int       (*etime_initialize)           (void);
-typedef int       (*etime_finalize)             (void);
-typedef long long (*etime_get_nanoseconds)      (void);
-typedef int       (*etime_set_nanoseconds)      (long long time_);
-typedef int       (*etime_is_synchronized)      (void);
-typedef int       (*etime_is_master)            (void);
-typedef int       (*etime_sleep_for_nanoseconds)(long long duration_nsecs_);
-typedef void      (*etime_get_status)           (int*, char*, const int);
-#endif //ECAL_OS_LINUX
-
+#include "ecal_time_plugin.h"
 
 namespace eCAL
 {
+  class CTimePlugin;
+
   class CTimeGate
   {
   public:
+    static std::shared_ptr<CTimeGate> CreateTimegate();
+
+    // TODO: these need to be removed
     enum eTimeSyncMode { none, realtime, replay };
 
-    CTimeGate();
+  private:
+    CTimeGate(CTimePlugin&& time_plugin, std::string plugin_name);
+
+  public:
     ~CTimeGate();
 
-    void Start(enum eTimeSyncMode sync_mode_);
-    void Stop();
+    CTimeGate(const CTimeGate&) = delete;
+    CTimeGate& operator=(const CTimeGate&) = delete;
+
+    CTimeGate(CTimeGate&&) noexcept = default;
+    CTimeGate& operator=(CTimeGate&&) = delete;
 
     const std::string& GetName() const;
 
@@ -83,54 +65,10 @@ namespace eCAL
     void SleepForNanoseconds(long long duration_nsecs_);
 
     void GetStatus(int& error_, std::string* status_message_);
-    bool IsValid();
 
-    eTimeSyncMode GetSyncMode() { return(m_sync_mode); };
+    eTimeSyncMode GetSyncMode() { return(eTimeSyncMode::realtime); };
 
-  protected:
-    static std::atomic<bool>  m_created;
-    std::string               m_time_sync_modname;
-    std::atomic<bool>         m_is_initialized_rt;
-    std::atomic<bool>         m_is_initialized_replay;
-    std::atomic<bool>         m_successfully_loaded_rt;
-    std::atomic<bool>         m_successfully_loaded_replay;
-    eTimeSyncMode             m_sync_mode;
-
-    struct STimeDllInterface
-    {
-      STimeDllInterface() :
-        module_handle(nullptr),
-        module_name(),
-        etime_initialize_ptr(nullptr),
-        etime_finalize_ptr(nullptr),
-        etime_get_nanoseconds_ptr(nullptr),
-        etime_set_nanoseconds_ptr(nullptr),
-        etime_is_synchronized_ptr(nullptr),
-        etime_is_master_ptr(nullptr),
-        etime_sleep_for_nanoseconds_ptr(nullptr),
-        etime_get_status_ptr(nullptr)
-      {
-      }
-
-#ifdef ECAL_OS_WINDOWS
-      HINSTANCE                   module_handle;
-#else // ECAL_OS_WINDOWS
-      void*                       module_handle;
-#endif // ECAL_OS_WINDOWS
-
-      std::string                 module_name;
-      etime_initialize            etime_initialize_ptr;
-      etime_finalize              etime_finalize_ptr;
-      etime_get_nanoseconds       etime_get_nanoseconds_ptr;
-      etime_set_nanoseconds       etime_set_nanoseconds_ptr;
-      etime_is_synchronized       etime_is_synchronized_ptr;
-      etime_is_master             etime_is_master_ptr;
-      etime_sleep_for_nanoseconds etime_sleep_for_nanoseconds_ptr;
-      etime_get_status            etime_get_status_ptr;
-    };
-    bool LoadModule(const std::string& interface_name_, STimeDllInterface& interface_);
-
-    STimeDllInterface        m_time_sync_rt;
-    STimeDllInterface        m_time_sync_replay;
+    CTimePlugin m_time_plugin;
+    std::string m_plugin_name;
   };
 }

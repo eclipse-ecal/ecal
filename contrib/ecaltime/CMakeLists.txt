@@ -16,6 +16,17 @@
 #
 # ========================= eCAL LICENSE =================================
 
+add_library(ecaltime INTERFACE)
+target_sources(ecaltime 
+  INTERFACE
+    FILE_SET ecaltime_headers
+    TYPE HEADERS
+    BASE_DIRS
+      ./include
+    FILES
+      ./include/ecaltime.h
+)
+
 if(ECAL_USE_PROTOBUF)
   add_subdirectory(ecaltime_pb)
   add_subdirectory(simtime)
