@@ -69,9 +69,9 @@ namespace EcalUtils
     template <typename T>
     T SymbolOrNone(const char* name) const noexcept
     {
-      auto r = LoadSymbol<T>(name);
-      if (std::holds_alternative<T>(r))
-        return std::get<T>(r);
+      auto symbol_or_error = LoadSymbol<T>(name);
+      if (std::holds_alternative<T>(symbol_or_error))
+        return std::get<T>(symbol_or_error);
       return nullptr;
     }
 
