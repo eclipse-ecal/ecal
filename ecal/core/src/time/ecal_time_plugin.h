@@ -38,17 +38,19 @@ namespace eCAL
     {
       enum class Code
       {
-        InvalidArgument,
-        LoadFailed,
+        InvalidArgument,        /* An empty path was passed to loading the library */
+        LoadFailed,             /* Plugin or dependent shared libraries could not be loaded */
         PlatformError,
-        IncompleteAPI
+        IncompleteAPI,          /* Plugin has been loaded, but not all symbols were found */
+        InitializationFailed    /* Plugin has been loaded, but initilization failed */
       };
 
       Code code{ Code::PlatformError };
       std::string message;
     };
 
-    // Path handling is done outside: caller passes the exact path to try.
+    // Factory method to try and load a given plugin
+    // Loading of the plugin can fail for serveral reasons, as indicated by the error code.
     static std::variant<CTimePlugin, Error> LoadFromPath(std::string full_path) noexcept;
 
     CTimePlugin(const CTimePlugin&) = delete;
@@ -72,6 +74,7 @@ namespace eCAL
     void GetStatus(int& error_, std::string* const status_message_) const override;
 
   private:
+    /* Structure to enable calling into the plugin */
     struct Api
     {
       decltype(&etime_initialize)            Initialize = nullptr;

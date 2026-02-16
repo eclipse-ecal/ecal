@@ -140,6 +140,11 @@ namespace eCAL
           eCAL::Logging::Log(Logging::log_level_warning, "eCAL time sync plugin API incomplete for plugin at path: " + path + ". Error: " + error.message + " Falling back to ecaltime-localtime.");
           return nullptr;
         }
+        else if (error.code == CTimePlugin::Error::Code::InitializationFailed)
+        {
+          eCAL::Logging::Log(Logging::log_level_warning, "eCAL time sync plugin at " + path + " could not be initialized. " + error.message + " Falling back to ecaltime-localtime.");
+          return nullptr;
+        }
       }
     }
     eCAL::Logging::Log(Logging::log_level_warning, "Failed to load eCAL time sync plugin " + module_name + ". Shared library (or dependencies) not found. Falling back to ecaltime-localtime.");

@@ -70,7 +70,6 @@ bool eCAL::CSimTime::finalize()
     return false;
   }
 #else
-  //sim_time_subscriber.reset();
   return true;
 #endif
 }

@@ -19,6 +19,7 @@
 
 #include "ecal_time_plugin.h"
 
+#include <array>
 #include <sstream>
 
 namespace
@@ -34,7 +35,6 @@ namespace
     case DC::InvalidArgument: mapped = PC::InvalidArgument; break;
     case DC::LoadFailed:      mapped = PC::LoadFailed;      break;
     case DC::SymbolNotFound:  mapped = PC::IncompleteAPI;   break;
-    case DC::PlatformError:   mapped = PC::PlatformError;   break;
     default:                  mapped = PC::PlatformError;   break;
     }
 
@@ -108,7 +108,10 @@ eCAL::CTimePlugin::LoadApi(const EcalUtils::DynamicLibrary& lib) noexcept
   return api;
 }
 
-
+// In general, it follows the following steps, and continues if the previous step was successful.
+// 1. Load the dynamic library. 
+// 2. Load all symbols which are relevant for the time plugin
+// 3. Initialize the time plugin
 std::variant<eCAL::CTimePlugin, eCAL::CTimePlugin::Error> eCAL::CTimePlugin::LoadFromPath(std::string full_path) noexcept
 {
   if (full_path.empty())
@@ -124,16 +127,20 @@ std::variant<eCAL::CTimePlugin, eCAL::CTimePlugin::Error> eCAL::CTimePlugin::Loa
   if (std::holds_alternative<eCAL::CTimePlugin::Error>(api_or_error))
     return std::get<eCAL::CTimePlugin::Error>(std::move(api_or_error));
 
-  Api api = std::get<Api>(std::move(api_or_error));
+  const Api api = std::get<Api>(std::move(api_or_error));
+  int plugin_initialization_result = api.Initialize();
+  
+  if (plugin_initialization_result != 0)
+    return eCAL::CTimePlugin::Error{ eCAL::CTimePlugin::Error::Code::InitializationFailed, std::string{"Initialization of plugin failed with error code "} + std::to_string(plugin_initialization_result) };
+
   return eCAL::CTimePlugin(std::move(lib), api, std::move(full_path));
 }
 
 eCAL::CTimePlugin::CTimePlugin(EcalUtils::DynamicLibrary&& lib, Api api, std::string loaded_path) noexcept
   : loaded_library_(std::move(lib))
-  , api_(std::move(api))
+  , api_(api)
   , loaded_path_(std::move(loaded_path))
 {
-  api_.Initialize();
 }
 
 eCAL::CTimePlugin::CTimePlugin(CTimePlugin&& other) noexcept
@@ -141,17 +148,18 @@ eCAL::CTimePlugin::CTimePlugin(CTimePlugin&& other) noexcept
   , api_(std::move(other.api_))
   , loaded_path_(std::move(other.loaded_path_))
 {
+  // reset api on moved from object, so it may be destructed safely.
+  other.api_ = Api{};
 }
 
 eCAL::CTimePlugin::~CTimePlugin()
 {
   // If object was move-constructed, the API pointer will be nullptr.
-  if (api_.Finalize)
+  if (api_.Finalize != nullptr)
   {
     api_.Finalize();
   }
 }
-
 
 // ---- member wrappers ----
 long long eCAL::CTimePlugin::GetNanoseconds() const
@@ -181,13 +189,12 @@ void eCAL::CTimePlugin::SleepForNanoseconds(long long duration_nsecs_) const
 
 void eCAL::CTimePlugin::GetStatus(int& error_, std::string* const status_message_) const
 {
-  static const int buffer_len = 256;
-  char buffer[buffer_len];
-  buffer[0] = 0x0;
-  api_.GetStatus(&error_, buffer, buffer_len);
-  buffer[buffer_len - 1] = 0x0;              // Just in case the module forgot to null-terminate the string
+  static constexpr std::size_t buffer_len = 256;
+  std::array<char, buffer_len> buffer{};
+  buffer[0] = '\0';
+  api_.GetStatus(&error_, buffer.data(), static_cast<int>(buffer.size()));
+  buffer.back() = '\0';
+
   if (status_message_ != nullptr)
-  {
-    status_message_->assign(buffer);
-  }
+    status_message_->assign(buffer.data());
 }
