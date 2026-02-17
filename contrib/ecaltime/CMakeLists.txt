@@ -16,11 +16,13 @@
 #
 # ========================= eCAL LICENSE =================================
 
-add_subdirectory(ecaltime_pb)
+if(ECAL_USE_PROTOBUF)
+  add_subdirectory(ecaltime_pb)
+  add_subdirectory(simtime)
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_subdirectory(linuxptp)
 endif()
 
 add_subdirectory(localtime)
-add_subdirectory(simtime)
