@@ -74,7 +74,7 @@ namespace
     return module_name_;
   }
 
-  std::vector<std::string> BuildPluginPath(std::string dynamic_library_name_)
+  std::vector<std::string> BuildPluginPath(const std::string& dynamic_library_name_)
   {
     // TODO should we use ECAL_OS_WINDOWS?
 #ifdef _WIN32
