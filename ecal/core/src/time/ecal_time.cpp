@@ -27,9 +27,11 @@
 #include <chrono>
 #include <string>
 
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
 #include "ecal_timegate.h"
+#include "ecal_global_accessors.h"
 #endif
+#include "ecal_time_localtime.h"
 
 namespace eCAL
 {
@@ -37,115 +39,101 @@ namespace eCAL
   {
     const std::string& GetName()
     {
-      static const std::string empty_string{ "" };
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->GetName();
       }
 #endif
-      return empty_string;
+      return CLocalTimeProvider::GetName();
     }
 
     long long GetMicroSeconds()
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->GetMicroSeconds();
       }
 #endif
-      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-      return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+      return CLocalTimeProvider::GetMicroseconds();
     }
 
     long long GetNanoSeconds()
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->GetNanoSeconds();
       }
 #endif
-      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-      return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
+      return CLocalTimeProvider::GetNanoSeconds();
     }
 
     bool SetNanoSeconds(long long time_)
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->SetNanoSeconds(time_);
       }
 #endif
-      (void)time_;
-      return false;
+      return CLocalTimeProvider::SetNanoSeconds(time_);
     }
 
     bool IsSynchronized()
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->IsSynchronized();
       }
 #endif
-      return false;
+      return CLocalTimeProvider::IsSynchronized();
     }
 
     bool IsMaster()
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         return timegate->IsMaster();
       }
 #endif
-      return false;
+      return CLocalTimeProvider::IsMaster();
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
-      if (timegate && timegate->IsValid())
+      if (timegate)
       {
         timegate->SleepForNanoseconds(duration_nsecs_);
       }
 #endif
-      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
+      CLocalTimeProvider::SleepForNanoseconds(duration_nsecs_);
     }
 
     void GetStatus(int& error_, std::string* const status_message_)
     {
-#if ECAL_CORE_TIMEGATE
+#if ECAL_CORE_TIMEPLUGIN
       auto timegate = g_timegate();
       if (timegate)
       {
         timegate->GetStatus(error_, status_message_);
       }
       else
-      {
-        error_ = -1;
-        if (status_message_ != nullptr)
-        {
-          status_message_->assign("Timegate has not been initialized!");
-        }
-      }
-#else
-      error_ = -1;
-      if (status_message_ != nullptr)
-      {
-        status_message_->assign("Timegate functionality not available.");
-      }
 #endif
+      {
+        CLocalTimeProvider::GetStatus(error_, status_message_);
+      }
     }
   }
 }
