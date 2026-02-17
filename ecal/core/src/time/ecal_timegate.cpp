@@ -52,7 +52,7 @@ namespace
 #endif // __linux__
 
 #ifdef __APPLE__
-    module_name_ = "lib" + module_name + ".dylib";
+    module_name_ = "lib" + module_name_ + ".dylib";
 #endif // __APPLE__
 
     return module_name_;
