@@ -63,8 +63,8 @@ namespace eCAL
 
     const std::string& LoadedPath() const noexcept { return loaded_path_; }
 
-    long long GetNanoseconds() const override;
-    bool SetNanoseconds(long long time_) const override;
+    long long GetNanoSeconds() const override;
+    bool SetNanoSeconds(long long time_) const override;
 
     bool IsSynchronized() const override;
     bool IsMaster() const override;
@@ -79,8 +79,8 @@ namespace eCAL
     {
       decltype(&etime_initialize)            Initialize = nullptr;
       decltype(&etime_finalize)              Finalize = nullptr;
-      decltype(&etime_get_nanoseconds)       GetNanoseconds = nullptr;
-      decltype(&etime_set_nanoseconds)       SetNanoseconds = nullptr;
+      decltype(&etime_get_nanoseconds)       GetNanoSeconds = nullptr;
+      decltype(&etime_set_nanoseconds)       SetNanoSeconds = nullptr;
       decltype(&etime_is_synchronized)       IsSynchronized = nullptr;
       decltype(&etime_is_master)             IsMaster = nullptr;
       decltype(&etime_sleep_for_nanoseconds) SleepForNanoseconds = nullptr;

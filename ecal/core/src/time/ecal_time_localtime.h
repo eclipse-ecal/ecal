@@ -36,7 +36,7 @@ namespace eCAL
       return name;
     }
 
-    static long long GetNanoseconds()
+    static long long GetNanoSeconds()
     {
       const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
       return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
@@ -49,7 +49,7 @@ namespace eCAL
       return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
     }
 
-    static bool SetNanoseconds(long long /*time_*/)
+    static bool SetNanoSeconds(long long /*time_*/)
     {
       return false;
     }

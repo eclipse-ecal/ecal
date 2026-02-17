@@ -93,8 +93,8 @@ eCAL::CTimePlugin::LoadApi(const EcalUtils::DynamicLibrary& lib) noexcept
 
   Bind(api.Initialize, "etime_initialize");
   Bind(api.Finalize, "etime_finalize");
-  Bind(api.GetNanoseconds, "etime_get_nanoseconds");
-  Bind(api.SetNanoseconds, "etime_set_nanoseconds");
+  Bind(api.GetNanoSeconds, "etime_get_nanoseconds");
+  Bind(api.SetNanoSeconds, "etime_set_nanoseconds");
   Bind(api.IsSynchronized, "etime_is_synchronized");
   Bind(api.IsMaster, "etime_is_master");
   Bind(api.SleepForNanoseconds, "etime_sleep_for_nanoseconds");
@@ -162,14 +162,14 @@ eCAL::CTimePlugin::~CTimePlugin()
 }
 
 // ---- member wrappers ----
-long long eCAL::CTimePlugin::GetNanoseconds() const
+long long eCAL::CTimePlugin::GetNanoSeconds() const
 {
-  return api_.GetNanoseconds();
+  return api_.GetNanoSeconds();
 }
 
-bool eCAL::CTimePlugin::SetNanoseconds(long long time_) const
+bool eCAL::CTimePlugin::SetNanoSeconds(long long time_) const
 {
-  return api_.SetNanoseconds(time_) == 0;
+  return api_.SetNanoSeconds(time_) == 0;
 }
 
 bool eCAL::CTimePlugin::IsSynchronized() const

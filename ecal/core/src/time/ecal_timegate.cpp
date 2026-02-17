@@ -174,12 +174,12 @@ namespace eCAL
 
   long long CTimeGate::GetNanoSeconds()
   {
-    return m_time_plugin.GetNanoseconds();
+    return m_time_plugin.GetNanoSeconds();
   }
 
   bool CTimeGate::SetNanoSeconds(long long time_)
   {
-    return m_time_plugin.SetNanoseconds(time_);
+    return m_time_plugin.SetNanoSeconds(time_);
   }
 
   bool CTimeGate::IsSynchronized()

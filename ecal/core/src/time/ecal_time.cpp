@@ -70,7 +70,7 @@ namespace eCAL
         return timegate->GetNanoSeconds();
       }
 #endif
-      return CLocalTimeProvider::GetNanoseconds();
+      return CLocalTimeProvider::GetNanoSeconds();
     }
 
     bool SetNanoSeconds(long long time_)
@@ -82,7 +82,7 @@ namespace eCAL
         return timegate->SetNanoSeconds(time_);
       }
 #endif
-      return CLocalTimeProvider::SetNanoseconds(time_);
+      return CLocalTimeProvider::SetNanoSeconds(time_);
     }
 
     bool IsSynchronized()

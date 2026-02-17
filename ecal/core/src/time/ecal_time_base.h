@@ -35,8 +35,8 @@ namespace eCAL
 
     virtual ~CTimeBase() = default;
 
-    virtual long long GetNanoseconds() const = 0;
-    virtual bool SetNanoseconds(long long time_) const = 0;
+    virtual long long GetNanoSeconds() const = 0;
+    virtual bool SetNanoSeconds(long long time_) const = 0;
 
     virtual bool IsSynchronized() const = 0;
     virtual bool IsMaster() const = 0;
