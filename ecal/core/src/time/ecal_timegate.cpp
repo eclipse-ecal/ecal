@@ -37,44 +37,44 @@ namespace
 {
   constexpr const char* ECAL_TIME_PLUGIN_DIR = "ecaltime_plugins";
 
-  std::string build_dynamic_library_name(std::string module_name)
+  std::string BuildDynamicLibraryName(std::string module_name_)
   {
 #ifdef _WIN32
 #ifndef NDEBUG
-    module_name += "d";
+    module_name_ += "d";
 #endif // !NDEBUG
     // set extension
-    module_name += ".dll";
+    module_name_ += ".dll";
 #endif // _WIN32
 
 #ifdef __linux__
-    module_name = "lib" + module_name + ".so";
+    module_name_ = "lib" + module_name_ + ".so";
 #endif // __linux__
 
 #ifdef __APPLE__
-    module_name = "lib" + module_name + ".dylib";
+    module_name_ = "lib" + module_name + ".dylib";
 #endif // __APPLE__
 
-    return module_name;
+    return module_name_;
   }
 
-  std::string remove_quotes(std::string module_name)
+  std::string RemoveQuotes(std::string module_name_)
   {
-    if (module_name.size() > 2)
+    if (module_name_.size() > 2)
     {
-      if (module_name[0] == '\"' || module_name[0] == '\'')
+      if (module_name_[0] == '\"' || module_name_[0] == '\'')
       {
-        module_name.erase(0, 1);
+        module_name_.erase(0, 1);
       }
-      if (module_name[module_name.size() - 1] == '\"' || module_name[module_name.size() - 1] == '\'')
+      if (module_name_[module_name_.size() - 1] == '\"' || module_name_[module_name_.size() - 1] == '\'')
       {
-        module_name.erase(module_name.size() - 1);
+        module_name_.erase(module_name_.size() - 1);
       }
     }
-    return module_name;
+    return module_name_;
   }
 
-  std::vector<std::string> build_plugin_paths(std::string dynamic_library_name)
+  std::vector<std::string> BuildPluginPath(std::string dynamic_library_name_)
   {
     // TODO should we use ECAL_OS_WINDOWS?
 #ifdef _WIN32
@@ -88,15 +88,15 @@ namespace
     const auto ecal_time_plugin_paths = splitPaths(getEnvVar("ECAL_TIME_PLUGIN_PATH"));
     for (const auto& ecal_time_plugin_path : ecal_time_plugin_paths)
     {
-      const auto module_path = ecal_time_plugin_path + path_separator + dynamic_library_name;
+      const auto module_path = ecal_time_plugin_path + path_separator + dynamic_library_name_;
       candidate_paths.push_back(module_path);
     }
 
     // 2. Load from standard path
-    candidate_paths.push_back(dynamic_library_name);
+    candidate_paths.push_back(dynamic_library_name_);
   
     // 3. Load from sub folder ECAL_TIME_PLUGIN_DIR
-    const auto module_path = std::string(ECAL_TIME_PLUGIN_DIR) + path_separator + dynamic_library_name;
+    const auto module_path = std::string(ECAL_TIME_PLUGIN_DIR) + path_separator + dynamic_library_name_;
     candidate_paths.push_back(module_path);
 
     return candidate_paths;
@@ -108,7 +108,7 @@ namespace eCAL
 {
   std::shared_ptr<CTimeGate> CTimeGate::CreateTimegate()
   {
-    const std::string module_name = remove_quotes(Config::GetTimesyncModuleName());
+    const std::string module_name = RemoveQuotes(Config::GetTimesyncModuleName());
 
     if (module_name.empty())
     {
@@ -122,7 +122,7 @@ namespace eCAL
       return nullptr;
     }
 
-    const auto possible_plugin_paths = build_plugin_paths(build_dynamic_library_name(module_name));
+    const auto possible_plugin_paths = BuildPluginPath(BuildDynamicLibraryName(module_name));
 
     for (const auto& path : possible_plugin_paths)
     {
@@ -151,9 +151,9 @@ namespace eCAL
     return nullptr;
   }
 
-  CTimeGate::CTimeGate(CTimePlugin&& time_plugin, std::string plugin_name)
-    : m_time_plugin(std::move(time_plugin))
-    , m_plugin_name(std::move(plugin_name))
+  CTimeGate::CTimeGate(CTimePlugin&& time_plugin_, std::string plugin_name_)
+    : m_time_plugin(std::move(time_plugin_))
+    , m_plugin_name(std::move(plugin_name_))
   {
   }
 

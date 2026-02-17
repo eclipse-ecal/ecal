@@ -49,15 +49,16 @@ namespace EcalUtils
 
     ~DynamicLibrary() noexcept;
 
-    // Factory
-    static std::variant<DynamicLibrary, DlError> Load(const std::string& path) noexcept;
+    // Factory method to load a dynamic library from a given path. 
+    // The path can be absolute or relative, but must include the library file name and extension.
+    static std::variant<DynamicLibrary, DlError> Load(const std::string& path_) noexcept;
 
-    std::variant<void*, DlError> LoadRawSymbol(const char* name) const noexcept;
+    std::variant<void*, DlError> LoadRawSymbol(const char* name_) const noexcept;
 
     template <typename T>
-    std::variant<T, DlError> LoadSymbol(const char* name) const noexcept
+    std::variant<T, DlError> LoadSymbol(const char* name_) const noexcept
     {
-      auto raw = LoadRawSymbol(name);
+      auto raw = LoadRawSymbol(name_);
       if (std::holds_alternative<DlError>(raw))
         return std::get<DlError>(std::move(raw));
 
@@ -67,9 +68,9 @@ namespace EcalUtils
     }
 
     template <typename T>
-    T SymbolOrNone(const char* name) const noexcept
+    T SymbolOrNone(const char* name_) const noexcept
     {
-      auto symbol_or_error = LoadSymbol<T>(name);
+      auto symbol_or_error = LoadSymbol<T>(name_);
       if (std::holds_alternative<T>(symbol_or_error))
         return std::get<T>(symbol_or_error);
       return nullptr;
@@ -77,10 +78,10 @@ namespace EcalUtils
 
   private:
     // No default construction: only open() can create an instance
-    explicit DynamicLibrary(void* handle) noexcept;
+    explicit DynamicLibrary(void* handle_) noexcept;
 
     void Unload() noexcept;
 
-    void* handle_{ nullptr }; // opaque OS handle (HMODULE or dlopen handle)
+    void* m_handle{ nullptr }; // opaque OS handle (HMODULE or dlopen handle)
   };
 }

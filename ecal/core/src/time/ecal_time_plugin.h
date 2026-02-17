@@ -51,7 +51,7 @@ namespace eCAL
 
     // Factory method to try and load a given plugin
     // Loading of the plugin can fail for serveral reasons, as indicated by the error code.
-    static std::variant<CTimePlugin, Error> LoadFromPath(std::string full_path) noexcept;
+    static std::variant<CTimePlugin, Error> LoadFromPath(std::string full_path_) noexcept;
 
     CTimePlugin(const CTimePlugin&) = delete;
     CTimePlugin& operator=(const CTimePlugin&) = delete;
@@ -61,7 +61,7 @@ namespace eCAL
 
     ~CTimePlugin();
 
-    const std::string& LoadedPath() const noexcept { return loaded_path_; }
+    const std::string& LoadedPath() const noexcept { return m_loaded_path; }
 
     long long GetNanoSeconds() const override;
     bool SetNanoSeconds(long long time_) const override;
@@ -87,13 +87,13 @@ namespace eCAL
       decltype(&etime_get_status)            GetStatus = nullptr;
     };
 
-    CTimePlugin(EcalUtils::DynamicLibrary&& lib, Api api, std::string loaded_path) noexcept;
+    CTimePlugin(EcalUtils::DynamicLibrary&& lib_, Api api_, std::string loaded_path_) noexcept;
 
-    static std::variant<Api, Error> LoadApi(const EcalUtils::DynamicLibrary& lib) noexcept;
+    static std::variant<Api, Error> LoadApi(const EcalUtils::DynamicLibrary& lib_) noexcept;
 
   private:
-    EcalUtils::DynamicLibrary loaded_library_;
-    Api api_;
-    std::string loaded_path_;
+    EcalUtils::DynamicLibrary m_loaded_library;
+    Api m_api;
+    std::string m_loaded_path;
   };
 }
