@@ -196,7 +196,7 @@ jobs:
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    if: github.repository == 'eclipse-ecal/ecal' && github.ref_name == 'master'
+    #if: github.repository == 'eclipse-ecal/ecal' && github.ref_name == 'master'
     needs: build-ubuntu
     
     strategy:
@@ -205,6 +205,22 @@ jobs:
         os_version: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
         # List of all benchmark types, corresponding to an executable
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
+        # Mark benchmarks with multiple transport layers so the throughput calculator can work accordingly
+        include:
+            - bm_type: pubsub
+              HAS_TRANSPORT_LAYERS: 1
+            
+            - bm_type: pubsub_config
+              HAS_TRANSPORT_LAYERS: 0
+            
+            - bm_type: pubsub_multi
+              HAS_TRANSPORT_LAYERS: 0
+            
+            - bm_type: service
+              HAS_TRANSPORT_LAYERS: 0
+            
+            - bm_type: setup
+              HAS_TRANSPORT_LAYERS: 0
     
     runs-on: ${{ matrix.os_version }}
     
@@ -249,7 +265,7 @@ jobs:
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -t ${{ matrix.HAS_TRANSPORT_LAYERS }}
       working-directory: ${{ github.workspace }}
         
     - name: Log Benchmark Results with Bencher

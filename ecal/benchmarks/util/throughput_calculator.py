@@ -25,8 +25,10 @@ import re
 # Read log file path from argument
 ap = argparse.ArgumentParser()
 ap.add_argument('-f', '--file', required=True, help="Path to the the log file. Can be relative to this python file.")
+ap.add_argument('-t', '--transportlayers', default=0, help="Set to 1 if the analyzed benchmark uses multiple transport layers via benchmark parameters (i.e. the transport layer ID appears after the payload size in the benchmark name). Defaults to 0.")
 args = ap.parse_args()
 file_in_path = args.file
+has_transportlayers = args.transportlayers
 
 # Check if file exists
 if not os.path.isfile(file_in_path):
@@ -53,17 +55,27 @@ full_results = {}
 
 for itm in benchmarks:
    try:
-      # Get payload size (in byte) from benchmark name
-      payload_size = int(re.search(r'/(\d+)/[a-z]', itm["name"]).group(1))
       # Get background thread count from benchmark name (if applicable), default to 1 to account for the main thread
       thread_count = 1
       multi = re.search(r'[a-z]/(\d+)/[0-9]', itm["name"])
+      # Get payload size (in byte) from benchmark name. Use different approaches depending on active transport layer parameters
+      if has_transportlayers == 1:
+         payload_size = int(re.search(r'/(\d+)/[0-9]', itm["name"]).group(1))
+         # Override extracted threadcount (multi) due to similar name structure
+         multi = None
+      else:
+         payload_size = int(re.search(r'/(\d+)/[a-z]', itm["name"]).group(1))
+      # Set thread count from multi
       if multi:
          thread_count += int(multi.group(1))
       # Get time taken. Expecting time in nanoseconds
       real_time_ns = float(itm["real_time"])
       # Calculating send frequency in hertz (corresponds to throughput in ops/s)
-      frequency = 1 / (real_time_ns * 10**-9) * thread_count
+      try:
+         frequency = 1 / (real_time_ns * 10**-9) * thread_count
+      except ZeroDivisionError as e:
+         frequency = 0
+         print(f"WARNING: Listed time equals zero. No meaningful calculation possible.")
       # Calculating speed in bytes per second
       speed = frequency * payload_size * thread_count
       # Output to console
