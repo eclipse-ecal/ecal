@@ -456,6 +456,14 @@ if(ECAL_CORE_TIMEPLUGIN)
 endif()
 
 ######################################
+# tracing
+######################################
+set(ecal_tracing_src
+    src/tracing/tracing.cpp
+    src/tracing/tracing.h
+)
+
+######################################
 # util
 ######################################
 set(ecal_util_src
@@ -631,6 +639,7 @@ set(ecal_sources
     ${ecal_serialization_src}
     ${ecal_service_src}
     ${ecal_time_src}
+    ${ecal_tracing_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_builder_src}

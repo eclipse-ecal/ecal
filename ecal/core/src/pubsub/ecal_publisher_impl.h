@@ -119,6 +119,7 @@ namespace eCAL
 
     void GetRegistrationSample(Registration::Sample& sample);
     void GetUnregistrationSample(Registration::Sample& sample);
+    long long GetClock() const { return m_clock; }
 
     bool StartUdpLayer();
     bool StartShmLayer();
