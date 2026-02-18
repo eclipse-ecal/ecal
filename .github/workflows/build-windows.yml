@@ -265,7 +265,7 @@ jobs:
     # --------------------------------------------------------------------------------------------------
     
   run-benchmarks:
-    #if: github.repository == 'eclipse-ecal/ecal' && github.ref_name == 'master'
+    if: github.repository == 'eclipse-ecal/ecal' && github.ref_name == 'master'
     runs-on: windows-2022
     needs: build-windows
     
