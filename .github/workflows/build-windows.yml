@@ -274,22 +274,7 @@ jobs:
       matrix:
         # List of all benchmark types, corresponding to an executable
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
-        # Mark benchmarks with multiple transport layers so the throughput calculator can work accordingly
-        include:
-            - bm_type: pubsub
-              HAS_TRANSPORT_LAYERS: 1
-            
-            - bm_type: pubsub_config
-              HAS_TRANSPORT_LAYERS: 0
-            
-            - bm_type: pubsub_multi
-              HAS_TRANSPORT_LAYERS: 0
-            
-            - bm_type: service
-              HAS_TRANSPORT_LAYERS: 0
-            
-            - bm_type: setup
-              HAS_TRANSPORT_LAYERS: 0
+        
     env:
       # Name of the benchmark log file without extension
       LOG_FILE_NAME: ecal_benchmark_${{ matrix.bm_type }}_log
@@ -329,7 +314,15 @@ jobs:
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -t ${{ matrix.HAS_TRANSPORT_LAYERS }}
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -t 0
+      working-directory: ${{ github.workspace }}
+      shell: cmd
+      
+    # Override throughput calculation for multithreaded benchmarks
+    - name: Calculate Throughput (Multithreaded)
+      if: matrix.bm_type == 'pubsub_multi'
+      run: |
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -t 1
       working-directory: ${{ github.workspace }}
       shell: cmd
         

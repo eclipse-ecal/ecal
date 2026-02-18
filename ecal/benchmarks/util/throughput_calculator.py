@@ -25,10 +25,14 @@ import re
 # Read log file path from argument
 ap = argparse.ArgumentParser()
 ap.add_argument('-f', '--file', required=True, help="Path to the the log file. Can be relative to this python file.")
-ap.add_argument('-t', '--transportlayers', default=0, help="Set to 1 if the analyzed benchmark uses multiple transport layers via benchmark parameters (i.e. the transport layer ID appears after the payload size in the benchmark name). Defaults to 0.")
+ap.add_argument('-m', '--multihreads', default=0, help="Pass 1 if the analyzed benchmark uses background threads as benchmark parameters (i.e. the background thread count appears as first number in the benchmark name). Defaults to 0.")
 args = ap.parse_args()
-file_in_path = args.file
-has_transportlayers = args.transportlayers
+try:
+   file_in_path = args.file
+   has_multithreads = bool(int(args.multihreads))
+except ValueError as e:
+   print(f"ERROR: Invalid arguments: {e}")
+   exit(1)
 
 # Check if file exists
 if not os.path.isfile(file_in_path):
@@ -55,19 +59,17 @@ full_results = {}
 
 for itm in benchmarks:
    try:
-      # Get background thread count from benchmark name (if applicable), default to 1 to account for the main thread
+      # Default thread count is 1 (main thread)
       thread_count = 1
-      multi = re.search(r'[a-z]/(\d+)/[0-9]', itm["name"])
-      # Get payload size (in byte) from benchmark name. Use different approaches depending on active transport layer parameters
-      if has_transportlayers == 1:
-         payload_size = int(re.search(r'/(\d+)/[0-9]', itm["name"]).group(1))
-         # Override extracted threadcount (multi) due to similar name structure
-         multi = None
+      # Get parameters from benchmark name
+      first_number = int(re.search(r'(\d+)', itm["name"]).group(1))
+      if has_multithreads:
+         # First number is background thread count, second number is payload size
+         thread_count += first_number
+         payload_size = int(re.search(r'[0-9]/(\d+)', itm["name"]).group(1))
       else:
-         payload_size = int(re.search(r'/(\d+)/[a-z]', itm["name"]).group(1))
-      # Set thread count from multi
-      if multi:
-         thread_count += int(multi.group(1))
+         # First number is payload size
+         payload_size = first_number
       # Get time taken. Expecting time in nanoseconds
       real_time_ns = float(itm["real_time"])
       # Calculating send frequency in hertz (corresponds to throughput in ops/s)
