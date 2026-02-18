@@ -78,6 +78,8 @@ namespace eCAL
   void                      SetGlobalEcalConfiguration(const Configuration& config_);
   void                      ResetGlobalEcalConfiguration(); 
 
+  void                      InitializeLaunchConfiguration();
+
   // Declaration of getter functions for globally accessible variable instances
   std::shared_ptr<CGlobals>               g_globals();
   std::shared_ptr<Logging::CLogReceiver>  g_log_udp_receiver();

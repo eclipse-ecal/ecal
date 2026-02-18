@@ -115,6 +115,7 @@ namespace eCAL
     if (auto globals = g_globals(); !globals)
     {
       SetGlobalEcalConfiguration(config_);
+      InitializeLaunchConfiguration();
       SetGlobalUnitName(unit_name_.c_str());
 
       auto globals_instance = CreateGlobalsInstance();

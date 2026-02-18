@@ -54,6 +54,7 @@ constexpr const char* ECAL_DATA_VAR                 = "ECAL_DATA";
 constexpr const char* ECAL_LOG_VAR                  = "ECAL_LOG_DIR";
 constexpr const char* ECAL_LINUX_HOME_VAR           = "HOME";
 constexpr const char* ECAL_LINUX_TMP_VAR            = "TMPDIR";
+constexpr const char* ECAL_LAUNCH_CONFIG_VAR        = "ECAL_LAUNCH_CONFIG";
 
 /* system paths */
 constexpr const char* ECAL_LINUX_SYSTEM_PATH        = "/etc";

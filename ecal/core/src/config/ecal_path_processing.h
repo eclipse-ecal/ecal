@@ -252,5 +252,11 @@ namespace eCAL
      * @returns std::vector<std::string> The default paths for possible ecal configurations.
      */
     std::vector<std::string> getEcalDefaultPaths(const Util::IDirProvider& dir_provider_, const Util::IDirManager& dir_manager_ );
+
+    /**
+     * @brief Returns the path to the eCAL launch configuration file.
+     *        File is specified by environment variable ECAL_LAUNCH_CONFIG.
+     */
+    std::string GetEcalLaunchConfigFilePath(const Util::IDirProvider& dir_provider_ = Util::DirProvider());
   } // namespace Config
 }

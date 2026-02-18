@@ -30,6 +30,7 @@
 #include "ecal/util.h"
 #include "util/getenvvar.h"
 
+#include <filesystem>
 #include <fstream>
 #include <vector>
 
@@ -456,6 +457,16 @@ namespace eCAL
       }
 
       return {};
+    }
+
+    std::string GetEcalLaunchConfigFilePath(const Util::IDirProvider& dir_provider_)
+    {
+      const std::string launch_config_path = dir_provider_.eCALEnvVar(ECAL_LAUNCH_CONFIG_VAR);
+      if (std::filesystem::exists(launch_config_path) && std::filesystem::is_regular_file(launch_config_path))
+      {
+        return launch_config_path;
+      }
+      return std::string();
     }
   } // namespace Config
   

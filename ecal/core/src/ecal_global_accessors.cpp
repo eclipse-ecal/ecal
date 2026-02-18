@@ -22,6 +22,7 @@
  * @brief  eCAL core functions
 **/
 
+#include "config/ecal_path_processing.h"
 #include "ecal/config/configuration.h"
 
 #include "ecal_global_accessors.h"
@@ -78,6 +79,22 @@ namespace eCAL
   void SetGlobalEcalConfiguration(const Configuration& config_)
   {
     g_ecal_configuration = config_;
+  }
+
+  void InitializeLaunchConfiguration()
+  {
+    const std::string launch_config = Config::GetEcalLaunchConfigFilePath();
+    if (!launch_config.empty())
+    {
+      auto launch_yaml = Config::ReadLaunchYaml(launch_config);
+      std::cout << "eCAL Launch config: \n";
+      std::cout << launch_yaml << std::endl;
+      g_ecal_launch_configuration = Config::CreateLaunchConfiguration(launch_yaml);
+    }
+    else
+    {
+      std::cout << "No launch configuration available." << std::endl;
+    }
   }
 
   std::shared_ptr<CGlobals> g_globals()

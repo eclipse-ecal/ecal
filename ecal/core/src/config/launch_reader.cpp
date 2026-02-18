@@ -21,12 +21,21 @@
 
 #include "util/yaml_functions.h"
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
 
 namespace
 {
+  bool checkIfFileExists(const std::string& path_to_file_)
+  {
+    if (std::filesystem::exists(path_to_file_) && std::filesystem::is_regular_file(path_to_file_))
+      return true;
+
+    return false;
+  }
+
   // some forward declarations
   void mergeNodesOfSameType(YAML::Node& base_sequence_, const YAML::Node& other_);
 
@@ -124,7 +133,7 @@ namespace
 
   YAML::Node ReadLaunchYamlImpl(const std::string& path_, std::vector<std::string>& include_yaml_list_);
 
-  // Node shall be a sequence
+  // Node should be a sequence
   std::vector<YAML::Node> handleBaseIncludes(YAML::Node& base_includes_, std::vector<std::string>& include_yaml_list_)
   {
     if (!base_includes_.IsSequence()) return {};
@@ -135,8 +144,13 @@ namespace
       auto file_name = it->as<std::string>();
       if (std::find(include_yaml_list_.begin(), include_yaml_list_.end(), file_name) == include_yaml_list_.end())
       {
-        include_yaml_list_.push_back(file_name);
-        return_vector.push_back(ReadLaunchYamlImpl(include_yaml_list_.back(), include_yaml_list_));
+        const auto absolute_path = std::filesystem::absolute(file_name).generic_string();
+
+        if (checkIfFileExists(absolute_path))
+        {
+          include_yaml_list_.push_back(absolute_path);
+          return_vector.push_back(ReadLaunchYamlImpl(include_yaml_list_.back(), include_yaml_list_));
+        }
       }
     }
 
@@ -151,7 +165,9 @@ namespace
     YAML::Node launch_yaml;
     try
     {
-      launch_yaml = YAML::LoadFile(path_);
+      const auto absolute_path = std::filesystem::absolute(path_).generic_string();
+      if (checkIfFileExists(absolute_path))
+        launch_yaml = YAML::LoadFile(absolute_path);
     }
     catch(const std::exception& e)
     {
