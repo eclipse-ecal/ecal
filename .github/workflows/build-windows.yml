@@ -274,7 +274,7 @@ jobs:
       matrix:
         # List of all benchmark types, corresponding to an executable
         bm_type: [pubsub, pubsub_config, pubsub_multi, service, setup]
-    
+        
     env:
       # Name of the benchmark log file without extension
       LOG_FILE_NAME: ecal_benchmark_${{ matrix.bm_type }}_log
@@ -314,7 +314,15 @@ jobs:
     - name: Calculate Throughput
       if: startsWith(matrix.bm_type, 'pubsub')
       run: |
-        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -m 0
+      working-directory: ${{ github.workspace }}
+      shell: cmd
+      
+    # Override throughput calculation for multithreaded benchmarks
+    - name: Calculate Throughput (Multithreaded)
+      if: matrix.bm_type == 'pubsub_multi'
+      run: |
+        python ecal/benchmarks/util/throughput_calculator.py -f ${{ github.workspace }}/${{ env.LOG_FILE_NAME }}.json -m 1
       working-directory: ${{ github.workspace }}
       shell: cmd
         
