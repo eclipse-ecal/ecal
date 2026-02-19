@@ -83,31 +83,33 @@ install(
 ##########################
 # flatbuffers measurement extension
 ##########################
-add_library(flatbuffers_measurement INTERFACE)
-add_library(eCAL::flatbuffers_measurement ALIAS flatbuffers_measurement)
+if(ECAL_USE_HDF5)
+  add_library(flatbuffers_measurement INTERFACE)
+  add_library(eCAL::flatbuffers_measurement ALIAS flatbuffers_measurement)
 
-target_link_libraries(flatbuffers_measurement 
-  INTERFACE 
-    eCAL::flatbuffers_base
-    eCAL::message_measurement
-)
+  target_link_libraries(flatbuffers_measurement 
+    INTERFACE 
+      eCAL::flatbuffers_base
+      eCAL::message_measurement
+  )
 
-target_sources(flatbuffers_measurement
-  INTERFACE
-    FILE_SET flatbuffers_measurement_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
-      include/ecal/msg/flatbuffers/imeasurement.h
-      include/ecal/msg/flatbuffers/omeasurement.h
-)
+  target_sources(flatbuffers_measurement
+    INTERFACE
+      FILE_SET flatbuffers_measurement_headers
+      TYPE HEADERS
+      BASE_DIRS include
+      FILES
+        include/ecal/msg/flatbuffers/imeasurement.h
+        include/ecal/msg/flatbuffers/omeasurement.h
+  )
 
-target_compile_features(flatbuffers_measurement INTERFACE cxx_std_14)
+  target_compile_features(flatbuffers_measurement INTERFACE cxx_std_14)
 
-install(
-  TARGETS flatbuffers_measurement
-  EXPORT eCALCoreTargets  
-  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
-  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET flatbuffers_measurement_headers COMPONENT sdk
-)
+  install(
+    TARGETS flatbuffers_measurement
+    EXPORT eCALCoreTargets  
+    ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+    FILE_SET flatbuffers_measurement_headers COMPONENT sdk
+  )
+endif()

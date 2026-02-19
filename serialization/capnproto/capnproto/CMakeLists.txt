@@ -85,31 +85,33 @@ install(
 ##########################
 # Capnproto measurement extension
 ##########################
-add_library(capnproto_measurement INTERFACE)
-add_library(eCAL::capnproto_measurement ALIAS capnproto_measurement)
+if(ECAL_USE_HDF5)
+  add_library(capnproto_measurement INTERFACE)
+  add_library(eCAL::capnproto_measurement ALIAS capnproto_measurement)
 
-target_link_libraries(capnproto_measurement 
-  INTERFACE 
-    eCAL::capnproto_base
-    eCAL::message_measurement
-)
+  target_link_libraries(capnproto_measurement 
+    INTERFACE 
+      eCAL::capnproto_base
+      eCAL::message_measurement
+  )
 
-target_sources(capnproto_measurement
-  INTERFACE
-    FILE_SET capnproto_measurement_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
-      include/ecal/msg/capnproto/imeasurement.h
-      include/ecal/msg/capnproto/omeasurement.h
-)
+  target_sources(capnproto_measurement
+    INTERFACE
+      FILE_SET capnproto_measurement_headers
+      TYPE HEADERS
+      BASE_DIRS include
+      FILES
+        include/ecal/msg/capnproto/imeasurement.h
+        include/ecal/msg/capnproto/omeasurement.h
+  )
 
-target_compile_features(capnproto_measurement INTERFACE cxx_std_14)
+  target_compile_features(capnproto_measurement INTERFACE cxx_std_14)
 
-install(
-  TARGETS capnproto_measurement
-  EXPORT eCALCoreTargets  
-  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
-  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET capnproto_measurement_headers COMPONENT sdk
-)
+  install(
+    TARGETS capnproto_measurement
+    EXPORT eCALCoreTargets  
+    ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+    FILE_SET capnproto_measurement_headers COMPONENT sdk
+  )
+endif()

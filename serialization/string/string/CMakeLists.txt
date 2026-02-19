@@ -77,31 +77,33 @@ install(
 ##########################
 # std::string measurement extension
 ##########################
-add_library(string_measurement INTERFACE)
-add_library(eCAL::string_measurement ALIAS string_measurement)
+if(ECAL_USE_HDF5)
+  add_library(string_measurement INTERFACE)
+  add_library(eCAL::string_measurement ALIAS string_measurement)
 
-target_link_libraries(string_measurement 
-  INTERFACE 
-    eCAL::string_base
-    eCAL::message_measurement
-)
+  target_link_libraries(string_measurement 
+    INTERFACE 
+      eCAL::string_base
+      eCAL::message_measurement
+  )
 
-target_sources(string_measurement
-  INTERFACE
-    FILE_SET string_measurement_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
-      include/ecal/msg/string/imeasurement.h
-      include/ecal/msg/string/omeasurement.h
-)
+  target_sources(string_measurement
+    INTERFACE
+      FILE_SET string_measurement_headers
+      TYPE HEADERS
+      BASE_DIRS include
+      FILES
+        include/ecal/msg/string/imeasurement.h
+        include/ecal/msg/string/omeasurement.h
+  )
 
-target_compile_features(string_measurement INTERFACE cxx_std_14)
+  target_compile_features(string_measurement INTERFACE cxx_std_14)
 
-install(
-  TARGETS string_measurement
-  EXPORT eCALCoreTargets  
-  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
-  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET string_measurement_headers COMPONENT sdk
-)
+  install(
+    TARGETS string_measurement
+    EXPORT eCALCoreTargets  
+    ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+    FILE_SET string_measurement_headers COMPONENT sdk
+  )
+endif()
