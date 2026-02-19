@@ -44,7 +44,9 @@ if(ECAL_PROTOBUF_BUILD_SAMPLES)
   add_subdirectory(samples/services/ping_client)
   add_subdirectory(samples/services/ping_client_dyn)
   add_subdirectory(samples/services/ping_server)
-  add_subdirectory(samples/measurement)
+  if(ECAL_USE_HDF5)
+    add_subdirectory(samples/measurement)
+  endif()
 endif()
 
 # --------------------------------------------------------

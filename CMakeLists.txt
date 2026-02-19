@@ -415,9 +415,8 @@ endif()
 if(ECAL_USE_HDF5)
   add_subdirectory(contrib/measurement/hdf5)
   add_subdirectory(contrib/ecalhdf5)
+  add_subdirectory(contrib/measurement/base)
 endif()
-add_subdirectory(contrib/measurement/base)
-
 
 # --------------------------------------------------------
 # ecal core python binding
