@@ -36,21 +36,32 @@ namespace eCAL
 {
   namespace rec_server
   {
+    using TopicName_T = std::string;
+    using Hostname_T = std::string;
+    using UnitName_T = std::string;
+    using DataFrequency_T = double;
+    using ProcessID_T = int32_t;
+    using IsEcalRecClientRunning_T = bool;
+
     struct TopicInfo
     {
-      TopicInfo(const std::string& type)
-        : type_(type)
-      {}
+      TopicInfo()
+      {
+      }
 
-      std::string                                        type_;                 ///< Type of the topic (e.g. the protobuf-type)
-      std::map<std::string, std::set<std::string>>       publishers_;           ///< {hostname: [publisher_names]}
-      std::map<std::pair<std::string, int32_t>, double>  rec_subscribers_;      ///< {(hostname, process_id): data_frequency}
+      void AddTypeInfo(const eCAL::SDataTypeInformation& data_type_info)
+      {
+        type_.insert(data_type_info);
+      }
+
+      std::set<SDataTypeInformation> type_;
+      std::map<Hostname_T, std::set<UnitName_T>> publishers_;
+      std::map<std::pair<Hostname_T, ProcessID_T>, DataFrequency_T> rec_subscribers_;
     };
 
-    typedef std::map<std::string, eCAL::rec_server::TopicInfo>                       TopicInfoMap_T;
-    typedef std::map<std::string, bool>                                              HostsRunningEcalRec_T;
-    typedef std::function<void(const TopicInfoMap_T&, const HostsRunningEcalRec_T&)> PostUpdateCallback_T;
-
-    typedef std::map<std::string, std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point>> RecorderStatusMap_T;
+    using TopicInfoMap_T = std::map<TopicName_T, eCAL::rec_server::TopicInfo>;
+    using HostsRunningEcalRec_T = std::map<Hostname_T, IsEcalRecClientRunning_T>;
+    using PostUpdateCallback_T = std::function<void(const TopicInfoMap_T&, const HostsRunningEcalRec_T&)>;
+    using RecorderStatusMap_T = std::map<std::string, std::pair<eCAL::rec::RecorderStatus, eCAL::Time::ecal_clock::time_point>>;
   }
 }

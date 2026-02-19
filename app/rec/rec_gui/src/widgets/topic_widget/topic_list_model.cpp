@@ -265,7 +265,7 @@ void TopicListModel::reset(const std::map<std::string, eCAL::rec_server::TopicIn
   {
     Topic topic_info;
     topic_info.name_              = topic.first.c_str();
-    topic_info.type_              = topic.second.type_.c_str();
+    topic_info.type_              = topic.second.type_.begin()->name.c_str(); // TODO this will print the first, maybe we need more here?
     topic_info.publishers_        = topic.second.publishers_;
     topic_info.listed_            = (listed_topics.find(topic.first) != listed_topics.end());
     topic_info.in_topic_info_map_ = true;
