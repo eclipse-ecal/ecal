@@ -78,9 +78,6 @@ namespace eCAL
 
     bool Finalize();
 
-    const std::shared_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
-    const std::shared_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };
-
 #if ECAL_CORE_MONITORING
     const std::shared_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
 #endif
@@ -121,8 +118,6 @@ namespace eCAL
 
     std::atomic<bool>                                                     initialized {false};
     unsigned int                                                          components {0};
-    std::shared_ptr<Logging::CLogProvider>                                log_provider_instance;
-    std::shared_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
     std::shared_ptr<CMonitoring>                                          monitoring_instance;
 #endif

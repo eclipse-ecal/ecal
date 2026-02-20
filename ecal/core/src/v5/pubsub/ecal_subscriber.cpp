@@ -173,7 +173,6 @@ namespace eCAL
         global_context.shm_layer = globals->shm_reader_layer();
         global_context.tcp_layer = globals->tcp_reader_layer();
         global_context.registration_provider = globals->registration_provider();
-        global_context.log_provider = globals->log_provider();
       }
 
       // create datareader

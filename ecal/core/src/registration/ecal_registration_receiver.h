@@ -49,16 +49,11 @@ namespace eCAL
   class CRegistrationReceiverUDP;
   class CRegistrationReceiverSHM;
   class CMemFileMap;
-  namespace Logging
-  {
-    class CLogProvider;
-  }
 
   struct SRegistrationReceiverContext
   {
     Registration::SAttributes                    attributes;
     std::shared_ptr<eCAL::CMemFileMap>           memfile_map;
-    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
   };
 
   namespace Registration

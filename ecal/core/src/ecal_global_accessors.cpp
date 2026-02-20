@@ -29,6 +29,10 @@
 #include "ecal_globals.h"
 #include "ecal_utils/filesystem.h"
 
+#include "config/builder/logging_attribute_builder.h"
+#include "logging/ecal_log_provider.h"
+#include "logging/ecal_log_receiver.h"
+
 #include <atomic>
 #include <string>
 
@@ -47,6 +51,9 @@ namespace eCAL
 
   Types::Process::SProcessState g_process_state;
   std::mutex                    g_process_state_mutex;
+
+  std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
+  std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
 
   void SetGlobalUnitName(const char *unit_name_)
   {
@@ -78,6 +85,24 @@ namespace eCAL
     g_ecal_configuration = config_;
   }
 
+  void InitializeLogging()
+  {
+    g_log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
+    g_log_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
+
+    if (g_log_provider_instance) g_log_provider_instance->Start();
+    if (g_log_receiver_instance) g_log_receiver_instance->Start();
+  }
+
+  void ResetLogging()
+  {
+    if (g_log_provider_instance) g_log_provider_instance->Stop();
+    if (g_log_receiver_instance) g_log_receiver_instance->Stop();
+
+    g_log_provider_instance.reset();
+    g_log_receiver_instance.reset();
+  }
+
   std::shared_ptr<CGlobals> g_globals()
   {
     if (auto globals_instance = CGlobals::instance(); globals_instance) 
@@ -90,14 +115,12 @@ namespace eCAL
 
   std::shared_ptr<Logging::CLogReceiver> g_log_udp_receiver()
   {
-    if (auto globals = g_globals(); globals) return globals->log_udp_receiver();
-    return nullptr;
+    return g_log_receiver_instance;
   }
 
   std::shared_ptr<Logging::CLogProvider> g_log_provider()
   {
-    if (auto globals = g_globals(); globals) return globals->log_provider();
-    return nullptr;
+    return g_log_provider_instance;
   }
 
 #if ECAL_CORE_MONITORING
