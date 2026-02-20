@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +38,6 @@
 
 namespace eCAL
 {
-  namespace Logging
-  {
-    class CLogProvider;
-  }
   class CRegistrationReceiver;
 
   ////////////////////////////////////////
@@ -49,7 +46,7 @@ namespace eCAL
   class CMonitoringImpl
   {
   public:
-    CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver);
+    CMonitoringImpl(std::shared_ptr<CRegistrationReceiver> registration_receiver);
     ~CMonitoringImpl() = default;
 
     void Create();
@@ -139,7 +136,6 @@ namespace eCAL
     SServerMap                                m_server_map;
     SClientMap                                m_client_map;
     
-    std::shared_ptr<Logging::CLogProvider>    m_log_provider;
     std::shared_ptr<CRegistrationReceiver>    m_registration_receiver;
   };
 }
