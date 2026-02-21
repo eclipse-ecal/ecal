@@ -293,7 +293,7 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # -------
 
 # C++14 is the baseline required standard
-set(_ECAL_CXX_STD 14)
+set(_ECAL_MIN_REQUIRED_CXX_STD 14)
 
 # Some dependencies require C++17, which we must detect and push to everything
 if(ECAL_USE_QT)
@@ -304,26 +304,25 @@ if(ECAL_USE_QT)
   endif()
   if("${QT_VERSION_MAJOR}" VERSION_GREATER 5)
     # QT6 has C++17 usage requirements
-    set(_ECAL_CXX_STD 17)
+    set(_ECAL_MIN_REQUIRED_CXX_STD 17)
   endif()
 endif()
 if(ECAL_USE_FTXUI)
   # FTXUI requires C++17
-  set(_ECAL_CXX_STD 17)
+  set(_ECAL_MIN_REQUIRED_CXX_STD 17)
 endif()
 
-# if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
-#   # eCAL is being compiled as the root project, and no standard version is set
-#   set(CMAKE_CXX_STANDARD "${_ECAL_CXX_STD}")
-#   message(STATUS "eCAL is using C++ ${_ECAL_CXX_STD}")
-# else()
-#   # eCAL is part of a larger build or the standard was externally set
-# endif()
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
+  # eCAL is being compiled as the root project, and no standard version is set
+  set(CMAKE_CXX_STANDARD "${_ECAL_MIN_REQUIRED_CXX_STD}")
+  message(STATUS "eCAL is using C++ ${_ECAL_MIN_REQUIRED_CXX_STD}")
+else()
+  # eCAL is part of a larger build or the standard was externally set
+endif()
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_CXX_STD}")
-#   message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
-# endif()
+if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_MIN_REQUIRED_CXX_STD}")
+  message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_MIN_REQUIRED_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
+endif()
 
 find_package(CMakeFunctions REQUIRED)
 
