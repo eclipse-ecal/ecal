@@ -733,12 +733,10 @@ namespace eCAL
           g_process_name.assign(proc->ki_comm, process_name_length);
           free(proc);
         }
-#else
-#if defined(ECAL_OS_QNX)
-        constexpr const char* filename_location = "/proc/self/exefile";
+#elif defined (ECAL_OS_QNX)
+        // Need to find / test a QNX version
 #else
         constexpr const char* filename_location = "/proc/self/exe";
-#endif
         // Read the link to our own executable.
         std::array<char, PATH_MAX> executable_path{};
         const ssize_t length = readlink(filename_location, executable_path.data(), executable_path.size());
