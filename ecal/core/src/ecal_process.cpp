@@ -42,6 +42,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -332,7 +333,6 @@ namespace eCAL
     const std::string& GetProcessName()
     {
       static std::once_flag process_name_once_flag;
-      // std::call_once is a C++11 threading primitive that guarantees one-time initialization.
       std::call_once(process_name_once_flag, []()
       {
         WCHAR process_name[1024] = { 0 };
@@ -708,32 +708,23 @@ namespace eCAL
     */
     const std::string& GetProcessName()
     {
-      static const std::string empty_string {};
       static std::once_flag process_name_once_flag;
       std::call_once(process_name_once_flag, []()
       {
 #if defined(ECAL_OS_MACOS)
-        // Query and then fetch the executable path, as it may exceed PATH_MAX.
-        uint32_t required_length = 0;
-        _NSGetExecutablePath(nullptr, &required_length);
-        if (required_length == 0)
-        {
-          return;
-        }
+        uint32_t size = 0;
+        _NSGetExecutablePath(nullptr, &size);
 
-        std::vector<char> executable_path(required_length, '\0');
-        if (_NSGetExecutablePath(executable_path.data(), &required_length) != 0)
-        {
+        if (size == 0)
           return;
-        }
 
-        const size_t executable_path_length = strnlen(executable_path.data(), executable_path.size());
-        if (executable_path_length >= executable_path.size())
-        {
+        std::string buffer(size, '\0');
+
+        if (_NSGetExecutablePath(buffer.data(), &size) != 0)
           return;
-        }
 
-        g_process_name.assign(executable_path.data(), executable_path_length);
+        std::filesystem::path p(buffer.c_str());
+        g_process_name = std::filesystem::weakly_canonical(p).string();
 #elif defined(ECAL_OS_FREEBSD)
         struct kinfo_proc *proc = kinfo_getproc(getpid());
         if (proc)
@@ -742,7 +733,7 @@ namespace eCAL
           g_process_name.assign(proc->ki_comm, process_name_length);
           free(proc);
         }
-#elif defined(ECAL_OS_QNX) || defined(ECAL_OS_LINUX)
+#else
 #if defined(ECAL_OS_QNX)
         constexpr const char* filename_location = "/proc/self/exefile";
 #else
@@ -761,11 +752,6 @@ namespace eCAL
         g_process_name.assign(executable_path.data(), static_cast<size_t>(length));
 #endif
       });
-
-      if (g_process_name.empty())
-      {
-        return empty_string;
-      }
 
       return g_process_name;
     }

@@ -33,10 +33,8 @@ target_link_libraries(test_process
 
 target_compile_features(test_process PRIVATE cxx_std_14)
 
-target_include_directories(test_process PRIVATE $<TARGET_PROPERTY:eCAL::ecal-utils,INCLUDE_DIRECTORIES>)
-
 target_compile_definitions(test_process PRIVATE
-  ECAL_PROCESS_TEST_EXECUTABLE_NAME="$<TARGET_FILE_NAME:test_process>"
+  ECAL_PROCESS_TEST_EXECUTABLE_NAME="$<TARGET_FILE:test_process>"
 )
 
 ecal_install_gtest(test_process)

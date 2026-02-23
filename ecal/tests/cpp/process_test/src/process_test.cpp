@@ -19,24 +19,29 @@
 
 #include <ecal/process.h>
 
-#include <ecal_utils/barrier.h>
-#include <ecal_utils/filesystem.h>
-
-#include <gtest/gtest.h>
-
+#include <filesystem>
 #include <string>
 #include <thread>
 #include <vector>
+
+#include <ecal_utils/barrier.h>
+
+#include <gtest/gtest.h>
+
+
+std::string normalize_path(const std::string& path_string)
+{
+  std::filesystem::path path(path_string);
+  std::filesystem::path canonicalPath = std::filesystem::weakly_canonical(path);
+  return canonicalPath.make_preferred().string();
+}
 
 TEST(process_cpp_public, GetProcessNameReturnsExpectedExecutable)
 {
   const std::string process_name = eCAL::Process::GetProcessName();
 
-  ASSERT_FALSE(process_name.empty());
-  EXPECT_EQ(std::string::npos, process_name.find('\0'));
 
-  const std::string executable_name = EcalUtils::Filesystem::BaseName(process_name);
-  EXPECT_EQ(std::string(ECAL_PROCESS_TEST_EXECUTABLE_NAME), executable_name);
+  EXPECT_EQ(normalize_path(std::string(ECAL_PROCESS_TEST_EXECUTABLE_NAME)), normalize_path(process_name));
 }
 
 TEST(process_cpp_public, GetProcessNameIsThreadSafe)
@@ -50,19 +55,14 @@ TEST(process_cpp_public, GetProcessNameIsThreadSafe)
 
   for (int i = 0; i < thread_count; ++i)
   {
-    threads.emplace_back([&barrier]()
+    threads.emplace_back([&barrier, &calls_per_thread]()
     {
       barrier.wait();
 
       for (int call = 0; call < calls_per_thread; ++call)
       {
         const std::string process_name = eCAL::Process::GetProcessName();
-
-        ASSERT_FALSE(process_name.empty());
-        EXPECT_EQ(std::string::npos, process_name.find('\0'));
-
-        const std::string executable_name = EcalUtils::Filesystem::BaseName(process_name);
-        EXPECT_EQ(std::string(ECAL_PROCESS_TEST_EXECUTABLE_NAME), executable_name);
+        EXPECT_EQ(normalize_path(std::string(ECAL_PROCESS_TEST_EXECUTABLE_NAME)), normalize_path(process_name));
       }
     });
   }
