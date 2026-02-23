@@ -21,9 +21,21 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <unistd.h>
 
 namespace eCAL
 { namespace tracing {
+
+    // Helper function to get file path with PID
+    std::string getSendSpansFilePath()
+    {
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans_" + std::to_string(getpid()) + ".json";
+    }
+
+    std::string getReceiveSpansFilePath()
+    {
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans_" + std::to_string(getpid()) + ".json";
+    }
 
     // Fixed file locations for trace data, to be changed
     const std::string SEND_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans.json";
@@ -140,6 +152,7 @@ namespace eCAL
         // Write send spans to JSON file
         try
         {
+            std::string filepath = getSendSpansFilePath();
             json json_array = json::array();
             
             for (const auto& span : batch)
@@ -159,9 +172,9 @@ namespace eCAL
             
             // Read existing data if file exists
             json all_data = json::array();
-            if (std::filesystem::exists(SEND_SPANS_FILE))
+            if (std::filesystem::exists(filepath))
             {
-                std::ifstream input_file(SEND_SPANS_FILE);
+                std::ifstream input_file(filepath);
                 if (input_file.is_open())
                 {
                     input_file >> all_data;
@@ -176,7 +189,7 @@ namespace eCAL
             }
             
             // Write back to file
-            std::ofstream output_file(SEND_SPANS_FILE);
+            std::ofstream output_file(filepath);
             if (output_file.is_open())
             {
                 output_file << all_data.dump(2) << std::endl;
@@ -184,7 +197,7 @@ namespace eCAL
             }
             else
             {
-                std::cerr << "Warning: Could not open send spans file: " << SEND_SPANS_FILE << std::endl;
+                std::cerr << "Warning: Could not open send spans file: " << filepath << std::endl;
             }
         }
         catch (const std::exception& e)
@@ -198,6 +211,7 @@ namespace eCAL
         // Write receive spans to JSON file
         try
         {
+            std::string filepath = getReceiveSpansFilePath();
             json json_array = json::array();
             
             for (const auto& span : batch)
@@ -217,9 +231,9 @@ namespace eCAL
             
             // Read existing data if file exists
             json all_data = json::array();
-            if (std::filesystem::exists(RECEIVE_SPANS_FILE))
+            if (std::filesystem::exists(filepath))
             {
-                std::ifstream input_file(RECEIVE_SPANS_FILE);
+                std::ifstream input_file(filepath);
                 if (input_file.is_open())
                 {
                     input_file >> all_data;
@@ -234,7 +248,7 @@ namespace eCAL
             }
             
             // Write back to file
-            std::ofstream output_file(RECEIVE_SPANS_FILE);
+            std::ofstream output_file(filepath);
             if (output_file.is_open())
             {
                 output_file << all_data.dump(2) << std::endl;
@@ -242,7 +256,7 @@ namespace eCAL
             }
             else
             {
-                std::cerr << "Warning: Could not open receive spans file: " << RECEIVE_SPANS_FILE << std::endl;
+                std::cerr << "Warning: Could not open receive spans file: " << filepath << std::endl;
             }
         }
         catch (const std::exception& e)
