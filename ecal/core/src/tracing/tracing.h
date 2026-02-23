@@ -24,16 +24,28 @@
 #include <list>
 #include <vector>
 #include <mutex>
+#include <chrono>
 #include <ecal/types.h>
 #include <serialization/ecal_struct_sample_common.h>
 #include <serialization/ecal_struct_sample_payload.h>
 #include <ecal/ecal.h>
 #include <time.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+using namespace std::chrono;
 
 namespace eCAL
 {
 namespace tracing
 {
+
+    enum operation_type
+    {
+        send,
+        receive,
+        callback_execution
+    };
+
     // Data structures to hold span information
     struct SSendSpanData
     {
@@ -42,36 +54,39 @@ namespace tracing
         size_t payload_size;
         long long clock;
         uint64_t layer;
-        long long duration_us; // duration in microseconds
+        long long start_ns;  // start timestamp in nanoseconds
+        long long end_ns;    // end timestamp in nanoseconds
+        operation_type op_type;
     };
 
     struct SReceiveSpanData
     {
-        uint64_t entity_id;
+        EntityIdT entity_id;
+        uint64_t topic_id;
         uint64_t process_id;
         long long clock;
         uint64_t layer;
-        long long duration_us; // duration in microseconds
+        long long start_ns;  // start timestamp in nanoseconds
+        long long end_ns;    // end timestamp in nanoseconds
+        operation_type op_type;
     };
 
     class CSendSpan {
     public:
-        CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size);
+        CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size, operation_type op_type);
         ~CSendSpan();
 
     private:
         SSendSpanData data;
-        timespec start_time;
     };
 
     class CReceiveSpan {
     public:
-        CReceiveSpan(const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer);
+        CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer, operation_type op_type);
         ~CReceiveSpan();
 
     private:
         SReceiveSpanData data;
-        timespec start_time;
     };
 
   class CTraceProvider {

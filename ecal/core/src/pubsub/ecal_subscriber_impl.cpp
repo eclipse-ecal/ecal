@@ -378,9 +378,11 @@ namespace eCAL
   {
 
     eCAL::tracing::CReceiveSpan receive_span(
+      m_subscriber_id,
       topic_info_,
       clock_,
-      layer_
+      layer_,
+      eCAL::tracing::operation_type::receive
     );
     
     // ensure thread safety
@@ -460,7 +462,17 @@ namespace eCAL
 
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
-        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
+        {
+          eCAL::tracing::CReceiveSpan receive_span(
+            m_subscriber_id,
+            topic_info_,
+            clock_,
+            layer_,
+            eCAL::tracing::operation_type::callback_execution
+          );
+         
+
+        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data); }
         processed = true;
       }
     }

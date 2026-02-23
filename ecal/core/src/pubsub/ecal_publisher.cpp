@@ -111,7 +111,8 @@ namespace eCAL
       publisher_impl->GetTopicId(), 
       sample.topic.data_clock, 
       eCAL::eTLayerType::tl_all, 
-      payload_.GetSize()
+      payload_.GetSize(),
+      eCAL::tracing::operation_type::send
     );
     
     // in an optimization case the

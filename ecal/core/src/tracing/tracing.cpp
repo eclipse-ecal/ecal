@@ -18,44 +18,53 @@
 */
 
 #include "tracing.h"
+#include <fstream>
+#include <filesystem>
+#include <iostream>
 
 namespace eCAL
 { namespace tracing {
 
-    CSendSpan::CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size)
+    // Fixed file locations for trace data, to be changed
+    const std::string SEND_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans.json";
+    const std::string RECEIVE_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans.json";
+
+    CSendSpan::CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size, operation_type op_type)
     {
-        clock_gettime(CLOCK_MONOTONIC, &start_time);
+        auto now = system_clock::now();
+        data.start_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
         data.entity_id = topic_id.topic_id.entity_id;
         data.process_id = topic_id.topic_id.process_id;
         data.payload_size = payload_size;
         data.clock = clock;
         data.layer = layer;
+        data.op_type = op_type;
     }
 
     CSendSpan::~CSendSpan()
     {
-        timespec end_time;
-        clock_gettime(CLOCK_MONOTONIC, &end_time);
-        data.duration_us = ((end_time.tv_sec - start_time.tv_sec) * 1e9 + (end_time.tv_nsec - start_time.tv_nsec)) / 1000;
+        auto now = system_clock::now();
+        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
         
         CTraceProvider::getInstance().addSendSpan(data);
     }
 
-    CReceiveSpan::CReceiveSpan(const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer)
+    CReceiveSpan::CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer, operation_type op_type)
     {
-        clock_gettime(CLOCK_MONOTONIC, &start_time);
-        data.entity_id = topic_info.topic_id;
+        auto now = system_clock::now();
+        data.start_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+        data.entity_id = entity_id;
+        data.topic_id = topic_info.topic_id;
         data.process_id = topic_info.process_id;
         data.clock = clock;
         data.layer = layer;
+        data.op_type = op_type;
     }
 
     CReceiveSpan::~CReceiveSpan()
     {
-        timespec end_time;
-        clock_gettime(CLOCK_MONOTONIC, &end_time);
-        data.duration_us = ((end_time.tv_sec - start_time.tv_sec) * 1e9 + (end_time.tv_nsec - start_time.tv_nsec)) / 1000;
-        
+        auto now = system_clock::now();
+        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();  
         CTraceProvider::getInstance().addReceiveSpan(data);
     }
 
@@ -128,30 +137,117 @@ namespace eCAL
 
     void CTraceProvider::sendBatchSendSpans(const std::vector<SSendSpanData>& batch)
     {
-        // Default implementation: print to stdout
-        // Users can override this behavior by modifying this method
-        for (const auto& span : batch)
+        // Write send spans to JSON file
+        try
         {
-            std::cout << "SendSpan: entity_id=" << span.entity_id 
-                      << ", process_id=" << span.process_id 
-                      << ", clock=" << span.clock 
-                      << ", layer=" << span.layer 
-                      << ", payload_size=" << span.payload_size 
-                      << ", duration=" << span.duration_us << " us" << std::endl;
+            json json_array = json::array();
+            
+            for (const auto& span : batch)
+            {
+                json span_obj;
+                span_obj["entity_id"] = span.entity_id;
+                span_obj["process_id"] = span.process_id;
+                span_obj["clock"] = span.clock;
+                span_obj["layer"] = span.layer;
+                span_obj["payload_size"] = span.payload_size;
+                span_obj["start_ns"] = span.start_ns;
+                span_obj["end_ns"] = span.end_ns;
+                span_obj["op_type"] = span.op_type;
+                
+                json_array.push_back(span_obj);
+            }
+            
+            // Read existing data if file exists
+            json all_data = json::array();
+            if (std::filesystem::exists(SEND_SPANS_FILE))
+            {
+                std::ifstream input_file(SEND_SPANS_FILE);
+                if (input_file.is_open())
+                {
+                    input_file >> all_data;
+                    input_file.close();
+                }
+            }
+            
+            // Append new spans
+            for (const auto& span : json_array)
+            {
+                all_data.push_back(span);
+            }
+            
+            // Write back to file
+            std::ofstream output_file(SEND_SPANS_FILE);
+            if (output_file.is_open())
+            {
+                output_file << all_data.dump(2) << std::endl;
+                output_file.close();
+            }
+            else
+            {
+                std::cerr << "Warning: Could not open send spans file: " << SEND_SPANS_FILE << std::endl;
+            }
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Error writing send spans to JSON: " << e.what() << std::endl;
         }
     }
 
     void CTraceProvider::sendBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch)
     {
-        // Default implementation: print to stdout
-        // Users can override this behavior by modifying this method
-        for (const auto& span : batch)
+        // Write receive spans to JSON file
+        try
         {
-            std::cout << "ReceiveSpan: entity_id=" << span.entity_id 
-                      << ", process_id=" << span.process_id 
-                      << ", clock=" << span.clock 
-                      << ", layer=" << span.layer 
-                      << ", duration=" << span.duration_us << " us" << std::endl;
+            json json_array = json::array();
+            
+            for (const auto& span : batch)
+            {
+                json span_obj;
+                span_obj["entity_id"] = span.entity_id;
+                span_obj["topic_id"] = span.topic_id;
+                span_obj["process_id"] = span.process_id;
+                span_obj["clock"] = span.clock;
+                span_obj["layer"] = span.layer;
+                span_obj["start_ns"] = span.start_ns;
+                span_obj["end_ns"] = span.end_ns;
+                span_obj["op_type"] = span.op_type;
+
+                json_array.push_back(span_obj);
+            }
+            
+            // Read existing data if file exists
+            json all_data = json::array();
+            if (std::filesystem::exists(RECEIVE_SPANS_FILE))
+            {
+                std::ifstream input_file(RECEIVE_SPANS_FILE);
+                if (input_file.is_open())
+                {
+                    input_file >> all_data;
+                    input_file.close();
+                }
+            }
+            
+            // Append new spans
+            for (const auto& span : json_array)
+            {
+                all_data.push_back(span);
+            }
+            
+            // Write back to file
+            std::ofstream output_file(RECEIVE_SPANS_FILE);
+            if (output_file.is_open())
+            {
+                output_file << all_data.dump(2) << std::endl;
+                output_file.close();
+            }
+            else
+            {
+                std::cerr << "Warning: Could not open receive spans file: " << RECEIVE_SPANS_FILE << std::endl;
+            }
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Error writing receive spans to JSON: " << e.what() << std::endl;
         }
     }
 
