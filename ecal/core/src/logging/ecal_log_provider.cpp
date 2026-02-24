@@ -161,7 +161,7 @@ namespace eCAL
       {
         if (!StartFileLogging())
         {
-          throw std::runtime_error("Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file_config.path);
+          logToConsole("[Error] Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file_config.path);
         }
       }
 
@@ -171,7 +171,7 @@ namespace eCAL
         // create udp logging sender
         if (!StartUDPLogging())
         {
-          throw std::runtime_error("Logging for udp enabled, but could not create udp logging sender.");
+          logToConsole("[Error] Logging for udp enabled, but could not create udp logging sender.");
         }
       }
     }
