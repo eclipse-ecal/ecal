@@ -117,10 +117,10 @@ namespace eCAL
       SetGlobalEcalConfiguration(config_);
       SetGlobalUnitName(unit_name_.c_str());
 
+      if ((components_ & Init::Logging) != 0u) InitializeLogging(config_);
+
       auto globals_instance = CreateGlobalsInstance();
       if (!globals_instance) return false;
-
-      if ((components_ & Init::Logging) != 0u) InitializeLogging();
       
       initialized = globals_instance->Initialize(components_);
       if (!initialized) FinalizeGlobals();

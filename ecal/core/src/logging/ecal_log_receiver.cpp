@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +27,9 @@
 
 namespace
 {
-  void logWarningToConsole(const std::string& msg_)
+  void logToConsole(const std::string& msg_)
   {
-    std::cout << "[eCAL][Logging-Receiver][Warning] " << msg_ << "\n";
+    std::cout << "[eCAL][Logging-Receiver] " << msg_ << "\n";
   }
 }
 
@@ -36,18 +37,20 @@ namespace eCAL
 {
   namespace Logging
   {
+    CLogReceiver::CLogReceiverUniquePtrT CLogReceiver::Create(const SReceiverAttributes& attr_)
+    {
+      try {
+        return Util::CUniqueSingleInstance<CLogReceiver>::Create(attr_);
+      }
+      catch (const std::exception& ex)
+      {
+        logToConsole(std::string("Failed to create logging receiver: ") + ex.what());
+        return nullptr;
+      }
+    }
+
     CLogReceiver::CLogReceiver(const SReceiverAttributes& attr_)
-    : m_created(false)
-    , m_attributes(attr_)
-    {
-    }
-
-    CLogReceiver::~CLogReceiver()
-    {
-      Stop();
-    }
-
-    void CLogReceiver::Start()
+    : m_attributes(attr_)
     {
       if (m_attributes.receive_enabled)
       {
@@ -59,20 +62,9 @@ namespace eCAL
 
         if(m_log_receiver == nullptr)
         {
-          logWarningToConsole("Logging receiver could not be created.");
+          throw std::runtime_error("Logging receiver could not be created.");
         }
       }
-
-      m_created = true;
-    }
-
-    void CLogReceiver::Stop()
-    {
-      if(!m_created) return;
-
-      m_log_receiver.reset();
-
-      m_created = false;
     }
 
     bool CLogReceiver::GetLogging(std::string& log_msg_list_string_)

@@ -202,8 +202,8 @@ namespace eCAL
     // START ALL
     /////////////////////
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                           registration_provider_instance->Start();
-    if (registration_receiver_instance)                                           registration_receiver_instance->Start();
+    if (registration_provider_instance) registration_provider_instance->Start();
+    if (registration_receiver_instance) registration_receiver_instance->Start();
 #endif
     if (descgate_instance)
     {

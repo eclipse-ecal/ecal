@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@
 
 #include "config/attributes/ecal_log_receiver_attributes.h"
 #include "io/udp/ecal_udp_sample_receiver.h"
+#include "util/unique_single_instance.h"
 
 #include <ecal/types/logging.h>
 
@@ -40,26 +42,17 @@ namespace eCAL
   {
     class CLogReceiver
     {
+      friend class Util::CUniqueSingleInstance<CLogReceiver>;
+
       public:
-        /**
-         * @brief Constructor.
-        **/
-        CLogReceiver(const SReceiverAttributes& attr_);
+        using CLogReceiverUniquePtrT = Util::CUniqueSingleInstance<CLogReceiver>::unique_t;
+
+        static CLogReceiverUniquePtrT Create(const SReceiverAttributes& attr_);
 
         /**
          * @brief Destructor.
         **/
-        ~CLogReceiver();
-
-        /**
-         * @brief Start logging.
-        **/
-        void Start();
-
-        /**
-         * @brief Stop logging.
-        **/
-        void Stop();
+        ~CLogReceiver() = default;
 
         /**
          * @brief Get the log messages.
@@ -77,12 +70,21 @@ namespace eCAL
         **/
         void GetLogging(Logging::SLogging& log_);
 
+        CLogReceiver(const CLogReceiver&) = delete;
+        CLogReceiver& operator=(const CLogReceiver&) = delete;
+
+        CLogReceiver(CLogReceiver&&) = delete;
+        CLogReceiver& operator=(CLogReceiver&&) = delete;
+
       private:
+        /**
+         * @brief Constructor.
+        **/
+        CLogReceiver(const SReceiverAttributes& attr_);
+
         bool HasSample(const std::string& sample_name_);
         bool ApplySample(const char* serialized_sample_data_, size_t serialized_sample_size_);
 
-        std::atomic<bool>                           m_created;
-        
         std::mutex                                  m_log_mtx;
 
         SReceiverAttributes                         m_attributes;

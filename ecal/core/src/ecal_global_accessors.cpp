@@ -30,6 +30,7 @@
 #include "ecal_utils/filesystem.h"
 
 #include "config/builder/logging_attribute_builder.h"
+#include "util/unique_single_instance.h"
 #include "logging/ecal_log_provider.h"
 #include "logging/ecal_log_receiver.h"
 
@@ -52,8 +53,8 @@ namespace eCAL
   Types::Process::SProcessState g_process_state;
   std::mutex                    g_process_state_mutex;
 
-  std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
-  std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
+  Logging::CLogProvider::CLogProviderUniquePtrT g_log_provider_instance;
+  Logging::CLogReceiver::CLogReceiverUniquePtrT g_log_receiver_instance;
 
   void SetGlobalUnitName(const char *unit_name_)
   {
@@ -85,20 +86,14 @@ namespace eCAL
     g_ecal_configuration = config_;
   }
 
-  void InitializeLogging()
+  void InitializeLogging(const eCAL::Configuration& config_)
   {
-    g_log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
-    g_log_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
-
-    if (g_log_provider_instance) g_log_provider_instance->Start();
-    if (g_log_receiver_instance) g_log_receiver_instance->Start();
+    g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
+    g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
   }
 
   void ResetLogging()
   {
-    if (g_log_provider_instance) g_log_provider_instance->Stop();
-    if (g_log_receiver_instance) g_log_receiver_instance->Stop();
-
     g_log_provider_instance.reset();
     g_log_receiver_instance.reset();
   }
@@ -111,16 +106,6 @@ namespace eCAL
     }
     
     return nullptr;
-  }
-
-  std::shared_ptr<Logging::CLogReceiver> g_log_udp_receiver()
-  {
-    return g_log_receiver_instance;
-  }
-
-  std::shared_ptr<Logging::CLogProvider> g_log_provider()
-  {
-    return g_log_provider_instance;
   }
 
 #if ECAL_CORE_MONITORING
