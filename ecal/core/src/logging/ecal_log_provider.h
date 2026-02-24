@@ -47,7 +47,7 @@ namespace eCAL
       friend class Util::CUniqueSingleInstance<CLogProvider>;
 
       public:
-        using CLogProviderUniquePtrT = Util::CUniqueSingleInstance<CLogProvider>::unique_t;
+        using CLogProviderUniquePtrT = Util::CUniqueSingleInstance<CLogProvider>::UniqueT;
         static CLogProviderUniquePtrT Create(const SProviderAttributes& attr_);
 
         /**

@@ -45,7 +45,7 @@ namespace eCAL
       friend class Util::CUniqueSingleInstance<CLogReceiver>;
 
       public:
-        using CLogReceiverUniquePtrT = Util::CUniqueSingleInstance<CLogReceiver>::unique_t;
+        using CLogReceiverUniquePtrT = Util::CUniqueSingleInstance<CLogReceiver>::UniqueT;
 
         static CLogReceiverUniquePtrT Create(const SReceiverAttributes& attr_);
 

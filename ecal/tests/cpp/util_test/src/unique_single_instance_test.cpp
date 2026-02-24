@@ -45,7 +45,7 @@ TEST(UniqueSingleInstanceTest /*unused*/, ClassImplementation /*unused*/)
   {
     friend class eCAL::Util::CUniqueSingleInstance<TestClass>;
     public:
-      using TestClassUniquePtrT = eCAL::Util::CUniqueSingleInstance<TestClass>::unique_t;
+      using TestClassUniquePtrT = eCAL::Util::CUniqueSingleInstance<TestClass>::UniqueT;
       
       static TestClassUniquePtrT Create(int value) {
         return eCAL::Util::CUniqueSingleInstance<TestClass>::Create(value);

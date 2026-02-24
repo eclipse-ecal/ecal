@@ -37,7 +37,7 @@ namespace eCAL
     template <typename T>
     struct SSingleInstanceDeleter {
       void operator()(T* p) const noexcept {
-        CUniqueSingleInstance<T>::clear_alive_();
+        CUniqueSingleInstance<T>::clearAlive();
         delete p;
       }
     };
@@ -46,39 +46,39 @@ namespace eCAL
     class CUniqueSingleInstance
     {
     public:
-      using unique_t = std::unique_ptr<T, SSingleInstanceDeleter<T>>;
+      using UniqueT = std::unique_ptr<T, SSingleInstanceDeleter<T>>;
 
       template <typename... Args>
-      static unique_t Create(Args&&... args)
+      static UniqueT Create(Args&&... args)
       {
-        std::lock_guard<std::mutex> lock(get_mutex_());
-        if (get_alive_().load(std::memory_order_acquire))
-          return unique_t{nullptr};
+        std::lock_guard<std::mutex> lock(getMutex());
+        if (getAlive().load(std::memory_order_acquire))
+          return UniqueT{nullptr};
 
-        unique_t ptr(new T(std::forward<Args>(args)...));
-        get_alive_().store(true, std::memory_order_release);
+        UniqueT ptr(new T(std::forward<Args>(args)...));
+        getAlive().store(true, std::memory_order_release);
         return ptr;
       }
 
-      static bool alive() noexcept {
-        return get_alive_().load(std::memory_order_acquire);
+      static bool isAlive() noexcept {
+        return getAlive().load(std::memory_order_acquire);
       }
 
     private:
       friend struct SSingleInstanceDeleter<T>;
 
-      static void clear_alive_() noexcept
+      static void clearAlive() noexcept
       {
-        std::lock_guard<std::mutex> lock(get_mutex_());
-        get_alive_().store(false, std::memory_order_release);
+        std::lock_guard<std::mutex> lock(getMutex());
+        getAlive().store(false, std::memory_order_release);
       }
 
-      static std::atomic<bool>& get_alive_() {
+      static std::atomic<bool>& getAlive() {
         static std::atomic<bool> a{false};
         return a;
       }
 
-      static std::mutex& get_mutex_() {
+      static std::mutex& getMutex() {
         static std::mutex m; 
         return m;
       }
