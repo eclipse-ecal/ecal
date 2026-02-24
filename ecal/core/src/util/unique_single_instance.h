@@ -37,7 +37,7 @@ namespace eCAL
     template <typename T>
     struct SSingleInstanceDeleter {
       void operator()(T* p) const noexcept {
-        CUniqueSingleInstance<T>::clearAlive();
+        CUniqueSingleInstance<T>::ClearAlive();
         delete p;
       }
     };
@@ -51,34 +51,34 @@ namespace eCAL
       template <typename... Args>
       static UniqueT Create(Args&&... args)
       {
-        std::lock_guard<std::mutex> lock(getMutex());
-        if (getAlive().load(std::memory_order_acquire))
+        std::lock_guard<std::mutex> lock(GetMutex());
+        if (GetAlive().load(std::memory_order_acquire))
           return UniqueT{nullptr};
 
         UniqueT ptr(new T(std::forward<Args>(args)...));
-        getAlive().store(true, std::memory_order_release);
+        GetAlive().store(true, std::memory_order_release);
         return ptr;
       }
 
-      static bool isAlive() noexcept {
-        return getAlive().load(std::memory_order_acquire);
+      static bool IsAlive() noexcept {
+        return GetAlive().load(std::memory_order_acquire);
       }
 
     private:
       friend struct SSingleInstanceDeleter<T>;
 
-      static void clearAlive() noexcept
+      static void ClearAlive() noexcept
       {
-        std::lock_guard<std::mutex> lock(getMutex());
-        getAlive().store(false, std::memory_order_release);
+        std::lock_guard<std::mutex> lock(GetMutex());
+        GetAlive().store(false, std::memory_order_release);
       }
 
-      static std::atomic<bool>& getAlive() {
+      static std::atomic<bool>& GetAlive() {
         static std::atomic<bool> a{false};
         return a;
       }
 
-      static std::mutex& getMutex() {
+      static std::mutex& GetMutex() {
         static std::mutex m; 
         return m;
       }
