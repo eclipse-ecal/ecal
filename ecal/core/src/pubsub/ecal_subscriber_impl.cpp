@@ -96,6 +96,19 @@ namespace eCAL
     m_topic_id.topic_id.host_name = m_attributes.host_name;
     m_topic_id.topic_id.process_id = m_attributes.process_id;
 
+    // record topic metadata for tracing
+    {
+      eCAL::tracing::STopicMetadata meta;
+      meta.entity_id  = m_subscriber_id;
+      meta.process_id = m_attributes.process_id;
+      meta.host_name  = m_attributes.host_name;
+      meta.topic_name = m_attributes.topic_name;
+      meta.encoding   = m_topic_info.encoding;
+      meta.type_name  = m_topic_info.name;
+      meta.direction  = eCAL::tracing::topic_direction::subscriber;
+      eCAL::tracing::CTraceProvider::getInstance().addTopicMetadata(meta);
+    }
+
     // start transport layers
     InitializeLayers();
     StartTransportLayer();

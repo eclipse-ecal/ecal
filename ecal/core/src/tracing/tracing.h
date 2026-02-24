@@ -46,6 +46,24 @@ namespace tracing
         callback_execution
     };
 
+    enum topic_direction
+    {
+        publisher,
+        subscriber
+    };
+
+    // Metadata captured when a topic is created
+    struct STopicMetadata
+    {
+        uint64_t         entity_id;       // unique entity id
+        int32_t          process_id;      // PID of the owning process
+        std::string      host_name;       // host that created the topic
+        std::string      topic_name;      // topic name used for pub/sub matching
+        std::string      encoding;        // datatype encoding (e.g. protobuf)
+        std::string      type_name;       // datatype name
+        topic_direction  direction;       // publisher or subscriber
+    };
+
     // Data structures to hold span information
     struct SSendSpanData
     {
@@ -107,6 +125,9 @@ namespace tracing
         // Add span data to buffer
         void addSendSpan(const SSendSpanData& span_data);
         void addReceiveSpan(const SReceiveSpanData& span_data);
+
+        // Topic metadata — written directly to file (no buffering)
+        void addTopicMetadata(const STopicMetadata& metadata);
         
         // Get buffered spans
         std::vector<SSendSpanData> getSendSpans() { return send_span_buffer_; }
@@ -126,10 +147,12 @@ namespace tracing
         size_t send_batch_size_{10};
         size_t receive_batch_size_{10};
         mutable std::mutex buffer_mutex_;
+        mutable std::mutex metadata_mutex_;
         
         // Internal method for batch sending (to be implemented by user for their specific backend)
         void sendBatchSendSpans(const std::vector<SSendSpanData>& batch);
         void sendBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch);
+        void writeTopicMetadata(const STopicMetadata& metadata);
   };
 
 } // namespace tracing

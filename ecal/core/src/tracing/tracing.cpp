@@ -37,6 +37,11 @@ namespace eCAL
         return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans_" + std::to_string(getpid()) + ".json";
     }
 
+    std::string getTopicMetadataFilePath()
+    {
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".json";
+    }
+
     // Fixed file locations for trace data, to be changed
     const std::string SEND_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans.json";
     const std::string RECEIVE_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans.json";
@@ -139,6 +144,11 @@ namespace eCAL
         }
         
         sendBatchReceiveSpans(batch_to_send);
+    }
+
+    void CTraceProvider::addTopicMetadata(const STopicMetadata& metadata)
+    {
+        writeTopicMetadata(metadata);
     }
 
     void CTraceProvider::flushAllSpans()
@@ -262,6 +272,54 @@ namespace eCAL
         catch (const std::exception& e)
         {
             std::cerr << "Error writing receive spans to JSON: " << e.what() << std::endl;
+        }
+    }
+
+    void CTraceProvider::writeTopicMetadata(const STopicMetadata& metadata)
+    {
+        try
+        {
+            std::lock_guard<std::mutex> lock(metadata_mutex_);
+            std::string filepath = getTopicMetadataFilePath();
+
+            json obj;
+            obj["entity_id"]   = metadata.entity_id;
+            obj["process_id"]  = metadata.process_id;
+            obj["host_name"]   = metadata.host_name;
+            obj["topic_name"]  = metadata.topic_name;
+            obj["encoding"]    = metadata.encoding;
+            obj["type_name"]   = metadata.type_name;
+            obj["direction"]   = (metadata.direction == topic_direction::publisher) ? "publisher" : "subscriber";
+
+            // Read existing data if file exists
+            json all_data = json::array();
+            if (std::filesystem::exists(filepath))
+            {
+                std::ifstream input_file(filepath);
+                if (input_file.is_open())
+                {
+                    input_file >> all_data;
+                    input_file.close();
+                }
+            }
+
+            all_data.push_back(obj);
+
+            // Write back to file
+            std::ofstream output_file(filepath);
+            if (output_file.is_open())
+            {
+                output_file << all_data.dump(2) << std::endl;
+                output_file.close();
+            }
+            else
+            {
+                std::cerr << "Warning: Could not open topic metadata file: " << filepath << std::endl;
+            }
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Error writing topic metadata to JSON: " << e.what() << std::endl;
         }
     }
 
