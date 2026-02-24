@@ -60,7 +60,6 @@
 
 #if defined(ECAL_OS_LINUX) || defined(ECAL_OS_QNX)
 #include <unistd.h>
-#include <cstring>
 #include <climits>
 #endif /* ECAL_OS_LINUX || ECAL_OS_QNX */
 
