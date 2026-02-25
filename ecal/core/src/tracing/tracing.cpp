@@ -22,6 +22,9 @@
 #include <filesystem>
 #include <iostream>
 #include <unistd.h>
+#include <csignal>
+#include <cstdlib>
+#include <atomic>
 
 namespace eCAL
 { namespace tracing {
@@ -86,9 +89,62 @@ namespace eCAL
     }
 
     // CTraceProvider implementation
-    CTraceProvider::CTraceProvider() = default;
+    std::atomic<bool> CTraceProvider::flush_done_{false};
+
+    CTraceProvider::CTraceProvider()
+    {
+        registerExitHandlers();
+    }
     
-    CTraceProvider::~CTraceProvider() = default;
+    CTraceProvider::~CTraceProvider()
+    {
+        if (!flush_done_.exchange(true))
+        {
+            flushAllSpans();
+        }
+    }
+
+    void CTraceProvider::registerExitHandlers()
+    {
+        // atexit runs before static destructors — first chance to flush
+        std::atexit(atExitHandler);
+
+        // Catch common termination / crash signals
+        struct sigaction sa{};
+        sa.sa_handler = signalHandler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESETHAND;  // restore default handler after first invocation
+
+        sigaction(SIGINT,  &sa, nullptr);
+        sigaction(SIGTERM, &sa, nullptr);
+        sigaction(SIGABRT, &sa, nullptr);
+        sigaction(SIGSEGV, &sa, nullptr);
+        sigaction(SIGBUS,  &sa, nullptr);
+        sigaction(SIGFPE,  &sa, nullptr);
+    }
+
+    void CTraceProvider::atExitHandler()
+    {
+        if (!flush_done_.exchange(true))
+        {
+            getInstance().flushAllSpans();
+        }
+    }
+
+    void CTraceProvider::signalHandler(int signum)
+    {
+        // Best-effort flush — not fully async-signal-safe, but
+        // maximises the chance of persisting buffered spans.
+        if (!flush_done_.exchange(true))
+        {
+            getInstance().flushAllSpans();
+        }
+
+        // Re-raise with default handler so the OS generates the
+        // expected exit status / core dump.
+        signal(signum, SIG_DFL);
+        raise(signum);
+    }
 
     void CTraceProvider::addSendSpan(const SSendSpanData& span_data)
     {

@@ -21,6 +21,9 @@
 
 #include <string>
 #include <ctime>
+#include <cstdlib>
+#include <csignal>
+#include <atomic>
 #include <list>
 #include <vector>
 #include <mutex>
@@ -141,6 +144,11 @@ namespace tracing
     private:
         CTraceProvider();
         ~CTraceProvider();
+
+        void registerExitHandlers();
+        static void atExitHandler();
+        static void signalHandler(int signum);
+        static std::atomic<bool> flush_done_;
         
         std::vector<SSendSpanData> send_span_buffer_;
         std::vector<SReceiveSpanData> receive_span_buffer_;
