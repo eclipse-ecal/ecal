@@ -70,15 +70,25 @@ namespace eCAL
       public:
         CSharedLockGuard()
         {
-          // If a writer is waiting, yield or spin briefly
-          while (WriterWaiting().load(std::memory_order_acquire))
-            std::this_thread::yield();
+          std::unique_lock<std::mutex> lk(GetAccessMutex());
 
-          lock_ = std::shared_lock<std::shared_mutex>(GetAccessSharedMutex());
+          AccessCondition().wait(lk, []{
+              return !WriterWaiting().load(std::memory_order_acquire);
+          });
+
+          ActiveReaders().fetch_add(1, std::memory_order_acq_rel);
+          // unlock AccessMutex before leaving; reader remains active
+        }
+
+        ~CSharedLockGuard()
+        {
+          std::unique_lock<std::mutex> lk(GetAccessMutex());
+          if (ActiveReaders().fetch_sub(1, std::memory_order_acq_rel) == 1)
+            AccessCondition().notify_all();
         }
 
       private:
-        std::shared_lock<std::shared_mutex> lock_;
+        std::unique_lock<std::mutex> lock_;
       };
 
       class CUniqueLockGuard
@@ -86,18 +96,23 @@ namespace eCAL
       public:
         CUniqueLockGuard()
         {
-          // Signal writer intent
+          std::unique_lock<std::mutex> lk(GetAccessMutex());
           WriterWaiting().store(true, std::memory_order_release);
 
-          // Wait for the mutex with exclusive semantics
-          lock_ = std::unique_lock<std::shared_mutex>(GetAccessSharedMutex());
-
-          // Writer now owns the mutex, safe to reset flag
-          WriterWaiting().store(false, std::memory_order_release);
+          AccessCondition().wait(lk, []{
+              return ActiveReaders().load(std::memory_order_acquire) == 0;
+          });
         }
 
+        ~CUniqueLockGuard()
+        {
+            std::unique_lock<std::mutex> lk(GetAccessMutex());
+            WriterWaiting().store(false, std::memory_order_release);
+            AccessCondition().notify_all();
+        }
+        
       private:
-        std::unique_lock<std::shared_mutex> lock_;
+        std::unique_lock<std::mutex> lock_;
       };
 
     private:
@@ -119,9 +134,19 @@ namespace eCAL
         return m;
       }
 
-      static std::shared_mutex& GetAccessSharedMutex() {
-        static std::shared_mutex m; 
+      static std::mutex& GetAccessMutex() {
+        static std::mutex m; 
         return m;
+      }
+
+      static std::condition_variable& AccessCondition() {
+        static std::condition_variable cv;
+        return cv;
+      }
+
+      static std::atomic<int>& ActiveReaders() {
+        static std::atomic<int> r{0};
+        return r;
       }
 
       static std::atomic<bool>& WriterWaiting() {
