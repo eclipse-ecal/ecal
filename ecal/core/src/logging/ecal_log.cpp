@@ -23,6 +23,7 @@
 **/
 
 #include <ecal/ecal.h>
+#include <shared_mutex>
 #include <string>
 
 #include "ecal_log_provider.h"
@@ -40,6 +41,7 @@ namespace eCAL
     **/
     void Log(eLogLevel level_, const std::string& msg_)
     {
+      std::shared_lock provider_lock(g_log_provider_mutex);
       if(g_log_provider_instance) g_log_provider_instance->Log(level_, msg_);
     }
 
@@ -52,6 +54,7 @@ namespace eCAL
     **/
     bool GetLogging(std::string& log_)
     {
+      std::shared_lock receiver_lock(g_log_receiver_mutex);
       if(g_log_receiver_instance) return g_log_receiver_instance->GetLogging(log_);
       return false;
     }
@@ -65,6 +68,7 @@ namespace eCAL
     **/
     bool GetLogging(Logging::SLogging& log_)
     {
+      std::shared_lock receiver_lock(g_log_receiver_mutex);
       if(g_log_receiver_instance) 
       {
         g_log_receiver_instance->GetLogging(log_);
