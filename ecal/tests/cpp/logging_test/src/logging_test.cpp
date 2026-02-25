@@ -399,3 +399,63 @@ TEST(logging_disable /*unused*/, console /*unused*/)
 
   eCAL::Finalize();
 }
+
+TEST(logging_runtime /*unused*/, finalize_while_logging /*unused*/)
+{
+  const std::string unit_name    = "logging_runtime_finalize_while_logging_test";
+  const std::string log_message  = "Logging while finalize test for udp, count: ";
+  auto  ecal_config              = GetUDPConfiguration();
+  constexpr size_t thread_count  = 50;
+
+  eCAL::Initialize(ecal_config, unit_name);
+
+  std::atomic<bool> is_initialized = true;
+  std::atomic<int> log_count{0};
+
+  auto logging_function = [&]()
+  {
+    while (is_initialized.load())
+    {
+      eCAL::Logging::Log(eCAL::Logging::eLogLevel::log_level_info, log_message + std::to_string(log_count.fetch_add(1)));      
+    }
+  };
+
+  std::vector<std::thread> logging_threads;
+  for (size_t i = 0; i < thread_count; ++i)
+  {
+    logging_threads.emplace_back(logging_function);
+  }
+
+  auto log_receiver_thread_function = [&]()
+  {
+    eCAL::Logging::SLogging log;
+    while (is_initialized.load())
+    {
+      eCAL::Logging::GetLogging(log);
+    }
+  };
+
+  for (size_t i = 0; i < thread_count; ++i)
+  {
+    logging_threads.emplace_back(log_receiver_thread_function);
+  }
+
+    // wait a bit to ensure the logging thread is running
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+  // finalize will reset logging
+  // measure time of finalize to ensure it doesn't take too long, which would indicate a deadlock
+  auto start = std::chrono::steady_clock::now();
+  eCAL::Finalize();
+  auto end = std::chrono::steady_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  
+  EXPECT_LT(duration.count(), 3000); // finalize should not take longer than 3 seconds, otherwise there might be a deadlock
+  
+  is_initialized.store(false);
+
+  for (auto& thread : logging_threads)
+  {
+    if (thread.joinable()) thread.join();
+  }
+}
