@@ -69,7 +69,13 @@ namespace eCAL
       {
       public:
         CSharedLockGuard()
-          : lock_(GetAccessSharedMutex()) {}
+        {
+          // If a writer is waiting, yield or spin briefly
+          while (WriterWaiting().load(std::memory_order_acquire))
+            std::this_thread::yield();
+
+          lock_ = std::shared_lock<std::shared_mutex>(GetAccessSharedMutex());
+        }
 
       private:
         std::shared_lock<std::shared_mutex> lock_;
@@ -79,7 +85,16 @@ namespace eCAL
       {
       public:
         CUniqueLockGuard()
-          : lock_(GetAccessSharedMutex()) {}
+        {
+          // Signal writer intent
+          WriterWaiting().store(true, std::memory_order_release);
+
+          // Wait for the mutex with exclusive semantics
+          lock_ = std::unique_lock<std::shared_mutex>(GetAccessSharedMutex());
+
+          // Writer now owns the mutex, safe to reset flag
+          WriterWaiting().store(false, std::memory_order_release);
+        }
 
       private:
         std::unique_lock<std::shared_mutex> lock_;
@@ -107,6 +122,11 @@ namespace eCAL
       static std::shared_mutex& GetAccessSharedMutex() {
         static std::shared_mutex m; 
         return m;
+      }
+
+      static std::atomic<bool>& WriterWaiting() {
+        static std::atomic<bool> w{false};
+        return w;
       }
     };
   }
