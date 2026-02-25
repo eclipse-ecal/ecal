@@ -26,6 +26,7 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 #include <utility>
 
 namespace eCAL
@@ -64,6 +65,26 @@ namespace eCAL
         return GetAlive().load(std::memory_order_acquire);
       }
 
+      class CSharedLockGuard
+      {
+      public:
+        CSharedLockGuard()
+          : lock_(GetAccessSharedMutex()) {}
+
+      private:
+        std::shared_lock<std::shared_mutex> lock_;
+      };
+
+      class CUniqueLockGuard
+      {
+      public:
+        CUniqueLockGuard()
+          : lock_(GetAccessSharedMutex()) {}
+
+      private:
+        std::unique_lock<std::shared_mutex> lock_;
+      };
+
     private:
       friend struct SSingleInstanceDeleter<T>;
 
@@ -80,6 +101,11 @@ namespace eCAL
 
       static std::mutex& GetMutex() {
         static std::mutex m; 
+        return m;
+      }
+
+      static std::shared_mutex& GetAccessSharedMutex() {
+        static std::shared_mutex m; 
         return m;
       }
     };

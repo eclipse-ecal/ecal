@@ -120,7 +120,4 @@ namespace eCAL
 
   extern Logging::CLogProviderUniquePtrT g_log_provider_instance;
   extern Logging::CLogReceiverUniquePtrT g_log_receiver_instance;
-
-  extern std::shared_mutex             g_log_provider_mutex;
-  extern std::shared_mutex             g_log_receiver_mutex;
 }

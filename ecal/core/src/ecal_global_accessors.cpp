@@ -56,9 +56,6 @@ namespace eCAL
   Logging::CLogProvider::CLogProviderUniquePtrT g_log_provider_instance;
   Logging::CLogReceiver::CLogReceiverUniquePtrT g_log_receiver_instance;
 
-  std::shared_mutex             g_log_provider_mutex;
-  std::shared_mutex             g_log_receiver_mutex;
-
   void SetGlobalUnitName(const char *unit_name_)
   {
     if(unit_name_ != nullptr) g_unit_name = unit_name_;
@@ -92,11 +89,11 @@ namespace eCAL
   void InitializeLogging(const eCAL::Configuration& config_)
   {
     {
-      std::unique_lock provider_lock(g_log_provider_mutex);
+      Util::CUniqueSingleInstance<Logging::CLogProvider>::CUniqueLockGuard guard;
       g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
     }
     {
-      std::unique_lock receiver_lock(g_log_receiver_mutex);
+      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CUniqueLockGuard guard;
       g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
     }
   }
@@ -104,11 +101,11 @@ namespace eCAL
   void ResetLogging()
   {
     {
-      std::unique_lock provider_lock(g_log_provider_mutex);
+      Util::CUniqueSingleInstance<Logging::CLogProvider>::CUniqueLockGuard guard;
       g_log_provider_instance.reset();
     }
     {
-      std::unique_lock receiver_lock(g_log_receiver_mutex);
+      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CUniqueLockGuard guard;
       g_log_receiver_instance.reset();
     }
   }
