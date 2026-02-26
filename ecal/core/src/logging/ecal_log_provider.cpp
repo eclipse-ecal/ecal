@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,9 +72,9 @@ namespace
 
 namespace
 {
-  void logWarningToConsole(const std::string& msg_)
+  void logToConsole(const std::string& msg_)
   {
-    std::cout << "[eCAL][Logging-Provider][Warning] " << msg_ << "\n";
+    std::cout << "[eCAL][Logging-Provider]" << msg_ << "\n";
   }
 
   void createLogHeader(std::stringstream& msg_stream, const eCAL::Logging::eLogLevel level_, const eCAL::Logging::SProviderAttributes& attr_, const eCAL::Time::ecal_clock::time_point& log_time_)
@@ -138,26 +139,29 @@ namespace eCAL
 {
   namespace Logging
   {
+    CLogProvider::CLogProviderUniquePtrT CLogProvider::Create(const SProviderAttributes& attr_)
+    {
+      try
+      {
+        return Util::CUniqueSingleInstance<CLogProvider>::Create(attr_);
+      }
+      catch (const std::exception& e)
+      {
+        logToConsole(std::string("[Error] Failed to create CLogProvider: ") + e.what());
+        return nullptr;
+      }
+    }
+
     CLogProvider::CLogProvider(const SProviderAttributes& attr_)
-    : m_created(false)
-    , m_logfile(nullptr)
+    : m_logfile(nullptr)
     , m_attributes(attr_)
-    {
-    }
-
-    CLogProvider::~CLogProvider()
-    {
-      Stop();
-    }
-
-    void CLogProvider::Start()
     {
       // create log file if file logging is enabled
       if (m_attributes.file_sink.enabled)
       {
         if (!StartFileLogging())
         {
-          logWarningToConsole("Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file_config.path);
+          logToConsole("[Error] Logging for file enabled, but specified path to log is not valid or could not be created: " + m_attributes.file_config.path);
         }
       }
 
@@ -167,13 +171,19 @@ namespace eCAL
         // create udp logging sender
         if (!StartUDPLogging())
         {
-          logWarningToConsole("Logging for udp enabled, but could not create udp logging sender.");
+          logToConsole("[Error] Logging for udp enabled, but could not create udp logging sender.");
         }
       }
-
-      m_created = true;
     }
-  
+
+    CLogProvider::~CLogProvider()
+    {
+      const std::lock_guard<std::mutex> lock(m_log_mtx);;
+
+      if(m_logfile != nullptr) fclose(m_logfile);
+      m_logfile = nullptr;
+    }
+
     bool CLogProvider::StartFileLogging()
     {
       if (!isDirectoryOrCreate(m_attributes.file_config.path)) return false;
@@ -192,7 +202,7 @@ namespace eCAL
 
       if (m_logfile != nullptr)
       {
-        std::cout << "[eCAL][Logging-Provider] Logfile created: " << m_logfile_name << "\n";
+        logToConsole("[Info] Logfile created: " + m_logfile_name);
         return true;
       }
 
@@ -211,7 +221,6 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_log_mtx);
 
-      if(!m_created) return;
       if(msg_.empty()) return;
 
       const Filter log_con  = level_ & m_attributes.console_sink.log_level;
@@ -259,20 +268,6 @@ namespace eCAL
           SerializeToBuffer(log_message, m_log_message_vec);
           m_udp_logging_sender->Send("_log_message_", m_log_message_vec);
       }
-    }
-
-    void CLogProvider::Stop()
-    {
-      if(!m_created) return;
-
-      const std::lock_guard<std::mutex> lock(m_log_mtx);
-
-      m_udp_logging_sender.reset();
-
-      if(m_logfile != nullptr) fclose(m_logfile);
-      m_logfile = nullptr;
-
-      m_created = false;
     }
   }
 }

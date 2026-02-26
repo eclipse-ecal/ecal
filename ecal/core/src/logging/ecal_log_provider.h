@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@
 
 #include "config/attributes/ecal_log_provider_attributes.h"
 #include "io/udp/ecal_udp_sample_sender.h"
+#include "util/unique_single_instance.h"
 
 #include <ecal/log_level.h>
 #include <ecal/types/logging.h>
@@ -42,26 +44,16 @@ namespace eCAL
   {
     class CLogProvider
     {
+      friend class Util::CUniqueSingleInstance<CLogProvider>;
+
       public:
-        /**
-         * @brief Constructor.
-        **/
-        CLogProvider(const SProviderAttributes& attr_);
+        using CLogProviderUniquePtrT = Util::CUniqueSingleInstance<CLogProvider>::UniqueT;
+        static CLogProviderUniquePtrT Create(const SProviderAttributes& attr_);
 
         /**
          * @brief Destructor.
         **/
         ~CLogProvider();
-
-        /**
-         * @brief Start logging.
-        **/
-        void Start();
-
-        /**
-         * @brief Stop logging.
-        **/
-        void Stop();
 
         /**
           * @brief Log a message.
@@ -71,17 +63,24 @@ namespace eCAL
         **/
         void Log(eLogLevel level_, const std::string& msg_);
 
-      private:
+        CLogProvider(const CLogProvider&) = delete;
+        CLogProvider& operator=(const CLogProvider&) = delete;
 
-        CLogProvider(const CLogProvider&);                 // prevent copy-construction
-        CLogProvider& operator=(const CLogProvider&);      // prevent assignment
+        CLogProvider(CLogProvider&&) = delete;
+        CLogProvider& operator=(CLogProvider&&) = delete;
+
+
+      private:
+        /**
+         * @brief Constructor.
+        **/
+        CLogProvider(const SProviderAttributes& attr_);
 
         bool StartFileLogging();
         bool StartUDPLogging();
 
         std::mutex                                m_log_mtx;
 
-        std::atomic<bool>                         m_created;
         std::unique_ptr<eCAL::UDP::CSampleSender> m_udp_logging_sender;
 
         // log message list and log message serialization buffer
@@ -92,7 +91,6 @@ namespace eCAL
         FILE*                                     m_logfile;
 
         SProviderAttributes                       m_attributes;
-      
     };
   }
 }

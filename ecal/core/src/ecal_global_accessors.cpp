@@ -29,6 +29,11 @@
 #include "ecal_globals.h"
 #include "ecal_utils/filesystem.h"
 
+#include "config/builder/logging_attribute_builder.h"
+#include "util/unique_single_instance.h"
+#include "logging/ecal_log_provider.h"
+#include "logging/ecal_log_receiver.h"
+
 #include <atomic>
 #include <string>
 
@@ -47,6 +52,9 @@ namespace eCAL
 
   Types::Process::SProcessState g_process_state;
   std::mutex                    g_process_state_mutex;
+
+  Logging::CLogProvider::CLogProviderUniquePtrT g_log_provider_instance;
+  Logging::CLogReceiver::CLogReceiverUniquePtrT g_log_receiver_instance;
 
   void SetGlobalUnitName(const char *unit_name_)
   {
@@ -78,6 +86,30 @@ namespace eCAL
     g_ecal_configuration = config_;
   }
 
+  void InitializeLogging(const eCAL::Configuration& config_)
+  {
+    {
+      Util::CUniqueSingleInstance<Logging::CLogProvider>::CUniqueLockGuard guard;
+      g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
+    }
+    {
+      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CUniqueLockGuard guard;
+      g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
+    }
+  }
+
+  void ResetLogging()
+  {
+    {
+      Util::CUniqueSingleInstance<Logging::CLogProvider>::CUniqueLockGuard guard;
+      g_log_provider_instance.reset();
+    }
+    {
+      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CUniqueLockGuard guard;
+      g_log_receiver_instance.reset();
+    }
+  }
+
   std::shared_ptr<CGlobals> g_globals()
   {
     if (auto globals_instance = CGlobals::instance(); globals_instance) 
@@ -85,18 +117,6 @@ namespace eCAL
       return globals_instance->IsInitialized() ? std::move(globals_instance) : nullptr;
     }
     
-    return nullptr;
-  }
-
-  std::shared_ptr<Logging::CLogReceiver> g_log_udp_receiver()
-  {
-    if (auto globals = g_globals(); globals) return globals->log_udp_receiver();
-    return nullptr;
-  }
-
-  std::shared_ptr<Logging::CLogProvider> g_log_provider()
-  {
-    if (auto globals = g_globals(); globals) return globals->log_provider();
     return nullptr;
   }
 

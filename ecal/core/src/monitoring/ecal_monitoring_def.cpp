@@ -30,9 +30,9 @@
 
 namespace eCAL
 {
-  CMonitoring::CMonitoring(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver_)
+  CMonitoring::CMonitoring(std::shared_ptr<CRegistrationReceiver> registration_receiver_)
   {
-    m_monitoring_impl = std::make_unique<CMonitoringImpl>(std::move(log_provider_), std::move(registration_receiver_));
+    m_monitoring_impl = std::make_unique<CMonitoringImpl>(std::move(registration_receiver_));
   }
 
   CMonitoring::~CMonitoring()

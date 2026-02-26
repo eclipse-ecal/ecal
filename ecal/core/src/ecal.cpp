@@ -23,9 +23,9 @@
 **/
 
 #include "ecal_def.h"
-#include "git_version.h"
 #include "ecal_event.h"
 #include "ecal_globals.h"
+#include "git_version.h"
 #include <string>
 #include <vector>
 
@@ -117,9 +117,11 @@ namespace eCAL
       SetGlobalEcalConfiguration(config_);
       SetGlobalUnitName(unit_name_.c_str());
 
+      if ((components_ & Init::Logging) != 0u) InitializeLogging(config_);
+
       auto globals_instance = CreateGlobalsInstance();
       if (!globals_instance) return false;
-
+      
       initialized = globals_instance->Initialize(components_);
       if (!initialized) FinalizeGlobals();
     }
@@ -149,6 +151,7 @@ namespace eCAL
   **/
   bool IsInitialized(unsigned int component_)
   {
+    if (component_ == Init::Logging) return g_log_provider_instance != nullptr;
     if (auto globals = g_globals(); globals) return globals->IsInitialized(component_);
     return false ;
   }
@@ -166,6 +169,7 @@ namespace eCAL
       finalized = FinalizeGlobals();
     }
     ResetGlobalEcalConfiguration();
+    ResetLogging();
 
     return finalized;
   }

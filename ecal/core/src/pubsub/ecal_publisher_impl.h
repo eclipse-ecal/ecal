@@ -65,7 +65,6 @@ namespace eCAL
   struct SPublisherGlobalContext
   {
     std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
-    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
   };
 
   class CPublisherImpl

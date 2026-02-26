@@ -37,6 +37,7 @@
 #include <string>
 
 #include <ecal/config.h>
+#include <ecal/log.h>
 #include <ecal_globals.h>
 #include "ecal_def.h"
 
@@ -79,7 +80,7 @@ namespace eCAL
     }
     else
     {
-      if (m_context.log_provider) m_context.log_provider->Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
+      eCAL::Logging::Log(Logging::log_level_error, "[CRegistrationProvider] No registration layer enabled.");
       return;
     }
 
