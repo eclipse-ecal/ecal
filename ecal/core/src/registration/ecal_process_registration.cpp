@@ -29,7 +29,9 @@
 #include <ecal/process.h>
 #include "ecal_global_accessors.h"
 #include "ecal_globals.h"
+#if ECAL_CORE_TIMEPLUGIN
 #include "time/ecal_timegate.h"
+#endif
 
 eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
 {

@@ -24,6 +24,7 @@ find_package(Threads REQUIRED)
 set (ecal_utils_includes
   include/ecal_utils/barrier.h
   include/ecal_utils/command_line.h
+  include/ecal_utils/dynamic_library.h
   include/ecal_utils/filesystem.h
   include/ecal_utils/ecal_utils.h
   include/ecal_utils/str_convert.h
@@ -34,6 +35,7 @@ set (ecal_utils_includes
 
 set(ecal_utils_src
     src/command_line.cpp
+    src/dynamic_library.cpp
     src/filesystem.cpp
     src/str_convert.cpp
     src/win_cp_changer.cpp
@@ -52,7 +54,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 # filesystem.cpp uses fts on Linux, some distibutions (i.e: Alpine) have fts as a
 # separate library
@@ -73,3 +75,7 @@ source_group(TREE "${CMAKE_CURRENT_LIST_DIR}"
 ecal_install_library(${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER lib)
+
+if (ECAL_BUILD_TESTS)
+add_subdirectory(tests)
+endif()
