@@ -58,6 +58,8 @@ namespace eCAL
     bool CheckSize(size_t size_);
     bool Write(CPayloadWriter& payload_, const SWriterAttr& data_, bool force_full_write_ = false);
 
+    void SetTracingInfo(uint64_t entity_id_, int32_t process_id_);
+
     std::string GetName() const;
     size_t GetSize() const;
     bool IsCreated() const { return m_created; };
@@ -75,6 +77,11 @@ namespace eCAL
     SSyncMemoryFileAttr m_attr;
     CMemoryFile         m_memfile;
     bool                m_created;
+
+    // Tracing context (not part of core SHM protocol)
+    uint64_t            m_entity_id_for_tracing{0};
+    int32_t             m_process_id_for_tracing{0};
+    long long           m_current_clock_for_tracing{0};
 
     struct SEventHandlePair
     {

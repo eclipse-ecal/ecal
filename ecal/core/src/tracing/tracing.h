@@ -46,7 +46,8 @@ namespace tracing
     {
         send,
         receive,
-        callback_execution
+        callback_execution,
+        shm_handshake
     };
 
     enum topic_direction
@@ -108,6 +109,15 @@ namespace tracing
 
     private:
         SReceiveSpanData data;
+    };
+
+    class CShmHandshakeSpan {
+    public:
+        CShmHandshakeSpan(uint64_t entity_id, int32_t process_id, long long clock);
+        ~CShmHandshakeSpan();
+
+    private:
+        SSendSpanData data;
     };
 
   class CTraceProvider {

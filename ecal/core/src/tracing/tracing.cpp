@@ -88,6 +88,25 @@ namespace eCAL
         CTraceProvider::getInstance().addReceiveSpan(data);
     }
 
+    CShmHandshakeSpan::CShmHandshakeSpan(uint64_t entity_id, int32_t process_id, long long clock)
+    {
+        auto now = system_clock::now();
+        data.start_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+        data.entity_id = entity_id;
+        data.process_id = process_id;
+        data.clock = clock;
+        data.layer = tl_ecal_shm;
+        data.op_type = operation_type::shm_handshake;
+        data.payload_size = 0;  // handshake doesn't transfer payload
+    }
+
+    CShmHandshakeSpan::~CShmHandshakeSpan()
+    {
+        auto now = system_clock::now();
+        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+        CTraceProvider::getInstance().addSendSpan(data);
+    }
+
     // CTraceProvider implementation
     std::atomic<bool> CTraceProvider::flush_done_{false};
 

@@ -772,6 +772,9 @@ namespace eCAL
     // create writer
     m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes), g_memfile_map());
 
+    // set tracing info for handshake tracing (does not modify SHM protocol)
+    m_writer_shm->SetTracingInfo(m_publisher_id, m_attributes.process_id);
+
     // register activated layer
     Register();
 
