@@ -32,22 +32,18 @@ namespace eCAL
     // Helper function to get file path with PID
     std::string getSendSpansFilePath()
     {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans_" + std::to_string(getpid()) + ".json";
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans_" + std::to_string(getpid()) + ".jsonl";
     }
 
     std::string getReceiveSpansFilePath()
     {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans_" + std::to_string(getpid()) + ".json";
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans_" + std::to_string(getpid()) + ".jsonl";
     }
 
     std::string getTopicMetadataFilePath()
     {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".json";
+        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".jsonl";
     }
-
-    // Fixed file locations for trace data, to be changed
-    const std::string SEND_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_publisher_spans.json";
-    const std::string RECEIVE_SPANS_FILE = std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_subscriber_spans.json";
 
     CSendSpan::CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size, operation_type op_type)
     {
@@ -66,7 +62,7 @@ namespace eCAL
         auto now = system_clock::now();
         data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
         
-        CTraceProvider::getInstance().addSendSpan(data);
+        CTraceProvider::getInstance().bufferSendSpan(data);
     }
 
     CReceiveSpan::CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer, operation_type op_type)
@@ -85,7 +81,7 @@ namespace eCAL
     {
         auto now = system_clock::now();
         data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();  
-        CTraceProvider::getInstance().addReceiveSpan(data);
+        CTraceProvider::getInstance().bufferReceiveSpan(data);
     }
 
     CShmHandshakeSpan::CShmHandshakeSpan(uint64_t entity_id, int32_t process_id, long long clock)
@@ -104,7 +100,7 @@ namespace eCAL
     {
         auto now = system_clock::now();
         data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        CTraceProvider::getInstance().addSendSpan(data);
+        CTraceProvider::getInstance().bufferSendSpan(data);
     }
 
     // CTraceProvider implementation
@@ -165,7 +161,7 @@ namespace eCAL
         raise(signum);
     }
 
-    void CTraceProvider::addSendSpan(const SSendSpanData& span_data)
+    void CTraceProvider::bufferSendSpan(const SSendSpanData& span_data)
     {
         {
             std::lock_guard<std::mutex> lock(buffer_mutex_);
@@ -179,7 +175,7 @@ namespace eCAL
         }
     }
 
-    void CTraceProvider::addReceiveSpan(const SReceiveSpanData& span_data)
+    void CTraceProvider::bufferReceiveSpan(const SReceiveSpanData& span_data)
     {
         {
             std::lock_guard<std::mutex> lock(buffer_mutex_);
@@ -204,7 +200,7 @@ namespace eCAL
             batch_to_send.swap(send_span_buffer_);
         }
         
-        sendBatchSendSpans(batch_to_send);
+        writeBatchSendSpans(batch_to_send);
     }
 
     void CTraceProvider::flushReceiveSpans()
@@ -218,7 +214,7 @@ namespace eCAL
             batch_to_send.swap(receive_span_buffer_);
         }
         
-        sendBatchReceiveSpans(batch_to_send);
+        writeBatchReceiveSpans(batch_to_send);
     }
 
     void CTraceProvider::addTopicMetadata(const STopicMetadata& metadata)
@@ -232,52 +228,32 @@ namespace eCAL
         flushReceiveSpans();
     }
 
-    void CTraceProvider::sendBatchSendSpans(const std::vector<SSendSpanData>& batch)
+    void CTraceProvider::writeBatchSendSpans(const std::vector<SSendSpanData>& batch)
     {
-        // Write send spans to JSON file
+        // Write send spans to JSONL file (one JSON object per line)
         try
         {
             std::string filepath = getSendSpansFilePath();
-            json json_array = json::array();
             
-            for (const auto& span : batch)
-            {
-                json span_obj;
-                span_obj["entity_id"] = span.entity_id;
-                span_obj["process_id"] = span.process_id;
-                span_obj["clock"] = span.clock;
-                span_obj["layer"] = span.layer;
-                span_obj["payload_size"] = span.payload_size;
-                span_obj["start_ns"] = span.start_ns;
-                span_obj["end_ns"] = span.end_ns;
-                span_obj["op_type"] = span.op_type;
-                
-                json_array.push_back(span_obj);
-            }
-            
-            // Read existing data if file exists
-            json all_data = json::array();
-            if (std::filesystem::exists(filepath))
-            {
-                std::ifstream input_file(filepath);
-                if (input_file.is_open())
-                {
-                    input_file >> all_data;
-                    input_file.close();
-                }
-            }
-            
-            // Append new spans
-            for (const auto& span : json_array)
-            {
-                all_data.push_back(span);
-            }
-            
-            // Write back to file
-            std::ofstream output_file(filepath);
+            // Open file in append mode
+            std::ofstream output_file(filepath, std::ios::app);
             if (output_file.is_open())
             {
-                output_file << all_data.dump(2) << std::endl;
+                for (const auto& span : batch)
+                {
+                    json span_obj;
+                    span_obj["entity_id"] = span.entity_id;
+                    span_obj["process_id"] = span.process_id;
+                    span_obj["clock"] = span.clock;
+                    span_obj["layer"] = span.layer;
+                    span_obj["payload_size"] = span.payload_size;
+                    span_obj["start_ns"] = span.start_ns;
+                    span_obj["end_ns"] = span.end_ns;
+                    span_obj["op_type"] = span.op_type;
+                    
+                    // Write each span as a single line
+                    output_file << span_obj.dump() << "\n";
+                }
                 output_file.close();
             }
             else
@@ -287,56 +263,36 @@ namespace eCAL
         }
         catch (const std::exception& e)
         {
-            std::cerr << "Error writing send spans to JSON: " << e.what() << std::endl;
+            std::cerr << "Error writing send spans to JSONL: " << e.what() << std::endl;
         }
     }
 
-    void CTraceProvider::sendBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch)
+    void CTraceProvider::writeBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch)
     {
-        // Write receive spans to JSON file
+        // Write receive spans to JSONL file (one JSON object per line)
         try
         {
             std::string filepath = getReceiveSpansFilePath();
-            json json_array = json::array();
             
-            for (const auto& span : batch)
-            {
-                json span_obj;
-                span_obj["entity_id"] = span.entity_id;
-                span_obj["topic_id"] = span.topic_id;
-                span_obj["process_id"] = span.process_id;
-                span_obj["clock"] = span.clock;
-                span_obj["layer"] = span.layer;
-                span_obj["start_ns"] = span.start_ns;
-                span_obj["end_ns"] = span.end_ns;
-                span_obj["op_type"] = span.op_type;
-
-                json_array.push_back(span_obj);
-            }
-            
-            // Read existing data if file exists
-            json all_data = json::array();
-            if (std::filesystem::exists(filepath))
-            {
-                std::ifstream input_file(filepath);
-                if (input_file.is_open())
-                {
-                    input_file >> all_data;
-                    input_file.close();
-                }
-            }
-            
-            // Append new spans
-            for (const auto& span : json_array)
-            {
-                all_data.push_back(span);
-            }
-            
-            // Write back to file
-            std::ofstream output_file(filepath);
+            // Open file in append mode
+            std::ofstream output_file(filepath, std::ios::app);
             if (output_file.is_open())
             {
-                output_file << all_data.dump(2) << std::endl;
+                for (const auto& span : batch)
+                {
+                    json span_obj;
+                    span_obj["entity_id"] = span.entity_id;
+                    span_obj["topic_id"] = span.topic_id;
+                    span_obj["process_id"] = span.process_id;
+                    span_obj["clock"] = span.clock;
+                    span_obj["layer"] = span.layer;
+                    span_obj["start_ns"] = span.start_ns;
+                    span_obj["end_ns"] = span.end_ns;
+                    span_obj["op_type"] = span.op_type;
+
+                    // Write each span as a single line
+                    output_file << span_obj.dump() << "\n";
+                }
                 output_file.close();
             }
             else
@@ -346,7 +302,7 @@ namespace eCAL
         }
         catch (const std::exception& e)
         {
-            std::cerr << "Error writing receive spans to JSON: " << e.what() << std::endl;
+            std::cerr << "Error writing receive spans to JSONL: " << e.what() << std::endl;
         }
     }
 
@@ -366,25 +322,11 @@ namespace eCAL
             obj["type_name"]   = metadata.type_name;
             obj["direction"]   = (metadata.direction == topic_direction::publisher) ? "publisher" : "subscriber";
 
-            // Read existing data if file exists
-            json all_data = json::array();
-            if (std::filesystem::exists(filepath))
-            {
-                std::ifstream input_file(filepath);
-                if (input_file.is_open())
-                {
-                    input_file >> all_data;
-                    input_file.close();
-                }
-            }
-
-            all_data.push_back(obj);
-
-            // Write back to file
-            std::ofstream output_file(filepath);
+            // Open file in append mode and write as a single line
+            std::ofstream output_file(filepath, std::ios::app);
             if (output_file.is_open())
             {
-                output_file << all_data.dump(2) << std::endl;
+                output_file << obj.dump() << "\n";
                 output_file.close();
             }
             else
@@ -394,7 +336,7 @@ namespace eCAL
         }
         catch (const std::exception& e)
         {
-            std::cerr << "Error writing topic metadata to JSON: " << e.what() << std::endl;
+            std::cerr << "Error writing topic metadata to JSONL: " << e.what() << std::endl;
         }
     }
 

@@ -42,6 +42,7 @@ namespace eCAL
 namespace tracing
 {
 
+    // Specifies the type of operation being traced
     enum operation_type
     {
         send,
@@ -50,6 +51,7 @@ namespace tracing
         shm_handshake
     };
 
+    // Specifies the direction of the topic (publisher or subscriber)
     enum topic_direction
     {
         publisher,
@@ -136,8 +138,8 @@ namespace tracing
         void setReceiveSpanBatchSize(size_t batch_size) { receive_batch_size_ = batch_size; }
         
         // Add span data to buffer
-        void addSendSpan(const SSendSpanData& span_data);
-        void addReceiveSpan(const SReceiveSpanData& span_data);
+        void bufferSendSpan(const SSendSpanData& span_data);
+        void bufferReceiveSpan(const SReceiveSpanData& span_data);
 
         // Topic metadata — written directly to file (no buffering)
         void addTopicMetadata(const STopicMetadata& metadata);
@@ -168,8 +170,8 @@ namespace tracing
         mutable std::mutex metadata_mutex_;
         
         // Internal method for batch sending (to be implemented by user for their specific backend)
-        void sendBatchSendSpans(const std::vector<SSendSpanData>& batch);
-        void sendBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch);
+        void writeBatchSendSpans(const std::vector<SSendSpanData>& batch);
+        void writeBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch);
         void writeTopicMetadata(const STopicMetadata& metadata);
   };
 
