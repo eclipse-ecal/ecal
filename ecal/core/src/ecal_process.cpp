@@ -42,9 +42,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -56,17 +58,19 @@
 #include <ecal_utils/str_convert.h>
 #endif /* ECAL_OS_WINDOWS */
 
+#if defined(ECAL_OS_LINUX) || defined(ECAL_OS_QNX)
+#include <unistd.h>
+#include <climits>
+#endif /* ECAL_OS_LINUX || ECAL_OS_QNX */
+
 #ifdef ECAL_OS_LINUX
 #include <spawn.h>
 #include <signal.h>
-#include <unistd.h>
-#include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/select.h>
-#include <limits.h>
 #include <netinet/in.h>
 #include <ecal_utils/ecal_utils.h>
 #endif /* ECAL_OS_LINUX */
@@ -327,12 +331,13 @@ namespace eCAL
 
     const std::string& GetProcessName()
     {
-      if (g_process_name.empty())
+      static std::once_flag process_name_once_flag;
+      std::call_once(process_name_once_flag, []()
       {
         WCHAR process_name[1024] = { 0 };
         GetModuleFileNameExW(GetCurrentProcess(), nullptr, process_name, 1024);
         g_process_name = EcalUtils::StrConvert::WideToUtf8(process_name);
-      }
+      });
       return(g_process_name);
     }
 
@@ -702,43 +707,49 @@ namespace eCAL
     */
     const std::string& GetProcessName()
     {
-      static const std::string empty_string {};
-      if (g_process_name.empty()) {
-        // Read the link to our own executable
-        char buf[PATH_MAX] = { 0 };
+      static std::once_flag process_name_once_flag;
+      std::call_once(process_name_once_flag, []()
+      {
 #if defined(ECAL_OS_MACOS)
-        uint32_t length = PATH_MAX;
-        if (_NSGetExecutablePath(buf, &length) != 0)
-        {
-          // Buffer size is too small.
-          return empty_string;
-        }
-        length = strlen(buf);
-#elif defined(ECAL_OS_QNX)
-        size_t length {0};
-        // TODO: Find a suitable method on QNX to retrieve current process name
+        uint32_t size = 0;
+        _NSGetExecutablePath(nullptr, &size);
+
+        if (size == 0)
+          return;
+
+        std::string buffer(size, '\0');
+
+        if (_NSGetExecutablePath(buffer.data(), &size) != 0)
+          return;
+
+        std::filesystem::path p(buffer.c_str());
+        g_process_name = std::filesystem::weakly_canonical(p).string();
 #elif defined(ECAL_OS_FREEBSD)
-        size_t length {0};
         struct kinfo_proc *proc = kinfo_getproc(getpid());
         if (proc)
         {
-          strncpy(buf, proc->ki_comm, sizeof(buf));
-          length = strlen(buf);
+          const size_t process_name_length = strnlen(proc->ki_comm, sizeof(proc->ki_comm));
+          g_process_name.assign(proc->ki_comm, process_name_length);
           free(proc);
         }
+#elif defined (ECAL_OS_QNX)
+        // Need to find / test a QNX version
 #else
-        ssize_t length = readlink("/proc/self/exe", buf, PATH_MAX);
+        constexpr const char* filename_location = "/proc/self/exe";
+        // Read the link to our own executable.
+        std::array<char, PATH_MAX> executable_path{};
+        const ssize_t length = readlink(filename_location, executable_path.data(), executable_path.size());
 
         if (length < 0)
         {
           std::cerr << "Unable to get process name: " << strerror(errno) << std::endl;
-          return empty_string;
+          return;
         }
-#endif
-        // Copy the binary name to a std::string
-        g_process_name = std::string(buf, length);
 
-      }
+        g_process_name.assign(executable_path.data(), static_cast<size_t>(length));
+#endif
+      });
+
       return g_process_name;
     }
 

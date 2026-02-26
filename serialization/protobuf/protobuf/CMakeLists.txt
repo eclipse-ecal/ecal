@@ -111,31 +111,33 @@ install(
 ##########################
 # Protobuf measurement extension
 ##########################
-add_library(protobuf_measurement INTERFACE)
-add_library(eCAL::protobuf_measurement ALIAS protobuf_measurement)
+if(ECAL_USE_HDF5)
+  add_library(protobuf_measurement INTERFACE)
+  add_library(eCAL::protobuf_measurement ALIAS protobuf_measurement)
 
-target_link_libraries(protobuf_measurement 
-  INTERFACE 
-    eCAL::protobuf_base
-    eCAL::message_measurement
-)
+  target_link_libraries(protobuf_measurement 
+    INTERFACE 
+      eCAL::protobuf_base
+      eCAL::message_measurement
+  )
 
-target_sources(protobuf_measurement
-  INTERFACE
-    FILE_SET proto_measurement_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
-      include/ecal/msg/protobuf/imeasurement.h
-      include/ecal/msg/protobuf/omeasurement.h
-)
+  target_sources(protobuf_measurement
+    INTERFACE
+      FILE_SET proto_measurement_headers
+      TYPE HEADERS
+      BASE_DIRS include
+      FILES
+        include/ecal/msg/protobuf/imeasurement.h
+        include/ecal/msg/protobuf/omeasurement.h
+  )
 
-target_compile_features(protobuf_measurement INTERFACE cxx_std_14)
+  target_compile_features(protobuf_measurement INTERFACE cxx_std_14)
 
-install(
-  TARGETS protobuf_measurement
-  EXPORT eCALCoreTargets  
-  ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
-  LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
-  FILE_SET proto_measurement_headers COMPONENT sdk
-)
+  install(
+    TARGETS protobuf_measurement
+    EXPORT eCALCoreTargets  
+    ARCHIVE       DESTINATION "${eCAL_install_archive_dir}" COMPONENT sdk
+    LIBRARY       DESTINATION "${eCAL_install_lib_dir}"     COMPONENT sdk
+    FILE_SET proto_measurement_headers COMPONENT sdk
+  )
+endif()

@@ -166,20 +166,6 @@ namespace eCAL
     }
 #endif // ECAL_CORE_SERVICE
 
-#if ECAL_CORE_TIMEPLUGIN
-    /////////////////////
-    // TIMEGATE
-    /////////////////////
-    if ((components_ & Init::TimeSync) != 0u)
-    {
-      if (timegate_instance == nullptr)
-      {
-        timegate_instance = std::make_shared<CTimeGate>();
-        new_initialization = true;
-      }
-    }
-#endif // ECAL_CORE_TIMEPLUGIN
-
 #if ECAL_CORE_REGISTRATION
     const Registration::SAttributes registration_attr = BuildRegistrationAttributes(eCAL::GetConfiguration(), eCAL::Process::GetProcessID());
     /////////////////////
@@ -278,8 +264,18 @@ namespace eCAL
     // possible subscribers.
     // This is very fragile, and we should think about how it can be reworked
 #if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance && ((components_ & Init::TimeSync) != 0u))        timegate_instance->Start(CTimeGate::eTimeSyncMode::realtime);
-#endif
+    /////////////////////
+    // TIMEGATE
+    /////////////////////
+    if ((components_ & Init::TimeSync) != 0u)
+    {
+      if (timegate_instance == nullptr)
+      {
+        timegate_instance = CTimeGate::CreateTimegate();
+        new_initialization = true;
+      }
+    }
+#endif // ECAL_CORE_TIMEPLUGIN
 
     return new_initialization;
   }
@@ -326,7 +322,7 @@ namespace eCAL
     // The timegate needs to be stopped first, 
     // but eCAL still treated as running
 #if ECAL_CORE_TIMEPLUGIN
-    if (timegate_instance)               timegate_instance->Stop();
+    timegate_instance.reset();
 #endif
 
     // We expect true to return, otherwise intialization was not done or
@@ -373,9 +369,6 @@ namespace eCAL
 
 #if ECAL_CORE_MONITORING
     monitoring_instance.reset();
-#endif
-#if ECAL_CORE_TIMEPLUGIN
-    timegate_instance.reset();
 #endif
 #if ECAL_CORE_SERVICE
     servicegate_instance.reset();

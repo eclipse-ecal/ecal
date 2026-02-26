@@ -22,6 +22,7 @@ cmake_minimum_required(VERSION 3.13)
 # cpp tests
 # --------------------------------------------------------
 add_subdirectory(cpp/core_test)
+add_subdirectory(cpp/process_test)
 
 add_subdirectory(cpp/descgate_test)
 
