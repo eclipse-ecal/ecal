@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <cerrno>
 #include <cstdio>
+#include <mutex>
+#include <variant>
 
 
 namespace eCAL::posix
@@ -26,29 +28,113 @@ namespace eCAL::posix
       explicit operator bool() const { return fd != -1; }
     };
 
-    struct FlockExclusive
+
+    enum class LockResult {
+      LockSuccess = 0,
+      FlockUnsupported = 1,
+      FcntlUnsupported = 2,
+      OtherLockingError = 3,
+    };
+
+    inline bool NotSupportedError(int e) noexcept
+    {
+#ifdef ENOTSUP
+      if (e == ENOTSUP) return true;
+#endif
+#ifdef EOPNOTSUPP
+      if (e == EOPNOTSUPP) return true;
+#endif
+      return false;
+    }
+
+
+    [[nodiscard]] LockResult LockFlock(int fd) {
+      if (::flock(fd, LOCK_EX) == 0)
+         return LockResult::LockSuccess;
+
+      const int error = errno;
+
+      if (NotSupportedError(error))
+        return LockResult::FlockUnsupported;
+      return LockResult::OtherLockingError;
+    }
+
+    void UnlockFlock(int fd) {
+      ::flock(fd, LOCK_UN);
+    }
+
+    [[nodiscard]] LockResult LockFcntl(int fd) {
+      struct flock fl{};
+      fl.l_type   = F_WRLCK;
+      fl.l_whence = SEEK_SET;
+      fl.l_start  = 0;
+      fl.l_len    = 0; // 0 => to EOF (whole file)
+
+      const int cmd = F_SETLKW;
+      if (::fcntl(fd, cmd, &fl) == 0)
+        return LockResult::LockSuccess;
+
+      const int error = errno;
+      if (NotSupportedError(error))
+        return LockResult::FcntlUnsupported;
+      return LockResult::OtherLockingError;
+    }
+
+    void UnlockFcntl(int fd) {
+      struct flock fl{};
+      fl.l_type   = F_UNLCK;
+      fl.l_whence = SEEK_SET;
+      fl.l_start  = 0;
+      fl.l_len    = 0;
+
+      (void)::fcntl(fd, F_SETLK, &fl);
+    }
+
+
+    class ExclusiveFileLock
     {
       int fd = -1;
       bool locked = false;
-      explicit FlockExclusive(const Fd& f) 
+      void (*unlock_function)(int) = nullptr;
+
+    public:
+      explicit ExclusiveFileLock(const Fd& f)
        : fd(f.fd)
       {
-        locked = (::flock(fd, LOCK_EX) != -1);
-      }
-      ~FlockExclusive()
-      {
-        if (locked) ::flock(fd, LOCK_UN);
+        if (fd < 0) return;
+
+        const auto flock_result = LockFlock(fd);
+
+        if (flock_result == LockResult::LockSuccess) {
+          locked = true;
+          unlock_function = &UnlockFlock;
+          return;
+        }
+
+        if (flock_result == LockResult::OtherLockingError)
+          return;
+
+        const auto fcntl_result = LockFcntl(fd);
+
+        if (fcntl_result == LockResult::LockSuccess) {
+          locked = true;
+          unlock_function = &UnlockFcntl;
+        }
       }
 
-      FlockExclusive(const FlockExclusive&) = delete;
-      FlockExclusive& operator=(const FlockExclusive&) = delete;
-      FlockExclusive(FlockExclusive&&) = delete;
-      FlockExclusive& operator=(FlockExclusive&&) = delete;
+      ~ExclusiveFileLock()
+      {
+        if (locked)
+          unlock_function(fd);
+      }
+
+      ExclusiveFileLock(const ExclusiveFileLock&) = delete;
+      ExclusiveFileLock& operator=(const ExclusiveFileLock&) = delete;
+      ExclusiveFileLock(ExclusiveFileLock&&) = delete;
+      ExclusiveFileLock& operator=(ExclusiveFileLock&&) = delete;
 
       explicit operator bool() const { return locked; }
     };
-
-
 
     inline int shm_open_create_or_open(const std::string& name)
     {
@@ -98,11 +184,12 @@ namespace eCAL::posix
       return out;
     }
 
-    const detail::FlockExclusive flock{fd};
-    if (!flock)
+    const detail::ExclusiveFileLock lock{fd};
+    if (!lock)
     {
       ::perror("flock");
-       return out;
+      // we continue even without holding a lock
+      // under very rare conditions that may lead to data races
     }
 
     struct stat st{};
