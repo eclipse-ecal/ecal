@@ -99,9 +99,10 @@ namespace eCAL
   }
 
   bool CPublisher::Send(CPayloadWriter& payload_, long long time_)
-  {
+  {    
     auto publisher_impl = m_publisher_impl.lock();
     if (!publisher_impl) return false;
+
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all

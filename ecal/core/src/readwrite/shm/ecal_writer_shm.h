@@ -53,6 +53,8 @@ namespace eCAL
     void ApplySubscription(const std::string& host_name_, int32_t process_id_, const EntityIdT& topic_id_, const std::string& conn_par_) override;
     void RemoveSubscription(const std::string& host_name_, int32_t process_id_, const EntityIdT& topic_id_) override;
 
+    void SetTracingInfo(uint64_t entity_id_, int32_t process_id_);
+
     Registration::LayerParShm GetConnectionParameter() override;
 
   protected:
@@ -69,5 +71,9 @@ namespace eCAL
     ProcessIDTopicIDSetT                          m_process_id_topic_id_set_map;
 
     std::shared_ptr<CMemFileMap>                  m_memfile_map;
+
+    // Store tracing info to propagate to memory files
+    uint64_t                                      m_tracing_entity_id{0};
+    int32_t                                       m_tracing_process_id{0};
   };
 }

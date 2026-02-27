@@ -45,6 +45,7 @@
 
 #include "registration/ecal_registration_provider.h"
 #include "logging/ecal_log_provider.h"
+#include "tracing/tracing.h"
 
 #include <algorithm>
 #include <chrono>
@@ -124,6 +125,19 @@ namespace eCAL
     m_topic_id.topic_id.host_name = m_attributes.host_name;
     m_topic_id.topic_id.process_id = m_attributes.process_id;
 
+    // record topic metadata for tracing
+    {
+      eCAL::tracing::STopicMetadata meta;
+      meta.entity_id  = m_publisher_id;
+      meta.process_id = m_attributes.process_id;
+      meta.host_name  = m_attributes.host_name;
+      meta.topic_name = m_attributes.topic_name;
+      meta.encoding   = m_topic_info.encoding;
+      meta.type_name  = m_topic_info.name;
+      meta.direction  = eCAL::tracing::topic_direction::publisher;
+      eCAL::tracing::CTraceProvider::getInstance().addTopicMetadata(meta);
+    }
+
     // mark as created
     m_created = true;
   }
@@ -180,6 +194,31 @@ namespace eCAL
 
     // prepare counter and internal states
     const size_t snd_hash = PrepareWrite(filter_id_, payload_buf_size);
+
+    // determine active transport layer for tracing
+    eCAL::eTLayerType active_layer = eCAL::eTLayerType::tl_none;
+    {
+      int active_count = 0;
+#if ECAL_CORE_TRANSPORT_SHM
+      if (m_writer_shm) { active_layer = eCAL::eTLayerType::tl_ecal_shm; ++active_count; }
+#endif
+#if ECAL_CORE_TRANSPORT_UDP
+      if (m_writer_udp) { active_layer = eCAL::eTLayerType::tl_ecal_udp; ++active_count; }
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+      if (m_writer_tcp) { active_layer = eCAL::eTLayerType::tl_ecal_tcp; ++active_count; }
+#endif
+      if (active_count > 1) active_layer = eCAL::eTLayerType::tl_all;
+    }
+
+    // create tracing span for the send operation
+    eCAL::tracing::CSendSpan send_span(
+      m_topic_id,
+      m_clock,
+      active_layer,
+      payload_buf_size,
+      eCAL::tracing::operation_type::send
+    );
 
     // did we write anything
     bool written(false);
@@ -757,6 +796,9 @@ namespace eCAL
 
     // create writer
     m_writer_shm = std::make_unique<CDataWriterSHM>(eCAL::eCALWriter::BuildSHMAttributes(m_attributes), g_memfile_map());
+
+    // set tracing info for handshake tracing (does not modify SHM protocol)
+    m_writer_shm->SetTracingInfo(m_publisher_id, m_attributes.process_id);
 
     // register activated layer
     Register();

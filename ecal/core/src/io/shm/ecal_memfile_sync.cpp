@@ -28,6 +28,7 @@
 #include "ecal_memfile_header.h"
 #include "ecal_memfile_naming.h"
 #include "ecal_memfile_sync.h"
+#include "tracing/tracing.h"
 
 #include <chrono>
 #include <mutex>
@@ -161,6 +162,9 @@ namespace eCAL
     m_attr.timeout_ack_ms = data_.acknowledge_timeout_ms;
     if (m_attr.timeout_ack_ms < 0) m_attr.timeout_ack_ms = 0;
 
+    // store clock for tracing (does not modify SHM protocol)
+    m_current_clock_for_tracing = data_.clock;
+
     // write header and payload into the memory file
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug4, m_base_name + "::CSyncMemoryFile::Write");
@@ -248,6 +252,12 @@ namespace eCAL
   size_t CSyncMemoryFile::GetSize() const
   {
     return m_attr.min_size;
+  }
+
+  void CSyncMemoryFile::SetTracingInfo(uint64_t entity_id_, int32_t process_id_)
+  {
+    m_entity_id_for_tracing = entity_id_;
+    m_process_id_for_tracing = process_id_;
   }
 
   bool CSyncMemoryFile::Create(const std::string& base_name_, size_t size_)
@@ -345,6 +355,13 @@ namespace eCAL
   void CSyncMemoryFile::SyncContent()
   {
     if (!m_created) return;
+
+    // Trace the SHM handshake operation (does not modify SHM protocol)
+    eCAL::tracing::CShmHandshakeSpan handshake_span(
+      m_entity_id_for_tracing,
+      m_process_id_for_tracing,
+      m_current_clock_for_tracing
+    );
 
     // fire the publisher events
     // connected subscribers will read the content from the memory file

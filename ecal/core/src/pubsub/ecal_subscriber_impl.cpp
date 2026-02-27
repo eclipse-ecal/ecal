@@ -23,6 +23,7 @@
 **/
 
 #include "ecal_subscriber_impl.h"
+#include "tracing/tracing.h"
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
@@ -94,6 +95,19 @@ namespace eCAL
     m_topic_id.topic_id.entity_id = m_subscriber_id;
     m_topic_id.topic_id.host_name = m_attributes.host_name;
     m_topic_id.topic_id.process_id = m_attributes.process_id;
+
+    // record topic metadata for tracing
+    {
+      eCAL::tracing::STopicMetadata meta;
+      meta.entity_id  = m_subscriber_id;
+      meta.process_id = m_attributes.process_id;
+      meta.host_name  = m_attributes.host_name;
+      meta.topic_name = m_attributes.topic_name;
+      meta.encoding   = m_topic_info.encoding;
+      meta.type_name  = m_topic_info.name;
+      meta.direction  = eCAL::tracing::topic_direction::subscriber;
+      eCAL::tracing::CTraceProvider::getInstance().addTopicMetadata(meta);
+    }
 
     // start transport layers
     InitializeLayers();
@@ -375,6 +389,15 @@ namespace eCAL
 
   size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
   {
+
+    eCAL::tracing::CReceiveSpan receive_span(
+      m_subscriber_id,
+      topic_info_,
+      clock_,
+      layer_,
+      eCAL::tracing::operation_type::receive
+    );
+    
     // ensure thread safety
     const std::lock_guard<std::mutex> lock(m_receive_callback_mutex);
     if (!m_created) return(0);
@@ -452,7 +475,17 @@ namespace eCAL
 
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
-        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data);
+        {
+          eCAL::tracing::CReceiveSpan receive_span(
+            m_subscriber_id,
+            topic_info_,
+            clock_,
+            layer_,
+            eCAL::tracing::operation_type::callback_execution
+          );
+         
+
+        (m_receive_callback)(topic_id, m_connection_map[pub_info].data_type_info, cb_data); }
         processed = true;
       }
     }

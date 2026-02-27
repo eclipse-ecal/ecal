@@ -151,6 +151,14 @@ namespace eCAL
     }
   }
 
+  void CDataWriterSHM::SetTracingInfo(uint64_t entity_id_, int32_t process_id_)
+  {
+    for (auto& memory_file : m_memory_file_vec)
+    {
+      memory_file->SetTracingInfo(entity_id_, process_id_);
+    }
+  }
+
   Registration::LayerParShm CDataWriterSHM::GetConnectionParameter()
   {
     Registration::LayerParShm layer_par_shm;
@@ -206,6 +214,16 @@ namespace eCAL
         Logging::Log(Logging::log_level_error, "CDataWriterSHM::SetBufferCount - FAILED");
         return false;
       }
+    }
+    // Propagate tracing info to newly created memory files if it has been set
+    if (m_tracing_entity_id != 0)
+    {
+      SetTracingInfo(m_tracing_entity_id, m_tracing_process_id);
+    }
+    // Propagate tracing info to newly created memory files if it has been set
+    if (m_tracing_entity_id != 0)
+    {
+      SetTracingInfo(m_tracing_entity_id, m_tracing_process_id);
     }
 
     return true;
