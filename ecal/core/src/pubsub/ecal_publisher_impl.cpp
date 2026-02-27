@@ -195,6 +195,31 @@ namespace eCAL
     // prepare counter and internal states
     const size_t snd_hash = PrepareWrite(filter_id_, payload_buf_size);
 
+    // determine active transport layer for tracing
+    eCAL::eTLayerType active_layer = eCAL::eTLayerType::tl_none;
+    {
+      int active_count = 0;
+#if ECAL_CORE_TRANSPORT_SHM
+      if (m_writer_shm) { active_layer = eCAL::eTLayerType::tl_ecal_shm; ++active_count; }
+#endif
+#if ECAL_CORE_TRANSPORT_UDP
+      if (m_writer_udp) { active_layer = eCAL::eTLayerType::tl_ecal_udp; ++active_count; }
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+      if (m_writer_tcp) { active_layer = eCAL::eTLayerType::tl_ecal_tcp; ++active_count; }
+#endif
+      if (active_count > 1) active_layer = eCAL::eTLayerType::tl_all;
+    }
+
+    // create tracing span for the send operation
+    eCAL::tracing::CSendSpan send_span(
+      m_topic_id,
+      m_clock,
+      active_layer,
+      payload_buf_size,
+      eCAL::tracing::operation_type::send
+    );
+
     // did we write anything
     bool written(false);
 

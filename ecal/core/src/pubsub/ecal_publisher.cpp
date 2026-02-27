@@ -30,7 +30,6 @@
 
 #include "config/builder/writer_attribute_builder.h"
 #include "ecal_config_internal.h"
-#include "tracing/tracing.h"
 
 #include <iostream>
 #include <memory>
@@ -104,17 +103,6 @@ namespace eCAL
     auto publisher_impl = m_publisher_impl.lock();
     if (!publisher_impl) return false;
 
-    Registration::Sample sample;
-    publisher_impl->GetRegistration(sample);
-
-    eCAL::tracing::CSendSpan send_span(
-      publisher_impl->GetTopicId(), 
-      sample.topic.data_clock, 
-      eCAL::eTLayerType::tl_all, 
-      payload_.GetSize(),
-      eCAL::tracing::operation_type::send
-    );
-    
     // in an optimization case the
      // publisher can send an empty package
      // or we do not have any subscription at all
