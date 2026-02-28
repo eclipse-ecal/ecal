@@ -283,18 +283,32 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
-# --------------------------------------------------------
-# detect qt library
-# --------------------------------------------------------
-if(MSVC)
-  if (ECAL_USE_QT)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-    if (NOT "${QT_FOUND}")
-	  include("cmake/qt_msvc_path.cmake")
-      autodetect_qt_msvc_dir()
-    endif()
-  endif()
+# -------
+# Select C++ standard
+# Abseil requires everything to be built with a consistent C++ standard.
+# If abseil is built with C++14 but a component building with C++17 tries to use
+# abseil (eg: via protobuf) there will be a mismatch and possibly a build failure.
+# This is most prevalent with string_view where C++14 will use the abseil type
+# but C++17 use std::string_view
+# -------
+
+# C++17 is the baseline required standard for compiling
+set(_ECAL_MIN_REQUIRED_CXX_STD 17)
+
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
+  # eCAL is being compiled as the root project, and no standard version is set
+  set(CMAKE_CXX_STANDARD "${_ECAL_MIN_REQUIRED_CXX_STD}")
+  message(STATUS "eCAL is using C++ ${_ECAL_MIN_REQUIRED_CXX_STD}")
+else()
+  # eCAL is part of a larger build or the standard was externally set
 endif()
+
+if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_MIN_REQUIRED_CXX_STD}")
+  message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_MIN_REQUIRED_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
+endif()
+
+# The requested C++ standard is mandatory
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(CMakeFunctions REQUIRED)
 
@@ -656,6 +670,7 @@ message(STATUS "ECAL_BUILD_TESTS                                    : ${ECAL_BUI
 message(STATUS "ECAL_DEPLOY_DEPENDENCIES                            : ${ECAL_DEPLOY_DEPENDENCIES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                         : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_USE_NPCAP                                      : ${ECAL_USE_NPCAP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_ABSL                          : ${ECAL_THIRDPARTY_BUILD_ABSL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                          : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_BENCHMARK                     : ${ECAL_THIRDPARTY_BUILD_BENCHMARK}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS               : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")

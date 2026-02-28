@@ -103,6 +103,7 @@ jobs:
         -DECAL_USE_NPCAP=ON ^
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON ^
         -DECAL_THIRDPARTY_BUILD_PROTOBUF=ON ^
+        -DECAL_THIRDPARTY_BUILD_ABSL=ON ^
         -DECAL_THIRDPARTY_BUILD_SPDLOG=ON ^
         -DECAL_THIRDPARTY_BUILD_TINYXML2=ON ^
         -DECAL_THIRDPARTY_BUILD_FINEFTP=OFF ^
@@ -164,6 +165,17 @@ jobs:
     - name: Build SDK
       run: cmake --build . --config Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
+
+    - name: SDK Integration test
+      run: |
+        cmake --install "${{ runner.workspace }}/_build/sdk" --prefix "${{ runner.workspace }}/_install/sdk" --config Debug
+        cmake -G "Ninja" ^
+        -S serialization/protobuf/samples/pubsub/person_loopback ^
+        -B _integration_test_build ^
+        -DCMAKE_CONFIGURATION_TYPES="Debug" ^
+        -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/sdk"
+        cmake --build _integration_test_build --config Debug
+      shell: cmd
 
     - name: Build Release
       run: cmake --build . --config Release
