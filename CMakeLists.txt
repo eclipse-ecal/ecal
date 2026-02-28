@@ -292,25 +292,8 @@ message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 # but C++17 use std::string_view
 # -------
 
-# C++14 is the baseline required standard
-set(_ECAL_MIN_REQUIRED_CXX_STD 14)
-
-# Some dependencies require C++17, which we must detect and push to everything
-if(ECAL_USE_QT)
-  find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
-  if(MSVC AND NOT "${QT_FOUND}")
-    include("cmake/qt_msvc_path.cmake")
-    autodetect_qt_msvc_dir()
-  endif()
-  if("${QT_VERSION_MAJOR}" VERSION_GREATER 5)
-    # QT6 has C++17 usage requirements
-    set(_ECAL_MIN_REQUIRED_CXX_STD 17)
-  endif()
-endif()
-if(ECAL_USE_FTXUI)
-  # FTXUI requires C++17
-  set(_ECAL_MIN_REQUIRED_CXX_STD 17)
-endif()
+# C++17 is the baseline required standard for compiling
+set(_ECAL_MIN_REQUIRED_CXX_STD 17)
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${eCAL_SOURCE_DIR}" AND NOT DEFINED CMAKE_CXX_STANDARD)
   # eCAL is being compiled as the root project, and no standard version is set
@@ -323,6 +306,9 @@ endif()
 if("${CMAKE_CXX_STANDARD}" VERSION_LESS "${_ECAL_MIN_REQUIRED_CXX_STD}")
   message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_MIN_REQUIRED_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
 endif()
+
+# The requested C++ standard is mandatory
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(CMakeFunctions REQUIRED)
 
