@@ -394,7 +394,7 @@ namespace eCAL
       m_subscriber_id,
       topic_info_,
       clock_,
-      layer_,
+      eCAL::tracing::toTracingLayerType(layer_),
       eCAL::tracing::operation_type::receive
     );
     
@@ -480,7 +480,7 @@ namespace eCAL
             m_subscriber_id,
             topic_info_,
             clock_,
-            layer_,
+            eCAL::tracing::toTracingLayerType(layer_),
             eCAL::tracing::operation_type::callback_execution
           );
          

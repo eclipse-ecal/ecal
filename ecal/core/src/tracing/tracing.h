@@ -73,6 +73,19 @@ namespace tracing
         tl_trace_all     = tl_trace_shm | tl_trace_udp | tl_trace_tcp,  // 7
     };
 
+    // Convert from eTLayerType (used in core APIs) to eTracingLayerType.
+    inline eTracingLayerType toTracingLayerType(eTLayerType layer)
+    {
+      switch (layer)
+      {
+        case tl_ecal_shm: return tl_trace_shm;
+        case tl_ecal_udp: return tl_trace_udp;
+        case tl_ecal_tcp: return tl_trace_tcp;
+        case tl_all:      return tl_trace_all;
+        default:          return tl_trace_none;
+      }
+    }
+
     // Metadata captured when a topic is created
     struct STopicMetadata
     {
@@ -121,7 +134,7 @@ namespace tracing
 
     class CReceiveSpan {
     public:
-        CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer, operation_type op_type);
+        CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
         ~CReceiveSpan();
 
     private:

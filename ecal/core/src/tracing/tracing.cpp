@@ -65,7 +65,7 @@ namespace eCAL
         CTraceProvider::getInstance().bufferSendSpan(data);
     }
 
-    CReceiveSpan::CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTLayerType layer, operation_type op_type)
+    CReceiveSpan::CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTracingLayerType layer, operation_type op_type)
     {
         auto now = system_clock::now();
         data.start_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
@@ -91,7 +91,7 @@ namespace eCAL
         data.entity_id = entity_id;
         data.process_id = process_id;
         data.clock = clock;
-        data.layer = tl_ecal_shm;
+        data.layer = tl_trace_shm;
         data.op_type = operation_type::shm_handshake;
         data.payload_size = 0;  // handshake doesn't transfer payload
     }
