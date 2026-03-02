@@ -42,6 +42,9 @@ namespace eCAL
 namespace tracing
 {
 
+    // Version of the tracing data format
+    constexpr const char* kTracingVersion = "1.0.0";
+
     // Specifies the type of operation being traced
     enum operation_type
     {
@@ -89,6 +92,7 @@ namespace tracing
     // Metadata captured when a topic is created
     struct STopicMetadata
     {
+        std::string      tracing_version{kTracingVersion}; // tracing format version
         uint64_t         entity_id;       // unique entity id
         int32_t          process_id;      // PID of the owning process
         std::string      host_name;       // host that created the topic

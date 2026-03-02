@@ -314,6 +314,7 @@ namespace eCAL
             std::string filepath = getTopicMetadataFilePath();
 
             json obj;
+            obj["tracing_version"] = metadata.tracing_version;
             obj["entity_id"]   = metadata.entity_id;
             obj["process_id"]  = metadata.process_id;
             obj["host_name"]   = metadata.host_name;
