@@ -45,6 +45,9 @@ namespace tracing
     // Version of the tracing data format
     constexpr const char* kTracingVersion = "1.0.0";
 
+    // Default batch size for span buffering before flushing to backend (jsonl file)
+    constexpr size_t kDefaultTracingBatchSize = 10;
+
     // Specifies the type of operation being traced
     enum operation_type
     {
@@ -180,7 +183,7 @@ namespace tracing
         static std::atomic<bool> flush_done_;
         
         std::vector<SSpanData> span_buffer_;
-        size_t batch_size_{10};
+        size_t batch_size_{kDefaultTracingBatchSize};
         mutable std::mutex buffer_mutex_;
         mutable std::mutex metadata_mutex_;
         
