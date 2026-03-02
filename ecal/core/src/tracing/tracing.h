@@ -100,14 +100,14 @@ namespace tracing
     // All span types share the same struct;
     struct SSpanData
     {
-        uint64_t       entity_id{0};
+        uint64_t       entity_id;
         uint64_t       topic_id{0};        // receive-only (0 for send spans)
-        uint64_t       process_id{0};
-        size_t         payload_size{0};
-        long long      clock{0};
-        uint64_t       layer{0};
-        long long      start_ns{0};       // start timestamp in nanoseconds
-        long long      end_ns{0};         // end timestamp in nanoseconds
+        uint64_t       process_id;
+        size_t         payload_size;
+        long long      clock;
+        uint64_t       layer;
+        long long      start_ns;       // start timestamp in nanoseconds
+        long long      end_ns;         // end timestamp in nanoseconds
         operation_type op_type;
     };
 
