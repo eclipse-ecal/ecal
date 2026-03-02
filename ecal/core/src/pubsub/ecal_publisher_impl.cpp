@@ -210,7 +210,7 @@ namespace eCAL
     }
 
     // create tracing span for the send operation
-    eCAL::tracing::CSendSpan send_span(
+    eCAL::tracing::CSpan send_span(
       m_topic_id,
       m_clock,
       active_layer,

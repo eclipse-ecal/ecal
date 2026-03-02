@@ -357,7 +357,7 @@ namespace eCAL
     if (!m_created) return;
 
     // Trace the SHM handshake operation (does not modify SHM protocol)
-    eCAL::tracing::CShmHandshakeSpan handshake_span(
+    eCAL::tracing::CSpan handshake_span(
       m_entity_id_for_tracing,
       m_process_id_for_tracing,
       m_current_clock_for_tracing

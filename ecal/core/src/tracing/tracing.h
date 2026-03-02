@@ -102,71 +102,44 @@ namespace tracing
         topic_direction  direction;       // publisher or subscriber
     };
 
-    // Data structures to hold span information
-    struct SSendSpanData
+    // Unified span data structure.
+    // All span types share the same struct; fields not applicable to a
+    // particular operation_type are left at their zero-initialised default.
+    //   - payload_size: populated for send / shm_handshake spans
+    //   - topic_id:     populated for receive spans
+    struct SSpanData
     {
-        uint64_t entity_id;
-        uint64_t process_id;
-        size_t payload_size;
-        long long clock;
-        uint64_t layer;
-        long long start_ns;  // start timestamp in nanoseconds
-        long long end_ns;    // end timestamp in nanoseconds
-        operation_type op_type;
+        uint64_t       entity_id{0};
+        uint64_t       topic_id{0};        // receive-only (0 for send spans)
+        uint64_t       process_id{0};
+        size_t         payload_size{0};    // send-only   (0 for receive spans)
+        long long      clock{0};
+        uint64_t       layer{0};
+        long long      start_ns{0};       // start timestamp in nanoseconds
+        long long      end_ns{0};         // end timestamp in nanoseconds
+        operation_type op_type{send};
     };
 
-    struct SReceiveSpanData
-    {
-        EntityIdT entity_id;
-        uint64_t topic_id;
-        uint64_t process_id;
-        long long clock;
-        uint64_t layer;
-        long long start_ns;  // start timestamp in nanoseconds
-        long long end_ns;    // end timestamp in nanoseconds
-        operation_type op_type;
-    };
-
-    class CSendSpan {
+    // RAII span — records start_ns on construction, end_ns + buffer on destruction.
+    // Overloaded constructors cover send, receive, and SHM-handshake use cases.
+    class CSpan {
     public:
-        CSendSpan(const STopicId topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
-        ~CSendSpan();
+        // Send span (publisher)
+        CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+        // Receive span (subscriber)
+        CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
+        // SHM handshake span
+        CSpan(uint64_t entity_id, int32_t process_id, long long clock);
 
-        CSendSpan(const CSendSpan&)            = delete;
-        CSendSpan& operator=(const CSendSpan&) = delete;
-        CSendSpan(CSendSpan&&)                 = delete;
-        CSendSpan& operator=(CSendSpan&&)      = delete;
+        ~CSpan();
+
+        CSpan(const CSpan&)            = delete;
+        CSpan& operator=(const CSpan&) = delete;
+        CSpan(CSpan&&)                 = delete;
+        CSpan& operator=(CSpan&&)      = delete;
 
     private:
-        SSendSpanData data;
-    };
-
-    class CReceiveSpan {
-    public:
-        CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
-        ~CReceiveSpan();
-
-        CReceiveSpan(const CReceiveSpan&)            = delete;
-        CReceiveSpan& operator=(const CReceiveSpan&) = delete;
-        CReceiveSpan(CReceiveSpan&&)                 = delete;
-        CReceiveSpan& operator=(CReceiveSpan&&)      = delete;
-
-    private:
-        SReceiveSpanData data;
-    };
-
-    class CShmHandshakeSpan {
-    public:
-        CShmHandshakeSpan(uint64_t entity_id, int32_t process_id, long long clock);
-        ~CShmHandshakeSpan();
-
-        CShmHandshakeSpan(const CShmHandshakeSpan&)            = delete;
-        CShmHandshakeSpan& operator=(const CShmHandshakeSpan&) = delete;
-        CShmHandshakeSpan(CShmHandshakeSpan&&)                 = delete;
-        CShmHandshakeSpan& operator=(CShmHandshakeSpan&&)      = delete;
-
-    private:
-        SSendSpanData data;
+        SSpanData data;
     };
 
   class CTraceProvider {
@@ -183,24 +156,19 @@ namespace tracing
         CTraceProvider& operator=(CTraceProvider&&)      = delete;
 
         // Buffer management
-        void setSendSpanBatchSize(size_t batch_size) { send_batch_size_ = batch_size; }
-        void setReceiveSpanBatchSize(size_t batch_size) { receive_batch_size_ = batch_size; }
+        void setBatchSize(size_t batch_size) { batch_size_ = batch_size; }
         
         // Add span data to buffer
-        void bufferSendSpan(const SSendSpanData& span_data);
-        void bufferReceiveSpan(const SReceiveSpanData& span_data);
+        void bufferSpan(const SSpanData& span_data);
 
         // Topic metadata — written directly to file (no buffering)
         void addTopicMetadata(const STopicMetadata& metadata);
         
         // Get buffered spans
-        std::vector<SSendSpanData> getSendSpans() { return send_span_buffer_; }
-        std::vector<SReceiveSpanData> getReceiveSpans() { return receive_span_buffer_; }
+        std::vector<SSpanData> getSpans() { return span_buffer_; }
         
-        // Flush buffered spans (send in batches if buffer is full or on demand)
-        void flushSendSpans();
-        void flushReceiveSpans();
-        void flushAllSpans();
+        // Flush buffered spans
+        void flushSpans();
 
     private:
         CTraceProvider();
@@ -211,16 +179,13 @@ namespace tracing
         static void signalHandler(int signum);
         static std::atomic<bool> flush_done_;
         
-        std::vector<SSendSpanData> send_span_buffer_;
-        std::vector<SReceiveSpanData> receive_span_buffer_;
-        size_t send_batch_size_{10};
-        size_t receive_batch_size_{10};
+        std::vector<SSpanData> span_buffer_;
+        size_t batch_size_{10};
         mutable std::mutex buffer_mutex_;
         mutable std::mutex metadata_mutex_;
         
-        // Internal method for batch sending (to be implemented by user for their specific backend)
-        void writeBatchSendSpans(const std::vector<SSendSpanData>& batch);
-        void writeBatchReceiveSpans(const std::vector<SReceiveSpanData>& batch);
+        // Internal method for writing spans to backend
+        void writeBatchSpans(const std::vector<SSpanData>& batch);
         void writeTopicMetadata(const STopicMetadata& metadata);
   };
 

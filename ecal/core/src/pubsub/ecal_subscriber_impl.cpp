@@ -390,7 +390,7 @@ namespace eCAL
   size_t CSubscriberImpl::ApplySample(const Payload::TopicInfo& topic_info_, const char* payload_, size_t size_, long long id_, long long clock_, long long time_, size_t /*hash_*/, eTLayerType layer_)
   {
 
-    eCAL::tracing::CReceiveSpan receive_span(
+    eCAL::tracing::CSpan receive_span(
       m_subscriber_id,
       topic_info_,
       clock_,
@@ -476,7 +476,7 @@ namespace eCAL
         // execute it
         const std::lock_guard<std::mutex> exec_lock(m_connection_map_mtx);
         {
-          eCAL::tracing::CReceiveSpan receive_span(
+          eCAL::tracing::CSpan receive_span(
             m_subscriber_id,
             topic_info_,
             clock_,
