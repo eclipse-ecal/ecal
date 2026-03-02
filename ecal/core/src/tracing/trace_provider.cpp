@@ -17,63 +17,17 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "tracing.h"
+#include "trace_provider.h"
 #include "tracing_writer.h"
-#include <fstream>
-#include <filesystem>
-#include <iostream>
-#include <unistd.h>
+
 #include <csignal>
 #include <cstdlib>
 #include <atomic>
 
 namespace eCAL
-{ namespace tracing {
-
-    // Send span constructor
-    CSpan::CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
-    {
-        auto now = system_clock::now();
-        data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id    = topic_id.topic_id.entity_id;
-        data.process_id   = topic_id.topic_id.process_id;
-        data.payload_size = payload_size;
-        data.clock        = clock;
-        data.layer        = layer;
-        data.op_type      = op_type;
-    }
-
-    // Receive span constructor
-    CSpan::CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, operation_type op_type)
-    {
-        auto now = system_clock::now();
-        data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id  = entity_id;
-        data.topic_id   = topic_info.topic_id;
-        data.process_id = topic_info.process_id;
-        data.clock      = clock;
-        data.layer      = layer;
-        data.op_type    = op_type;
-    }
-
-    // SHM handshake span constructor
-    CSpan::CSpan(uint64_t entity_id, int32_t process_id, long long clock)
-    {
-        auto now = system_clock::now();
-        data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id  = entity_id;
-        data.process_id = process_id;
-        data.clock      = clock;
-        data.layer      = tl_trace_shm;
-        data.op_type    = operation_type::shm_handshake;
-    }
-
-    CSpan::~CSpan()
-    {
-        auto now = system_clock::now();
-        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        CTraceProvider::getInstance().bufferSpan(data);
-    }
+{
+namespace tracing
+{
 
     // CTraceProvider implementation
     std::atomic<bool> CTraceProvider::flush_done_{false};
@@ -168,5 +122,4 @@ namespace eCAL
     }
 
 } // namespace tracing
-
 } // namespace eCAL

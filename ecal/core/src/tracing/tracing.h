@@ -17,29 +17,16 @@
  * ========================= eCAL LICENSE =================================
 */
 
+/**
+ * @file   tracing/tracing.h
+ * @brief  Shared tracing types, enums, and constants used across the tracing subsystem.
+**/
+
 #pragma once
 
 #include <string>
-#include <ctime>
-#include <cstdlib>
-#include <csignal>
-#include <atomic>
-#include <list>
-#include <vector>
-#include <mutex>
-#include <memory>
-#include <chrono>
+#include <cstdint>
 #include <ecal/types.h>
-#include <serialization/ecal_struct_sample_common.h>
-#include <serialization/ecal_struct_sample_payload.h>
-#include <ecal/ecal.h>
-#include <time.h>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-using namespace std::chrono;
-
-// Forward declaration
-namespace eCAL { namespace tracing { class CTracingWriter; } }
 
 namespace eCAL
 {
@@ -126,72 +113,5 @@ namespace tracing
         operation_type op_type{send};
     };
 
-    // RAII span — records start_ns on construction, end_ns + buffer on destruction.
-    // Overloaded constructors cover send, receive, and SHM-handshake use cases.
-    class CSpan {
-    public:
-        // Send span (publisher)
-        CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
-        // Receive span (subscriber)
-        CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
-        // SHM handshake span
-        CSpan(uint64_t entity_id, int32_t process_id, long long clock);
-
-        ~CSpan();
-
-        CSpan(const CSpan&)            = delete;
-        CSpan& operator=(const CSpan&) = delete;
-        CSpan(CSpan&&)                 = delete;
-        CSpan& operator=(CSpan&&)      = delete;
-
-    private:
-        SSpanData data;
-    };
-
-  class CTraceProvider {
-    public:
-        static CTraceProvider& getInstance()
-        {
-            static CTraceProvider instance;
-            return instance;
-        }
-
-        CTraceProvider(const CTraceProvider&)            = delete;
-        CTraceProvider& operator=(const CTraceProvider&) = delete;
-        CTraceProvider(CTraceProvider&&)                 = delete;
-        CTraceProvider& operator=(CTraceProvider&&)      = delete;
-
-        // Buffer management
-        void setBatchSize(size_t batch_size) { batch_size_ = batch_size; }
-        
-        // Add span data to buffer
-        void bufferSpan(const SSpanData& span_data);
-
-        // Topic metadata — written directly to file (no buffering)
-        void addTopicMetadata(const STopicMetadata& metadata);
-        
-        // Get buffered spans
-        std::vector<SSpanData> getSpans() { return span_buffer_; }
-        
-        // Flush buffered spans
-        void flushSpans();
-
-    private:
-        CTraceProvider();
-        ~CTraceProvider();
-
-        void registerExitHandlers();
-        static void atExitHandler();
-        static void signalHandler(int signum);
-        static std::atomic<bool> flush_done_;
-        
-        std::vector<SSpanData> span_buffer_;
-        size_t batch_size_{kDefaultTracingBatchSize};
-        mutable std::mutex buffer_mutex_;
-
-        std::unique_ptr<CTracingWriter> writer_;
-  };
-
 } // namespace tracing
-
 } // namespace eCAL

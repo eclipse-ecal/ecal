@@ -24,6 +24,8 @@
 
 #include "ecal_subscriber_impl.h"
 #include "tracing/tracing.h"
+#include "tracing/span.h"
+#include "tracing/trace_provider.h"
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>

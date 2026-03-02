@@ -28,7 +28,7 @@
 #include "ecal_memfile_header.h"
 #include "ecal_memfile_naming.h"
 #include "ecal_memfile_sync.h"
-#include "tracing/tracing.h"
+#include "tracing/span.h"
 
 #include <chrono>
 #include <mutex>

@@ -464,8 +464,11 @@ endif()
 # tracing
 ######################################
 set(ecal_tracing_src
-    src/tracing/tracing.cpp
     src/tracing/tracing.h
+    src/tracing/span.cpp
+    src/tracing/span.h
+    src/tracing/trace_provider.cpp
+    src/tracing/trace_provider.h
     src/tracing/tracing_writer.cpp
     src/tracing/tracing_writer.h
 )
