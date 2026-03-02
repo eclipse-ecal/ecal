@@ -27,6 +27,7 @@
 #include <string>
 #include <cstdint>
 #include <ecal/types.h>
+#include <ecal_struct_sample_common.h>
 
 namespace eCAL
 {

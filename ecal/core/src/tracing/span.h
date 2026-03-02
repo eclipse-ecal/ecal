@@ -23,6 +23,7 @@
 
 #include <ecal/types.h>
 #include <serialization/ecal_struct_sample_payload.h>
+#include <ecal/pubsub/types.h>
 
 namespace eCAL
 {
