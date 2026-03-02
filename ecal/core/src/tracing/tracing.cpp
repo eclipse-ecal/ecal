@@ -18,6 +18,7 @@
 */
 
 #include "tracing.h"
+#include "tracing_writer.h"
 #include <fstream>
 #include <filesystem>
 #include <iostream>
@@ -28,17 +29,6 @@
 
 namespace eCAL
 { namespace tracing {
-
-    // Helper function to get file path with PID
-    std::string getSpansFilePath()
-    {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_spans_" + std::to_string(getpid()) + ".jsonl";
-    }
-
-    std::string getTopicMetadataFilePath()
-    {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".jsonl";
-    }
 
     // Send span constructor
     CSpan::CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
@@ -89,6 +79,7 @@ namespace eCAL
     std::atomic<bool> CTraceProvider::flush_done_{false};
 
     CTraceProvider::CTraceProvider()
+        : writer_(std::make_unique<CTracingWriter>())
     {
         registerExitHandlers();
     }
@@ -168,86 +159,12 @@ namespace eCAL
             batch_to_send.swap(span_buffer_);
         }
         
-        writeBatchSpans(batch_to_send);
+        writer_->writeBatchSpans(batch_to_send);
     }
 
     void CTraceProvider::addTopicMetadata(const STopicMetadata& metadata)
     {
-        writeTopicMetadata(metadata);
-    }
-
-    void CTraceProvider::writeBatchSpans(const std::vector<SSpanData>& batch)
-    {
-        // Write spans to JSONL file (one JSON object per line)
-        try
-        {
-            std::string filepath = getSpansFilePath();
-            
-            // Open file in append mode
-            std::ofstream output_file(filepath, std::ios::app);
-            if (output_file.is_open())
-            {
-                for (const auto& span : batch)
-                {
-                    json span_obj;
-                    span_obj["entity_id"]    = span.entity_id;
-                    span_obj["topic_id"]     = span.topic_id;
-                    span_obj["process_id"]   = span.process_id;
-                    span_obj["payload_size"] = span.payload_size;
-                    span_obj["clock"]        = span.clock;
-                    span_obj["layer"]        = span.layer;
-                    span_obj["start_ns"]     = span.start_ns;
-                    span_obj["end_ns"]       = span.end_ns;
-                    span_obj["op_type"]      = span.op_type;
-                    
-                    output_file << span_obj.dump() << "\n";
-                }
-                output_file.close();
-            }
-            else
-            {
-                std::cerr << "Warning: Could not open spans file: " << filepath << std::endl;
-            }
-        }
-        catch (const std::exception& e)
-        {
-            std::cerr << "Error writing spans to JSONL: " << e.what() << std::endl;
-        }
-    }
-
-    void CTraceProvider::writeTopicMetadata(const STopicMetadata& metadata)
-    {
-        try
-        {
-            std::lock_guard<std::mutex> lock(metadata_mutex_);
-            std::string filepath = getTopicMetadataFilePath();
-
-            json obj;
-            obj["tracing_version"] = metadata.tracing_version;
-            obj["entity_id"]   = metadata.entity_id;
-            obj["process_id"]  = metadata.process_id;
-            obj["host_name"]   = metadata.host_name;
-            obj["topic_name"]  = metadata.topic_name;
-            obj["encoding"]    = metadata.encoding;
-            obj["type_name"]   = metadata.type_name;
-            obj["direction"]   = (metadata.direction == topic_direction::publisher) ? "publisher" : "subscriber";
-
-            // Open file in append mode and write as a single line
-            std::ofstream output_file(filepath, std::ios::app);
-            if (output_file.is_open())
-            {
-                output_file << obj.dump() << "\n";
-                output_file.close();
-            }
-            else
-            {
-                std::cerr << "Warning: Could not open topic metadata file: " << filepath << std::endl;
-            }
-        }
-        catch (const std::exception& e)
-        {
-            std::cerr << "Error writing topic metadata to JSONL: " << e.what() << std::endl;
-        }
+        writer_->writeTopicMetadata(metadata);
     }
 
 } // namespace tracing

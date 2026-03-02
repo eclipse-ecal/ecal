@@ -27,6 +27,7 @@
 #include <list>
 #include <vector>
 #include <mutex>
+#include <memory>
 #include <chrono>
 #include <ecal/types.h>
 #include <serialization/ecal_struct_sample_common.h>
@@ -36,6 +37,9 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 using namespace std::chrono;
+
+// Forward declaration
+namespace eCAL { namespace tracing { class CTracingWriter; } }
 
 namespace eCAL
 {
@@ -184,11 +188,8 @@ namespace tracing
         std::vector<SSpanData> span_buffer_;
         size_t batch_size_{kDefaultTracingBatchSize};
         mutable std::mutex buffer_mutex_;
-        mutable std::mutex metadata_mutex_;
-        
-        // Internal method for writing spans to backend
-        void writeBatchSpans(const std::vector<SSpanData>& batch);
-        void writeTopicMetadata(const STopicMetadata& metadata);
+
+        std::unique_ptr<CTracingWriter> writer_;
   };
 
 } // namespace tracing

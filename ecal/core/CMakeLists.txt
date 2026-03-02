@@ -466,6 +466,8 @@ endif()
 set(ecal_tracing_src
     src/tracing/tracing.cpp
     src/tracing/tracing.h
+    src/tracing/tracing_writer.cpp
+    src/tracing/tracing_writer.h
 )
 
 ######################################
