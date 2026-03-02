@@ -132,6 +132,11 @@ namespace tracing
         CSendSpan(const STopicId topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
         ~CSendSpan();
 
+        CSendSpan(const CSendSpan&)            = delete;
+        CSendSpan& operator=(const CSendSpan&) = delete;
+        CSendSpan(CSendSpan&&)                 = delete;
+        CSendSpan& operator=(CSendSpan&&)      = delete;
+
     private:
         SSendSpanData data;
     };
@@ -141,6 +146,11 @@ namespace tracing
         CReceiveSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
         ~CReceiveSpan();
 
+        CReceiveSpan(const CReceiveSpan&)            = delete;
+        CReceiveSpan& operator=(const CReceiveSpan&) = delete;
+        CReceiveSpan(CReceiveSpan&&)                 = delete;
+        CReceiveSpan& operator=(CReceiveSpan&&)      = delete;
+
     private:
         SReceiveSpanData data;
     };
@@ -149,6 +159,11 @@ namespace tracing
     public:
         CShmHandshakeSpan(uint64_t entity_id, int32_t process_id, long long clock);
         ~CShmHandshakeSpan();
+
+        CShmHandshakeSpan(const CShmHandshakeSpan&)            = delete;
+        CShmHandshakeSpan& operator=(const CShmHandshakeSpan&) = delete;
+        CShmHandshakeSpan(CShmHandshakeSpan&&)                 = delete;
+        CShmHandshakeSpan& operator=(CShmHandshakeSpan&&)      = delete;
 
     private:
         SSendSpanData data;
@@ -162,8 +177,10 @@ namespace tracing
             return instance;
         }
 
-        CTraceProvider(const CTraceProvider&) = delete;
-        void operator=(const CTraceProvider&) = delete;
+        CTraceProvider(const CTraceProvider&)            = delete;
+        CTraceProvider& operator=(const CTraceProvider&) = delete;
+        CTraceProvider(CTraceProvider&&)                 = delete;
+        CTraceProvider& operator=(CTraceProvider&&)      = delete;
 
         // Buffer management
         void setSendSpanBatchSize(size_t batch_size) { send_batch_size_ = batch_size; }
