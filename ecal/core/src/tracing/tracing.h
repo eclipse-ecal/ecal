@@ -110,7 +110,7 @@ namespace tracing
         uint64_t       layer{0};
         long long      start_ns{0};       // start timestamp in nanoseconds
         long long      end_ns{0};         // end timestamp in nanoseconds
-        operation_type op_type{send};
+        operation_type op_type;
     };
 
 } // namespace tracing
