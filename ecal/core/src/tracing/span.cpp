@@ -43,13 +43,14 @@ namespace tracing
     }
 
     // Receive span constructor
-    CSpan::CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, operation_type op_type)
+    CSpan::CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
         auto now = system_clock::now();
         data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
         data.entity_id  = entity_id;
         data.topic_id   = topic_info.topic_id;
         data.process_id = topic_info.process_id;
+        data.payload_size = payload_size;
         data.clock      = clock;
         data.layer      = layer;
         data.op_type    = op_type;

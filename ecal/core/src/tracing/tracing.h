@@ -96,16 +96,13 @@ namespace tracing
     };
 
     // Unified span data structure.
-    // All span types share the same struct; fields not applicable to a
-    // particular operation_type are left at their zero-initialised default.
-    //   - payload_size: populated for send / shm_handshake spans
-    //   - topic_id:     populated for receive spans
+    // All span types share the same struct;
     struct SSpanData
     {
         uint64_t       entity_id{0};
         uint64_t       topic_id{0};        // receive-only (0 for send spans)
         uint64_t       process_id{0};
-        size_t         payload_size{0};    // send-only   (0 for receive spans)
+        size_t         payload_size{0};
         long long      clock{0};
         uint64_t       layer{0};
         long long      start_ns{0};       // start timestamp in nanoseconds

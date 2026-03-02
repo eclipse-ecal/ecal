@@ -397,6 +397,7 @@ namespace eCAL
       topic_info_,
       clock_,
       eCAL::tracing::toTracingLayerType(layer_),
+      size_,
       eCAL::tracing::operation_type::receive
     );
     
@@ -483,6 +484,7 @@ namespace eCAL
             topic_info_,
             clock_,
             eCAL::tracing::toTracingLayerType(layer_),
+            size_,
             eCAL::tracing::operation_type::callback_execution
           );
          

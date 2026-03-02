@@ -36,7 +36,7 @@ namespace tracing
         // Send span (publisher)
         CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
         // Receive span (subscriber)
-        CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, operation_type op_type);
+        CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
         // SHM handshake span
         CSpan(uint64_t entity_id, int32_t process_id, long long clock);
 
