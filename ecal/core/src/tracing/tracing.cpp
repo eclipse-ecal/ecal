@@ -45,7 +45,7 @@ namespace eCAL
         return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".jsonl";
     }
 
-    CSendSpan::CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size, operation_type op_type)
+    CSendSpan::CSendSpan(const STopicId topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
         auto now = system_clock::now();
         data.start_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();

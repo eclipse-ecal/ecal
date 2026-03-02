@@ -196,19 +196,17 @@ namespace eCAL
     const size_t snd_hash = PrepareWrite(filter_id_, payload_buf_size);
 
     // determine active transport layer for tracing
-    eCAL::eTLayerType active_layer = eCAL::eTLayerType::tl_none;
+    eCAL::tracing::eTracingLayerType active_layer = eCAL::tracing::tl_trace_none;
     {
-      int active_count = 0;
 #if ECAL_CORE_TRANSPORT_SHM
-      if (m_writer_shm) { active_layer = eCAL::eTLayerType::tl_ecal_shm; ++active_count; }
+      if (m_writer_shm) { active_layer = static_cast<eCAL::tracing::eTracingLayerType>(active_layer | eCAL::tracing::tl_trace_shm); }
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
-      if (m_writer_udp) { active_layer = eCAL::eTLayerType::tl_ecal_udp; ++active_count; }
+      if (m_writer_udp) { active_layer = static_cast<eCAL::tracing::eTracingLayerType>(active_layer | eCAL::tracing::tl_trace_udp); }
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
-      if (m_writer_tcp) { active_layer = eCAL::eTLayerType::tl_ecal_tcp; ++active_count; }
+      if (m_writer_tcp) { active_layer = static_cast<eCAL::tracing::eTracingLayerType>(active_layer | eCAL::tracing::tl_trace_tcp); }
 #endif
-      if (active_count > 1) active_layer = eCAL::eTLayerType::tl_all;
     }
 
     // create tracing span for the send operation

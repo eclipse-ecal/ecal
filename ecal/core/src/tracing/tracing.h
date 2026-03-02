@@ -58,6 +58,21 @@ namespace tracing
         subscriber
     };
 
+    // Bitmask enum for active transport layers used in tracing spans.
+    // Unlike eTLayerType (whose values are not bitmask-safe), these use
+    // power-of-two values so combinations can be expressed with bitwise OR.
+    enum eTracingLayerType : uint64_t
+    {
+        tl_trace_none    = 0,
+        tl_trace_shm     = 1 << 0,  // 1
+        tl_trace_udp     = 1 << 1,  // 2
+        tl_trace_tcp     = 1 << 2,  // 4
+        tl_trace_shm_udp = tl_trace_shm | tl_trace_udp,  // 3
+        tl_trace_shm_tcp = tl_trace_shm | tl_trace_tcp,   // 5
+        tl_trace_udp_tcp = tl_trace_udp | tl_trace_tcp,   // 6
+        tl_trace_all     = tl_trace_shm | tl_trace_udp | tl_trace_tcp,  // 7
+    };
+
     // Metadata captured when a topic is created
     struct STopicMetadata
     {
@@ -97,7 +112,7 @@ namespace tracing
 
     class CSendSpan {
     public:
-        CSendSpan(const STopicId topic_id, long long clock, eTLayerType layer, size_t payload_size, operation_type op_type);
+        CSendSpan(const STopicId topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
         ~CSendSpan();
 
     private:
