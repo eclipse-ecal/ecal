@@ -42,7 +42,7 @@ namespace eCAL
 namespace tracing
 {
 
-    // Version of the tracing data format
+    // Version of the tracing implementation.
     constexpr const char* kTracingVersion = "1.0.0";
 
     // Default batch size for span buffering before flushing to backend (jsonl file)
@@ -65,8 +65,7 @@ namespace tracing
     };
 
     // Bitmask enum for active transport layers used in tracing spans.
-    // Unlike eTLayerType (whose values are not bitmask-safe), these use
-    // power-of-two values so combinations can be expressed with bitwise OR.
+    // These use power-of-two values so combinations can be expressed with bitwise OR.
     enum eTracingLayerType : uint64_t
     {
         tl_trace_none    = 0,
