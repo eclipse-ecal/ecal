@@ -9,6 +9,26 @@ eCAL Releases
 Here you can find a list of all eCAL Versions ever released on GitHub.
 
 
+eCAL 6.1
+===========
+
+.. list-table:: 
+   :widths: 3 3 4
+   :header-rows: 1
+   
+   * - Release
+
+     - Release Date
+
+     - Support Status
+
+
+   * - :ref:`eCAL v6.1.0 <ecal_release_page_6_1_0>`
+
+     - 2026-02-24
+
+     - Supported
+       
 eCAL 6.0
 ===========
 
@@ -38,6 +58,8 @@ eCAL 6.0
 eCAL 5.13
 ===========
 
+*eCAL 5.13 has reached its end of life.*
+
 .. list-table:: 
    :widths: 3 3 4
    :header-rows: 1
@@ -53,7 +75,7 @@ eCAL 5.13
 
      - 2025-08-13
 
-     - Supported
+     - EOL
        
    * - :ref:`eCAL v5.13.3 <ecal_release_page_5_13_3>`
 
