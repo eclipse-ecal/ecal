@@ -59,14 +59,17 @@
 #include "readwrite/tcp/ecal_reader_tcp.h"
 #include "readwrite/shm/ecal_reader_shm.h"
 
+#include "util/single_instance_helper.h"
+
 #include <memory>
 
 namespace eCAL
 {
   class CGlobals
   {
+    friend class eCAL::Util::CSingleInstanceHelper<CGlobals>;
   public:
-    static std::shared_ptr<CGlobals> instance();
+    static std::shared_ptr<CGlobals> Create();
 
     ~CGlobals();
 
@@ -113,8 +116,6 @@ namespace eCAL
     CGlobals() = default;
     CGlobals(const CGlobals&) = delete;
     CGlobals& operator=(const CGlobals&) = delete;
-    inline static std::shared_ptr<CGlobals>                               m_instance;
-    inline static std::mutex                                              m_instance_mutex;
 
     std::atomic<bool>                                                     initialized {false};
     unsigned int                                                          components {0};

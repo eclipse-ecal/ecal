@@ -52,6 +52,8 @@ namespace eCAL
   Types::Process::SProcessState g_process_state;
   std::mutex                    g_process_state_mutex;
 
+  std::shared_ptr<CGlobals>     g_globals_instance;
+
   std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
   std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
 
@@ -67,12 +69,20 @@ namespace eCAL
 
   std::shared_ptr<CGlobals> CreateGlobalsInstance()
   {
-    return CGlobals::instance();
+    g_globals_instance = CGlobals::Create();
+    return g_globals_instance;
   }
 
   bool FinalizeGlobals() 
   { 
-    return CGlobals::instance()->Finalize(); 
+    if (auto globals_instance = g_globals_instance; globals_instance) 
+    {
+      const bool result = globals_instance->Finalize();
+      g_globals_instance.reset();
+      return result;
+    }
+
+    return false;
   }
 
   void ResetGlobalEcalConfiguration() 
@@ -118,9 +128,9 @@ namespace eCAL
 
   std::shared_ptr<CGlobals> g_globals()
   {
-    if (auto globals_instance = CGlobals::instance(); globals_instance) 
+    if (auto globals_instance = g_globals_instance; globals_instance) 
     {
-      return globals_instance->IsInitialized() ? std::move(globals_instance) : nullptr;
+      return globals_instance->IsInitialized() ? globals_instance : nullptr;
     }
     
     return nullptr;

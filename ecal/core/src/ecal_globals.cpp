@@ -40,18 +40,9 @@
 
 namespace eCAL
 {
-  std::shared_ptr<CGlobals> CGlobals::instance()
+  std::shared_ptr<CGlobals> CGlobals::Create()
   {
-    auto instance = m_instance;
-    if (instance) return instance;
-
-    std::lock_guard<std::mutex> lock(m_instance_mutex);
-    if (!m_instance)
-    {
-      m_instance = std::shared_ptr<CGlobals>(new CGlobals());
-    }
-
-    return m_instance;
+    return Util::CSingleInstanceHelper<CGlobals>::Create();
   }
 
   CGlobals::~CGlobals()
@@ -363,11 +354,6 @@ namespace eCAL
     m_udp_reader_layer_instance.reset();
     m_tcp_reader_layer_instance.reset();
     m_shm_reader_layer_instance.reset();
-
-    {
-      std::lock_guard<std::mutex> lock(m_instance_mutex);
-      m_instance.reset();
-    }
     
     return true;
   }
