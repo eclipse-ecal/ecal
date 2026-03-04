@@ -45,8 +45,7 @@ namespace tracing
     {
         send,
         receive,
-        callback_execution,
-        shm_handshake
+        callback_execution
     };
 
     // Specifies the direction of the topic (publisher or subscriber)
