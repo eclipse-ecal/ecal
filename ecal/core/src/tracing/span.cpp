@@ -56,18 +56,6 @@ namespace tracing
         data.op_type    = op_type;
     }
 
-    // SHM handshake span constructor
-    CSpan::CSpan(uint64_t entity_id, int32_t process_id, long long clock)
-    {
-        auto now = system_clock::now();
-        data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id  = entity_id;
-        data.process_id = process_id;
-        data.clock      = clock;
-        data.layer      = tl_trace_shm;
-        data.op_type    = operation_type::shm_handshake;
-    }
-
     CSpan::~CSpan()
     {
         auto now = system_clock::now();

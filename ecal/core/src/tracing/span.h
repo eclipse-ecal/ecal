@@ -31,15 +31,13 @@ namespace tracing
 {
 
     // RAII span — records start_ns on construction, end_ns + buffer on destruction.
-    // Overloaded constructors cover send, receive, and SHM-handshake use cases.
+    // Overloaded constructors cover send and receive use cases.
     class CSpan {
     public:
         // Send span (publisher)
         CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
         // Receive span (subscriber)
         CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
-        // SHM handshake span
-        CSpan(uint64_t entity_id, int32_t process_id, long long clock);
 
         ~CSpan();
 
