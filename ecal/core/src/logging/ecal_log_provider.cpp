@@ -139,11 +139,11 @@ namespace eCAL
 {
   namespace Logging
   {
-    CLogProvider::CLogProviderUniquePtrT CLogProvider::Create(const SProviderAttributes& attr_)
+    std::shared_ptr<CLogProvider> CLogProvider::Create(const SProviderAttributes& attr_)
     {
       try
       {
-        return Util::CUniqueSingleInstance<CLogProvider>::Create(attr_);
+        return Util::CSingleInstanceHelper<CLogProvider>::Create(attr_);
       }
       catch (const std::exception& e)
       {

@@ -26,7 +26,7 @@
 
 #include "config/attributes/ecal_log_receiver_attributes.h"
 #include "io/udp/ecal_udp_sample_receiver.h"
-#include "util/unique_single_instance.h"
+#include "util/single_instance_helper.h"
 
 #include <ecal/types/logging.h>
 
@@ -42,12 +42,11 @@ namespace eCAL
   {
     class CLogReceiver
     {
-      friend class Util::CUniqueSingleInstance<CLogReceiver>;
+      friend class Util::CSingleInstanceHelper<CLogReceiver>;
 
       public:
-        using CLogReceiverUniquePtrT = Util::CUniqueSingleInstance<CLogReceiver>::UniqueT;
 
-        static CLogReceiverUniquePtrT Create(const SReceiverAttributes& attr_);
+        static std::shared_ptr<CLogReceiver> Create(const SReceiverAttributes& attr_);
 
         /**
          * @brief Destructor.

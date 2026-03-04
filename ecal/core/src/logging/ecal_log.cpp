@@ -41,8 +41,7 @@ namespace eCAL
     **/
     void Log(eLogLevel level_, const std::string& msg_)
     {
-      Util::CUniqueSingleInstance<Logging::CLogProvider>::CSharedLockGuard guard;
-      if(g_log_provider_instance) g_log_provider_instance->Log(level_, msg_);
+      if(auto provider = g_logging_provider(); provider) provider->Log(level_, msg_);
     }
 
     /**
@@ -54,8 +53,7 @@ namespace eCAL
     **/
     bool GetLogging(std::string& log_)
     {
-      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CSharedLockGuard guard;
-      if(g_log_receiver_instance) return g_log_receiver_instance->GetLogging(log_);
+      if(auto receiver = g_logging_receiver(); receiver) return receiver->GetLogging(log_);
       return false;
     }
 
@@ -68,10 +66,9 @@ namespace eCAL
     **/
     bool GetLogging(Logging::SLogging& log_)
     {
-      Util::CUniqueSingleInstance<Logging::CLogReceiver>::CSharedLockGuard guard;
-      if(g_log_receiver_instance) 
+      if(auto receiver = g_logging_receiver(); receiver) 
       {
-        g_log_receiver_instance->GetLogging(log_);
+        receiver->GetLogging(log_);
         return true;
       }
       return false;

@@ -20,42 +20,42 @@
 
 #include <gtest/gtest.h>
 
-#include "util/unique_single_instance.h"
+#include "util/single_instance_helper.h"
 
-TEST(UniqueSingleInstanceTest /*unused*/, BasicCreate /*unused*/) 
+TEST(SingleInstanceHelperTest /*unused*/, BasicCreate /*unused*/) 
 {
-    auto instance1 = eCAL::Util::CUniqueSingleInstance<int>::Create(42);
+    auto instance1 = eCAL::Util::CSingleInstanceHelper<int>::Create(42);
     EXPECT_NE(instance1, nullptr);
     EXPECT_EQ(*instance1, 42);
 
-    auto instance2 = eCAL::Util::CUniqueSingleInstance<int>::Create(42);
+    auto instance2 = eCAL::Util::CSingleInstanceHelper<int>::Create(42);
     EXPECT_EQ(instance2, nullptr); // Should not create a second instance
 
-    auto instance_float = eCAL::Util::CUniqueSingleInstance<float>::Create(3.14f);
+    auto instance_float = eCAL::Util::CSingleInstanceHelper<float>::Create(3.14f);
     EXPECT_NE(instance_float, nullptr);
     EXPECT_EQ(*instance_float, 3.14f);
 
-    auto instance_float2 = eCAL::Util::CUniqueSingleInstance<float>::Create(2.71f);
+    auto instance_float2 = eCAL::Util::CSingleInstanceHelper<float>::Create(2.71f);
     EXPECT_EQ(instance_float2, nullptr); // Should not create a second instance
 }
 
-TEST(UniqueSingleInstanceTest /*unused*/, ClassImplementation /*unused*/) 
+TEST(SingleInstanceHelperTest /*unused*/, ClassImplementation /*unused*/) 
 {
   class TestClass
   {
-    friend class eCAL::Util::CUniqueSingleInstance<TestClass>;
+    friend class eCAL::Util::CSingleInstanceHelper<TestClass>;
     public:
-      using TestClassUniquePtrT = eCAL::Util::CUniqueSingleInstance<TestClass>::UniqueT;
-      
-      static TestClassUniquePtrT Create(int value) {
-        return eCAL::Util::CUniqueSingleInstance<TestClass>::Create(value);
+      static std::shared_ptr<TestClass> Create(int value) {
+        return eCAL::Util::CSingleInstanceHelper<TestClass>::Create(value);
       }
-      ~TestClass() = default;
 
       int GetValue() const { return value_; }
 
+      ~TestClass() = default;
+
     private:
       TestClass(int value) : value_(value) {}
+      
       int value_;
   };
 

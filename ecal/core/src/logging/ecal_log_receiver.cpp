@@ -37,10 +37,10 @@ namespace eCAL
 {
   namespace Logging
   {
-    CLogReceiver::CLogReceiverUniquePtrT CLogReceiver::Create(const SReceiverAttributes& attr_)
+    std::shared_ptr<CLogReceiver> CLogReceiver::Create(const SReceiverAttributes& attr_)
     {
       try {
-        return Util::CUniqueSingleInstance<CLogReceiver>::Create(attr_);
+        return Util::CSingleInstanceHelper<CLogReceiver>::Create(attr_);
       }
       catch (const std::exception& ex)
       {

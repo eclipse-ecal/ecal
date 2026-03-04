@@ -151,7 +151,7 @@ namespace eCAL
   **/
   bool IsInitialized(unsigned int component_)
   {
-    if (component_ == Init::Logging) return g_log_provider_instance != nullptr;
+    if (component_ == Init::Logging) return g_logging_provider() != nullptr;
     if (auto globals = g_globals(); globals) return globals->IsInitialized(component_);
     return false ;
   }

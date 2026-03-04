@@ -26,7 +26,7 @@
 
 #include "config/attributes/ecal_log_provider_attributes.h"
 #include "io/udp/ecal_udp_sample_sender.h"
-#include "util/unique_single_instance.h"
+#include "util/single_instance_helper.h"
 
 #include <ecal/log_level.h>
 #include <ecal/types/logging.h>
@@ -44,11 +44,10 @@ namespace eCAL
   {
     class CLogProvider
     {
-      friend class Util::CUniqueSingleInstance<CLogProvider>;
+      friend class Util::CSingleInstanceHelper<CLogProvider>;
 
       public:
-        using CLogProviderUniquePtrT = Util::CUniqueSingleInstance<CLogProvider>::UniqueT;
-        static CLogProviderUniquePtrT Create(const SProviderAttributes& attr_);
+        static std::shared_ptr<CLogProvider> Create(const SProviderAttributes& attr_);
 
         /**
          * @brief Destructor.

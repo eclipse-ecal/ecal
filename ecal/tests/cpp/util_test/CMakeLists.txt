@@ -25,7 +25,7 @@ set(util_test_src
   src/counter_cache_test.cpp
   src/expanding_vector_test.cpp
   src/message_drop_calculator_test.cpp
-  src/unique_single_instance_test.cpp
+  src/single_instance_helper_test.cpp
   src/util_test.cpp
 )
 

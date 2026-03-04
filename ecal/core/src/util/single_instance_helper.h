@@ -1,3 +1,4 @@
+
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
@@ -5,9 +6,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,30 +19,43 @@
 */
 
 /**
- * @brief  eCAL logging pointer types for fwd declarations
- */
+ * @brief This file provides a template class to ensure a single instance of a type.
+**/
 
 #pragma once
-
+#include <atomic>
+#include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <utility>
 
 namespace eCAL
 {
   namespace Util
   {
-    template <typename T>
-    class CUniqueSingleInstance;
+      template <typename T>
+      class CSingleInstanceHelper
+      {
+      public:
+        template <typename... Args>
+        static std::shared_ptr<T> Create(Args&&... args)
+        {
+          auto instance = m_instance.lock();;
+          if (instance)
+            return std::shared_ptr<T>{};
 
-    template<typename T>
-    struct SSingleInstanceDeleter;
-  }
+          auto ptr = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
+          m_instance = ptr;
+         
+          return ptr;
+        }
 
-  namespace Logging
-  {
-    class CLogProvider;
-    class CLogReceiver;
+      private:
+        static std::weak_ptr<T> m_instance;
+      };
 
-    using CLogProviderUniquePtrT = std::unique_ptr<CLogProvider, Util::SSingleInstanceDeleter<CLogProvider>>;
-    using CLogReceiverUniquePtrT = std::unique_ptr<CLogReceiver, Util::SSingleInstanceDeleter<CLogReceiver>>;
+      template <typename T>
+      std::weak_ptr<T> CSingleInstanceHelper<T>::m_instance;
   }
 }

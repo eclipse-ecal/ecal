@@ -31,13 +31,18 @@
 #include <vector>
 
 #include "ecal/types/process.h"
-#include "logging/ecal_log_ptr_types.h"
 
 // Forward declaration of global accessible classes
 namespace eCAL
 {
   class   CGlobals;
   struct  Configuration;
+
+  namespace Logging
+  {
+    class CLogProvider;
+    class CLogReceiver;
+  }
 
 #if ECAL_CORE_MONITORING
   class  CMonitoring;
@@ -103,6 +108,9 @@ namespace eCAL
   std::shared_ptr<CMemFileMap>            g_memfile_map();
 #endif
 
+  std::shared_ptr<Logging::CLogProvider>  g_logging_provider();
+  std::shared_ptr<Logging::CLogReceiver>  g_logging_receiver();
+
   // declaration of globally accessible variables
   extern std::string                   g_default_ini_file;
   extern Configuration                 g_ecal_configuration;
@@ -118,6 +126,6 @@ namespace eCAL
   extern Types::Process::SProcessState g_process_state;
   extern std::mutex                    g_process_state_mutex;
 
-  extern Logging::CLogProviderUniquePtrT g_log_provider_instance;
-  extern Logging::CLogReceiverUniquePtrT g_log_receiver_instance;
+  // extern std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
+  // extern std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
 }
