@@ -43,16 +43,16 @@ namespace tracing
     // Specifies the type of operation being traced
     enum operation_type
     {
-        send,
-        receive,
-        callback_execution
+        send = 0,
+        receive = 1,
+        callback_execution = 2
     };
 
     // Specifies the direction of the topic (publisher or subscriber)
     enum topic_direction
     {
-        publisher,
-        subscriber
+        publisher = 0,
+        subscriber = 1
     };
 
     // Bitmask enum for active transport layers used in tracing spans.
