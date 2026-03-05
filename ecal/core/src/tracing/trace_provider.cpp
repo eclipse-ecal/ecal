@@ -90,13 +90,15 @@ namespace tracing
 
     void CTraceProvider::bufferSpan(const SSpanData& span_data)
     {
+        bool should_flush = false;
         {
             std::lock_guard<std::mutex> lock(buffer_mutex_);
             span_buffer_.push_back(span_data);
+            should_flush = (span_buffer_.size() >= batch_size_);
         }
         
         // Auto-flush if batch size reached
-        if (span_buffer_.size() >= batch_size_)
+        if (should_flush)
         {
             flushSpans();
         }

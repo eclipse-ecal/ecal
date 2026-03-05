@@ -47,6 +47,7 @@ namespace tracing
     {
         try
         {
+            std::lock_guard<std::mutex> lock(spans_mutex_);
             std::string filepath = getSpansFilePath();
 
             std::ofstream output_file(filepath, std::ios::app);

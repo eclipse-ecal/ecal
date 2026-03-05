@@ -53,6 +53,7 @@ namespace tracing
     std::string getSpansFilePath() const;
     std::string getTopicMetadataFilePath() const;
 
+    mutable std::mutex spans_mutex_;
     mutable std::mutex metadata_mutex_;
   };
 

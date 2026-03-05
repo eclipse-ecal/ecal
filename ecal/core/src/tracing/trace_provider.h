@@ -57,7 +57,11 @@ namespace tracing
         void addTopicMetadata(const STopicMetadata& metadata);
         
         // Get buffered spans
-        std::vector<SSpanData> getSpans() { return span_buffer_; }
+        std::vector<SSpanData> getSpans()
+        {
+            std::lock_guard<std::mutex> lock(buffer_mutex_);
+            return span_buffer_;
+        }
         
         // Flush buffered spans
         void flushSpans();
