@@ -125,7 +125,4 @@ namespace eCAL
 
   extern Types::Process::SProcessState g_process_state;
   extern std::mutex                    g_process_state_mutex;
-
-  // extern std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
-  // extern std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
 }
