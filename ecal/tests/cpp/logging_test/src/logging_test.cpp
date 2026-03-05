@@ -451,8 +451,7 @@ TEST(logging_runtime /*unused*/, finalize_while_logging /*unused*/)
   auto end = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
   
-  EXPECT_LT(duration.count(), 3000); // finalize should not take longer than 3 seconds, otherwise there might be a deadlock
-  
+  EXPECT_LT(duration.count(), 3000);
   is_initialized.store(false);
 
   for (auto& thread : logging_threads)

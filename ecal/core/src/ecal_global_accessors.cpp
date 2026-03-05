@@ -97,22 +97,14 @@ namespace eCAL
 
   void InitializeLogging(const eCAL::Configuration& config_)
   {
-    {
       g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
-    }
-    {
       g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
-    }
   }
 
   void ResetLogging()
   {
-    {
-      g_log_provider_instance.reset();
-    }
-    {
-      g_log_receiver_instance.reset();
-    }
+    g_log_provider_instance.reset();
+    g_log_receiver_instance.reset();
   }
 
   std::shared_ptr<Logging::CLogProvider>  g_logging_provider()

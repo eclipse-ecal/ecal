@@ -164,11 +164,10 @@ namespace eCAL
   bool Finalize()
   {
     bool finalized{ false };
-    if (auto globals = g_globals(); globals)
-    {
-      finalized = FinalizeGlobals();
-    }
+    finalized = FinalizeGlobals();
+    
     ResetGlobalEcalConfiguration();
+
     ResetLogging();
 
     return finalized;
