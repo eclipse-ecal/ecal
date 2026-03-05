@@ -48,8 +48,8 @@ namespace eCAL
     public:
       void SetPostUpdateCallbacks(const std::vector<PostUpdateCallback_T>& post_update_callbacks);
 
-      std::map<std::string, eCAL::rec_server::TopicInfo> GetTopicInfoMap() const;
-      std::map<std::string, bool> GetHostsRunningEcalRec() const;
+      TopicInfoMap_T GetTopicInfoMap() const;
+      HostsRunningEcalRec_T GetHostsRunningEcalRec() const;
 
     /////////////////////////////////////////
     // Interruptible Thread overrides
