@@ -112,6 +112,7 @@ namespace eCAL
   {
     bool initialized{ false };
 
+    // TODO: Protect init with a mutex?
     if (auto globals = g_globals(); !globals)
     {
       SetGlobalEcalConfiguration(config_);

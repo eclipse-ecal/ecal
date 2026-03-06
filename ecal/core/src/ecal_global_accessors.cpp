@@ -75,7 +75,7 @@ namespace eCAL
 
   bool FinalizeGlobals() 
   { 
-    if (auto globals_instance = g_globals_instance; globals_instance) 
+    if (auto globals_instance = g_globals(); globals_instance) 
     {
       const bool result = globals_instance->Finalize();
       g_globals_instance.reset();
@@ -97,8 +97,8 @@ namespace eCAL
 
   void InitializeLogging(const eCAL::Configuration& config_)
   {
-      g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
-      g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
+    g_log_provider_instance = Logging::CLogProvider::Create(eCAL::Logging::BuildLoggingProviderAttributes(config_));
+    g_log_receiver_instance = Logging::CLogReceiver::Create(eCAL::Logging::BuildLoggingReceiverAttributes(config_));
   }
 
   void ResetLogging()
