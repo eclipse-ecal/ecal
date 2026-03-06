@@ -55,11 +55,6 @@ namespace eCAL
   class CUDPReaderLayer;
   class CTCPReaderLayer;
   class CRegistrationProvider;
-  
-  namespace Logging
-  {
-    class CLogProvider;
-  }
 
   struct SSubscriberGlobalContext // SSubscriberContext, SSubscriberGlobalDependencies
   {
@@ -67,7 +62,6 @@ namespace eCAL
     std::shared_ptr<eCAL::CSHMReaderLayer>       shm_layer;
     std::shared_ptr<eCAL::CTCPReaderLayer>       tcp_layer;
     std::shared_ptr<eCAL::CRegistrationProvider> registration_provider;
-    std::shared_ptr<eCAL::Logging::CLogProvider> log_provider;
   };
 
   class CSubscriberImpl

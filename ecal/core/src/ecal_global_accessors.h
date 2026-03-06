@@ -75,12 +75,13 @@ namespace eCAL
   bool                      FinalizeGlobals();
 
   void                      SetGlobalEcalConfiguration(const Configuration& config_);
-  void                      ResetGlobalEcalConfiguration(); 
+  void                      ResetGlobalEcalConfiguration();
+
+  void                      InitializeLogging(const eCAL::Configuration& config_);
+  void                      ResetLogging();
 
   // Declaration of getter functions for globally accessible variable instances
   std::shared_ptr<CGlobals>               g_globals();
-  std::shared_ptr<Logging::CLogReceiver>  g_log_udp_receiver();
-  std::shared_ptr<Logging::CLogProvider>  g_log_provider();
 #if ECAL_CORE_MONITORING
   std::shared_ptr<CMonitoring>            g_monitoring();
 #endif
@@ -105,6 +106,9 @@ namespace eCAL
 #if defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
   std::shared_ptr<CMemFileMap>            g_memfile_map();
 #endif
+
+  std::shared_ptr<Logging::CLogProvider>  g_logging_provider();
+  std::shared_ptr<Logging::CLogReceiver>  g_logging_receiver();
 
   // declaration of globally accessible variables
   extern std::string                   g_default_ini_file;
