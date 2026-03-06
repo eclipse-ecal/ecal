@@ -23,7 +23,6 @@
 **/
 
 #include <ecal/ecal.h>
-#include <shared_mutex>
 #include <string>
 
 #include "ecal_log_provider.h"

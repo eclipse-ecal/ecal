@@ -24,6 +24,8 @@
 
 #pragma once
 #include <memory>
+#include <mutex>
+
 
 namespace eCAL
 {
@@ -36,6 +38,9 @@ namespace eCAL
         template <typename... Args>
         static std::shared_ptr<T> Create(Args&&... args)
         {
+          static std::mutex mtx;
+          std::lock_guard<std::mutex> lock(mtx);
+          
           auto instance = m_instance.lock();;
           if (instance)
             return std::shared_ptr<T>{};
