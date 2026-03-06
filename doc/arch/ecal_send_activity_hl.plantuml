@@ -1,0 +1,46 @@
+@startuml PublisherSendActivityHL
+!pragma useVerticalIf on
+start
+
+partition #lightYellow "Prerequisites check" {
+if(Is eCAL initialized?) then (no)
+:Return False;
+  stop
+else(yes)
+endif
+
+if(Are matching subscriber available?) then (no)
+:Return False;
+  stop
+else(yes)
+endif
+}
+
+partition #lightBlue "Options available" {
+if(Zero-copy configured?) then (no)
+elseif(Was there never a network subscriber?) then (no)
+else(yes)
+:Activate zero-copy mode;
+endif
+}
+
+partition #lightGreen "Write buffer to layers" {
+if(Was there ever a shm subscriber?) then (yes)
+:Forward buffer to shm writer;
+else (no)
+endif
+
+if(Was there ever a udp subscriber?) then (yes)
+:Forward buffer to UDP writer;
+else (no)
+endif
+
+if(Was there ever a tcp subscriber?) then (yes)
+:Forward buffer to TCP writer;
+else(no)
+endif
+}
+
+stop
+
+@enduml
