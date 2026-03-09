@@ -53,16 +53,12 @@ namespace
 // Build the same file paths the writer uses so tests can read them back.
 std::string spansFilePath()
 {
-    return std::string(std::getenv("HOME"))
-         + "/workspace/eCAL-tracing-backend/data/ecal_spans_"
-         + std::to_string(getpid()) + ".jsonl";
+    return CTraceProvider::getInstance().getSpansFilePath();
 }
 
 std::string metadataFilePath()
 {
-    return std::string(std::getenv("HOME"))
-         + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_"
-         + std::to_string(getpid()) + ".jsonl";
+    return CTraceProvider::getInstance().getTopicMetadataFilePath();
 }
 
 // Read all JSON lines from a JSONL file and return them parsed.
@@ -107,6 +103,7 @@ class TracingProviderTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         // Clear any buffered spans before each test
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
@@ -127,7 +124,7 @@ TEST_F(TracingTypesTest, TracingVersionConstant)
 
 TEST_F(TracingTypesTest, DefaultTracingBatchSize)
 {
-    EXPECT_EQ(kDefaultTracingBatchSize, 10);
+    EXPECT_EQ(kDefaultTracingBatchSize, 500);
 }
 
 TEST_F(TracingLayerTypeTest, LayerTypeValues)
@@ -520,6 +517,7 @@ class SpanTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
     }
 
@@ -693,26 +691,28 @@ TEST_F(SpanTest, MultipleLayerTypes)
 class TracingWriterTest : public ::testing::Test
 {
 protected:
+    std::unique_ptr<CTracingWriter> writer_;
+
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
-        // Clean output files so each test starts fresh
-        removeFile(spansFilePath());
-        removeFile(metadataFilePath());
+        writer_ = std::make_unique<CTracingWriter>();
+        removeFile(writer_->getSpansFilePath());
+        removeFile(writer_->getTopicMetadataFilePath());
     }
 
     void TearDown() override
     {
         CTraceProvider::getInstance().flushSpans();
-        removeFile(spansFilePath());
-        removeFile(metadataFilePath());
+        removeFile(writer_->getSpansFilePath());
+        removeFile(writer_->getTopicMetadataFilePath());
     }
 };
 
 TEST_F(TracingWriterTest, WriterConstruction)
 {
-    CTracingWriter writer;
-    // Should construct without throwing
+    // writer_ is already constructed in SetUp — should not have thrown
     SUCCEED();
 }
 
@@ -735,10 +735,9 @@ TEST_F(TracingWriterTest, WriteBatchSpansVerifyContent)
         batch.push_back(span);
     }
 
-    CTracingWriter writer;
-    writer.writeBatchSpans(batch);
+    writer_->writeBatchSpans(batch);
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     ASSERT_EQ(lines.size(), 3);
 
     for (int i = 0; i < 3; ++i)
@@ -768,10 +767,9 @@ TEST_F(TracingWriterTest, WriteBatchSpansReceive)
     span.end_ns       = 6000000;
     span.op_type      = receive;
 
-    CTracingWriter writer;
-    writer.writeBatchSpans({span});
+    writer_->writeBatchSpans({span});
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["op_type"].get<int>(), receive);
     EXPECT_EQ(lines[0]["topic_id"].get<uint64_t>(), 20);
@@ -780,21 +778,19 @@ TEST_F(TracingWriterTest, WriteBatchSpansReceive)
 
 TEST_F(TracingWriterTest, WriteBatchSpansAppends)
 {
-    CTracingWriter writer;
-
     // First write
     SSpanData span1{};
     span1.entity_id = 1;
     span1.op_type = send;
-    writer.writeBatchSpans({span1});
+    writer_->writeBatchSpans({span1});
 
     // Second write — should append, not overwrite
     SSpanData span2{};
     span2.entity_id = 2;
     span2.op_type = send;
-    writer.writeBatchSpans({span2});
+    writer_->writeBatchSpans({span2});
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     ASSERT_EQ(lines.size(), 2);
     EXPECT_EQ(lines[0]["entity_id"].get<uint64_t>(), 1);
     EXPECT_EQ(lines[1]["entity_id"].get<uint64_t>(), 2);
@@ -804,11 +800,10 @@ TEST_F(TracingWriterTest, WriteEmptyBatch)
 {
     std::vector<SSpanData> batch;  // Empty batch
 
-    CTracingWriter writer;
-    EXPECT_NO_THROW(writer.writeBatchSpans(batch));
+    EXPECT_NO_THROW(writer_->writeBatchSpans(batch));
 
     // File should either not exist or be empty
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     EXPECT_EQ(lines.size(), 0);
 }
 
@@ -823,10 +818,9 @@ TEST_F(TracingWriterTest, WriteTopicMetadataVerifyContent)
     metadata.type_name = "TestMessage";
     metadata.direction = publisher;
 
-    CTracingWriter writer;
-    writer.writeTopicMetadata(metadata);
+    writer_->writeTopicMetadata(metadata);
 
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer_->getTopicMetadataFilePath());
     ASSERT_EQ(lines.size(), 1);
 
     const auto& obj = lines[0];
@@ -851,18 +845,15 @@ TEST_F(TracingWriterTest, WriteTopicMetadataSubscriber)
     metadata.type_name = "RawData";
     metadata.direction = subscriber;
 
-    CTracingWriter writer;
-    writer.writeTopicMetadata(metadata);
+    writer_->writeTopicMetadata(metadata);
 
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer_->getTopicMetadataFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["direction"].get<std::string>(), "subscriber");
 }
 
 TEST_F(TracingWriterTest, WriteMultipleMetadataAppends)
 {
-    CTracingWriter writer;
-
     for (int i = 0; i < 3; ++i)
     {
         STopicMetadata metadata;
@@ -874,10 +865,10 @@ TEST_F(TracingWriterTest, WriteMultipleMetadataAppends)
         metadata.type_name = "TestMessage";
         metadata.direction = (i % 2 == 0) ? publisher : subscriber;
 
-        writer.writeTopicMetadata(metadata);
+        writer_->writeTopicMetadata(metadata);
     }
 
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer_->getTopicMetadataFilePath());
     ASSERT_EQ(lines.size(), 3);
 
     for (int i = 0; i < 3; ++i)
@@ -902,10 +893,9 @@ TEST_F(TracingWriterTest, EmptyStringMetadataFields)
     metadata.process_id = 0;
     metadata.direction = publisher;
 
-    CTracingWriter writer;
-    writer.writeTopicMetadata(metadata);
+    writer_->writeTopicMetadata(metadata);
 
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer_->getTopicMetadataFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["host_name"].get<std::string>(), "");
     EXPECT_EQ(lines[0]["topic_name"].get<std::string>(), "");
@@ -928,10 +918,9 @@ TEST_F(TracingWriterTest, WriteBatchSpansCallbackExecution)
     span.end_ns       = 200;
     span.op_type      = callback_execution;
 
-    CTracingWriter writer;
-    writer.writeBatchSpans({span});
+    writer_->writeBatchSpans({span});
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["op_type"].get<int>(), callback_execution);
     EXPECT_EQ(lines[0]["layer"].get<uint64_t>(), tl_trace_tcp);
@@ -953,10 +942,9 @@ TEST_F(TracingWriterTest, WriteBatchSpansAllLayerTypes)
         batch.push_back(span);
     }
 
-    CTracingWriter writer;
-    writer.writeBatchSpans(batch);
+    writer_->writeBatchSpans(batch);
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     ASSERT_EQ(lines.size(), layer_types.size());
 
     for (size_t i = 0; i < layer_types.size(); ++i)
@@ -972,6 +960,7 @@ class TracingIntegrationTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1148,18 +1137,24 @@ TEST_F(TracingIntegrationTest, AutoFlushWritesToFile)
 class ThreadSafetyTest : public ::testing::Test
 {
 protected:
+    std::unique_ptr<CTracingWriter> writer_;
+
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
+        writer_ = std::make_unique<CTracingWriter>();
         removeFile(spansFilePath());
-        removeFile(metadataFilePath());
+        removeFile(writer_->getSpansFilePath());
+        removeFile(writer_->getTopicMetadataFilePath());
     }
 
     void TearDown() override
     {
         CTraceProvider::getInstance().flushSpans();
         removeFile(spansFilePath());
-        removeFile(metadataFilePath());
+        removeFile(writer_->getSpansFilePath());
+        removeFile(writer_->getTopicMetadataFilePath());
     }
 };
 
@@ -1198,15 +1193,13 @@ TEST_F(ThreadSafetyTest, ConcurrentSpanBuffering)
 
 TEST_F(ThreadSafetyTest, ConcurrentMetadataWriting)
 {
-    CTracingWriter writer;
-
     const int num_threads = 4;
     const int metadata_per_thread = 5;
     std::vector<std::thread> threads;
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([&writer, t]()
+        threads.emplace_back([this, t]()
         {
             for (int i = 0; i < metadata_per_thread; ++i)
             {
@@ -1219,7 +1212,7 @@ TEST_F(ThreadSafetyTest, ConcurrentMetadataWriting)
                 metadata.type_name = "TestMessage";
                 metadata.direction = publisher;
 
-                EXPECT_NO_THROW(writer.writeTopicMetadata(metadata));
+                EXPECT_NO_THROW(writer_->writeTopicMetadata(metadata));
             }
         });
     }
@@ -1230,7 +1223,7 @@ TEST_F(ThreadSafetyTest, ConcurrentMetadataWriting)
     }
 
     // Verify all metadata lines were written
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer_->getTopicMetadataFilePath());
     EXPECT_EQ(lines.size(), num_threads * metadata_per_thread);
 }
 
@@ -1330,8 +1323,6 @@ TEST_F(ThreadSafetyTest, ConcurrentWriteBatchSpansIntegrity)
 {
     // Regression: writeBatchSpans previously had no mutex, so concurrent
     // flushes interleaved writes producing corrupted JSONL lines.
-    CTracingWriter writer;
-
     const int num_threads = 8;
     const int batches_per_thread = 20;
     const int spans_per_batch = 5;
@@ -1339,7 +1330,7 @@ TEST_F(ThreadSafetyTest, ConcurrentWriteBatchSpansIntegrity)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([&writer, t]()
+        threads.emplace_back([this, t]()
         {
             for (int b = 0; b < batches_per_thread; ++b)
             {
@@ -1352,7 +1343,7 @@ TEST_F(ThreadSafetyTest, ConcurrentWriteBatchSpansIntegrity)
                     span.op_type = send;
                     batch.push_back(span);
                 }
-                writer.writeBatchSpans(batch);
+                writer_->writeBatchSpans(batch);
             }
         });
     }
@@ -1363,7 +1354,7 @@ TEST_F(ThreadSafetyTest, ConcurrentWriteBatchSpansIntegrity)
     }
 
     // Every line must be valid JSON — no interleaved / corrupted lines
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer_->getSpansFilePath());
     EXPECT_EQ(lines.size(),
               static_cast<size_t>(num_threads) * batches_per_thread * spans_per_batch);
 }
@@ -1375,6 +1366,7 @@ class EdgeCaseTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1436,7 +1428,7 @@ TEST_F(EdgeCaseTest, EmptyStringMetadata)
     CTracingWriter writer;
     EXPECT_NO_THROW(writer.writeTopicMetadata(metadata));
 
-    auto lines = readJsonLines(metadataFilePath());
+    auto lines = readJsonLines(writer.getTopicMetadataFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["host_name"].get<std::string>(), "");
     EXPECT_EQ(lines[0]["topic_name"].get<std::string>(), "");
@@ -1483,7 +1475,7 @@ TEST_F(EdgeCaseTest, MaxEntityAndProcessIds)
     CTracingWriter writer;
     writer.writeBatchSpans({span});
 
-    auto lines = readJsonLines(spansFilePath());
+    auto lines = readJsonLines(writer.getSpansFilePath());
     ASSERT_EQ(lines.size(), 1);
     EXPECT_EQ(lines[0]["entity_id"].get<uint64_t>(), UINT64_MAX);
     EXPECT_EQ(lines[0]["process_id"].get<uint64_t>(), UINT64_MAX);
@@ -1528,6 +1520,7 @@ class ScaleTest : public ::testing::Test
 protected:
     void SetUp() override
     {
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1785,6 +1778,7 @@ protected:
 
         eCAL::Initialize(config, "tracing_pubsub_stress");
 
+        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(200);  // large batch to avoid I/O during send
         removeFile(spansFilePath());

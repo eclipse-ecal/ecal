@@ -38,7 +38,7 @@ namespace tracing
     constexpr const char* kTracingVersion = "1.0.0";
 
     // Default batch size for span buffering before flushing to backend (jsonl file)
-    constexpr size_t kDefaultTracingBatchSize = 10;
+    constexpr size_t kDefaultTracingBatchSize = 500;
 
     // Specifies the type of operation being traced
     enum operation_type

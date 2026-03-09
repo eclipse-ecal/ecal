@@ -21,6 +21,10 @@
 
 #include <fstream>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <stdexcept>
+#include <ctime>
 #include <unistd.h>
 
 #include <nlohmann/json.hpp>
@@ -31,16 +35,33 @@ namespace eCAL
 namespace tracing
 {
 
-    CTracingWriter::CTracingWriter() = default;
+    static std::string getCurrentTimestamp()
+    {
+        std::time_t now = std::time(nullptr);
+        std::tm* tm_info = std::localtime(&now);
+        std::ostringstream oss;
+        oss << std::put_time(tm_info, "%Y%m%d_%H%M%S");
+        return oss.str();
+    }
+
+    CTracingWriter::CTracingWriter()
+        : timestamp_(getCurrentTimestamp())
+    {}
 
     std::string CTracingWriter::getSpansFilePath() const
     {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_spans_" + std::to_string(getpid()) + ".jsonl";
+        const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
+        if (data_dir == nullptr)
+            throw std::runtime_error("Mandatory environment variable ECAL_TRACING_DATA_DIR is not set.");
+        return std::string(data_dir) + "/ecal_spans_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
     }
 
     std::string CTracingWriter::getTopicMetadataFilePath() const
     {
-        return std::string(std::getenv("HOME")) + "/workspace/eCAL-tracing-backend/data/ecal_topic_metadata_" + std::to_string(getpid()) + ".jsonl";
+        const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
+        if (data_dir == nullptr)
+            throw std::runtime_error("Mandatory environment variable ECAL_TRACING_DATA_DIR is not set.");
+        return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
     }
 
     void CTracingWriter::writeBatchSpans(const std::vector<SSpanData>& batch)

@@ -66,6 +66,10 @@ namespace tracing
         // Flush buffered spans
         void flushSpans();
 
+        // File path accessors (delegated to the internal writer)
+        std::string getSpansFilePath() const;
+        std::string getTopicMetadataFilePath() const;
+
     private:
         CTraceProvider();
         ~CTraceProvider();

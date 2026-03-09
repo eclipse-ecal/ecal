@@ -123,5 +123,15 @@ namespace tracing
         writer_->writeTopicMetadata(metadata);
     }
 
+    std::string CTraceProvider::getSpansFilePath() const
+    {
+        return writer_->getSpansFilePath();
+    }
+
+    std::string CTraceProvider::getTopicMetadataFilePath() const
+    {
+        return writer_->getTopicMetadataFilePath();
+    }
+
 } // namespace tracing
 } // namespace eCAL
