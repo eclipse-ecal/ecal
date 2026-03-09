@@ -23,7 +23,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <stdexcept>
+#include <cstdlib>
 #include <ctime>
 #include <unistd.h>
 
@@ -52,7 +52,10 @@ namespace tracing
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
-            throw std::runtime_error("Mandatory environment variable ECAL_TRACING_DATA_DIR is not set.");
+        {
+            std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
+            std::abort();
+        }
         return std::string(data_dir) + "/ecal_spans_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
     }
 
@@ -60,7 +63,10 @@ namespace tracing
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
-            throw std::runtime_error("Mandatory environment variable ECAL_TRACING_DATA_DIR is not set.");
+        {
+            std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
+            std::abort();
+        }
         return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
     }
 
