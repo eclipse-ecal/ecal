@@ -34,7 +34,9 @@ ecal_add_gtest(${PROJECT_NAME} ${util_test_src})
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     ecal_core_private
-    Threads::Threads)
+    Threads::Threads
+    eCAL::ecal-utils
+)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
