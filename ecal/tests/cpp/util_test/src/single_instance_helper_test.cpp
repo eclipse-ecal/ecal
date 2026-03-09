@@ -23,6 +23,8 @@
 #include "util/single_instance_helper.h"
 #include "ecal_utils/barrier.h"
 
+#include <thread>
+
 class TestClass
   {
     friend class eCAL::Util::CSingleInstanceHelper<TestClass>;
