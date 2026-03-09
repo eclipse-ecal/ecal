@@ -54,9 +54,6 @@ namespace tracing
     std::string getTopicMetadataFilePath() const;
 
   private:
-    std::string getSpansFilePath() const;
-    std::string getTopicMetadataFilePath() const;
-
     mutable std::mutex spans_mutex_;
     mutable std::mutex metadata_mutex_;
     std::string        timestamp_;
