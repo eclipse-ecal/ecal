@@ -131,68 +131,83 @@ namespace ecal_service
   {
     ECAL_SERVICE_LOG_DEBUG(logger_, "Service starting to accept new connections...");
 
-    // set up the acceptor to listen on the tcp port
+    const auto setup_acceptor = [this](const asio::ip::tcp::endpoint& endpoint) -> bool
+      {
+        {
+          asio::error_code ec;
+          ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Opening acceptor...");
 
-    const asio::ip::tcp::endpoint endpoint(asio::ip::address_v6(), port);
-  
-    ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Opening acceptor...");
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.open(endpoint.protocol(), ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value from the ec parameter
+          if (ec)
+          {
+            logger_(ecal_service::LogLevel::Error, "Service Server: Error opening acceptor: " + ec.message());
+            return false;
+          }
+        }
+
+        {
+          asio::error_code ec;
+          ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Setting \"reuse_address\" option...");
+
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec); // NOLINT(bugprone-unused-return-value) -> We already get the value from the ec parameter
+          if (ec)
+          {
+            logger_(ecal_service::LogLevel::Error, "Service Server: Error setting \"reuse_address\" option: " + ec.message());
+            return false;
+          }
+        }
+
+        {
+          asio::error_code ec;
+          ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Binding acceptor to endpoint...");
+
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.bind(endpoint, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value from the ec parameter
+          if (ec)
+          {
+            logger_(ecal_service::LogLevel::Error, "Service Server: Error binding acceptor: " + ec.message());
+            return false;
+          }
+        }
+
+        {
+          asio::error_code ec;
+          ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Listening on acceptor...");
+
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.listen(asio::socket_base::max_listen_connections, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value from the ec parameter
+          if (ec)
+          {
+            logger_(ecal_service::LogLevel::Error, "Service Server: Error listening on acceptor: " + ec.message());
+            return false;
+          }
+        }
+
+        return true;
+      };
+
+    // Prefer IPv6 (dual-stack where available) and fall back to IPv4 on systems with disabled IPv6.
+    if (!setup_acceptor(asio::ip::tcp::endpoint(asio::ip::address_v6(), port)))
     {
-      asio::error_code ec;
-
       {
+        asio::error_code ec;
         const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
-        acceptor_.open(endpoint.protocol(), ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
+        acceptor_.close(ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value from the ec parameter
       }
-      if (ec)
-      {
-        logger_(ecal_service::LogLevel::Error, "Service Server: Error opening acceptor:" + ec.message());
-        // return false; What do do here?
-      }
-    }
 
-    ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Setting \"reuse_address\" option...");
+      ECAL_SERVICE_LOG_DEBUG(logger_, "Service Server: IPv6 setup failed. Falling back to IPv4.");
 
-
-    {
-      asio::error_code ec;
+      if (!setup_acceptor(asio::ip::tcp::endpoint(asio::ip::address_v4(), port)))
       {
-        acceptor_.set_option(asio::ip::tcp::acceptor::reuse_address(true), ec); // NOLINT(bugprone-unused-return-value) -> We already get the value from the ec parameter
-        const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
-      }
-      if (ec)
-      {
-        logger_(ecal_service::LogLevel::Error, "Service Server: Error setting \"reuse_address\" option:" + ec.message());
-        // return false; What do do here?
-      }
-    }
-
-    ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Binding acceptor to endpoint...");
-
-    {
-      asio::error_code ec;
-      {
-        const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
-        acceptor_.bind(endpoint, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
-      }
-      if (ec)
-      {
-        logger_(ecal_service::LogLevel::Error, "Service Server: Error binding acceptor:" + ec.message());
-        // return false; What do do here?
-      }
-    }
-
-    ECAL_SERVICE_LOG_DEBUG_VERBOSE(logger_, "Service Server: Listening on acceptor...");
-
-    {
-      asio::error_code ec;
-      {
-        const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
-        acceptor_.listen(asio::socket_base::max_listen_connections, ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value  rom the ec parameter
-      }
-      if (ec)
-      {
-        logger_(ecal_service::LogLevel::Error, "Service Server: Error listening on acceptor: " + ec.message());
-        // return false; What do do here?
+        {
+          asio::error_code ec;
+          const std::lock_guard<std::mutex> acceptor_lock(acceptor_mutex_);
+          acceptor_.close(ec); // NOLINT(bugprone-unused-return-value) -> We already get the return value from the ec parameter
+        }
+        logger_(ecal_service::LogLevel::Error, "Service Server: Failed to start listener for both IPv6 and IPv4.");
+        return;
       }
     }
 
