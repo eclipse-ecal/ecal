@@ -34,7 +34,8 @@
 #include <cstring>
 #include <asio.hpp>
 
-namespace {
+namespace
+{
   constexpr int ANY_PORT = 0;
 
   bool IsIpv6Supported()
@@ -45,9 +46,9 @@ namespace {
     return !ec;
   }
 
-  std::string& GetPreferredAnyAddress() {
-    static std::string any_address = IsIpv6Supported() ?
-     "::" : "0.0.0.0";
+  const std::string& GetPreferredAnyAddress()
+  {
+    static const std::string any_address = IsIpv6Supported() ? "::" : "0.0.0.0";
     return any_address;
   }
 }
