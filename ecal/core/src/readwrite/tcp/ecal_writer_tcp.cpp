@@ -32,6 +32,26 @@
 #include "ecal_utils/portable_endian.h"
 
 #include <cstring>
+#include <asio.hpp>
+
+namespace
+{
+  constexpr int ANY_PORT = 0;
+
+  bool IsIpv6Supported()
+  {
+    asio::error_code ec;
+    asio::ip::tcp::socket sock(asio::system_executor{});
+    std::ignore = sock.open(asio::ip::tcp::v6(), ec);
+    return !ec;
+  }
+
+  const std::string& GetPreferredAnyAddress()
+  {
+    static const std::string any_address = IsIpv6Supported() ? "::" : "0.0.0.0";
+    return any_address;
+  }
+}
 
 namespace eCAL
 {
@@ -50,7 +70,7 @@ namespace eCAL
     }
 
     // create publisher
-    m_publisher = std::make_shared<tcp_pubsub::Publisher>(g_tcp_writer_executor);
+    m_publisher = std::make_shared<tcp_pubsub::Publisher>(g_tcp_writer_executor, GetPreferredAnyAddress(), ANY_PORT);
     m_port      = m_publisher->getPort();
   }
 
