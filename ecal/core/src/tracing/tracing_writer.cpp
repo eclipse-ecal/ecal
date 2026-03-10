@@ -25,7 +25,8 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
-#include <unistd.h>
+
+#include <ecal/process.h>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -56,7 +57,7 @@ namespace tracing
             std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
             std::abort();
         }
-        return std::string(data_dir) + "/ecal_spans_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
+        return std::string(data_dir) + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
     std::string CTracingWriter::getTopicMetadataFilePath() const
@@ -67,7 +68,7 @@ namespace tracing
             std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
             std::abort();
         }
-        return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(getpid()) + "_" + timestamp_ + ".jsonl";
+        return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
     void CTracingWriter::writeBatchSpans(const std::vector<SSpanData>& batch)
