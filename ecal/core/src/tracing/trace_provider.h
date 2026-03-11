@@ -76,7 +76,6 @@ namespace tracing
 
         void registerExitHandlers();
         static void atExitHandler();
-        static void signalHandler(int signum);
         static std::atomic<bool> flush_done_;
         
         std::vector<SSpanData> span_buffer_;
