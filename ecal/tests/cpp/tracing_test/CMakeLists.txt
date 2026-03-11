@@ -20,6 +20,7 @@ project(test_tracing)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 set(tracing_test_src
   src/tracing_test.cpp
@@ -38,6 +39,7 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE 
     eCAL::core 
     Threads::Threads
+    nlohmann_json::nlohmann_json
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
