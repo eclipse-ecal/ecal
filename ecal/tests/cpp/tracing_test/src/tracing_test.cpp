@@ -39,7 +39,8 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include <unistd.h>
+
+#include <ecal/process.h>
 
 using namespace eCAL;
 using namespace eCAL::tracing;
@@ -1049,7 +1050,7 @@ TEST_F(TracingIntegrationTest, CompleteTracingFlow)
     // Step 1: Write topic metadata through the provider
     STopicMetadata metadata;
     metadata.entity_id = 111;
-    metadata.process_id = getpid();
+    metadata.process_id = eCAL::Process::GetProcessID();
     metadata.host_name = "integration-host";
     metadata.topic_name = "integration_test_topic";
     metadata.encoding = "protobuf";
@@ -1061,7 +1062,7 @@ TEST_F(TracingIntegrationTest, CompleteTracingFlow)
     // Step 2: Create spans via RAII CSpan
     STopicId topic_id;
     topic_id.topic_id.entity_id = 111;
-    topic_id.topic_id.process_id = getpid();
+    topic_id.topic_id.process_id = eCAL::Process::GetProcessID();
 
     for (int i = 0; i < 5; ++i)
     {
@@ -1075,7 +1076,7 @@ TEST_F(TracingIntegrationTest, CompleteTracingFlow)
     for (int i = 0; i < 5; ++i)
     {
         EXPECT_EQ(spans[i].entity_id, 111);
-        EXPECT_EQ(spans[i].process_id, static_cast<uint64_t>(getpid()));
+        EXPECT_EQ(spans[i].process_id, static_cast<uint64_t>(eCAL::Process::GetProcessID()));
         EXPECT_EQ(spans[i].payload_size, 256 * (i + 1));
         EXPECT_EQ(spans[i].clock, i * 10);
     }
@@ -1173,7 +1174,7 @@ TEST_F(ThreadSafetyTest, ConcurrentSpanBuffering)
         {
             STopicId topic_id;
             topic_id.topic_id.entity_id = t;
-            topic_id.topic_id.process_id = getpid();
+            topic_id.topic_id.process_id = eCAL::Process::GetProcessID();
 
             for (int i = 0; i < spans_per_thread; ++i)
             {
@@ -1205,7 +1206,7 @@ TEST_F(ThreadSafetyTest, ConcurrentMetadataWriting)
             {
                 STopicMetadata metadata;
                 metadata.entity_id = t * 100 + i;
-                metadata.process_id = getpid();
+                metadata.process_id = eCAL::Process::GetProcessID();
                 metadata.host_name = "host-" + std::to_string(t);
                 metadata.topic_name = "topic_" + std::to_string(t) + "_" + std::to_string(i);
                 metadata.encoding = "protobuf";
@@ -1244,7 +1245,7 @@ TEST_F(ThreadSafetyTest, ConcurrentBufferingWithAutoFlush)
             {
                 SSpanData span{};
                 span.entity_id = t * 1000 + i;
-                span.process_id = getpid();
+                span.process_id = eCAL::Process::GetProcessID();
                 span.op_type = send;
                 provider.bufferSpan(span);
             }
@@ -1592,7 +1593,7 @@ TEST_F(ScaleTest, HighFanoutViaSpanRAII)
         {
             STopicId topic_id;
             topic_id.topic_id.entity_id = static_cast<uint64_t>(p);
-            topic_id.topic_id.process_id = static_cast<uint64_t>(getpid());
+            topic_id.topic_id.process_id = static_cast<uint64_t>(eCAL::Process::GetProcessID());
 
             for (int i = 0; i < messages_per_pub; ++i)
             {
@@ -1631,7 +1632,7 @@ TEST_F(ScaleTest, MixedPubSubMetadataAndSpans)
             // Register metadata first (like a real pub/sub does on creation)
             STopicMetadata metadata;
             metadata.entity_id = static_cast<uint64_t>(e);
-            metadata.process_id = getpid();
+            metadata.process_id = eCAL::Process::GetProcessID();
             metadata.host_name = "scale-host";
             metadata.topic_name = "topic_" + std::to_string(e);
             metadata.encoding = "protobuf";
@@ -1732,7 +1733,7 @@ TEST_F(ScaleTest, SustainedBurst)
                 SSpanData span{};
                 span.entity_id = static_cast<uint64_t>(t);
                 span.topic_id = static_cast<uint64_t>(t % 50);
-                span.process_id = static_cast<uint64_t>(getpid());
+                span.process_id = static_cast<uint64_t>(eCAL::Process::GetProcessID());
                 span.clock = i;
                 span.layer = tl_trace_shm;
                 span.op_type = send;
