@@ -57,7 +57,7 @@ namespace Multi_Send {
   // Benchmark function
   void BM_eCAL_Multi_Send(benchmark::State& state) {
     // Define topic count and payload size from arguments
-    const int topic_count = state.range(0);
+    const int64_t topic_count = state.range(0);
     const size_t payload_size = state.range(1);
 
     // Reset kill signal

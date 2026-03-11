@@ -1245,7 +1245,7 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
     clients.emplace_back("service#" + std::to_string(i));
     // Add a callback to the server that just returns the request as response
     servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
-          [service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          [service_index = i]([[maybe_unused]] const eCAL::SServiceMethodInformation&  method_info_, const std::string& request_, std::string& response_) -> int
           {
 #if DO_LOGGING
             // Print thread ID
