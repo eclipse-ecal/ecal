@@ -59,6 +59,20 @@ using json = nlohmann::json;
 namespace
 {
 
+// Return a platform-appropriate temporary directory.
+std::string tempDir()
+{
+#ifdef _WIN32
+    const char* dir = std::getenv("TEMP");
+    if (dir) return dir;
+    dir = std::getenv("TMP");
+    if (dir) return dir;
+    return "C:\\Temp";
+#else
+    return "/tmp";
+#endif
+}
+
 // Build the same file paths the writer uses so tests can read them back.
 std::string spansFilePath()
 {
@@ -112,7 +126,7 @@ class TracingProviderTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         // Clear any buffered spans before each test
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
@@ -526,7 +540,7 @@ class SpanTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
     }
 
@@ -704,7 +718,7 @@ protected:
 
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         writer_ = std::make_unique<CTracingWriter>();
         removeFile(writer_->getSpansFilePath());
@@ -969,7 +983,7 @@ class TracingIntegrationTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1150,7 +1164,7 @@ protected:
 
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         writer_ = std::make_unique<CTracingWriter>();
         removeFile(spansFilePath());
@@ -1375,7 +1389,7 @@ class EdgeCaseTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1529,7 +1543,7 @@ class ScaleTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(kDefaultTracingBatchSize);
         removeFile(spansFilePath());
@@ -1787,7 +1801,7 @@ protected:
 
         eCAL::Initialize(config, "tracing_pubsub_stress");
 
-        setenv("ECAL_TRACING_DATA_DIR", "/tmp", 1);
+        setenv("ECAL_TRACING_DATA_DIR", tempDir().c_str(), 1);
         CTraceProvider::getInstance().flushSpans();
         CTraceProvider::getInstance().setBatchSize(200);  // large batch to avoid I/O during send
         removeFile(spansFilePath());
