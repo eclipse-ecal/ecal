@@ -15,6 +15,7 @@ jobs:
     env:
       # enable starting Qt GUI Applications
       QT_QPA_PLATFORM: offscreen
+      ECAL_TRACING_DATA_DIR: ${{ runner.temp }}\ecal_tracing
 
     steps:
     - name: Install Qt
@@ -198,6 +199,10 @@ jobs:
 
     - name: Build C# bindings
       run: cmake --build "${{ runner.workspace }}/_build/csharp" --config Release
+      shell: cmd
+
+    - name: Create tracing output directory
+      run: mkdir "${{ runner.temp }}\ecal_tracing"
       shell: cmd
 
     - name: Run C# Tests

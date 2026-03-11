@@ -18,6 +18,7 @@ jobs:
       # enable starting Qt GUI Applications
       QT_QPA_PLATFORM: offscreen
       PROJECT_NAME: ecal
+      ECAL_TRACING_DATA_DIR: ${{ runner.temp }}/ecal_tracing
 
     steps:
 
@@ -168,6 +169,9 @@ jobs:
         cache-dir: ${{ github.workspace }}/.ccache
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
+
+    - name: Create tracing output directory
+      run: mkdir -p "$ECAL_TRACING_DATA_DIR"
 
     - name: Run Tests
       run: ctest -V --test-dir _build
