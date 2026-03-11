@@ -54,7 +54,7 @@ namespace eCAL
         static std::mutex mtx;
         std::lock_guard<std::mutex> lock(mtx);
 
-        auto instance = m_instance.lock();;
+        auto instance = m_instance.lock();
         if (instance)
           return instance;
 
