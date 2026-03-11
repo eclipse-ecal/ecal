@@ -181,7 +181,7 @@ namespace eCAL
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
     {
-      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + entity_id_.entity_id);
+      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallback: Failed to find client for entity ID: " + std::to_string(entity_id_.entity_id));
       return { false, SServiceResponse() };
     }
 
@@ -219,7 +219,7 @@ namespace eCAL
     SClient client;
     if (!GetClientByEntity(entity_id_, client))
     {
-      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallbackAsync: Failed to find client for entity ID: " + entity_id_.entity_id);
+      eCAL::Logging::Log(Logging::log_level_warning, "CServiceClientImpl::CallWithCallbackAsync: Failed to find client for entity ID: " + std::to_string(entity_id_.entity_id));
       return false;
     }
 
