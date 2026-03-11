@@ -42,6 +42,14 @@
 
 #include <ecal/process.h>
 
+#ifdef _WIN32
+#include <cstdlib>
+inline int setenv(const char* name, const char* value, int /*overwrite*/)
+{
+    return _putenv_s(name, value);
+}
+#endif
+
 using namespace eCAL;
 using namespace eCAL::tracing;
 using json = nlohmann::json;
@@ -1170,7 +1178,7 @@ TEST_F(ThreadSafetyTest, ConcurrentSpanBuffering)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([&provider, t]()
+        threads.emplace_back([&provider, t, spans_per_thread]()
         {
             STopicId topic_id;
             topic_id.topic_id.entity_id = t;
@@ -1200,7 +1208,7 @@ TEST_F(ThreadSafetyTest, ConcurrentMetadataWriting)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([this, t]()
+        threads.emplace_back([this, t, metadata_per_thread]()
         {
             for (int i = 0; i < metadata_per_thread; ++i)
             {
@@ -1239,7 +1247,7 @@ TEST_F(ThreadSafetyTest, ConcurrentBufferingWithAutoFlush)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([&provider, t]()
+        threads.emplace_back([&provider, t, spans_per_thread]()
         {
             for (int i = 0; i < spans_per_thread; ++i)
             {
@@ -1331,7 +1339,7 @@ TEST_F(ThreadSafetyTest, ConcurrentWriteBatchSpansIntegrity)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([this, t]()
+        threads.emplace_back([this, t, batches_per_thread, spans_per_batch]()
         {
             for (int b = 0; b < batches_per_thread; ++b)
             {
@@ -1550,7 +1558,7 @@ TEST_F(ScaleTest, HighFanoutProducers)
 
     for (int p = 0; p < num_producers; ++p)
     {
-        threads.emplace_back([&provider, p]()
+        threads.emplace_back([&provider, p, spans_per_producer]()
         {
             for (int i = 0; i < spans_per_producer; ++i)
             {
@@ -1589,7 +1597,7 @@ TEST_F(ScaleTest, HighFanoutViaSpanRAII)
 
     for (int p = 0; p < num_publishers; ++p)
     {
-        threads.emplace_back([p]()
+        threads.emplace_back([p, messages_per_pub]()
         {
             STopicId topic_id;
             topic_id.topic_id.entity_id = static_cast<uint64_t>(p);
@@ -1627,7 +1635,7 @@ TEST_F(ScaleTest, MixedPubSubMetadataAndSpans)
 
     for (int e = 0; e < num_endpoints; ++e)
     {
-        threads.emplace_back([&provider, e]()
+        threads.emplace_back([&provider, e, spans_per_endpoint]()
         {
             // Register metadata first (like a real pub/sub does on creation)
             STopicMetadata metadata;
@@ -1687,7 +1695,7 @@ TEST_F(ScaleTest, BatchSizeSweep)
         std::vector<std::thread> threads;
         for (int p = 0; p < num_producers; ++p)
         {
-            threads.emplace_back([&provider, p]()
+            threads.emplace_back([&provider, p, spans_per_producer]()
             {
                 for (int i = 0; i < spans_per_producer; ++i)
                 {
@@ -1726,7 +1734,7 @@ TEST_F(ScaleTest, SustainedBurst)
 
     for (int t = 0; t < num_threads; ++t)
     {
-        threads.emplace_back([&provider, t]()
+        threads.emplace_back([&provider, t, spans_per_thread]()
         {
             for (int i = 0; i < spans_per_thread; ++i)
             {
