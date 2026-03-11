@@ -37,7 +37,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE 
-    eCAL::core 
+    ecal_core_private
     Threads::Threads
     nlohmann_json::nlohmann_json
 )
