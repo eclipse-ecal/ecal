@@ -40,18 +40,9 @@
 
 namespace eCAL
 {
-  std::shared_ptr<CGlobals> CGlobals::instance()
+  std::shared_ptr<CGlobals> CGlobals::Create()
   {
-    auto instance = m_instance;
-    if (instance) return instance;
-
-    std::lock_guard<std::mutex> lock(m_instance_mutex);
-    if (!m_instance)
-    {
-      m_instance = std::shared_ptr<CGlobals>(new CGlobals());
-    }
-
-    return m_instance;
+    return Util::CSingleInstanceHelper<CGlobals>::Create();
   }
 
   CGlobals::~CGlobals()
@@ -63,24 +54,6 @@ namespace eCAL
   {
     // will be set if any new module was initialized
     bool new_initialization(false);
-
-    /////////////////////
-    // LOGGING
-    /////////////////////
-    if ((components_ & Init::Logging) != 0u)
-    {
-      if (!log_provider_instance)
-      {
-        log_provider_instance = std::make_shared<Logging::CLogProvider>(eCAL::Logging::BuildLoggingProviderAttributes(GetConfiguration()));
-        new_initialization = true;
-      }
-
-      if (!log_udp_receiver_instance)
-      {
-        log_udp_receiver_instance = std::make_shared<Logging::CLogReceiver>(eCAL::Logging::BuildLoggingReceiverAttributes(GetConfiguration()));
-        new_initialization = true;
-      }
-    }
 
     /////////////////////
     // DESCRIPTION GATE
@@ -107,7 +80,7 @@ namespace eCAL
     /////////////////////
     if (!memfile_pool_instance)
     {
-      memfile_pool_instance = std::make_shared<CMemFileThreadPool>(memfile_map_instance, log_provider_instance);
+      memfile_pool_instance = std::make_shared<CMemFileThreadPool>(memfile_map_instance);
       new_initialization = true;
     }
 #endif // defined(ECAL_CORE_REGISTRATION_SHM) || defined(ECAL_CORE_TRANSPORT_SHM)
@@ -120,7 +93,7 @@ namespace eCAL
     {
       if (!subgate_instance)
       {
-        subgate_instance = std::make_shared<CSubGate>(log_provider_instance);
+        subgate_instance = std::make_shared<CSubGate>();
         new_initialization = true;
       }
     }
@@ -194,7 +167,6 @@ namespace eCAL
       registration_provider_context.pubgate      = pubgate_instance;
       registration_provider_context.servicegate  = servicegate_instance;
       registration_provider_context.clientgate   = clientgate_instance;
-      registration_provider_context.log_provider = log_provider_instance;
       registration_provider_instance = std::make_shared<CRegistrationProvider>(registration_provider_context);
       new_initialization = true;
     }
@@ -207,7 +179,6 @@ namespace eCAL
       SRegistrationReceiverContext registration_receiver_context;
       registration_receiver_context.attributes    = registration_attr;
       registration_receiver_context.memfile_map   = memfile_map_instance;
-      registration_receiver_context.log_provider  = log_provider_instance;
       registration_receiver_instance = std::make_shared<CRegistrationReceiver>(registration_receiver_context);
       new_initialization = true;
     }
@@ -221,7 +192,7 @@ namespace eCAL
     {
       if (!monitoring_instance)
       {
-        monitoring_instance = std::make_shared<CMonitoring>(log_provider_instance, registration_receiver_instance);
+        monitoring_instance = std::make_shared<CMonitoring>(registration_receiver_instance);
         new_initialization = true;
       }
     }
@@ -235,14 +206,9 @@ namespace eCAL
     /////////////////////
     // START ALL
     /////////////////////
-    if (log_provider_instance && ((components_ & Init::Logging) != 0u))
-    {
-      log_provider_instance->Start();
-      log_udp_receiver_instance->Start();
-    }
 #if ECAL_CORE_REGISTRATION
-    if (registration_provider_instance)                                           registration_provider_instance->Start();
-    if (registration_receiver_instance)                                           registration_receiver_instance->Start();
+    if (registration_provider_instance) registration_provider_instance->Start();
+    if (registration_receiver_instance) registration_receiver_instance->Start();
 #endif
     if (descgate_instance)
     {
@@ -310,8 +276,6 @@ namespace eCAL
     case Init::Monitoring:
       return(monitoring_instance != nullptr);
 #endif
-    case Init::Logging:
-      return(log_provider_instance != nullptr);
 #if ECAL_CORE_TIMEPLUGIN
     case Init::TimeSync:
       return(timegate_instance != nullptr);
@@ -368,8 +332,6 @@ namespace eCAL
     if (memfile_pool_instance)           memfile_pool_instance->Stop();
     if (memfile_map_instance)            memfile_map_instance->Stop();
 #endif
-    if (log_udp_receiver_instance)       log_udp_receiver_instance->Stop();
-    if (log_provider_instance)           log_provider_instance->Stop();
 
 #if ECAL_CORE_MONITORING
     monitoring_instance.reset();
@@ -396,17 +358,9 @@ namespace eCAL
     memfile_pool_instance.reset();
     memfile_map_instance.reset();
 #endif
-    log_provider_instance.reset();
-    log_udp_receiver_instance.reset();
-
     m_udp_reader_layer_instance.reset();
     m_tcp_reader_layer_instance.reset();
     m_shm_reader_layer_instance.reset();
-
-    {
-      std::lock_guard<std::mutex> lock(m_instance_mutex);
-      m_instance.reset();
-    }
     
     return true;
   }

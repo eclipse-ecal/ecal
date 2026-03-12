@@ -37,6 +37,7 @@
 #endif
 #include "io/udp/ecal_udp_configurations.h"
 #include <ecal/config.h>
+#include <ecal/log.h>
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -45,7 +46,6 @@
 
 #include "config/builder/udp_shm_attribute_builder.h"
 #include "config/builder/sample_applier_attribute_builder.h"
-#include "logging/ecal_log_provider.h"
 
 namespace eCAL
 {
@@ -107,7 +107,7 @@ namespace eCAL
     }
     else
     {
-      if (m_context.log_provider) m_context.log_provider->Log(Logging::log_level_error, "[CRegistrationReceiver] No registration layer enabled.");
+      eCAL::Logging::Log(Logging::log_level_error, "[CRegistrationReceiver] No registration layer enabled.");
     }
 
     m_created = true;

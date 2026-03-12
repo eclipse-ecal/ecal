@@ -57,14 +57,17 @@
 #include "readwrite/tcp/ecal_reader_tcp.h"
 #include "readwrite/shm/ecal_reader_shm.h"
 
+#include "util/single_instance_helper.h"
+
 #include <memory>
 
 namespace eCAL
 {
   class CGlobals
   {
+    friend class eCAL::Util::CSingleInstanceHelper<CGlobals>;
   public:
-    static std::shared_ptr<CGlobals> instance();
+    static std::shared_ptr<CGlobals> Create();
 
     ~CGlobals();
 
@@ -75,9 +78,6 @@ namespace eCAL
     unsigned int GetComponents() const { return(components); };
 
     bool Finalize();
-
-    const std::shared_ptr<Logging::CLogProvider>&                         log_provider()           { return log_provider_instance; };
-    const std::shared_ptr<Logging::CLogReceiver>&                         log_udp_receiver()       { return log_udp_receiver_instance; };
 
 #if ECAL_CORE_MONITORING
     const std::shared_ptr<CMonitoring>&                                   monitoring()             { return monitoring_instance; };
@@ -114,13 +114,9 @@ namespace eCAL
     CGlobals() = default;
     CGlobals(const CGlobals&) = delete;
     CGlobals& operator=(const CGlobals&) = delete;
-    inline static std::shared_ptr<CGlobals>                               m_instance;
-    inline static std::mutex                                              m_instance_mutex;
 
     std::atomic<bool>                                                     initialized {false};
     unsigned int                                                          components {0};
-    std::shared_ptr<Logging::CLogProvider>                                log_provider_instance;
-    std::shared_ptr<Logging::CLogReceiver>                                log_udp_receiver_instance;
 #if ECAL_CORE_MONITORING
     std::shared_ptr<CMonitoring>                                          monitoring_instance;
 #endif
