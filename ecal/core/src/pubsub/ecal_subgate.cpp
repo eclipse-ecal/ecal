@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +25,8 @@
 #include "pubsub/ecal_subgate.h"
 #include "ecal_globals.h"
 
+#include "ecal/log.h"
+
 #include <algorithm>
 #include <atomic>
 #include <cstddef>
@@ -42,9 +45,7 @@ namespace eCAL
   //////////////////////////////////////////////////////////////////
   std::atomic<bool> CSubGate::m_created;
 
-  CSubGate::CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_)
-  : m_log_provider(std::move(log_provider_))
-  {}
+  CSubGate::CSubGate() = default;
 
   CSubGate::~CSubGate()
   {
@@ -120,7 +121,7 @@ namespace eCAL
       if (layer_ == eTLayerType::tl_none)
       {
         // log it
-        if (m_log_provider) m_log_provider->Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
+        eCAL::Logging::Log(Logging::log_level_error, ecal_sample.topic_info.topic_name + " : payload received without layer definition !");
       }
 #endif
 

@@ -31,10 +31,7 @@
 namespace eCAL
 {
   class CRegistrationReceiver;
-  namespace Logging
-  {
-    class CLogProvider;
-  }
+
   ////////////////////////////////////////
   // global monitoring class
   ////////////////////////////////////////
@@ -42,7 +39,7 @@ namespace eCAL
   class CMonitoring
   {
   public:
-    CMonitoring(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver_);
+    CMonitoring(std::shared_ptr<CRegistrationReceiver> registration_receiver_);
     ~CMonitoring();
     
     void Start();

@@ -47,10 +47,6 @@ namespace eCAL
   class CPubGate;
   class CServiceGate;
   class CClientGate;
-  namespace Logging
-  {
-    class CLogProvider;
-  }
 
   struct SRegistrationProviderContext
   {
@@ -60,7 +56,6 @@ namespace eCAL
     std::shared_ptr<eCAL::CPubGate>        pubgate;
     std::shared_ptr<eCAL::CServiceGate>    servicegate;
     std::shared_ptr<eCAL::CClientGate>     clientgate;
-    std::shared_ptr<Logging::CLogProvider> log_provider;
   };
 
   class CRegistrationProvider
