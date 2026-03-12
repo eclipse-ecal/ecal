@@ -1,6 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +35,10 @@
 
 namespace eCAL
 {
-  namespace Logging
-  {
-    class CLogProvider;
-  }
-
   class CSubGate
   {
   public:
-    CSubGate(std::shared_ptr<Logging::CLogProvider> log_provider_);
+    CSubGate();
     ~CSubGate();
 
     void Start();
@@ -67,7 +63,5 @@ namespace eCAL
     using TopicNameSubscriberMapT = std::unordered_multimap<std::string, std::shared_ptr<CSubscriberImpl>>;
     std::shared_timed_mutex  m_topic_name_subscriber_mutex;
     TopicNameSubscriberMapT  m_topic_name_subscriber_map;
-
-    std::shared_ptr<Logging::CLogProvider> m_log_provider;
   };
 }

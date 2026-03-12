@@ -45,18 +45,13 @@ namespace eCAL
 {
   using MemFileDataCallbackT = std::function<size_t (const char *, size_t, long long, long long, long long, size_t)>;
 
-  namespace Logging
-  {
-    class CLogProvider;
-  }
-
   ////////////////////////////////////////
   // CMemFileObserver
   ////////////////////////////////////////
   class CMemFileObserver
   {
   public:
-    CMemFileObserver(std::shared_ptr<CMemFileMap> memfile_map_, std::shared_ptr<Logging::CLogProvider> log_provider_);
+    CMemFileObserver(std::shared_ptr<CMemFileMap> memfile_map_);
     ~CMemFileObserver();
 
     CMemFileObserver(const CMemFileObserver&) = delete;
@@ -89,8 +84,6 @@ namespace eCAL
     EventHandleT            m_event_snd;
     EventHandleT            m_event_ack;
     CMemoryFile             m_memfile;
-
-    std::shared_ptr<Logging::CLogProvider> m_log_provider;
   };
 
   ////////////////////////////////////////
@@ -99,7 +92,7 @@ namespace eCAL
   class CMemFileThreadPool
   {
   public:
-    CMemFileThreadPool(std::shared_ptr<CMemFileMap> memfile_map_, std::shared_ptr<Logging::CLogProvider> log_provider_);
+    CMemFileThreadPool(std::shared_ptr<CMemFileMap> memfile_map_);
     ~CMemFileThreadPool();
 
     void Start();
@@ -121,6 +114,5 @@ namespace eCAL
     std::thread                                               m_cleanup_thread;
     
     std::shared_ptr<CMemFileMap>                              m_memfile_map;
-    std::shared_ptr<Logging::CLogProvider>                    m_log_provider;
   };
 }

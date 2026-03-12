@@ -1,7 +1,7 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
- * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+ * Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@
  * @brief  Global monitoring class (implementation)
 **/
 
-#include <ecal/ecal.h>
 #include <ecal/config.h>
+#include <ecal/ecal.h>
+#include <ecal/log.h>
 
 #include "io/udp/ecal_udp_configurations.h"
 #include "ecal_monitoring_impl.h"
 #include "ecal_global_accessors.h"
 
-#include "logging/ecal_log_provider.h"
 #include "registration/ecal_registration_provider.h"
 #include "registration/ecal_registration_receiver.h"
 
@@ -41,9 +41,8 @@ namespace eCAL
   ////////////////////////////////////////
   // Monitoring Implementation
   ////////////////////////////////////////
-  CMonitoringImpl::CMonitoringImpl(std::shared_ptr<Logging::CLogProvider> log_provider_, std::shared_ptr<CRegistrationReceiver> registration_receiver)
+  CMonitoringImpl::CMonitoringImpl(std::shared_ptr<CRegistrationReceiver> registration_receiver)
   : m_init(false)
-  , m_log_provider(std::move(log_provider_))
   , m_registration_receiver(std::move(registration_receiver))
   {
   }
@@ -139,7 +138,7 @@ namespace eCAL
     break;
     default:
     {
-      if (m_log_provider) m_log_provider->Log(Logging::log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");
+      eCAL::Logging::Log(Logging::log_level_debug1, "CMonitoringImpl::ApplySample : unknown sample type");
     }
     break;
     }
