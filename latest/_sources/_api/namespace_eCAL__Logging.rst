@@ -24,9 +24,9 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_log_8h_1a29c44b3b7bd43c2bf19db99d21e91887`
-
 - :ref:`exhale_function_log_8h_1a4933524c4a46c77a8a3a6c19a005897b`
+
+- :ref:`exhale_function_log_8h_1a29c44b3b7bd43c2bf19db99d21e91887`
 
 - :ref:`exhale_function_log_8h_1ac41d3c193623d4ad374f71172adf8333`
 
