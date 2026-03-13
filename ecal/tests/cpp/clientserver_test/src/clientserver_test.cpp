@@ -30,6 +30,8 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <random>
+#include <future>
 
 #include "atomic_signalable.h"
 
@@ -1312,3 +1314,88 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
 }
 
 #endif /* NestedBlockingCallFromClientCallbackTest */
+
+TEST(core_cpp_clientserver, CallOnClosedConnection)
+{
+  auto config = eCAL::Init::Configuration();
+  config.registration.registration_refresh = 500;
+  // initialize eCAL API
+  eCAL::Initialize(config, "ClosedConnectionTest");
+
+  std::atomic<int> successful_calls{0};
+  std::atomic<int> failed_calls{0};
+  std::atomic<int> servers_total_spawned{0};
+  constexpr int runtime_server_ms = 200;
+  constexpr int run_count = 10;
+
+  auto server_thread = [&servers_total_spawned, &runtime_server_ms]()
+    {
+      // create service server
+      eCAL::CServiceServer server("ClosedConnectionService");
+      servers_total_spawned.fetch_add(1);
+      
+      // method callback function
+      auto method_callback = [](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/) -> int
+        {
+          return 42;
+        };
+      
+      // add callback for client request
+      eCAL::SServiceMethodInformation method_info{ "test_method", {"req_type", "", ""}, {"resp_type", "", ""} };
+      server.SetMethodCallback(method_info, method_callback);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(runtime_server_ms));
+    };
+
+  // Create client
+  eCAL::CServiceClient client("ClosedConnectionService");
+
+  std::vector<std::thread> server_threads;
+  int count = 0;
+
+  while(eCAL::Ok() && ++count < run_count)
+  {
+    server_threads.emplace_back(std::thread(server_thread));
+    
+    eCAL::ServiceResponseVecT response;
+    if (client.CallWithResponse("test_method", "test_request", response))
+    {
+      if (!response.empty())
+      {
+        successful_calls.fetch_add(1);
+      }
+      else
+      {
+        failed_calls.fetch_add(1);
+      }
+    }
+    else
+    {
+      failed_calls.fetch_add(1);
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  
+  // Wait for remaining threads to finish before shutdown
+  for (auto& f : server_threads)
+  {
+    f.join();
+  }
+
+  server_threads.clear();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000)); // Give some time for cleanup and make really sure
+
+  // call last time, there should be no response:
+  eCAL::ServiceResponseVecT response;
+  auto call_result =client.CallWithResponse("test_method", "test_request", response);
+  EXPECT_FALSE(call_result) << "Call should have failed as there are no servers available";
+  EXPECT_EQ(response.size(), 0) << "No servers should be available to respond";
+
+  // Verify test ran successfully - should have made several successful calls
+  EXPECT_GT(successful_calls.load(), 0) << "Should have made at least one successful call";
+
+  // finalize eCAL API
+  eCAL::Finalize();
+}
