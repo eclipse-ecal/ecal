@@ -33,7 +33,7 @@ constexpr int registration_delay_ms = 2000;
 */
 namespace Ping {
    // Define server service function
-   int callback_ping(const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) {
+   int callback_ping(const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& response_) {
       response_ = "response";
       return 0;
    }

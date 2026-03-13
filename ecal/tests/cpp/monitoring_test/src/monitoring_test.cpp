@@ -162,7 +162,7 @@ TEST(core_cpp_monitoring, ClientServerInMonitoring)
 {
   eCAL::Initialize("core_cpp_monitoring_own_process_in_monitoring_after_delay", eCAL::Init::All);
 
-  auto method_callback = [&](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+  auto method_callback = [&](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& request_, std::string& response_) -> int
     {
       response_ = request_;
       return 0;
