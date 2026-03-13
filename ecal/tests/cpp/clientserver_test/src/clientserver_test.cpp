@@ -1256,7 +1256,7 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
 //
 // This scenario relates to issue #2519, where servers were not properly removed under these
 // conditions, allowing invalid calls to succeed throughout the entire lifetime of the client.
-TEST(core_cpp_clientserver, CallOnClosedConnection)
+TEST(core_cpp_clientserver /*unused*/, CallOnClosedConnection /*unused*/)
 {
   auto config = eCAL::Init::Configuration();
   config.registration.registration_refresh = 500;
