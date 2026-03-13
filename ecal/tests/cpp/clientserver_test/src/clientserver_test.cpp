@@ -31,20 +31,7 @@
 
 #include "atomic_signalable.h"
 
-#define ClientConnectEventTest                    1
-#define ServerConnectEventTest                    1
-
-#define ClientServerBaseCallbackTest              1
-#define ClientServerBaseCallbackTimeoutTest       1
-
-#define ClientServerBaseAsyncCallbackTest         1
-#define ClientServerBaseAsyncTest                 1
-
-#define NestedRPCCallTest                         1
-
-#define ClientServerBaseBlockingTest              1
-
-#define DO_LOGGING                                0
+#define DO_LOGGING                                    0
 
 enum {
   CMN_REGISTRATION_REFRESH_MS = 1000
@@ -106,8 +93,6 @@ namespace
 #endif
 }
 
-#if ClientConnectEventTest
-
 TEST(core_cpp_clientserver, ClientConnectEvent)
 {
   // initialize eCAL API
@@ -168,10 +153,6 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientConnectEventTest */
-
-#if ServerConnectEventTest
 
 TEST(core_cpp_clientserver, ServerConnectEvent)
 {
@@ -235,10 +216,6 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ServerConnectEventTest */
-
-#if ClientServerBaseCallbackTest
 
 TEST(core_cpp_clientserver, ClientServerBaseCallback)
 {
@@ -340,10 +317,6 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientServerBaseCallbackTest */
-
-#if ClientServerBaseCallbackTimeoutTest
 
 TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 {
@@ -503,10 +476,6 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseCallbackTimeoutTest */
-
-#if ClientServerBaseAsyncCallbackTest
-
 TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
@@ -575,10 +544,6 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientServerBaseAsyncCallbackTest */
-
-#if ClientServerBaseAsyncTest
 
 TEST(core_cpp_clientserver, ClientServerBaseAsync)
 {
@@ -682,10 +647,6 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseAsyncTest */
-
-#if ClientServerBaseBlockingTest
-
 TEST(core_cpp_clientserver, ClientServerBaseBlocking)
 {
   const int num_services(2);
@@ -784,10 +745,6 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseBlockingTest */
-
-#if NestedRPCCallTest
-
 TEST(core_cpp_clientserver, NestedRPCCall)
 {
   const int calls(1);
@@ -859,5 +816,89 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   // finalize eCAL API
   eCAL::Finalize();
 }
+// This test temporarily spawns multiple servers for a duration shorter than registration.refresh
+// and invokes them while they are available.
+//
+// After a defined waiting period, it verifies that the servers are no longer callable, as this
+// would not be expected behavior.
+//
+// This scenario relates to issue #2519, where servers were not properly removed under these
+// conditions, allowing invalid calls to succeed throughout the entire lifetime of the client.
+TEST(core_cpp_clientserver /*unused*/, CallOnClosedConnection /*unused*/)
+{
+  auto config = eCAL::Init::Configuration();
+  config.registration.registration_refresh = 500;
+  
+  eCAL::Initialize(config, "ClosedConnectionTest");
 
-#endif /* NestedRPCCallTest */
+  std::atomic<int> successful_calls{0};
+  std::atomic<int> failed_calls{0};
+  std::atomic<int> servers_total_spawned{0};
+  constexpr int runtime_server_ms = 200;
+  constexpr int run_count = 10;
+
+  auto server_thread = [&servers_total_spawned, &runtime_server_ms]()
+    {
+      eCAL::CServiceServer server("ClosedConnectionService");
+      servers_total_spawned.fetch_add(1);
+      
+      auto method_callback = [](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/) -> int
+        {
+          return 42;
+        };
+      
+      eCAL::SServiceMethodInformation method_info{ "test_method", {"req_type", "", ""}, {"resp_type", "", ""} };
+      server.SetMethodCallback(method_info, method_callback);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(runtime_server_ms));
+    };
+
+  eCAL::CServiceClient client("ClosedConnectionService");
+
+  std::vector<std::thread> server_threads;
+  int count = 0;
+
+  while(eCAL::Ok() && ++count < run_count)
+  {
+    server_threads.emplace_back(std::thread(server_thread));
+    
+    eCAL::ServiceResponseVecT response;
+    if (client.CallWithResponse("test_method", "test_request", response))
+    {
+      if (!response.empty())
+      {
+        successful_calls.fetch_add(1);
+      }
+      else
+      {
+        failed_calls.fetch_add(1);
+      }
+    }
+    else
+    {
+      failed_calls.fetch_add(1);
+    }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  
+  for (auto& f : server_threads)
+  {
+    f.join();
+  }
+
+  server_threads.clear();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+  // call last time, there should be no response:
+  eCAL::ServiceResponseVecT response;
+  auto call_result =client.CallWithResponse("test_method", "test_request", response);
+  EXPECT_FALSE(call_result) << "Call should have failed as there are no servers available";
+  EXPECT_EQ(response.size(), 0) << "No servers should be available to respond";
+
+  // Verify test ran successfully - should have made several successful calls
+  EXPECT_GT(successful_calls.load(), 0) << "Should have made at least one successful call";
+
+  eCAL::Finalize();
+}
