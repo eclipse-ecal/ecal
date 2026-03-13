@@ -33,24 +33,6 @@
 
 #include "atomic_signalable.h"
 
-#define ClientConnectEventTest                        1
-#define ServerConnectEventTest                        1
-
-#define ClientServerBaseCallbackTest                  1
-#define ClientServerBaseCallbackTimeoutTest           1
-
-#define ClientServerCallWithResponseTimeBehaviorTest  1
-#define ClientServerCallWithCallbackTimeBehaviorTest  1
-
-#define ClientServerBaseAsyncCallbackTest             1
-#define ClientServerBaseAsyncTest                     1
-
-#define NestedRPCCallTest                             1
-#define NestedBlockingCallFromServerCallbackTest      1
-#define NestedBlockingCallFromClientCallbackTest      1
-
-#define ClientServerBaseBlockingTest                  1
-
 #define DO_LOGGING                                    0
 
 enum {
@@ -113,8 +95,6 @@ namespace
 #endif
 }
 
-#if ClientConnectEventTest
-
 TEST(core_cpp_clientserver, ClientConnectEvent)
 {
   // initialize eCAL API
@@ -175,10 +155,6 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientConnectEventTest */
-
-#if ServerConnectEventTest
 
 TEST(core_cpp_clientserver, ServerConnectEvent)
 {
@@ -242,10 +218,6 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ServerConnectEventTest */
-
-#if ClientServerBaseCallbackTest
 
 TEST(core_cpp_clientserver, ClientServerBaseCallback)
 {
@@ -347,10 +319,6 @@ TEST(core_cpp_clientserver, ClientServerBaseCallback)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientServerBaseCallbackTest */
-
-#if ClientServerBaseCallbackTimeoutTest
 
 TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
 {
@@ -508,10 +476,6 @@ TEST(core_cpp_clientserver, ClientServerBaseCallbackTimeout)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseCallbackTimeoutTest */
-
-#if ClientServerCallWithResponseTimeBehaviorTest
-
 // Test time-behavior of CallWithResponse with multiple servers when one server is slow
 TEST(core_cpp_clientserver, ClientServerCallWithResponseTimeBehavior)
 {
@@ -660,10 +624,6 @@ TEST(core_cpp_clientserver, ClientServerCallWithResponseTimeBehavior)
   eCAL::Finalize();
 }
 
-#endif //ClientServerCallWithResponseTimeBehaviorTest
-
-#if ClientServerCallWithCallbackTimeBehaviorTest
-
 // Test time-behavior of CallWithCallback with multiple servers when one server is slow.
 // Also tests that the function only returns AFTER the user-callback has been called for all responses, even if that goes beyond the timeout.
 TEST(core_cpp_clientserver, ClientServerCallWithCallbackTimeBehavior)
@@ -782,10 +742,6 @@ TEST(core_cpp_clientserver, ClientServerCallWithCallbackTimeBehavior)
   eCAL::Finalize();
 }
 
-#endif //ClientServerCallWithCallbackTimeBehaviorTest
-
-#if ClientServerBaseAsyncCallbackTest
-
 TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
 {
   const int calls(1);
@@ -854,10 +810,6 @@ TEST(core_cpp_clientserver, ClientServerBaseAsyncCallback)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* ClientServerBaseAsyncCallbackTest */
-
-#if ClientServerBaseAsyncTest
 
 TEST(core_cpp_clientserver, ClientServerBaseAsync)
 {
@@ -961,10 +913,6 @@ TEST(core_cpp_clientserver, ClientServerBaseAsync)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseAsyncTest */
-
-#if ClientServerBaseBlockingTest
-
 TEST(core_cpp_clientserver, ClientServerBaseBlocking)
 {
   const int num_services(2);
@@ -1063,10 +1011,6 @@ TEST(core_cpp_clientserver, ClientServerBaseBlocking)
   eCAL::Finalize();
 }
 
-#endif /* ClientServerBaseBlockingTest */
-
-#if NestedRPCCallTest
-
 TEST(core_cpp_clientserver, NestedRPCCall)
 {
   const int calls(1);
@@ -1138,10 +1082,6 @@ TEST(core_cpp_clientserver, NestedRPCCall)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* NestedRPCCallTest */
-
-#if NestedBlockingCallFromServerCallbackTest
 
 // This test injects blocking server callbacks into the service call. 
 TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
@@ -1219,10 +1159,6 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
   // finalize eCAL API
   eCAL::Finalize();
 }
-
-#endif /* NestedBlockingCallFromServerCallbackTest */
-
-#if NestedBlockingCallFromClientCallbackTest
 
 TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
 {
@@ -1311,13 +1247,20 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromClientCallback)
   eCAL::Finalize();
 }
 
-#endif /* NestedBlockingCallFromClientCallbackTest */
 
+// This test temporarily spawns multiple servers for a duration shorter than registration.refresh
+// and invokes them while they are available.
+//
+// After a defined waiting period, it verifies that the servers are no longer callable, as this
+// would not be expected behavior.
+//
+// This scenario relates to issue #2519, where servers were not properly removed under these
+// conditions, allowing invalid calls to succeed throughout the entire lifetime of the client.
 TEST(core_cpp_clientserver, CallOnClosedConnection)
 {
   auto config = eCAL::Init::Configuration();
   config.registration.registration_refresh = 500;
-  // initialize eCAL API
+  
   eCAL::Initialize(config, "ClosedConnectionTest");
 
   std::atomic<int> successful_calls{0};
@@ -1328,24 +1271,20 @@ TEST(core_cpp_clientserver, CallOnClosedConnection)
 
   auto server_thread = [&servers_total_spawned, &runtime_server_ms]()
     {
-      // create service server
       eCAL::CServiceServer server("ClosedConnectionService");
       servers_total_spawned.fetch_add(1);
       
-      // method callback function
       auto method_callback = [](const eCAL::SServiceMethodInformation& /*method_info_*/, const std::string& /*request_*/, std::string& /*response_*/) -> int
         {
           return 42;
         };
       
-      // add callback for client request
       eCAL::SServiceMethodInformation method_info{ "test_method", {"req_type", "", ""}, {"resp_type", "", ""} };
       server.SetMethodCallback(method_info, method_callback);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(runtime_server_ms));
     };
 
-  // Create client
   eCAL::CServiceClient client("ClosedConnectionService");
 
   std::vector<std::thread> server_threads;
@@ -1375,7 +1314,6 @@ TEST(core_cpp_clientserver, CallOnClosedConnection)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
   
-  // Wait for remaining threads to finish before shutdown
   for (auto& f : server_threads)
   {
     f.join();
@@ -1383,7 +1321,7 @@ TEST(core_cpp_clientserver, CallOnClosedConnection)
 
   server_threads.clear();
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000)); // Give some time for cleanup and make really sure
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
   // call last time, there should be no response:
   eCAL::ServiceResponseVecT response;
@@ -1394,6 +1332,5 @@ TEST(core_cpp_clientserver, CallOnClosedConnection)
   // Verify test ran successfully - should have made several successful calls
   EXPECT_GT(successful_calls.load(), 0) << "Should have made at least one successful call";
 
-  // finalize eCAL API
   eCAL::Finalize();
 }
