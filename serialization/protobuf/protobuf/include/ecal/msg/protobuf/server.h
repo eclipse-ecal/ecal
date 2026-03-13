@@ -163,10 +163,8 @@ namespace eCAL
 
           SServiceMethodInformation method_info{
             method_name,
-            method_descriptor->input_type()->name(),
-            method_descriptor->output_type()->name(),
-            input_type_desc,
-            output_type_desc
+            SDataTypeInformation{method_descriptor->input_type()->name(), "proto", input_type_desc},
+            SDataTypeInformation{method_descriptor->output_type()->name(), "proto", output_type_desc}
           };
 
           SetMethodCallback(method_info,
