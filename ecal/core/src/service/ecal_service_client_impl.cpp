@@ -495,10 +495,13 @@ namespace eCAL
         NotifyEventCallback(service_id, eClientEvent::connected);
         ++it;
       }
-      else if (client_data.connected && state == ecal_service::State::FAILED)
+      else if (state == ecal_service::State::FAILED)
       {
-        client_data.connected = false;
-        NotifyEventCallback(service_id, eClientEvent::disconnected);
+        if (client_data.connected)
+        {
+          client_data.connected = false;
+          NotifyEventCallback(service_id, eClientEvent::disconnected);
+        }
         it = m_client_session_map.erase(it);
       }
       else
