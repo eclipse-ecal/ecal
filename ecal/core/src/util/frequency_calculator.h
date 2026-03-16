@@ -112,7 +112,11 @@ namespace eCAL
 
     double getFrequency(const time_point& now)
     {
-      double frequency = calculator ? calculator->getFrequency() : 0.0;
+      double frequency = 0.0;
+      if (calculator)
+      {
+        frequency = calculator->getFrequency();
+      }
 
       // if the frequency is 0.0, return it right away
       if (frequency == 0.0)

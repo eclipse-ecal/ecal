@@ -204,7 +204,7 @@ TEST(core_cpp_core, ExpMap_Insert)
 TEST(core_cpp_core, ExpMap_Update)
 {
   eCAL::Util::CExpirationMap<std::string, int, TestingClock> expmap(std::chrono::milliseconds(200));
-  auto ret = expmap.insert(std::make_pair("A", 1));
+  std::ignore = expmap.insert(std::make_pair("A", 1));
 
   TestingClock::increment_time(std::chrono::milliseconds(100));
 
