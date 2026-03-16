@@ -57,7 +57,9 @@ public:
     TCP_PORT,
     METHOD_NAME,
     REQ_TYPE,
+    REQ_ENCODING,
     RESP_TYPE,
+    RESP_ENCODING,
     CALL_COUNT,
   };
 
@@ -123,11 +125,19 @@ public:
       }
       else if (column == Columns::REQ_TYPE)
       {
-        return method_.req_type().c_str();
+        return method_.request_datatype_information().name().c_str();
+      }
+      else if (column == Columns::REQ_ENCODING)
+      {
+        return method_.request_datatype_information().encoding().c_str();
       }
       else if (column == Columns::RESP_TYPE)
       {
-        return method_.resp_type().c_str();
+        return method_.response_datatype_information().name().c_str();
+      }
+      else if (column == Columns::RESP_ENCODING)
+      {
+        return method_.response_datatype_information().encoding().c_str();
       }
       else if (column == Columns::CALL_COUNT)
       {
