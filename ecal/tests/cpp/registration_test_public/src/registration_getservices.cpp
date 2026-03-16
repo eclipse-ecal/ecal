@@ -118,8 +118,10 @@ TEST_P(ServicesTestFixture, GetServiceIDs)
     eCAL::SServiceMethodInformation service_method_info;
     service_method_info.method_name = "method";
     service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.encoding    = "foo::req_encoding";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.encoding   = "foo::resp_encoding";
     service_method_info.response_type.descriptor = "foo::resp_desc";
     service.SetMethodCallback(service_method_info, eCAL::ServiceMethodCallbackT());
 
