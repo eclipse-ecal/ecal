@@ -63,8 +63,10 @@ TEST_P(ClientsTestFixture, ClientExpiration)
     eCAL::SServiceMethodInformation service_method_info;
     service_method_info.method_name              = "foo::method";
     service_method_info.request_type.name        = "foo::req_type";
+    service_method_info.request_type.encoding    = "foo::req_encoding";
     service_method_info.request_type.descriptor  = "foo::req_desc";
     service_method_info.response_type.name       = "foo::resp_type";
+    service_method_info.response_type.encoding   = "foo::resp_encoding";
     service_method_info.response_type.descriptor = "foo::resp_desc";
     const eCAL::CServiceClient client("foo::service", { service_method_info });
 
