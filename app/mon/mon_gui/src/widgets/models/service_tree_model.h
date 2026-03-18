@@ -47,7 +47,9 @@ public:
     TCP_PORT,
     METHOD_NAME,
     METHOD_REQUEST_TYPE,
+    METHOD_REQUEST_ENCODING,
     METHOD_RESPONSE_TYPE,
+    METHOD_RESPONSE_ENCODING,
     HEARTBEAT,
     CALL_COUNT,
 
@@ -84,26 +86,30 @@ private:
     { Columns::TCP_PORT,             "TCP Port" },
     { Columns::METHOD_NAME,          "Method" },
     { Columns::METHOD_REQUEST_TYPE,  "Req. Type" },
+    { Columns::METHOD_REQUEST_ENCODING,  "Req. Encoding" },
     { Columns::METHOD_RESPONSE_TYPE, "Resp. Type" },
+    { Columns::METHOD_RESPONSE_ENCODING, "Resp. Encoding" },
     { Columns::CALL_COUNT,           "Call count" },
   };
 
   std::map<Columns, int> tree_item_column_mapping =
   {
     { Columns::GROUP,                -1 },
-    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REGISTRATION_CLOCK },
-    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::HOST_NAME },
-    { Columns::PROCESS_ID,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_ID },
-    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_NAME },
-    { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::UNIT_NAME },
-    { Columns::SERVICE_NAME,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_NAME },
-    { Columns::SERVICE_ID,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_ID },
-    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::STYPE },
-    { Columns::TCP_PORT,             (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::TCP_PORT },
-    { Columns::METHOD_NAME,          (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::METHOD_NAME },
-    { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REQ_TYPE },
-    { Columns::METHOD_RESPONSE_TYPE, (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::RESP_TYPE },
-    { Columns::CALL_COUNT,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::CALL_COUNT },
+    { Columns::HEARTBEAT,                (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REGISTRATION_CLOCK },
+    { Columns::HOST_NAME,                (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::HOST_NAME },
+    { Columns::PROCESS_ID,               (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_ID },
+    { Columns::PROCESS_NAME,             (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_NAME },
+    { Columns::UNIT_NAME,                (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::UNIT_NAME },
+    { Columns::SERVICE_NAME,             (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_NAME },
+    { Columns::SERVICE_ID,               (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_ID },
+    { Columns::SERVICE_TYPE,             (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::STYPE },
+    { Columns::TCP_PORT,                 (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::TCP_PORT },
+    { Columns::METHOD_NAME,              (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::METHOD_NAME },
+    { Columns::METHOD_REQUEST_TYPE,      (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REQ_TYPE },
+    { Columns::METHOD_REQUEST_ENCODING,  (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REQ_ENCODING },
+    { Columns::METHOD_RESPONSE_TYPE,     (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::RESP_TYPE },
+    { Columns::METHOD_RESPONSE_ENCODING, (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::RESP_ENCODING },
+    { Columns::CALL_COUNT,               (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::CALL_COUNT },
   };
 
   std::map<std::string, ServiceTreeItem<eCAL::Monitoring::SClient>*> tree_item_client_map_;

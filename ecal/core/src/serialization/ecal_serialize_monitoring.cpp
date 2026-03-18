@@ -320,6 +320,12 @@ namespace{
   void SerializeMethod(Writer& writer_, const eCAL::Monitoring::SMethod& method_)
   {
     writer_.add_string(+eCAL::pb::Method::optional_string_method_name, method_.method_name);
+
+    writer_.add_string(+eCAL::pb::Method::optional_string_req_type, method_.request_datatype_information.name);
+    writer_.add_bytes(+eCAL::pb::Method::optional_bytes_req_desc, method_.request_datatype_information.descriptor);
+    writer_.add_string(+eCAL::pb::Method::optional_string_resp_type, method_.response_datatype_information.name);
+    writer_.add_bytes(+eCAL::pb::Method::optional_bytes_resp_desc, method_.response_datatype_information.descriptor);
+
     {
       Writer req_dt_info_writer{ writer_, +eCAL::pb::Method::optional_message_request_datatype_information };
       SerializeDataTypeInformation(req_dt_info_writer, method_.request_datatype_information);

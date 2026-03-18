@@ -37,7 +37,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
   };
   setFilterColumns(filter_columns);
 
@@ -53,7 +55,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
   };
 
   QList<EcalmonTreeWidget::GroupSetting> preconfigured_group_by_settings;
@@ -85,7 +89,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::PROCESS_ID,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
     (int)ServiceTreeModel::Columns::HEARTBEAT,
     (int)ServiceTreeModel::Columns::CALL_COUNT,
   };
@@ -140,7 +146,9 @@ void ServiceWidget::autoSizeColumns()
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
     (int)ServiceTreeModel::Columns::HEARTBEAT,
   };
 
