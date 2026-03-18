@@ -1307,107 +1307,108 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos">  3</span>
 <span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span><span class="c1"> //memset()</span>
 <span class="linenos">  5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span><span class="c1">  //printf()</span>
-<span class="linenos">  6</span>
+<span class="linenos">  6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;inttypes.h&gt;</span><span class="c1"> //int64_t</span>
 <span class="linenos">  7</span>
-<span class="linenos">  8</span><span class="cm">/*</span>
-<span class="linenos">  9</span><span class="cm">  Here we create the receive callback function.</span>
-<span class="linenos"> 10</span><span class="cm">  The function will be called whenever a new message is received.</span>
-<span class="linenos"> 11</span><span class="cm">*/</span>
-<span class="linenos"> 12</span><span class="kt">void</span><span class="w"> </span><span class="nf">OnReceive</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_STopicId</span><span class="o">*</span><span class="w"> </span><span class="n">topic_id_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_SDataTypeInformation</span><span class="o">*</span><span class="w"> </span><span class="n">data_type_information_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_SReceiveCallbackData</span><span class="o">*</span><span class="w"> </span><span class="n">callback_data_</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">user_argument_</span><span class="p">)</span>
-<span class="linenos"> 13</span><span class="p">{</span>
-<span class="linenos"> 14</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 15</span><span class="cm">    These are unused arguments for this example.</span>
-<span class="linenos"> 16</span><span class="cm">    You can use the data type information to check the data type of the received message.</span>
-<span class="linenos"> 17</span><span class="cm">    The user argument can be used to work with user defined data when the callback is called.</span>
-<span class="linenos"> 18</span><span class="cm">  */</span>
-<span class="linenos"> 19</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">topic_id_</span><span class="p">;</span>
-<span class="linenos"> 20</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">data_type_information_</span><span class="p">;</span>
-<span class="linenos"> 21</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">user_argument_</span><span class="p">;</span>
-<span class="linenos"> 22</span>
-<span class="linenos"> 23</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
-<span class="linenos"> 24</span><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">char_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="p">)(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer</span><span class="p">);</span>
-<span class="linenos"> 25</span><span class="w">  </span>
-<span class="linenos"> 26</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;----------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 27</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Received binary buffer in C</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 28</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;----------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 29</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Size         : %zu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">);</span>
-<span class="linenos"> 30</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Time         : %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_timestamp</span><span class="p">);</span>
-<span class="linenos"> 31</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Clock        : %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_clock</span><span class="p">);</span>
-<span class="linenos"> 32</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Content      : %.*s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">,</span><span class="w"> </span><span class="n">char_buffer</span><span class="p">);</span>
-<span class="linenos"> 33</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 34</span><span class="p">}</span>
-<span class="linenos"> 35</span>
-<span class="linenos"> 36</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
-<span class="linenos"> 37</span><span class="p">{</span>
-<span class="linenos"> 38</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 39</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; C: BLOB RECEIVER</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 40</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="linenos"> 41</span>
-<span class="linenos"> 42</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 43</span><span class="cm">    We create the objects we want to work with.</span>
-<span class="linenos"> 44</span><span class="cm">    In this case we need a subscriber handle.</span>
-<span class="linenos"> 45</span><span class="cm">  */</span>
-<span class="linenos"> 46</span><span class="w">  </span><span class="n">eCAL_Subscriber</span><span class="w"> </span><span class="o">*</span><span class="n">subscriber</span><span class="p">;</span>
-<span class="linenos"> 47</span>
-<span class="linenos"> 48</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 49</span><span class="cm">    Initialize eCAL. You always have to initialize eCAL before using its API.</span>
-<span class="linenos"> 50</span><span class="cm">    The name of our eCAL Process will be &quot;blob receive c&quot;. </span>
-<span class="linenos"> 51</span><span class="cm">    This name will be visible in the eCAL Monitor, once the process is running.</span>
-<span class="linenos"> 52</span><span class="cm">  */</span>
-<span class="linenos"> 53</span><span class="w">  </span><span class="n">eCAL_Initialize</span><span class="p">(</span><span class="s">&quot;blob receive c&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
-<span class="linenos"> 54</span>
-<span class="linenos"> 55</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 56</span><span class="cm">    Print some eCAL version information.</span>
-<span class="linenos"> 57</span><span class="cm">  */</span>
-<span class="linenos"> 58</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;eCAL %s (%s)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL_GetVersionString</span><span class="p">(),</span><span class="w"> </span><span class="n">eCAL_GetVersionDateString</span><span class="p">());</span>
-<span class="linenos"> 59</span>
-<span class="linenos"> 60</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 61</span><span class="cm">    Set the state for the program.</span>
-<span class="linenos"> 62</span><span class="cm">    You can vary between different states like healthy, warning, critical ...</span>
-<span class="linenos"> 63</span><span class="cm">    This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
-<span class="linenos"> 64</span><span class="cm">  */</span>
-<span class="linenos"> 65</span><span class="w">  </span><span class="n">eCAL_Process_SetState</span><span class="p">(</span><span class="n">eCAL_Process_eSeverity_healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL_Process_eSeverityLevel_level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
-<span class="linenos"> 66</span><span class="w">  </span>
-<span class="linenos"> 67</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 68</span><span class="cm">    Now we create a new subscriber that will subscribe to the topic &quot;blob&quot;.</span>
-<span class="linenos"> 69</span><span class="cm">    The three additional parameters that could be set (eCAL_SDatatypeInformation, eCAL_SubEventCallbackT and eCAL_Subscriber_Configuration)</span>
-<span class="linenos"> 70</span><span class="cm">    are set to NULL, because for this example we are fine with the default settings.</span>
-<span class="linenos"> 71</span><span class="cm">  */</span>
-<span class="linenos"> 72</span><span class="w">  </span><span class="n">subscriber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL_Subscriber_New</span><span class="p">(</span><span class="s">&quot;blob&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
-<span class="linenos"> 73</span>
-<span class="linenos"> 74</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 75</span><span class="cm">    In order to receive message, we need to register a receive callback.</span>
-<span class="linenos"> 76</span><span class="cm">    The callback will be called whenever a new message is received.</span>
-<span class="linenos"> 77</span><span class="cm">  */</span>
-<span class="linenos"> 78</span><span class="w">  </span><span class="n">eCAL_Subscriber_SetReceiveCallback</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span><span class="w"> </span><span class="n">OnReceive</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
-<span class="linenos"> 79</span>
-<span class="linenos"> 80</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 81</span><span class="cm">    Creating an infinite loop.</span>
-<span class="linenos"> 82</span><span class="cm">    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.</span>
-<span class="linenos"> 83</span><span class="cm">  */</span>
-<span class="linenos"> 84</span><span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="n">eCAL_Ok</span><span class="p">())</span>
-<span class="linenos"> 85</span><span class="w">  </span><span class="p">{</span>
-<span class="linenos"> 86</span><span class="w">    </span><span class="cm">/*</span>
-<span class="linenos"> 87</span><span class="cm">      Sleep for 500ms to avoid busy waiting.</span>
-<span class="linenos"> 88</span><span class="cm">      You can use eCAL_Process_SleepMS() to sleep in milliseconds.</span>
-<span class="linenos"> 89</span><span class="cm">    */</span>
-<span class="linenos"> 90</span><span class="w">    </span><span class="n">eCAL_Process_SleepMS</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
-<span class="linenos"> 91</span><span class="w">  </span><span class="p">}</span>
-<span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos"> 94</span><span class="cm">    Now we delete the subscriber handle. This is important to free resources.</span>
-<span class="linenos"> 95</span><span class="cm">    All objects that are created with eCAL_xxx_New() have to be deleted with eCAL_xxx_Delete().</span>
-<span class="linenos"> 96</span><span class="cm">  */</span>
-<span class="linenos"> 97</span><span class="w">  </span><span class="n">eCAL_Subscriber_Delete</span><span class="p">(</span><span class="n">subscriber</span><span class="p">);</span>
-<span class="linenos"> 98</span>
-<span class="linenos"> 99</span><span class="w">  </span><span class="cm">/*</span>
-<span class="linenos">100</span><span class="cm">    Deinitialize eCAL.</span>
-<span class="linenos">101</span><span class="cm">    You should always do that before your application exits.</span>
-<span class="linenos">102</span><span class="cm">  */</span>
-<span class="linenos">103</span><span class="w">  </span><span class="n">eCAL_Finalize</span><span class="p">();</span>
-<span class="linenos">104</span>
-<span class="linenos">105</span><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-<span class="linenos">106</span><span class="p">}</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span><span class="cm">/*</span>
+<span class="linenos"> 10</span><span class="cm">  Here we create the receive callback function.</span>
+<span class="linenos"> 11</span><span class="cm">  The function will be called whenever a new message is received.</span>
+<span class="linenos"> 12</span><span class="cm">*/</span>
+<span class="linenos"> 13</span><span class="kt">void</span><span class="w"> </span><span class="nf">OnReceive</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_STopicId</span><span class="o">*</span><span class="w"> </span><span class="n">topic_id_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_SDataTypeInformation</span><span class="o">*</span><span class="w"> </span><span class="n">data_type_information_</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">eCAL_SReceiveCallbackData</span><span class="o">*</span><span class="w"> </span><span class="n">callback_data_</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">user_argument_</span><span class="p">)</span>
+<span class="linenos"> 14</span><span class="p">{</span>
+<span class="linenos"> 15</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 16</span><span class="cm">    These are unused arguments for this example.</span>
+<span class="linenos"> 17</span><span class="cm">    You can use the data type information to check the data type of the received message.</span>
+<span class="linenos"> 18</span><span class="cm">    The user argument can be used to work with user defined data when the callback is called.</span>
+<span class="linenos"> 19</span><span class="cm">  */</span>
+<span class="linenos"> 20</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">topic_id_</span><span class="p">;</span>
+<span class="linenos"> 21</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">data_type_information_</span><span class="p">;</span>
+<span class="linenos"> 22</span><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">user_argument_</span><span class="p">;</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="linenos"> 25</span><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">char_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="p">)(</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer</span><span class="p">);</span>
+<span class="linenos"> 26</span><span class="w">  </span>
+<span class="linenos"> 27</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;----------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 28</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Received binary buffer in C</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;----------------------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 30</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Size         : %zu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">);</span>
+<span class="linenos"> 31</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Time         : %&quot;</span><span class="w"> </span><span class="n">PRId64</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_timestamp</span><span class="p">);</span>
+<span class="linenos"> 32</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Clock        : %&quot;</span><span class="w"> </span><span class="n">PRId64</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">send_clock</span><span class="p">);</span>
+<span class="linenos"> 33</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; Content      : %.*s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">callback_data_</span><span class="o">-&gt;</span><span class="n">buffer_size</span><span class="p">,</span><span class="w"> </span><span class="n">char_buffer</span><span class="p">);</span>
+<span class="linenos"> 34</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 35</span><span class="p">}</span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos"> 38</span><span class="p">{</span>
+<span class="linenos"> 39</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 40</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot; C: BLOB RECEIVER</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 41</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 44</span><span class="cm">    We create the objects we want to work with.</span>
+<span class="linenos"> 45</span><span class="cm">    In this case we need a subscriber handle.</span>
+<span class="linenos"> 46</span><span class="cm">  */</span>
+<span class="linenos"> 47</span><span class="w">  </span><span class="n">eCAL_Subscriber</span><span class="w"> </span><span class="o">*</span><span class="n">subscriber</span><span class="p">;</span>
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 50</span><span class="cm">    Initialize eCAL. You always have to initialize eCAL before using its API.</span>
+<span class="linenos"> 51</span><span class="cm">    The name of our eCAL Process will be &quot;blob receive c&quot;. </span>
+<span class="linenos"> 52</span><span class="cm">    This name will be visible in the eCAL Monitor, once the process is running.</span>
+<span class="linenos"> 53</span><span class="cm">  */</span>
+<span class="linenos"> 54</span><span class="w">  </span><span class="n">eCAL_Initialize</span><span class="p">(</span><span class="s">&quot;blob receive c&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 57</span><span class="cm">    Print some eCAL version information.</span>
+<span class="linenos"> 58</span><span class="cm">  */</span>
+<span class="linenos"> 59</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;eCAL %s (%s)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL_GetVersionString</span><span class="p">(),</span><span class="w"> </span><span class="n">eCAL_GetVersionDateString</span><span class="p">());</span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 62</span><span class="cm">    Set the state for the program.</span>
+<span class="linenos"> 63</span><span class="cm">    You can vary between different states like healthy, warning, critical ...</span>
+<span class="linenos"> 64</span><span class="cm">    This can be used to communicate the application state to applications like eCAL Monitor/Sys.</span>
+<span class="linenos"> 65</span><span class="cm">  */</span>
+<span class="linenos"> 66</span><span class="w">  </span><span class="n">eCAL_Process_SetState</span><span class="p">(</span><span class="n">eCAL_Process_eSeverity_healthy</span><span class="p">,</span><span class="w"> </span><span class="n">eCAL_Process_eSeverityLevel_level1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;I feel good!&quot;</span><span class="p">);</span>
+<span class="linenos"> 67</span><span class="w">  </span>
+<span class="linenos"> 68</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 69</span><span class="cm">    Now we create a new subscriber that will subscribe to the topic &quot;blob&quot;.</span>
+<span class="linenos"> 70</span><span class="cm">    The three additional parameters that could be set (eCAL_SDatatypeInformation, eCAL_SubEventCallbackT and eCAL_Subscriber_Configuration)</span>
+<span class="linenos"> 71</span><span class="cm">    are set to NULL, because for this example we are fine with the default settings.</span>
+<span class="linenos"> 72</span><span class="cm">  */</span>
+<span class="linenos"> 73</span><span class="w">  </span><span class="n">subscriber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eCAL_Subscriber_New</span><span class="p">(</span><span class="s">&quot;blob&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 76</span><span class="cm">    In order to receive message, we need to register a receive callback.</span>
+<span class="linenos"> 77</span><span class="cm">    The callback will be called whenever a new message is received.</span>
+<span class="linenos"> 78</span><span class="cm">  */</span>
+<span class="linenos"> 79</span><span class="w">  </span><span class="n">eCAL_Subscriber_SetReceiveCallback</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span><span class="w"> </span><span class="n">OnReceive</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="linenos"> 80</span>
+<span class="linenos"> 81</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 82</span><span class="cm">    Creating an infinite loop.</span>
+<span class="linenos"> 83</span><span class="cm">    eCAL Supports a stop signal; when an eCAL Process is stopped, eCAL_Ok() will return false.</span>
+<span class="linenos"> 84</span><span class="cm">  */</span>
+<span class="linenos"> 85</span><span class="w">  </span><span class="k">while</span><span class="p">(</span><span class="n">eCAL_Ok</span><span class="p">())</span>
+<span class="linenos"> 86</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos"> 87</span><span class="w">    </span><span class="cm">/*</span>
+<span class="linenos"> 88</span><span class="cm">      Sleep for 500ms to avoid busy waiting.</span>
+<span class="linenos"> 89</span><span class="cm">      You can use eCAL_Process_SleepMS() to sleep in milliseconds.</span>
+<span class="linenos"> 90</span><span class="cm">    */</span>
+<span class="linenos"> 91</span><span class="w">    </span><span class="n">eCAL_Process_SleepMS</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="linenos"> 92</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos"> 95</span><span class="cm">    Now we delete the subscriber handle. This is important to free resources.</span>
+<span class="linenos"> 96</span><span class="cm">    All objects that are created with eCAL_xxx_New() have to be deleted with eCAL_xxx_Delete().</span>
+<span class="linenos"> 97</span><span class="cm">  */</span>
+<span class="linenos"> 98</span><span class="w">  </span><span class="n">eCAL_Subscriber_Delete</span><span class="p">(</span><span class="n">subscriber</span><span class="p">);</span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span><span class="w">  </span><span class="cm">/*</span>
+<span class="linenos">101</span><span class="cm">    Deinitialize eCAL.</span>
+<span class="linenos">102</span><span class="cm">    You should always do that before your application exits.</span>
+<span class="linenos">103</span><span class="cm">  */</span>
+<span class="linenos">104</span><span class="w">  </span><span class="n">eCAL_Finalize</span><span class="p">();</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">107</span><span class="p">}</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-1-QyM=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-QyM=" name="QyM=" role="tabpanel" tabindex="0"><div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
