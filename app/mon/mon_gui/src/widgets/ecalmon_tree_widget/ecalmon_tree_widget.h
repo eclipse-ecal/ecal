@@ -25,17 +25,9 @@
 #include <QMap>
 #include "ui_ecalmon_tree_widget.h"
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
 #include "widgets/models/group_tree_model.h"
 #include <CustomQt/QMulticolumnSortFilterProxyModel.h>
+#include <ecal/types/monitoring.h>
 
 class EcalmonTreeWidget : public QWidget
 {
@@ -62,10 +54,10 @@ public:
   void setDefaultForcedColumn(int column);
 
 signals:
-  void topicsUpdated(const eCAL::pb::Monitoring& monitoring_pb);
+  void topicsUpdated(const eCAL::Monitoring::SMonitoring& monitoring);
 
 public slots:
-  virtual void monitorUpdated(const eCAL::pb::Monitoring& enable);
+  virtual void monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring);
   void setAlternatingRowColors(bool alternating_colors_enabled);
   virtual void resetLayout();
 

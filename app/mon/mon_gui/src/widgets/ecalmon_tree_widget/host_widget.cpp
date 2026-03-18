@@ -85,19 +85,21 @@ HostWidget::~HostWidget()
 
 void HostWidget::autoSizeColumns()
 {
-  eCAL::pb::Monitoring example_monitoring_pb;
+  eCAL::Monitoring::SMonitoring example_monitoring;
 
-  auto example_process_pb = example_monitoring_pb.add_processes();
+  eCAL::Monitoring::SProcess example_process;
 
-  example_process_pb->set_registration_clock(999999);
-  example_process_pb->set_host_name("CARPC00____");
-  example_process_pb->set_process_id(999999);
-  example_process_pb->set_process_name("");
-  example_process_pb->set_unit_name("CameraSensorMapFusionCAF___");
-  example_process_pb->set_process_parameter("");
+  example_process.registration_clock = 999999;
+  example_process.host_name = "CARPC00____";
+  example_process.process_id = 999999;
+  example_process.process_name = "";
+  example_process.unit_name = "CameraSensorMapFusionCAF___";
+  example_process.process_parameter = "";
+
+  example_monitoring.processes.push_back(example_process);
 
   HostTreeItem* example_host_item = new HostTreeItem("CARPC00____");
-  example_host_item->update(example_monitoring_pb);
+  example_host_item->update(example_monitoring);
 
   host_tree_model_->insertItem(example_host_item);
 

@@ -28,15 +28,7 @@
 
 #include "item_data_roles.h"
 #include "tree_item_type.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/service.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 template <class T>
 class ServiceTreeItem :
@@ -65,7 +57,7 @@ public:
   {
   }
 
-  ServiceTreeItem(const T& service, const eCAL::pb::Method& method)
+  ServiceTreeItem(const T& service, const eCAL::Monitoring::SMethod& method)
     : QAbstractTreeItem()
   {
     update(service, method);
@@ -83,35 +75,35 @@ public:
     {
       if (column == Columns::REGISTRATION_CLOCK)
       {
-        return service_.registration_clock();
+        return service_.registration_clock;
       }
       else if (column == Columns::HOST_NAME)
       {
-        return service_.host_name().c_str();
+        return service_.host_name.c_str();
       }
       else if (column == Columns::PROCESS_NAME)
       {
-        return service_.process_name().c_str();
+        return service_.process_name.c_str();
       }
       else if (column == Columns::UNIT_NAME)
       {
-        return service_.unit_name().c_str();
+        return service_.unit_name.c_str();
       }
       else if (column == Columns::PROCESS_ID)
       {
-        return service_.process_id();
+        return service_.process_id;
       }
       else if (column == Columns::SERVICE_NAME)
       {
-        return service_.service_name().c_str();
+        return service_.service_name.c_str();
       }
       else if (column == Columns::SERVICE_ID)
       {
-        return service_.service_id().c_str();
+        return std::to_string(service_.service_id).c_str();
       }
       else if (column == Columns::STYPE)
       {
-        return std::is_same<T, eCAL::pb::Service>::value ? "Server" : "Client";
+        return std::is_same<T, eCAL::Monitoring::SServer>::value ? "Server" : "Client";
       }
       else if (column == Columns::TCP_PORT)
       {
@@ -119,19 +111,19 @@ public:
       }
       else if (column == Columns::METHOD_NAME)
       {
-        return method_.method_name().c_str();
+        return method_.method_name.c_str();
       }
       else if (column == Columns::REQ_TYPE)
       {
-        return method_.req_type().c_str();
+        return method_.request_datatype_information.name.c_str();
       }
       else if (column == Columns::RESP_TYPE)
       {
-        return method_.resp_type().c_str();
+        return method_.response_datatype_information.name.c_str();
       }
       else if (column == Columns::CALL_COUNT)
       {
-        return (long long)method_.call_count();
+        return (long long)method_.call_count;
       }
       else
       {
@@ -187,22 +179,22 @@ public:
     {
         if (column == Columns::PROCESS_NAME)
         {
-          QStringList list{ service_.host_name().c_str(), service_.process_name().c_str() };
+          QStringList list{ service_.host_name.c_str(), service_.process_name.c_str() };
           return list;
         }
         else if (column == Columns::PROCESS_ID)
         {
-          QStringList list{ service_.host_name().c_str(), QString::number(service_.process_id()) };
+          QStringList list{ service_.host_name.c_str(), QString::number(service_.process_id) };
           return list;
         }
         else if (column == Columns::UNIT_NAME)
         {
-          QStringList list{ service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
+          QStringList list{ service_.host_name.c_str(), service_.unit_name.c_str(), QString::number(service_.process_id) };
           return list;
         }
         else if (column == Columns::SERVICE_NAME)
         {
-          QStringList list{ service_.service_name().c_str(), service_.host_name().c_str(), service_.unit_name().c_str(), QString::number(service_.process_id()) };
+          QStringList list{ service_.service_name.c_str(), service_.host_name.c_str(), service_.unit_name.c_str(), QString::number(service_.process_id) };
           return list;
         }
         else
@@ -253,38 +245,36 @@ public:
     return identifier_;
   }
 
-  static std::string generateIdentifier(const T& service, const eCAL::pb::Method& method)
+  static std::string generateIdentifier(const T& service, const eCAL::Monitoring::SMethod& method)
   {
-    return std::to_string(service.process_id()) + "@" + service.host_name() + "@" + service.service_name() + "@" + method.method_name();
+    return std::to_string(service.process_id) + "@" + service.host_name + "@" + service.service_name + "@" + method.method_name;
   }
 
-  void update(const T& service, const eCAL::pb::Method& method)
+  void update(const T& service, const eCAL::Monitoring::SMethod& method)
   {
-    service_.Clear();
-    service_.CopyFrom(service);
-    method_.Clear();
-    method_.CopyFrom(method);
+    service_ = service;
+    method_ = method;
     identifier_ = generateIdentifier(service_, method_);
   }
 
 private:
   // This workaround is required to utilize this template class with
-  // eCAL::pb::Client even though it has no tcp_port_v1() signature
-  // exposed. However, when upgrading eCAL to a newer C++ standard 
+  // eCAL::Monitoring::SClient even though it has no tcp_port_v1 field.
+  // However, when upgrading eCAL to a newer C++ standard 
   // in the future, the workaround can be replace with if constexpr.
   template <class U = T>
-  typename std::enable_if<std::is_same<eCAL::pb::Service, U>::value, int>::type
+  typename std::enable_if<std::is_same<eCAL::Monitoring::SServer, U>::value, int>::type
     tcpPort() const {
-    return service_.tcp_port_v1();
+    return service_.tcp_port_v1;
   }
   template <class U = T>
-  typename std::enable_if<std::is_same<eCAL::pb::Client, U>::value, int>::type
+  typename std::enable_if<std::is_same<eCAL::Monitoring::SClient, U>::value, int>::type
     tcpPort() const {
     return 0;
   }
 
   T service_;
-  eCAL::pb::Method  method_;
+  eCAL::Monitoring::SMethod  method_;
   std::string identifier_;
 };
 

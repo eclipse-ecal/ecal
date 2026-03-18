@@ -222,12 +222,12 @@ void EcalmonTreeWidget::setDefaultForcedColumn(int column)
 //// Slots controlled by the main application                               ////
 ////////////////////////////////////////////////////////////////////////////////
 
-void EcalmonTreeWidget::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
+void EcalmonTreeWidget::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring)
 {
-  emit topicsUpdated(monitoring_pb);
+  emit topicsUpdated(monitoring);
   if (group_tree_model_)
   {
-    group_tree_model_->monitorUpdated(monitoring_pb);
+    group_tree_model_->monitorUpdated(monitoring);
   }
 }
 

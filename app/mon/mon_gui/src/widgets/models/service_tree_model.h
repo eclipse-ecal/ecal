@@ -20,15 +20,7 @@
 #pragma once
 
 #include "group_tree_model.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 #include "service_tree_item.h"
 
@@ -71,7 +63,7 @@ public:
 
   QVector<QPair<int, QString>> getTreeItemColumnNameMapping() const;
 
-  void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
+  void monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring) override;
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;
@@ -99,21 +91,21 @@ private:
   std::map<Columns, int> tree_item_column_mapping =
   {
     { Columns::GROUP,                -1 },
-    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::REGISTRATION_CLOCK },
-    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::HOST_NAME },
-    { Columns::PROCESS_ID,           (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PROCESS_ID },
-    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::PROCESS_NAME },
-    { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::pb::Service>::Columns::UNIT_NAME },
-    { Columns::SERVICE_NAME,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::SERVICE_NAME },
-    { Columns::SERVICE_ID,           (int)ServiceTreeItem<eCAL::pb::Service>::Columns::SERVICE_ID },
-    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem<eCAL::pb::Service>::Columns::STYPE },
-    { Columns::TCP_PORT,             (int)ServiceTreeItem<eCAL::pb::Service>::Columns::TCP_PORT },
-    { Columns::METHOD_NAME,          (int)ServiceTreeItem<eCAL::pb::Service>::Columns::METHOD_NAME },
-    { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem<eCAL::pb::Service>::Columns::REQ_TYPE },
-    { Columns::METHOD_RESPONSE_TYPE, (int)ServiceTreeItem<eCAL::pb::Service>::Columns::RESP_TYPE },
-    { Columns::CALL_COUNT,           (int)ServiceTreeItem<eCAL::pb::Service>::Columns::CALL_COUNT },
+    { Columns::HEARTBEAT,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REGISTRATION_CLOCK },
+    { Columns::HOST_NAME,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::HOST_NAME },
+    { Columns::PROCESS_ID,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_ID },
+    { Columns::PROCESS_NAME,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::PROCESS_NAME },
+    { Columns::UNIT_NAME,            (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::UNIT_NAME },
+    { Columns::SERVICE_NAME,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_NAME },
+    { Columns::SERVICE_ID,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::SERVICE_ID },
+    { Columns::SERVICE_TYPE,         (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::STYPE },
+    { Columns::TCP_PORT,             (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::TCP_PORT },
+    { Columns::METHOD_NAME,          (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::METHOD_NAME },
+    { Columns::METHOD_REQUEST_TYPE,  (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::REQ_TYPE },
+    { Columns::METHOD_RESPONSE_TYPE, (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::RESP_TYPE },
+    { Columns::CALL_COUNT,           (int)ServiceTreeItem<eCAL::Monitoring::SServer>::Columns::CALL_COUNT },
   };
 
-  std::map<std::string, ServiceTreeItem<eCAL::pb::Client>*> tree_item_client_map_;
-  std::map<std::string, ServiceTreeItem<eCAL::pb::Service>*> tree_item_server_map_;
+  std::map<std::string, ServiceTreeItem<eCAL::Monitoring::SClient>*> tree_item_client_map_;
+  std::map<std::string, ServiceTreeItem<eCAL::Monitoring::SServer>*> tree_item_server_map_;
 };

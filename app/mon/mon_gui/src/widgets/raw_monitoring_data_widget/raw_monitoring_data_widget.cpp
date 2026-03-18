@@ -59,21 +59,54 @@ RawMonitoringDataWidget::RawMonitoringDataWidget(QWidget *parent)
 // Plaintext handling
 ////////////////////////////////////////////
 
-void RawMonitoringDataWidget::setRawMonitoringData(const eCAL::pb::Monitoring& monitoring_data_pb)
+void RawMonitoringDataWidget::setRawMonitoringData(const eCAL::Monitoring::SMonitoring& monitoring)
 {
-  ui_.raw_monitoring_data_textedit->setPlainText(QString::fromStdString(monitoring_data_pb.DebugString()));
+  // Create a formatted text representation of the monitoring data
+  std::string output;
+  output += "=== Monitoring Data ===\n\n";
+  
+  output += "Processes: " + std::to_string(monitoring.processes.size()) + "\n";
+  for (const auto& proc : monitoring.processes)
+  {
+    output += "  - " + proc.process_name + " (PID: " + std::to_string(proc.process_id) + ")\n";
+  }
+  
+  output += "\nPublishers: " + std::to_string(monitoring.publishers.size()) + "\n";
+  for (const auto& pub : monitoring.publishers)
+  {
+    output += "  - " + pub.topic_name + " [" + pub.datatype_information.name + "]\n";
+  }
+  
+  output += "\nSubscribers: " + std::to_string(monitoring.subscribers.size()) + "\n";
+  for (const auto& sub : monitoring.subscribers)
+  {
+    output += "  - " + sub.topic_name + " [" + sub.datatype_information.name + "]\n";
+  }
+  
+  output += "\nServers: " + std::to_string(monitoring.servers.size()) + "\n";
+  for (const auto& srv : monitoring.servers)
+  {
+    output += "  - " + srv.service_name + "\n";
+  }
+  
+  output += "\nClients: " + std::to_string(monitoring.clients.size()) + "\n";
+  for (const auto& cli : monitoring.clients)
+  {
+    output += "  - " + cli.service_name + "\n";
+  }
+  
+  ui_.raw_monitoring_data_textedit->setPlainText(QString::fromStdString(output));
   ui_.save_to_file_button->setEnabled(true);
   ui_.search_lineedit->setEnabled(true);
 }
 
 void RawMonitoringDataWidget::updateRawMonitoringData()
 {
-  std::string          monitoring_string;
-  eCAL::pb::Monitoring monitoring_pb;
+  eCAL::Monitoring::SMonitoring monitoring;
 
-  if ((eCAL::Monitoring::GetMonitoring(monitoring_string) != 0) && !monitoring_string.empty() && monitoring_pb.ParseFromString(monitoring_string))
+  if (eCAL::Monitoring::GetMonitoring(monitoring))
   {
-    setRawMonitoringData(monitoring_pb);
+    setRawMonitoringData(monitoring);
   }
   else
   {

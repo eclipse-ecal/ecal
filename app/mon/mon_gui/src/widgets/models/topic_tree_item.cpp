@@ -31,7 +31,7 @@
 
 #include <ecal/ecal.h>
 
-TopicTreeItem::TopicTreeItem(const eCAL::pb::Topic& topic)
+TopicTreeItem::TopicTreeItem(const eCAL::Monitoring::STopic& topic)
 {
   update(topic);
 }
@@ -48,89 +48,88 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::REGISTRATION_CLOCK)
     {
-      return topic_.registration_clock();
+      return topic_.registration_clock;
     }
     else if (column == Columns::HOST_NAME)
     {
-      return topic_.host_name().c_str();
+      return topic_.host_name.c_str();
     }
     else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
-      return topic_.shm_transport_domain().c_str();
+      return topic_.shm_transport_domain.c_str();
     }
     else if (column == Columns::PROCESS_ID)
     {
-      return topic_.process_id();
+      return topic_.process_id;
     }
     else if (column == Columns::PROCESS_NAME)
     {
-      return topic_.process_name().c_str();
+      return topic_.process_name.c_str();
     }
     else if (column == Columns::UNIT_NAME)
     {
-      return topic_.unit_name().c_str();
+      return topic_.unit_name.c_str();
     }
     else if (column == Columns::TOPIC_ID)
     {
-      return topic_.topic_id().c_str();
+      return QString::number(topic_.topic_id);
     }
     else if (column == Columns::TOPIC_NAME)
     {
-      return topic_.topic_name().c_str();
+      return topic_.topic_name.c_str();
     }
     else if (column == Columns::DIRECTION)
     {
-      return topic_.direction().c_str();
+      return topic_.direction.c_str();
     }
     else if (column == Columns::TENCODING)
     {
-      return topic_.datatype_information().encoding().c_str();
+      return topic_.datatype_information.encoding.c_str();
     }
     else if (column == Columns::TTYPE)
     {
-      return topic_.datatype_information().name().c_str();
+      return topic_.datatype_information.name.c_str();
     }
     else if (column == Columns::TDESC)
     {
-      return topic_.datatype_information().descriptor_information().c_str();
+      return topic_.datatype_information.descriptor.c_str();
     }
     else if (column == Columns::TRANSPORT_LAYER)
     {
       QList<QVariant> layers;
-      auto layer_pb = topic_.transport_layer();
-      for (const auto& layer : layer_pb)
+      for (const auto& layer : topic_.transport_layer)
       {
-        layers.push_back(layer.type());
+        layers.push_back((int)layer.type);
       }
       return layers;
     }
     else if (column == Columns::TOPIC_SIZE)
     {
-      return QVariant::fromValue(ByteSize(topic_.topic_size()));
+      return QVariant::fromValue(ByteSize(topic_.topic_size));
     }
     else if (column == Columns::CONNECTIONS_LOCAL)
     {
-      return topic_.connections_local();
+      return topic_.connections_local;
     }
     else if (column == Columns::CONNECTIONS_EXTERNAL)
     {
-      return topic_.connections_external();
+      return topic_.connections_external;
     }
     else if (column == Columns::MESSAGE_DROPS)
     {
-      return topic_.message_drops();
+      return topic_.message_drops;
     }
     else if (column == Columns::DATA_CLOCK)
     {
-      return (long long)topic_.data_clock();
+      return (long long)topic_.data_clock;
     }
     else if (column == Columns::DFREQ)
     {
-      return topic_.data_frequency();
+      return topic_.data_frequency;
     }
     else if (column == Columns::DATA_LATENCY)
     {
-      return topic_.data_latency_us().latest();
+      return topic_.data_latency_us.latest;
     }
     else
     {
@@ -153,7 +152,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().descriptor_information();
+      const std::string& raw_data = topic_.datatype_information.descriptor;
 
       if (!raw_data.empty())
       {
@@ -178,29 +177,24 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       QString layer_string;
 
-      auto layer_pb = topic_.transport_layer();
-
-      for (const auto& layer : layer_pb)
+      for (const auto& layer : topic_.transport_layer)
       {
         QString this_layer_string;
-        if (layer.active())
+        if (layer.active)
         {
-          switch (layer.type())
+          switch (layer.type)
           {
-          case eCAL::pb::eTransportLayerType::tl_ecal_tcp:
+          case eCAL::Monitoring::eTransportLayerType::tcp:
             this_layer_string = "tcp";
             break;
-          case eCAL::pb::eTransportLayerType::tl_ecal_udp_mc:
+          case eCAL::Monitoring::eTransportLayerType::udp_mc:
             this_layer_string = "udp_mc";
             break;
-          case eCAL::pb::eTransportLayerType::tl_ecal_shm:
+          case eCAL::Monitoring::eTransportLayerType::shm:
             this_layer_string = "shm";
             break;
-          case eCAL::pb::eTransportLayerType::tl_all:
-            this_layer_string = "all";
-            break;
           default:
-            this_layer_string = ("Unknown (" + QString::number((int)layer.type()) + ")");
+            this_layer_string = ("Unknown (" + QString::number(static_cast<int>(layer.type)) + ")");
           }
         }
 
@@ -230,12 +224,12 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().descriptor_information();
+      const std::string& raw_data = topic_.datatype_information.descriptor;
       return static_cast<int>(raw_data.size());
     }
     else if (column == Columns::TOPIC_SIZE)
     {
-      return topic_.topic_size();
+      return topic_.topic_size;
     }
 
     return data(column, (Qt::ItemDataRole)ItemDataRoles::RawDataRole); //-V1016
@@ -287,17 +281,17 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PROCESS_ID)
     {
-      const QStringList list{ topic_.host_name().c_str(), QString::number(topic_.process_id()) };
+      const QStringList list{ topic_.host_name.c_str(), QString::number(topic_.process_id) };
       return list;
     }
     else if (column == Columns::PROCESS_NAME)
     {
-      const QStringList list{topic_.host_name().c_str(), topic_.process_name().c_str()};
+      const QStringList list{topic_.host_name.c_str(), topic_.process_name.c_str()};
       return list;
     }
     else if (column == Columns::UNIT_NAME)
     {
-      const QStringList list{ topic_.host_name().c_str(), topic_.unit_name().c_str(), QString::number(topic_.process_id()) };
+      const QStringList list{ topic_.host_name.c_str(), topic_.unit_name.c_str(), QString::number(topic_.process_id) };
       return list;
     }
     else
@@ -329,7 +323,7 @@ QVariant TopicTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TDESC)
     {
-      const std::string& raw_data = topic_.datatype_information().descriptor_information();
+      const std::string& raw_data = topic_.datatype_information.descriptor;
       if (raw_data.empty())
       {
         QFont font;
@@ -356,17 +350,14 @@ int TopicTreeItem::type() const
   return (int)TreeItemType::Topic;
 }
 
-void TopicTreeItem::update(const eCAL::pb::Topic& topic)
+void TopicTreeItem::update(const eCAL::Monitoring::STopic& topic)
 {
-  topic_.Clear();
-  topic_.CopyFrom(topic);
+  topic_ = topic;
 }
 
-eCAL::pb::Topic TopicTreeItem::topicPb()
+eCAL::Monitoring::STopic TopicTreeItem::getTopic()
 {
-  eCAL::pb::Topic topic_pb;
-  topic_pb.CopyFrom(topic_);
-  return topic_pb;
+  return topic_;
 }
 
 QString TopicTreeItem::toFrequencyString(long long freq)
@@ -383,5 +374,5 @@ QString TopicTreeItem::toFrequencyString(long long freq)
 
 std::string TopicTreeItem::topicId() const
 {
-  return topic_.topic_id();
+  return std::to_string(topic_.topic_id);
 }

@@ -68,7 +68,7 @@ int TopicTreeModel::groupColumn() const
   return (int)(Columns::GROUP);
 }
 
-void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
+void TopicTreeModel::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring)
 {
   // Create a list of all topics to check if we have to remove them
   std::map<std::string, bool> topic_still_existing;
@@ -77,9 +77,10 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     topic_still_existing[topic.first] = false;
   }
 
-  for (const auto& topic : monitoring_pb.topics())
+  // Lambda to process a single topic
+  auto processTopic = [this, &topic_still_existing](const eCAL::Monitoring::STopic& topic)
   {
-    std::string topic_id = topic.topic_id();
+    std::string topic_id = std::to_string(topic.topic_id);
 
     if (topic_tree_item_map_.find(topic_id) == topic_tree_item_map_.end())
     {
@@ -133,6 +134,18 @@ void TopicTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
       topic_tree_item->update(topic);
       topic_still_existing[topic_id] = true;
     }
+  };
+
+  // Process publishers
+  for (const auto& topic : monitoring.publishers)
+  {
+    processTopic(topic);
+  }
+
+  // Process subscribers
+  for (const auto& topic : monitoring.subscribers)
+  {
+    processTopic(topic);
   }
 
   // Remove obsolete items

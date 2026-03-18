@@ -21,14 +21,7 @@
 
 #include "CustomQt/QAbstractTreeItem.h"
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/process.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 class ProcessTreeItem :
   public QAbstractTreeItem
@@ -54,7 +47,7 @@ public:
   };
 
   ProcessTreeItem();
-  ProcessTreeItem(const eCAL::pb::Process& process);
+  ProcessTreeItem(const eCAL::Monitoring::SProcess& process);
 
   ~ProcessTreeItem();
 
@@ -64,18 +57,18 @@ public:
 
   int type() const;
 
-  void update(const eCAL::pb::Process& process);
+  void update(const eCAL::Monitoring::SProcess& process);
 
-  eCAL::pb::Process processPb();
+  eCAL::Monitoring::SProcess getProcess();
 
 
-  int severityToCombinedInt(const eCAL::pb::eProcessSeverity severity, const eCAL::pb::eProcessSeverityLevel level) const;
+  int severityToCombinedInt(const int32_t severity, const int32_t level) const;
 
-  QString severityToString(const eCAL::pb::eProcessSeverity severity, const eCAL::pb::eProcessSeverityLevel level) const;
+  QString severityToString(const int32_t severity, const int32_t level) const;
 
 
 private:
-  eCAL::pb::Process process_;
+  eCAL::Monitoring::SProcess process_;
 
   static QString toFrequencyString(long long freq);
 };

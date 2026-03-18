@@ -60,9 +60,9 @@ VisualisationWindow::~VisualisationWindow()
 {
 }
 
-void VisualisationWindow::updatePublishers(const eCAL::pb::Monitoring & monitoring_pb)
+void VisualisationWindow::updatePublishers(const eCAL::Monitoring::SMonitoring & monitoring)
 {
-  emit updateVisualizationWidget(monitoring_pb);
+  emit updateVisualizationWidget(monitoring);
 }
 
 void VisualisationWindow::keyPressEvent(QKeyEvent* event)

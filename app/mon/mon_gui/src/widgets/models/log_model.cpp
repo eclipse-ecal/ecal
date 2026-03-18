@@ -20,14 +20,7 @@
 #include "log_model.h"
 #include "util.h"
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/logging.h>
 
 #include "item_data_roles.h"
 
@@ -214,9 +207,9 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
   return QAbstractItemModel::flags(index);
 }
 
-void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
+void LogModel::insertLogs(const eCAL::Logging::SLogging& logging)
 {
-  int inserted_row_count = logging_pb.log_messages().size();
+  int inserted_row_count = logging.log_messages.size();
   if (inserted_row_count <= 0) return;
   
   int size_before = logs_.size();
@@ -246,19 +239,19 @@ void LogModel::insertLogs(const eCAL::pb::LogMessageList& logging_pb)
   beginInsertRows(QModelIndex(), size_before, size_after - 1);
 
   int counter = inserted_row_count;
-  for (auto& log_message_pb : logging_pb.log_messages())
+  for (auto& log_message : logging.log_messages)
   {
     if (counter <= max_entries_)
     {
       LogModel::LogEntry entry;
 
-      entry.time = log_message_pb.time();
-      entry.host_name = log_message_pb.host_name().c_str();
-      entry.process_id = log_message_pb.process_id();
-      entry.process_path = log_message_pb.process_name().c_str();
-      entry.process_name = log_message_pb.unit_name().c_str();
-      entry.log_level = log_message_pb.level();
-      entry.message = log_message_pb.content().c_str();
+      entry.time = log_message.time;
+      entry.host_name = log_message.host_name.c_str();
+      entry.process_id = log_message.process_id;
+      entry.process_path = log_message.process_name.c_str();
+      entry.process_name = log_message.unit_name.c_str();
+      entry.log_level = static_cast<int>(log_message.level);
+      entry.message = log_message.content.c_str();
 
       logs_.push_back(entry);
     }

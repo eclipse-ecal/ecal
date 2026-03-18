@@ -34,7 +34,7 @@ ProcessTreeItem::ProcessTreeItem()
 {
 }
 
-ProcessTreeItem::ProcessTreeItem(const eCAL::pb::Process& process)
+ProcessTreeItem::ProcessTreeItem(const eCAL::Monitoring::SProcess& process)
   : QAbstractTreeItem()
 {
   update(process);
@@ -55,59 +55,59 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::REGISTRATION_CLOCK)
     {
-      return process_.registration_clock();
+      return process_.registration_clock;
     }
     else if (column == Columns::HOST_NAME)
     {
-      return process_.host_name().c_str();
+      return process_.host_name.c_str();
     }
     else if (column == Columns::SHM_TRANSPORT_DOMAIN)
     {
-      return process_.shm_transport_domain().c_str();
+      return process_.shm_transport_domain.c_str();
     }
     else if (column == Columns::PROCESS_ID)
     {
-      return process_.process_id();
+      return process_.process_id;
     }
     else if (column == Columns::PROCESS_NAME)
     {
-      return process_.process_name().c_str();
+      return process_.process_name.c_str();
     }
     else if (column == Columns::UNIT_NAME)
     {
-      return process_.unit_name().c_str();
+      return process_.unit_name.c_str();
     }
     else if (column == Columns::PROCESS_PARAMETER)
     {
-      return process_.process_parameter().c_str();
+      return process_.process_parameter.c_str();
     }
     else if (column == Columns::SEVERITY)
     {
-      severityToCombinedInt(process_.state().severity(), process_.state().severity_level());
+      return severityToCombinedInt(process_.state_severity, process_.state_severity_level);
     }
     else if (column == Columns::INFO)
     {
-      return process_.state().info().c_str();
+      return process_.state_info.c_str();
     }
     else if (column == Columns::TIME_SYNC_STATE)
     {
-      return (int)process_.time_sync_state();
+      return (int)process_.time_sync_state;
     }
     else if (column == Columns::TSYNC_MOD_NAME)
     {
-      return process_.time_sync_module_name().c_str();
+      return process_.time_sync_module_name.c_str();
     }
     else if (column == Columns::COMPONENT_INIT_INFO)
     {
-      return process_.component_init_info().c_str();
+      return process_.component_init_info.c_str();
     }
     else if (column == Columns::ECAL_RUNTIME_VERSION)
     {
-      return process_.ecal_runtime_version().c_str();
+      return process_.ecal_runtime_version.c_str();
     }
     else if (column == Columns::CONFIG_FILE_PATH)
     {
-      return process_.config_file_path().c_str();
+      return process_.config_file_path.c_str();
     }
     else
     {
@@ -127,11 +127,11 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::SEVERITY)
     {
-      return severityToString(process_.state().severity(), process_.state().severity_level());
+      return severityToString(process_.state_severity, process_.state_severity_level);
     }
     else if (column == Columns::TIME_SYNC_STATE)
     {
-      switch (process_.time_sync_state())
+      switch (process_.time_sync_state)
       {
       case 0:
         return "None";
@@ -165,7 +165,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::TIME_SYNC_STATE)
     {
-      switch (process_.time_sync_state())
+      switch (process_.time_sync_state)
       {
       case 0:
         return "None";
@@ -201,17 +201,17 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PROCESS_ID)
     {
-      QStringList list{ process_.host_name().c_str(), QString::number(process_.process_id()) };
+      QStringList list{ process_.host_name.c_str(), QString::number(process_.process_id) };
       return list;
     }
     if (column == Columns::PROCESS_NAME)
     {
-      QStringList list{process_.host_name().c_str(), process_.process_name().c_str()};
+      QStringList list{process_.host_name.c_str(), process_.process_name.c_str()};
       return list;
     }
     else if (column == Columns::UNIT_NAME)
     {
-      QStringList list{ process_.host_name().c_str(), process_.unit_name().c_str(), QString::number(process_.process_id()) };
+      QStringList list{ process_.host_name.c_str(), process_.unit_name.c_str(), QString::number(process_.process_id) };
       return list;
     }
     else
@@ -224,15 +224,15 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::SEVERITY)
     {
-      switch (process_.state().severity())
+      switch (process_.state_severity)
       {
-      case eCAL::pb::proc_sev_healthy:
+      case 1:
         return QColor(80, 225, 120);
-      case eCAL::pb::proc_sev_warning:
+      case 2:
         return QColor(240, 240, 50);
-      case eCAL::pb::proc_sev_critical:
+      case 3:
         return QColor(250, 130, 0);
-      case eCAL::pb::proc_sev_failed:
+      case 4:
         return QColor(240, 20, 20);
       default:
         return QVariant(); // Invalid QVariant
@@ -264,7 +264,7 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     {
       QFont font;
       font.setItalic(true);
-      switch (process_.time_sync_state())
+      switch (process_.time_sync_state)
       {
       case 0:
       case 1:
@@ -289,17 +289,14 @@ int ProcessTreeItem::type() const
   return (int)TreeItemType::Process;
 }
 
-void ProcessTreeItem::update(const eCAL::pb::Process& process)
+void ProcessTreeItem::update(const eCAL::Monitoring::SProcess& process)
 {
-  process_.Clear();
-  process_.CopyFrom(process);
+  process_ = process;
 }
 
-eCAL::pb::Process ProcessTreeItem::processPb()
+eCAL::Monitoring::SProcess ProcessTreeItem::getProcess()
 {
-  eCAL::pb::Process process_pb;
-  process_pb.CopyFrom(process_);
-  return process_pb;
+  return process_;
 }
 
 QString ProcessTreeItem::toFrequencyString(long long freq)
@@ -314,30 +311,28 @@ QString ProcessTreeItem::toFrequencyString(long long freq)
   }
 }
 
-int ProcessTreeItem::severityToCombinedInt(const eCAL::pb::eProcessSeverity severity, const eCAL::pb::eProcessSeverityLevel level) const
+int ProcessTreeItem::severityToCombinedInt(const int32_t severity, const int32_t level) const
 {
-  int severity_level_integer = level - eCAL::pb::eProcessSeverityLevel_MIN;
-  int severity_integer =  severity - eCAL::pb::eProcessSeverity_MIN;
-  return (eCAL::pb::eProcessSeverityLevel_MAX - eCAL::pb::eProcessSeverityLevel_MIN) * severity_integer + severity_level_integer;
+  return severity * 10 + level;
 }
 
-QString ProcessTreeItem::severityToString(const eCAL::pb::eProcessSeverity severity, const eCAL::pb::eProcessSeverityLevel level) const
+QString ProcessTreeItem::severityToString(const int32_t severity, const int32_t level) const
 {
   QString severity_string;
   switch (severity)
   {
-  case eCAL::pb::proc_sev_unknown:
+  case 0:
     return "Unknown";
-  case eCAL::pb::proc_sev_healthy:
+  case 1:
     severity_string = "Healthy";
     break;
-  case eCAL::pb::proc_sev_warning:
+  case 2:
     severity_string = "Warning";
     break;
-  case eCAL::pb::proc_sev_critical:
+  case 3:
     severity_string = "Critical";
     break;
-  case eCAL::pb::proc_sev_failed:
+  case 4:
     severity_string = "Failed";
     break;
   default:
@@ -346,22 +341,22 @@ QString ProcessTreeItem::severityToString(const eCAL::pb::eProcessSeverity sever
 
   switch (level)
   {
-  //case eCAL::pb::proc_sev_level_unknown:
+  //case eCAL::Registration::eProcessSeverityLevel::proc_sev_level_unknown:
   //  severity_string += " (Unknown)";
   //  break;
-  case eCAL::pb::proc_sev_level1:
+  case 1:
     severity_string += " (Lv. 1)";
     break;
-  case eCAL::pb::proc_sev_level2:
+  case 2:
     severity_string += " (Lv. 2)";
     break;
-  case eCAL::pb::proc_sev_level3:
+  case 3:
     severity_string += " (Lv. 3)";
     break;
-  case eCAL::pb::proc_sev_level4:
+  case 4:
     severity_string += " (Lv. 4)";
     break;
-  case eCAL::pb::proc_sev_level5:
+  case 5:
     severity_string += " (Lv. 5)";
     break;
   default:

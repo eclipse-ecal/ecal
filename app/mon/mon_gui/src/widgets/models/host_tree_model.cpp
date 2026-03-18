@@ -66,7 +66,7 @@ int HostTreeModel::groupColumn() const
   return (int)(Columns::GROUP);
 }
 
-void HostTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
+void HostTreeModel::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring)
 {
   // Create a list of all hosts to check if we have to remove them
   std::map<std::string, bool> host_still_existing;
@@ -75,9 +75,9 @@ void HostTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     host_still_existing[host.first] = false;
   }
 
-  for (const auto& process : monitoring_pb.processes())
+  for (const auto& process : monitoring.processes)
   {
-    std::string host_name = process.host_name();
+    std::string host_name = process.host_name;
 
     if (tree_item_map_.find(host_name) == tree_item_map_.end())
     {
@@ -89,7 +89,7 @@ void HostTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     else
     {
       // Update an existing host
-      tree_item_map_.at(host_name)->update(monitoring_pb);
+      tree_item_map_.at(host_name)->update(monitoring);
       host_still_existing[host_name] = true;
     }
   }

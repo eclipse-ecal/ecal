@@ -153,7 +153,7 @@ int HostTreeItem::type() const
   return (int)TreeItemType::Host;
 }
 
-void HostTreeItem::update(const eCAL::pb::Monitoring& monitoring_pb)
+void HostTreeItem::update(const eCAL::Monitoring::SMonitoring& monitoring)
 {
   // Clear old data
   publisher_count_     = 0;
@@ -161,23 +161,23 @@ void HostTreeItem::update(const eCAL::pb::Monitoring& monitoring_pb)
   data_sent_bytes_     = 0;
   data_received_bytes_ = 0;
 
-  // Fill variables with accumulated data
-  for (int i = 0; i <monitoring_pb.topics_size(); ++i)
+  // Process publishers
+  for (const auto& topic : monitoring.publishers)
   {
-    const auto& topic = monitoring_pb.topics(i);
-    if (QString(topic.host_name().c_str()).compare(host_name_, Qt::CaseSensitivity::CaseInsensitive) == 0)
+    if (QString(topic.host_name.c_str()).compare(host_name_, Qt::CaseSensitivity::CaseInsensitive) == 0)
     {
-      QString direction = topic.direction().c_str();
-      if (direction.compare("publisher", Qt::CaseSensitivity::CaseInsensitive) == 0)
-      {
-        publisher_count_++;
-        data_sent_bytes_ += ((long long)topic.topic_size() * (long long)topic.data_frequency()) / 1000;
-      }
-      else if (direction.compare("subscriber", Qt::CaseSensitivity::CaseInsensitive) == 0)
-      {
-        subscriber_count_++;
-        data_received_bytes_ += ((long long)topic.topic_size() * (long long)topic.data_frequency()) / 1000;
-      }
+      publisher_count_++;
+      data_sent_bytes_ += ((long long)topic.topic_size * (long long)topic.data_frequency) / 1000;
+    }
+  }
+
+  // Process subscribers
+  for (const auto& topic : monitoring.subscribers)
+  {
+    if (QString(topic.host_name.c_str()).compare(host_name_, Qt::CaseSensitivity::CaseInsensitive) == 0)
+    {
+      subscriber_count_++;
+      data_received_bytes_ += ((long long)topic.topic_size * (long long)topic.data_frequency) / 1000;
     }
   }
 }

@@ -34,16 +34,9 @@
 #include <QDateTime>
 #include <QTimer>
 #include <ecal/ecal.h>
+#include <ecal/types/monitoring.h>
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4146 4505)
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
+#include "plugin/plugin_manager.h"
 
 class VisualisationWidget : public QWidget
 {
@@ -63,7 +56,7 @@ protected:
 
 public slots:
   void setParseTimeEnabled(bool enabled);
-  void checkForMorePublishersWithSameTopic(const eCAL::pb::Monitoring& monitoring_pb);
+  void checkForMorePublishersWithSameTopic(const eCAL::Monitoring::SMonitoring& monitoring);
 
 private:
   static const int UPDATE_INTERVAL_MS = 50;

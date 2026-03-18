@@ -66,7 +66,7 @@ int ProcessTreeModel::groupColumn() const
   return (int)(Columns::GROUP);
 }
 
-void ProcessTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
+void ProcessTreeModel::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring)
 {
   // Create a list of all processes to check if we have to remove them
   std::map<std::string, bool> process_still_existing;
@@ -75,22 +75,22 @@ void ProcessTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     process_still_existing[process.first] = false;
   }
 
-  for (const auto& process_pb : monitoring_pb.processes())
+  for (const auto& process : monitoring.processes)
   {
     // Create a Process ID that is unique across all hosts
-    std::string process_identifier = (std::to_string(process_pb.process_id()) + "@" + process_pb.host_name());
+    std::string process_identifier = (std::to_string(process.process_id) + "@" + process.host_name);
 
     if (tree_item_map_.find(process_identifier) == tree_item_map_.end())
     {
       // Got a new process
-      ProcessTreeItem* process_tree_item = new ProcessTreeItem(process_pb);
+      ProcessTreeItem* process_tree_item = new ProcessTreeItem(process);
       insertItemIntoGroups(process_tree_item);
       tree_item_map_[process_identifier] = process_tree_item;
     }
     else
     {
       // Update an existing process
-      tree_item_map_.at(process_identifier)->update(process_pb);
+      tree_item_map_.at(process_identifier)->update(process);
       process_still_existing[process_identifier] = true;
     }
   }

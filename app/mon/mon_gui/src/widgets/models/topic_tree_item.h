@@ -22,15 +22,7 @@
 
 #include "CustomQt/QAbstractTreeItem.h"
 #include <QFont>
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/topic.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 class TopicTreeItem :
   public QAbstractTreeItem
@@ -62,7 +54,7 @@ public:
   };
 
   TopicTreeItem() = default;
-  TopicTreeItem(const eCAL::pb::Topic& topic);
+  TopicTreeItem(const eCAL::Monitoring::STopic& topic);
 
   ~TopicTreeItem() override = default;
 
@@ -74,14 +66,14 @@ public:
 
   int type() const;
 
-  void update(const eCAL::pb::Topic& topic);
+  void update(const eCAL::Monitoring::STopic& topic);
 
-  eCAL::pb::Topic topicPb();
+  eCAL::Monitoring::STopic getTopic();
 
   std::string topicId() const;
 
 private:
-  eCAL::pb::Topic topic_;
+  eCAL::Monitoring::STopic topic_;
   QFont itemfont;
   static QString toFrequencyString(long long freq);
 };

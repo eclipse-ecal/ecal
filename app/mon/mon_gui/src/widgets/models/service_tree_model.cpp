@@ -66,7 +66,7 @@ int ServiceTreeModel::groupColumn() const
   return (int)(Columns::GROUP);
 }
 
-void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
+void ServiceTreeModel::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring)
 {
   // Create a list of all service methods to check if we have to remove them
   std::map<std::string, bool> server_still_existing;
@@ -81,16 +81,16 @@ void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     client_still_existing[client_tree_item.first] = false;
   }
 
-  for (const auto& service : monitoring_pb.services())
+  for (const auto& service : monitoring.servers)
   {
-    for (const auto& method : service.methods())
+    for (const auto& method : service.methods)
     {
-      const std::string service_identifier = ServiceTreeItem<eCAL::pb::Service>::generateIdentifier(service, method);
+      const std::string service_identifier = ServiceTreeItem<eCAL::Monitoring::SServer>::generateIdentifier(service, method);
 
       if (tree_item_server_map_.find(service_identifier) == tree_item_server_map_.end())
       {
         // Got a new server-method
-        auto* const server_tree_item = new ServiceTreeItem<eCAL::pb::Service>(service, method);
+        auto* const server_tree_item = new ServiceTreeItem<eCAL::Monitoring::SServer>(service, method);
         insertItemIntoGroups(server_tree_item);
         tree_item_server_map_[service_identifier] = server_tree_item;
       }
@@ -103,16 +103,16 @@ void ServiceTreeModel::monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb)
     }
   }
 
-  for (const auto& client : monitoring_pb.clients())
+  for (const auto& client : monitoring.clients)
   {
-    for (const auto& method : client.methods())
+    for (const auto& method : client.methods)
     {
-      const std::string client_identifier = ServiceTreeItem<eCAL::pb::Client>::generateIdentifier(client, method);
+      const std::string client_identifier = ServiceTreeItem<eCAL::Monitoring::SClient>::generateIdentifier(client, method);
 
       if (tree_item_client_map_.find(client_identifier) == tree_item_client_map_.end())
       {
         // Got a new client-method
-        auto* const client_tree_item = new ServiceTreeItem<eCAL::pb::Client>(client, method);
+        auto* const client_tree_item = new ServiceTreeItem<eCAL::Monitoring::SClient>(client, method);
         insertItemIntoGroups(client_tree_item);
         tree_item_client_map_[client_identifier] = client_tree_item;
       }

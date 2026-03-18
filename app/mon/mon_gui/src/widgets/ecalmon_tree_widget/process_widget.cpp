@@ -107,19 +107,19 @@ ProcessWidget::~ProcessWidget()
 
 void ProcessWidget::autoSizeColumns()
 {
-  eCAL::pb::Process example_process_pb;
-  example_process_pb.set_registration_clock(999999);
-  example_process_pb.set_host_name("HNAME00____");
-  example_process_pb.set_process_id(999999);
-  example_process_pb.set_process_name("");
-  example_process_pb.set_unit_name("eCALProcessUnitNameABCDE___");
-  example_process_pb.set_process_parameter("");
+  eCAL::Monitoring::SProcess example_process;
+  example_process.registration_clock = 999999;
+  example_process.host_name = "HNAME00____";
+  example_process.process_id = 999999;
+  example_process.process_name = "";
+  example_process.unit_name = "eCALProcessUnitNameABCDE___";
+  example_process.process_parameter = "";
 
-  example_process_pb.mutable_state()->set_severity(eCAL::pb::eProcessSeverity::proc_sev_warning);
-  example_process_pb.mutable_state()->set_severity_level(eCAL::pb::eProcessSeverityLevel::proc_sev_level5);
-  //example_process_pb.set_tsync_mode();
+  example_process.state_severity = 2;  // proc_sev_warning
+  example_process.state_severity_level = 5;  // proc_sev_level5
+  //example_process.time_sync_state = "";
 
-  ProcessTreeItem* example_process_item = new ProcessTreeItem(example_process_pb);
+  ProcessTreeItem* example_process_item = new ProcessTreeItem(example_process);
   GroupTreeItem* example_group_item = new GroupTreeItem("HNAME00____", "", "", QVariant(), "");
 
   process_tree_model_->insertItem(example_process_item);
