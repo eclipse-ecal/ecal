@@ -151,7 +151,6 @@ int main()
         std::cout << "Method callback call failed." << "\n";
         calls_ok = false;
       }
-      break;
     }
 
     /*

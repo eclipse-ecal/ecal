@@ -1106,7 +1106,7 @@ TEST(core_cpp_clientserver, NestedBlockingCallFromServerCallback)
 
     // Add a callback to the server that blocking-calls the next service
     servers.back().SetMethodCallback(eCAL::SServiceMethodInformation{ "my_method", {}, {} },
-          [&clients, service_index = i](const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
+          [&clients, service_index = i]([[maybe_unused]] const eCAL::SServiceMethodInformation& method_info_, const std::string& request_, std::string& response_) -> int
           {
 #if DO_LOGGING
             // Print thread ID

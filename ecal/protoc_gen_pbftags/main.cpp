@@ -58,31 +58,6 @@ namespace {
     return id;
   }
 
-  std::string to_snake(std::string s) {
-    std::string out; out.reserve(s.size() * 2);
-    bool prev_lower = false;
-    for (char c : s) {
-      if (std::isalnum(static_cast<unsigned char>(c))) {
-        if (std::isupper(static_cast<unsigned char>(c))) {
-          if (prev_lower) out.push_back('_');
-          out.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(c))));
-          prev_lower = false;
-        }
-        else {
-          out.push_back(c);
-          prev_lower = true;
-        }
-      }
-      else {
-        if (!out.empty() && out.back() != '_') out.push_back('_');
-        prev_lower = false;
-      }
-    }
-    if (!out.empty() && out.back() == '_') out.pop_back();
-    if (out.empty()) out = "_";
-    return out;
-  }
-
   std::string label_to_string(FieldDescriptor::Label label) {
     switch (label) {
     case FieldDescriptor::LABEL_REQUIRED: return "required";

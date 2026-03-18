@@ -22,6 +22,7 @@
 
 #include <string.h> //memset()
 #include <stdio.h>  //printf()
+#include <inttypes.h> //int64_t
 
 void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_) { 
   (void*)data_type_information_;
@@ -31,9 +32,9 @@ void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTyp
   printf(" Received %s message in C\n", layer);
   printf("---------------------------------------------------\n");
   printf(" Topic   : %s\n", topic_id_->topic_name);
-  printf(" Size    : %lld\n",  callback_data_->buffer_size);
-  printf(" Time    : %lld\n",  callback_data_->send_timestamp);
-  printf(" Clock   : %lld\n",  callback_data_->send_clock);
+  printf(" Size    : %zu\n",  callback_data_->buffer_size);
+  printf(" Time    : %" PRId64 "\n",  callback_data_->send_timestamp);
+  printf(" Clock   : %" PRId64 "\n",  callback_data_->send_clock);
   printf(" Message : %.*s\n", (int)(callback_data_->buffer_size), (char*)(callback_data_->buffer));
   printf("\n");
 };

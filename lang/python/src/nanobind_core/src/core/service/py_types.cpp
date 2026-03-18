@@ -43,7 +43,7 @@ void AddServiceTypes(nanobind::module_& m)
     .value("NONE", eCAL::eClientEvent::none)
     .value("CONNECTED", eCAL::eClientEvent::connected)
     .value("DISCONNECTED", eCAL::eClientEvent::disconnected)
-    .value("TIMEOUT", eCAL::eClientEvent::timeout);
+    .value("TIMEOUT", eCAL::eClientEvent::timeout, "Timeout Events are not fired anymore. Use the response of the service call to check for timeouts.");
 
   nb::enum_<eCAL::eServerEvent>(m, "ServerEvent")
     .value("NONE", eCAL::eServerEvent::none)

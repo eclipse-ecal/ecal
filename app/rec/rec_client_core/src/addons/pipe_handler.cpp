@@ -91,7 +91,6 @@ bool PipeHandler::StartProcess(const std::wstring& executable_path)
   }
 
   // Create the child process
-  TCHAR*              command_line;
   PROCESS_INFORMATION process_info;
   STARTUPINFOW        startup_info;
 

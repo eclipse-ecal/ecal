@@ -43,11 +43,6 @@ void OnClientState(const eCAL::SServiceId& service_id_, const eCAL::SClientEvent
     std::cout << "Client disconnected from service " << std::endl;
     std::cout << "---------------------------------" << std::endl;
     break;
-  case eCAL::eClientEvent::timeout:
-    std::cout << "---------------------------------" << std::endl;
-    std::cout << "Client request timeouted         " << std::endl;
-    std::cout << "---------------------------------" << std::endl;
-    break;
   default:
     std::cout << "Unknown client event." << std::endl;
     break;

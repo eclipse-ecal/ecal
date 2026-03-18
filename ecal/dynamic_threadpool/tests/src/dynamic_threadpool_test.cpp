@@ -90,8 +90,6 @@ TEST(DynamicThreadPool, ParallelExecution)
   Barrier barrier(number_of_tasks + 1); // +1 for the main thread
 
   atomic_signalable<int> finished_tasks(0);
-  
-  auto start = std::chrono::steady_clock::now();
 
   for (int i = 0; i < number_of_tasks; i++)
   {
@@ -153,11 +151,9 @@ TEST(DynamicThreadPool, MaxSize)
   constexpr int number_of_tasks        = max_threadpool_size * 2;
 
   DynamicThreadPool thread_pool(max_threadpool_size);
-
   Barrier barrier(max_threadpool_size + 1);
-
   atomic_signalable<int> finished_tasks(0);
-  auto start = std::chrono::steady_clock::now();
+
   for (int i = 0; i < number_of_tasks; i++)
   {
     thread_pool.Post([&finished_tasks, &barrier]()
