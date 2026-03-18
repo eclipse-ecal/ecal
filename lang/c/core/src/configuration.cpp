@@ -32,10 +32,10 @@
 
 namespace
 {
-  void null_terminated_string_copy(char* destination, const std::string& source, size_t destination_size)
+  void string_copy_safe(char* destination, const char* source, size_t destination_size)
   {
     assert(destination_size > 0);
-    std::strncpy(destination, source.c_str(), destination_size - 1);
+    std::strncpy(destination, source, destination_size - 1);
     destination[destination_size - 1] = '\0';
   }
 }
@@ -216,16 +216,16 @@ void Assign_TransportLayer_Configuration(struct eCAL_TransportLayer_Configuratio
   // Assign UDP::Configuration
   configuration_c_->udp.config_version = Convert_Types_UdpConfigVersion(configuration_.udp.config_version);
   configuration_c_->udp.port = configuration_.udp.port;
-  null_terminated_string_copy(configuration_c_->udp.mask, configuration_.udp.mask.Get(), sizeof(configuration_c_->udp.mask));
+  string_copy_safe(configuration_c_->udp.mask, configuration_.udp.mask.Get().c_str(), sizeof(configuration_c_->udp.mask));
   configuration_c_->udp.send_buffer = configuration_.udp.send_buffer;
   configuration_c_->udp.receive_buffer = configuration_.udp.receive_buffer;
   configuration_c_->udp.join_all_interfaces = configuration_.udp.join_all_interfaces;
   configuration_c_->udp.npcap_enabled = configuration_.udp.npcap_enabled;
 
-  null_terminated_string_copy(configuration_c_->udp.network.group, configuration_.udp.network.group.Get(), sizeof(configuration_c_->udp.network.group));
+  string_copy_safe(configuration_c_->udp.network.group, configuration_.udp.network.group.Get().c_str(), sizeof(configuration_c_->udp.network.group));
   configuration_c_->udp.network.ttl = configuration_.udp.network.ttl;
 
-  null_terminated_string_copy(configuration_c_->udp.local.group, configuration_.udp.local.group.Get(), sizeof(configuration_c_->udp.local.group));
+  string_copy_safe(configuration_c_->udp.local.group, configuration_.udp.local.group.Get().c_str(), sizeof(configuration_c_->udp.local.group));
   configuration_c_->udp.local.ttl = configuration_.udp.local.ttl;
 
   // Assign TCP::Configuration

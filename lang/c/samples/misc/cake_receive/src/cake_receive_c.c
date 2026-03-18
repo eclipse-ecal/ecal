@@ -24,7 +24,8 @@
 #include <stdio.h>  //printf()
 #include <inttypes.h> //int64_t
 
-void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* /*data_type_information_*/, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_) { 
+void OnReceive(const struct eCAL_STopicId* topic_id_, const struct eCAL_SDataTypeInformation* data_type_information_, const struct eCAL_SReceiveCallbackData* callback_data_, void* user_argument_) { 
+  (void*)data_type_information_;
   const char* layer = (const char*)user_argument_;
   
   printf("---------------------------------------------------\n");

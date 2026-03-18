@@ -155,6 +155,7 @@ namespace
       {
         const auto& index_to_update = samples[i].identifier;
         const auto& cache_iterator = cache.find(index_to_update);
+        benchmark::DoNotOptimize(cache_iterator);
       }
       benchmark::DoNotOptimize(cache);
     }
