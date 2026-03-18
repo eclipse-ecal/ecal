@@ -77,7 +77,7 @@ void HostTreeModel::monitorUpdated(const eCAL::Monitoring::SMonitoring& monitori
 
   for (const auto& process : monitoring.processes)
   {
-    std::string host_name = process.host_name;
+    const std::string host_name = process.host_name;
 
     if (tree_item_map_.find(host_name) == tree_item_map_.end())
     {

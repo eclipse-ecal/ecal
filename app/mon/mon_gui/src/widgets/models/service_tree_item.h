@@ -127,10 +127,6 @@ public:
       {
         return method_.request_datatype_information.encoding.c_str();
       }
-      else if (column == Columns::RESP_TYPE)
-      {
-        return method_.response_datatype_information.name.c_str();
-      }
       else if (column == Columns::RESP_ENCODING)
       {
         return method_.response_datatype_information.encoding.c_str();
@@ -277,12 +273,12 @@ private:
   // However, when upgrading eCAL to a newer C++ standard 
   // in the future, the workaround can be replace with if constexpr.
   template <class U = T>
-  typename std::enable_if<std::is_same<eCAL::Monitoring::SServer, U>::value, int>::type
+  typename std::enable_if_t<std::is_same<eCAL::Monitoring::SServer, U>::value, int>
     tcpPort() const {
     return service_.tcp_port_v1;
   }
   template <class U = T>
-  typename std::enable_if<std::is_same<eCAL::Monitoring::SClient, U>::value, int>::type
+  typename std::enable_if_t<std::is_same<eCAL::Monitoring::SClient, U>::value, int>
     tcpPort() const {
     return 0;
   }

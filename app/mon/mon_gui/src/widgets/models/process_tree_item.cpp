@@ -201,17 +201,17 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::PROCESS_ID)
     {
-      QStringList list{ process_.host_name.c_str(), QString::number(process_.process_id) };
+      const QStringList list{ process_.host_name.c_str(), QString::number(process_.process_id) };
       return list;
     }
     if (column == Columns::PROCESS_NAME)
     {
-      QStringList list{process_.host_name.c_str(), process_.process_name.c_str()};
+      const QStringList list{process_.host_name.c_str(), process_.process_name.c_str()};
       return list;
     }
     else if (column == Columns::UNIT_NAME)
     {
-      QStringList list{ process_.host_name.c_str(), process_.unit_name.c_str(), QString::number(process_.process_id) };
+      const QStringList list{ process_.host_name.c_str(), process_.unit_name.c_str(), QString::number(process_.process_id) };
       return list;
     }
     else

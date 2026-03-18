@@ -209,7 +209,7 @@ Qt::ItemFlags LogModel::flags(const QModelIndex &index) const
 
 void LogModel::insertLogs(const eCAL::Logging::SLogging& logging)
 {
-  int inserted_row_count = logging.log_messages.size();
+  const int inserted_row_count = logging.log_messages.size();
   if (inserted_row_count <= 0) return;
   
   int size_before = logs_.size();
@@ -239,7 +239,7 @@ void LogModel::insertLogs(const eCAL::Logging::SLogging& logging)
   beginInsertRows(QModelIndex(), size_before, size_after - 1);
 
   int counter = inserted_row_count;
-  for (auto& log_message : logging.log_messages)
+  for (const auto& log_message : logging.log_messages)
   {
     if (counter <= max_entries_)
     {

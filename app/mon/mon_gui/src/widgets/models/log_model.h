@@ -66,7 +66,7 @@ public:
   QModelIndex parent(const QModelIndex &index) const override;
   Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-  void insertLogs(const eCAL::Logging::SLogging& logs);
+  void insertLogs(const eCAL::Logging::SLogging& logging);
 
   void setParseTimeEnabled(bool enabled);
   bool isParseTimeEnabled() const;

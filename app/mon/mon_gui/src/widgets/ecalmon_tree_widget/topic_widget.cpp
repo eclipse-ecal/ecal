@@ -39,6 +39,17 @@
 #include <QDesktopWidget>
 #endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
+namespace
+{
+  QString combineTopicEncodingAndType(const QString& encoding, const QString& type)
+  {
+    if (encoding.isEmpty()) return type;
+    if (type.isEmpty()) return encoding;
+
+    return encoding + ":" + type;
+  }
+}
+
 TopicWidget::TopicWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
   , parse_time_(true)
@@ -317,7 +328,7 @@ void TopicWidget::openReflectionWindowForSelection()
         QString topic_encoding = topic_item->data(TopicTreeItem::Columns::TENCODING, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
         QString topic_type = topic_item->data(TopicTreeItem::Columns::TTYPE, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
 
-        QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString())) };
+        QString combined_topic_encoding_type{ combineTopicEncodingAndType(topic_encoding, topic_type) };
 
         // Create a new Reflection Window
         VisualisationWindow* visualisation_window = new VisualisationWindow(topic_name, combined_topic_encoding_type);
@@ -354,7 +365,7 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
     QString topic_encoding = item->data((int)TopicTreeItem::Columns::TENCODING).toString();
     QString topic_type     = item->data((int)TopicTreeItem::Columns::TTYPE).toString();
 
-    QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString()))};
+    QString combined_topic_encoding_type{ combineTopicEncodingAndType(topic_encoding, topic_type) };
 
     QAction* reflection_action = new QAction(tr("Inspect topic \"") + topic_name + "\"", &menu);
     connect(reflection_action, &QAction::triggered, this, &TopicWidget::openReflectionWindowForSelection);
