@@ -34,11 +34,12 @@ namespace eCAL
     **/
     enum class eSeverity
     {
-      unknown  = 0,  /*!<  0 == condition unknown     */
-      healthy  = 1,  /*!<  1 == process healthy       */
-      warning  = 2,  /*!<  2 == process warning level */
-      critical = 3,  /*!<  3 == process critical      */
-      failed   = 4,  /*!<  4 == process failed        */
+      unknown   = 0, /*!<  0 == condition unknown     */
+      healthy   = 1, /*!<  1 == process healthy       */
+      warning   = 2, /*!<  2 == process warning level */
+      critical  = 3, /*!<  3 == process critical      */
+      failed    = 4, /*!<  4 == process failed        */
+      count     = 5, /*!<  count of severities        */
     };
 
 

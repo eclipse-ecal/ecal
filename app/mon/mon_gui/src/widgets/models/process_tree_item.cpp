@@ -130,9 +130,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::SEVERITY)
     {
-      auto severity = static_cast<eCAL::Process::eSeverity>(process_.state_severity);
-      auto severity_level = static_cast<eCAL::Process::eSeverityLevel>(process_.state_severity_level);
-      return severityToString(severity, severity_level);
+      return severityToString(
+        static_cast<eCAL::Process::eSeverity>(process_.state_severity),
+        static_cast<eCAL::Process::eSeverityLevel>(process_.state_severity_level));
     }
     else if (column == Columns::TIME_SYNC_STATE)
     {
