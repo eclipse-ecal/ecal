@@ -38,11 +38,12 @@ Program Listing for File process_severity.h
    
        enum class eSeverity
        {
-         unknown  = 0,  
-         healthy  = 1,  
-         warning  = 2,  
-         critical = 3,  
-         failed   = 4,  
+         unknown   = 0, 
+         healthy   = 1, 
+         warning   = 2, 
+         critical  = 3, 
+         failed    = 4, 
+         count     = 5, 
        };
    
    
