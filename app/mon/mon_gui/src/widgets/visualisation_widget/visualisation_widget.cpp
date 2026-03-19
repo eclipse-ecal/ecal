@@ -177,16 +177,16 @@ bool VisualisationWidget::isPaused() const
   return ui_.pause_button->isChecked();
 }
 
-void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::pb::Monitoring & monitoring_pb)
+void VisualisationWidget::checkForMorePublishersWithSameTopic(const eCAL::Monitoring::SMonitoring & monitoring)
 {
   QStringList publishers = {};
-  for (const auto& topic : monitoring_pb.topics())
+  for (const auto& topic : monitoring.publishers)
   {
     if (!topic_name_.isNull())
     {
-      if ((topic.topic_name() == topic_name_.toStdString()) && (topic.direction() == std::string("publisher")))
+      if ((topic.topic_name == topic_name_.toStdString()) && (topic.direction == std::string("publisher")))
       {
-        publishers.append(QString(QString(topic.host_name().c_str()) + QString(": ") + QString(topic.process_name().c_str())));
+        publishers.append(QString(QString(topic.host_name.c_str()) + QString(": ") + QString(topic.process_name.c_str())));
       }
     }
   }

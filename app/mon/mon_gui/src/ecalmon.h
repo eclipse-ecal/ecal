@@ -33,14 +33,7 @@
 #include "widgets/raw_monitoring_data_widget/raw_monitoring_data_widget.h"
 #include "widgets/system_information_widget/system_information_widget.h"
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 class Ecalmon : public QMainWindow
 {
@@ -79,7 +72,7 @@ private slots:
   void updateEcalTime();
 
 signals:
-  void monitorUpdatedSignal(const eCAL::pb::Monitoring&);
+  void monitorUpdatedSignal(const eCAL::Monitoring::SMonitoring&);
 
 protected:
   void closeEvent(QCloseEvent *event) override;
