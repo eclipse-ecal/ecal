@@ -22,6 +22,7 @@
 #include "CustomQt/QAbstractTreeItem.h"
 
 #include <ecal/types/monitoring.h>
+#include <ecal/process_severity.h>
 
 class ProcessTreeItem :
   public QAbstractTreeItem
@@ -62,9 +63,9 @@ public:
   eCAL::Monitoring::SProcess getProcess();
 
 
-  int severityToCombinedInt(const int32_t severity, const int32_t level) const;
+  int severityToCombinedInt(const eCAL::Process::eSeverity severity, const eCAL::Process::eSeverityLevel level) const;
 
-  QString severityToString(const int32_t severity, const int32_t level) const;
+  QString severityToString(const eCAL::Process::eSeverity severity, const eCAL::Process::eSeverityLevel level) const;
 
 
 private:

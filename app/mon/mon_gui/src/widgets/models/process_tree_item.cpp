@@ -83,7 +83,10 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::SEVERITY)
     {
-      return severityToCombinedInt(process_.state_severity, process_.state_severity_level);
+      return severityToCombinedInt(
+        static_cast<eCAL::Process::eSeverity>(process_.state_severity), 
+        static_cast<eCAL::Process::eSeverityLevel>(process_.state_severity_level)
+      );
     }
     else if (column == Columns::INFO)
     {
@@ -127,7 +130,9 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
     }
     else if (column == Columns::SEVERITY)
     {
-      return severityToString(process_.state_severity, process_.state_severity_level);
+      auto severity = static_cast<eCAL::Process::eSeverity>(process_.state_severity);
+      auto severity_level = static_cast<eCAL::Process::eSeverityLevel>(process_.state_severity_level);
+      return severityToString(severity, severity_level);
     }
     else if (column == Columns::TIME_SYNC_STATE)
     {
@@ -224,15 +229,16 @@ QVariant ProcessTreeItem::data(Columns column, Qt::ItemDataRole role) const
   {
     if (column == Columns::SEVERITY)
     {
-      switch (process_.state_severity)
+      auto severity = static_cast<eCAL::Process::eSeverity>(process_.state_severity);
+      switch (severity)
       {
-      case 1:
+      case eCAL::Process::eSeverity::healthy:
         return QColor(80, 225, 120);
-      case 2:
+      case eCAL::Process::eSeverity::warning:
         return QColor(240, 240, 50);
-      case 3:
+      case eCAL::Process::eSeverity::critical:
         return QColor(250, 130, 0);
-      case 4:
+      case eCAL::Process::eSeverity::failed:
         return QColor(240, 20, 20);
       default:
         return QVariant(); // Invalid QVariant
@@ -311,28 +317,28 @@ QString ProcessTreeItem::toFrequencyString(long long freq)
   }
 }
 
-int ProcessTreeItem::severityToCombinedInt(const int32_t severity, const int32_t level) const
+int ProcessTreeItem::severityToCombinedInt(const eCAL::Process::eSeverity severity, const eCAL::Process::eSeverityLevel level) const
 {
-  return severity * 10 + level;
+  return static_cast<int>(severity) * static_cast<int>(eCAL::Process::eSeverity::count) + static_cast<int>(level);
 }
 
-QString ProcessTreeItem::severityToString(const int32_t severity, const int32_t level) const
+QString ProcessTreeItem::severityToString(const eCAL::Process::eSeverity severity, const eCAL::Process::eSeverityLevel level) const
 {
   QString severity_string;
   switch (severity)
   {
-  case 0:
+  case eCAL::Process::eSeverity::unknown:
     return "Unknown";
-  case 1:
+  case eCAL::Process::eSeverity::healthy:
     severity_string = "Healthy";
     break;
-  case 2:
+  case eCAL::Process::eSeverity::warning:
     severity_string = "Warning";
     break;
-  case 3:
+  case eCAL::Process::eSeverity::critical:
     severity_string = "Critical";
     break;
-  case 4:
+  case eCAL::Process::eSeverity::failed:
     severity_string = "Failed";
     break;
   default:
@@ -344,19 +350,19 @@ QString ProcessTreeItem::severityToString(const int32_t severity, const int32_t 
   //case eCAL::Registration::eProcessSeverityLevel::proc_sev_level_unknown:
   //  severity_string += " (Unknown)";
   //  break;
-  case 1:
+  case eCAL::Process::eSeverityLevel::level1:
     severity_string += " (Lv. 1)";
     break;
-  case 2:
+  case eCAL::Process::eSeverityLevel::level2:
     severity_string += " (Lv. 2)";
     break;
-  case 3:
+  case eCAL::Process::eSeverityLevel::level3:
     severity_string += " (Lv. 3)";
     break;
-  case 4:
+  case eCAL::Process::eSeverityLevel::level4:
     severity_string += " (Lv. 4)";
     break;
-  case 5:
+  case eCAL::Process::eSeverityLevel::level5:
     severity_string += " (Lv. 5)";
     break;
   default:
