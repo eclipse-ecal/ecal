@@ -25,12 +25,13 @@
 #include <ecal/process_severity.h>
 
 #include <functional>
+#include <map>
+#include <mutex>
 #include <string>
+#include <thread>
+#include <unordered_map>
 #include <utility>
 #include <vector>
-#include <thread>
-#include <map>
-#include <unordered_map>
 
 #include "model/data/host.hpp"
 #include "model/data/process.hpp"
@@ -99,7 +100,7 @@ class MonitorModel
     case 1:
       return Process::TimeSyncState::REALTIME;
     case 2:
-      return Process::TimeSyncState::REALTIME;
+      return Process::TimeSyncState::REPLAY;
     case 0:
     default:
       return Process::TimeSyncState::NONE;
@@ -162,7 +163,7 @@ class MonitorModel
         auto found = hosts_map.find(t.host_name);
         if(found != hosts_map.end())
         {
-          auto host = found->second;
+          auto* host = found->second;
           if(direction == Topic::Direction::PUBLISHER)
           {
             host->publisher_count++;

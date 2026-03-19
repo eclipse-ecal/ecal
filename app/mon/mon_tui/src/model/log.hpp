@@ -19,6 +19,7 @@
 #pragma once
 
 #include <thread>
+#include <mutex>
 
 #include <ecal/ecal.h>
 #include <ecal/log.h>
@@ -104,8 +105,8 @@ class LogModel
       std::lock_guard<std::mutex> lock{mtx};
       eCAL::Logging::GetLogging(logs);
 
-      const auto &pb_logs = logs.log_messages;
-      auto new_entries_count = pb_logs.size();
+      const auto &log_messages = logs.log_messages;
+      auto new_entries_count = log_messages.size();
       if(new_entries_count == 0)
       {
         return;
