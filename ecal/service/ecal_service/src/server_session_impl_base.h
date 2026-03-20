@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <atomic>
+#include <cstdint>
 #include <memory>
 #include <functional>
 
@@ -69,6 +71,7 @@ namespace ecal_service
                     , const ShutdownCallbackT&                         shutdown_callback)
       : io_context_             (io_context)
       , socket_                 (*io_context)
+      , session_id_             (next_session_id_++)
       , service_callback_       (service_callback)
       , event_callback_         (event_callback)
       , shutdown_callback_      (shutdown_callback)
@@ -88,9 +91,12 @@ namespace ecal_service
   // Member variables
   /////////////////////////////////////
   protected:
+    static std::atomic<std::uint64_t>               next_session_id_;
+
     const std::shared_ptr<asio::io_context>         io_context_;
     asio::ip::tcp::socket                           socket_;
     mutable std::mutex                              socket_mutex_;
+    const std::uint64_t                             session_id_;   //!< Unique ID assigned to this session at construction time.
 
     const ServerServiceCallbackT                    service_callback_;
     const ServerEventCallbackT                      event_callback_;

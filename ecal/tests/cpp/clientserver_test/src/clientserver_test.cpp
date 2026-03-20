@@ -103,7 +103,8 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // client event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SClientEventCallbackData& data_)
+  eCAL::SServiceId service_id_received;
+  auto event_callback = [&](const eCAL::SServiceId& service_id_, const struct eCAL::SClientEventCallbackData& data_)
     {
       switch (data_.type)
       {
@@ -111,6 +112,7 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
 #if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
 #endif
+        service_id_received = service_id_;
         event_connected_fired++;
         break;
       case eCAL::eClientEvent::disconnected:
@@ -135,16 +137,21 @@ TEST(core_cpp_clientserver, ClientConnectEvent)
   // create server
   {
     eCAL::CServiceServer server1("service");
+    auto server1_id = server1.GetServiceId();
 
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
 
+    EXPECT_EQ(server1_id, service_id_received);
+
     eCAL::CServiceServer server2("service");
+    auto server2_id = server2.GetServiceId();
 
     event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
+    EXPECT_EQ(server2_id, service_id_received);
   }
 
   // wait for disconnection
@@ -164,7 +171,8 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // server event callback for connect events
   atomic_signalable<int> event_connected_fired   (0);
   atomic_signalable<int> event_disconnected_fired(0);
-  auto event_callback = [&](const eCAL::SServiceId& /*service_id_*/, const struct eCAL::SServerEventCallbackData& data_) -> void
+  eCAL::SServiceId service_id_received;
+  auto event_callback = [&](const eCAL::SServiceId& service_id_, const struct eCAL::SServerEventCallbackData& data_) -> void
     {
       switch (data_.type)
       {
@@ -172,6 +180,7 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
 #if DO_LOGGING
         std::cout << "event connected fired" << std::endl;
 #endif
+        service_id_received = service_id_;
         event_connected_fired++;
         break;
       case eCAL::eServerEvent::disconnected:
@@ -196,18 +205,22 @@ TEST(core_cpp_clientserver, ServerConnectEvent)
   // create clients
   {
     eCAL::CServiceClient client1("service");
+    auto client1_id = client1.GetServiceId();
 
     // one client connected, no client disconnected
     event_connected_fired.wait_for([](int v) { return v >= 1; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(1, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
+    EXPECT_EQ(client1_id, service_id_received);
 
     eCAL::CServiceClient client2("service");
+    auto client2_id = client2.GetServiceId();
 
     // two clients connected, no client disconnected
-    event_disconnected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
+    event_connected_fired.wait_for([](int v) { return v >= 2; }, std::chrono::milliseconds(3 * CMN_REGISTRATION_REFRESH_MS));
     EXPECT_EQ(2, event_connected_fired.get());
     EXPECT_EQ(0, event_disconnected_fired.get());
+    EXPECT_EQ(client2_id, service_id_received);
   }
 
   // two clients connected, two clients disconnected

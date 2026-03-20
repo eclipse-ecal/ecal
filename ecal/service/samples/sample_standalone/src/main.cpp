@@ -52,7 +52,7 @@ int main(int /*argc*/, char** /*argv*/)
   // This callback will be called, when a client calls the service.
   // It is responsible for filling the response object.
   auto server_service_callback
-          = [](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
+          = [](std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> void
             {
                 *response = "Response on \"" + *request + "\"";
             };
@@ -70,7 +70,7 @@ int main(int /*argc*/, char** /*argv*/)
             };
 
   // Event callbacks (empty)
-  auto server_event_callback = [](ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
+  auto server_event_callback = [](std::uint64_t /*session_id*/, ecal_service::ServerEventType /*event*/, const std::string& /*message*/) {};
   auto client_event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) {};
 
   // Synchronous Callback Executor

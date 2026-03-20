@@ -32,8 +32,8 @@ namespace ecal_service
     Disconnected,       //!< The connection to a client has been closed for any reason.
   };
 
-  using ServerServiceCallbackT                  = std::function<void(const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
-  using ServerEventCallbackT                    = std::function<void(ServerEventType, const std::string&)>;
+  using ServerServiceCallbackT                  = std::function<void(std::uint64_t session_id, const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)>;
+  using ServerEventCallbackT                    = std::function<void(std::uint64_t session_id, ServerEventType, const std::string&)>;
 
   /**
    * @brief A function that posts a task to the service callback executor.

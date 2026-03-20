@@ -38,6 +38,8 @@
 
 namespace ecal_service
 {
+  // Define the static session-id counter (shared across all server sessions in this process)
+  std::atomic<std::uint64_t> ServerSessionBase::next_session_id_{1};
   ///////////////////////////////////////////
   // Constructor, Destructor, Create
   ///////////////////////////////////////////
