@@ -25,6 +25,7 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <ecal/config/service.h>
 #include <chrono>
 #include <cstdint>
 #include <cstring>
@@ -285,13 +286,15 @@ namespace eCAL
           // Post a timeout fallback.  After the deadline, if the identity
           // call has not arrived yet (old/pre-change client), we fire
           // Connected with an empty placeholder — matching the old behavior.
+          const auto timeout_ms = eCAL::GetConfiguration().service.server_client_id_timeout_ms;
           auto threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool();
           if (threadpool)
           {
             threadpool->Post(
-              [weak_me, session_id]()
+              [weak_me, session_id, timeout_ms]()
               {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                if (timeout_ms > 0)
+                  std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms));
                 auto me2 = weak_me.lock();
                 if (!me2) return;
 

@@ -377,6 +377,14 @@ namespace eCAL
       ss << R"(      # UDP Port for sending logging data)"                                                                          << "\n";
       ss << R"(      port: )"                                         << config_.logging.receiver.udp_config.port                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
+      ss << R"()"                                                                                                                   << "\n";
+      ss << R"(# Service configuration)"                                                                                            << "\n";
+      ss << R"(service:)"                                                                                                           << "\n";
+      ss << R"(  # Timeout in ms to wait for the client to send its entity ID after connecting.)"                                   << "\n";
+      ss << R"(  # If the client does not send its entity ID within this time, the server will)"                                    << "\n";
+      ss << R"(  # use a placeholder. Set to 0 to disable waiting (old behavior). Default: 1000)"                                   << "\n";
+      ss << R"(  server_client_id_timeout_ms: )"                     << config_.service.server_client_id_timeout_ms                 << "\n";
+      ss << R"()"                                                                                                                   << "\n";
     
       return ss;
     }

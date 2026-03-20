@@ -356,7 +356,21 @@ namespace YAML
     static Node encode(const eCAL::Configuration& config_);
 
     static bool decode(const Node& node_, eCAL::Configuration& config_);
-  };  
+  };
+
+  /*
+        ____           _          
+       / __/__ _____  __(_)_______ 
+      _\ \/ -_) __/ |/ / / __/ -_)
+     /___/\__/_/  |___/_\__/\__/ 
+  */
+  template<>
+  struct convert<eCAL::Service::Configuration>
+  {
+    static Node encode(const eCAL::Service::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Service::Configuration& config_);
+  };
 }
 
 #endif // CONFIGURATION_TO_YAML_H
