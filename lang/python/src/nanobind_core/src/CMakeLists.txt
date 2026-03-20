@@ -82,7 +82,8 @@ nanobind_add_module(
   # Target the stable ABI for Python 3.12+, which reduces
   # the number of binary wheels that must be built. This
   # does nothing on older Python versions
-  STABLE_ABI
+  # -> Using stable API seems to break the python packages (at least on unix), see #2563 
+  # STABLE_ABI
 
   # Source code goes here
   ${nanobind_sources}
