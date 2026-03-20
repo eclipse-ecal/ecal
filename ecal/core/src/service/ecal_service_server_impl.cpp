@@ -25,8 +25,13 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <ecal/config/service.h>
+#include <chrono>
+#include <cstdint>
+#include <cstring>
 #include <functional>
 #include <string>
+#include <thread>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
@@ -264,26 +269,78 @@ namespace eCAL
 
     // Create callback functions
     const ecal_service::Server::EventCallbackT event_callback =
-      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](ecal_service::ServerEventType event, const std::string& message)
+      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](std::uint64_t session_id, ecal_service::ServerEventType event, const std::string& message)
       {
-        if (auto me = weak_me.lock())
+        auto me = weak_me.lock();
+        if (!me) return;
+
+        if (event == ecal_service::ServerEventType::Connected)
         {
-          SServiceId service_id;
-          service_id.service_name = me->m_service_name;
-          service_id.service_id.entity_id = me->m_server_id;
-          // TODO: Also fill process ID and hostname?
-          me->NotifyEventCallback(service_id, event == ecal_service::ServerEventType::Connected
-            ? eServerEvent::connected
-            : eServerEvent::disconnected, message);
+          // Add to pending set — we are now waiting for the client to send
+          // its identity via __ecal_client_id__.
+          {
+            const std::lock_guard<std::mutex> lock(me->m_connected_clients_mutex);
+            me->m_pending_identity_sessions.insert(session_id);
+          }
+
+          // Post a timeout fallback.  After the deadline, if the identity
+          // call has not arrived yet (old/pre-change client), we fire
+          // Connected with an empty placeholder — matching the old behavior.
+          const auto timeout_ms = eCAL::GetConfiguration().service.server_client_id_timeout_ms;
+          auto threadpool = eCAL::service::ServiceManager::instance()->get_dynamic_threadpool();
+          if (threadpool)
+          {
+            threadpool->Post(
+              [weak_me, session_id, timeout_ms]()
+              {
+                if (timeout_ms > 0)
+                  std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms));
+                auto me2 = weak_me.lock();
+                if (!me2) return;
+
+                // Win the race: only fire if the entry is still present.
+                bool won = false;
+                {
+                  const std::lock_guard<std::mutex> lock(me2->m_connected_clients_mutex);
+                  won = (me2->m_pending_identity_sessions.erase(session_id) > 0);
+                }
+                if (won)
+                {
+                  // Old client — identity call never arrived. Use empty placeholder.
+                  SServiceId placeholder;
+                  placeholder.service_name = me2->m_service_name;
+                  me2->NotifyEventCallback(placeholder, eServerEvent::connected, "");
+                }
+              });
+          }
+        }
+        else // Disconnected
+        {
+          SServiceId client_id;
+          {
+            const std::lock_guard<std::mutex> lock(me->m_connected_clients_mutex);
+            auto it = me->m_connected_clients.find(session_id);
+            if (it != me->m_connected_clients.end())
+            {
+              client_id = it->second;
+              me->m_connected_clients.erase(it);
+            }
+            else
+            {
+              // Client disconnected before the identity call was received (e.g. immediate drop).
+              // Report the server's own service-id as a best-effort placeholder.
+              client_id.service_name = me->m_service_name;
+            }
+          }
+          me->NotifyEventCallback(client_id, eServerEvent::disconnected, message);
         }
       };
 
     const ecal_service::Server::ServiceCallbackT service_callback =
-      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response) -> int
+      [weak_me = std::weak_ptr<CServiceServerImpl>(shared_from_this())](std::uint64_t session_id, const std::shared_ptr<const std::string>& request, const std::shared_ptr<std::string>& response)
       {
         if (auto me = weak_me.lock())
-          return me->RequestCallback(*request, *response);
-        return -1;
+          me->RequestCallback(session_id, *request, *response);
       };
 
     // Start service
@@ -420,7 +477,7 @@ namespace eCAL
     return ecal_reg_sample;
   }
 
-  int CServiceServerImpl::RequestCallback(const std::string & request_pb_, std::string & response_pb_)
+  int CServiceServerImpl::RequestCallback(std::uint64_t session_id_, const std::string & request_pb_, std::string & response_pb_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::RequestCallback: Processing request callback for: " + m_service_name);
@@ -456,6 +513,45 @@ namespace eCAL
     SMethod method;
     const auto& request_header = request.header;
     response_header.method_name = request_header.method_name;
+
+    // Intercept the internal identity-announcement call sent by CServiceClientImpl
+    // right after every TCP connection is established.
+    if (request_header.method_name == "__ecal_client_id__")
+    {
+      const std::string& payload = request.request;
+      SServiceId client_id;
+      client_id.service_name = m_service_name;
+
+      if (payload.size() >= sizeof(std::uint64_t) + sizeof(std::int32_t))
+      {
+        std::uint64_t entity_id  = 0;
+        std::int32_t  process_id = 0;
+        std::memcpy(&entity_id,  payload.data(),                         sizeof(entity_id));
+        std::memcpy(&process_id, payload.data() + sizeof(entity_id),     sizeof(process_id));
+        client_id.service_id.entity_id  = entity_id;
+        client_id.service_id.process_id = process_id;
+        client_id.service_id.host_name  = payload.substr(sizeof(entity_id) + sizeof(process_id));
+      }
+
+      // Win the race: only fire Connected if we are the first to erase the
+      // pending entry.  If the timeout task already fired (very slow identity
+      // call, overloaded system), we still store the real identity for the
+      // Disconnected event but we do NOT fire a second Connected.
+      bool won = false;
+      {
+        const std::lock_guard<std::mutex> lock(m_connected_clients_mutex);
+        won = (m_pending_identity_sessions.erase(session_id_) > 0);
+        m_connected_clients[session_id_] = client_id;
+      }
+
+      if (won)
+        NotifyEventCallback(client_id, eServerEvent::connected, "");
+
+      response_header.state = Service::eMethodCallState::executed;
+      SerializeToBuffer(response, response_pb_);
+      return 0;
+    }
+
     {
       const std::lock_guard<std::mutex> lock(m_method_map_mutex);
       auto requested_method_iterator = m_method_map.find(request_header.method_name);
