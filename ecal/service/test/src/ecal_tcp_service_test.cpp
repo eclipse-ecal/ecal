@@ -517,7 +517,7 @@ TEST(ecal_service, CallbacksConnectDisconnect_ClientDisconnectsFirst) // NOLINT
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
             = []
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+              (std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
               {};
 
     const ecal_service::Server::EventCallbackT server_event_callback
@@ -819,7 +819,7 @@ TEST(ecal_service, CommunicationAndCallbacks_ServerDisconnectsFirst) // NOLINT
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+              (std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
               {
                 num_server_service_callback_called++;
               };
@@ -1291,22 +1291,26 @@ TEST(ecal_service, Callback_ServerAndClientManagers) // NOLINT
     }
 
     const ecal_service::Server::ServiceCallbackT server_service_callback =
-        [](const auto &, const auto &) -> void {};
+        [](std::uint64_t, auto &, const auto &) -> void {};
     const ecal_service::ClientSession::ResponseCallbackT client_response_callback =
         [](const auto &, const auto &) -> void {};
 
     // Lambda function that on call returns another lambda function that will increment the given atomic_signalable
-    auto increment_atomic_signalable = [](auto &atomic_signalable) -> auto {
-      return [&atomic_signalable](auto, const auto &) -> void { atomic_signalable++; };
+    auto increment_atomic_signalable_server = [](auto &atomic_signalable) -> auto {
+      return [&atomic_signalable](std::uint64_t, auto, const auto &) -> void { atomic_signalable++; };
     };
 
-    auto server1 = server_manager->create_server(protocol_version, 0, server_service_callback, synchronous_server_service_callback_executor_function, increment_atomic_signalable(server1_event_callback_called));
-    auto server2 = server_manager->create_server(protocol_version, 0, server_service_callback, synchronous_server_service_callback_executor_function, increment_atomic_signalable(server2_event_callback_called));
+    auto increment_atomic_signalable_client = [](auto &atomic_signalable) -> auto {
+      return [&atomic_signalable](const auto &, const auto &) -> void { atomic_signalable++; };
+    };
 
-    auto client1_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable(client1_1_event_callback_called));
-    auto client1_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable(client1_2_event_callback_called));
-    auto client2_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable(client2_1_event_callback_called));
-    auto client2_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable(client2_2_event_callback_called));
+    auto server1 = server_manager->create_server(protocol_version, 0, server_service_callback, synchronous_server_service_callback_executor_function, increment_atomic_signalable_server(server1_event_callback_called));
+    auto server2 = server_manager->create_server(protocol_version, 0, server_service_callback, synchronous_server_service_callback_executor_function, increment_atomic_signalable_server(server2_event_callback_called));
+
+    auto client1_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable_client(client1_1_event_callback_called));
+    auto client1_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server1->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable_client(client1_2_event_callback_called));
+    auto client2_1 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable_client(client2_1_event_callback_called));
+    auto client2_2 = client_manager->create_client(protocol_version, {{ "127.0.0.1", server2->get_port() }}, synchronous_client_response_callback_executor_function, increment_atomic_signalable_client(client2_2_event_callback_called));
 
     // Wait for the clients to be connected
     client1_1_event_callback_called.wait_for([&](int value) { return value >= 1; }, std::chrono::seconds(5));
@@ -1406,7 +1410,7 @@ TEST(ecal_service, Callback_ServiceCallFromCallback) // NOLINT
     std::atomic<int> num_client_response_callback2_called(0);
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
-            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+            = [&num_server_service_callback_called](std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
               {
                 num_server_service_callback_called++;
               };
@@ -1482,7 +1486,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
     std::shared_ptr<ecal_service::ClientSession> client;
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
-              = [&num_server_service_callback_called, &server](const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+              = [&num_server_service_callback_called, &server](std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
                 {
                   if (server)
                   {
@@ -1625,7 +1629,7 @@ TEST(ecal_service, BackupHost)
     atomic_signalable<int> num_client_event_callback_called   (0);
     
     const ecal_service::Server::ServiceCallbackT server_service_callback
-            = [&num_server_service_callback_called](const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
+            = [&num_server_service_callback_called](std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& /*response*/) -> void
             {
               num_server_service_callback_called++;
             };
@@ -1801,7 +1805,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackServerHasDisconnected) // NOLINT
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
+              (std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
               {
                 *response = "Server running!";
                 num_server_service_callback_called++; 
@@ -1961,7 +1965,7 @@ TEST(ecal_service, ErrorCallback_ErrorCallbackClientDisconnects) // NOLINT
 
     const ecal_service::Server::ServiceCallbackT server_service_callback
             = [&num_server_service_callback_called]
-              (const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
+              (std::uint64_t /*session_id*/, const std::shared_ptr<const std::string>& /*request*/, const std::shared_ptr<std::string>& response) -> void
               {
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 *response = "Server running!";
