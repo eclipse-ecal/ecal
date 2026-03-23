@@ -27,6 +27,7 @@
 #include "clr_registration.h"
 #include "clr_logging.h"
 #include "clr_publisher.h"
+#include "clr_service.h"
 #include "clr_subscriber.h"
 #include "clr_time.h"
 #include "clr_transport_layer.h"
@@ -108,6 +109,11 @@ namespace Eclipse {
           property LoggingConfiguration^ Logging;
 
           /**
+           * @brief Gets or sets the service configuration.
+           */
+          property ServiceConfiguration^ Service;
+
+          /**
            * @brief Gets or sets the communication mode.
            */
           property eCommunicationMode CommunicationMode;
@@ -124,6 +130,7 @@ namespace Eclipse {
             TimeSync       = gcnew TimeConfiguration(config.timesync);
             Application    = gcnew ApplicationConfiguration(config.application);
             Logging        = gcnew LoggingConfiguration(config.logging);
+            Service        = gcnew ServiceConfiguration(config.service);
             CommunicationMode = CommunicationModeHelper::FromNative(config.communication_mode);
 
             this->native_config = new ::eCAL::Configuration(config);
@@ -142,6 +149,7 @@ namespace Eclipse {
             TimeSync       = gcnew TimeConfiguration(native_config.timesync);
             Application    = gcnew ApplicationConfiguration(native_config.application);
             Logging        = gcnew LoggingConfiguration(native_config.logging);
+            Service        = gcnew ServiceConfiguration(native_config.service);
             CommunicationMode = CommunicationModeHelper::FromNative(native_config.communication_mode);
 
             this->native_config = new ::eCAL::Configuration(native_config);
@@ -193,6 +201,7 @@ namespace Eclipse {
             native_config_copy.timesync = TimeSync->ToNative();
             native_config_copy.application = Application->ToNative();
             native_config_copy.logging = Logging->ToNative();
+            native_config_copy.service = Service->ToNative();
             native_config_copy.communication_mode = CommunicationModeHelper::ToNative(CommunicationMode);
             return native_config_copy;
           }
@@ -211,6 +220,7 @@ namespace Eclipse {
             TimeSync = gcnew TimeConfiguration(native_config->timesync);
             Application = gcnew ApplicationConfiguration(native_config->application);
             Logging = gcnew LoggingConfiguration(native_config->logging);
+            Service = gcnew ServiceConfiguration(native_config->service);
             CommunicationMode = CommunicationModeHelper::FromNative(native_config->communication_mode);
           }
         };

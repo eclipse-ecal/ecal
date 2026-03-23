@@ -47,6 +47,8 @@ set(nanobind_sources
   core/config/py_subscriber.h
   core/config/py_time.cpp
   core/config/py_time.h
+  core/config/py_service.cpp
+  core/config/py_service.h
   core/config/py_transport_layer.cpp
   core/config/py_transport_layer.h
   core/pubsub/py_publisher.cpp

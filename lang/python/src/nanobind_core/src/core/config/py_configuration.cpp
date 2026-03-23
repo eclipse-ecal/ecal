@@ -47,5 +47,6 @@ void AddConfigConfiguration(nanobind::module_& module)
     .def_rw("publisher", &eCAL::Configuration::publisher)
     .def_rw("timesync", &eCAL::Configuration::timesync)
     .def_rw("application", &eCAL::Configuration::application)
-    .def_rw("logging", &eCAL::Configuration::logging);
+    .def_rw("logging", &eCAL::Configuration::logging)
+    .def_rw("service", &eCAL::Configuration::service);
 }

@@ -29,6 +29,7 @@
 #include <ecal_c/config/registration.h>
 #include <ecal_c/config/logging.h>
 #include <ecal_c/config/publisher.h>
+#include <ecal_c/config/service.h>
 #include <ecal_c/config/subscriber.h>
 #include <ecal_c/config/time.h>
 #include <ecal_c/config/transport_layer.h>
@@ -52,6 +53,7 @@ typedef struct
   struct eCAL_Time_Configuration timesync;
   struct eCAL_Application_Configuration application;
   struct eCAL_Logging_Configuration logging;
+  struct eCAL_Service_Configuration service;
 
   enum eCAL_eCommunicationMode communication_mode; /*!< eCAL components communication mode:
                                                        local: local host only communication (default)

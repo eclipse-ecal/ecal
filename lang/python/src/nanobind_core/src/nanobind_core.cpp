@@ -53,6 +53,7 @@
 #include <core/config/py_logging.h>
 #include <core/config/py_publisher.h>
 #include <core/config/py_registration.h>
+#include <core/config/py_service.h>
 #include <core/config/py_subscriber.h>
 #include <core/config/py_time.h>
 #include <core/config/py_transport_layer.h>
@@ -84,6 +85,7 @@ NB_MODULE(nanobind_core, core) {
   AddConfigLogging(core);
   AddConfigPublisher(core);
   AddConfigRegistration(core);
+  AddConfigService(core);
   AddConfigSubscriber(core);
   AddConfigTime(core);
   AddConfigTransportLayer(core);

@@ -234,6 +234,11 @@ void Assign_TransportLayer_Configuration(struct eCAL_TransportLayer_Configuratio
   configuration_c_->tcp.max_reconnections = configuration_.tcp.max_reconnections;
 }
 
+void Assign_Service_Configuration(struct eCAL_Service_Configuration* configuration_c_, const eCAL::Service::Configuration& configuration_)
+{
+  configuration_c_->server_client_id_timeout_ms = configuration_.server_client_id_timeout_ms;
+}
+
 void Assign_Configuration(eCAL_Configuration* configuration_c_, const eCAL::Configuration& configuration_)
 {
   // Assign TransportLayer::Configuration
@@ -256,6 +261,9 @@ void Assign_Configuration(eCAL_Configuration* configuration_c_, const eCAL::Conf
 
   // Assign Logging::Configuration
   Assign_Logging_Configuration(&configuration_c_->logging, configuration_.logging);
+
+  // Assign Service::Configuration
+  Assign_Service_Configuration(&configuration_c_->service, configuration_.service);
 
   // Assign communication_mode
   configuration_c_->communication_mode = Convert_eCommunicationMode(configuration_.communication_mode);
@@ -457,6 +465,11 @@ void Assign_TransportLayer_Configuration(eCAL::TransportLayer::Configuration& co
   configuration_.tcp.max_reconnections = configuration_c_->tcp.max_reconnections;
 }
 
+void Assign_Service_Configuration(eCAL::Service::Configuration& configuration_, const struct eCAL_Service_Configuration* configuration_c_)
+{
+  configuration_.server_client_id_timeout_ms = configuration_c_->server_client_id_timeout_ms;
+}
+
 void Assign_Configuration(eCAL::Configuration& configuration_, const eCAL_Configuration* configuration_c_)
 {
   // Assign TransportLayer::Configuration
@@ -479,6 +492,9 @@ void Assign_Configuration(eCAL::Configuration& configuration_, const eCAL_Config
 
   // Assign Logging::Configuration
   Assign_Logging_Configuration(configuration_.logging, &configuration_c_->logging);
+
+  // Assign Service::Configuration
+  Assign_Service_Configuration(configuration_.service, &configuration_c_->service);
 
   // Assign communication_mode
   configuration_.communication_mode = Convert_eCommunicationMode(configuration_c_->communication_mode);
