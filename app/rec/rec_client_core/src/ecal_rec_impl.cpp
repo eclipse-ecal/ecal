@@ -77,33 +77,31 @@ namespace eCAL
       {
       }
 
-      ~ReceiveDispatchThread()
-      {
-      }
     protected:
       // forward data from the queue to the actual buffer
       void Loop() override
       {
-        std::array<std::shared_ptr<Frame>, 16> frames;
+        constexpr int max_items = 16;
+        std::array<std::shared_ptr<Frame>, max_items> frames;
         size_t no_items = 0;
         do
         {
           no_items = ecal_rec_impl.receive_dispatch_queue_.try_dequeue_bulk(token, frames.data(), frames.size());
+          assert(no_items < max_items);
+          
           for (size_t i = 0; i < no_items; ++i)
           {
             auto& frame = frames[i];
+
             // Add to the pre-buffer (it is thread-safe by using a mutex internally)
-            for (size_t i = 0; i < no_items; ++i)
-            {
-              ecal_rec_impl.pre_buffer_.push_back(frames[i]);
-            }
+            ecal_rec_impl.pre_buffer_.push_back(frame);
 
             {
               // Add to the currently recording job (if there is any)
-              std::shared_lock<decltype(ecal_rec_impl.recorder_mutex_)> recorder_lock(ecal_rec_impl.recorder_mutex_);
+              const std::shared_lock<decltype(ecal_rec_impl.recorder_mutex_)> recorder_lock(ecal_rec_impl.recorder_mutex_);
               if (ecal_rec_impl.recording_recorder_job_ != nullptr)
               {
-                ecal_rec_impl.recording_recorder_job_->AddFrame(std::move(frame));
+                ecal_rec_impl.recording_recorder_job_->AddFrame(frame);
               }
             }
 
@@ -162,7 +160,7 @@ namespace eCAL
 
       // Interrupt garbage collector
       garbage_collector_trigger_thread_->Interrupt();
-      garbage_collector_trigger_thread_->Join();    
+      garbage_collector_trigger_thread_->Join();
 
       {
         std::unique_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
@@ -783,7 +781,7 @@ namespace eCAL
 
     void EcalRecImpl::EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_)
     {
-      thread_local moodycamel::ProducerToken token(receive_dispatch_queue_);
+      const thread_local moodycamel::ProducerToken token(receive_dispatch_queue_);
 
       auto ecal_receive_time   = eCAL::Time::ecal_clock::now();
       auto system_receive_time = std::chrono::steady_clock::now();
