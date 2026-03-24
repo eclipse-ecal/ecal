@@ -38,6 +38,7 @@
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_writer_buffer_payload.h"
 #include "readwrite/ecal_transport_layer.h"
+#include "util/entity_id_generator.h"
 
 #include "readwrite/config/builder/shm_attribute_builder.h"
 #include "readwrite/config/builder/tcp_attribute_builder.h"
@@ -115,7 +116,7 @@ namespace eCAL
 #endif
 
     // build publisher id
-    m_publisher_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_publisher_id = eCAL::Util::GenerateUniqueEntityId();
 
     // build topic id
     m_topic_id.topic_name = m_attributes.topic_name;

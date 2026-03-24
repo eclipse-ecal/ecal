@@ -25,6 +25,7 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <chrono>
 #include <functional>
 #include <string>
 
@@ -33,6 +34,7 @@
 #include "ecal_service_singleton_manager.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
+#include "util/entity_id_generator.h"
 
 #include <ecal_service/server_manager.h>
 #include <ecal_service/server_session_types.h>
@@ -63,7 +65,7 @@ namespace eCAL
 #endif
 
     // Create service ID
-    m_server_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_server_id = eCAL::Util::GenerateUniqueEntityId();
 
     // build service id
     m_service_id.service_id.entity_id = m_server_id;

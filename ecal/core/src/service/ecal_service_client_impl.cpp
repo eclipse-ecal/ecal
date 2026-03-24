@@ -40,6 +40,7 @@
 #include "ecal_struct_service.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
+#include "util/entity_id_generator.h"
 
 #include <chrono>
 #include <cstdint>
@@ -115,7 +116,7 @@ namespace eCAL
     }
 
     // create unique client ID
-    m_client_id = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_client_id = eCAL::Util::GenerateUniqueEntityId();
 
     // create service id
     m_service_id.service_id.entity_id = m_client_id;
