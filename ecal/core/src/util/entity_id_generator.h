@@ -25,7 +25,7 @@
 
 #include <atomic>
 #include <cstdint>
-#include <string>
+#include <random>
 
 namespace eCAL
 {
@@ -33,42 +33,26 @@ namespace eCAL
   {
     namespace Internal
     {
-      inline std::uint64_t Mix64(std::uint64_t value)
+      inline std::uint32_t SecureRandom24()
       {
-        // splitmix64
-        value += 0x9E3779B97F4A7C15ULL;
-        value = (value ^ (value >> 30)) * 0xBF58476D1CE4E5B9ULL;
-        value = (value ^ (value >> 27)) * 0x94D049BB133111EBULL;
-        return value ^ (value >> 31);
-      }
+        std::random_device rd;
 
-      inline std::uint64_t HashHostName(const std::string& host_name_)
-      {
-        // 64-bit FNV-1a
-        std::uint64_t hash = 14695981039346656037ULL;
-        for (unsigned char c : host_name_)
-        {
-          hash ^= c;
-          hash *= 1099511628211ULL;
-        }
-        return hash;
+        auto random_value = rd();
+        return ((static_cast<std::uint32_t>(rd()) << 16) ^ static_cast<std::uint32_t>(rd())) & 0xFFFFFFu;
       }
+    }
 
-      inline std::uint64_t CreateProcessSeed()
-      {
-        const std::uint64_t process_id = static_cast<std::uint64_t>(eCAL::Process::GetProcessID());
-        const std::uint64_t host_hash  = HashHostName(eCAL::Process::GetHostName());
-        return Mix64((host_hash << 1) ^ process_id);
-      }
-    } // namespace Internal
 
     inline EntityIdT GenerateUniqueEntityId()
     {
-      static const std::uint64_t process_seed = Internal::CreateProcessSeed();
-      static std::atomic<std::uint64_t> process_counter{ 0 };
+      static const uint32_t process_namespace = Internal::SecureRandom24();            // 24 bit for process namespace.
+      static const uint32_t pid = eCAL::Process::GetProcessID() & 0xFFFFFFu; // 24 bit for PID.
+      static std::atomic<uint16_t> counter{ 0 };                             // 16 bit for counter
 
-      const std::uint64_t counter = process_counter.fetch_add(1, std::memory_order_relaxed);
-      return static_cast<EntityIdT>(Internal::Mix64(process_seed + counter));
+      uint64_t id =
+        (static_cast<uint64_t>(process_namespace) << 40) |
+        (static_cast<uint64_t>(pid) << 16) |
+        static_cast<uint64_t>(counter.fetch_add(1, std::memory_order_relaxed));
     }
   } // namespace Util
 } // namespace eCAL

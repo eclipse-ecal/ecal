@@ -1,58 +1,37 @@
-# ADR-0001: Entity ID generation for eCAL core communication
+# ADR: 64-bit Entity ID Generation for eCAL
 
-- **Status:** Accepted
-- **Date:** 2026-03-24
+- Status: Accepted
+- Date: 2026-03-24
+- Deciders: eCAL maintainers
+- Technical Story: Unique entity ID generation across processes, hosts, and containers with low configuration overhead
 
 ## Context
 
-eCAL entities such as publishers, subscribers, service clients, and service servers require an entity id.
-Historically, several entities used:
+eCAL needs to generate `uint64_t` entity IDs that are unique across multiple processes and execution environments.
 
-```cpp
-std::chrono::steady_clock::now().time_since_epoch().count()
-```
+The practical deployment assumptions are:
 
-This can collide when entities are created in parallel or when multiple processes start at nearly the same time.
+- usually fewer than 10 distinct hosts / containers
+- fewer than 1000 processes in the system
+- fewer than 1000 IDs per process
+
+The original implementation used:
+
+- a per-process seed derived from PID, hostname, clocks, and random entropy
+- a per-process atomic counter
+- a 64-bit mixing function to generate the final ID
+
+That design provides very low collision probability, but its uniqueness model is not obvious from the bit pattern and depends on multiple heuristics for process seed generation.
+
+We want a simpler and more explainable default that:
+- works without manual configuration
+- performs well
+- keeps the implementation compact
+- provides very low collision probability across hosts, containers, and process restarts
 
 ## Decision
 
-Introduce a private utility `eCAL::Util::GenerateUniqueEntityId()` in
-`ecal/core/src/util/entity_id_generator.h` and use it at entity-id assignment sites.
+eCAL will generate entity IDs using a structured 64-bit layout:
 
-Design:
-
-1. Build a deterministic per-process seed from:
-   - process id
-   - 64-bit FNV-1a hash of hostname
-2. Maintain a process-local `std::atomic<std::uint64_t>` counter.
-3. Generate the ID as a splitmix64 permutation over `process_seed + counter`.
-
-## Consequences
-
-### Positive
-
-- Removes direct dependency on clock ticks for id generation.
-- Guarantees uniqueness per process until counter wrap-around.
-- Distinguishes concurrently running processes by process identity `(host, pid)`.
-- Fast, lock-free generation path.
-
-### Trade-offs
-
-- System-wide uniqueness is still bounded by 64-bit space and host-hash collision probability.
-- The approach assumes hostname and pid together represent process identity during overlap.
-- Absolute global uniqueness across all time and all environments would require a coordinated allocator or larger ID space.
-
-## Alternatives considered
-
-### Clock-based IDs
-
-Rejected due to collision risk under high parallelism.
-
-### Pure random 64-bit IDs
-
-Rejected as the sole strategy because collision probability grows with the number of generated IDs (birthday paradox).
-
-### UUID / centrally coordinated ID service
-
-Not selected due to additional complexity and integration cost for core internals.
-
+```text
+[ process_namespace:24 | pid:24 | counter:16 ]
