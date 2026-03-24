@@ -1488,7 +1488,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   {
                     bool const is_connected = server->is_connected();
                     int const connection_count = server->get_connection_count();
-                    uint16_t const port = server->get_port();
+                    std::ignore = server->get_port();
 
                     EXPECT_EQ(is_connected, true);
                     EXPECT_EQ(connection_count, 1);
@@ -1504,7 +1504,7 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   {
                     bool const is_connected = server->is_connected();
                     int const connection_count = server->get_connection_count();
-                    uint16_t const port = server->get_port();
+                    std::ignore = server->get_port();
 
                     if (event == ecal_service::ServerEventType::Connected)
                     {
@@ -1528,12 +1528,12 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   if(client)
                   {
                     // We just test if those functions can be called without crashing
-                    auto address          = client->get_host();
-                    auto port             = client->get_port();
-                    auto endpoint         = client->get_remote_endpoint();
-                    auto protocol_version = client->get_accepted_protocol_version();
-                    auto queue_size       = client->get_queue_size();
-                    auto state            = client->get_state();
+                    std::ignore = client->get_host();
+                    std::ignore = client->get_port();
+                    std::ignore = client->get_remote_endpoint();
+                    std::ignore = client->get_accepted_protocol_version();
+                    std::ignore = client->get_queue_size();
+                    std::ignore = client->get_state();
                   }
 
                   num_client_response_callback_called++;
@@ -1546,12 +1546,12 @@ TEST(ecal_service, Callback_ApiCallsFromCallbacks) // NOLINT
                   if (client)
                   {
                     // We just test if those functions can be called without crashing
-                    auto address          = client->get_host();
-                    auto port             = client->get_port();
-                    auto endpoint         = client->get_remote_endpoint();
-                    auto protocol_version = client->get_accepted_protocol_version();
-                    auto queue_size       = client->get_queue_size();
-                    auto state            = client->get_state();
+                    std::ignore = client->get_host();
+                    std::ignore = client->get_port();
+                    std::ignore = client->get_remote_endpoint();
+                    std::ignore = client->get_accepted_protocol_version();
+                    std::ignore = client->get_queue_size();
+                    std::ignore = client->get_state();
                   }
 
                   num_client_event_callback_called++;

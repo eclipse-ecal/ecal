@@ -21,15 +21,7 @@
 #pragma once
 
 #include "group_tree_model.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4100 4127 4146 4505 4800 4189 4592) // disable proto warnings
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 #include "topic_tree_item.h"
 #include "group_tree_item.h"
@@ -80,7 +72,7 @@ public:
 
   QVector<QPair<int, QVariant>> getTreeItemColumnNameMapping() const;
 
-  void monitorUpdated(const eCAL::pb::Monitoring& monitoring_pb) override;
+  void monitorUpdated(const eCAL::Monitoring::SMonitoring& monitoring) override;
 
 protected:
   int mapColumnToItem(int model_column, int tree_item_type) const override;

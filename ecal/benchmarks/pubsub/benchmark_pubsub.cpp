@@ -191,10 +191,10 @@ namespace Send {
 
         // Wait for registration / matching
         std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
-        while (!publisher.GetSubscriberCount() > 0)
+        while (publisher.GetSubscriberCount() == 0)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		}
+		    }
 
         // Benchmarked section: Send data
         for (auto _ : state)
@@ -269,7 +269,7 @@ namespace Send_and_Receive {
             });
 
         std::this_thread::sleep_for(std::chrono::milliseconds(registration_delay_ms));
-        while (!publisher.GetSubscriberCount() > 0)
+        while (publisher.GetSubscriberCount() == 0)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }

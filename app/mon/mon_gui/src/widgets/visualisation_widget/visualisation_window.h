@@ -21,15 +21,7 @@
 
 #include <QMainWindow>
 #include "visualisation_widget.h"
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4146)
-#endif
-#include <ecal/core/pb/monitoring.pb.h>
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+#include <ecal/types/monitoring.h>
 
 class VisualisationWindow : public QMainWindow
 {
@@ -45,11 +37,11 @@ public:
   void restoreWindowState();
 
 signals:
-  void updateVisualizationWidget(const eCAL::pb::Monitoring & monitoring_pb);
+  void updateVisualizationWidget(const eCAL::Monitoring::SMonitoring& monitoring);
 
 public slots:
   void setParseTimeEnabled(bool enabled);
-  void updatePublishers(const eCAL::pb::Monitoring& monitoring_pb);
+  void updatePublishers(const eCAL::Monitoring::SMonitoring& monitoring);
 
 protected:
   void keyPressEvent(QKeyEvent * event);

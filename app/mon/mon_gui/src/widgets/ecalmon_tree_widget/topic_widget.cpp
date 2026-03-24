@@ -39,6 +39,17 @@
 #include <QDesktopWidget>
 #endif // QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
 
+namespace
+{
+  QString combineTopicEncodingAndType(const QString& encoding, const QString& type)
+  {
+    if (encoding.isEmpty()) return type;
+    if (type.isEmpty()) return encoding;
+
+    return encoding + ":" + type;
+  }
+}
+
 TopicWidget::TopicWidget(QWidget *parent)
   : EcalmonTreeWidget(parent)
   , parse_time_(true)
@@ -218,30 +229,36 @@ void TopicWidget::loadRegExpLists()
 
 void TopicWidget::autoSizeColumns()
 {
-  eCAL::pb::Topic example_topic_pb;
+  eCAL::Monitoring::STopic example_topic;
 
-  example_topic_pb.set_registration_clock(999999);
-  example_topic_pb.set_host_name("HOSTNAME____");
-  example_topic_pb.set_process_id(999999);
-  example_topic_pb.set_process_name("");
-  example_topic_pb.set_unit_name("ATypicalLongUnitName___");
-  example_topic_pb.set_topic_id("");
-  example_topic_pb.set_topic_name("ATypicalLongTopicName___");
-  example_topic_pb.set_direction("subscriber__");
-  example_topic_pb.mutable_datatype_information()->set_name("Enc.TypeName.Name____");
-  example_topic_pb.mutable_datatype_information()->set_encoding("encdg:");
-  //example_topic_pb.mutable_tdatatype()->set_desc("");
+  example_topic.registration_clock = 999999;
+  example_topic.host_name = "HOSTNAME____";
+  example_topic.process_id = 999999;
+  example_topic.process_name = "";
+  example_topic.unit_name = "ATypicalLongUnitName___";
+  example_topic.topic_id = 0;
+  example_topic.topic_name = "ATypicalLongTopicName___";
+  example_topic.direction = "subscriber__";
+  example_topic.datatype_information.name = "Enc.TypeName.Name____";
+  example_topic.datatype_information.encoding = "encdg:";
+  //example_topic.datatype_information.descriptor = "";
 
-  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_shm);
-  example_topic_pb.mutable_transport_layer()->Add()->set_type(eCAL::pb::eTransportLayerType::tl_ecal_udp_mc);
-  example_topic_pb.set_topic_size(999999);
-  example_topic_pb.set_connections_local(999999);
-  example_topic_pb.set_connections_external(999999);
-  example_topic_pb.set_message_drops(999999);
-  example_topic_pb.set_data_clock(99999999999);
-  example_topic_pb.set_data_frequency(999999);
+  eCAL::Monitoring::STransportLayer tl1;
+  tl1.type = eCAL::Monitoring::eTransportLayerType::shm;
+  example_topic.transport_layer.push_back(tl1);
+  
+  eCAL::Monitoring::STransportLayer tl2;
+  tl2.type = eCAL::Monitoring::eTransportLayerType::udp_mc;
+  example_topic.transport_layer.push_back(tl2);
+  
+  example_topic.topic_size = 999999;
+  example_topic.connections_local = 999999;
+  example_topic.connections_external = 999999;
+  example_topic.message_drops = 999999;
+  example_topic.data_clock = 99999999999;
+  example_topic.data_frequency = 999999;
 
-  TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic_pb);
+  TopicTreeItem* example_topic_item = new TopicTreeItem(example_topic);
   GroupTreeItem* example_group_item = new GroupTreeItem("ATypicalLongGroupName___", "", "", QVariant(), "");
 
   topic_tree_model_->insertItem(example_group_item);
@@ -311,7 +328,7 @@ void TopicWidget::openReflectionWindowForSelection()
         QString topic_encoding = topic_item->data(TopicTreeItem::Columns::TENCODING, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
         QString topic_type = topic_item->data(TopicTreeItem::Columns::TTYPE, (Qt::ItemDataRole)ItemDataRoles::RawDataRole).toString(); //-V1016
 
-        QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString())) };
+        QString combined_topic_encoding_type{ combineTopicEncodingAndType(topic_encoding, topic_type) };
 
         // Create a new Reflection Window
         VisualisationWindow* visualisation_window = new VisualisationWindow(topic_name, combined_topic_encoding_type);
@@ -348,7 +365,7 @@ void TopicWidget::fillContextMenu(QMenu& menu, const QList<QAbstractTreeItem*>& 
     QString topic_encoding = item->data((int)TopicTreeItem::Columns::TENCODING).toString();
     QString topic_type     = item->data((int)TopicTreeItem::Columns::TTYPE).toString();
 
-    QString combined_topic_encoding_type{ QString::fromStdString(eCAL::Util::CombinedTopicEncodingAndType(topic_encoding.toStdString(), topic_type.toStdString()))};
+    QString combined_topic_encoding_type{ combineTopicEncodingAndType(topic_encoding, topic_type) };
 
     QAction* reflection_action = new QAction(tr("Inspect topic \"") + topic_name + "\"", &menu);
     connect(reflection_action, &QAction::triggered, this, &TopicWidget::openReflectionWindowForSelection);

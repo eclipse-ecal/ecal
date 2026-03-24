@@ -173,10 +173,10 @@ Ecalmon::Ecalmon(QWidget *parent)
   monitor_update_timer_->start(1000);
 
 
-  connect(this, &Ecalmon::monitorUpdatedSignal, [this](eCAL::pb::Monitoring monitoring_pb) {topic_widget_  ->monitorUpdated(monitoring_pb);});
-  connect(this, &Ecalmon::monitorUpdatedSignal, [this](eCAL::pb::Monitoring monitoring_pb) {process_widget_->monitorUpdated(monitoring_pb); });
-  connect(this, &Ecalmon::monitorUpdatedSignal, [this](eCAL::pb::Monitoring monitoring_pb) {host_widget_   ->monitorUpdated(monitoring_pb); });
-  connect(this, &Ecalmon::monitorUpdatedSignal, [this](eCAL::pb::Monitoring monitoring_pb) {service_widget_->monitorUpdated(monitoring_pb); });
+  connect(this, &Ecalmon::monitorUpdatedSignal, [this](const eCAL::Monitoring::SMonitoring& monitoring) {topic_widget_  ->monitorUpdated(monitoring);});
+  connect(this, &Ecalmon::monitorUpdatedSignal, [this](const eCAL::Monitoring::SMonitoring& monitoring) {process_widget_->monitorUpdated(monitoring); });
+  connect(this, &Ecalmon::monitorUpdatedSignal, [this](const eCAL::Monitoring::SMonitoring& monitoring) {host_widget_   ->monitorUpdated(monitoring); });
+  connect(this, &Ecalmon::monitorUpdatedSignal, [this](const eCAL::Monitoring::SMonitoring& monitoring) {service_widget_->monitorUpdated(monitoring); });
 
   // Monitor Update Speed selection
   monitor_update_speed_group_ = new QActionGroup(this);
@@ -283,7 +283,7 @@ Ecalmon::Ecalmon(QWidget *parent)
   // Dock widgets in view menu
   createDockWidgetMenu();
 
-  connect(this, &Ecalmon::monitorUpdatedSignal, [this](eCAL::pb::Monitoring monitoring_pb){topic_widget_->monitorUpdated(monitoring_pb);});
+  connect(this, &Ecalmon::monitorUpdatedSignal, [this](const eCAL::Monitoring::SMonitoring& monitoring){topic_widget_->monitorUpdated(monitoring);});
 
   ui_.action_monitor_refresh_speed_1s->trigger();
 
@@ -347,10 +347,9 @@ void Ecalmon::updateMonitor()
 #ifndef NDEBUG
   qDebug().nospace() << "[" << metaObject()->className() << "] Updating monitor";
 #endif // NDEBUG
-  std::string monitoring_string;
-  eCAL::pb::Monitoring monitoring_pb;
+  eCAL::Monitoring::SMonitoring monitoring;
 
-  if (eCAL::Monitoring::GetMonitoring(monitoring_string) && !monitoring_string.empty() && monitoring_pb.ParseFromString(monitoring_string))
+  if (eCAL::Monitoring::GetMonitoring(monitoring))
   {
     monitor_error_counter_ = 0;
     if (error_label_->isVisible())
@@ -358,7 +357,7 @@ void Ecalmon::updateMonitor()
       error_label_->setHidden(true);
     }
 
-    emit monitorUpdatedSignal(monitoring_pb);
+    emit monitorUpdatedSignal(monitoring);
   }
   else
   {

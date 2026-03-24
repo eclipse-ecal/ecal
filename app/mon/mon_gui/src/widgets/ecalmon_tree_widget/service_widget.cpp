@@ -37,7 +37,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::SERVICE_NAME,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
   };
   setFilterColumns(filter_columns);
 
@@ -53,7 +55,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
   };
 
   QList<EcalmonTreeWidget::GroupSetting> preconfigured_group_by_settings;
@@ -85,7 +89,9 @@ ServiceWidget::ServiceWidget(QWidget *parent)
     (int)ServiceTreeModel::Columns::PROCESS_ID,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
     (int)ServiceTreeModel::Columns::HEARTBEAT,
     (int)ServiceTreeModel::Columns::CALL_COUNT,
   };
@@ -108,23 +114,23 @@ ServiceWidget::~ServiceWidget()
 
 void ServiceWidget::autoSizeColumns()
 {
-  eCAL::pb::Service example_service_pb;
+  eCAL::Monitoring::SServer example_service;
 
-  example_service_pb.set_registration_clock(999999);
-  example_service_pb.set_host_name("CARPC00____");
-  example_service_pb.set_process_name("");
-  example_service_pb.set_unit_name("eCALRPCService____");
-  example_service_pb.set_process_id(999999);
-  example_service_pb.set_service_name("eCALRPCService____");
-  example_service_pb.set_tcp_port_v1(999999);
+  example_service.registration_clock = 999999;
+  example_service.host_name = "CARPC00____";
+  example_service.process_name = "";
+  example_service.unit_name = "eCALRPCService____";
+  example_service.process_id = 999999;
+  example_service.service_name = "eCALRPCService____";
+  example_service.tcp_port_v1 = 999999;
 
-  eCAL::pb::Method* method = example_service_pb.mutable_methods()->Add();
-  method->set_method_name("ShutdownProcessName____");
-  method->set_req_type("ShutdownProcessNameRequest____");
-  method->set_resp_type("ShutdownProcessNameResponse____");
-  method->set_call_count(999999);
+  eCAL::Monitoring::SMethod example_method;
+  example_method.method_name = "ShutdownProcessName____";
+  example_method.request_datatype_information.name = "ShutdownProcessNameRequest____";
+  example_method.response_datatype_information.name = "ShutdownProcessNameResponse____";
+  example_method.call_count = 999999;
 
-  auto* example_topic_item = new ServiceTreeItem<eCAL::pb::Service>(example_service_pb, *method);
+  auto* example_topic_item = new ServiceTreeItem<eCAL::Monitoring::SServer>(example_service, example_method);
   GroupTreeItem* example_group_item = new GroupTreeItem("__ / eCALRPCService____", "", "", QVariant(), "");
 
   service_tree_model_->insertItem(example_topic_item);
@@ -140,7 +146,9 @@ void ServiceWidget::autoSizeColumns()
     (int)ServiceTreeModel::Columns::TCP_PORT,
     (int)ServiceTreeModel::Columns::METHOD_NAME,
     (int)ServiceTreeModel::Columns::METHOD_REQUEST_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_REQUEST_ENCODING,
     (int)ServiceTreeModel::Columns::METHOD_RESPONSE_TYPE,
+    (int)ServiceTreeModel::Columns::METHOD_RESPONSE_ENCODING,
     (int)ServiceTreeModel::Columns::HEARTBEAT,
   };
 
