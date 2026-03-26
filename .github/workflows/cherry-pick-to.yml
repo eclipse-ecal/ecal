@@ -35,7 +35,7 @@ jobs:
     #   Error: The process '/usr/bin/git' failed with exit code 128
     #
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-04-10 and probably is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/5852#note_3593366
