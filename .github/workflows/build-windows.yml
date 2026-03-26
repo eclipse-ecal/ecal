@@ -35,7 +35,7 @@ jobs:
       run: choco install ccache --version=4.11.2
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules:  'false'
         fetch-depth: 0
@@ -244,7 +244,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/_build/complete/_deploy/
 
     - name: Upload Windows setup
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy/*.exe
@@ -260,7 +260,7 @@ jobs:
 
     # Download the installer from the previous job
     - name: Download Windows setup
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: unsigned-setup
         path: ${{ runner.workspace }}/_build/complete/_deploy
@@ -442,7 +442,7 @@ jobs:
 
     - name: Upload Windows setup signed on Eclipse CI
       if: env.IS_DOWNLOAD_AVAILABLE == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ env.ARTIFACT_NAME }}
         path: ${{ runner.workspace }}/_build/complete/_deploy/${{ env.ASSET_NAME }}
