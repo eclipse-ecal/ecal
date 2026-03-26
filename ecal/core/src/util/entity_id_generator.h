@@ -33,7 +33,7 @@ namespace eCAL
   {
     namespace Internal
     {
-      inline std::uint32_t SecureRandom24()
+      inline std::uint32_t Random24BitUint()
       {
         std::random_device rd;
 
@@ -45,14 +45,16 @@ namespace eCAL
 
     inline EntityIdT GenerateUniqueEntityId()
     {
-      static const uint32_t process_namespace = Internal::SecureRandom24();            // 24 bit for process namespace.
+      static const uint32_t process_namespace = Internal::Random24BitUint(); // 24 bit for process namespace.
       static const uint32_t pid = eCAL::Process::GetProcessID() & 0xFFFFFFu; // 24 bit for PID.
       static std::atomic<uint16_t> counter{ 0 };                             // 16 bit for counter
 
-      uint64_t id =
+      const EntityIdT id =
         (static_cast<uint64_t>(process_namespace) << 40) |
         (static_cast<uint64_t>(pid) << 16) |
         static_cast<uint64_t>(counter.fetch_add(1, std::memory_order_relaxed));
+
+      return id;
     }
   } // namespace Util
 } // namespace eCAL
