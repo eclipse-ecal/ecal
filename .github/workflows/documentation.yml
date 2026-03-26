@@ -39,7 +39,7 @@ jobs:
         sudo apt-get install ninja-build doxygen graphviz libprotobuf-dev libprotoc-dev protobuf-compiler libhdf5-dev
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules:  'false'
         fetch-depth: 0
@@ -120,7 +120,7 @@ jobs:
         zip -r ${{ runner.workspace }}/_build/doc/html.zip .
 
     - name: Upload Documentation as Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: documentation
         path: ${{ runner.workspace }}/_build/doc/html.zip
