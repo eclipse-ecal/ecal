@@ -20,6 +20,7 @@
 find_package(Threads REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(concurrentqueue REQUIRED)
 
 if (ECAL_USE_CURL)
     find_package(CURL REQUIRED)
@@ -106,6 +107,7 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     eCAL::ecal-utils
     EcalParser
+    concurrentqueue::concurrentqueue
 )
 
 if(ECAL_USE_CURL)
