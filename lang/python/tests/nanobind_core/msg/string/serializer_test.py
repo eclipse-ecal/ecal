@@ -38,13 +38,12 @@ def test_serialize_string():
     serializer = Serializer(DataTypeInfo)
 
     assert serializer.serialize("") == b""
-    assert serializer.serialize("abc") == b"abc"
+    assert serializer.serialize("eCAL is great!") == b"eCAL is great!"
 
-
-def test_serialize_string():
+def test_deserialize_string():
     deserializer = Serializer(DataTypeInfo)
 
     assert deserializer.deserialize(b"", correct_datatype_info) == ""
-    assert deserializer.deserialize(b"abc", correct_datatype_info) == "abc"
+    assert deserializer.deserialize(b"eCAL is great!", correct_datatype_info) == "eCAL is great!"
 
     #see that decoding something which cannot be decoded throws an Deserialization error
