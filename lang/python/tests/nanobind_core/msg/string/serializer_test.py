@@ -20,7 +20,21 @@ import pytest
 import time
 from typing import Tuple
 from ecal.msg.string.serializer import Serializer
-from ecal.msg.common.serializer import DataTypeInfo
+
+class DataTypeInfo(object):
+    descriptor: bytes
+    encoding: str
+    name: str
+    
+    def __init__(self, name: str = "", encoding: str = "", descriptor: bytes = b"") -> None:
+        self.name = name
+        self.encoding = encoding
+        self.descriptor = descriptor
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, DataTypeInfo):
+            return NotImplemented
+        return self.name == other.name and self.encoding == other.encoding and self.descriptor == other.descriptor
 
 correct_datatype_info = DataTypeInfo(name = "string", encoding = "utf-8")
 incorrect_datatype_info = DataTypeInfo(name = "other", encoding = "utf-8")
