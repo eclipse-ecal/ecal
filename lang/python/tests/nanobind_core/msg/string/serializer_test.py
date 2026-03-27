@@ -27,7 +27,7 @@ incorrect_datatype_info = DataTypeInfo(name = "other", encoding = "utf-8")
 
 def test_datatype_information():
     serializer = Serializer(DataTypeInfo)
-    assert serializer.get_data_type_information == correct_datatype_info
+    assert serializer.get_data_type_information() == correct_datatype_info
 
 def test_accepts_datatype_information():
     serializer = Serializer(DataTypeInfo)   
@@ -44,7 +44,7 @@ def test_serialize_string():
 def test_serialize_string():
     deserializer = Serializer(DataTypeInfo)
 
-    assert deserializer.deserialize(b"") == ""
-    assert deserializer.deserialize(b"abc") == "abc"
+    assert deserializer.deserialize(b"", correct_datatype_info) == ""
+    assert deserializer.deserialize(b"abc", correct_datatype_info) == "abc"
 
     #see that decoding something which cannot be decoded throws an Deserialization error
