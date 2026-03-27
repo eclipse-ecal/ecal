@@ -38,6 +38,7 @@
 #include "readwrite/ecal_writer_base.h"
 #include "readwrite/ecal_writer_buffer_payload.h"
 #include "readwrite/ecal_transport_layer.h"
+#include "util/entity_id_generator.h"
 
 #include "readwrite/config/builder/shm_attribute_builder.h"
 #include "readwrite/config/builder/tcp_attribute_builder.h"
@@ -104,7 +105,8 @@ namespace
 namespace eCAL
 {
   CPublisherImpl::CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, SPublisherGlobalContext global_context_)
-    : m_topic_info(topic_info_)
+    : m_publisher_id(eCAL::Util::GenerateUniqueEntityId())
+    , m_topic_info(topic_info_)
     , m_attributes(attr_)
     , m_frequency_calculator(3.0f)
     , m_created(false)
@@ -113,9 +115,6 @@ namespace eCAL
 #ifndef NDEBUG
     eCAL::Logging::Log(Logging::log_level_debug2, m_attributes.topic_name + "::CPublisherImpl::Constructor");
 #endif
-
-    // build publisher id
-    m_publisher_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // build topic id
     m_topic_id.topic_name = m_attributes.topic_name;
