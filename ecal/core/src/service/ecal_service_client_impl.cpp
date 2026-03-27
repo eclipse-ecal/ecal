@@ -103,7 +103,9 @@ namespace eCAL
   // Constructor: Initializes client ID, method call counts, and registers the client
   CServiceClientImpl::CServiceClientImpl(
       const std::string & service_name_, const ServiceMethodInformationSetT & method_information_set_, const ClientEventCallbackT & event_callback_)
-      : m_service_name(service_name_), m_method_information_set(method_information_set_)
+      : m_service_name(service_name_)
+      , m_client_id(eCAL::Util::GenerateUniqueEntityId())
+      , m_method_information_set(method_information_set_)
   {
 #ifndef NDEBUG
     eCAL::Logging::Log(eCAL::Logging::log_level_debug2, "CServiceClientImpl::CServiceClientImpl: Initializing service client for: " + service_name_);
@@ -114,9 +116,6 @@ namespace eCAL
     {
       m_method_call_count_map[method_information.method_name] = 0;
     }
-
-    // create unique client ID
-    m_client_id = eCAL::Util::GenerateUniqueEntityId();
 
     // create service id
     m_service_id.service_id.entity_id = m_client_id;

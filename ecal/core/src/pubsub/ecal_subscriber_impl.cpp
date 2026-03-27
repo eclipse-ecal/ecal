@@ -72,6 +72,7 @@ namespace eCAL
   // CSubscriberImpl
   ////////////////////////////////////////
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_, SSubscriberGlobalContext global_context_) :
+                 m_subscriber_id(eCAL::Util::GenerateUniqueEntityId()),
                  m_topic_info(topic_info_),
                  m_topic_size(0),
                  m_receive_time(0),
@@ -85,9 +86,6 @@ namespace eCAL
     // log it
     eCAL::Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
-
-    // build subscriber id
-    m_subscriber_id = eCAL::Util::GenerateUniqueEntityId();
 
     // build topic id
     m_topic_id.topic_name = m_attributes.topic_name;

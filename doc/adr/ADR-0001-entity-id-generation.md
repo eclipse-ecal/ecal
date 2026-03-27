@@ -3,35 +3,29 @@
 - Status: Accepted
 - Date: 2026-03-24
 - Deciders: eCAL maintainers
-- Technical Story: Unique entity ID generation across processes, hosts, and containers with low configuration overhead
+- Technical Story: Unique entity ID generation
 
 ## Context
 
 eCAL needs to generate `uint64_t` entity IDs that are unique across multiple processes and execution environments.
+The original implementation used only the system timestamp, so there was a collision risk, if many processes / entities are started simultaneously.
 
 The practical deployment assumptions are:
-
 - usually fewer than 10 distinct hosts / containers
-- fewer than 1000 processes in the system
-- fewer than 1000 IDs per process
+- usually fewer than 1000 processes in the system
+- usually fewer than 10000 IDs per process
 
-The original implementation used:
-
-- a per-process seed derived from PID, hostname, clocks, and random entropy
-- a per-process atomic counter
-- a 64-bit mixing function to generate the final ID
-
-That design provides very low collision probability, but its uniqueness model is not obvious from the bit pattern and depends on multiple heuristics for process seed generation.
-
-We want a simpler and more explainable default that:
-- works without manual configuration
-- performs well
-- keeps the implementation compact
-- provides very low collision probability across hosts, containers, and process restarts
+However, processes may not coordinate among themselves, so an algorithm with a low enough collision propability needs to be selected
 
 ## Decision
 
 eCAL will generate entity IDs using a structured 64-bit layout:
 
 ```text
-[ process_namespace:24 | pid:24 | counter:16 ]
+[ pid:24 + process_namespace:24 + counter:16 ]
+```
+
+- 24 bit PID: PID may be up to 22 bit on Unix systems (per configuration), on Windows systems they are usually numbers < 2^16, although the type returned by the OS is uint32_t
+- 24 bit Process namespace: PID is only guaranteed to be unique within one host. This is why a random 24 bit value for the process namespace is introduced
+- 16 bit Counter: Unique per process and incrementing. The type of the counter however is larger, and will "leak" into the process namespace if it's higher than 2^16.
+
