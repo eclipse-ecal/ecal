@@ -18,16 +18,13 @@
 
 import pytest
 import ecal.nanobind_core as ecal_core
-
-# get constants from git???
-#ECAL_VERSION = "v6.0.0-nightly-52-g063aa0199-dirty"
-#ECAL_DATE = "24.05.2024"
-ECAL_VERSION_MAJOR = 6
-ECAL_VERSION_MINOR = 0
-ECAL_VERSION_PATCH = 0
-
+from packaging import version as packaging_version
+from importlib.metadata import version as importlib_version, PackageNotFoundError
 
 def test_get_version():
+    ecal_package_version = packaging_version.parse(importlib_version("eclipse_ecal"))
+    ecal_package_version.major
+
     # Get eCAL version string
     ecal_core.get_version_string()
 
@@ -36,9 +33,9 @@ def test_get_version():
 
     # Get eCAL version as separated integer values
     version = ecal_core.get_version()
-    assert version.major == ECAL_VERSION_MAJOR
-    assert version.minor == ECAL_VERSION_MINOR
-    assert version.patch == ECAL_VERSION_PATCH
+    assert version.major == ecal_package_version.major
+    assert version.minor == ecal_package_version.minor
+    assert version.patch == ecal_package_version.micro
 
 
 def test_initialize_finalize():
