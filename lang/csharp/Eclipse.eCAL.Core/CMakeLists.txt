@@ -27,6 +27,7 @@ set(ecal_clr_src
     include/config/clr_logging.h
     include/config/clr_publisher.h
     include/config/clr_registration.h
+    include/config/clr_service.h
     include/config/clr_subscriber.h
     include/config/clr_time.h
     include/config/clr_transport_layer.h

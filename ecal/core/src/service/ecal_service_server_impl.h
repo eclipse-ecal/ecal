@@ -35,6 +35,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <string>
 
 namespace eCAL
@@ -90,7 +91,7 @@ namespace eCAL
     Registration::Sample GetUnregistrationSample();
 
     // Request and event callback methods
-    int RequestCallback(const std::string& request_pb_, std::string& response_pb_);
+    int RequestCallback(std::uint64_t session_id_, const std::string& request_pb_, std::string& response_pb_);
     void NotifyEventCallback(const SServiceId& service_id_, eServerEvent event_type_, const std::string& message_);
 
     // Server version (incremented for protocol or functionality changes)
@@ -120,6 +121,19 @@ namespace eCAL
     // Event callback and synchronization
     std::mutex                             m_event_callback_mutex;
     ServerEventCallbackT                   m_event_callback;
+
+    // Connected clients: maps TCP session_id -> client SServiceId.
+    // An entry is added when the __ecal_client_id__ method is received (i.e.
+    // after the identity handshake), and removed on disconnect.
+    // m_connected_clients_mutex also protects m_pending_identity_sessions.
+    std::mutex                             m_connected_clients_mutex;
+    std::map<std::uint64_t, SServiceId>    m_connected_clients;
+
+    // Sessions that have TCP-connected but have not yet sent __ecal_client_id__.
+    // Also protected by m_connected_clients_mutex.
+    // Whichever wins the race (identity call vs. timeout task) erases the entry
+    // and fires the Connected notification; the other becomes a no-op.
+    std::set<std::uint64_t>                m_pending_identity_sessions;
 
     // Server interface
     std::shared_ptr<ecal_service::Server> m_tcp_server;

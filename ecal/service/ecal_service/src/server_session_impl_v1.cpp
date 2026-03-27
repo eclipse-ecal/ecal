@@ -250,7 +250,7 @@ namespace ecal_service
                             me->state_ = State::CONNECTED;
                               
                             // call event callback
-                            me->event_callback_(ecal_service::ServerEventType::Connected, message);
+                            me->event_callback_(me->session_id_, ecal_service::ServerEventType::Connected, message);
 
                             me->receive_service_request();
                           });
@@ -269,7 +269,7 @@ namespace ecal_service
                               me->state_ = State::FAILED;
                               
                               // call event callback
-                              me->event_callback_(ecal_service::ServerEventType::Disconnected, message);
+                              me->event_callback_(me->session_id_, ecal_service::ServerEventType::Disconnected, message);
                               me->shutdown_callback_(me);
                             }
                           , [me = shared_from_this()](const std::shared_ptr<std::vector<char>>& header_buffer, const std::shared_ptr<std::string>& payload_buffer)
@@ -286,7 +286,7 @@ namespace ecal_service
                                 me->state_ = State::FAILED;
 
                                 // call event callback
-                                me->event_callback_(ecal_service::ServerEventType::Disconnected, message);
+                                me->event_callback_(me->session_id_, ecal_service::ServerEventType::Disconnected, message);
                                 
                                 me->shutdown_callback_(me);
                                 return;
@@ -305,7 +305,7 @@ namespace ecal_service
                                 //       even if the user passes the service callback to another thread.
                                 me->post_to_service_callback_executor_([me, payload_buffer, response_buffer, dummy_work = asio::make_work_guard(me->io_context_)]()
                                                                       {
-                                                                        me->service_callback_(payload_buffer, response_buffer);
+                                                                        me->service_callback_(me->session_id_, payload_buffer, response_buffer);
 
                                                                         // Send the response to the client
                                                                         me->send_service_response(response_buffer);
@@ -336,7 +336,7 @@ namespace ecal_service
                               me->state_ = State::FAILED;
                               
                               // call event callback
-                              me->event_callback_(ecal_service::ServerEventType::Disconnected, message);
+                              me->event_callback_(me->session_id_, ecal_service::ServerEventType::Disconnected, message);
                               me->shutdown_callback_(me);
                             }
                           , [me = shared_from_this()]()

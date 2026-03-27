@@ -64,6 +64,7 @@ set(ecal_header_cimpl
     include/ecal_c/config/logging.h
     include/ecal_c/config/publisher.h
     include/ecal_c/config/registration.h
+    include/ecal_c/config/service.h
     include/ecal_c/config/subscriber.h
     include/ecal_c/config/time.h
     include/ecal_c/config/transport_layer.h

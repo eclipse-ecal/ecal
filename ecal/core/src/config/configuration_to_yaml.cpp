@@ -686,6 +686,7 @@ namespace YAML
     node["time"]               = config_.timesync;
     node["application"]        = config_.application;
     node["logging"]            = config_.logging;
+    node["service"]            = config_.service;
     node["communication_mode"] = config_.communication_mode == eCAL::eCommunicationMode::network ? "network" : "local";
     
     return node;
@@ -700,11 +701,28 @@ namespace YAML
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+    AssignValue<eCAL::Service::Configuration>(config_.service, node_, "service");
     
     std::string communication_mode;
     AssignValue<std::string>(communication_mode, node_, "communication_mode");
     config_.communication_mode = communication_mode == "network" ? eCAL::eCommunicationMode::network : eCAL::eCommunicationMode::local;
 
+    return true;
+  }
+
+  // ---------------------------------------------------------------------------
+  //  Service configuration
+  // ---------------------------------------------------------------------------
+  Node convert<eCAL::Service::Configuration>::encode(const eCAL::Service::Configuration& config_)
+  {
+    Node node;
+    node["server_client_id_timeout_ms"] = config_.server_client_id_timeout_ms;
+    return node;
+  }
+
+  bool convert<eCAL::Service::Configuration>::decode(const Node& node_, eCAL::Service::Configuration& config_)
+  {
+    AssignValue<unsigned int>(config_.server_client_id_timeout_ms, node_, "server_client_id_timeout_ms");
     return true;
   }
 }

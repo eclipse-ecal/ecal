@@ -43,6 +43,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -311,11 +312,52 @@ namespace eCAL
       auto client_manager = eCAL::service::ServiceManager::instance()->get_client_manager();
       if (client_manager == nullptr || client_manager->is_stopped()) return;
 
-      // Event callback (unused)
-      const ecal_service::ClientSession::EventCallbackT event_callback = [](ecal_service::ClientEventType /*event*/, const std::string& /*message*/) -> void
+      // Event callback: as soon as the TCP connection is established, send the client's
+      // entity ID, process ID, and host name to the server via a reserved service call.
+      // This allows the server to propagate a fully-populated SServiceId (client side) in
+      // its Connected event callback.
+      const ecal_service::ClientSession::EventCallbackT event_callback =
+        [weak_me = std::weak_ptr<CServiceClientImpl>(shared_from_this()), server_entity_id = entity_id_]
+        (ecal_service::ClientEventType event, const std::string& /*message*/) -> void
         {
-        // TODO: Replace current connect/disconnect state logic with this client event callback logic
-      };
+          if (event != ecal_service::ClientEventType::Connected) return;
+
+          auto me = weak_me.lock();
+          if (!me) return;
+
+          // Retrieve the client session we just connected on.
+          std::shared_ptr<ecal_service::ClientSession> session;
+          {
+            const std::lock_guard<std::mutex> lock(me->m_client_session_map_mutex);
+            auto it = me->m_client_session_map.find(server_entity_id);
+            if (it == me->m_client_session_map.end()) return;
+            session = it->second.client_session;
+          }
+          if (!session) return;
+
+          // Build the identity payload:
+          //   bytes [0..7]  : entity_id  (uint64_t, native byte order)
+          //   bytes [8..11] : process_id (int32_t,  native byte order)
+          //   bytes [12..]  : host_name  (UTF-8, not null-terminated)
+          std::string payload;
+          payload.resize(sizeof(std::uint64_t) + sizeof(std::int32_t));
+          const std::uint64_t eid = me->m_client_id;
+          const std::int32_t  pid = static_cast<std::int32_t>(Process::GetProcessID());
+          std::memcpy(payload.data(),               &eid, sizeof(eid));
+          std::memcpy(payload.data() + sizeof(eid), &pid, sizeof(pid));
+          payload.append(Process::GetHostName());
+
+          // Wrap in a Service::Request and serialize.
+          Service::Request identity_request;
+          identity_request.header.method_name = "__ecal_client_id__";
+          identity_request.request            = std::move(payload);
+          auto serialized = std::make_shared<std::string>();
+          SerializeToBuffer(identity_request, *serialized);
+
+          // Fire-and-forget; the server intercepts this by method name.
+          session->async_call_service(serialized,
+            [](const ecal_service::Error& /*error*/, const std::shared_ptr<std::string>& /*response*/) {});
+        };
 
       // Callback executor: Use dynamic threadpool executor
       const ecal_service::PostToClientResponseCallbackExecutorFunctionT response_callback_executor_function
