@@ -22,19 +22,28 @@ class SerializationError(Exception):
     """Exception raised (de)serializing an object"""
     pass
 
+
 class UnsupportedDatatypeError(Exception):
     """This exception is raised if a datatype cannot be deserialized by the given deserializer"""
     pass
 
+
+@typing.runtime_checkable
 class DataTypeInfo(typing.Protocol):
+    descriptor: bytes
+    encoding: str
+    name: str
+    
     def __init__(self, name: str = "", encoding: str = "", descriptor: bytes = b"") -> None:
         self.name = name
         self.encoding = encoding
         self.descriptor = descriptor
 
-    descriptor: bytes
-    encoding: str
-    name: str
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, DataTypeInfo):
+            return NotImplemented
+        return self.name == other.name and self.encoding == other.encoding and self.descriptor == other.descriptor
+
 
 T = typing.TypeVar("T")
 
