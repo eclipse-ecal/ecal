@@ -18,19 +18,41 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
+#include "entity_id_generator.h"
 
-#include <ecal/types.h>
+#include <ecal/process.h>
+
+#include <atomic>
+#include <cstdint>
+#include <random>
 
 namespace eCAL
 {
   namespace Util
   {
-    /*
-    * Generates a unique EntityIdT using a combination of the process ID, a random namespace, and an atomic counter.
-    * This function is thread-safe.
-    * For design decisions, reference ADR-0001-entity-id-generation.md in the eCAL documentation.
-    */
-    EntityIdT GenerateUniqueEntityId();
+    namespace
+    {
+      std::uint64_t Random24BitUint()
+      {
+        std::random_device rd;
+
+        return static_cast<std::uint64_t>(rd()) & 0xFFFFFFu;
+      }
+    }
+
+    EntityIdT GenerateUniqueEntityId()
+    {
+      // 24 bit for PID.
+      static const std::uint64_t pid = static_cast<std::uint64_t>(eCAL::Process::GetProcessID() & 0xFFFFFFu) << 40;
+      // 24 bit for process namespace.
+      static const std::uint64_t process_namespace = Random24BitUint() << 16;
+      // 16 bit for counter -> might leak into process_namespace once it is larger than 65535, but this is acceptable for our use case.
+      static std::atomic<std::uint64_t> counter{ 0 };
+
+      const EntityIdT id =
+        pid + process_namespace + counter.fetch_add(1, std::memory_order_relaxed);
+
+      return id;
+    }
   } // namespace Util
 } // namespace eCAL
