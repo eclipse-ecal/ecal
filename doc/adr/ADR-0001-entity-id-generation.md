@@ -7,7 +7,7 @@
 
 ## Context
 
-eCAL needs to generate `uint64_t` entity IDs that are unique across multiple processes and execution environments.
+eCAL needs to generate `uint64_t` entity IDs that are collision-resistant under the stated assumptions across multiple processes and execution environments.
 The original implementation used only the system timestamp, so there was a collision risk, if many processes / entities are started simultaneously.
 
 The practical deployment assumptions are:
@@ -15,7 +15,7 @@ The practical deployment assumptions are:
 - usually fewer than 1000 processes in the system
 - usually fewer than 10000 IDs per process
 
-However, processes may not coordinate among themselves, so an algorithm with a low enough collision propability needs to be selected
+However, processes may not coordinate among themselves, so an algorithm with a low enough collision probability needs to be selected
 
 ## Decision
 
