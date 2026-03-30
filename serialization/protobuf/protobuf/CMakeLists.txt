@@ -30,6 +30,7 @@ target_sources(protobuf_base
     TYPE HEADERS
     BASE_DIRS include
     FILES
+      include/ecal/msg/protobuf/dynamic_serializer.h
       include/ecal/msg/protobuf/ecal_proto_decoder.h
       include/ecal/msg/protobuf/ecal_proto_dyn.h
       include/ecal/msg/protobuf/ecal_proto_hlp.h
