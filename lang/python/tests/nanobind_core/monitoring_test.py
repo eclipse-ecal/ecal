@@ -22,6 +22,11 @@ from time import sleep
 import pytest
 import ecal.nanobind_core as ecal_core
 
+DataTypeInformation      = ecal_core.DataTypeInformation
+ServiceMethodInformation = ecal_core.ServiceMethodInformation
+ServiceServer            = ecal_core.ServiceServer
+ServiceClient            = ecal_core.ServiceClient
+
 UNIT_NAME = "Monitoring Python Test"
 
 @pytest.fixture(scope="module", autouse=True)
@@ -87,12 +92,12 @@ def test_current_process_fields():
     assert isinstance(current.config_file_path, str)
 
     # Integer fields must be int with reasonable values
-    assert isinstance(current.process_id, int) and current.process_id > 0
+    assert isinstance(current.process_id, int) and current.process_id > 0 and current.process_id == os.getpid()
     assert isinstance(current.registration_clock, int) and current.registration_clock > 0
     assert isinstance(current.state_severity, int)
     assert isinstance(current.state_severity_level, int)
     assert isinstance(current.time_sync_state, int)
-    assert isinstance(current.component_init_state, int)
+    assert isinstance(current.component_init_state, int) and current.component_init_state == ecal_core.monitoring.Entity.ALL
 
 
 # ---------------------------------------------------------------------------
@@ -165,7 +170,7 @@ def test_topic_fields():
     assert entry is not None
 
     assert isinstance(entry.host_name, str) and entry.host_name != ""
-    assert isinstance(entry.process_id, int) and entry.process_id > 0
+    assert isinstance(entry.process_id, int) and entry.process_id > 0 and entry.process_id == os.getpid()
     assert isinstance(entry.process_name, str)
     assert isinstance(entry.unit_name, str)
     assert isinstance(entry.topic_name, str) and entry.topic_name == TOPIC_NAME
@@ -176,6 +181,100 @@ def test_topic_fields():
     assert isinstance(entry.connections_local, int)
     assert isinstance(entry.connections_external, int)
     assert isinstance(entry.message_drops, int)
+
+
+# ---------------------------------------------------------------------------
+# Server / Client visibility
+# ---------------------------------------------------------------------------
+
+SERVICE_NAME = "monitoring_test_service"
+SERVICE_DTYPE = DataTypeInformation(name="test_type", encoding="raw", descriptor=b"")
+SERVICE_METHOD = ServiceMethodInformation(
+    method_name="echo",
+    request_type=SERVICE_DTYPE,
+    response_type=SERVICE_DTYPE,
+)
+
+
+def test_server_appears_in_monitoring():
+    """A registered ServiceServer must appear in monitoring.servers."""
+    server = ServiceServer(SERVICE_NAME, event_callback=None)
+    server.set_method_callback(SERVICE_METHOD, lambda method_info, request: (0, request))
+    sleep(2)
+
+    monitoring = ecal_core.monitoring.get_monitoring(
+        ecal_core.monitoring.Entity.SERVER
+    )
+    service_names = [s.service_name for s in monitoring.servers]
+    assert SERVICE_NAME in service_names, \
+        f"Service '{SERVICE_NAME}' not found in monitoring servers: {service_names}"
+
+
+def test_client_appears_in_monitoring():
+    """A registered ServiceClient must appear in monitoring.clients."""
+    client = ServiceClient(SERVICE_NAME, methods={SERVICE_METHOD})
+    sleep(2)
+
+    monitoring = ecal_core.monitoring.get_monitoring(
+        ecal_core.monitoring.Entity.CLIENT
+    )
+    service_names = [c.service_name for c in monitoring.clients]
+    assert SERVICE_NAME in service_names, \
+        f"Service '{SERVICE_NAME}' not found in monitoring clients: {service_names}"
+
+
+def test_server_fields():
+    """Validate all SServer field types for the registered server entry."""
+    server = ServiceServer(SERVICE_NAME, event_callback=None)
+    server.set_method_callback(SERVICE_METHOD, lambda method_info, request: (0, request))
+    sleep(2)
+
+    monitoring = ecal_core.monitoring.get_monitoring(
+        ecal_core.monitoring.Entity.SERVER
+    )
+    entry = next((s for s in monitoring.servers if s.service_name == SERVICE_NAME), None)
+    assert entry is not None
+
+    assert isinstance(entry.registration_clock, int) and entry.registration_clock > 0
+    assert isinstance(entry.host_name, str) and entry.host_name != ""
+    assert isinstance(entry.process_name, str) and entry.process_name != ""
+    assert isinstance(entry.unit_name, str)
+    assert isinstance(entry.process_id, int) and entry.process_id > 0 and entry.process_id == os.getpid()
+    assert isinstance(entry.service_name, str) and entry.service_name == SERVICE_NAME
+    assert isinstance(entry.service_id, int)
+    assert isinstance(entry.version, int)
+    assert isinstance(entry.tcp_port_v0, int)
+    assert isinstance(entry.tcp_port_v1, int)
+    assert isinstance(entry.methods, list)
+    assert len(entry.methods) == 1
+    method = entry.methods[0]
+    assert isinstance(method.method_name, str) and method.method_name == SERVICE_METHOD.method_name
+
+
+def test_client_fields():
+    """Validate all SClient field types for the registered client entry."""
+    client = ServiceClient(SERVICE_NAME, methods={SERVICE_METHOD})
+    sleep(2)
+
+    monitoring = ecal_core.monitoring.get_monitoring(
+        ecal_core.monitoring.Entity.CLIENT
+    )
+    entry = next((c for c in monitoring.clients if c.service_name == SERVICE_NAME), None)
+    assert entry is not None
+
+    assert isinstance(entry.registration_clock, int) and entry.registration_clock > 0
+    assert isinstance(entry.host_name, str) and entry.host_name != ""
+    assert isinstance(entry.process_name, str) and entry.process_name != ""
+    assert isinstance(entry.unit_name, str)
+    assert isinstance(entry.process_id, int) and entry.process_id > 0 and entry.process_id == os.getpid()
+    assert isinstance(entry.service_name, str) and entry.service_name == SERVICE_NAME
+    assert isinstance(entry.service_id, int)
+    assert isinstance(entry.version, int)
+    assert isinstance(entry.methods, list)
+    assert len(entry.methods) == 1
+    method = entry.methods[0]
+    assert isinstance(method.method_name, str) and method.method_name == SERVICE_METHOD.method_name
+
 
 
 # ---------------------------------------------------------------------------
