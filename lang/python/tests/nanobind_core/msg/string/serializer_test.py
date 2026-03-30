@@ -20,14 +20,28 @@ import pytest
 import time
 from typing import Tuple
 from ecal.msg.string.serializer import Serializer
-from ecal.msg.common.serializer import DataTypeInfo
+
+class DataTypeInfo(object):
+    descriptor: bytes
+    encoding: str
+    name: str
+    
+    def __init__(self, name: str = "", encoding: str = "", descriptor: bytes = b"") -> None:
+        self.name = name
+        self.encoding = encoding
+        self.descriptor = descriptor
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, DataTypeInfo):
+            return NotImplemented
+        return self.name == other.name and self.encoding == other.encoding and self.descriptor == other.descriptor
 
 correct_datatype_info = DataTypeInfo(name = "string", encoding = "utf-8")
 incorrect_datatype_info = DataTypeInfo(name = "other", encoding = "utf-8")
 
 def test_datatype_information():
     serializer = Serializer(DataTypeInfo)
-    assert serializer.get_data_type_information == correct_datatype_info
+    assert serializer.get_data_type_information() == correct_datatype_info
 
 def test_accepts_datatype_information():
     serializer = Serializer(DataTypeInfo)   
@@ -38,13 +52,12 @@ def test_serialize_string():
     serializer = Serializer(DataTypeInfo)
 
     assert serializer.serialize("") == b""
-    assert serializer.serialize("abc") == b"abc"
+    assert serializer.serialize("eCAL is great!") == b"eCAL is great!"
 
-
-def test_serialize_string():
+def test_deserialize_string():
     deserializer = Serializer(DataTypeInfo)
 
-    assert deserializer.deserialize(b"") == ""
-    assert deserializer.deserialize(b"abc") == "abc"
+    assert deserializer.deserialize(b"", correct_datatype_info) == ""
+    assert deserializer.deserialize(b"eCAL is great!", correct_datatype_info) == "eCAL is great!"
 
     #see that decoding something which cannot be decoded throws an Deserialization error
