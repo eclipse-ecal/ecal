@@ -34,16 +34,6 @@ void AddMonitoring(nanobind::module_& m)
 {
   nb::module_ m_monitoring = m.def_submodule("monitoring", "eCAL Monitoring related functionality");
 
-  // Enum values from Entity namespace
-  m_monitoring.attr("Publisher") = eCAL::Monitoring::Entity::Publisher;
-  m_monitoring.attr("Subscriber") = eCAL::Monitoring::Entity::Subscriber;
-  m_monitoring.attr("Server") = eCAL::Monitoring::Entity::Server;
-  m_monitoring.attr("Client") = eCAL::Monitoring::Entity::Client;
-  m_monitoring.attr("Process") = eCAL::Monitoring::Entity::Process;
-  m_monitoring.attr("Host") = eCAL::Monitoring::Entity::Host;
-  m_monitoring.attr("All") = eCAL::Monitoring::Entity::All;
-  m_monitoring.attr("None") = eCAL::Monitoring::Entity::None;
-
   // GetMonitoring: serialized string version
   m_monitoring.def("get_serialized_monitoring", [](unsigned int entities = eCAL::Monitoring::Entity::All) {
     //nb::gil_scoped_release release_gil;
