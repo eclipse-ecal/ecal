@@ -36,6 +36,7 @@
 
 #include "readwrite/ecal_reader_layer.h"
 #include "readwrite/ecal_transport_layer.h"
+#include "util/entity_id_generator.h"
 
 #if ECAL_CORE_TRANSPORT_UDP
 #include "readwrite/udp/ecal_reader_udp.h"
@@ -70,6 +71,7 @@ namespace eCAL
   // CSubscriberImpl
   ////////////////////////////////////////
   CSubscriberImpl::CSubscriberImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALReader::SAttributes& attr_) :
+                 m_subscriber_id(eCAL::Util::GenerateUniqueEntityId()),
                  m_topic_info(topic_info_),
                  m_topic_size(0),
                  m_receive_time(0),
@@ -82,9 +84,6 @@ namespace eCAL
     // log it
     Logging::Log(Logging::log_level_debug1, m_attributes.topic_name + "::CSubscriberImpl::Constructor");
 #endif
-
-    // build subscriber id
-    m_subscriber_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // build topic id
     m_topic_id.topic_name = m_attributes.topic_name;

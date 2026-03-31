@@ -24,12 +24,14 @@
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
+#include <chrono>
 
 #include "ecal_global_accessors.h"
 #include "ecal_service_server_impl.h"
 #include "ecal_service_singleton_manager.h"
 #include "registration/ecal_registration_provider.h"
 #include "serialization/ecal_serialize_service.h"
+#include "util/entity_id_generator.h"
 
 namespace eCAL
 {
@@ -50,14 +52,14 @@ namespace eCAL
 
   // Constructor
   CServiceServerImpl::CServiceServerImpl(const std::string& service_name_, const ServerEventCallbackT& event_callback_)
-    : m_service_name(service_name_), m_created(false), m_event_callback(event_callback_)
+    : m_service_name(service_name_)
+    , m_server_id(eCAL::Util::GenerateUniqueEntityId())
+    , m_created(false)
+    , m_event_callback(event_callback_)
   {
 #ifndef NDEBUG
     Logging::Log(Logging::log_level_debug2, "CServiceServerImpl::CServiceServerImpl: Initializing service server for: " + m_service_name);
 #endif
-
-    // Create service ID
-    m_server_id = std::chrono::steady_clock::now().time_since_epoch().count();
 
     // build service id
     m_service_id.service_id.entity_id = m_server_id;
