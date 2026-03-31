@@ -59,7 +59,7 @@ namespace eCAL
 
       struct Configuration
       {
-        eTransportType transport_type { eTransportType::udp }; //!< Transport type for registration (Default: udp)
+        eTransportType transport_type { eTransportType::shm }; //!< Transport type for registration (Default: udp)
         
         SHM::Configuration shm;
         UDP::Configuration udp;
