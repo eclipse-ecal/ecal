@@ -463,6 +463,8 @@ endif()
 # util
 ######################################
 set(ecal_util_src
+    src/util/entity_id_generator.cpp
+    src/util/entity_id_generator.h
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
     src/util/expanding_vector.h
