@@ -20,6 +20,7 @@
 #pragma once
 
 #include "tracing.h"
+#include "itracing_writer.h"
 #include "util/single_instance_helper.h"
 
 #include <vector>
@@ -28,9 +29,6 @@
 #include <atomic>
 #include <thread>
 #include <condition_variable>
-
-// Forward declaration
-namespace eCAL { namespace tracing { class CTracingWriter; } }
 
 namespace eCAL
 {
@@ -72,6 +70,10 @@ namespace tracing
         std::string getSpansFilePath() const;
         std::string getTopicMetadataFilePath() const;
 
+        // Replace the active writer. The new writer takes effect immediately.
+        // Pass nullptr to disable writing.
+        void setWriter(std::unique_ptr<ITracingWriter> writer);
+
     private:
         CTraceProvider();
         void writerThreadLoop();
@@ -82,7 +84,7 @@ namespace tracing
         std::condition_variable write_cv_;
         bool stop_thread_{false};
         std::thread writer_thread_;
-        std::unique_ptr<CTracingWriter> writer_;
+        std::unique_ptr<ITracingWriter> writer_;
   };
 
 } // namespace tracing

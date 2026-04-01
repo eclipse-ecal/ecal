@@ -23,6 +23,7 @@
 #include <vector>
 #include <mutex>
 
+#include "itracing_writer.h"
 #include "tracing.h"
 
 namespace eCAL
@@ -32,11 +33,11 @@ namespace tracing
 
   // Responsible for serializing span and metadata to JSONL files.
   // Separated from CTraceProvider to isolate the I/O concern.
-  class CTracingWriter
+  class CTracingWriter : public ITracingWriter
   {
   public:
     CTracingWriter();
-    ~CTracingWriter() = default;
+    ~CTracingWriter() override = default;
 
     CTracingWriter(const CTracingWriter&)            = delete;
     CTracingWriter& operator=(const CTracingWriter&) = delete;
@@ -44,14 +45,14 @@ namespace tracing
     CTracingWriter& operator=(CTracingWriter&&)      = delete;
 
     // Write a batch of spans to the JSONL spans file
-    void writeBatchSpans(const std::vector<SSpanData>& batch);
+    void writeBatchSpans(const std::vector<SSpanData>& batch) override;
 
     // Write a single topic metadata entry to the JSONL metadata file
-    void writeTopicMetadata(const STopicMetadata& metadata);
+    void writeTopicMetadata(const STopicMetadata& metadata) override;
 
     // File path accessors (path is fixed at construction time)
-    std::string getSpansFilePath() const;
-    std::string getTopicMetadataFilePath() const;
+    std::string getSpansFilePath() const override;
+    std::string getTopicMetadataFilePath() const override;
 
   private:
     mutable std::mutex spans_mutex_;

@@ -108,5 +108,11 @@ namespace tracing
         return writer_->getTopicMetadataFilePath();
     }
 
+    void CTraceProvider::setWriter(std::unique_ptr<ITracingWriter> writer)
+    {
+        std::lock_guard<std::mutex> lock(thread_mutex);
+        writer_ = std::move(writer);
+    }
+    
 } // namespace tracing
 } // namespace eCAL
