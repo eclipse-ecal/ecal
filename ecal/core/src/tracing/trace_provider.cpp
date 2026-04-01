@@ -22,71 +22,63 @@
 
 #include <cstdlib>
 #include <atomic>
+#include <thread>
 
 namespace eCAL
 {
 namespace tracing
 {
 
-    // CTraceProvider implementation
-    std::atomic<bool> CTraceProvider::flush_done_{false};
-
     CTraceProvider::CTraceProvider()
         : writer_(std::make_unique<CTracingWriter>())
     {
-        registerExitHandlers();
+        writer_thread_ = std::thread(&CTraceProvider::writerThreadLoop, this);
     }
     
     CTraceProvider::~CTraceProvider()
     {
-        if (!flush_done_.exchange(true))
         {
-            flushSpans();
+            std::lock_guard<std::mutex> lock(thread_mutex);
+            stop_thread_ = true;
+            write_cv_.notify_all();
         }
+        writer_thread_.join();
     }
 
-    void CTraceProvider::registerExitHandlers()
-    {
-        // atexit runs before static destructors — first chance to flush
-        std::atexit(atExitHandler);
-    }
-
-    void CTraceProvider::atExitHandler()
-    {
-        if (!flush_done_.exchange(true))
-        {
-            getInstance().flushSpans();
-        }
-    }
 
     void CTraceProvider::bufferSpan(const SSpanData& span_data)
     {
-        bool should_flush = false;
+        std::lock_guard<std::mutex> lock(thread_mutex);
+        span_buffer_.push_back(span_data);
+        if (span_buffer_.size() >= batch_size_)
         {
-            std::lock_guard<std::mutex> lock(buffer_mutex_);
-            span_buffer_.push_back(span_data);
-            should_flush = (span_buffer_.size() >= batch_size_);
-        }
-        
-        // Auto-flush if batch size reached
-        if (should_flush)
-        {
-            flushSpans();
+            write_cv_.notify_one();
         }
     }
 
-    void CTraceProvider::flushSpans()
+    void CTraceProvider::writerThreadLoop()
     {
-        std::vector<SSpanData> batch_to_send;
+        std::vector<SSpanData> span_flusher;
+        while (true)
         {
-            std::lock_guard<std::mutex> lock(buffer_mutex_);
-            if (span_buffer_.empty())
-                return;
-            
-            batch_to_send.swap(span_buffer_);
+            {
+                std::unique_lock<std::mutex> lock(thread_mutex);
+                write_cv_.wait(lock, [this]()
+                {
+                    return stop_thread_|| (span_buffer_.size() >= batch_size_);
+                });
+                if (stop_thread_ && span_buffer_.empty())
+                {
+                    break;
+                }
+                span_flusher.swap(span_buffer_);
+            }
+            if (!span_flusher.empty())
+            {
+                writer_->writeBatchSpans(span_flusher);
+                span_flusher.clear();
+            }
         }
-        
-        writer_->writeBatchSpans(batch_to_send);
     }
 
     void CTraceProvider::addTopicMetadata(const STopicMetadata& metadata)

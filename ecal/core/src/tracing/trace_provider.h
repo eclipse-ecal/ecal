@@ -25,6 +25,8 @@
 #include <mutex>
 #include <memory>
 #include <atomic>
+#include <thread>
+#include <condition_variable>
 
 // Forward declaration
 namespace eCAL { namespace tracing { class CTracingWriter; } }
@@ -47,6 +49,8 @@ namespace tracing
         CTraceProvider(CTraceProvider&&)                 = delete;
         CTraceProvider& operator=(CTraceProvider&&)      = delete;
 
+        ~CTraceProvider();
+
         // Buffer management
         void setBatchSize(size_t batch_size) { batch_size_ = batch_size; }
         
@@ -59,12 +63,10 @@ namespace tracing
         // Get buffered spans
         std::vector<SSpanData> getSpans()
         {
-            std::lock_guard<std::mutex> lock(buffer_mutex_);
+            std::lock_guard<std::mutex> lock(thread_mutex);
             return span_buffer_;
         }
         
-        // Flush buffered spans
-        void flushSpans();
 
         // File path accessors (delegated to the internal writer)
         std::string getSpansFilePath() const;
@@ -72,16 +74,16 @@ namespace tracing
 
     private:
         CTraceProvider();
-        ~CTraceProvider();
 
         void registerExitHandlers();
-        static void atExitHandler();
-        static std::atomic<bool> flush_done_;
-        
-        std::vector<SSpanData> span_buffer_;
-        size_t batch_size_{kDefaultTracingBatchSize};
-        mutable std::mutex buffer_mutex_;
+        void writerThreadLoop();
 
+        std::atomic<size_t> batch_size_{kDefaultTracingBatchSize};
+        std::vector<SSpanData> span_buffer_;
+        mutable std::mutex thread_mutex;
+        std::condition_variable write_cv_;
+        bool stop_thread_{false};
+        std::thread writer_thread_;
         std::unique_ptr<CTracingWriter> writer_;
   };
 
