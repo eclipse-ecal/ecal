@@ -29,6 +29,18 @@ namespace eCAL
 namespace tracing
 {
 
+    std::shared_ptr<CTraceProvider> CTraceProvider::Create()
+    {
+      try
+      {
+        return Util::CSingleInstanceHelper<CTraceProvider>::Create();
+      }
+      catch (const std::exception& e)
+      {
+        return nullptr;
+      }
+    }
+
     CTraceProvider::CTraceProvider()
         : writer_(std::make_unique<CTracingWriter>())
     {

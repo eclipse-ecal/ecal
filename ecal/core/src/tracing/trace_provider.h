@@ -20,6 +20,7 @@
 #pragma once
 
 #include "tracing.h"
+#include "util/single_instance_helper.h"
 
 #include <vector>
 #include <mutex>
@@ -36,20 +37,19 @@ namespace eCAL
 namespace tracing
 {
 
-  class CTraceProvider {
+  class CTraceProvider 
+  {
+    friend class Util::CSingleInstanceHelper<CTraceProvider>;
+
     public:
-        static CTraceProvider& getInstance()
-        {
-            static CTraceProvider instance;
-            return instance;
-        }
+
+        static std::shared_ptr<CTraceProvider> Create();
+        ~CTraceProvider();
 
         CTraceProvider(const CTraceProvider&)            = delete;
         CTraceProvider& operator=(const CTraceProvider&) = delete;
         CTraceProvider(CTraceProvider&&)                 = delete;
         CTraceProvider& operator=(CTraceProvider&&)      = delete;
-
-        ~CTraceProvider();
 
         // Buffer management
         void setBatchSize(size_t batch_size) { batch_size_ = batch_size; }
@@ -74,8 +74,6 @@ namespace tracing
 
     private:
         CTraceProvider();
-
-        void registerExitHandlers();
         void writerThreadLoop();
 
         std::atomic<size_t> batch_size_{kDefaultTracingBatchSize};

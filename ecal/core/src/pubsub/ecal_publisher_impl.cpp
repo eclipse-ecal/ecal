@@ -137,7 +137,7 @@ namespace eCAL
       meta.encoding   = m_topic_info.encoding;
       meta.type_name  = m_topic_info.name;
       meta.direction  = eCAL::tracing::topic_direction::publisher;
-      eCAL::tracing::CTraceProvider::getInstance().addTopicMetadata(meta);
+      if (auto provider = g_trace_provider(); provider) provider->addTopicMetadata(meta);
     }
 
     // mark as created

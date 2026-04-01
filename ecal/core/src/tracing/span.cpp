@@ -19,6 +19,7 @@
 
 #include "span.h"
 #include "trace_provider.h"
+#include "../ecal_global_accessors.h"
 
 #include <chrono>
 
@@ -60,7 +61,7 @@ namespace tracing
     {
         auto now = system_clock::now();
         data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        CTraceProvider::getInstance().bufferSpan(data);
+        if (auto provider = g_trace_provider(); provider) provider->bufferSpan(data);
     }
 
 } // namespace tracing
