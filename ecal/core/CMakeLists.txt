@@ -43,6 +43,7 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 find_package(protozero        REQUIRED)
+find_package(nlohmann_json    REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
@@ -460,6 +461,19 @@ if(ECAL_CORE_TIMEPLUGIN)
 endif()
 
 ######################################
+# tracing
+######################################
+set(ecal_tracing_src
+    src/tracing/tracing.h
+    src/tracing/span.cpp
+    src/tracing/span.h
+    src/tracing/trace_provider.cpp
+    src/tracing/trace_provider.h
+    src/tracing/tracing_writer.cpp
+    src/tracing/tracing_writer.h
+)
+
+######################################
 # util
 ######################################
 set(ecal_util_src
@@ -637,6 +651,7 @@ set(ecal_sources
     ${ecal_serialization_src}
     ${ecal_service_src}
     ${ecal_time_src}
+    ${ecal_tracing_src}
     ${ecal_util_src}
     ${ecal_cmn_src}
     ${ecal_builder_src}
@@ -719,6 +734,7 @@ target_link_libraries(ecal_core_private
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
+    nlohmann_json::nlohmann_json
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
