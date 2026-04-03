@@ -125,7 +125,7 @@ namespace eCAL
 
       std::set<std::string> GetSubscribedTopics() const;
 
-      void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_);
+      void EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SDataTypeInformation& datatype_info_, const eCAL::SReceiveCallbackData& data_);
 
       Throughput GetSubscriberThroughput() const;
 
@@ -134,7 +134,7 @@ namespace eCAL
       //////////////////////////////////////
       void GarbageCollect();
 
-      void SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map);
+      void SetTopicInfo(const TopicInfoMap& topic_info_map);
 
     //////////////////////////////////////////////////////////////////////////////
     //// Private functions                                                    ////
@@ -142,7 +142,7 @@ namespace eCAL
     private:
       void UpdateAndCleanSubscribers();
 
-      std::set<std::string> FilterAvailableTopics_NoLock(const std::map<std::string, TopicInfo>& topic_info_map) const;
+      std::set<std::string> FilterAvailableTopics_NoLock(const TopicInfoMap& topic_info_map) const;
 
       void CreateNewSubscribers_NoLock(const std::set<std::string>& topic_set);
       void RemoveOldSubscribers_NoLock(const std::set<std::string>& topic_set);

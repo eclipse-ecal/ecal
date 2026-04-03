@@ -283,7 +283,7 @@ namespace eCAL
       return true;
     }
 
-    bool RecordJob::StartRecording(const std::map<std::string, TopicInfo>& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
+    bool RecordJob::StartRecording(const TopicInfoMap& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
     {
       std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
@@ -317,7 +317,7 @@ namespace eCAL
     }
 
 
-    bool RecordJob::SaveBuffer(const std::map<std::string, TopicInfo>& topic_info_map, const std::deque<std::shared_ptr<Frame>>& frame_buffer)
+    bool RecordJob::SaveBuffer(const TopicInfoMap& topic_info_map, const std::deque<std::shared_ptr<Frame>>& frame_buffer)
     {
       std::unique_lock<std::shared_timed_mutex> lock(job_mutex_);
 
@@ -344,7 +344,7 @@ namespace eCAL
       return hdf5_writer_thread_->AddFrame(frame);
     }
 
-    void RecordJob::SetTopicInfo(const std::map<std::string, TopicInfo>& topic_info_map)
+    void RecordJob::SetTopicInfo(const TopicInfoMap& topic_info_map)
     {
       std::shared_lock<std::shared_timed_mutex> lock(job_mutex_);
       if ((main_recorder_state_ != JobState::Recording) || !hdf5_writer_thread_)
