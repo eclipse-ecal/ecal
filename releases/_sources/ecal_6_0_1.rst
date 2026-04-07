@@ -24,6 +24,10 @@ Downloads
 =========
 
 
+.. note::
+
+   A more recent version of eCAL 6.0 is available: :ref:`eCAL 6.0.2 <ecal_release_page_6_0_2>`.
+
 
 
 eCAL Installer
