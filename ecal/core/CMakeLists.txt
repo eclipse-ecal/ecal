@@ -721,6 +721,7 @@ target_link_libraries(ecal_core_private
     ecaludp::ecaludp
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:atomic>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
     $<$<BOOL:${WIN32}>:iphlpapi>
     $<$<BOOL:${WIN32}>:psapi> 
