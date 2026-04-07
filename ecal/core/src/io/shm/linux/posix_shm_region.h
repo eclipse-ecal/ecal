@@ -39,9 +39,6 @@ namespace eCAL::posix
   template <typename T, typename Init>
   ShmTypedRegion<T> open_or_create_mapped_region(std::string name, Init&& init)
   {
-    static_assert(std::is_standard_layout_v<T>,
-      "T should be standard-layout for shared memory compatibility");
-
     ShmTypedRegion<T> out;
     out.region = open_or_create_mapped_region(
       std::move(name),
