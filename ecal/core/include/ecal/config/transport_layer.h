@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <ecal/config/shm_mutex.h>
 #include <ecal/types/custom_data_types.h>
 #include <ecal/os.h>
 
@@ -79,10 +80,19 @@ namespace eCAL
       };
     }
 
+    namespace SHM
+    {
+      struct Configuration
+      {
+        Config::SHM::eMutexType mutex_type { Config::SHM::DefaultMutexType() };
+      };
+    }
+
     struct Configuration
     {
       UDP::Configuration udp;
       TCP::Configuration tcp;
+      SHM::Configuration shm;
     };
   }
 }

@@ -27,6 +27,7 @@ namespace eCAL
     {
       SHM::SAttributes attributes;
 
+      attributes.mutex_type              = attr_.shm.mutex_type;
       attributes.process_id              = attr_.process_id;
       attributes.registration_timeout_ms = attr_.registration_timeout_ms;
       
@@ -40,6 +41,7 @@ namespace eCAL
     {
       SHM::SAttributes attributes;
 
+      attributes.mutex_type              = attr_.shm.mutex_type;
       attributes.acknowledge_timeout_ms  = attr_.shm.acknowledge_timeout_ms;
       attributes.memfile_buffer_count    = attr_.shm.memfile_buffer_count;
       attributes.memfile_reserve_percent = attr_.shm.memfile_reserve_percent;

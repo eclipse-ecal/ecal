@@ -45,6 +45,7 @@ namespace eCAL
     attributes.topic_name           = topic_name_;
 
     attributes.shm.enable                  = publisher_config.layer.shm.enable;
+    attributes.shm.mutex_type              = detail::GetEffectiveResolvedMutexType(transport_tlayer_config.shm.mutex_type, publisher_config.layer.shm.mutex_type);
     attributes.shm.acknowledge_timeout_ms  = publisher_config.layer.shm.acknowledge_timeout_ms;
     attributes.shm.memfile_buffer_count    = publisher_config.layer.shm.memfile_buffer_count;
     attributes.shm.memfile_min_size_bytes  = publisher_config.layer.shm.memfile_min_size_bytes;

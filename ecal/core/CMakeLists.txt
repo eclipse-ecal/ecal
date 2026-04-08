@@ -151,6 +151,7 @@ set(ecal_config_src
     src/config/default_configuration.h
     src/config/ecal_config.cpp
     src/config/configuration.cpp
+    src/config/shm_mutex.cpp
     src/config/ecal_path_processing.cpp
     src/config/ecal_path_processing.h
     src/types/ecal_custom_data_types.cpp
@@ -173,6 +174,7 @@ if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
       src/io/mtx/ecal_named_mutex.cpp
       src/io/mtx/ecal_named_mutex.h
       src/io/mtx/ecal_named_mutex_base.h
+      src/io/mtx/shm_mutex_resolution.h
   )
 
   # io/mtx/linux
@@ -573,6 +575,7 @@ set(ecal_public_headers
     include/ecal/config/logging.h
     include/ecal/config/publisher.h
     include/ecal/config/registration.h
+    include/ecal/config/shm_mutex.h
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h

@@ -138,6 +138,11 @@ namespace
   {
     return std::string("\"") + ip_.Get() + std::string("\"");
   }
+
+  std::string quoteString(const eCAL::Config::SHM::eMutexType type_)
+  {
+    return std::string("\"") + std::string(eCAL::Config::SHM::ToString(type_)) + std::string("\"");
+  }
 }
 
 namespace eCAL
@@ -248,6 +253,11 @@ namespace eCAL
       ss << R"(    # Reconnection attemps the session will try to reconnect in case of an issue)"                                   << "\n";
       ss << R"(    max_reconnections: )"                             << config_.transport_layer.tcp.max_reconnections               << "\n";
       ss << R"()"                                                                                                                   << "\n";
+      ss << R"(  shm:)"                                                                                                             << "\n";
+      ss << R"(    # Named mutex mode for shared-memory synchronization)"                                                          << "\n";
+      ss << R"(    # Options: "mutex", "recoverable_mutex")"                                                                       << "\n";
+      ss << R"(    mutex_type: )"                                    << quoteString(config_.transport_layer.shm.mutex_type)        << "\n";
+      ss << R"()"                                                                                                                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(# Publisher specific base settings)"                                                                                 << "\n";
       ss << R"(publisher:)"                                                                                                         << "\n";
@@ -256,6 +266,8 @@ namespace eCAL
       ss << R"(    shm:)"                                                                                                           << "\n";
       ss << R"(      # Enable layer)"                                                                                               << "\n";
       ss << R"(      enable: )"                                      << config_.publisher.layer.shm.enable                          << "\n";
+      ss << R"(      # Optional override. If omitted, inherits transport_layer.shm.mutex_type)"                                   << "\n";
+      ss << R"(      # mutex_type: "recoverable_mutex")"                                                                            << "\n";
       ss << R"(      # Enable zero copy shared memory transport mode)"                                                              << "\n";
       ss << R"(      zero_copy_mode: )"                              << config_.publisher.layer.shm.zero_copy_mode                  << "\n";
       ss << R"(      # Force connected subscribers to send acknowledge event after processing the message.)"                        << "\n";
@@ -276,7 +288,7 @@ namespace eCAL
       ss << R"(    # Base configuration for TCP publisher)"                                                                         << "\n";
       ss << R"(    tcp:)"                                                                                                           << "\n";
       ss << R"(      # Enable layer)"                                                                                               << "\n";
-      ss << R"(      enable: )"                                      << config_.publisher.layer.shm.enable                          << "\n";
+      ss << R"(      enable: )"                                      << config_.publisher.layer.tcp.enable                          << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(  # Priority list for layer usage in local mode (Default: SHM > UDP > TCP))"                                         << "\n";
       ss << R"(  priority_local: )"                                  << quoteString(config_.publisher.layer_priority_local)         << "\n";
@@ -291,6 +303,8 @@ namespace eCAL
       ss << R"(    shm:)"                                                                                                           << "\n";
       ss << R"(      # Enable layer)"                                                                                               << "\n";
       ss << R"(      enable: )"                                        << config_.subscriber.layer.shm.enable                       << "\n";
+      ss << R"(      # Optional override. If omitted, inherits transport_layer.shm.mutex_type)"                                   << "\n";
+      ss << R"(      # mutex_type: "recoverable_mutex")"                                                                            << "\n";
       ss << R"()"                                                                                                                   << "\n";
       ss << R"(    # Base configuration for UDP subscriber)"                                                                        << "\n";
       ss << R"(    udp:)"                                                                                                           << "\n";

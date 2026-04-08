@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "io/mtx/shm_mutex_resolution.h"
+
 #include <string>
 
 namespace eCAL
@@ -29,6 +31,7 @@ namespace eCAL
     {
       struct SAttributes
       {
+        detail::eResolvedMutexType mutex_type;
         int          process_id;
         unsigned int registration_timeout_ms;
       };

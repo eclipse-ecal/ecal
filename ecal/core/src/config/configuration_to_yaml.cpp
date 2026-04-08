@@ -1,8 +1,26 @@
 #include "configuration_to_yaml.h"
+#include <ecal/config/shm_mutex.h>
 
 // utility functions for yaml node handling
 namespace YAML
 {
+  std::string ShmMutexTypeToString(const eCAL::Config::SHM::eMutexType type)
+  {
+    return std::string(eCAL::Config::SHM::ToString(type));
+  }
+
+  bool ParseShmMutexType(const std::string& text, eCAL::Config::SHM::eMutexType& out)
+  {
+    const auto parsed = eCAL::Config::SHM::FromString(text);
+    if (!parsed.has_value())
+      return false;
+    if (!eCAL::Config::SHM::IsSupported(*parsed))
+      return false;
+
+    out = *parsed;
+    return true;
+  }
+
   eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
@@ -281,12 +299,34 @@ namespace YAML
     AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.local, node_, "local");
     return true;
   }
+
+  Node convert<eCAL::TransportLayer::SHM::Configuration>::encode(const eCAL::TransportLayer::SHM::Configuration& config_)
+  {
+    Node node;
+    node["mutex_type"] = ShmMutexTypeToString(config_.mutex_type);
+    return node;
+  }
+
+  bool convert<eCAL::TransportLayer::SHM::Configuration>::decode(const Node& node_, eCAL::TransportLayer::SHM::Configuration& config_)
+  {
+    if (node_["mutex_type"])
+    {
+      eCAL::Config::SHM::eMutexType parsed_mutex_type;
+      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
+      {
+        return false;
+      }
+      config_.mutex_type = parsed_mutex_type;
+    }
+    return true;
+  }
   
   Node convert<eCAL::TransportLayer::Configuration>::encode(const eCAL::TransportLayer::Configuration& config_)
   {
     Node node;
     node["udp"] = config_.udp;
     node["tcp"] = config_.tcp;
+    node["shm"] = config_.shm;
 
     return node;
   }
@@ -295,6 +335,7 @@ namespace YAML
   {
     AssignValue<eCAL::TransportLayer::UDP::Configuration>(config_.udp, node_, "udp");
     AssignValue<eCAL::TransportLayer::TCP::Configuration>(config_.tcp, node_, "tcp");
+    AssignValue<eCAL::TransportLayer::SHM::Configuration>(config_.shm, node_, "shm");
     return true;
   }
 
@@ -310,6 +351,8 @@ namespace YAML
   {
     Node node;
     node["enable"]                   = config_.enable;
+    if (config_.mutex_type.has_value())
+      node["mutex_type"] = ShmMutexTypeToString(*config_.mutex_type);
     node["zero_copy_mode"]           = config_.zero_copy_mode;
     node["acknowledge_timeout_ms"]   = config_.acknowledge_timeout_ms;
     node["memfile_buffer_count"]     = config_.memfile_buffer_count;
@@ -321,6 +364,15 @@ namespace YAML
   bool convert<eCAL::Publisher::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Publisher::Layer::SHM::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
+    if (node_["mutex_type"])
+    {
+      eCAL::Config::SHM::eMutexType parsed_mutex_type;
+      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
+      {
+        return false;
+      }
+      config_.mutex_type = parsed_mutex_type;
+    }
     AssignValue<bool>(config_.zero_copy_mode, node_, "zero_copy_mode");
     AssignValue<unsigned int>(config_.acknowledge_timeout_ms, node_, "acknowledge_timeout_ms");
     AssignValue<unsigned int>(config_.memfile_buffer_count, node_, "memfile_buffer_count");
@@ -408,12 +460,23 @@ namespace YAML
   {
     Node node;
     node["enable"] = config_.enable;
+    if (config_.mutex_type.has_value())
+      node["mutex_type"] = ShmMutexTypeToString(*config_.mutex_type);
     return node;
   }
 
   bool convert<eCAL::Subscriber::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::SHM::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
+    if (node_["mutex_type"])
+    {
+      eCAL::Config::SHM::eMutexType parsed_mutex_type;
+      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
+      {
+        return false;
+      }
+      config_.mutex_type = parsed_mutex_type;
+    }
     return true;
   }
   
@@ -680,6 +743,7 @@ namespace YAML
   Node convert<eCAL::Configuration>::encode(const eCAL::Configuration& config_)
   {
     Node node;
+    node["transport_layer"]    = config_.transport_layer;
     node["publisher"]          = config_.publisher;
     node["subscriber"]         = config_.subscriber;
     node["registration"]       = config_.registration;

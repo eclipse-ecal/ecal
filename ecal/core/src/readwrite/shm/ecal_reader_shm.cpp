@@ -69,7 +69,7 @@ namespace eCAL
         {
           return OnNewShmFileContent(topic_info, buf_, len_, id_, clock_, time_, hash_);
         };
-        m_memfile_thread_pool->ObserveFile(memfile_name, memfile_event, m_attributes.registration_timeout_ms, data_callback);
+        m_memfile_thread_pool->ObserveFile(memfile_name, memfile_event, m_attributes.mutex_type, m_attributes.registration_timeout_ms, data_callback);
       }
     }
   }

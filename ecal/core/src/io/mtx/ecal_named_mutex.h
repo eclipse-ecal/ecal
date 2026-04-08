@@ -27,6 +27,8 @@
 #include <memory>
 #include <cstdint>
 
+#include "shm_mutex_resolution.h"
+
 namespace eCAL
 {
   class CNamedMutexImplBase;
@@ -44,6 +46,7 @@ namespace eCAL
     CNamedMutex& operator=(CNamedMutex&& named_mutex)  noexcept;
 
     bool Create(const std::string& name_, bool recoverable_ = false);
+    bool Create(const std::string& name_, detail::eResolvedMutexType mutex_type_, bool recoverable_ = false);
     void Destroy();
 
     bool IsCreated() const;
