@@ -39,6 +39,35 @@
 #include <string_view>
 #include <vector>
 
+namespace
+{
+  // Returns true if writing should proceed.
+  // If overwrite is true, always proceeds. Otherwise, if any of the listed files
+  // already exist, asks the user interactively whether to overwrite them.
+  [[nodiscard]] bool handleExistingFiles(const std::vector<std::filesystem::path>& file_paths, bool overwrite)
+  {
+    if (overwrite) return true;
+
+    std::vector<std::filesystem::path> existing;
+    for (const auto& path : file_paths)
+    {
+      if (std::filesystem::exists(path))
+        existing.push_back(path);
+    }
+
+    if (existing.empty()) return true;
+
+    std::cout << "The following configuration file(s) already exist:\n";
+    for (const auto& path : existing)
+      std::cout << "  " << path.string() << "\n";
+
+    std::cout << "Overwrite? [y/N]: ";
+    std::string answer;
+    std::getline(std::cin, answer);
+    return (!answer.empty() && (answer[0] == 'y' || answer[0] == 'Y'));
+  }
+} // namespace
+
 void showHelp(std::string_view argv0) {
   const auto program_name = std::filesystem::path(argv0).filename();
 
@@ -61,33 +90,6 @@ void showHelp(std::string_view argv0) {
             << "  " << program_name << " --dump\n"
             << "  " << program_name << " --dump --overwrite --no-wait\n"
             << "  " << program_name << "\n";
-}
-
-
-// Returns true if writing should proceed.
-// If overwrite is true, always proceeds. Otherwise, if any of the listed files
-// already exist, asks the user interactively whether to overwrite them.
-[[nodiscard]] static bool handleExistingFiles(const std::vector<std::filesystem::path>& file_paths, bool overwrite)
-{
-  if (overwrite) return true;
-
-  std::vector<std::filesystem::path> existing;
-  for (const auto& path : file_paths)
-  {
-    if (std::filesystem::exists(path))
-      existing.push_back(path);
-  }
-
-  if (existing.empty()) return true;
-
-  std::cout << "The following configuration file(s) already exist:\n";
-  for (const auto& path : existing)
-    std::cout << "  " << path.string() << "\n";
-
-  std::cout << "Overwrite? [y/N]: ";
-  std::string answer;
-  std::getline(std::cin, answer);
-  return (!answer.empty() && (answer[0] == 'y' || answer[0] == 'Y'));
 }
 
 [[noreturn]] void exitWithMessage(std::string_view message, int exitCode, bool wait_for_it = true) {
