@@ -39,6 +39,7 @@
 #include "rec_client_core/topic_info.h"
 #include "rec_client_core/upload_config.h"
 
+#include <array>
 #include <chrono>
 #include <cstdint>
 #include <algorithm>
@@ -66,6 +67,59 @@ namespace eCAL
 {
   namespace rec
   {
+    class EcalRecImpl::ReceiveDispatchThread : public InterruptibleLoopThread
+    {
+    public:
+      ReceiveDispatchThread(EcalRecImpl& ecal_rec_impl_)
+        : InterruptibleLoopThread(std::chrono::milliseconds(10))
+        , ecal_rec_impl(ecal_rec_impl_)
+        , token(ecal_rec_impl_.receive_dispatch_queue_)
+      {
+      }
+
+    protected:
+      // forward data from the queue to the actual buffer
+      void Loop() override
+      {
+        constexpr int max_items = 16;
+        std::array<std::shared_ptr<Frame>, max_items> frames;
+        size_t no_items = 0;
+        do
+        {
+          no_items = ecal_rec_impl.receive_dispatch_queue_.try_dequeue_bulk(token, frames.data(), frames.size());
+          assert(no_items < max_items);
+          
+          for (size_t i = 0; i < no_items; ++i)
+          {
+            auto& frame = frames[i];
+
+            // Add to the pre-buffer (it is thread-safe by using a mutex internally)
+            ecal_rec_impl.pre_buffer_.push_back(frame);
+
+            {
+              // Add to the currently recording job (if there is any)
+              const std::shared_lock<decltype(ecal_rec_impl.recorder_mutex_)> recorder_lock(ecal_rec_impl.recorder_mutex_);
+              if (ecal_rec_impl.recording_recorder_job_ != nullptr)
+              {
+                ecal_rec_impl.recording_recorder_job_->AddFrame(frame);
+              }
+            }
+
+            {
+              // Add to the subscriber statistics
+              const std::lock_guard<decltype(ecal_rec_impl.subscriber_throughput_mutex_)> subscriber_statistics_lock(ecal_rec_impl.subscriber_throughput_mutex_);
+              ecal_rec_impl.subscriber_throughput_statistics_.AddFrame(frame->data_.size());
+            }
+          }
+        } while (no_items > 0);
+      }
+
+    private:
+      EcalRecImpl& ecal_rec_impl;
+      moodycamel::ConsumerToken token;
+    };
+
+
     EcalRecImpl::EcalRecImpl()
       : addon_manager_(std::make_unique<AddonManager>([this](int64_t job_id, const std::string& addon_id, const RecAddonJobStatus& job_status)
                                                       {
@@ -90,11 +144,15 @@ namespace eCAL
 
       monitoring_thread_ = std::make_unique<MonitoringThread>(*this);
       monitoring_thread_->Start();
+
+      receive_dispatch_thread = std::make_unique<ReceiveDispatchThread>(*this);
+      receive_dispatch_thread->Start();
     }
 
     EcalRecImpl::~EcalRecImpl()
     {
-      DisconnectFromEcal();
+      receive_dispatch_thread->Interrupt();
+      receive_dispatch_thread->Join();
 
       // Interrupt monitoring thread
       monitoring_thread_->Interrupt();
@@ -723,28 +781,14 @@ namespace eCAL
 
     void EcalRecImpl::EcalMessageReceived(const eCAL::STopicId& topic_id_, const eCAL::SReceiveCallbackData& data_)
     {
+      const thread_local moodycamel::ProducerToken token(receive_dispatch_queue_);
+
       auto ecal_receive_time   = eCAL::Time::ecal_clock::now();
       auto system_receive_time = std::chrono::steady_clock::now();
 
       std::shared_ptr<Frame> frame = std::make_shared<Frame>(&data_, topic_id_.topic_name, ecal_receive_time, system_receive_time);
 
-      // Add to the pre-buffer (it is thread-safe by using a mutex internally)
-      pre_buffer_.push_back(frame);
-
-      {
-        // Add to the currently recording job (if there is any)
-        std::shared_lock<decltype(recorder_mutex_)> recorder_lock(recorder_mutex_);
-        if (recording_recorder_job_ != nullptr)
-        {
-          recording_recorder_job_->AddFrame(std::move(frame));
-        }
-      }
-
-      {
-        // Add to the subscriber statistics
-        const std::lock_guard<decltype(subscriber_throughput_mutex_)> subscriber_statistics_lock(subscriber_throughput_mutex_);
-        subscriber_throughput_statistics_.AddFrame(data_.buffer_size);
-      }
+      receive_dispatch_queue_.enqueue(token, std::move(frame));
     }
 
     Throughput EcalRecImpl::GetSubscriberThroughput() const

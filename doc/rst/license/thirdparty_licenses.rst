@@ -36,6 +36,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - Apache-2.0
 
+   * - :ref:`concurrentqueue <thirdparty_licenses_concurrentqueue>`
+
+     - Copyright (c) 2013-2016, Cameron Desrochers.
+
+     - BSD-2-Clause
+
    * - :ref:`Cap'n Proto <thirdparty_licenses_cap_n_proto>`
 
      - Copyright (c) 2013-2017 Sandstorm Development Group, Inc.; Cloudflare, Inc.;   and other contributors. Each commit is copyright by its respective author or   author's employer.
@@ -205,6 +211,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
    thirdparty_licenses/asio
 
    thirdparty_licenses/benchmark
+
+   thirdparty_licenses/concurrentqueue
 
    thirdparty_licenses/cap_n_proto
 
