@@ -153,6 +153,7 @@ set(ecal_config_src
     src/config/configuration.cpp
     src/config/ecal_path_processing.cpp
     src/config/ecal_path_processing.h
+    src/config/shm_mutex.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -803,8 +804,7 @@ set_target_properties(core
     VISIBILITY_INLINES_HIDDEN ON
 )
 
-target_compile_features(core INTERFACE cxx_std_14)
-target_compile_features(core PRIVATE cxx_std_17)
+target_compile_features(core PUBLIC cxx_std_17)
 
 set_property(TARGET core PROPERTY FOLDER core)
 endmacro()

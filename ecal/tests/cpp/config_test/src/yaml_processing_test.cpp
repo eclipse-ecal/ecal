@@ -32,6 +32,7 @@
 #endif
 #include "config/default_configuration.h"
 #include "ecal_def.h"
+#include "io/mtx/shm_mutex_resolution.h"
 
 #ifdef ECAL_CORE_CONFIGURATION
 TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
@@ -67,6 +68,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     config.transport_layer.tcp.number_executor_reader = 9;
     config.transport_layer.tcp.number_executor_writer = 10;
     config.transport_layer.tcp.max_reconnections = 11;
+    config.transport_layer.shm.mutex_type = eCAL::TransportLayer::SHM::eMutexType::mutex;
 
     config.publisher.layer.shm.enable = false;
     config.publisher.layer.shm.zero_copy_mode = true;
@@ -131,6 +133,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.transport_layer.tcp.number_executor_reader, config_from_yaml.transport_layer.tcp.number_executor_reader);
     EXPECT_EQ(config.transport_layer.tcp.number_executor_writer, config_from_yaml.transport_layer.tcp.number_executor_writer);
     EXPECT_EQ(config.transport_layer.tcp.max_reconnections, config_from_yaml.transport_layer.tcp.max_reconnections);
+    EXPECT_EQ(config.transport_layer.shm.mutex_type, config_from_yaml.transport_layer.shm.mutex_type);
     EXPECT_EQ(config.publisher.layer.shm.enable, config_from_yaml.publisher.layer.shm.enable);
     EXPECT_EQ(config.publisher.layer.shm.zero_copy_mode, config_from_yaml.publisher.layer.shm.zero_copy_mode);
     EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, config_from_yaml.publisher.layer.shm.acknowledge_timeout_ms);

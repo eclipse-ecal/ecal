@@ -3,6 +3,21 @@
 // utility functions for yaml node handling
 namespace YAML
 {
+  std::string ShmMutexTypeToString(const eCAL::TransportLayer::SHM::eMutexType type)
+  {
+    using namespace eCAL::TransportLayer::SHM;
+    return ToString(type).data();
+  }
+
+  void ParseShmMutexType(const std::string& text, eCAL::TransportLayer::SHM::eMutexType& out)
+  {
+    using namespace eCAL::TransportLayer::SHM;
+    if (auto mutex_type = FromString(text); mutex_type.has_value())
+    {
+      out = mutex_type.value();
+    }
+  }
+
   eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
   {
     // create excluding filter list
@@ -283,12 +298,29 @@ namespace YAML
     AssignValue<eCAL::TransportLayer::UDP::MulticastConfiguration>(config_.local, node_, "local");
     return true;
   }
+
+  Node convert<eCAL::TransportLayer::SHM::Configuration>::encode(const eCAL::TransportLayer::SHM::Configuration& config_)
+  {
+    Node node;
+    node["mutex_type"] = ShmMutexTypeToString(config_.mutex_type);
+    return node;
+  }
+
+  bool convert<eCAL::TransportLayer::SHM::Configuration>::decode(const Node& node_, eCAL::TransportLayer::SHM::Configuration& config_)
+  {
+    if (node_["mutex_type"])
+    {
+      ParseShmMutexType(node_["mutex_type"].as<std::string>(), config_.mutex_type);
+    }
+    return true;
+  }
   
   Node convert<eCAL::TransportLayer::Configuration>::encode(const eCAL::TransportLayer::Configuration& config_)
   {
     Node node;
     node["udp"] = config_.udp;
     node["tcp"] = config_.tcp;
+    node["shm"] = config_.shm;
 
     return node;
   }
@@ -297,6 +329,7 @@ namespace YAML
   {
     AssignValue<eCAL::TransportLayer::UDP::Configuration>(config_.udp, node_, "udp");
     AssignValue<eCAL::TransportLayer::TCP::Configuration>(config_.tcp, node_, "tcp");
+    AssignValue<eCAL::TransportLayer::SHM::Configuration>(config_.shm, node_, "shm");
     return true;
   }
 

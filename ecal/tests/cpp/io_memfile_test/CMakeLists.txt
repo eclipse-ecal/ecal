@@ -25,6 +25,7 @@ set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
     src/named_mutex_test.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/config/shm_mutex.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/ecal_named_mutex.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_db.cpp

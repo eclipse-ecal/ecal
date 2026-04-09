@@ -64,7 +64,7 @@ namespace eCAL
     attributes.tcp.max_reconnection_attempts = transport_layer_config.tcp.max_reconnections;
     
     attributes.shm.enable = subscriber_config.layer.shm.enable;
-    
+   
     return attributes;
   }
 }

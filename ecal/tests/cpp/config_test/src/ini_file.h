@@ -95,11 +95,8 @@ transport_layer:
     # Reconnection attemps the session will try to reconnect in case of an issue
     max_reconnections: 7
 
-  shm:     
-    # Default memory file size for new publisher
-    memfile_min_size_bytes: 4096
-    # Dynamic file size reserve before recreating memory file if topic size changes
-    memfile_reserve_percent: 50
+  shm:
+    mutex_type: "recoverable_mutex"
     
 
 # Publisher specific base settings
@@ -109,6 +106,7 @@ publisher:
     shm:
       # Enable layer
       enable: false
+      mutex_type: "mutex"
       # Enable zero copy shared memory transport mode
       zero_copy_mode: false
       # Force connected subscribers to send acknowledge event after processing the message.

@@ -59,7 +59,7 @@ namespace eCAL
     CMemFileObserver(CMemFileObserver&& rhs) = delete;
     CMemFileObserver& operator=(CMemFileObserver&& rhs) = delete;
 
-    bool Create(const std::string& memfile_name_, const std::string& memfile_event_);
+    bool Create(const std::string& memfile_name_, const std::string& memfile_event_, detail::eResolvedMutexType mutex_type_);
     bool Destroy();
 
     bool Start(int timeout_, const MemFileDataCallbackT& callback_);
@@ -98,7 +98,7 @@ namespace eCAL
     void Start();
     void Stop();
 
-    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_observation_ms, const MemFileDataCallbackT& callback_);
+    bool ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, detail::eResolvedMutexType mutex_type_, int timeout_observation_ms, const MemFileDataCallbackT& callback_);
 
   protected:
     void CleanupPoolThread();

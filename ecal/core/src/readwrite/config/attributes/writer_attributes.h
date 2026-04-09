@@ -25,6 +25,7 @@
 
 #include <ecal/config/configuration.h>
 #include <ecal/config/transport_layer.h>
+#include "io/mtx/shm_mutex_resolution.h"
 
 namespace eCAL
 {
@@ -49,6 +50,7 @@ namespace eCAL
     struct SSHMAttributes
     {
       bool         enable;
+      detail::eResolvedMutexType mutex_type;
       bool         zero_copy_mode;
       unsigned int acknowledge_timeout_ms;
       unsigned int memfile_buffer_count;

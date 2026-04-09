@@ -30,8 +30,6 @@
 #endif
 #include <yaml-cpp/yaml.h>
 
-#include "configuration_to_yaml.h"
-
 #include <fstream>
 #include <stack>
 #include <utility>

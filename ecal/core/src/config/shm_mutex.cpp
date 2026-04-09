@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2024 Continental Corporation
+ * Copyright (C) 2016 - 2026 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,37 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#pragma once
-
+#include <ecal/config/transport_layer.h>
 #include "io/mtx/shm_mutex_resolution.h"
 
-#include <string>
-
-namespace eCAL
+namespace eCAL::TransportLayer::SHM
 {
-  namespace eCALReader
+  eMutexType DefaultMutexType()
   {
-    namespace SHM
+    return detail::DefaultSemanticMutexType();
+  }
+
+  std::string_view ToString(eMutexType mutex_type)
+  {
+    switch (mutex_type)
     {
-      struct SAttributes
-      {
-        detail::eResolvedMutexType mutex_type;
-        int          process_id;
-        unsigned int registration_timeout_ms;
-      };
+    case eMutexType::mutex:
+      return "mutex";
+    case eMutexType::recoverable_mutex:
+      return "recoverable_mutex";
+    default:
+      return "mutex";
     }
+  }
+
+  std::optional<eMutexType> FromString(std::string_view mutex_type_string)
+  {
+    if (mutex_type_string == "mutex")
+      return eMutexType::mutex;
+
+    if (mutex_type_string == "recoverable_mutex")
+      return eMutexType::recoverable_mutex;
+
+    return std::nullopt;
   }
 }

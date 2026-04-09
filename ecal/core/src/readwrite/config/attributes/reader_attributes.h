@@ -22,6 +22,7 @@
 #include <string>
 #include <cstddef>
 #include <ecal/config/configuration.h>
+#include "io/mtx/shm_mutex_resolution.h"
 
 namespace eCAL
 {
@@ -46,6 +47,7 @@ namespace eCAL
     struct SSHMAttributes
     {
       bool enable;
+      detail::eResolvedMutexType mutex_type;
     };
 
     struct SAttributes

@@ -79,7 +79,7 @@ namespace eCAL
       if (is_new_payload_memfile && broadcast_event->type != eMemfileBroadcastEventType::EVENT_REMOVED)
       {
         if(!memfile_broadcast_payload.payload_memfile->Create(
-          BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), false, 0))
+          BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), false, detail::Resolve(eCAL::GetConfiguration().transport_layer.shm.mutex_type), 0))
         {
 #ifndef NDEBUG
           std::cerr << "Error opening payload memory file" << '\n';

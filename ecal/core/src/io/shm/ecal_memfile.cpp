@@ -56,12 +56,13 @@ namespace eCAL
     Destroy(false);
   }
 
-  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_, bool auto_sanitizing_)
+  bool CMemoryFile::Create(const char* name_, const bool create_, detail::eResolvedMutexType mutex_type_, const size_t len_, bool auto_sanitizing_)
   {
     assert((create_ && len_ > 0) || (!create_ && len_ == 0));
     assert((auto_sanitizing_ && create_) || !auto_sanitizing_);
 
     m_auto_sanitizing = auto_sanitizing_;
+    m_memfile_mutex_type = mutex_type_;
 
     // do we have to recreate the file ?
     if ((m_name != name_)
@@ -98,7 +99,7 @@ namespace eCAL
 
     // create mutex
     // for performance reasons only apply consistency check if it is explicitly set
-    if(!m_memfile_mutex.Create(name_, m_auto_sanitizing))
+    if(!m_memfile_mutex.Create(name_, m_memfile_mutex_type, m_auto_sanitizing))
     {
 #ifndef NDEBUG
       printf("Could not create memory file mutex: %s.\n", name_);

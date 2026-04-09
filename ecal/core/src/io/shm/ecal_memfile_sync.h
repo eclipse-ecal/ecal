@@ -31,6 +31,7 @@
 #include "readwrite/ecal_writer_data.h"
 #include "ecal_eventhandle.h"
 #include "ecal_memfile.h"
+#include "io/mtx/shm_mutex_resolution.h"
 
 #include <mutex>
 #include <string>
@@ -40,6 +41,7 @@ namespace eCAL
 {
   struct SSyncMemoryFileAttr
   {
+    detail::eResolvedMutexType mutex_type;
     size_t  min_size;           //!< memory file minimum size [Bytes]
     size_t  reserve;            //!< dynamic file size reserve before recreating memory file if payload size changes [%]
     int64_t timeout_open_ms;    //!< timeout to open a memory file using mutex lock [ms]

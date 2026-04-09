@@ -175,6 +175,7 @@ namespace eCAL
 
     // prepare memfile attributes
     SSyncMemoryFileAttr memory_file_attr = {};
+    memory_file_attr.mutex_type      = m_attributes.mutex_type;
     memory_file_attr.min_size        = m_attributes.memfile_min_size_bytes;
     memory_file_attr.reserve         = m_attributes.memfile_reserve_percent;
     memory_file_attr.timeout_open_ms = PUB_MEMFILE_OPEN_TO;

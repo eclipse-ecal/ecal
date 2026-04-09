@@ -22,11 +22,13 @@
 **/
 
 #include <cstdint>
+#include <ecal/config.h>
 #include <ecal/os.h>
 #include <memory>
 #include <string>
 
 #include "ecal_named_mutex.h"
+#include "shm_mutex_resolution.h"
 
 #ifdef ECAL_OS_LINUX
 #include "linux/ecal_named_mutex_impl.h"
@@ -39,13 +41,11 @@
 #include "win32/ecal_named_mutex_impl.h"
 #endif
 
-#include <iostream>
-
 namespace eCAL
 {
-  CNamedMutex::CNamedMutex(const std::string& name_, bool recoverable_) : CNamedMutex()
+  CNamedMutex::CNamedMutex(const std::string& name_, const detail::eResolvedMutexType mutex_type_, bool recoverable_) : CNamedMutex()
   {
-    Create(name_, recoverable_);
+    Create(name_, mutex_type_, recoverable_);
   }
 
   CNamedMutex::CNamedMutex()
@@ -69,24 +69,29 @@ namespace eCAL
     return *this;
   }
 
-  bool CNamedMutex::Create(const std::string& name_, bool recoverable_)
+  bool CNamedMutex::Create(const std::string& name_, const detail::eResolvedMutexType mutex_type_, bool recoverable_)
   {
+    switch (mutex_type_)
+    {
+    case detail::eResolvedMutexType::pthread_mutex:
 #ifdef ECAL_OS_LINUX
-#if !defined(ECAL_USE_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_ROBUST_MUTEX)
-    if(recoverable_)
-      m_impl = std::make_unique<CNamedMutexRobustClockLockImpl>(name_, true);
-    else
-      m_impl = std::make_unique<CNamedMutexImpl>(name_, false);
-#elif defined(ECAL_USE_CLOCKLOCK_MUTEX) && defined(ECAL_HAS_CLOCKLOCK_MUTEX)
-    m_impl = std::make_unique<CNamedMutexRobustClockLockImpl>(name_, recoverable_);
-#else
-    m_impl = std::make_unique<CNamedMutexImpl>(name_, recoverable_);
+      m_impl = std::make_unique<CNamedMutexImpl>(name_, recoverable_);
 #endif
+      break;
+    case detail::eResolvedMutexType::pthread_robust_mutex:
+#if defined(ECAL_OS_LINUX) && (defined(ECAL_HAS_ROBUST_MUTEX) || defined(ECAL_HAS_CLOCKLOCK_MUTEX))
+      m_impl = std::make_unique<CNamedMutexRobustClockLockImpl>(name_, recoverable_);
 #endif
-
+      break;
+    case detail::eResolvedMutexType::winapi_mutex:
 #ifdef ECAL_OS_WINDOWS
-    m_impl = std::make_unique<CNamedMutexImpl>(name_, recoverable_);
+      m_impl = std::make_unique<CNamedMutexImpl>(name_, recoverable_);
 #endif
+      break;
+    default:
+      break;
+    }
+
     return IsCreated();
   }
 
@@ -130,4 +135,3 @@ namespace eCAL
     m_impl->Unlock();
   }
 }
-

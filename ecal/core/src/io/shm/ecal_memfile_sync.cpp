@@ -265,7 +265,7 @@ namespace eCAL
     if (memfile_size < m_attr.min_size) memfile_size = m_attr.min_size;
 
     // create the memory file
-    if (!m_memfile.Create(m_memfile_name.c_str(), true, memfile_size))
+    if (!m_memfile.Create(m_memfile_name.c_str(), true, m_attr.mutex_type, memfile_size))
     {
       Logging::Log(Logging::log_level_error, std::string("CSyncMemoryFile::Create FAILED : ") + m_memfile_name);
       return false;

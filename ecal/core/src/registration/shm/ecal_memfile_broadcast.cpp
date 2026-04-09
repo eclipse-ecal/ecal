@@ -77,7 +77,7 @@ namespace eCAL
     const auto presumably_memfile_size =
       RelocatableCircularQueue<SMemfileBroadcastEvent>::PresumablyOccupiedMemorySize(m_attributes.queue_size) +
       sizeof(SMemfileBroadcastHeader);
-    if (!m_broadcast_memfile->Create(m_attributes.domain.c_str(), true, presumably_memfile_size, true))
+    if (!m_broadcast_memfile->Create(m_attributes.domain.c_str(), true, detail::Resolve(eCAL::GetConfiguration().transport_layer.shm.mutex_type), presumably_memfile_size, true))
     {
 #ifndef NDEBUG
       std::cerr << "Unable to access broadcast memory file." << std::endl;

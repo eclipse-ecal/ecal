@@ -58,7 +58,7 @@ namespace eCAL
     Destroy();
   }
 
-  bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_)
+  bool CMemFileObserver::Create(const std::string& memfile_name_, const std::string& memfile_event_, detail::eResolvedMutexType mutex_type_)
   {
     if (m_created) return false;
 
@@ -67,7 +67,7 @@ namespace eCAL
     gOpenNamedEvent(&m_event_ack, memfile_event_ + "_ack", false);
 
     // create memory file access
-    m_memfile.Create(memfile_name_.c_str(), false);
+    m_memfile.Create(memfile_name_.c_str(), false, mutex_type_);
 
     m_created = true;
 
@@ -370,7 +370,7 @@ namespace eCAL
     m_created = false;
   }
 
-  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
+  bool CMemFileThreadPool::ObserveFile(const std::string& memfile_name_, const std::string& memfile_event_, detail::eResolvedMutexType mutex_type_, int timeout_observation_ms, const MemFileDataCallbackT& callback_)
   {
     if(!m_created)            return(false);
     if(memfile_name_.empty()) return(false);
@@ -402,7 +402,7 @@ namespace eCAL
     else
     {
       auto observer = std::make_shared<CMemFileObserver>(m_memfile_map);
-      observer->Create(memfile_name_, memfile_event_);
+      observer->Create(memfile_name_, memfile_event_, mutex_type_);
       observer->Start(timeout_observation_ms, callback_);
       m_observer_pool[memfile_name_] = observer;
 #ifndef NDEBUG

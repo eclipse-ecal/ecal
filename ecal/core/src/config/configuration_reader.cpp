@@ -1,4 +1,5 @@
 #include "configuration_reader.h"
+#include "configuration_to_yaml.h"
 
 namespace 
 {
