@@ -40,7 +40,7 @@ set(YAML_PATHS
 # Add a custom command to generate the YAML file
 add_custom_command(
   OUTPUT  ${YAML_PATHS}                            # Specify the output file
-  COMMAND $<TARGET_FILE:${PROJECT_NAME}> --dump    # Command to run the executable
+  COMMAND $<TARGET_FILE:${PROJECT_NAME}> -d -n -o  # Command to run the executable (dump to directy, overwrite, no user input)
   DEPENDS ${PROJECT_NAME}                          # Ensure the executable is built before running the command
   COMMENT "Generating ${YAML_PATHS}"               # Comment to display during the build process
   VERBATIM                                         # Ensure command arguments are passed as-is
