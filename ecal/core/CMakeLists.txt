@@ -575,7 +575,6 @@ set(ecal_public_headers
     include/ecal/config/logging.h
     include/ecal/config/publisher.h
     include/ecal/config/registration.h
-    include/ecal/config/shm_mutex.h
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
     include/ecal/config/transport_layer.h
@@ -714,11 +713,9 @@ target_include_directories(ecal_core_private
 )
 
 target_link_libraries(ecal_core_private 
-  PRIVATE
+  PUBLIC
     $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
     $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
@@ -737,6 +734,10 @@ target_link_libraries(ecal_core_private
     Threads::Threads
     eCAL::ecal-utils
     # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
+  PRIVATE
+    # Target objects need to bee linked privately.
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
 )
 
@@ -806,8 +807,7 @@ set_target_properties(core
     VISIBILITY_INLINES_HIDDEN ON
 )
 
-target_compile_features(core INTERFACE cxx_std_14)
-target_compile_features(core PRIVATE cxx_std_17)
+target_compile_features(core PUBLIC cxx_std_17)
 
 set_property(TARGET core PROPERTY FOLDER core)
 endmacro()

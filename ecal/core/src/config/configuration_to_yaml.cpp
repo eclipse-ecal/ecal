@@ -1,24 +1,21 @@
 #include "configuration_to_yaml.h"
-#include <ecal/config/shm_mutex.h>
 
 // utility functions for yaml node handling
 namespace YAML
 {
-  std::string ShmMutexTypeToString(const eCAL::Config::SHM::eMutexType type)
+  std::string ShmMutexTypeToString(const eCAL::TransportLayer::SHM::eMutexType type)
   {
-    return std::string(eCAL::Config::SHM::ToString(type));
+    using namespace eCAL::TransportLayer::SHM;
+    return ToString(type).data();
   }
 
-  bool ParseShmMutexType(const std::string& text, eCAL::Config::SHM::eMutexType& out)
+  void ParseShmMutexType(const std::string& text, eCAL::TransportLayer::SHM::eMutexType& out)
   {
-    const auto parsed = eCAL::Config::SHM::FromString(text);
-    if (!parsed.has_value())
-      return false;
-    if (!eCAL::Config::SHM::IsSupported(*parsed))
-      return false;
-
-    out = *parsed;
-    return true;
+    using namespace eCAL::TransportLayer::SHM;
+    if (auto mutex_type = FromString(text); mutex_type.has_value())
+    {
+      out = mutex_type.value();
+    }
   }
 
   eCAL::Logging::Filter ParseLogLevel(const std::vector<std::string>& filter_)
@@ -311,12 +308,7 @@ namespace YAML
   {
     if (node_["mutex_type"])
     {
-      eCAL::Config::SHM::eMutexType parsed_mutex_type;
-      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
-      {
-        return false;
-      }
-      config_.mutex_type = parsed_mutex_type;
+      ParseShmMutexType(node_["mutex_type"].as<std::string>(), config_.mutex_type);
     }
     return true;
   }
@@ -351,8 +343,6 @@ namespace YAML
   {
     Node node;
     node["enable"]                   = config_.enable;
-    if (config_.mutex_type.has_value())
-      node["mutex_type"] = ShmMutexTypeToString(*config_.mutex_type);
     node["zero_copy_mode"]           = config_.zero_copy_mode;
     node["acknowledge_timeout_ms"]   = config_.acknowledge_timeout_ms;
     node["memfile_buffer_count"]     = config_.memfile_buffer_count;
@@ -364,15 +354,6 @@ namespace YAML
   bool convert<eCAL::Publisher::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Publisher::Layer::SHM::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
-    if (node_["mutex_type"])
-    {
-      eCAL::Config::SHM::eMutexType parsed_mutex_type;
-      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
-      {
-        return false;
-      }
-      config_.mutex_type = parsed_mutex_type;
-    }
     AssignValue<bool>(config_.zero_copy_mode, node_, "zero_copy_mode");
     AssignValue<unsigned int>(config_.acknowledge_timeout_ms, node_, "acknowledge_timeout_ms");
     AssignValue<unsigned int>(config_.memfile_buffer_count, node_, "memfile_buffer_count");
@@ -460,23 +441,12 @@ namespace YAML
   {
     Node node;
     node["enable"] = config_.enable;
-    if (config_.mutex_type.has_value())
-      node["mutex_type"] = ShmMutexTypeToString(*config_.mutex_type);
     return node;
   }
 
   bool convert<eCAL::Subscriber::Layer::SHM::Configuration>::decode(const Node& node_, eCAL::Subscriber::Layer::SHM::Configuration& config_)
   {
     AssignValue<bool>(config_.enable, node_, "enable");
-    if (node_["mutex_type"])
-    {
-      eCAL::Config::SHM::eMutexType parsed_mutex_type;
-      if (!ParseShmMutexType(node_["mutex_type"].as<std::string>(), parsed_mutex_type))
-      {
-        return false;
-      }
-      config_.mutex_type = parsed_mutex_type;
-    }
     return true;
   }
   

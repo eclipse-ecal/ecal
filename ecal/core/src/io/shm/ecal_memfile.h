@@ -64,7 +64,6 @@ namespace eCAL
      *
      * @return  true if it succeeds, false if it fails. 
     **/
-    bool Create(const char* name_, bool create_, size_t len_ = 0, bool auto_sanitizing_ = false);
     bool Create(const char* name_, bool create_, detail::eResolvedMutexType mutex_type_, size_t len_ = 0, bool auto_sanitizing_ = false);
 
     /**
@@ -227,7 +226,7 @@ namespace eCAL
     SInternalHeader               m_header;
     std::shared_ptr<SMemFileInfo> m_memfile_info;
     CNamedMutex                   m_memfile_mutex;
-    detail::eResolvedMutexType    m_memfile_mutex_type { detail::Resolve(eCAL::Config::SHM::DefaultMutexType()) };
+    detail::eResolvedMutexType    m_memfile_mutex_type { detail::Resolve(eCAL::TransportLayer::SHM::DefaultMutexType()) };
 
   private:
     CMemoryFile(const CMemoryFile&);                 // prevent copy-construction

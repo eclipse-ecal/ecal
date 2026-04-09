@@ -57,17 +57,10 @@ add_custom_target(run_${PROJECT_NAME} ALL
 # Ensure the executable is built before running the custom target
 add_dependencies(run_${PROJECT_NAME} ${PROJECT_NAME})
 
-# Specify include directories for the executable
-target_include_directories(${PROJECT_NAME} PRIVATE 
-  ${ECAL_CORE_PROJECT_ROOT}/core/src
-  ${ECAL_CORE_PROJECT_ROOT}/core/include
-)
-
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
-    eCAL::core
-    eCAL::ecal-utils
+    ecal_core_private
 )
 
 # Select the correct ecal config directory on Linux and Windows

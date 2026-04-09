@@ -36,7 +36,7 @@ namespace eCAL
   class CNamedMutex
   {
   public:
-    explicit CNamedMutex(const std::string& name_, bool recoverable_ = false);
+    explicit CNamedMutex(const std::string& name_, const detail::eResolvedMutexType mutex_type_, bool recoverable_ = false);
     CNamedMutex();
     ~CNamedMutex();
 
@@ -45,7 +45,6 @@ namespace eCAL
     CNamedMutex(CNamedMutex&& named_mutex) noexcept;
     CNamedMutex& operator=(CNamedMutex&& named_mutex)  noexcept;
 
-    bool Create(const std::string& name_, bool recoverable_ = false);
     bool Create(const std::string& name_, detail::eResolvedMutexType mutex_type_, bool recoverable_ = false);
     void Destroy();
 

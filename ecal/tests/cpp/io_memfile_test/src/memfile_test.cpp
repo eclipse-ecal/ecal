@@ -20,6 +20,7 @@
 
 #include "io/shm/ecal_memfile.h"
 #include "io/shm/ecal_memfile_db.h"
+#include "io/mtx/shm_mutex_resolution.h"
 #include <cstddef>
 #include <ecal/ecal.h>
 
@@ -31,6 +32,11 @@
 
 #include <gtest/gtest.h>
 #include <vector>
+
+namespace
+{
+  const auto default_mutex_type = eCAL::detail::Resolve(eCAL::TransportLayer::SHM::DefaultMutexType());
+}
 
 namespace eCAL
 {
@@ -62,7 +68,7 @@ TEST(core_cpp_core, MemFile_ReadWrite)
   EXPECT_EQ(false, mem_file.IsCreated());
 
   // create memory file
-  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, slen));
+  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, default_mutex_type, slen));
 
   // check creation state
   EXPECT_EQ(true, mem_file.IsCreated());
@@ -159,7 +165,7 @@ TEST(core_cpp_core, MemFile_Perf)
   size_t slen = send_s.size();
 
   // create memory file
-  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, slen));
+  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, default_mutex_type, slen));
 
   // start time
   auto start = std::chrono::high_resolution_clock::now();
@@ -215,7 +221,7 @@ TEST(core_cpp_core, MemFile_Concurrency)
   const size_t runs(10);
 
   // create memory file
-  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, buflen));
+  EXPECT_EQ(true, mem_file.Create(memfile_name.c_str(), true, default_mutex_type, buflen));
 
   // producer thread
   auto num_writes(0);

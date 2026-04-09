@@ -56,11 +56,6 @@ namespace eCAL
     Destroy(false);
   }
 
-  bool CMemoryFile::Create(const char* name_, const bool create_, const size_t len_, bool auto_sanitizing_)
-  {
-    return Create(name_, create_, m_memfile_mutex_type, len_, auto_sanitizing_);
-  }
-
   bool CMemoryFile::Create(const char* name_, const bool create_, detail::eResolvedMutexType mutex_type_, const size_t len_, bool auto_sanitizing_)
   {
     assert((create_ && len_ > 0) || (!create_ && len_ == 0));

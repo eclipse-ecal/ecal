@@ -24,9 +24,12 @@
 
 #pragma once
 
-#include <ecal/config/shm_mutex.h>
 #include <ecal/types/custom_data_types.h>
 #include <ecal/os.h>
+
+#include <optional>
+#include <string_view>
+
 
 namespace eCAL
 {
@@ -82,9 +85,20 @@ namespace eCAL
 
     namespace SHM
     {
+      enum class eMutexType : std::uint8_t
+      {
+        mutex,
+        recoverable_mutex
+      };
+
+      ECAL_API eMutexType DefaultMutexType();
+      ECAL_API std::string_view ToString(eMutexType mutex_type);
+      ECAL_API std::optional<eMutexType> FromString(std::string_view mutex_type_string);
+
+
       struct Configuration
       {
-        Config::SHM::eMutexType mutex_type { Config::SHM::DefaultMutexType() };
+        eMutexType mutex_type {  DefaultMutexType() };
       };
     }
 

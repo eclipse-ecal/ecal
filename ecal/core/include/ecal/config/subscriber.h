@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <ecal/config/shm_mutex.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
@@ -41,7 +40,6 @@ namespace eCAL
         struct Configuration
         {
           bool enable { true }; //!< enable layer (Default: true)
-          std::optional<eCAL::Config::SHM::eMutexType> mutex_type {}; //!< nullopt => inherit transport_layer.shm.mutex_type
         };
       }
 

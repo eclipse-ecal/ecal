@@ -17,15 +17,19 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include <ecal/config/shm_mutex.h>
-
+#include <ecal/config/transport_layer.h>
 #include "io/mtx/shm_mutex_resolution.h"
 
-namespace eCAL::Config::SHM
+namespace eCAL::TransportLayer::SHM
 {
-  std::string_view ToString(const eMutexType type)
+  eMutexType DefaultMutexType()
   {
-    switch (type)
+    return detail::DefaultSemanticMutexType();
+  }
+
+  ECAL_API std::string_view ToString(eMutexType mutex_type)
+  {
+    switch (mutex_type)
     {
     case eMutexType::mutex:
       return "mutex";
@@ -36,24 +40,14 @@ namespace eCAL::Config::SHM
     }
   }
 
-  std::optional<eMutexType> FromString(const std::string_view text)
+  ECAL_API std::optional<eMutexType> FromString(std::string_view mutex_type_string)
   {
-    if (text == "mutex" || text == "pthread_mutex")
+    if (mutex_type_string == "mutex")
       return eMutexType::mutex;
 
-    if (text == "recoverable_mutex" || text == "pthread_robust_mutex" || text == "winapi_mutex")
+    if (mutex_type_string == "recoverable_mutex")
       return eMutexType::recoverable_mutex;
 
     return std::nullopt;
-  }
-
-  eMutexType DefaultMutexType()
-  {
-    return detail::DefaultSemanticMutexType();
-  }
-
-  bool IsSupported(const eMutexType type)
-  {
-    return detail::IsSupported(type);
   }
 }

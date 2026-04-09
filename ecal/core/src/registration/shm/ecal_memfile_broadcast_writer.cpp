@@ -42,7 +42,7 @@ namespace eCAL
     m_memfile_broadcast = memfile_broadcast;
     m_event_id = CreateEventId();
     m_payload_memfile = std::make_unique<CMemoryFile>(m_memfile_map);
-    if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_event_id).c_str(), true, 1024))
+    if (!m_payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), m_event_id).c_str(), true, detail::Resolve(eCAL::GetConfiguration().transport_layer.shm.mutex_type), 1024))
     {
 #ifndef NDEBUG
       std::cerr << "Unable to create payload memfile" << '\n';
@@ -64,7 +64,7 @@ namespace eCAL
     {
       auto payload_memfile = std::make_unique<CMemoryFile>(m_memfile_map);
       const auto event_id = CreateEventId();
-      if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), true, size * 2))
+      if (!payload_memfile->Create(BuildPayloadMemfileName(m_memfile_broadcast->GetName(), event_id).c_str(), true, detail::Resolve(eCAL::GetConfiguration().transport_layer.shm.mutex_type), size * 2))
       {
 #ifndef NDEBUG
         std::cerr << "Unable to create new payload memory file" << '\n';

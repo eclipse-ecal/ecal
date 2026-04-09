@@ -19,9 +19,8 @@
 
 #pragma once
 
-#include <ecal/config/shm_mutex.h>
 #include <ecal/os.h>
-
+#include <ecal/config/transport_layer.h>
 #include <optional>
 #include <stdexcept>
 
@@ -34,11 +33,11 @@ namespace eCAL::detail
     pthread_robust_mutex
   };
 
-  template<eCAL::Config::SHM::eMutexType T>
+  template<eCAL::TransportLayer::SHM::eMutexType T>
   struct shm_mutex_traits;
 
   template<>
-  struct shm_mutex_traits<eCAL::Config::SHM::eMutexType::mutex>
+  struct shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::mutex>
   {
     static constexpr bool supported = true;
 #ifdef ECAL_OS_WINDOWS
@@ -49,7 +48,7 @@ namespace eCAL::detail
   };
 
   template<>
-  struct shm_mutex_traits<eCAL::Config::SHM::eMutexType::recoverable_mutex>
+  struct shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex>
   {
 #ifdef ECAL_OS_WINDOWS
     static constexpr bool supported = true;
@@ -63,54 +62,40 @@ namespace eCAL::detail
 #endif
   };
 
-  inline bool IsSupported(const eCAL::Config::SHM::eMutexType type)
+  inline bool IsSupported(const eCAL::TransportLayer::SHM::eMutexType type)
   {
     switch (type)
     {
-    case eCAL::Config::SHM::eMutexType::mutex:
-      return shm_mutex_traits<eCAL::Config::SHM::eMutexType::mutex>::supported;
-    case eCAL::Config::SHM::eMutexType::recoverable_mutex:
-      return shm_mutex_traits<eCAL::Config::SHM::eMutexType::recoverable_mutex>::supported;
+    case eCAL::TransportLayer::SHM::eMutexType::mutex:
+      return shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::mutex>::supported;
+    case eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex:
+      return shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex>::supported;
     default:
       return false;
     }
   }
-
-  inline eCAL::Config::SHM::eMutexType DefaultSemanticMutexType()
+    
+  inline eCAL::TransportLayer::SHM::eMutexType DefaultSemanticMutexType()
   {
-    return IsSupported(eCAL::Config::SHM::eMutexType::recoverable_mutex)
-      ? eCAL::Config::SHM::eMutexType::recoverable_mutex
-      : eCAL::Config::SHM::eMutexType::mutex;
+    return IsSupported(eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex)
+      ? eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex
+      : eCAL::TransportLayer::SHM::eMutexType::mutex;
   }
 
-  inline eResolvedMutexType Resolve(const eCAL::Config::SHM::eMutexType type)
+  inline eResolvedMutexType Resolve(const eCAL::TransportLayer::SHM::eMutexType type)
   {
     switch (type)
     {
-    case eCAL::Config::SHM::eMutexType::mutex:
-      return shm_mutex_traits<eCAL::Config::SHM::eMutexType::mutex>::resolved;
-    case eCAL::Config::SHM::eMutexType::recoverable_mutex:
-      if (!shm_mutex_traits<eCAL::Config::SHM::eMutexType::recoverable_mutex>::supported)
+    case eCAL::TransportLayer::SHM::eMutexType::mutex:
+      return shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::mutex>::resolved;
+    case eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex:
+      if (!shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex>::supported)
       {
         throw std::runtime_error("recoverable_mutex is not supported by this build");
       }
-      return shm_mutex_traits<eCAL::Config::SHM::eMutexType::recoverable_mutex>::resolved;
+      return shm_mutex_traits<eCAL::TransportLayer::SHM::eMutexType::recoverable_mutex>::resolved;
     default:
       throw std::runtime_error("Unknown SHM mutex type");
     }
-  }
-
-  inline eCAL::Config::SHM::eMutexType GetEffectiveMutexType(
-    const eCAL::Config::SHM::eMutexType global_type,
-    const std::optional<eCAL::Config::SHM::eMutexType>& local_override)
-  {
-    return local_override.value_or(global_type);
-  }
-
-  inline eResolvedMutexType GetEffectiveResolvedMutexType(
-    const eCAL::Config::SHM::eMutexType global_type,
-    const std::optional<eCAL::Config::SHM::eMutexType>& local_override)
-  {
-    return Resolve(GetEffectiveMutexType(global_type, local_override));
   }
 }

@@ -64,8 +64,7 @@ namespace eCAL
     attributes.tcp.max_reconnection_attempts = transport_layer_config.tcp.max_reconnections;
     
     attributes.shm.enable = subscriber_config.layer.shm.enable;
-    attributes.shm.mutex_type = detail::GetEffectiveResolvedMutexType(transport_layer_config.shm.mutex_type, subscriber_config.layer.shm.mutex_type);
-    
+   
     return attributes;
   }
 }

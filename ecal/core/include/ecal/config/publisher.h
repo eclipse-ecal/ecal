@@ -89,7 +89,6 @@
 #pragma once
 
 #include <ecal/types/custom_data_types.h>
-#include <ecal/config/shm_mutex.h>
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
@@ -107,7 +106,6 @@ namespace eCAL
         struct Configuration
         {
           bool         enable                  { true };  //!< enable layer 
-          std::optional<eCAL::Config::SHM::eMutexType> mutex_type {}; //!< nullopt => inherit transport_layer.shm.mutex_type
 
           bool         zero_copy_mode          { false }; //!< Enable zero copy shared memory transport mode 
           unsigned int acknowledge_timeout_ms  { 0U };    /*!< Force connected subscribers to send acknowledge event after processing the message.

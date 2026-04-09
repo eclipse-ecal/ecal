@@ -43,17 +43,9 @@
 
 namespace eCAL
 {
-  namespace
+  CNamedMutex::CNamedMutex(const std::string& name_, const detail::eResolvedMutexType mutex_type_, bool recoverable_) : CNamedMutex()
   {
-    detail::eResolvedMutexType GetConfiguredResolvedMutexType()
-    {
-      return detail::Resolve(eCAL::GetConfiguration().transport_layer.shm.mutex_type);
-    }
-  }
-
-  CNamedMutex::CNamedMutex(const std::string& name_, bool recoverable_) : CNamedMutex()
-  {
-    Create(name_, recoverable_);
+    Create(name_, mutex_type_, recoverable_);
   }
 
   CNamedMutex::CNamedMutex()
@@ -75,17 +67,6 @@ namespace eCAL
     m_impl.swap(named_mutex.m_impl);
     named_mutex.m_impl.reset();
     return *this;
-  }
-
-  bool CNamedMutex::Create(const std::string& name_, bool recoverable_)
-  {
-    if (recoverable_)
-    {
-      const auto resolved_type = detail::Resolve(eCAL::Config::SHM::eMutexType::recoverable_mutex);
-      return Create(name_, resolved_type, true);
-    }
-
-    return Create(name_, GetConfiguredResolvedMutexType(), false);
   }
 
   bool CNamedMutex::Create(const std::string& name_, const detail::eResolvedMutexType mutex_type_, bool recoverable_)

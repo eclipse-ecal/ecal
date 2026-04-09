@@ -53,12 +53,14 @@ namespace
 
     return name;
   }
+
+  const auto default_mutex_type = eCAL::detail::Resolve(eCAL::TransportLayer::SHM::DefaultMutexType());
 }
 
 TEST(core_cpp_io, MutexLockUnlock)
 {
   const std::string mutex_name = RandomMutexName20();
-  eCAL::CNamedMutex mutex(mutex_name);
+  eCAL::CNamedMutex mutex(mutex_name, default_mutex_type);
   EXPECT_EQ(true, mutex.Lock(0));
   mutex.Unlock();
 }
@@ -83,7 +85,7 @@ void MutexParallelCreateTest(bool robust)
       for (int i = 0; i < runs; ++i)
       {
         barrier.wait();
-        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i), robust);
+        eCAL::CNamedMutex mutex(mutex_name + "_" + std::to_string(i), default_mutex_type);
         if (mutex.IsCreated()){++number_times_created;}
         barrier.wait();
         if (mutex.Lock(100))
@@ -135,7 +137,7 @@ void MutexParallelLockUnlock(bool robust)
   auto mutex = [&barrier, &mutex_name, runs, robust, &lock_count]()
     {
       barrier.wait();
-      eCAL::CNamedMutex mutex(mutex_name, robust);
+      eCAL::CNamedMutex mutex(mutex_name, default_mutex_type);
       for (int i = 1; i <= runs; ++i)
       {
         barrier.wait();

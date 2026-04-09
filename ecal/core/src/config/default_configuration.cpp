@@ -1,6 +1,7 @@
 #include "default_configuration.h"
 
 #include "ecal/config.h"
+#include "config/configuration_to_yaml.h"
 
 #include <string>
 
@@ -139,9 +140,10 @@ namespace
     return std::string("\"") + ip_.Get() + std::string("\"");
   }
 
-  std::string quoteString(const eCAL::Config::SHM::eMutexType type_)
+  std::string quoteString(const eCAL::TransportLayer::SHM::eMutexType type_)
   {
-    return std::string("\"") + std::string(eCAL::Config::SHM::ToString(type_)) + std::string("\"");
+    using namespace eCAL::TransportLayer::SHM;
+    return std::string("\"") + ToString(type_).data() + std::string("\"");
   }
 }
 
