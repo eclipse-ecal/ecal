@@ -27,7 +27,6 @@
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
-#include <optional>
 
 namespace eCAL
 {

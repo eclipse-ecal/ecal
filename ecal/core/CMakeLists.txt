@@ -151,9 +151,9 @@ set(ecal_config_src
     src/config/default_configuration.h
     src/config/ecal_config.cpp
     src/config/configuration.cpp
-    src/config/shm_mutex.cpp
     src/config/ecal_path_processing.cpp
     src/config/ecal_path_processing.h
+    src/config/shm_mutex.cpp
     src/types/ecal_custom_data_types.cpp
 )
 if (ECAL_CORE_CONFIGURATION)
@@ -174,7 +174,6 @@ if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
       src/io/mtx/ecal_named_mutex.cpp
       src/io/mtx/ecal_named_mutex.h
       src/io/mtx/ecal_named_mutex_base.h
-      src/io/mtx/shm_mutex_resolution.h
   )
 
   # io/mtx/linux
@@ -713,9 +712,11 @@ target_include_directories(ecal_core_private
 )
 
 target_link_libraries(ecal_core_private 
-  PUBLIC
+  PRIVATE
     $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
     $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
@@ -734,10 +735,6 @@ target_link_libraries(ecal_core_private
     Threads::Threads
     eCAL::ecal-utils
     # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
-  PRIVATE
-    # Target objects need to bee linked privately.
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
 )
 

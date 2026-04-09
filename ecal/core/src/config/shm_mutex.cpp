@@ -27,7 +27,7 @@ namespace eCAL::TransportLayer::SHM
     return detail::DefaultSemanticMutexType();
   }
 
-  ECAL_API std::string_view ToString(eMutexType mutex_type)
+  std::string_view ToString(eMutexType mutex_type)
   {
     switch (mutex_type)
     {
@@ -40,7 +40,7 @@ namespace eCAL::TransportLayer::SHM
     }
   }
 
-  ECAL_API std::optional<eMutexType> FromString(std::string_view mutex_type_string)
+  std::optional<eMutexType> FromString(std::string_view mutex_type_string)
   {
     if (mutex_type_string == "mutex")
       return eMutexType::mutex;

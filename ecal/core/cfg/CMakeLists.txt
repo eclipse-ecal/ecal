@@ -29,9 +29,6 @@ set(ECAL_GENERATED_YAML_PATH ${ECAL_YAML_PATH} CACHE INTERNAL "Path to the gener
 
 add_executable(${PROJECT_NAME} 
   ${ECAL_CORE_PROJECT_ROOT}/core/cfg/generate_configuration_yaml.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/configuration_writer.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/default_configuration.cpp
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/config/ecal_path_processing.cpp
 )
 
 # Set the output paths for the generated YAML files

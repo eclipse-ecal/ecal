@@ -92,7 +92,6 @@
 #include <ecal/config/transport_layer.h>
 
 #include <cstddef>
-#include <optional>
 #include <vector>
 
 namespace eCAL
