@@ -53,6 +53,7 @@ public class ConfigTest
     config.Registration.Local.TransportType = 0; // eCAL::Registration::Local::eTransportType::shm
     config.Registration.Local.SHM.Domain = "ecal_don";
     config.Registration.Local.SHM.QueueSize = 2048;
+    config.Registration.Local.SHM.ReceivePollMs = 12;
     config.Registration.Local.UDP.Port = 15000;
     config.Registration.Network.TransportType = 0; // eCAL::Registration::Network::eTransportType::udp
     config.Registration.Network.UDP.Port = 16000;
@@ -128,6 +129,7 @@ public class ConfigTest
     Assert.AreEqual(config.Registration.Local.TransportType, ecalConfig.Registration.Local.TransportType, "Local.TransportType mismatch");
     Assert.AreEqual(config.Registration.Local.SHM.Domain, ecalConfig.Registration.Local.SHM.Domain, "Local.SHM.Domain mismatch");
     Assert.AreEqual(config.Registration.Local.SHM.QueueSize, ecalConfig.Registration.Local.SHM.QueueSize, "Local.SHM.QueueSize mismatch");
+    Assert.AreEqual(config.Registration.Local.SHM.ReceivePollMs, ecalConfig.Registration.Local.SHM.ReceivePollMs, "Local.SHM.ReceivePollMs mismatch");
     Assert.AreEqual(config.Registration.Local.UDP.Port, ecalConfig.Registration.Local.UDP.Port, "Local.UDP.Port mismatch");
     Assert.AreEqual(config.Registration.Network.TransportType, ecalConfig.Registration.Network.TransportType, "Network.TransportType mismatch");
     Assert.AreEqual(config.Registration.Network.UDP.Port, ecalConfig.Registration.Network.UDP.Port, "Network.UDP.Port mismatch");

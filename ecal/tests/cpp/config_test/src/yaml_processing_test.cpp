@@ -48,6 +48,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
     config.registration.local.shm.domain = "ecal_don";
     config.registration.local.shm.queue_size = 2048;
+    config.registration.local.shm.receive_poll_ms = 12;
     config.registration.local.udp.port = 15000;
     // There is unfortunately only one transport type
     config.registration.network.transport_type = eCAL::Registration::Network::eTransportType::udp;
@@ -114,6 +115,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.registration.local.transport_type, config_from_yaml.registration.local.transport_type);
     EXPECT_EQ(config.registration.local.shm.domain, config_from_yaml.registration.local.shm.domain);
     EXPECT_EQ(config.registration.local.shm.queue_size, config_from_yaml.registration.local.shm.queue_size);
+    EXPECT_EQ(config.registration.local.shm.receive_poll_ms, config_from_yaml.registration.local.shm.receive_poll_ms);
     EXPECT_EQ(config.registration.local.udp.port, config_from_yaml.registration.local.udp.port);
     EXPECT_EQ(config.registration.network.transport_type, config_from_yaml.registration.network.transport_type);
     EXPECT_EQ(config.registration.network.udp.port, config_from_yaml.registration.network.udp.port);

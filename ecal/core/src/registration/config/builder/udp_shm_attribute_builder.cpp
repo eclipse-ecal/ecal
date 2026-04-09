@@ -57,6 +57,7 @@ namespace eCAL
 
       sender_attr.domain     = provider_attr_.shm.domain;
       sender_attr.queue_size = provider_attr_.shm.queue_size;
+      sender_attr.receive_poll_ms = provider_attr_.shm.receive_poll_ms;
 
       return sender_attr;
     }
