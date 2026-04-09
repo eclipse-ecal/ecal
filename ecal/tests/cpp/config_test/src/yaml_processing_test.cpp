@@ -105,6 +105,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     eCAL::Configuration config_from_yaml;
     eCAL::Config::YamlStringToConfig(yaml_string.str(), config_from_yaml);
 
+    // Compare all values of the config struct with the values of the config struct created from yaml string
     EXPECT_EQ(config.communication_mode, config_from_yaml.communication_mode);
     EXPECT_EQ(config.registration.registration_refresh, config_from_yaml.registration.registration_refresh);
     EXPECT_EQ(config.registration.registration_timeout, config_from_yaml.registration.registration_timeout);
@@ -158,6 +159,64 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.logging.provider.udp_config.port, config_from_yaml.logging.provider.udp_config.port);
     EXPECT_EQ(config.logging.receiver.enable, config_from_yaml.logging.receiver.enable);
     EXPECT_EQ(config.logging.receiver.udp_config.port, config_from_yaml.logging.receiver.udp_config.port);
+
+    auto yaml_from_config = YAML::Node(config);
+    eCAL::Configuration config_from_yaml_config = yaml_from_config.as<eCAL::Configuration>();
+    
+    // Compare all values of the config struct with the encoded and decoded config struct
+    EXPECT_EQ(config.communication_mode, config_from_yaml_config.communication_mode);
+    EXPECT_EQ(config.registration.registration_refresh, config_from_yaml_config.registration.registration_refresh);
+    EXPECT_EQ(config.registration.registration_timeout, config_from_yaml_config.registration.registration_timeout);
+    EXPECT_EQ(config.registration.loopback, config_from_yaml_config.registration.loopback);
+    EXPECT_EQ(config.registration.shm_transport_domain, config_from_yaml_config.registration.shm_transport_domain);
+    EXPECT_EQ(config.registration.local.transport_type, config_from_yaml_config.registration.local.transport_type);
+    EXPECT_EQ(config.registration.local.shm.domain, config_from_yaml_config.registration.local.shm.domain);
+    EXPECT_EQ(config.registration.local.shm.queue_size, config_from_yaml_config.registration.local.shm.queue_size);
+    EXPECT_EQ(config.registration.local.udp.port, config_from_yaml_config.registration.local.udp.port);
+    EXPECT_EQ(config.registration.network.transport_type, config_from_yaml_config.registration.network.transport_type);
+    EXPECT_EQ(config.registration.network.udp.port, config_from_yaml_config.registration.network.udp.port);
+    EXPECT_EQ(config.transport_layer.udp.config_version, config_from_yaml_config.transport_layer.udp.config_version);
+    EXPECT_EQ(config.transport_layer.udp.port, config_from_yaml_config.transport_layer.udp.port);
+    EXPECT_EQ(config.transport_layer.udp.mask, config_from_yaml_config.transport_layer.udp.mask);
+    EXPECT_EQ(config.transport_layer.udp.send_buffer, config_from_yaml_config.transport_layer.udp.send_buffer);
+    EXPECT_EQ(config.transport_layer.udp.receive_buffer, config_from_yaml_config.transport_layer.udp.receive_buffer);
+    EXPECT_EQ(config.transport_layer.udp.join_all_interfaces, config_from_yaml_config.transport_layer.udp.join_all_interfaces);
+    EXPECT_EQ(config.transport_layer.udp.npcap_enabled, config_from_yaml_config.transport_layer.udp.npcap_enabled);
+    EXPECT_EQ(config.transport_layer.udp.local.group, config_from_yaml_config.transport_layer.udp.local.group);
+    EXPECT_EQ(config.transport_layer.udp.local.ttl, config_from_yaml_config.transport_layer.udp.local.ttl);
+    EXPECT_EQ(config.transport_layer.udp.network.group, config_from_yaml_config.transport_layer.udp.network.group);
+    EXPECT_EQ(config.transport_layer.udp.network.ttl, config_from_yaml_config.transport_layer.udp.network.ttl);
+    EXPECT_EQ(config.transport_layer.tcp.number_executor_reader, config_from_yaml_config.transport_layer.tcp.number_executor_reader);
+    EXPECT_EQ(config.transport_layer.tcp.number_executor_writer, config_from_yaml_config.transport_layer.tcp.number_executor_writer);
+    EXPECT_EQ(config.transport_layer.tcp.max_reconnections, config_from_yaml_config.transport_layer.tcp.max_reconnections);
+    EXPECT_EQ(config.publisher.layer.shm.enable, config_from_yaml_config.publisher.layer.shm.enable);
+    EXPECT_EQ(config.publisher.layer.shm.zero_copy_mode, config_from_yaml_config.publisher.layer.shm.zero_copy_mode);
+    EXPECT_EQ(config.publisher.layer.shm.acknowledge_timeout_ms, config_from_yaml_config.publisher.layer.shm.acknowledge_timeout_ms);
+    EXPECT_EQ(config.publisher.layer.shm.memfile_buffer_count, config_from_yaml_config.publisher.layer.shm.memfile_buffer_count);
+    EXPECT_EQ(config.publisher.layer.shm.memfile_min_size_bytes, config_from_yaml_config.publisher.layer.shm.memfile_min_size_bytes);
+    EXPECT_EQ(config.publisher.layer.shm.memfile_reserve_percent, config_from_yaml_config.publisher.layer.shm.memfile_reserve_percent);
+    EXPECT_EQ(config.publisher.layer.udp.enable, config_from_yaml_config.publisher.layer.udp.enable);
+    EXPECT_EQ(config.publisher.layer.tcp.enable, config_from_yaml_config.publisher.layer.tcp.enable);
+    EXPECT_EQ(config.publisher.layer_priority_local, config_from_yaml_config.publisher.layer_priority_local);
+    EXPECT_EQ(config.publisher.layer_priority_remote, config_from_yaml_config.publisher.layer_priority_remote);
+    EXPECT_EQ(config.subscriber.layer.shm.enable, config_from_yaml_config.subscriber.layer.shm.enable);
+    EXPECT_EQ(config.subscriber.layer.udp.enable, config_from_yaml_config.subscriber.layer.udp.enable);
+    EXPECT_EQ(config.subscriber.layer.tcp.enable, config_from_yaml_config.subscriber.layer.tcp.enable);
+    EXPECT_EQ(config.subscriber.drop_out_of_order_messages, config_from_yaml_config.subscriber.drop_out_of_order_messages);
+    EXPECT_EQ(config.timesync.timesync_module_replay, config_from_yaml_config.timesync.timesync_module_replay);
+    EXPECT_EQ(config.timesync.timesync_module_rt, config_from_yaml_config.timesync.timesync_module_rt);
+    EXPECT_EQ(config.application.startup.terminal_emulator, config_from_yaml_config.application.startup.terminal_emulator);
+    EXPECT_EQ(config.application.sys.filter_excl, config_from_yaml_config.application.sys.filter_excl);
+    EXPECT_EQ(config.logging.provider.console.enable, config_from_yaml_config.logging.provider.console.enable);
+    EXPECT_EQ(config.logging.provider.console.log_level, config_from_yaml_config.logging.provider.console.log_level);
+    EXPECT_EQ(config.logging.provider.file.enable, config_from_yaml_config.logging.provider.file.enable);
+    EXPECT_EQ(config.logging.provider.file.log_level, config_from_yaml_config.logging.provider.file.log_level);
+    EXPECT_EQ(config.logging.provider.udp.enable, config_from_yaml_config.logging.provider.udp.enable);
+    EXPECT_EQ(config.logging.provider.udp.log_level, config_from_yaml_config.logging.provider.udp.log_level);
+    EXPECT_EQ(config.logging.provider.file_config.path, config_from_yaml_config.logging.provider.file_config.path);
+    EXPECT_EQ(config.logging.provider.udp_config.port, config_from_yaml_config.logging.provider.udp_config.port);
+    EXPECT_EQ(config.logging.receiver.enable, config_from_yaml_config.logging.receiver.enable);
+    EXPECT_EQ(config.logging.receiver.udp_config.port, config_from_yaml_config.logging.receiver.udp_config.port);
 }
 
 TEST(core_cpp_config /*unused*/, read_write_file_test /*unused*/)
