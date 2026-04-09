@@ -26,12 +26,13 @@
 #include "ecal_def.h"
 #include "ecal/config.h"
 
-#include <filesystem>
-#include <system_error>
 #include "ecal/util.h"
 #include "util/getenvvar.h"
 
+#include <algorithm>
+#include <filesystem>
 #include <fstream>
+#include <system_error>
 #include <vector>
 
 // for cwd
@@ -318,7 +319,6 @@ namespace eCAL
     
     #elif defined(ECAL_OS_LINUX)
     
-      // TODO PG: Check if we really want to give that back here
       if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH))
         system_dir = ECAL_LINUX_SYSTEM_PATH;
     
