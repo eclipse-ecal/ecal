@@ -20,7 +20,8 @@
 #pragma once
 
 #include "tracing.h"
-#include "itracing_writer.h"
+#include "tracing_writer.h"
+#include "tracing_writer_jsonl.h"
 #include "util/single_instance_helper.h"
 
 #include <vector>
@@ -41,16 +42,14 @@ namespace tracing
 
     public:
 
-        static std::shared_ptr<CTraceProvider> Create();
-        ~CTraceProvider();
+        static std::shared_ptr<CTraceProvider> Create(std::unique_ptr<TracingWriter> writer = std::make_unique<CTracingWriterJSONL>(), size_t batch_size = kDefaultTracingBatchSize);
 
         CTraceProvider(const CTraceProvider&)            = delete;
         CTraceProvider& operator=(const CTraceProvider&) = delete;
         CTraceProvider(CTraceProvider&&)                 = delete;
         CTraceProvider& operator=(CTraceProvider&&)      = delete;
 
-        // Buffer management
-        void setBatchSize(size_t batch_size) { batch_size_ = batch_size; }
+        ~CTraceProvider();
         
         // Add span data to buffer
         void bufferSpan(const SSpanData& span_data);
@@ -64,18 +63,21 @@ namespace tracing
             std::lock_guard<std::mutex> lock(thread_mutex);
             return span_buffer_;
         }
-        
 
-        // File path accessors (delegated to the internal writer)
-        std::string getSpansFilePath() const;
-        std::string getTopicMetadataFilePath() const;
-
-        // Replace the active writer. The new writer takes effect immediately.
-        // Pass nullptr to disable writing.
-        void setWriter(std::unique_ptr<ITracingWriter> writer);
+        // Synchronously flush all buffered spans to the writer
+        void forceFlush()
+        {
+            std::vector<SSpanData> to_write;
+            {
+                std::lock_guard<std::mutex> lock(thread_mutex);
+                to_write.swap(span_buffer_);
+            }
+            if (!to_write.empty())
+                writer_->writeBatchSpans(to_write);
+        }
 
     private:
-        CTraceProvider();
+        CTraceProvider(std::unique_ptr<TracingWriter> writer, size_t batch_size);
         void writerThreadLoop();
 
         std::atomic<size_t> batch_size_{kDefaultTracingBatchSize};
@@ -84,7 +86,7 @@ namespace tracing
         std::condition_variable write_cv_;
         bool stop_thread_{false};
         std::thread writer_thread_;
-        std::unique_ptr<ITracingWriter> writer_;
+        std::unique_ptr<TracingWriter> writer_;
   };
 
 } // namespace tracing

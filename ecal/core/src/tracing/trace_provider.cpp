@@ -19,6 +19,8 @@
 
 #include "trace_provider.h"
 #include "tracing_writer.h"
+#include "tracing_writer_jsonl.h"
+#include "util/single_instance_helper.h"
 
 #include <cstdlib>
 #include <atomic>
@@ -29,11 +31,11 @@ namespace eCAL
 namespace tracing
 {
 
-    std::shared_ptr<CTraceProvider> CTraceProvider::Create()
+    std::shared_ptr<CTraceProvider> CTraceProvider::Create(std::unique_ptr<TracingWriter> writer, size_t batch_size)
     {
       try
       {
-        return Util::CSingleInstanceHelper<CTraceProvider>::Create();
+        return Util::CSingleInstanceHelper<CTraceProvider>::Create(std::move(writer), batch_size);
       }
       catch (const std::exception& e)
       {
@@ -41,8 +43,8 @@ namespace tracing
       }
     }
 
-    CTraceProvider::CTraceProvider()
-        : writer_(std::make_unique<CTracingWriter>())
+    CTraceProvider::CTraceProvider(std::unique_ptr<TracingWriter> writer, size_t batch_size)
+        : batch_size_(batch_size), writer_(std::move(writer))
     {
         writer_thread_ = std::thread(&CTraceProvider::writerThreadLoop, this);
     }
@@ -98,21 +100,5 @@ namespace tracing
         writer_->writeTopicMetadata(metadata);
     }
 
-    std::string CTraceProvider::getSpansFilePath() const
-    {
-        return writer_->getSpansFilePath();
-    }
-
-    std::string CTraceProvider::getTopicMetadataFilePath() const
-    {
-        return writer_->getTopicMetadataFilePath();
-    }
-
-    void CTraceProvider::setWriter(std::unique_ptr<ITracingWriter> writer)
-    {
-        std::lock_guard<std::mutex> lock(thread_mutex);
-        writer_ = std::move(writer);
-    }
-    
 } // namespace tracing
 } // namespace eCAL

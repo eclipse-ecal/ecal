@@ -17,7 +17,7 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "tracing_writer.h"
+#include "tracing_writer_jsonl.h"
 
 #include <fstream>
 #include <iostream>
@@ -45,11 +45,11 @@ namespace tracing
         return oss.str();
     }
 
-    CTracingWriter::CTracingWriter()
+    CTracingWriterJSONL::CTracingWriterJSONL()
         : timestamp_(getCurrentTimestamp())
     {}
 
-    std::string CTracingWriter::getSpansFilePath() const
+    std::string CTracingWriterJSONL::getSpansFilePath() const
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
@@ -60,7 +60,7 @@ namespace tracing
         return std::string(data_dir) + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    std::string CTracingWriter::getTopicMetadataFilePath() const
+    std::string CTracingWriterJSONL::getTopicMetadataFilePath() const
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
@@ -71,7 +71,7 @@ namespace tracing
         return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    void CTracingWriter::writeBatchSpans(const std::vector<SSpanData>& batch)
+    void CTracingWriterJSONL::writeBatchSpans(const std::vector<SSpanData>& batch)
     {
         try
         {
@@ -109,7 +109,7 @@ namespace tracing
         }
     }
 
-    void CTracingWriter::writeTopicMetadata(const STopicMetadata& metadata)
+    void CTracingWriterJSONL::writeTopicMetadata(const STopicMetadata& metadata)
     {
         try
         {
