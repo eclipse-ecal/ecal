@@ -30,7 +30,6 @@ It will generate the files in the first of the marked directories that is writab
   2. ``%cd%\ecal.yaml``
   3. |ecalconfig-path-windows| *
   4. ``%ProgramData%\eCAL\ecal.yaml`` * (fallback)
-  5. ``<ecal installation directory>\etc\ecal.yaml`` (fallback)
 
 - |fa-ubuntu| Ubuntu:
 

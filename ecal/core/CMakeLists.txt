@@ -478,6 +478,8 @@ set(ecal_tracing_src
 # util
 ######################################
 set(ecal_util_src
+    src/util/entity_id_generator.cpp
+    src/util/entity_id_generator.h
     src/util/ecal_expmap.h
     src/util/ecal_thread.h
     src/util/expanding_vector.h
@@ -725,17 +727,16 @@ target_include_directories(ecal_core_private
 )
 
 target_link_libraries(ecal_core_private 
-  PRIVATE
+  PUBLIC
     $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
     $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
-    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
     nlohmann_json::nlohmann_json
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
+    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:atomic>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>
     $<$<BOOL:${WIN32}>:iphlpapi>
     $<$<BOOL:${WIN32}>:psapi> 
@@ -747,8 +748,11 @@ target_link_libraries(ecal_core_private
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
+  PRIVATE
     # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:ecal_service $<TARGET_OBJECTS:ecal_service>>
+    $<$<BOOL:${ECAL_CORE_SERVICE}>:dynamic_threadpool $<TARGET_OBJECTS:dynamic_threadpool>>
 )
 
 target_compile_features(ecal_core_private PUBLIC cxx_std_17)

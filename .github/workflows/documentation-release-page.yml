@@ -30,7 +30,7 @@ jobs:
         fi
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules:  'false'
         fetch-depth: 0
@@ -62,7 +62,7 @@ jobs:
         zip -r ../release-page.zip .
 
     - name: Upload documentation
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: release-page
         path: build/release-page.zip

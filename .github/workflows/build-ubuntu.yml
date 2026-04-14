@@ -57,7 +57,7 @@ jobs:
         sudo apt-get install --no-install-recommends "${common_packages[@]}" "${specific_packages[@]}"
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules:  'false'
         fetch-depth: 0
@@ -182,19 +182,19 @@ jobs:
       run: cpack -G DEB -R '${{ env.DEB_VERSION }}' --config _build/CPackConfig.cmake
 
     - name: Upload Debian
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: '${{env.PROJECT_NAME}}_${{ env.DEB_VERSION }}-${{runner.arch}}'
         path: _deploy/*.deb
         
     - name: Upload Benchmark Executables
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'benchmarks_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/bin/ecal_benchmark*
         
     - name: Upload eCAL Libraries
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: 'libraries_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/lib/*
@@ -220,7 +220,7 @@ jobs:
 
     steps:
     - name: Fetch Throughput Calculator Python Script
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         sparse-checkout: |
             ecal/benchmarks/util/throughput_calculator.py
@@ -232,13 +232,13 @@ jobs:
         sudo apt-get install --no-install-recommends "libyaml-cpp-dev"
     
     - name: Download eCAL Libraries
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: 'libraries_${{ matrix.os_version }}'
         path: ${{ github.workspace }}/_build/lib
     
     - name: Download Benchmark Executables
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: 'benchmarks_${{ matrix.os_version }}'
         path: ${{ github.workspace }}/_build/bin
@@ -305,7 +305,7 @@ jobs:
       uses: bencherdev/bencher@main
         
     - name: Fetch 7z-Score Python Script
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         sparse-checkout: |
             ecal/benchmarks/util/7z_score.py
