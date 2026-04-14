@@ -23,7 +23,20 @@ find_package(GTest REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
 set(tracing_test_src
-  src/tracing_test.cpp
+  src/tracing_test_helpers.h
+  # Unit tests — individual classes in isolation
+  src/unittest/tracing_types_test.cpp
+  src/unittest/tracing_layer_type_test.cpp
+  src/unittest/tracing_provider_test.cpp
+  src/unittest/tracing_span_test.cpp
+  src/unittest/tracing_writer_test.cpp
+  src/unittest/tracing_edge_case_test.cpp
+  # Integration tests — component interactions and concurrency
+  src/integrationtest/tracing_integration_test.cpp
+  src/integrationtest/tracing_thread_safety_test.cpp
+  src/integrationtest/tracing_scale_test.cpp
+  # System tests — full eCAL runtime, real pub/sub
+  src/systemtest/tracing_pubsub_stress_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${tracing_test_src})
