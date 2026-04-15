@@ -170,7 +170,9 @@ jobs:
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Run Tests
-      run: ctest -V --test-dir _build --output-junit test-results/test-results.xml
+      run: |
+        mkdir -p _build/test-results
+        ctest -V --test-dir _build --output-junit _build/test-results/test-results.xml
 
     - name: Upload JUnit XML
       if: always()
