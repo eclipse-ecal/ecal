@@ -67,7 +67,7 @@ def load_all_results(xml_dir, repo, sha):
     xml_files = sorted(glob.glob(os.path.join(xml_dir, "**", "*.xml"), recursive=True))
     if not xml_files:
         print(f"No XML files found in '{xml_dir}' — nothing to report.")
-        sys.exit(0)
+        return []
 
     results = []
     for xml_path in xml_files:
@@ -152,6 +152,17 @@ def main():
 
     run_url      = f"{SERVER}/{args.repo}/actions/runs/{args.run_id}" if args.repo and args.run_id else ""
     results      = load_all_results(args.xml_dir, args.repo, args.sha)
+
+    if not results:
+        comment_body = (
+            f"{MARKER}\n"
+            "## CI Test Results\n\n"
+            ":warning: No JUnit XML artifacts were found in this run.\n"
+        )
+        write_step_summary(comment_body)
+        print("No parsed test results available. Wrote fallback job summary.")
+        return
+
     comment_body = render_comment(results, run_url, args.sha)
 
     write_step_summary(comment_body)
