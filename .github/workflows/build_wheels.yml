@@ -1,8 +1,6 @@
 name: Build Wheels
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 
 jobs:

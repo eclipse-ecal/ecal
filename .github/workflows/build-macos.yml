@@ -1,10 +1,7 @@
 name: Build macOS
 
-on:  
-  push:
-  pull_request:
-    branches:
-      - master
+on:
+  workflow_dispatch:
 
 jobs:
   build-macos:
