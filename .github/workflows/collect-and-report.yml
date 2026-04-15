@@ -1,0 +1,51 @@
+name: Collect and Report
+
+on:
+  workflow_call:
+    inputs:
+      artifact-pattern:
+        required: false
+        default: test-results-*
+        type: string
+      pr-number:
+        required: false
+        default: ""
+        type: string
+      sha:
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  collect-and-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download test XML artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: ${{ inputs.artifact-pattern }}
+          path: xml-artifacts/
+
+      - name: List downloaded files
+        run: find xml-artifacts/ -type f | sort
+
+      - name: Install Python dependencies
+        run: pip install --quiet junitparser requests jinja2
+
+      - name: Build summary and post PR comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 .github/scripts/merge_and_post.py \
+            --xml-dir    xml-artifacts/ \
+            --pr-number  "${{ inputs.pr-number }}" \
+            --repo       "${{ github.repository }}" \
+            --run-id     "${{ github.run_id }}" \
+            --sha        "${{ inputs.sha || github.sha }}"
