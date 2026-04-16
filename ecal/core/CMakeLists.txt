@@ -717,7 +717,7 @@ target_link_libraries(ecal_core_private
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
-    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
+    ${CMAKE_DL_LIBS}
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:atomic>
     $<$<STREQUAL:${CMAKE_SYSTEM_NAME},FreeBSD>:util>

@@ -29,7 +29,6 @@ ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
     ecal_core_private

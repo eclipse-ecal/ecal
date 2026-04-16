@@ -53,7 +53,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<TARGET_PROPERTY:eCAL::core,
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
-    $<$<BOOL:${UNIX}>:dl>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>:rt>
     Threads::Threads
     eCAL::ecal-utils
