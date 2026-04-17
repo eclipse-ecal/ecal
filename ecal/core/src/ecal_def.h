@@ -35,6 +35,7 @@ constexpr const char* ECAL_FOLDER_NAME_WINDOWS      = "eCAL";
 constexpr const char* ECAL_FOLDER_NAME_LINUX        = "ecal";
 constexpr const char* ECAL_FOLDER_NAME_HOME_LINUX   = ".ecal";
 constexpr const char* ECAL_FOLDER_NAME_LOG          = "logs";
+constexpr const char* ECAL_FOLDER_NAME_TRACE        = "traces";
 constexpr const char* ECAL_FOLDER_NAME_TMP_WINDOWS  = "Temp";
 
 #ifdef ECAL_OS_WINDOWS
@@ -51,6 +52,7 @@ constexpr const char* ECAL_DEFAULT_CFG              = "ecal.yaml";
 /* environment variables */
 constexpr const char* ECAL_DATA_VAR                 = "ECAL_DATA";
 constexpr const char* ECAL_LOG_VAR                  = "ECAL_LOG_DIR";
+constexpr const char* ECAL_TRACE_VAR                = "ECAL_TRACE_DIR";
 constexpr const char* ECAL_LINUX_HOME_VAR           = "HOME";
 constexpr const char* ECAL_LINUX_TMP_VAR            = "TMPDIR";
 
