@@ -65,6 +65,24 @@ namespace eCAL
     ECAL_API std::string GeteCALLogDir();
 
     /**
+     * @brief Returns the path to the eCAL trace directory.
+     *
+     *        Searches in following order:
+     *        1. Environment variable ECAL_TRACE_DIR
+     *        2. Environment variable ECAL_DATA (also checking for traces subdirectory)
+    *        3. The path where ecal.yaml was loaded from (also checking for traces subdirectory)
+    *        4. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+    *        5. Fallback path /ecal_tmp
+     *
+    *        In case of 4/5, a unique temporary folder will be created.
+     *
+     * @returns The path to the eCAL trace directory.
+     *          The subdirectory traces might not exist yet.
+     *          Returns empty string if no root path could be found.
+    **/
+    ECAL_API std::string GeteCALTraceDir();
+
+    /**
      * @brief Send shutdown event to specified local user process using it's unit name.
      *
      * @param unit_name_   Process unit name.
