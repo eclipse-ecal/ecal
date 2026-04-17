@@ -56,7 +56,6 @@ add_dependencies(run_${PROJECT_NAME} ${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
-    $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${QNXNTO}>>>:dl>
     ecal_core_private
 )
 

@@ -55,6 +55,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_link_libraries(${PROJECT_NAME} 
+  PRIVATE  
+    ${CMAKE_DL_LIBS}
+)
 
 # filesystem.cpp uses fts on Linux, some distibutions (i.e: Alpine) have fts as a
 # separate library
