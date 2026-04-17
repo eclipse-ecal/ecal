@@ -31,7 +31,7 @@ namespace tracing
 {
 
     // Send span constructor
-    CSpan::CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    CPublisherSpan::CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
         auto now = system_clock::now();
         data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
@@ -43,8 +43,15 @@ namespace tracing
         data.op_type      = op_type;
     }
 
+    CPublisherSpan::~CPublisherSpan()
+    {
+        auto now = system_clock::now();
+        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+        if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
+    }
+
     // Receive span constructor
-    CSpan::CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    CSubscriberSpan::CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
         auto now = system_clock::now();
         data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
@@ -57,11 +64,11 @@ namespace tracing
         data.op_type    = op_type;
     }
 
-    CSpan::~CSpan()
+    CSubscriberSpan::~CSubscriberSpan()
     {
         auto now = system_clock::now();
         data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        if (auto provider = g_trace_provider(); provider) provider->bufferSpan(data);
+        if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
     }
 
 } // namespace tracing

@@ -136,7 +136,7 @@ namespace eCAL
       meta.encoding   = m_topic_info.encoding;
       meta.type_name  = m_topic_info.name;
       meta.direction  = eCAL::tracing::topic_direction::publisher;
-      if (auto provider = g_trace_provider(); provider) provider->addTopicMetadata(meta);
+      if (auto provider = g_trace_provider(); provider) provider->WriteMetadata(meta);
     }
 
     // mark as created
@@ -211,7 +211,7 @@ namespace eCAL
     }
 
     // create tracing span for the send operation
-    eCAL::tracing::CSpan send_span(
+    eCAL::tracing::CPublisherSpan send_span(
       m_topic_id,
       m_clock,
       active_layer,

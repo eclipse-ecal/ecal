@@ -30,24 +30,38 @@ namespace eCAL
 namespace tracing
 {
 
-    // RAII span — records start_ns on construction, end_ns + buffer on destruction.
-    // Overloaded constructors cover send and receive use cases.
-    class CSpan {
+    // RAII span for send (publisher) operations.
+    // Records start_ns on construction, end_ns + buffer on destruction.
+    class CPublisherSpan {
     public:
-        // Send span (publisher)
-        CSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
-        // Receive span (subscriber)
-        CSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+        CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
 
-        ~CSpan();
+        ~CPublisherSpan();
 
-        CSpan(const CSpan&)            = delete;
-        CSpan& operator=(const CSpan&) = delete;
-        CSpan(CSpan&&)                 = delete;
-        CSpan& operator=(CSpan&&)      = delete;
+        CPublisherSpan(const CPublisherSpan&)            = delete;
+        CPublisherSpan& operator=(const CPublisherSpan&) = delete;
+        CPublisherSpan(CPublisherSpan&&)                 = delete;
+        CPublisherSpan& operator=(CPublisherSpan&&)      = delete;
 
     private:
-        SSpanData data;
+        SPublisherSpanData data{};
+    };
+
+    // RAII span for receive (subscriber) operations.
+    // Records start_ns on construction, end_ns + buffer on destruction.
+    class CSubscriberSpan {
+    public:
+        CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+
+        ~CSubscriberSpan();
+
+        CSubscriberSpan(const CSubscriberSpan&)            = delete;
+        CSubscriberSpan& operator=(const CSubscriberSpan&) = delete;
+        CSubscriberSpan(CSubscriberSpan&&)                 = delete;
+        CSubscriberSpan& operator=(CSubscriberSpan&&)      = delete;
+
+    private:
+        SSubscriberSpanData data{};
     };
 
 } // namespace tracing

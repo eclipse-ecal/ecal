@@ -46,7 +46,7 @@ namespace tracing
     CTraceProvider::CTraceProvider(std::unique_ptr<TracingWriter> writer, size_t batch_size)
         : batch_size_(batch_size), writer_(std::move(writer))
     {
-        writer_thread_ = std::thread(&CTraceProvider::writerThreadLoop, this);
+        writer_thread_ = std::thread(&CTraceProvider::WriterThreadLoop, this);
     }
     
     CTraceProvider::~CTraceProvider()
@@ -60,7 +60,7 @@ namespace tracing
     }
 
 
-    void CTraceProvider::bufferSpan(const SSpanData& span_data)
+    void CTraceProvider::WriteSpan(const SpanDataVariant& span_data)
     {
         std::lock_guard<std::mutex> lock(thread_mutex);
         span_buffer_.push_back(span_data);
@@ -70,9 +70,9 @@ namespace tracing
         }
     }
 
-    void CTraceProvider::writerThreadLoop()
+    void CTraceProvider::WriterThreadLoop()
     {
-        std::vector<SSpanData> span_flusher;
+        std::vector<SpanDataVariant> span_flusher;
         while (true)
         {
             {
@@ -89,15 +89,15 @@ namespace tracing
             }
             if (!span_flusher.empty())
             {
-                writer_->writeBatchSpans(span_flusher);
+                writer_->WriteSpansToFile(span_flusher);
                 span_flusher.clear();
             }
         }
     }
 
-    void CTraceProvider::addTopicMetadata(const STopicMetadata& metadata)
+    void CTraceProvider::WriteMetadata(const STopicMetadata& metadata)
     {
-        writer_->writeTopicMetadata(metadata);
+        writer_->WriteMetadataToFile(metadata);
     }
 
 } // namespace tracing

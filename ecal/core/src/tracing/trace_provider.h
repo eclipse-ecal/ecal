@@ -51,37 +51,18 @@ namespace tracing
 
         ~CTraceProvider();
         
-        // Add span data to buffer
-        void bufferSpan(const SSpanData& span_data);
+        // Write span data to buffer (accepts any span type via variant)
+        void WriteSpan(const SpanDataVariant& span_data);
 
-        // Topic metadata — written directly to file (no buffering)
-        void addTopicMetadata(const STopicMetadata& metadata);
+        // metadata — written directly to file (no buffering)
+        void WriteMetadata(const STopicMetadata& metadata);
         
-        // Get buffered spans
-        std::vector<SSpanData> getSpans()
-        {
-            std::lock_guard<std::mutex> lock(thread_mutex);
-            return span_buffer_;
-        }
-
-        // Synchronously flush all buffered spans to the writer
-        void forceFlush()
-        {
-            std::vector<SSpanData> to_write;
-            {
-                std::lock_guard<std::mutex> lock(thread_mutex);
-                to_write.swap(span_buffer_);
-            }
-            if (!to_write.empty())
-                writer_->writeBatchSpans(to_write);
-        }
-
     private:
         CTraceProvider(std::unique_ptr<TracingWriter> writer, size_t batch_size);
-        void writerThreadLoop();
+        void WriterThreadLoop();
 
         std::atomic<size_t> batch_size_{kDefaultTracingBatchSize};
-        std::vector<SSpanData> span_buffer_;
+        std::vector<SpanDataVariant> span_buffer_;
         mutable std::mutex thread_mutex;
         std::condition_variable write_cv_;
         bool stop_thread_{false};

@@ -25,6 +25,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <type_traits>
 
 #include <ecal/process.h>
 
@@ -36,7 +37,7 @@ namespace eCAL
 namespace tracing
 {
 
-    static std::string getCurrentTimestamp()
+    static std::string GetCurrentTimestamp()
     {
         std::time_t now = std::time(nullptr);
         std::tm* tm_info = std::localtime(&now);
@@ -46,10 +47,10 @@ namespace tracing
     }
 
     CTracingWriterJSONL::CTracingWriterJSONL()
-        : timestamp_(getCurrentTimestamp())
+        : timestamp_(GetCurrentTimestamp())
     {}
 
-    std::string CTracingWriterJSONL::getSpansFilePath() const
+    std::string CTracingWriterJSONL::GetSpansFilePath() const
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
@@ -60,7 +61,7 @@ namespace tracing
         return std::string(data_dir) + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    std::string CTracingWriterJSONL::getTopicMetadataFilePath() const
+    std::string CTracingWriterJSONL::GetTopicMetadataFilePath() const
     {
         const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
         if (data_dir == nullptr)
@@ -71,29 +72,46 @@ namespace tracing
         return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    void CTracingWriterJSONL::writeBatchSpans(const std::vector<SSpanData>& batch)
+    void CTracingWriterJSONL::WriteSpansToFile(const std::vector<SpanDataVariant>& batch)
     {
         try
         {
             std::lock_guard<std::mutex> lock(spans_mutex_);
-            std::string filepath = getSpansFilePath();
+            std::string filepath = GetSpansFilePath();
 
             std::ofstream output_file(filepath, std::ios::app);
             if (output_file.is_open())
             {
-                for (const auto& span : batch)
+                for (const auto& span_variant : batch)
                 {
                     json span_obj;
-                    span_obj["entity_id"]    = span.entity_id;
-                    span_obj["topic_id"]     = span.topic_id;
-                    span_obj["process_id"]   = span.process_id;
-                    span_obj["payload_size"] = span.payload_size;
-                    span_obj["clock"]        = span.clock;
-                    span_obj["layer"]        = span.layer;
-                    span_obj["start_ns"]     = span.start_ns;
-                    span_obj["end_ns"]       = span.end_ns;
-                    span_obj["op_type"]      = span.op_type;
-
+                    std::visit([&span_obj](const auto& span)
+                    {
+                        using T = std::decay_t<decltype(span)>;
+                        if constexpr (std::is_same_v<T, SPublisherSpanData>)
+                        {
+                            span_obj["entity_id"]    = span.entity_id;
+                            span_obj["process_id"]   = span.process_id;
+                            span_obj["payload_size"] = span.payload_size;
+                            span_obj["clock"]        = span.clock;
+                            span_obj["layer"]        = span.layer;
+                            span_obj["start_ns"]     = span.start_ns;
+                            span_obj["end_ns"]       = span.end_ns;
+                            span_obj["op_type"]      = span.op_type;
+                        }
+                        else if constexpr (std::is_same_v<T, SSubscriberSpanData>)
+                        {
+                            span_obj["entity_id"]    = span.entity_id;
+                            span_obj["topic_id"]     = span.topic_id;
+                            span_obj["process_id"]   = span.process_id;
+                            span_obj["payload_size"] = span.payload_size;
+                            span_obj["clock"]        = span.clock;
+                            span_obj["layer"]        = span.layer;
+                            span_obj["start_ns"]     = span.start_ns;
+                            span_obj["end_ns"]       = span.end_ns;
+                            span_obj["op_type"]      = span.op_type;
+                        }
+                    }, span_variant);
                     output_file << span_obj.dump() << "\n";
                 }
                 output_file.close();
@@ -109,12 +127,12 @@ namespace tracing
         }
     }
 
-    void CTracingWriterJSONL::writeTopicMetadata(const STopicMetadata& metadata)
+    void CTracingWriterJSONL::WriteMetadataToFile(const STopicMetadata& metadata)
     {
         try
         {
             std::lock_guard<std::mutex> lock(metadata_mutex_);
-            std::string filepath = getTopicMetadataFilePath();
+            std::string filepath = GetTopicMetadataFilePath();
 
             json obj;
             obj["tracing_version"] = metadata.tracing_version;

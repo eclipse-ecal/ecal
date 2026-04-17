@@ -26,6 +26,7 @@
 
 #include <string>
 #include <cstdint>
+#include <variant>
 #include <ecal/types.h>
 #include <ecal_struct_sample_common.h>
 
@@ -38,7 +39,7 @@ namespace tracing
     constexpr const char* kTracingVersion = "1.0.0";
 
     // Default batch size for span buffering before flushing to backend (jsonl file)
-    constexpr size_t kDefaultTracingBatchSize = 500;
+    constexpr size_t kDefaultTracingBatchSize = 10;
 
     // Specifies the type of operation being traced
     enum operation_type
@@ -95,20 +96,34 @@ namespace tracing
         topic_direction  direction;       // publisher or subscriber
     };
 
-    // Unified span data structure.
-    // All span types share the same struct;
-    struct SSpanData
+    struct SPublisherSpanData
     {
+        operation_type op_type;
         uint64_t       entity_id;
-        uint64_t       topic_id{0};        // receive-only (0 for send spans)
         uint64_t       process_id;
         size_t         payload_size;
         long long      clock;
         uint64_t       layer;
         long long      start_ns;       // start timestamp in nanoseconds
         long long      end_ns;         // end timestamp in nanoseconds
-        operation_type op_type;
     };
+
+    struct SSubscriberSpanData
+    {
+        operation_type op_type;
+        uint64_t       entity_id;
+        uint64_t       topic_id;
+        uint64_t       process_id;
+        size_t         payload_size;
+        long long      clock;
+        uint64_t       layer;
+        long long      start_ns;       // start timestamp in nanoseconds
+        long long      end_ns;         // end timestamp in nanoseconds
+    };
+
+    // Variant type for buffering heterogeneous span data.
+    // Extend this variant when new span types are added (e.g. client/server).
+    using SpanDataVariant = std::variant<SPublisherSpanData, SSubscriberSpanData>;
 
 } // namespace tracing
 } // namespace eCAL

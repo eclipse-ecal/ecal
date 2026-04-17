@@ -45,14 +45,14 @@ namespace tracing
     CTracingWriterJSONL& operator=(CTracingWriterJSONL&&)      = delete;
 
     // Write a batch of spans to the JSONL spans file
-    void writeBatchSpans(const std::vector<SSpanData>& batch) override;
+    void WriteSpansToFile(const std::vector<SpanDataVariant>& batch) override;
 
     // Write a single topic metadata entry to the JSONL metadata file
-    void writeTopicMetadata(const STopicMetadata& metadata) override;
+    void WriteMetadataToFile(const STopicMetadata& metadata) override;
 
     // File path accessors (path is fixed at construction time)
-    std::string getSpansFilePath() const;
-    std::string getTopicMetadataFilePath() const;
+    std::string GetSpansFilePath() const;
+    std::string GetTopicMetadataFilePath() const;
 
   private:
     mutable std::mutex spans_mutex_;
