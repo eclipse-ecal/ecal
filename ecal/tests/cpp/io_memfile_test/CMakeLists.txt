@@ -25,6 +25,7 @@ set(memfile_test_src
     src/memfile_test.cpp
     src/memfile_naming_test.cpp
     src/named_mutex_test.cpp
+    src/umask_race_test_linux.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/mtx/ecal_named_mutex.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/ecal_memfile_db.cpp
@@ -37,6 +38,8 @@ set(memfile_test_os_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.h
 )
 endif()
 
