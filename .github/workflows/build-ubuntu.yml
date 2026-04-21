@@ -211,10 +211,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: ./.github/workflows/collect-and-report.yml
+    uses: YannikSpaeth/ecal-ci-pipeline-improvements/.github/workflows/ci-failure-summary.yml@main
     with:
-      artifact-pattern: 'test-results-*'
-      pr-number: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
+      artifact_name: 'test-results-*'
+      pr_number: ${{ github.event.pull_request.number }}
       sha: ${{ github.sha }}
     secrets: inherit
 
