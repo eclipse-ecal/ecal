@@ -29,17 +29,44 @@ jobs:
 
       - name: Download test XML artifacts
         uses: actions/download-artifact@v8
+        continue-on-error: true
         with:
           pattern: ${{ inputs.artifact-pattern }}
           path: xml-artifacts/
 
       - name: List downloaded files
-        run: find xml-artifacts/ -type f | sort
+        run: |
+          if [ -d xml-artifacts/ ]; then
+            find xml-artifacts/ -type f | sort
+          else
+            echo "No artifact directory downloaded."
+          fi
+
+      - name: Detect XML artifacts
+        id: detect_xml
+        run: |
+          if [ -d xml-artifacts/ ] && find xml-artifacts/ -type f -name "*.xml" | grep -q .; then
+            echo "has_xml=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_xml=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write no-results summary
+        if: steps.detect_xml.outputs.has_xml != 'true'
+        run: |
+          {
+            echo "## CI Test Results"
+            echo
+            echo ":warning: No JUnit XML artifacts were found for pattern \`${{ inputs.artifact-pattern }}\`."
+            echo
+            echo "No PR comment was posted."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Install Python dependencies
         run: pip install --quiet junitparser requests jinja2
 
       - name: Build summary and post PR comment
+        if: steps.detect_xml.outputs.has_xml == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
