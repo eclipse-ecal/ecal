@@ -19,110 +19,140 @@
 
 #pragma once
 
-#include <gtest/gtest.h>
-
-#include <ecal/ecal.h>
-#include <ecal/pubsub/publisher.h>
-#include <ecal/pubsub/subscriber.h>
-
 #include <tracing/tracing.h>
-#include <tracing/trace_provider.h>
-#include <tracing/span.h>
 #include <tracing/tracing_writer.h>
 
+#include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
-#include <atomic>
-#include <chrono>
-#include <cstdio>
-#include <cstring>
+#include <cstdlib>
 #include <fstream>
-#include <sstream>
+#include <mutex>
 #include <string>
-#include <thread>
 #include <vector>
 
-#include <ecal/process.h>
-#include <ecal_global_accessors.h>
-
-#ifdef _WIN32
-#include <cstdlib>
-inline int setenv(const char* name, const char* value, int /*overwrite*/)
+// Mock writer that counts spans and metadata for test assertions.
+class MockTracingWriter : public eCAL::tracing::TracingWriter
 {
-    return _putenv_s(name, value);
-}
-#endif
+public:
+    void WriteSpansToFile(const std::vector<eCAL::tracing::SpanDataVariant>& batch) override
+    {
+        span_count_ += batch.size();
+    }
 
-using json = nlohmann::json;
+    void WriteMetadataToFile(const eCAL::tracing::STopicMetadata& /*metadata*/) override
+    {
+        metadata_count_++;
+    }
 
-// Return a platform-appropriate temporary directory.
-inline std::string tempDir()
+    size_t SpanCount() const
+    {
+        return span_count_.load();
+    }
+
+    size_t MetadataCount() const
+    {
+        return metadata_count_.load();
+    }
+
+    void Clear()
+    {
+        span_count_       = 0;
+        metadata_count_   = 0;
+
+    }
+
+private:
+    mutable std::mutex mutex_;
+    std::atomic<size_t> span_count_{0};
+    std::atomic<size_t> metadata_count_{0};
+};
+
+// This allows the mock to outlive the CTraceProvider that only owns this proxy.
+class ProxyTracingWriter : public eCAL::tracing::TracingWriter
 {
-#ifdef _WIN32
-    const char* dir = std::getenv("TEMP");
-    if (dir) return dir;
-    dir = std::getenv("TMP");
-    if (dir) return dir;
-    return "C:\\Temp";
-#else
-    return "/tmp";
-#endif
-}
+public:
+    explicit ProxyTracingWriter(MockTracingWriter& target) : target_(target) {}
 
-// Remove a file if it exists.
-inline void removeFile(const std::string& path)
-{
-    std::remove(path.c_str());
-}
+    void WriteSpansToFile(const std::vector<eCAL::tracing::SpanDataVariant>& batch) override
+    {
+        target_.WriteSpansToFile(batch);
+    }
 
-// Read a JSONL file and return a vector of parsed JSON objects.
-inline std::vector<json> readJsonLines(const std::string& path)
+    void WriteMetadataToFile(const eCAL::tracing::STopicMetadata& metadata) override
+    {
+        target_.WriteMetadataToFile(metadata);
+    }
+
+private:
+    MockTracingWriter& target_;
+};
+
+// Count the number of lines in a file and validate each line is valid JSON.
+inline size_t CountAndValidateJsonlLines(const std::string& filepath)
 {
-    std::vector<json> result;
-    std::ifstream file(path);
+    std::ifstream file(filepath);
+    EXPECT_TRUE(file.is_open()) << "Failed to open: " << filepath;
+
+    size_t count = 0;
     std::string line;
     while (std::getline(file, line))
     {
-        if (!line.empty())
-        {
-            try { result.push_back(json::parse(line)); }
-            catch (...) {}
-        }
+      if (line.empty()) continue;
+      // Every line must be valid JSON — a corrupted/interleaved write would break parsing.
+      EXPECT_NO_THROW(nlohmann::json::parse(line))
+          << "Invalid JSON on line " << (count + 1) << ": " << line;
+      ++count;
     }
-    return result;
+    return count;
 }
 
-// Convenience accessors for the provider's output file paths.
-inline std::string spansFilePath()
+// Cross-platform helpers for environment variable manipulation.
+inline void SetEnv(const std::string& name, const std::string& value)
 {
-    auto p = eCAL::g_trace_provider();
-    if (p) return p->getSpansFilePath();
-    return {};
+#ifdef _WIN32
+  _putenv_s(name.c_str(), value.c_str());
+#else
+  setenv(name.c_str(), value.c_str(), 1);
+#endif
 }
 
-inline std::string metadataFilePath()
+inline void UnsetEnv(const std::string& name)
 {
-    auto p = eCAL::g_trace_provider();
-    if (p) return p->getTopicMetadataFilePath();
-    return {};
+#ifdef _WIN32
+  _putenv_s(name.c_str(), "");
+#else
+  unsetenv(name.c_str());
+#endif
 }
 
-// Wait for the provider's background writer thread to drain the span buffer.
-inline bool waitForBufferDrain(eCAL::tracing::CTraceProvider* provider, int timeout_ms = 500)
+// RAII helper to set and restore an environment variable.
+class ScopedEnvVar
 {
-    auto deadline = std::chrono::steady_clock::now()
-                  + std::chrono::milliseconds(timeout_ms);
-    while (!provider->getSpans().empty()
-           && std::chrono::steady_clock::now() < deadline)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    }
-    return provider->getSpans().empty();
-}
+public:
+  ScopedEnvVar(const char* name, const std::string& value)
+    : name_(name)
+  {
+    const char* old = std::getenv(name);
+    had_old_ = (old != nullptr);
+    if (had_old_) old_value_ = old;
+    SetEnv(name_, value);
+  }
 
-// Force the provider to synchronously flush all buffered spans.
-// Intended for setUp/tearDown cleanup.
-inline void triggerFlush(eCAL::tracing::CTraceProvider* provider)
-{
-    provider->forceFlush();
-}
+  ~ScopedEnvVar()
+  {
+    if (had_old_)
+      SetEnv(name_, old_value_);
+    else
+      UnsetEnv(name_);
+  }
+
+  ScopedEnvVar(const ScopedEnvVar&)            = delete;
+  ScopedEnvVar& operator=(const ScopedEnvVar&) = delete;
+
+private:
+  std::string name_;
+  std::string old_value_;
+  bool        had_old_{false};
+};
+
