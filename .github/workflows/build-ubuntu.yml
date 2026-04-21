@@ -170,7 +170,9 @@ jobs:
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Run Tests
-      run: ctest -V --test-dir _build --output-junit test-results/test-results.xml
+      run: |
+        mkdir -p _build/test-results
+        ctest -V --test-dir _build --output-junit test-results/test-results.xml
 
     - name: Upload JUnit XML
       if: always()
@@ -212,7 +214,7 @@ jobs:
     uses: ./.github/workflows/collect-and-report.yml
     with:
       artifact-pattern: 'test-results-*'
-      pr-number: ${{ github.event.pull_request.number }}
+      pr-number: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
       sha: ${{ github.sha }}
     secrets: inherit
 
