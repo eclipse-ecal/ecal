@@ -23,6 +23,7 @@ find_package(GTest REQUIRED)
 
 set(event_test_src
   src/event_test.cpp
+  $<$<BOOL:${UNIX}>:src/shm_region_test.cpp>
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
