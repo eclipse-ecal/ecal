@@ -57,8 +57,8 @@ namespace eCAL::posix
     {
       // Interim mitigation: this only prevents umask races between threads in this process,
       // but cannot protect against concurrent umask changes in other processes.
-      const std::lock_guard<std::mutex> lock{eCAL::io::shm::linux::GetUmaskCreationMutex()};
-      const eCAL::io::shm::linux::ScopedUmaskRestore scoped_umask{000};
+      const std::lock_guard<std::mutex> lock{eCAL::io::shm::GetUmaskCreationMutex()};
+      const eCAL::io::shm::ScopedUmaskRestore scoped_umask{000};
 
       int fd = ::shm_open(name.c_str(),
                         O_RDWR | O_CREAT | O_EXCL,

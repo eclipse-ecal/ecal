@@ -47,24 +47,26 @@ namespace eCAL
 
       bool AllocFile(const std::string& name_, const bool create_, SMemFileInfo& mem_file_info_)
       {
-        // Interim mitigation: this only prevents umask races between threads in this process,
-        // but cannot protect against concurrent umask changes in other processes.
-        const std::lock_guard<std::mutex> lock{eCAL::io::shm::linux::GetUmaskCreationMutex()};
-        const eCAL::io::shm::linux::ScopedUmaskRestore scoped_umask{000};  // set umask to nothing, so we can create files with all possible permission bits
-
-        mem_file_info_.name = name_.size() ? ((name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
-        if(create_)
         {
-          mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-          if(mem_file_info_.memfile == -1 && errno == EEXIST)
+          // Interim mitigation: this only prevents umask races between threads in this process,
+          // but cannot protect against concurrent umask changes in other processes.
+          const std::lock_guard<std::mutex> lock{eCAL::io::shm::GetUmaskCreationMutex()};
+          const eCAL::io::shm::ScopedUmaskRestore scoped_umask{000};  // set umask to nothing, so we can create files with all possible permission bits
+
+          mem_file_info_.name = name_.size() ? ((name_[0] != '/') ? "/" + name_ : name_) : name_; // make memory file path compatible for all posix systems
+          if(create_)
           {
-            mem_file_info_.exists = true;
-            mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+            mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+            if(mem_file_info_.memfile == -1 && errno == EEXIST)
+            {
+              mem_file_info_.exists = true;
+              mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+            }
           }
-        }
-        else {
-          mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-          mem_file_info_.exists = true;
+          else {
+            mem_file_info_.memfile = ::shm_open(mem_file_info_.name.c_str(), O_RDONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+            mem_file_info_.exists = true;
+          }
         }
 
         if (mem_file_info_.memfile == -1)
