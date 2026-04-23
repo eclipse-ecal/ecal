@@ -469,6 +469,9 @@ set(ecal_tracing_src
     src/tracing/span.h
     src/tracing/trace_provider.cpp
     src/tracing/trace_provider.h
+    src/tracing/trace_provider_default.cpp
+    src/tracing/trace_provider_default.h
+    src/tracing/trace_provider_noop.h
     src/tracing/tracing_writer.h
     src/tracing/tracing_writer_jsonl.cpp
     src/tracing/tracing_writer_jsonl.h

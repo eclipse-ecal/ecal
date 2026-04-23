@@ -344,6 +344,22 @@ namespace YAML
 
 
   /*
+     ______             _          
+    /_  __/______ _____(_)__  ___ _
+     / / / __/ _ `/ __/ / _ \/ _ `/
+    /_/ /_/  \_,_/\__/_/_//_/\_, / 
+                            /___/  
+  */
+  template<>
+  struct convert<eCAL::Tracing::Configuration>
+  {
+    static Node encode(const eCAL::Tracing::Configuration& config_);
+
+    static bool decode(const Node& node_, eCAL::Tracing::Configuration& config_);
+  };
+
+
+  /*
        __  ___     _                      ____                    __  _         
       /  |/  /__ _(_)__    _______  ___  / _(_)__ ___ _________ _/ /_(_)__  ___ 
      / /|_/ / _ `/ / _ \  / __/ _ \/ _ \/ _/ / _ `/ // / __/ _ `/ __/ / _ \/ _ \

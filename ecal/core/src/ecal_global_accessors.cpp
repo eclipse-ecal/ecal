@@ -33,6 +33,8 @@
 #include "logging/ecal_log_provider.h"
 #include "logging/ecal_log_receiver.h"
 #include "tracing/trace_provider.h"
+#include "tracing/trace_provider_default.h"
+#include "tracing/trace_provider_noop.h"
 
 #include <atomic>
 #include <string>
@@ -58,7 +60,7 @@ namespace eCAL
   std::shared_ptr<Logging::CLogProvider> g_log_provider_instance;
   std::shared_ptr<Logging::CLogReceiver> g_log_receiver_instance;
 
-  std::shared_ptr<tracing::CTraceProvider> g_trace_provider_instance;
+  std::shared_ptr<tracing::TraceProvider> g_trace_provider_instance;
 
   void SetGlobalUnitName(const char *unit_name_)
   {
@@ -121,9 +123,9 @@ namespace eCAL
     return nullptr;
   }
 
-  void InitializeTracing()
+  void InitializeTracing(const eCAL::Configuration& config_)
   {
-    g_trace_provider_instance = tracing::CTraceProvider::Create();
+    g_trace_provider_instance = tracing::TraceProvider::Create(config_.tracing);
   }
 
   void ResetTracing()
@@ -131,7 +133,7 @@ namespace eCAL
     g_trace_provider_instance.reset();
   }
 
-    std::shared_ptr<tracing::CTraceProvider> g_trace_provider()
+    std::shared_ptr<tracing::TraceProvider> g_trace_provider()
   {
     if (auto provider = g_trace_provider_instance; provider) return provider;
     return nullptr;

@@ -45,7 +45,7 @@ namespace eCAL
 
   namespace tracing
   {
-    class CTraceProvider;
+    class TraceProvider;
   }
 
 #if ECAL_CORE_MONITORING
@@ -85,7 +85,7 @@ namespace eCAL
   void                      InitializeLogging(const eCAL::Configuration& config_);
   void                      ResetLogging();
 
-  void                      InitializeTracing();
+  void                      InitializeTracing(const eCAL::Configuration& config_);
   void                      ResetTracing();
 
   // Declaration of getter functions for globally accessible variable instances
@@ -118,7 +118,7 @@ namespace eCAL
   std::shared_ptr<Logging::CLogProvider>  g_logging_provider();
   std::shared_ptr<Logging::CLogReceiver>  g_logging_receiver();
 
-  std::shared_ptr<tracing::CTraceProvider> g_trace_provider();
+  std::shared_ptr<tracing::TraceProvider> g_trace_provider();
 
   // declaration of globally accessible variables
   extern std::string                   g_default_ini_file;

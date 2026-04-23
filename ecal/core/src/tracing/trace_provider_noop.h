@@ -17,23 +17,21 @@
  * ========================= eCAL LICENSE =================================
 */
 
+#pragma once
+
 #include "trace_provider.h"
-#include "trace_provider_default.h"
-#include "trace_provider_noop.h"
 
 namespace eCAL
 {
 namespace tracing
 {
 
-  std::shared_ptr<TraceProvider> TraceProvider::Create(const eCAL::Tracing::Configuration& config_)
+  class CNoOpTraceProvider : public TraceProvider
   {
-    if (config_.enabled)
-    {
-      return CTraceProviderDefault::Create();
-    }
-    return std::make_shared<CNoOpTraceProvider>();
-  }
+  public:
+    void WriteSpan(const SpanDataVariant& /*span_data*/) override {}
+    void WriteMetadata(const STopicMetadata& /*metadata*/) override {}
+  };
 
 } // namespace tracing
 } // namespace eCAL

@@ -19,7 +19,7 @@
 
 #include "tracing_test_helpers.h"
 
-#include <tracing/trace_provider.h>
+#include <tracing/trace_provider_default.h>
 #include <tracing/tracing.h>
 
 #include <gtest/gtest.h>
@@ -39,7 +39,7 @@ TEST(TestTraceProvider, ConcurrentSpanWrites)
 
     MockTracingWriter mock_writer;
 
-    auto provider = eCAL::tracing::CTraceProvider::Create(
+    auto provider = eCAL::tracing::CTraceProviderDefault::Create(
         std::make_unique<ProxyTracingWriter>(mock_writer), batch_size);
     ASSERT_NE(provider, nullptr);
 
@@ -89,7 +89,7 @@ TEST(TestTraceProvider, ConcurrentMetadataWrites)
 
     MockTracingWriter mock_writer;
 
-    auto provider = eCAL::tracing::CTraceProvider::Create(
+    auto provider = eCAL::tracing::CTraceProviderDefault::Create(
         std::make_unique<ProxyTracingWriter>(mock_writer), batch_size);
     ASSERT_NE(provider, nullptr);
 

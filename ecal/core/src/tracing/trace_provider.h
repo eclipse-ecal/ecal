@@ -20,54 +20,31 @@
 #pragma once
 
 #include "tracing.h"
-#include "tracing_writer.h"
-#include "tracing_writer_jsonl.h"
-#include "util/single_instance_helper.h"
 
-#include <vector>
-#include <mutex>
+#include <ecal/config/tracing.h>
+
 #include <memory>
-#include <atomic>
-#include <thread>
-#include <condition_variable>
 
 namespace eCAL
 {
 namespace tracing
 {
 
-  class CTraceProvider 
+  class TraceProvider
   {
-    friend class Util::CSingleInstanceHelper<CTraceProvider>;
+  public:
+    TraceProvider()                               = default;
+    virtual ~TraceProvider()                      = default;
 
-    public:
+    TraceProvider(const TraceProvider&)            = delete;
+    TraceProvider& operator=(const TraceProvider&) = delete;
+    TraceProvider(TraceProvider&&)                 = delete;
+    TraceProvider& operator=(TraceProvider&&)      = delete;
 
-        static std::shared_ptr<CTraceProvider> Create(std::unique_ptr<TracingWriter> writer = std::make_unique<CTracingWriterJSONL>(), size_t batch_size = kDefaultTracingBatchSize);
+    static std::shared_ptr<TraceProvider> Create(const eCAL::Tracing::Configuration& config_);
 
-        CTraceProvider(const CTraceProvider&)            = delete;
-        CTraceProvider& operator=(const CTraceProvider&) = delete;
-        CTraceProvider(CTraceProvider&&)                 = delete;
-        CTraceProvider& operator=(CTraceProvider&&)      = delete;
-
-        ~CTraceProvider();
-        
-        // Write span data to buffer (accepts any span type via variant)
-        void WriteSpan(const SpanDataVariant& span_data);
-
-        // metadata — written directly to file (no buffering)
-        void WriteMetadata(const STopicMetadata& metadata);
-        
-    private:
-        CTraceProvider(std::unique_ptr<TracingWriter> writer, size_t batch_size);
-        void WriterThreadLoop();
-
-        std::atomic<size_t> batch_size_{kDefaultTracingBatchSize};
-        std::vector<SpanDataVariant> span_buffer_;
-        mutable std::mutex thread_mutex;
-        std::condition_variable write_cv_;
-        bool stop_thread_{false};
-        std::thread writer_thread_;
-        std::unique_ptr<TracingWriter> writer_;
+    virtual void WriteSpan(const SpanDataVariant& span_data) = 0;
+    virtual void WriteMetadata(const STopicMetadata& metadata) = 0;
   };
 
 } // namespace tracing

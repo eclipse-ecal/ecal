@@ -118,7 +118,7 @@ namespace eCAL
       SetGlobalUnitName(unit_name_.c_str());
 
       if ((components_ & Init::Logging) != 0u) InitializeLogging(config_);
-      InitializeTracing();
+      InitializeTracing(config_);
 
       auto globals_instance = CreateGlobalsInstance();
       if (!globals_instance) return false;
