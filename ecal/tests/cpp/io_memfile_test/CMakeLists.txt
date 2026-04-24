@@ -37,6 +37,8 @@ set(memfile_test_os_src
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/ecal_memfile_os.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp
     ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.cpp
+    ${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.h
 )
 endif()
 

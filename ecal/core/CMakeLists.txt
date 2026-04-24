@@ -164,6 +164,8 @@ if(ECAL_CORE_REGISTRATION_SHM OR ECAL_CORE_TRANSPORT_SHM)
         src/io/shm/linux/ecal_memfile_os.cpp
         src/io/shm/linux/posix_shm_region.cpp
         src/io/shm/linux/posix_shm_region.h
+        src/io/shm/linux/umask_guard.cpp
+        src/io/shm/linux/umask_guard.h
     )
   endif()
 
