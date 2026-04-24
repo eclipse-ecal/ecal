@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <cerrno>
 #include <cstdio>
+#include <mutex>
+
+#include "io/shm/linux/umask_guard.h"
 
 
 namespace eCAL::posix
@@ -52,7 +55,10 @@ namespace eCAL::posix
 
     inline int shm_open_create_or_open(const std::string& name)
     {
-      const int previous_umask = ::umask(000);
+      // Interim mitigation: this only prevents umask races between threads in this process,
+      // but cannot protect against concurrent umask changes in other processes.
+      const std::lock_guard<std::mutex> lock{eCAL::posix::GetUmaskCreationMutex()};
+      const eCAL::posix::ScopedUmaskRestore scoped_umask{000};
 
       int fd = ::shm_open(name.c_str(),
                         O_RDWR | O_CREAT | O_EXCL,
@@ -63,7 +69,6 @@ namespace eCAL::posix
                       O_RDWR,
                       S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 
-      ::umask(previous_umask);
       return fd;
     }
 
