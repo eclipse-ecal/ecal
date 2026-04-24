@@ -1,6 +1,6 @@
 #include "io/shm/linux/umask_guard.h"
 
-namespace eCAL::io::shm
+namespace eCAL::posix
 {
   std::mutex& GetUmaskCreationMutex()
   {

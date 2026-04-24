@@ -18,6 +18,7 @@
 */
 
 #include "io/shm/linux/posix_shm_region.h"
+#include "io/shm/linux/umask_guard.h"
 
 #include <gtest/gtest.h>
 #include <thread>
@@ -50,28 +51,28 @@ TEST(core_cpp_internal, shm_region_umask_test)
 
   // Restrictive umask on purpose: the implementation under test should still
   // create the shm objects with 0666 permissions.
-  const mode_t old_umask = ::umask(0077);
-
-  for (int i = 0; i < number_of_threads; ++i)
   {
-    threads.emplace_back([&, i]()
+    auto scoped_umask = eCAL::posix::ScopedUmaskRestore(0077);
+
+    for (int i = 0; i < number_of_threads; ++i)
     {
-      barrier.wait();
+      threads.emplace_back([&, i]()
+      {
+        barrier.wait();
 
-      regions[i].emplace(
-        eCAL::posix::open_or_create_mapped_region(
-          shm_names[i],
-          100,
-          initializer
-        )
-      );
-    });
+        regions[i].emplace(
+          eCAL::posix::open_or_create_mapped_region(
+            shm_names[i],
+            100,
+            initializer
+          )
+        );
+      });
+    }
+
+    for (auto& t : threads)
+      t.join();
   }
-
-  for (auto& t : threads)
-    t.join();
-
-  ::umask(old_umask);
 
   auto to_octal_string = [](mode_t mode)
   {
