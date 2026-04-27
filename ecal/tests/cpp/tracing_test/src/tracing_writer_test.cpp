@@ -19,6 +19,8 @@
 
 #include "tracing_test_helpers.h"
 
+#include <ecal/core.h>
+
 #include <tracing/tracing_writer_jsonl.h>
 #include <tracing/tracing.h>
 
@@ -27,7 +29,7 @@
 #include <ecal_utils/barrier.h>
 
 #include <atomic>
-#include <filesystem>
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <thread>
@@ -35,20 +37,30 @@
 
 #include <nlohmann/json.hpp>
 
+namespace
+{
+eCAL::Configuration GetTracingConfiguration(const std::string& path)
+{
+  eCAL::Configuration config;
+  config.tracing.path                    = path;
+  return config;
+}
+}
+
 TEST(TestTracingWriterJSONL, ConcurrentSpanWrites)
 {
   constexpr size_t num_threads      = 100;
   constexpr size_t batches_per_thread = 50;
   constexpr size_t spans_per_batch  = 500;
   constexpr size_t total_spans      = num_threads * batches_per_thread * spans_per_batch;
+  auto ecal_config                  = GetTracingConfiguration("./");
+  ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
-  // Use a temporary directory for output files.
-  auto tmp_dir = std::filesystem::temp_directory_path() / "ecal_tracing_writer_test_spans";
-  std::filesystem::create_directories(tmp_dir);
-  ScopedEnvVar env("ECAL_TRACING_DATA_DIR", tmp_dir.string());
+  std::string spans_path;
 
   {
     eCAL::tracing::CTracingWriterJSONL writer;
+    spans_path = writer.GetSpansFilePath();
 
     Barrier barrier(num_threads);
 
@@ -85,15 +97,15 @@ TEST(TestTracingWriterJSONL, ConcurrentSpanWrites)
     }
 
     for (auto& th : threads) th.join();
-
-    // Verify: every span line must be valid JSON and the total count must match.
-    std::string spans_path = writer.GetSpansFilePath();
-    size_t line_count = CountAndValidateJsonlLines(spans_path);
-    EXPECT_EQ(line_count, total_spans);
   }
 
-  // Clean up temp files.
-  std::filesystem::remove_all(tmp_dir);
+  eCAL::Finalize();
+
+  // Verify: every span line must be valid JSON and the total count must match.
+  size_t line_count = CountAndValidateJsonlLines(spans_path);
+  EXPECT_EQ(line_count, total_spans);
+
+  if (!spans_path.empty()) std::remove(spans_path.c_str());
 }
 
 TEST(TestTracingWriterJSONL, ConcurrentMetadataWrites)
@@ -101,13 +113,14 @@ TEST(TestTracingWriterJSONL, ConcurrentMetadataWrites)
   constexpr size_t num_threads          = 100;
   constexpr size_t metadata_per_thread  = 200;
   constexpr size_t total_metadata       = num_threads * metadata_per_thread;
+  auto ecal_config                      = GetTracingConfiguration("./");
+  ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
-  auto tmp_dir = std::filesystem::temp_directory_path() / "ecal_tracing_writer_test_metadata";
-  std::filesystem::create_directories(tmp_dir);
-  ScopedEnvVar env("ECAL_TRACING_DATA_DIR", tmp_dir.string());
+  std::string metadata_path;
 
   {
     eCAL::tracing::CTracingWriterJSONL writer;
+    metadata_path = writer.GetTopicMetadataFilePath();
 
     Barrier barrier(num_threads);
 
@@ -136,23 +149,26 @@ TEST(TestTracingWriterJSONL, ConcurrentMetadataWrites)
     }
 
     for (auto& th : threads) th.join();
-
-    std::string metadata_path = writer.GetTopicMetadataFilePath();
-    size_t line_count = CountAndValidateJsonlLines(metadata_path);
-    EXPECT_EQ(line_count, total_metadata);
   }
 
-  std::filesystem::remove_all(tmp_dir);
+  eCAL::Finalize();
+
+  size_t line_count = CountAndValidateJsonlLines(metadata_path);
+  EXPECT_EQ(line_count, total_metadata);
+
+  if (!metadata_path.empty()) std::remove(metadata_path.c_str());
 }
 
 TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
 {
-  auto tmp_dir = std::filesystem::temp_directory_path() / "ecal_tracing_writer_test_pub_fields";
-  std::filesystem::create_directories(tmp_dir);
-  ScopedEnvVar env("ECAL_TRACING_DATA_DIR", tmp_dir.string());
+  auto ecal_config = GetTracingConfiguration("./");
+  ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
+
+  std::string spans_path;
 
   {
     eCAL::tracing::CTracingWriterJSONL writer;
+    spans_path = writer.GetSpansFilePath();
 
     eCAL::tracing::SPublisherSpanData span{};
     span.op_type      = eCAL::tracing::operation_type::send;
@@ -167,35 +183,39 @@ TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
     std::vector<eCAL::tracing::SpanDataVariant> batch;
     batch.push_back(span);
     writer.WriteSpansToFile(batch);
-
-    std::ifstream file(writer.GetSpansFilePath());
-    ASSERT_TRUE(file.is_open());
-
-    std::string line;
-    ASSERT_TRUE(std::getline(file, line));
-    auto j = nlohmann::json::parse(line);
-
-    EXPECT_EQ(j.at("op_type"),      static_cast<int>(eCAL::tracing::operation_type::send));
-    EXPECT_EQ(j.at("entity_id"),    42u);
-    EXPECT_EQ(j.at("process_id"),   123u);
-    EXPECT_EQ(j.at("payload_size"), 256u);
-    EXPECT_EQ(j.at("clock"),        7);
-    EXPECT_EQ(j.at("layer"),        static_cast<uint64_t>(eCAL::tracing::tl_trace_udp));
-    EXPECT_EQ(j.at("start_ns"),     1000);
-    EXPECT_EQ(j.at("end_ns"),       2000);
   }
 
-  std::filesystem::remove_all(tmp_dir);
+  eCAL::Finalize();
+
+  std::ifstream file(spans_path);
+  ASSERT_TRUE(file.is_open());
+
+  std::string line;
+  ASSERT_TRUE(std::getline(file, line));
+  auto j = nlohmann::json::parse(line);
+
+  EXPECT_EQ(j.at("op_type"),      static_cast<int>(eCAL::tracing::operation_type::send));
+  EXPECT_EQ(j.at("entity_id"),    42u);
+  EXPECT_EQ(j.at("process_id"),   123u);
+  EXPECT_EQ(j.at("payload_size"), 256u);
+  EXPECT_EQ(j.at("clock"),        7);
+  EXPECT_EQ(j.at("layer"),        static_cast<uint64_t>(eCAL::tracing::tl_trace_udp));
+  EXPECT_EQ(j.at("start_ns"),     1000);
+  EXPECT_EQ(j.at("end_ns"),       2000);
+
+  if (!spans_path.empty()) std::remove(spans_path.c_str());
 }
 
 TEST(TestTracingWriterJSONL, SubscriberSpanJsonFields)
 {
-  auto tmp_dir = std::filesystem::temp_directory_path() / "ecal_tracing_writer_test_sub_fields";
-  std::filesystem::create_directories(tmp_dir);
-  ScopedEnvVar env("ECAL_TRACING_DATA_DIR", tmp_dir.string());
+  auto ecal_config = GetTracingConfiguration("./");
+  ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
+
+  std::string spans_path;
 
   {
     eCAL::tracing::CTracingWriterJSONL writer;
+    spans_path = writer.GetSpansFilePath();
 
     eCAL::tracing::SSubscriberSpanData span{};
     span.op_type      = eCAL::tracing::operation_type::receive;
@@ -211,25 +231,27 @@ TEST(TestTracingWriterJSONL, SubscriberSpanJsonFields)
     std::vector<eCAL::tracing::SpanDataVariant> batch;
     batch.push_back(span);
     writer.WriteSpansToFile(batch);
-
-    std::ifstream file(writer.GetSpansFilePath());
-    ASSERT_TRUE(file.is_open());
-
-    std::string line;
-    ASSERT_TRUE(std::getline(file, line));
-    auto j = nlohmann::json::parse(line);
-
-    EXPECT_EQ(j.at("op_type"),      static_cast<int>(eCAL::tracing::operation_type::receive));
-    EXPECT_EQ(j.at("entity_id"),    99u);
-    EXPECT_EQ(j.at("topic_id"),     55u);
-    EXPECT_EQ(j.at("process_id"),   456u);
-    EXPECT_EQ(j.at("payload_size"), 512u);
-    EXPECT_EQ(j.at("clock"),        3);
-    EXPECT_EQ(j.at("layer"),        static_cast<uint64_t>(eCAL::tracing::tl_trace_tcp));
-    EXPECT_EQ(j.at("start_ns"),     3000);
-    EXPECT_EQ(j.at("end_ns"),       4000);
   }
 
-  std::filesystem::remove_all(tmp_dir);
+  eCAL::Finalize();
+
+  std::ifstream file(spans_path);
+  ASSERT_TRUE(file.is_open());
+
+  std::string line;
+  ASSERT_TRUE(std::getline(file, line));
+  auto j = nlohmann::json::parse(line);
+
+  EXPECT_EQ(j.at("op_type"),      static_cast<int>(eCAL::tracing::operation_type::receive));
+  EXPECT_EQ(j.at("entity_id"),    99u);
+  EXPECT_EQ(j.at("topic_id"),     55u);
+  EXPECT_EQ(j.at("process_id"),   456u);
+  EXPECT_EQ(j.at("payload_size"), 512u);
+  EXPECT_EQ(j.at("clock"),        3);
+  EXPECT_EQ(j.at("layer"),        static_cast<uint64_t>(eCAL::tracing::tl_trace_tcp));
+  EXPECT_EQ(j.at("start_ns"),     3000);
+  EXPECT_EQ(j.at("end_ns"),       4000);
+
+  if (!spans_path.empty()) std::remove(spans_path.c_str());
 }
 

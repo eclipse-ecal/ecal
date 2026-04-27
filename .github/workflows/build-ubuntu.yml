@@ -169,12 +169,6 @@ jobs:
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
-    - name: Create tracing output directory
-      run: |
-        ECAL_TRACING_DATA_DIR="${{ runner.temp }}/ecal_tracing"
-        mkdir -p "$ECAL_TRACING_DATA_DIR"
-        echo "ECAL_TRACING_DATA_DIR=$ECAL_TRACING_DATA_DIR" >> "$GITHUB_ENV"
-
     - name: Run Tests
       run: ctest -V --test-dir _build
 

@@ -338,3 +338,74 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_dir);
   EXPECT_EQ(eCAL::Config::GeteCALLogDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
 }
+
+TEST(core_cpp_path_processing /*unused*/, ecal_trace_order_test /*unused*/)
+{
+  const std::string ecal_trace_env_var = "/ecal/trace/env";
+  const std::string ecal_data_env_var = "/ecal/data/env";
+  const std::string ecal_data_env_trace_var = ecal_data_env_var + path_separator + ECAL_FOLDER_NAME_TRACE;
+  const std::string ecal_config_trace_dir = "/config/tracing/dir";
+  const std::string ecal_yaml_dir = "/dir/to/current/yaml";
+  const std::string ecal_yaml_trace_dir = ecal_yaml_dir + path_separator + ECAL_FOLDER_NAME_TRACE;
+  const std::string unique_tmp_dir = "/tmp/unique";
+
+  const MockDirProvider mock_dir_provider;
+  const NiceMock<MockDirManager> mock_dir_manager;
+
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_TRACE_VAR))
+    .Times(7)
+    .WillOnce(testing::Return(ecal_trace_env_var))
+    .WillRepeatedly(testing::Return(""));
+  EXPECT_CALL(mock_dir_provider, eCALEnvVar(ECAL_DATA_VAR))
+    .Times(7)
+    .WillRepeatedly(testing::Return(ecal_data_env_var));
+
+  EXPECT_CALL(mock_dir_manager, getDirectoryPath(testing::_))
+    .Times(7)
+    .WillRepeatedly(testing::Return(ecal_yaml_dir));
+
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_trace_env_var))
+    .Times(1)
+    .WillOnce(testing::Return(true));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_trace_var))
+    .Times(6)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_data_env_var))
+    .Times(5)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_config_trace_dir))
+    .Times(1)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_yaml_trace_dir))
+    .Times(3)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExists(ecal_yaml_dir))
+    .Times(2)
+    .WillOnce(testing::Return(true))
+    .WillRepeatedly(testing::Return(false));
+  EXPECT_CALL(mock_dir_manager, dirExistsOrCreate(testing::_))
+    .Times(0);
+
+  EXPECT_CALL(mock_dir_provider, uniqueTmpDir(::testing::Ref(mock_dir_manager)))
+    .Times(1)
+    .WillRepeatedly(testing::Return(unique_tmp_dir));
+
+  ON_CALL(mock_dir_manager, dirExists(testing::_)).WillByDefault(testing::Return(false));
+  ON_CALL(mock_dir_manager, canWriteToDirectory(testing::_)).WillByDefault(testing::Return(true));
+
+  auto config = eCAL::GetConfiguration();
+  config.tracing.path = ecal_config_trace_dir;
+
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_trace_env_var);
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_trace_var);
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_data_env_var);
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_config_trace_dir);
+  config.tracing.path = "";
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_trace_dir);
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), ecal_yaml_dir);
+  EXPECT_EQ(eCAL::Config::GeteCALTraceDirImpl(mock_dir_provider, mock_dir_manager, config), unique_tmp_dir);
+}

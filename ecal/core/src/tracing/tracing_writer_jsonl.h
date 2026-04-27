@@ -58,6 +58,7 @@ namespace tracing
     mutable std::mutex spans_mutex_;
     mutable std::mutex metadata_mutex_;
     std::string        timestamp_;
+    std::string        trace_dir_;
   };
 
 } // namespace tracing

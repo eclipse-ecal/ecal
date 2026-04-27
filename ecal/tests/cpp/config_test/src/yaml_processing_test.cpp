@@ -91,6 +91,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     config.application.sys.filter_excl = "filter_excl";
     
     config.tracing.enabled = true;
+    config.tracing.path = "trace_config_path";
 
     config.logging.provider.console.enable = false;
     config.logging.provider.console.log_level = eCAL::Logging::eLogLevel::log_level_debug1;
@@ -162,6 +163,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.logging.receiver.enable, config_from_yaml.logging.receiver.enable);
     EXPECT_EQ(config.logging.receiver.udp_config.port, config_from_yaml.logging.receiver.udp_config.port);
     EXPECT_EQ(config.tracing.enabled, config_from_yaml.tracing.enabled);
+    EXPECT_EQ(config.tracing.path, config_from_yaml.tracing.path);
 
     auto yaml_from_config = YAML::Node(config);
     eCAL::Configuration config_from_yaml_config = yaml_from_config.as<eCAL::Configuration>();
@@ -221,6 +223,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.logging.receiver.enable, config_from_yaml_config.logging.receiver.enable);
     EXPECT_EQ(config.logging.receiver.udp_config.port, config_from_yaml_config.logging.receiver.udp_config.port);
     EXPECT_EQ(config.tracing.enabled, config_from_yaml_config.tracing.enabled);
+    EXPECT_EQ(config.tracing.path, config_from_yaml_config.tracing.path);
 }
 
 TEST(core_cpp_config /*unused*/, read_write_file_test /*unused*/)

@@ -25,7 +25,6 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
-#include <cstdlib>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -106,53 +105,4 @@ inline size_t CountAndValidateJsonlLines(const std::string& filepath)
     }
     return count;
 }
-
-// Cross-platform helpers for environment variable manipulation.
-inline void SetEnv(const std::string& name, const std::string& value)
-{
-#ifdef _WIN32
-  _putenv_s(name.c_str(), value.c_str());
-#else
-  setenv(name.c_str(), value.c_str(), 1);
-#endif
-}
-
-inline void UnsetEnv(const std::string& name)
-{
-#ifdef _WIN32
-  _putenv_s(name.c_str(), "");
-#else
-  unsetenv(name.c_str());
-#endif
-}
-
-// RAII helper to set and restore an environment variable.
-class ScopedEnvVar
-{
-public:
-  ScopedEnvVar(const char* name, const std::string& value)
-    : name_(name)
-  {
-    const char* old = std::getenv(name);
-    had_old_ = (old != nullptr);
-    if (had_old_) old_value_ = old;
-    SetEnv(name_, value);
-  }
-
-  ~ScopedEnvVar()
-  {
-    if (had_old_)
-      SetEnv(name_, old_value_);
-    else
-      UnsetEnv(name_);
-  }
-
-  ScopedEnvVar(const ScopedEnvVar&)            = delete;
-  ScopedEnvVar& operator=(const ScopedEnvVar&) = delete;
-
-private:
-  std::string name_;
-  std::string old_value_;
-  bool        had_old_{false};
-};
 

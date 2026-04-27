@@ -24,13 +24,16 @@
 
 #pragma once
 
+#include <string>
+
 namespace eCAL
 {
   namespace Tracing
   {
     struct Configuration
     {
-      bool enabled { false }; //!< Enable tracing (Default: false)
+      bool        enabled { false }; //!< Enable tracing (Default: false)
+      std::string path    { "" };   //!< Path to trace output directory (Default: "")
     };
   }
 }

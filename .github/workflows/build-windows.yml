@@ -200,13 +200,6 @@ jobs:
       run: cmake --build "${{ runner.workspace }}/_build/csharp" --config Release
       shell: cmd
 
-    - name: Create tracing output directory
-      run: |
-        $TRACING_DIR = "${{ runner.temp }}\ecal_tracing"
-        mkdir $TRACING_DIR
-        echo "ECAL_TRACING_DATA_DIR=$TRACING_DIR" >> $Env:GITHUB_ENV
-      shell: powershell
-
     - name: Run C# Tests
       run: ctest -C Release -V --test-dir "${{ runner.workspace }}/_build/csharp"
 

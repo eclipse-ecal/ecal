@@ -222,6 +222,25 @@ namespace eCAL
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ = Util::DirProvider(), const Util::IDirManager& dir_manager_ = Util::DirManager(), const eCAL::Configuration& config_ = eCAL::GetConfiguration());
 
     /**
+     * @brief Returns the path to the eCAL trace directory.
+     *
+     *        Searches in following order:
+     *        1. Environment variable ECAL_TRACE_DIR
+     *        2. Environment variable ECAL_DATA (also checking for traces subdirectory)
+     *        3. The path provided from the configuration
+     *        4. The path where ecal.yaml was loaded from (also checking for traces subdirectory)
+     *        5. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+     *        6. Fallback path /ecal_tmp
+     *
+     *        In case of 5/6, a unique temporary folder will be created.
+     *
+     * @returns The path to the eCAL trace directory.
+     *          The subdirectory traces might not exist yet.
+     *          Returns empty string if no root path could be found.
+     */
+     std::string GeteCALTraceDirImpl(const Util::IDirProvider& dir_provider_ = Util::DirProvider(), const Util::IDirManager& dir_manager_ = Util::DirManager(), const eCAL::Configuration& config_ = eCAL::GetConfiguration());
+
+    /**
      * @brief Returns the path to the eCAL data directory. Searches in following order:
      *
      *       1. Environment variable ECAL_DATA

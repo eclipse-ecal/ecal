@@ -28,6 +28,7 @@
 #include <type_traits>
 
 #include <ecal/process.h>
+#include <ecal/util.h>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -48,28 +49,17 @@ namespace tracing
 
     CTracingWriterJSONL::CTracingWriterJSONL()
         : timestamp_(GetCurrentTimestamp())
+        , trace_dir_(eCAL::Util::GeteCALTraceDir())
     {}
 
     std::string CTracingWriterJSONL::GetSpansFilePath() const
     {
-        const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
-        if (data_dir == nullptr)
-        {
-            std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
-            std::abort();
-        }
-        return std::string(data_dir) + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
+        return trace_dir_ + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
     std::string CTracingWriterJSONL::GetTopicMetadataFilePath() const
     {
-        const char* data_dir = std::getenv("ECAL_TRACING_DATA_DIR");
-        if (data_dir == nullptr)
-        {
-            std::cerr << "Fatal: Mandatory environment variable ECAL_TRACING_DATA_DIR is not set." << std::endl;
-            std::abort();
-        }
-        return std::string(data_dir) + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
+        return trace_dir_ + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
     void CTracingWriterJSONL::WriteSpansToFile(const std::vector<SpanDataVariant>& batch)
