@@ -29,8 +29,6 @@
 #include "ecal/util.h"
 #include "util/getenvvar.h"
 
-#include <ecal_utils/str_convert.h>
-
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -50,32 +48,20 @@
 
 namespace
 {
-#ifdef ECAL_OS_WINDOWS
   // Converts a UTF-8 encoded std::string to a std::filesystem::path.
-  // Necessary on Windows where std::filesystem::path(std::string) uses
-  // the current ANSI code page, not UTF-8.
+  // std::filesystem::u8path() is the standard C++17 way to do this correctly
+  // on all platforms, including Windows where path(std::string) uses the ANSI
+  // code page rather than UTF-8.
   std::filesystem::path utf8ToPath(const std::string& utf8_str_)
   {
-    return std::filesystem::path(EcalUtils::StrConvert::Utf8ToWide(utf8_str_));
+    return std::filesystem::u8path(utf8_str_);
   }
 
   // Converts a std::filesystem::path to a UTF-8 encoded std::string.
-  // Uses the wide (UTF-16) representation to avoid code-page issues.
   std::string pathToUtf8(const std::filesystem::path& p_)
   {
-    return EcalUtils::StrConvert::WideToUtf8(p_.wstring());
+    return p_.u8string();
   }
-#else
-  std::filesystem::path utf8ToPath(const std::string& utf8_str_)
-  {
-    return std::filesystem::path(utf8_str_);
-  }
-
-  std::string pathToUtf8(const std::filesystem::path& p_)
-  {
-    return p_.string();
-  }
-#endif /* ECAL_OS_WINDOWS */
 
   // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
   std::string buildPath(const std::string& str1_, const std::string& str2_)
@@ -93,7 +79,6 @@ namespace
 #ifdef ECAL_OS_WINDOWS
   std::string getKnownFolderPath(REFKNOWNFOLDERID id_)
   {
-    std::string return_path;
     PWSTR path_tmp = nullptr;
 
     // Retrieve the known folder path: users local app data
@@ -108,16 +93,9 @@ namespace
       return {};
     }
 
-    // Convert the wide-character string to a multi-byte string
-    // For supporting full Unicode compatibility
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, path_tmp, -1, nullptr, 0, nullptr, nullptr);
-    if (size_needed > 0)
-    {
-      // Exclude the null terminator from the size
-      return_path.resize(size_needed - 1);
-      WideCharToMultiByte(CP_UTF8, 0, path_tmp, -1, return_path.data(), size_needed, nullptr, nullptr);
-    }
-    
+    // Construct a path from the wide string and convert to UTF-8.
+    std::string return_path = std::filesystem::path(path_tmp).u8string();
+
     // Free the memory allocated by SHGetKnownFolderPath
     CoTaskMemFree(path_tmp);
 
@@ -156,7 +134,7 @@ namespace
       DWORD path_length = GetTempPathW(MAX_PATH, temp_path_buffer);
       if (path_length > 0 && path_length < MAX_PATH)
       {
-        return EcalUtils::StrConvert::WideToUtf8(std::wstring(temp_path_buffer, path_length));
+        return std::filesystem::path(temp_path_buffer).u8string();
       }
       else
       {
@@ -291,21 +269,25 @@ namespace eCAL
       const std::string tmp_dir = getTempDir(dir_manager_);
     #ifdef ECAL_OS_WINDOWS
       
-      std::wstring wide_tmp_dir = EcalUtils::StrConvert::Utf8ToWide(tmp_dir);
-      wchar_t unique_path[MAX_PATH];
-      if (GetTempFileNameW(wide_tmp_dir.c_str(), L"ecal", 0, unique_path) == 0)
+      std::wstring wide_tmp_dir = utf8ToPath(tmp_dir).wstring();
+      wchar_t unique_path_buf[MAX_PATH];
+      if (GetTempFileNameW(wide_tmp_dir.c_str(), L"ecal", 0, unique_path_buf) == 0)
       {
         // failed to generate the path
         return {};
       }
 
-      // delete the temporary file and use the name as a directory
-      DeleteFileW(unique_path);
-      if (!CreateDirectoryW(unique_path, nullptr)) {
-        return {};
-      }
+      // GetTempFileNameW creates a file to reserve the name; remove it so we
+      // can create a directory with the same name instead.
+      const std::filesystem::path unique_path(unique_path_buf);
+      std::error_code ec;
+      std::filesystem::remove(unique_path, ec);
+      if (ec) return {};
 
-      return EcalUtils::StrConvert::WideToUtf8(std::wstring(unique_path));
+      std::filesystem::create_directory(unique_path, ec);
+      if (ec) return {};
+
+      return pathToUtf8(unique_path);
     
     #elif defined(ECAL_OS_LINUX)
 
