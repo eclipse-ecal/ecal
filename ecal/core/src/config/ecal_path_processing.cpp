@@ -29,6 +29,8 @@
 #include "ecal/util.h"
 #include "util/getenvvar.h"
 
+#include <ecal_utils/str_convert.h>
+
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -48,17 +50,44 @@
 
 namespace
 {
+#ifdef ECAL_OS_WINDOWS
+  // Converts a UTF-8 encoded std::string to a std::filesystem::path.
+  // Necessary on Windows where std::filesystem::path(std::string) uses
+  // the current ANSI code page, not UTF-8.
+  std::filesystem::path utf8ToPath(const std::string& utf8_str_)
+  {
+    return std::filesystem::path(EcalUtils::StrConvert::Utf8ToWide(utf8_str_));
+  }
+
+  // Converts a std::filesystem::path to a UTF-8 encoded std::string.
+  // Uses the wide (UTF-16) representation to avoid code-page issues.
+  std::string pathToUtf8(const std::filesystem::path& p_)
+  {
+    return EcalUtils::StrConvert::WideToUtf8(p_.wstring());
+  }
+#else
+  std::filesystem::path utf8ToPath(const std::string& utf8_str_)
+  {
+    return std::filesystem::path(utf8_str_);
+  }
+
+  std::string pathToUtf8(const std::filesystem::path& p_)
+  {
+    return p_.string();
+  }
+#endif /* ECAL_OS_WINDOWS */
+
   // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
   std::string buildPath(const std::string& str1_, const std::string& str2_)
   {
     if (str1_.empty()) return "";
-    return (std::filesystem::path(str1_) / str2_).string();
+    return pathToUtf8(utf8ToPath(str1_) / utf8ToPath(str2_));
   }
 
   // checks if the specified file is a proper file
   bool isValidFile(const std::string& full_file_path_)
   {
-    return std::filesystem::is_regular_file(full_file_path_);
+    return std::filesystem::is_regular_file(utf8ToPath(full_file_path_));
   }
 
 #ifdef ECAL_OS_WINDOWS
@@ -123,11 +152,11 @@ namespace
   {
   #ifdef ECAL_OS_WINDOWS
       
-      char temp_path_buffer[MAX_PATH];
-      DWORD path_length = GetTempPathA(MAX_PATH, temp_path_buffer);
+      wchar_t temp_path_buffer[MAX_PATH];
+      DWORD path_length = GetTempPathW(MAX_PATH, temp_path_buffer);
       if (path_length > 0 && path_length < MAX_PATH)
       {
-        return std::string(temp_path_buffer, path_length);
+        return EcalUtils::StrConvert::WideToUtf8(std::wstring(temp_path_buffer, path_length));
       }
       else
       {
@@ -181,13 +210,13 @@ namespace eCAL
   {
     bool DirManager::dirExists(const std::string& path_) const
     {
-      return std::filesystem::is_directory(path_);
+      return std::filesystem::is_directory(utf8ToPath(path_));
     }
 
     bool DirManager::createDir(const std::string& path_) const
     {
       std::error_code ec;
-      return std::filesystem::create_directory(path_, ec);
+      return std::filesystem::create_directory(utf8ToPath(path_), ec);
     }
 
     bool DirManager::dirExistsOrCreate(const std::string& path_) const
@@ -234,13 +263,14 @@ namespace eCAL
       //   - access(W_OK) is POSIX-only
       // Use a thread-id-qualified name to avoid collisions under concurrent calls.
       const std::string test_file_name = "ecal_write_test_" + std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())) + ".tmp";
-      const std::filesystem::path test_file_path = std::filesystem::path(path_) / test_file_name;
+      const std::filesystem::path test_file_path = utf8ToPath(path_) / utf8ToPath(test_file_name);
       std::ofstream test_file(test_file_path);
 
       if (test_file)
       {
         test_file.close();
-        std::filesystem::remove(test_file_path);
+        std::error_code ec;
+        std::filesystem::remove(test_file_path, ec);
         return true;
       }
 
@@ -250,7 +280,7 @@ namespace eCAL
     // returns the directory path of the specified file
     std::string DirManager::getDirectoryPath(const std::string& file_path_) const
     {
-      return std::filesystem::path(file_path_).parent_path().string();
+      return pathToUtf8(utf8ToPath(file_path_).parent_path());
     }
 
     // return a unique temporary folder name
@@ -261,20 +291,21 @@ namespace eCAL
       const std::string tmp_dir = getTempDir(dir_manager_);
     #ifdef ECAL_OS_WINDOWS
       
-      char unique_path[MAX_PATH];
-      if (GetTempFileNameA(tmp_dir.c_str(), "ecal", 0, unique_path) == 0)
+      std::wstring wide_tmp_dir = EcalUtils::StrConvert::Utf8ToWide(tmp_dir);
+      wchar_t unique_path[MAX_PATH];
+      if (GetTempFileNameW(wide_tmp_dir.c_str(), L"ecal", 0, unique_path) == 0)
       {
         // failed to generate the path
         return {};
       }
 
       // delete the temporary file and use the name as a directory
-      DeleteFileA(unique_path);
-      if (!CreateDirectoryA(unique_path, nullptr)) {
+      DeleteFileW(unique_path);
+      if (!CreateDirectoryW(unique_path, nullptr)) {
         return {};
       }
 
-      return std::string(unique_path);
+      return EcalUtils::StrConvert::WideToUtf8(std::wstring(unique_path));
     
     #elif defined(ECAL_OS_LINUX)
 
@@ -356,7 +387,7 @@ namespace eCAL
     std::string checkForValidConfigFilePath(const std::string& config_file_, const Util::DirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::DirManager& dir_manager_ /* = Util::DirManager() */)
     {
       std::error_code ec;
-      const std::string cwd_directory_path = std::filesystem::current_path(ec).string();
+      const std::string cwd_directory_path = pathToUtf8(std::filesystem::current_path(ec));
 
       std::vector<std::string> ecal_default_paths = getEcalDefaultPaths(dir_provider_, dir_manager_);
       
