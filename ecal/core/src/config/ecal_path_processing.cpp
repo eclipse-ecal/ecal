@@ -128,37 +128,10 @@ namespace
   // never returns an empty string, if there is no valid temp dir found, fallback /ecal_tmp is returned
   std::string getTempDir(const eCAL::Util::IDirManager& dir_manager_)
   {
-  #ifdef ECAL_OS_WINDOWS
-      
-      wchar_t temp_path_buffer[MAX_PATH];
-      DWORD path_length = GetTempPathW(MAX_PATH, temp_path_buffer);
-      if (path_length > 0 && path_length < MAX_PATH)
-      {
-        return std::filesystem::path(temp_path_buffer).u8string();
-      }
-      else
-      {
-        std::string appdata_path = getKnownFolderPath(FOLDERID_LocalAppData);
-        if (!appdata_path.empty())
-        {
-          std::string apdata_tmp_path = buildPath(appdata_path, ECAL_FOLDER_NAME_TMP_WINDOWS);
-          if (dir_manager_.dirExists(apdata_tmp_path))
-          {
-            return apdata_tmp_path;
-          }
-        }
-      }
-      
-  #elif defined(ECAL_OS_LINUX)
-
-      std::string env_tmp_dir = getEnvVar(ECAL_LINUX_TMP_VAR);
-      if (!env_tmp_dir.empty() && dir_manager_.dirExists(env_tmp_dir))
-      {
-        return env_tmp_dir;
-      }
-
-  #endif /* ECAL_OS_LINUX */
-
+    std::error_code ec;
+    const std::filesystem::path tmp = std::filesystem::temp_directory_path(ec);
+    if (!ec && !tmp.empty())
+      return pathToUtf8(tmp);
     return ECAL_FALLBACK_TMP_DIR;
   }
 
