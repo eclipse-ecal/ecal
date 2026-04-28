@@ -66,7 +66,7 @@ namespace
   // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
   std::string buildPath(const std::string& str1_, const std::string& str2_)
   {
-    if (str1_.empty()) return "";
+    if (str1_.empty()) return {};
     return pathToUtf8(utf8ToPath(str1_) / utf8ToPath(str2_));
   }
 
@@ -86,10 +86,7 @@ namespace
 
     if (ret != S_OK)
     {
-      if (path_tmp != nullptr)
-        // Free the memory allocated by SHGetKnownFolderPath
-        CoTaskMemFree(path_tmp);
-
+      CoTaskMemFree(path_tmp); // safe to call with nullptr
       return {};
     }
 
@@ -126,7 +123,7 @@ namespace
 
   // returns temp dir, e.g. /tmp in linux or C:\Users\username\AppData\Local\Temp in windows
   // never returns an empty string, if there is no valid temp dir found, fallback /ecal_tmp is returned
-  std::string getTempDir(const eCAL::Util::IDirManager& dir_manager_)
+  std::string getTempDir()
   {
     std::error_code ec;
     const std::filesystem::path tmp = std::filesystem::temp_directory_path(ec);
@@ -239,7 +236,12 @@ namespace eCAL
     // returns an empty string if the folder could not be created
     std::string DirProvider::uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const
     {
-      const std::string tmp_dir = getTempDir(dir_manager_);
+      const std::string tmp_dir = getTempDir();
+
+      // Ensure the base tmp directory exists (e.g. when falling back to /ecal_tmp)
+      if (!dir_manager_.dirExistsOrCreate(tmp_dir))
+        return {};
+
     #ifdef ECAL_OS_WINDOWS
       
       std::wstring wide_tmp_dir = utf8ToPath(tmp_dir).wstring();
@@ -267,9 +269,8 @@ namespace eCAL
       std::string path_template = buildPath(tmp_dir, "ecal-XXXXXX"); // 'X's will be replaced
       char* dir = mkdtemp(path_template.data());
 
-      if (dir == nullptr) {
+      if (dir == nullptr)
         return {};
-      }
 
       return std::string(dir);
 
@@ -329,9 +330,7 @@ namespace eCAL
       for (const auto& path : log_paths)
       {
         if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
-        {
           return path;
-        }
       }
       
       // if no path is available, we create temp directories for logging

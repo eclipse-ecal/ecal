@@ -368,13 +368,9 @@ TEST(core_cpp_dir_manager /*unused*/, can_write_to_directory /*unused*/)
 
 // Verify that uniqueTmpDir returns a non-empty, existing directory and can be
 // cleaned up without issues.
-// Note: the Windows-specific Unicode bug (GetTempFileNameA mishandling non-ASCII
-// temp paths) cannot be exercised here because getTempDir() is a free function
-// that reads the real OS temp directory, which is not injectable.  The bug only
-// manifests when the system temp directory itself contains non-ANSI characters –
-// an environment condition that cannot be controlled in a unit test.  The fix
-// (switching to the W-variants of the Win32 API) is validated by code review and
-// by the can_write_to_directory_unicode_path integration test above.
+// Note: getTempDir() is a free function that reads the real OS temp directory and
+// is not injectable, so the fallback path (ECAL_FALLBACK_TMP_DIR) cannot be
+// triggered in a unit test without manipulating environment variables.
 TEST(core_cpp_dir_provider /*unused*/, unique_tmp_dir_returns_valid_dir /*unused*/)
 {
   const eCAL::Util::DirManager  dir_manager;
@@ -391,6 +387,18 @@ TEST(core_cpp_dir_provider /*unused*/, unique_tmp_dir_returns_valid_dir /*unused
     std::filesystem::remove_all(std::filesystem::u8path(unique_dir), ec);
     EXPECT_FALSE(ec) << "Cleanup of unique tmp dir failed: " << ec.message();
   }
+}
+
+// Verify that uniqueTmpDir returns an empty string when the base tmp directory
+// cannot be accessed or created (new guard: dirExistsOrCreate fails).
+TEST(core_cpp_dir_provider /*unused*/, unique_tmp_dir_returns_empty_when_dir_not_creatable /*unused*/)
+{
+  NiceMock<MockDirManager> mock_dir_manager;
+  const eCAL::Util::DirProvider dir_provider;
+
+  ON_CALL(mock_dir_manager, dirExistsOrCreate(testing::_)).WillByDefault(testing::Return(false));
+
+  EXPECT_TRUE(dir_provider.uniqueTmpDir(mock_dir_manager).empty());
 }
 
 #ifdef ECAL_OS_WINDOWS
