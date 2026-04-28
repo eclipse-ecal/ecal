@@ -377,6 +377,11 @@ namespace eCAL
       ss << R"(      # UDP Port for sending logging data)"                                                                          << "\n";
       ss << R"(      port: )"                                         << config_.logging.receiver.udp_config.port                   << "\n";
       ss << R"()"                                                                                                                   << "\n";
+      ss << R"(# Tracing configuration)"                                                                                            << "\n";
+      ss << R"(tracing:)"                                                                                                           << "\n";
+      ss << R"(  # Enable tracing (Default: false))"                                                                                << "\n";
+      ss << R"(  enabled: )"                                          << config_.tracing.enabled                                    << "\n";
+      ss << R"()"                                                                                                                   << "\n";
     
       return ss;
     }

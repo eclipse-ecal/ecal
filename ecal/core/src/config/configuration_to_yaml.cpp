@@ -672,6 +672,28 @@ namespace YAML
 
 
   /*
+     ______             _          
+    /_  __/______ _____(_)__  ___ _
+     / / / __/ _ `/ __/ / _ \/ _ `/
+    /_/ /_/  \_,_/\__/_/_//_/\_, / 
+                            /___/  
+  */
+
+  Node convert<eCAL::Tracing::Configuration>::encode(const eCAL::Tracing::Configuration& config_)
+  {
+    Node node;
+    node["enabled"] = config_.enabled;
+    return node;
+  }
+
+  bool convert<eCAL::Tracing::Configuration>::decode(const Node& node_, eCAL::Tracing::Configuration& config_)
+  {
+    AssignValue<bool>(config_.enabled, node_, "enabled");
+    return true;
+  }
+
+
+  /*
        __  ___     _                      ____                    __  _         
       /  |/  /__ _(_)__    _______  ___  / _(_)__ ___ _________ _/ /_(_)__  ___ 
      / /|_/ / _ `/ / _ \  / __/ _ \/ _ \/ _/ / _ `/ // / __/ _ `/ __/ / _ \/ _ \
@@ -689,6 +711,7 @@ namespace YAML
     node["time"]               = config_.timesync;
     node["application"]        = config_.application;
     node["logging"]            = config_.logging;
+    node["tracing"]            = config_.tracing;
     node["communication_mode"] = config_.communication_mode == eCAL::eCommunicationMode::network ? "network" : "local";
     
     return node;
@@ -703,6 +726,7 @@ namespace YAML
     AssignValue<eCAL::Time::Configuration>(config_.timesync, node_, "time");
     AssignValue<eCAL::Application::Configuration>(config_.application, node_, "application");
     AssignValue<eCAL::Logging::Configuration>(config_.logging, node_, "logging");
+    AssignValue<eCAL::Tracing::Configuration>(config_.tracing, node_, "tracing");
     
     std::string communication_mode;
     AssignValue<std::string>(communication_mode, node_, "communication_mode");
