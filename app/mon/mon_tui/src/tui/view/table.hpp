@@ -43,6 +43,8 @@ class TableView : public View
 {
   ftxui::DataTable table;
   ftxui::Component details;
+  ftxui::Component split_view;
+  int split_left_width = 80;
 
 protected:
   std::shared_ptr<TableViewModel<T>> view_model;
@@ -100,11 +102,16 @@ public:
       focusable.push_back(details);
     }
 
+    split_view = ftxui::ResizableSplitLeft(table, details, &split_left_width);
+
     Add(std::make_shared<FocusManager>(focusable, nullptr));
   }
 
   bool OnEvent(ftxui::Event event) override
   {
+    if (event.is_mouse() && view_model->details_visible && split_view != nullptr && split_view->OnEvent(event))
+      return true;
+
     if(ComponentBase::OnEvent(event)) return true;
 
     auto command = KeyCommand(event);
@@ -141,12 +148,15 @@ public:
   {
     using namespace ftxui;
 
-    return hbox(
-      separatorEmpty(),
-      table->Render() | flex,
-      separator(),
-      details->Render()
-    );
+    if (!view_model->details_visible)
+    {
+      return hbox(
+        separatorEmpty(),
+        table->Render() | flex
+      );
+    }
+
+    return split_view->Render();
   }
 
   virtual std::shared_ptr<ItemRenderer> CreateRenderer()

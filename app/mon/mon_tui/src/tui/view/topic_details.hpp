@@ -49,18 +49,18 @@ class TopicDetailsView : public View
     Elements attributes;
     for(auto &a: details->attributes)
     {
-      attributes.push_back(text(a.first + ": " + a.second));
+      attributes.push_back(paragraph(a.first + ": " + a.second));
     }
 
     return vbox (
       separatorEmpty(),
-      text("Process path: " + details->process_name),
+      paragraph("Process path: " + details->process_name),
       separatorEmpty(),
-      text("Local connections: " + std::to_string(details->local_connections_count)),
+      paragraph("Local connections: " + std::to_string(details->local_connections_count)),
       separatorEmpty(),
-      text("External connections: " + std::to_string(details->external_connections_count)),
+      paragraph("External connections: " + std::to_string(details->external_connections_count)),
       separatorEmpty(),
-      text("Attributes:"),
+      paragraph("Attributes:"),
       vbox(attributes)
     );
   }
