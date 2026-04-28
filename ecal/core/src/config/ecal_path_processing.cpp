@@ -178,6 +178,31 @@ namespace
     
   #endif
   }
+
+  std::string GeteCALOutputDirImpl(const eCAL::Util::IDirProvider& dir_provider_, const eCAL::Util::IDirManager& dir_manager_, const std::string& env_var_name_, const std::string& output_subdirectory_, const std::string& config_file_path_, const std::string& config_output_dir_)
+  {
+    const std::string config_file_dir = dir_manager_.getDirectoryPath(config_file_path_);
+    const std::string ecal_data_env_dir = dir_provider_.eCALEnvVar(ECAL_DATA_VAR);
+
+    const std::vector<std::string> output_paths = {
+      dir_provider_.eCALEnvVar(env_var_name_),
+      buildPath(ecal_data_env_dir, output_subdirectory_),
+      ecal_data_env_dir,
+      config_output_dir_,
+      buildPath(config_file_dir, output_subdirectory_),
+      config_file_dir
+    };
+
+    for (const auto& path : output_paths)
+    {
+      if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
+      {
+        return path;
+      }
+    }
+
+    return dir_provider_.uniqueTmpDir(dir_manager_);
+  }
 }
 
 namespace eCAL
@@ -340,55 +365,15 @@ namespace eCAL
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
-      const std::string ecal_data_env_dir = dir_provider_.eCALEnvVar(ECAL_DATA_VAR);
-      
-      const std::vector<std::string> log_paths = {
-        dir_provider_.eCALEnvVar(ECAL_LOG_VAR),
-        buildPath(ecal_data_env_dir, ECAL_FOLDER_NAME_LOG),
-        ecal_data_env_dir,
-        config_.logging.provider.file_config.path,
-        buildPath(config_file_dir, ECAL_FOLDER_NAME_LOG),
-        config_file_dir
-      };
-
-      for (const auto& path : log_paths)
-      {
-        if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
-        {
-          return path;
-        }
-      }
-      
       // if no path is available, we create temp directories for logging
       // check now for a tmp directory and return
-      return dir_provider_.uniqueTmpDir(dir_manager_);
+      return GeteCALOutputDirImpl(dir_provider_, dir_manager_, ECAL_LOG_VAR, ECAL_FOLDER_NAME_LOG, config_.GetConfigurationFilePath(), config_.logging.provider.file_config.path);
     }
 
     std::string GeteCALTraceDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
-      const std::string ecal_data_env_dir = dir_provider_.eCALEnvVar(ECAL_DATA_VAR);
-
-      const std::vector<std::string> trace_paths = {
-        dir_provider_.eCALEnvVar(ECAL_TRACE_VAR),
-        buildPath(ecal_data_env_dir, ECAL_FOLDER_NAME_TRACE),
-        ecal_data_env_dir,
-        config_.tracing.path,
-        buildPath(config_file_dir, ECAL_FOLDER_NAME_TRACE),
-        config_file_dir
-      };
-
-      for (const auto& path : trace_paths)
-      {
-        if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
-        {
-          return path;
-        }
-      }
-
       // if no path is available, we create temp directories for tracing
-      return dir_provider_.uniqueTmpDir(dir_manager_);
+      return GeteCALOutputDirImpl(dir_provider_, dir_manager_, ECAL_TRACE_VAR, ECAL_FOLDER_NAME_TRACE, config_.GetConfigurationFilePath(), {});
     }
 
     std::string checkForValidConfigFilePath(const std::string& config_file_, const Util::DirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::DirManager& dir_manager_ /* = Util::DirManager() */)

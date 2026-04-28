@@ -37,23 +37,14 @@
 
 #include <nlohmann/json.hpp>
 
-namespace
-{
-eCAL::Configuration GetTracingConfiguration(const std::string& path)
-{
-  eCAL::Configuration config;
-  config.tracing.path                    = path;
-  return config;
-}
-}
-
 TEST(TestTracingWriterJSONL, ConcurrentSpanWrites)
 {
   constexpr size_t num_threads      = 100;
   constexpr size_t batches_per_thread = 50;
   constexpr size_t spans_per_batch  = 500;
   constexpr size_t total_spans      = num_threads * batches_per_thread * spans_per_batch;
-  auto ecal_config                  = GetTracingConfiguration("./");
+  ScopedTraceDirOverride trace_dir_override("./");
+  auto ecal_config                  = GetTracingConfiguration();
   ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
   std::string spans_path;
@@ -113,7 +104,8 @@ TEST(TestTracingWriterJSONL, ConcurrentMetadataWrites)
   constexpr size_t num_threads          = 100;
   constexpr size_t metadata_per_thread  = 200;
   constexpr size_t total_metadata       = num_threads * metadata_per_thread;
-  auto ecal_config                      = GetTracingConfiguration("./");
+  ScopedTraceDirOverride trace_dir_override("./");
+  auto ecal_config                      = GetTracingConfiguration();
   ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
   std::string metadata_path;
@@ -161,7 +153,8 @@ TEST(TestTracingWriterJSONL, ConcurrentMetadataWrites)
 
 TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
 {
-  auto ecal_config = GetTracingConfiguration("./");
+  ScopedTraceDirOverride trace_dir_override("./");
+  auto ecal_config = GetTracingConfiguration();
   ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
   std::string spans_path;
@@ -208,7 +201,8 @@ TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
 
 TEST(TestTracingWriterJSONL, SubscriberSpanJsonFields)
 {
-  auto ecal_config = GetTracingConfiguration("./");
+  ScopedTraceDirOverride trace_dir_override("./");
+  auto ecal_config = GetTracingConfiguration();
   ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));
 
   std::string spans_path;

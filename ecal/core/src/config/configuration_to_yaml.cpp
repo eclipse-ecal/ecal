@@ -683,14 +683,12 @@ namespace YAML
   {
     Node node;
     node["enabled"] = config_.enabled;
-    node["path"]    = config_.path;
     return node;
   }
 
   bool convert<eCAL::Tracing::Configuration>::decode(const Node& node_, eCAL::Tracing::Configuration& config_)
   {
     AssignValue<bool>(config_.enabled, node_, "enabled");
-    AssignValue<std::string>(config_.path, node_, "path");
     return true;
   }
 

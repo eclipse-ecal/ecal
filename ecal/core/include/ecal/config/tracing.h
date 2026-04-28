@@ -32,8 +32,7 @@ namespace eCAL
   {
     struct Configuration
     {
-      bool        enabled { false }; //!< Enable tracing (Default: false)
-      std::string path    { "" };   //!< Path to trace output directory (Default: "")
+      bool enabled { false }; //!< Enable tracing (Default: false)
     };
   }
 }

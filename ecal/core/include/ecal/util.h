@@ -70,12 +70,11 @@ namespace eCAL
      *        Searches in following order:
      *        1. Environment variable ECAL_TRACE_DIR
      *        2. Environment variable ECAL_DATA (also checking for traces subdirectory)
-     *        3. The path provided from the configuration
-     *        4. The path where ecal.yaml was loaded from (also checking for traces subdirectory)
-     *        5. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
-     *        6. Fallback path /ecal_tmp
+    *        3. The path where ecal.yaml was loaded from (also checking for traces subdirectory)
+    *        4. The temporary directory (e.g. /tmp [unix], Appdata/local/Temp [win])
+    *        5. Fallback path /ecal_tmp
      *
-     *        In case of 5/6, a unique temporary folder will be created.
+    *        In case of 4/5, a unique temporary folder will be created.
      *
      * @returns The path to the eCAL trace directory.
      *          The subdirectory traces might not exist yet.

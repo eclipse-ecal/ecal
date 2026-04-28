@@ -381,8 +381,6 @@ namespace eCAL
       ss << R"(tracing:)"                                                                                                           << "\n";
       ss << R"(  # Enable tracing (Default: false))"                                                                                << "\n";
       ss << R"(  enabled: )"                                          << config_.tracing.enabled                                    << "\n";
-      ss << R"(  # Trace output directory)"                                                                          << "\n";
-      ss << R"(  path: )"                                             << quoteString(config_.tracing.path)                          << "\n";
       ss << R"()"                                                                                                                   << "\n";
     
       return ss;
