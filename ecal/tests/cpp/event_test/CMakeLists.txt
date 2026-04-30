@@ -26,6 +26,8 @@ set(event_test_src
   ${ECAL_CORE_PROJECT_ROOT}/core/src/ecal_event.cpp
   $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.cpp>
   $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/posix_shm_region.h>
+  $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.cpp>
+  $<$<BOOL:${UNIX}>:${ECAL_CORE_PROJECT_ROOT}/core/src/io/shm/linux/umask_guard.h>
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${event_test_src})
