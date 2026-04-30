@@ -28,17 +28,32 @@ jobs:
         echo cherry_pick_branch=cherry-pick/$short_sha/${{matrix.target-branch}} >> $GITHUB_ENV
 
     # Checkout with a specific fine-grained access token that has more permissions.
+    # We cannot use the generic GITHUB_TOKEN (i.e. the GitHub Bot), as commits
+    # and PRs created by that bot cannot trigger workflow runs.
+    #
+    # The token must be renewed every year.
+    #
     # When the token becomes invalid, this will show as the following error:
     #  
     #   /usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
     #   Error: fatal: could not read Username for 'https://github.com': terminal prompts disabled
     #   Error: The process '/usr/bin/git' failed with exit code 128
     #
+    # Last renewal:   2026-04-29
+    # Eclipse ticket: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/7432
+    #
+    # Mandatory Token Permissions:
+    #   Actions:       Read and write
+    #   Contents:      Read and write
+    #   Metadata:      Read-only
+    #   Pull requests: Read and write
+    #   Workflows:     Read and write
+    #
     - name: Checkout
       uses: actions/checkout@v6
       with:
         fetch-depth: 0
-        token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }} # This token was created on 2024-04-10 and probably is valid for 1 year: https://gitlab.eclipse.org/eclipsefdn/helpdesk/-/issues/5852#note_3593366
+        token: ${{ secrets.CHERRY_PICK_GITHUB_TOKEN }}
 
     - name: Determine PR number (if any)
       id: pr
