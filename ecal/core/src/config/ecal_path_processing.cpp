@@ -24,50 +24,61 @@
 #include "ecal_path_processing.h"
 
 #include "ecal_def.h"
-#include "ecal_utils/ecal_utils.h"
-#include "ecal_utils/filesystem.h"
 #include "ecal/config.h"
+
 #include "ecal/util.h"
 #include "util/getenvvar.h"
 
+#include <algorithm>
+#include <filesystem>
 #include <fstream>
+#include <functional>
+#include <system_error>
+#include <thread>
 #include <vector>
 
-// for cwd
+// OS-specific includes for path/temp/registry APIs
 #ifdef ECAL_OS_WINDOWS
   #include <windows.h>
   #include <ShlObj.h>
 #endif
 #ifdef ECAL_OS_LINUX
-  #include <sys/types.h>
-  #include <sys/stat.h>
   #include <unistd.h>
-  #include <dlfcn.h>
 #endif
 
 namespace
 {
-  // get the path separator from the current OS (win: "\\", unix: "/")
-  const std::string path_separator(1, EcalUtils::Filesystem::NativeSeparator());
+  // Converts a UTF-8 encoded std::string to a std::filesystem::path.
+  // std::filesystem::u8path() is the standard C++17 way to do this correctly
+  // on all platforms, including Windows where path(std::string) uses the ANSI
+  // code page rather than UTF-8.
+  std::filesystem::path utf8ToPath(const std::string& utf8_str_)
+  {
+    return std::filesystem::u8path(utf8_str_);
+  }
 
-  // returns empty if str1_ is empty. otherwise returns str1_ + path_separator + str2_
+  // Converts a std::filesystem::path to a UTF-8 encoded std::string.
+  std::string pathToUtf8(const std::filesystem::path& p_)
+  {
+    return p_.u8string();
+  }
+
+  // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
   std::string buildPath(const std::string& str1_, const std::string& str2_)
   {
-    if (str1_.empty()) return "";
-    return EcalUtils::String::Join(path_separator, std::vector<std::string>{str1_, str2_});
+    if (str1_.empty()) return {};
+    return pathToUtf8(utf8ToPath(str1_) / utf8ToPath(str2_));
   }
 
   // checks if the specified file is a proper file
   bool isValidFile(const std::string& full_file_path_)
   {
-    const EcalUtils::Filesystem::FileStatus file_status(full_file_path_, EcalUtils::Filesystem::Current);
-    return file_status.IsOk() && (file_status.GetType() == EcalUtils::Filesystem::Type::RegularFile);
+    return std::filesystem::is_regular_file(utf8ToPath(full_file_path_));
   }
 
 #ifdef ECAL_OS_WINDOWS
   std::string getKnownFolderPath(REFKNOWNFOLDERID id_)
   {
-    std::string return_path;
     PWSTR path_tmp = nullptr;
 
     // Retrieve the known folder path: users local app data
@@ -75,23 +86,13 @@ namespace
 
     if (ret != S_OK)
     {
-      if (path_tmp != nullptr)
-        // Free the memory allocated by SHGetKnownFolderPath
-        CoTaskMemFree(path_tmp);
-
+      CoTaskMemFree(path_tmp); // safe to call with nullptr
       return {};
     }
 
-    // Convert the wide-character string to a multi-byte string
-    // For supporting full Unicode compatibility
-    int size_needed = WideCharToMultiByte(CP_UTF8, 0, path_tmp, -1, nullptr, 0, nullptr, nullptr);
-    if (size_needed > 0)
-    {
-      // Exclude the null terminator from the size
-      return_path.resize(size_needed - 1);
-      WideCharToMultiByte(CP_UTF8, 0, path_tmp, -1, &return_path[0], size_needed, nullptr, nullptr);
-    }
-    
+    // Construct a path from the wide string and convert to UTF-8.
+    std::string return_path = std::filesystem::path(path_tmp).u8string();
+
     // Free the memory allocated by SHGetKnownFolderPath
     CoTaskMemFree(path_tmp);
 
@@ -122,54 +123,25 @@ namespace
 
   // returns temp dir, e.g. /tmp in linux or C:\Users\username\AppData\Local\Temp in windows
   // never returns an empty string, if there is no valid temp dir found, fallback /ecal_tmp is returned
-  std::string getTempDir(const eCAL::Util::IDirManager& dir_manager_)
+  std::string getTempDir()
   {
-  #ifdef ECAL_OS_WINDOWS
-      
-      char temp_path_buffer[MAX_PATH];
-      DWORD path_length = GetTempPathA(MAX_PATH, temp_path_buffer);
-      if (path_length > 0 && path_length < MAX_PATH)
-      {
-        return std::string(temp_path_buffer, path_length);
-      }
-      else
-      {
-        std::string appdata_path = getKnownFolderPath(FOLDERID_LocalAppData);
-        if (!appdata_path.empty())
-        {
-          std::string apdata_tmp_path = buildPath(appdata_path, ECAL_FOLDER_NAME_TMP_WINDOWS);
-          if (dir_manager_.dirExists(apdata_tmp_path))
-          {
-            return apdata_tmp_path;
-          }
-        }
-      }
-      
-  #elif defined(ECAL_OS_LINUX)
-
-      std::string env_tmp_dir = getEnvVar(ECAL_LINUX_TMP_VAR);
-      if (!env_tmp_dir.empty() && dir_manager_.dirExists(env_tmp_dir))
-      {
-        return env_tmp_dir;
-      }
-
-  #endif /* ECAL_OS_LINUX */
-
+    std::error_code ec;
+    const std::filesystem::path tmp = std::filesystem::temp_directory_path(ec);
+    if (!ec && !tmp.empty())
+      return pathToUtf8(tmp);
     return ECAL_FALLBACK_TMP_DIR;
   }
 
-  std::string eCALPlatformSpecificFolder(const std::string& path_, const std::string& linux_folder_name_ = ECAL_FOLDER_NAME_HOME_LINUX, const std::string& win_folder_name_ = ECAL_FOLDER_NAME_WINDOWS)
+  std::string eCALPlatformSpecificFolder(const std::string& path_, [[maybe_unused]] const std::string& linux_folder_name_ = ECAL_FOLDER_NAME_HOME_LINUX, [[maybe_unused]] const std::string& win_folder_name_ = ECAL_FOLDER_NAME_WINDOWS)
   {
     if (path_.empty()) return {};
 
   #ifdef ECAL_OS_WINDOWS
         
-    (void)linux_folder_name_; // suppress unused warning
     return buildPath(path_, win_folder_name_);
         
   #elif defined(ECAL_OS_LINUX)
         
-    (void)win_folder_name_; // suppress unused warning
     return buildPath(path_, linux_folder_name_);
         
   #else
@@ -210,13 +182,13 @@ namespace eCAL
   {
     bool DirManager::dirExists(const std::string& path_) const
     {
-      const EcalUtils::Filesystem::FileStatus status(path_, EcalUtils::Filesystem::Current);
-      return (status.IsOk() && (status.GetType() == EcalUtils::Filesystem::Type::Dir));
+      return std::filesystem::is_directory(utf8ToPath(path_));
     }
 
     bool DirManager::createDir(const std::string& path_) const
     {
-      return EcalUtils::Filesystem::MkDir(path_);
+      std::error_code ec;
+      return std::filesystem::create_directory(utf8ToPath(path_), ec);
     }
 
     bool DirManager::dirExistsOrCreate(const std::string& path_) const
@@ -250,7 +222,7 @@ namespace eCAL
 
       // We should have encountered a valid path
       if (it != paths_.end())
-        return (*it);
+        return *it;
 
       // If valid path is not encountered, defaults should be used
       return {};
@@ -258,26 +230,29 @@ namespace eCAL
 
     bool DirManager::canWriteToDirectory(const std::string& path_) const 
     {
-      const std::string testFilePath = path_ + "/test_file.txt";
-      std::ofstream testFile(testFilePath);
-      
-      if (testFile)
+      // Attempt-the-write is the most reliable cross-platform check:
+      //   - std::filesystem::perms doesn't model Windows ACLs
+      //   - access(W_OK) is POSIX-only
+      // Use a thread-id-qualified name to avoid collisions under concurrent calls.
+      const std::string test_file_name = "ecal_write_test_" + std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())) + ".tmp";
+      const std::filesystem::path test_file_path = utf8ToPath(path_) / utf8ToPath(test_file_name);
+      std::ofstream test_file(test_file_path);
+
+      if (test_file)
       {
-        testFile.close();
-        std::remove(testFilePath.c_str());
+        test_file.close();
+        std::error_code ec;
+        std::filesystem::remove(test_file_path, ec);
         return true;
-      } 
-      else 
-      {
-        return false;
       }
+
+      return false;
     }
 
     // returns the directory path of the specified file
     std::string DirManager::getDirectoryPath(const std::string& file_path_) const
     {
-      const size_t pos = file_path_.find_last_of("/\\");
-      return (std::string::npos == pos) ? "" : file_path_.substr(0, pos);
+      return pathToUtf8(utf8ToPath(file_path_).parent_path());
     }
 
     // return a unique temporary folder name
@@ -285,32 +260,41 @@ namespace eCAL
     // returns an empty string if the folder could not be created
     std::string DirProvider::uniqueTmpDir(const eCAL::Util::IDirManager& dir_manager_) const
     {
-      const std::string tmp_dir = getTempDir(dir_manager_);
+      const std::string tmp_dir = getTempDir();
+
+      // Ensure the base tmp directory exists (e.g. when falling back to /ecal_tmp)
+      if (!dir_manager_.dirExistsOrCreate(tmp_dir))
+        return {};
+
     #ifdef ECAL_OS_WINDOWS
       
-      char unique_path[MAX_PATH];
-      if (!GetTempFileNameA(tmp_dir.c_str(), "ecal", 0, unique_path) != 0)
+      std::wstring wide_tmp_dir = utf8ToPath(tmp_dir).wstring();
+      wchar_t unique_path_buf[MAX_PATH];
+      if (GetTempFileNameW(wide_tmp_dir.c_str(), L"ecal", 0, unique_path_buf) == 0)
       {
         // failed to generate the path
         return {};
       }
 
-      // delete the temporary file and use the name as a directory
-      DeleteFileA(unique_path);
-      if (!CreateDirectoryA(unique_path, nullptr)) {
-        return {};
-      }
+      // GetTempFileNameW creates a file to reserve the name; remove it so we
+      // can create a directory with the same name instead.
+      const std::filesystem::path unique_path(unique_path_buf);
+      std::error_code ec;
+      std::filesystem::remove(unique_path, ec);
+      if (ec) return {};
 
-      return std::string(unique_path);
+      std::filesystem::create_directory(unique_path, ec);
+      if (ec) return {};
+
+      return pathToUtf8(unique_path);
     
     #elif defined(ECAL_OS_LINUX)
 
       std::string path_template = buildPath(tmp_dir, "ecal-XXXXXX"); // 'X's will be replaced
-      char* dir = mkdtemp(&path_template[0]);
+      char* dir = mkdtemp(path_template.data());
 
-      if (dir == nullptr) {
+      if (dir == nullptr)
         return {};
-      }
 
       return std::string(dir);
 
@@ -328,27 +312,18 @@ namespace eCAL
 
     std::string DirProvider::eCALLocalUserDir() const
     {
-      const std::string userspace_path = getLocalUserPath();
-
-      if (!userspace_path.empty())
-      {
-        return eCALPlatformSpecificFolder(userspace_path);
-      }
-      
-      return {};
+      return eCALPlatformSpecificFolder(getLocalUserPath());
     }
 
-    std::string DirProvider::eCALDataSystemDir(const Util::IDirManager& dir_manager_) const
+    std::string DirProvider::eCALDataSystemDir([[maybe_unused]] const Util::IDirManager& dir_manager_) const
     {
       std::string system_dir;
     #ifdef ECAL_OS_WINDOWS
 
-      (void)dir_manager_; // suppress unused warning
       system_dir = getKnownFolderPath(FOLDERID_ProgramData);
     
     #elif defined(ECAL_OS_LINUX)
     
-      // TODO PG: Check if we really want to give that back here
       if (dir_manager_.dirExists(ECAL_LINUX_SYSTEM_PATH))
         system_dir = ECAL_LINUX_SYSTEM_PATH;
     
@@ -369,7 +344,7 @@ namespace eCAL
   {
     std::string GeteCALLogDirImpl(const Util::IDirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::IDirManager& dir_manager_ /* = Util::DirManager() */, const eCAL::Configuration& config_ /* = eCAL::GetConfiguration() */)
     {
-      const std::string config_file_dir = dir_manager_.getDirectoryPath(eCAL::GetConfiguration().GetConfigurationFilePath());
+      const std::string config_file_dir = dir_manager_.getDirectoryPath(config_.GetConfigurationFilePath());
       const std::string ecal_data_env_dir = dir_provider_.eCALEnvVar(ECAL_DATA_VAR);
       
       const std::vector<std::string> log_paths = {
@@ -384,9 +359,7 @@ namespace eCAL
       for (const auto& path : log_paths)
       {
         if (!path.empty() && dir_manager_.dirExists(path) && dir_manager_.canWriteToDirectory(path))
-        {
           return path;
-        }
       }
       
       // if no path is available, we create temp directories for logging
@@ -396,12 +369,15 @@ namespace eCAL
 
     std::string checkForValidConfigFilePath(const std::string& config_file_, const Util::DirProvider& dir_provider_ /* = Util::DirProvider() */, const Util::DirManager& dir_manager_ /* = Util::DirManager() */)
     {
-      const std::string cwd_directory_path = EcalUtils::Filesystem::CurrentWorkingDir();
+      std::error_code ec;
+      const std::string cwd_directory_path = pathToUtf8(std::filesystem::current_path(ec));
 
       std::vector<std::string> ecal_default_paths = getEcalDefaultPaths(dir_provider_, dir_manager_);
       
       // insert cwd on 2nd position, so that ECAL_DATA dir has precedence
-      ecal_default_paths.insert(ecal_default_paths.begin() + 1, cwd_directory_path);
+      // skip if CWD could not be determined (e.g. directory was deleted)
+      if (!ec)
+        ecal_default_paths.insert(ecal_default_paths.begin() + 1, cwd_directory_path);
       
       const std::string found_path = dir_manager_.findFileInPaths(ecal_default_paths, config_file_);
 
