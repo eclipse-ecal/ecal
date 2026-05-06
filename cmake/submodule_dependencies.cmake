@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.24)
 set(ecal_submodule_dependency_provider_root_dir ${CMAKE_CURRENT_LIST_DIR})
 
 set(ecal_submodule_dependencies 
+  absl
   asio
   CMakeFunctions
   CURL
