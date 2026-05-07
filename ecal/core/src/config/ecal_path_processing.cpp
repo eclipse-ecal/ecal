@@ -44,6 +44,7 @@
 #endif
 #ifdef ECAL_OS_LINUX
   #include <unistd.h>
+  #include <dlfcn.h>
 #endif
 
 namespace
