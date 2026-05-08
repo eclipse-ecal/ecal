@@ -184,6 +184,7 @@ void Assign_Registration_Configuration(struct eCAL_Registration_Configuration* c
 
   configuration_c_->local.shm.domain = configuration_.local.shm.domain.c_str();
   configuration_c_->local.shm.queue_size = configuration_.local.shm.queue_size;
+  configuration_c_->local.shm.receive_poll_ms = configuration_.local.shm.receive_poll_ms;
 
   configuration_c_->local.udp.port = configuration_.local.udp.port;
 
@@ -409,6 +410,7 @@ void Assign_Registration_Configuration(eCAL::Registration::Configuration& config
   configuration_.local.transport_type = Convert_Registration_Local_eTransportType(configuration_c_->local.transport_type);
   configuration_.local.shm.domain = configuration_c_->local.shm.domain != NULL ? configuration_c_->local.shm.domain : "";
   configuration_.local.shm.queue_size = configuration_c_->local.shm.queue_size;
+  configuration_.local.shm.receive_poll_ms = configuration_c_->local.shm.receive_poll_ms;
   configuration_.local.udp.port = configuration_c_->local.udp.port;
 
   // Assign Network::Configuration

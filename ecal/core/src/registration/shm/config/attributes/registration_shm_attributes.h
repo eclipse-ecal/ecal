@@ -29,8 +29,9 @@ namespace eCAL
     {
       struct SAttributes
       {
-        std::string  domain;
-        size_t       queue_size;
+        std::string   domain;
+        size_t        queue_size;
+        unsigned int  receive_poll_ms;
       };
     }
   }
