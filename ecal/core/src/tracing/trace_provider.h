@@ -26,7 +26,6 @@
 #include <memory>
 
 namespace eCAL
-{
 namespace tracing
 {
 

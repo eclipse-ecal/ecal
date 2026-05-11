@@ -27,7 +27,6 @@
 #include <string>
 
 namespace eCAL
-{
   namespace Tracing
   {
     struct Configuration

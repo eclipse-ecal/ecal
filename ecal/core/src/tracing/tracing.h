@@ -31,7 +31,6 @@
 #include <ecal_struct_sample_common.h>
 
 namespace eCAL
-{
 namespace tracing
 {
 

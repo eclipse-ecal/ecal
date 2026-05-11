@@ -211,7 +211,7 @@ namespace eCAL
     }
 
     // create tracing span for the send operation
-    eCAL::tracing::CPublisherSpan send_span(
+    eCAL::tracing::CPublisherSpan const send_span(
       m_topic_id,
       m_clock,
       active_layer,

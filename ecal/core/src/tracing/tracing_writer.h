@@ -25,7 +25,6 @@
 #include "tracing.h"
 
 namespace eCAL
-{
 namespace tracing
 {
 

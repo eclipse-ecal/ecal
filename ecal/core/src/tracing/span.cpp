@@ -26,7 +26,6 @@
 using namespace std::chrono;
 
 namespace eCAL
-{
 namespace tracing
 {
 
