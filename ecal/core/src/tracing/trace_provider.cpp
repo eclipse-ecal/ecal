@@ -22,6 +22,7 @@
 #include "trace_provider_noop.h"
 
 namespace eCAL
+{
 namespace tracing
 {
 

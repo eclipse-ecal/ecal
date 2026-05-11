@@ -22,6 +22,7 @@
 #include "trace_provider.h"
 
 namespace eCAL
+{
 namespace tracing
 {
 

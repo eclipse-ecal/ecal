@@ -27,6 +27,7 @@
 #include <thread>
 
 namespace eCAL
+{
 namespace tracing
 {
 
@@ -51,7 +52,7 @@ namespace tracing
     CTraceProviderDefault::~CTraceProviderDefault()
     {
         {
-            std::lock_guard<std::mutex> const lock(thread_mutex);
+            std::lock_guard<std::mutex> lock(thread_mutex);
             stop_thread_ = true;
             write_cv_.notify_all();
         }
@@ -61,7 +62,7 @@ namespace tracing
 
     void CTraceProviderDefault::WriteSpan(const SpanDataVariant& span_data)
     {
-        std::lock_guard<std::mutex> const lock(thread_mutex);
+        std::lock_guard<std::mutex> lock(thread_mutex);
         span_buffer_.push_back(span_data);
         if (span_buffer_.size() >= batch_size_)
         {

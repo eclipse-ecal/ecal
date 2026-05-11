@@ -26,6 +26,7 @@
 #include <ecal/pubsub/types.h>
 
 namespace eCAL
+{
 namespace tracing
 {
 

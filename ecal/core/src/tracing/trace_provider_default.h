@@ -33,6 +33,7 @@
 #include <condition_variable>
 
 namespace eCAL
+{
 namespace tracing
 {
 
