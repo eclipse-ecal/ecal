@@ -1,13 +1,14 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,49 +28,47 @@ using namespace std::chrono;
 
 namespace eCAL
 {
-namespace tracing
-{
-
+  namespace tracing
+  {
     // Send span constructor
     CPublisherSpan::CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
-        auto now = system_clock::now();
-        data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id    = topic_id.topic_id.entity_id;
-        data.process_id   = topic_id.topic_id.process_id;
-        data.payload_size = payload_size;
-        data.clock        = clock;
-        data.layer        = layer;
-        data.op_type      = op_type;
+      auto now = system_clock::now();
+      data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+      data.entity_id    = topic_id.topic_id.entity_id;
+      data.process_id   = topic_id.topic_id.process_id;
+      data.payload_size = payload_size;
+      data.clock        = clock;
+      data.layer        = layer;
+      data.op_type      = op_type;
     }
 
     CPublisherSpan::~CPublisherSpan()
     {
-        auto now = system_clock::now();
-        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
+      auto now = system_clock::now();
+      data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+      if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
     }
 
     // Receive span constructor
     CSubscriberSpan::CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
-        auto now = system_clock::now();
-        data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        data.entity_id  = entity_id;
-        data.topic_id   = topic_info.topic_id;
-        data.process_id = topic_info.process_id;
-        data.payload_size = payload_size;
-        data.clock      = clock;
-        data.layer      = layer;
-        data.op_type    = op_type;
+      auto now = system_clock::now();
+      data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+      data.entity_id  = entity_id;
+      data.topic_id   = topic_info.topic_id;
+      data.process_id = topic_info.process_id;
+      data.payload_size = payload_size;
+      data.clock      = clock;
+      data.layer      = layer;
+      data.op_type    = op_type;
     }
 
     CSubscriberSpan::~CSubscriberSpan()
     {
-        auto now = system_clock::now();
-        data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-        if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
+      auto now = system_clock::now();
+      data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
+      if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
     }
-
-} // namespace tracing
-} // namespace eCAL
+  }
+}

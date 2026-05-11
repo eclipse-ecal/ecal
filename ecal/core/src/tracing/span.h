@@ -1,13 +1,14 @@
 /* ========================= eCAL LICENSE =================================
  *
  * Copyright (C) 2016 - 2025 Continental Corporation
+ * Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,42 +28,42 @@
 
 namespace eCAL
 {
-namespace tracing
-{
-
+  namespace tracing
+  {
     // RAII span for send (publisher) operations.
     // Records start_ns on construction, end_ns + buffer on destruction.
-    class CPublisherSpan {
+    class CPublisherSpan
+    {
     public:
-        CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+      CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
 
-        ~CPublisherSpan();
+      ~CPublisherSpan();
 
-        CPublisherSpan(const CPublisherSpan&)            = delete;
-        CPublisherSpan& operator=(const CPublisherSpan&) = delete;
-        CPublisherSpan(CPublisherSpan&&)                 = delete;
-        CPublisherSpan& operator=(CPublisherSpan&&)      = delete;
+      CPublisherSpan(const CPublisherSpan&)            = delete;
+      CPublisherSpan& operator=(const CPublisherSpan&) = delete;
+      CPublisherSpan(CPublisherSpan&&)                 = delete;
+      CPublisherSpan& operator=(CPublisherSpan&&)      = delete;
 
     private:
-        SPublisherSpanData data{};
+      SPublisherSpanData data{};
     };
 
     // RAII span for receive (subscriber) operations.
     // Records start_ns on construction, end_ns + buffer on destruction.
-    class CSubscriberSpan {
+    class CSubscriberSpan
+    {
     public:
-        CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+      CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
 
-        ~CSubscriberSpan();
+      ~CSubscriberSpan();
 
-        CSubscriberSpan(const CSubscriberSpan&)            = delete;
-        CSubscriberSpan& operator=(const CSubscriberSpan&) = delete;
-        CSubscriberSpan(CSubscriberSpan&&)                 = delete;
-        CSubscriberSpan& operator=(CSubscriberSpan&&)      = delete;
+      CSubscriberSpan(const CSubscriberSpan&)            = delete;
+      CSubscriberSpan& operator=(const CSubscriberSpan&) = delete;
+      CSubscriberSpan(CSubscriberSpan&&)                 = delete;
+      CSubscriberSpan& operator=(CSubscriberSpan&&)      = delete;
 
     private:
-        SSubscriberSpanData data{};
+      SSubscriberSpanData data{};
     };
-
-} // namespace tracing
-} // namespace eCAL
+  }
+}
