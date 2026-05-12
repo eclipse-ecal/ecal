@@ -112,6 +112,21 @@ TEST(core_cpp_core, eCAL_Ok)
   EXPECT_EQ(false, eCAL::Ok());
 }
 
+TEST(core_cpp_core, IntentionalFailure_One)
+{
+  EXPECT_EQ(1, 2) << "Intentional CI failure #1 for summary validation";
+}
+
+TEST(core_cpp_core, IntentionalFailure_Two)
+{
+  EXPECT_TRUE(false) << "Intentional CI failure #2 for summary validation";
+}
+
+TEST(core_cpp_core, IntentionalFailure_Three)
+{
+  EXPECT_STREQ("expected", "actual") << "Intentional CI failure #3 for summary validation";
+}
+
 /* excluded for now, system timer jitter too high */
 #if 0
 namespace

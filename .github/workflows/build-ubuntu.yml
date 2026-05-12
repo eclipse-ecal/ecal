@@ -170,7 +170,17 @@ jobs:
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Run Tests
-      run: ctest -V --test-dir _build
+      run: |
+        mkdir -p "${{ github.workspace }}/_build/test-results"
+        ctest -V --test-dir _build --output-junit "${{ github.workspace }}/_build/test-results/test-results-${{ matrix.os }}.xml"
+
+    - name: Upload JUnit XML
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: 'test-results-${{ matrix.os }}'
+        path: ${{ github.workspace }}/_build/test-results/test-results-${{ matrix.os }}.xml
+        if-no-files-found: warn
 
     - name: CPack
       run: cpack -G DEB -R '${{ env.DEB_VERSION }}' --config _build/CPackConfig.cmake
@@ -193,6 +203,21 @@ jobs:
         name: 'libraries_${{ matrix.os }}'
         path: ${{ github.workspace }}/_build/lib/*
         
+    #---------------------------------------------------------------------------------------------------
+
+  report-ubuntu-tests:
+    needs: [build-ubuntu]
+    if: always()
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: YannikSpaeth/ci-failure-summary-workflow/.github/workflows/ci-failure-summary.yml@main
+    with:
+      artifact_name: 'test-results-*'
+      pr_number: ${{ github.event.pull_request.number }}
+      sha: ${{ github.sha }}
+    secrets: inherit
+
     #---------------------------------------------------------------------------------------------------
     
   run-benchmarks:
