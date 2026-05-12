@@ -1,10 +1,7 @@
 name: Build Windows
 
 on:
-  push:
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
 env:
   IS_JENKINS_SIGNING_ALLOWED: true
 
@@ -200,12 +197,24 @@ jobs:
       run: cmake --build "${{ runner.workspace }}/_build/csharp" --config Release
       shell: cmd
 
+    - name: Ensure JUnit output directory exists
+      run: mkdir "${{ runner.workspace }}\_build\test-results"
+      shell: cmd
+
     - name: Run C# Tests
-      run: ctest -C Release -V --test-dir "${{ runner.workspace }}/_build/csharp"
+      run: ctest -C Release -V --test-dir "${{ runner.workspace }}/_build/csharp" --output-junit "${{ runner.workspace }}/_build/test-results/test-results-csharp.xml"
 
     - name: Run Tests
-      run: ctest -C Release -V
+      run: ctest -C Release -V --output-junit "${{ runner.workspace }}/_build/test-results/test-results-windows.xml"
       working-directory: ${{ runner.workspace }}/_build/complete
+
+    - name: Upload JUnit XML
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: test-results-windows
+        path: ${{ runner.workspace }}/_build/test-results/*.xml
+        if-no-files-found: warn
 
     - name: Pack SDK
       run: cpack -C Debug
@@ -263,7 +272,22 @@ jobs:
         path: ${{ runner.workspace }}/_build/complete/bin/*.dll
 
     # --------------------------------------------------------------------------------------------------
-    
+
+  report-windows-tests:
+    needs: [build-windows]
+    if: always()
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: YannikSpaeth/ecal-ci-pipeline-improvements/.github/workflows/ci-failure-summary.yml@main
+    with:
+      artifact_name: test-results-*
+      pr_number: ${{ github.event.pull_request.number }}
+      sha: ${{ github.sha }}
+    secrets: inherit
+
+    # --------------------------------------------------------------------------------------------------
+
   run-benchmarks:
     if: github.repository == 'eclipse-ecal/ecal' && github.ref_name == 'master'
     runs-on: windows-2022
