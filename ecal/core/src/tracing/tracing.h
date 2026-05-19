@@ -27,6 +27,7 @@
 
 #include <string>
 #include <cstdint>
+#include <cstddef>
 #include <variant>
 #include <ecal/types.h>
 #include <ecal_struct_sample_common.h>

@@ -20,10 +20,11 @@
 
 #include "span.h"
 #include "trace_provider.h"
-#include "../ecal_global_accessors.h"
+#include "ecal_global_accessors.h"
 
 #include <chrono>
 
+using tracing_clock = std::chrono::steady_clock;
 using namespace std::chrono;
 
 namespace eCAL
@@ -33,7 +34,7 @@ namespace eCAL
     // Send span constructor
     CPublisherSpan::CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
-      auto now = system_clock::now();
+      auto now = tracing_clock::now();
       data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       data.entity_id    = topic_id.topic_id.entity_id;
       data.process_id   = topic_id.topic_id.process_id;
@@ -45,7 +46,7 @@ namespace eCAL
 
     CPublisherSpan::~CPublisherSpan()
     {
-      auto now = system_clock::now();
+      auto now = tracing_clock::now();
       data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
     }
@@ -53,7 +54,7 @@ namespace eCAL
     // Receive span constructor
     CSubscriberSpan::CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
     {
-      auto now = system_clock::now();
+      auto now = tracing_clock::now();
       data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       data.entity_id  = entity_id;
       data.topic_id   = topic_info.topic_id;
@@ -66,7 +67,7 @@ namespace eCAL
 
     CSubscriberSpan::~CSubscriberSpan()
     {
-      auto now = system_clock::now();
+      auto now = tracing_clock::now();
       data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
     }
