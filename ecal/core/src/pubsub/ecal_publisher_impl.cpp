@@ -214,13 +214,7 @@ namespace eCAL
     }
 
     // create tracing span for the send operation
-    eCAL::tracing::CPublisherSpan send_span(
-      m_topic_id,
-      m_clock,
-      active_layer,
-      payload_buf_size,
-      eCAL::tracing::operation_type::send
-    );
+    auto send_span = eCAL::tracing::CPublisherSpan::Create(m_topic_id, m_clock, active_layer, payload_buf_size, eCAL::tracing::operation_type::send);
 
     // did we write anything
     bool written(false);
