@@ -20,7 +20,6 @@
 
 #include "trace_provider.h"
 #include "trace_provider_default.h"
-#include "trace_provider_noop.h"
 
 namespace eCAL
 {
@@ -32,7 +31,7 @@ namespace eCAL
       {
         return CTraceProviderDefault::Create();
       }
-      return std::make_shared<CNoOpTraceProvider>();
+      return nullptr;
     }
   }
 }
