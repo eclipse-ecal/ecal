@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <optional>
 #include "tracing.h"
 
 #include <ecal/types.h>
@@ -30,40 +31,67 @@ namespace eCAL
 {
   namespace tracing
   {
+    class TraceProvider;
+
     // RAII span for send (publisher) operations.
     // Records start_ns on construction, end_ns + buffer on destruction.
     class CPublisherSpan
     {
-    public:
-      CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+    private:
+      struct ConstructionToken
+      {
+      private:
+        ConstructionToken() = default;
+        friend class CPublisherSpan;
+      };
 
+    public:
+      static std::optional<CPublisherSpan> Create(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+
+      CPublisherSpan(ConstructionToken token, std::shared_ptr<tracing::TraceProvider> provider_, const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
       ~CPublisherSpan();
 
       CPublisherSpan(const CPublisherSpan&)            = delete;
       CPublisherSpan& operator=(const CPublisherSpan&) = delete;
-      CPublisherSpan(CPublisherSpan&&)                 = delete;
+      CPublisherSpan(CPublisherSpan&&)                 = default;
       CPublisherSpan& operator=(CPublisherSpan&&)      = delete;
 
     private:
       SPublisherSpanData data{};
+      std::shared_ptr<tracing::TraceProvider> provider;
     };
+
+    using OptionalPublisherSpan = std::optional<CPublisherSpan>;
 
     // RAII span for receive (subscriber) operations.
     // Records start_ns on construction, end_ns + buffer on destruction.
     class CSubscriberSpan
     {
-    public:
-      CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+    private:
+      struct ConstructionToken
+      {
+      private:
+        ConstructionToken() = default;
+        friend class CSubscriberSpan;
+      };
 
+    public:
+      static std::optional<CSubscriberSpan> Create(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
+      CSubscriberSpan(ConstructionToken token, std::shared_ptr<tracing::TraceProvider> provider_, EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type);
       ~CSubscriberSpan();
 
+    private:
       CSubscriberSpan(const CSubscriberSpan&)            = delete;
       CSubscriberSpan& operator=(const CSubscriberSpan&) = delete;
-      CSubscriberSpan(CSubscriberSpan&&)                 = delete;
+      CSubscriberSpan(CSubscriberSpan&&)                 = default;
       CSubscriberSpan& operator=(CSubscriberSpan&&)      = delete;
 
     private:
       SSubscriberSpanData data{};
+      std::shared_ptr<tracing::TraceProvider> provider;
     };
+
+    using OptionalSubscriberSpan = std::optional<CSubscriberSpan>;
+
   }
 }

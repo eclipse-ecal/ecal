@@ -31,8 +31,26 @@ namespace eCAL
 {
   namespace tracing
   {
+    OptionalPublisherSpan CPublisherSpan::Create(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    {
+      auto provider = g_trace_provider();
+      if (!provider) return std::nullopt;
+
+      return OptionalPublisherSpan{
+          std::in_place,
+          CPublisherSpan::ConstructionToken{},
+          std::move(provider),
+          topic_id,
+          clock,
+          layer,
+          payload_size,
+          op_type
+      };
+    }
+
     // Send span constructor
-    CPublisherSpan::CPublisherSpan(const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    CPublisherSpan::CPublisherSpan(ConstructionToken /*token*/, std::shared_ptr<tracing::TraceProvider> provider_, const STopicId& topic_id, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+      : provider(std::move(provider_))
     {
       auto now = tracing_clock::now();
       data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
@@ -48,11 +66,30 @@ namespace eCAL
     {
       auto now = tracing_clock::now();
       data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-      if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
+      provider->WriteSpan(data);
+    }
+
+    OptionalSubscriberSpan CSubscriberSpan::Create(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    {
+      auto provider = g_trace_provider();
+      if (!provider) return std::nullopt;
+
+      return OptionalSubscriberSpan{
+          std::in_place,
+          CSubscriberSpan::ConstructionToken{},
+          std::move(provider),
+          entity_id,
+          topic_info,
+          clock,
+          layer,
+          payload_size,
+          op_type
+      };
     }
 
     // Receive span constructor
-    CSubscriberSpan::CSubscriberSpan(EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+    CSubscriberSpan::CSubscriberSpan(ConstructionToken /*token*/, std::shared_ptr<tracing::TraceProvider> provider_, EntityIdT entity_id, const eCAL::Payload::TopicInfo& topic_info, long long clock, eTracingLayerType layer, size_t payload_size, operation_type op_type)
+      : provider(std::move(provider_))
     {
       auto now = tracing_clock::now();
       data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
@@ -69,7 +106,7 @@ namespace eCAL
     {
       auto now = tracing_clock::now();
       data.end_ns = duration_cast<nanoseconds>(now.time_since_epoch()).count();
-      if (auto provider = g_trace_provider(); provider) provider->WriteSpan(data);
+      provider->WriteSpan(data);
     }
   }
 }
