@@ -169,8 +169,8 @@ namespace eCAL
     
     ResetGlobalEcalConfiguration();
 
-    ResetLogging();
     ResetTracing();
+    ResetLogging();
 
     return finalized;
   }
