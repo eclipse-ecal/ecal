@@ -322,6 +322,10 @@ jobs:
           'Cookie'=$CRUMB_COOKIE
           $CRUMB_FIELD=$CRUMB_ID
         }
+        $AUTH_HEADERS = @{
+          'Authorization'="Basic $($AUTH_INFO)"
+          'Cookie'=$CRUMB_COOKIE
+        }
         $FORM = @{
           'GH_FILE_NAME'= $ASSET_NAME
           'GH_EXECUTABLE'= Get-Item -Path $ASSET_NAME
@@ -350,7 +354,7 @@ jobs:
               Exit 1
           }
 
-          $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL
+          $RESPONSE = Invoke-WebRequest -Uri $QUEUE_URL -Headers $AUTH_HEADERS
           $RES_CODE = $RESPONSE.StatusCode
           Write-Output "    ++ build number retrieval - HTTP status code: $RES_CODE"
 
@@ -377,7 +381,7 @@ jobs:
         Write-Output "-- check build status of #Build $BUILD_NUM with $JENKINS_STATUS_URL"
 
         while ($true) {
-          $RESPONSE = Invoke-WebRequest -Uri $JENKINS_STATUS_URL
+          $RESPONSE = Invoke-WebRequest -Uri $JENKINS_STATUS_URL -Headers $AUTH_HEADERS
           $RES_CODE = $RESPONSE.StatusCode
           Write-Output "    ++ status check - HTTP status code: $RES_CODE"
 
@@ -414,7 +418,7 @@ jobs:
 
         Rename-Item -Path "$ASSET_NAME" -NewName "$ASSET_NAME_OLD" 
 
-        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_DOWNLOAD_URL -OutFile $ASSET_NAME_NEW -PassThru
+        $RESPONSE = Invoke-WebRequest -Uri $JENKINS_DOWNLOAD_URL -Headers $AUTH_HEADERS -OutFile $ASSET_NAME_NEW -PassThru
         $RES_CODE = $RESPONSE.StatusCode
         Write-Output "    ++ download installer - HTTP status code: $RES_CODE"
 
