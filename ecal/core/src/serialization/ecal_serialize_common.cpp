@@ -109,8 +109,15 @@ namespace eCAL
       intermediate_string.resize(len);
 
       auto ret = pb_read(stream, (pb_byte_t*)(intermediate_string.data()), intermediate_string.size()); // NOLINT(*-pro-type-cstyle-cast)
-      *tgt_integer = std::stoull(intermediate_string);
-      return ret;
+      try
+      {
+        *tgt_integer = std::stoull(intermediate_string);
+        return ret;
+      }
+      catch (const std::exception&)
+      {
+        return false;
+      }
     }
 
     void decode_int_from_string(pb_callback_t& pb_callback, uint64_t& int_argument)
