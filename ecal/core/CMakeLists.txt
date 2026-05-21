@@ -1,7 +1,7 @@
 # ========================= eCAL LICENSE =================================
 #
 # Copyright (C) 2016 - 2025 Continental Corporation
-# Copyright 2025 AUMOVIO and subsidiaries. All rights reserved.
+# Copyright 2025 - 2026 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -594,6 +594,7 @@ set(ecal_public_headers
     include/ecal/config/registration.h
     include/ecal/config/subscriber.h
     include/ecal/config/time.h
+    include/ecal/config/tracing.h
     include/ecal/config/transport_layer.h
     include/ecal/pubsub/subscriber.h
     include/ecal/pubsub/types.h
