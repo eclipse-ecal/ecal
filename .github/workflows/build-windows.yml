@@ -1,7 +1,10 @@
 name: Build Windows
 
 on:
-  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+      - master
 env:
   IS_JENKINS_SIGNING_ALLOWED: true
 
