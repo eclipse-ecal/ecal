@@ -51,6 +51,7 @@ namespace eCAL
       attributes.host_name   = attr_.host_name;
       attributes.broadcast   = attr_.udp.broadcast;
       attributes.send_buffer = attr_.udp.send_buffer;
+      attributes.max_datagram_size = attr_.udp.max_datagram_size;
       attributes.port        = attr_.udp.port;
       attributes.address     = attr_.udp.group;
       attributes.ttl         = attr_.udp.ttl;

@@ -50,6 +50,7 @@ struct eCAL_TransportLayer_UDP_Configuration
   char mask[16]; //!< Mask maximum number of dynamic multicast group
   unsigned int send_buffer; //!< UDP send buffer in bytes (Default: 5242880)
   unsigned int receive_buffer; //!< UDP receive buffer in bytes (Default: 5242880)
+  unsigned int max_datagram_size; //!< Maximum UDP datagram size in bytes (Default: 65507)
   int join_all_interfaces; //!< Linux specific setting to enable joining multicast groups on all network interfaces
   int npcap_enabled; //!< Enable to receive UDP traffic with the Npcap based receiver (Default: false)
   struct eCAL_TransportLayer_UDP_MulticastConfiguration network; //!< default: "239.0.0.1", 3U

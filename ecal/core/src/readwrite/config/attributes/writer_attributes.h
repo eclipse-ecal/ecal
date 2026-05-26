@@ -36,6 +36,7 @@ namespace eCAL
       bool        broadcast;
       int         port;
       int         send_buffer;
+      int         max_datagram_size;
       std::string group;
       int         ttl;
     };

@@ -75,6 +75,7 @@ namespace eCAL
 
     attr.udp.sendbuffer    = tl_udp_config.send_buffer;
     attr.udp.receivebuffer = tl_udp_config.receive_buffer;
+    attr.udp.max_datagram_size = tl_udp_config.max_datagram_size;
     
     return attr;
   }
