@@ -63,6 +63,7 @@ extern "C" {
   ECALC_API int eCAL_Config_GetUdpMulticastTtl();
   ECALC_API int eCAL_Config_GetUdpMulticastSndBufSizeBytes();
   ECALC_API int eCAL_Config_GetUdpMulticastRcvBufSizeBytes();
+  ECALC_API int eCAL_Config_GetMaxUdpDatagramSizeBytes();
   ECALC_API int eCAL_Config_IsUdpMulticastJoinAllIfEnabled();
   ECALC_API int eCAL_Config_IsUdpMulticastRecEnabled();
   ECALC_API int eCAL_Config_IsShmRecEnabled();

@@ -166,6 +166,12 @@ namespace Eclipse {
           static unsigned int GetUdpMulticastRcvBufSizeBytes();
 
           /**
+           * @brief Gets the maximum UDP datagram size in bytes.
+           * @return Maximum datagram size in bytes.
+           */
+          static unsigned int GetMaxUdpDatagramSizeBytes();
+
+          /**
            * @brief Checks if UDP multicast join-all-interfaces is enabled.
            * @return True if enabled, otherwise false.
            */

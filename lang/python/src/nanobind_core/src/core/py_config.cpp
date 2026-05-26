@@ -90,6 +90,9 @@ void AddConfig(nb::module_& module)
   config.def("get_udp_multicast_rcv_buf_size_bytes",
     &eCAL::Config::GetUdpMulticastRcvBufSizeBytes,
     "Return the UDP multicast receive buffer size in bytes.");
+  config.def("get_max_udp_datagram_size_bytes",
+    &eCAL::Config::GetMaxUdpDatagramSizeBytes,
+    "Return the maximum UDP datagram size in bytes.");
   config.def("is_udp_multicast_join_all_if_enabled",
     &eCAL::Config::IsUdpMulticastJoinAllIfEnabled,
     "Return True if joining all interfaces for UDP multicast is enabled.");
