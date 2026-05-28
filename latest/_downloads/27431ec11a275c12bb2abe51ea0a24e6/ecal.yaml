@@ -70,6 +70,10 @@ transport_layer:
     send_buffer: 5242880
     # Receive buffer in bytes
     receive_buffer: 5242880
+    # Maximum UDP datagram size in bytes
+    # Default: 65507 = 64 KiB - 20 (IPv4 header) - 8 (UDP header) - 1
+    # This is the maximum payload size for a single UDP datagram imposed by IPv4.
+    max_datagram_size: 65507
     # Linux specific setting to join all network interfaces independend of their link state.
     # Enabling ensures that eCAL processes receive data when they are started before the
     # network devices are up and running.

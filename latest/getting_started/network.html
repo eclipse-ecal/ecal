@@ -275,6 +275,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1ab602f6c8307b53fe6826d7618ac9f465.html">Function eCAL::Config::GetDropOutOfOrderMessages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1a00f593fbed5a932d13d95e5d670fa27d.html">Function eCAL::Config::GetEcalSysFilterExcludeList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1af5b58da0cab93d96828ae51f56da08c2.html">Function eCAL::Config::GetLoadedEcalIniPath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1a7fc370f43ff50281aab1200600bdba9b.html">Function eCAL::Config::GetMaxUdpDatagramSizeBytes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html">Function eCAL::Config::GetRegistrationRefreshMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1a313807e5364233c84ae52d3a2ab10211.html">Function eCAL::Config::GetRegistrationTimeoutMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../_api/function_config_8h_1a3253931786d5bbb82c458c56d9b2a767.html">Function eCAL::Config::GetShmMonitoringDomain</a></li>
@@ -830,25 +831,25 @@ To switch eCAL to network mode, edit your <code class="file docutils literal not
 <span class="linenos">20</span><span class="w">    </span><span class="nt">send_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
 <span class="linenos">21</span><span class="w">    </span><span class="c1"># Receive buffer in bytes</span>
 <span class="linenos">22</span><span class="w">    </span><span class="nt">receive_buffer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5242880</span>
-<span class="linenos">23</span><span class="w">    </span><span class="c1"># Linux specific setting to join all network interfaces independend of their link state.</span>
-<span class="linenos">24</span><span class="w">    </span><span class="c1"># Enabling ensures that eCAL processes receive data when they are started before the</span>
-<span class="linenos">25</span><span class="w">    </span><span class="c1"># network devices are up and running.</span>
-<span class="linenos">26</span><span class="w">    </span><span class="nt">join_all_interfaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="linenos">27</span><span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
-<span class="linenos">28</span><span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="linenos">29</span>
-<span class="linenos">30</span><span class="w">    </span><span class="c1"># Local mode multicast group and ttl</span>
-<span class="linenos">31</span><span class="w">    </span><span class="nt">local</span><span class="p">:</span>
-<span class="linenos">32</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
-<span class="linenos">33</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;127.255.255.255&quot;</span>
-<span class="linenos">34</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
-<span class="linenos">35</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="linenos">36</span>
-<span class="linenos">37</span><span class="w">    </span><span class="nt">network</span><span class="p">:</span>
-<span class="linenos">38</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
-<span class="linenos">39</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;239.0.0.1&quot;</span>
-<span class="linenos">40</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
-<span class="linenos">41</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="linenos">23</span><span class="w">    </span><span class="c1"># Maximum UDP datagram size in bytes</span>
+<span class="linenos">24</span><span class="w">    </span><span class="c1"># Default: 65507 = 64 KiB - 20 (IPv4 header) - 8 (UDP header) - 1</span>
+<span class="linenos">25</span><span class="w">    </span><span class="c1"># This is the maximum payload size for a single UDP datagram imposed by IPv4.</span>
+<span class="linenos">26</span><span class="w">    </span><span class="nt">max_datagram_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65507</span>
+<span class="linenos">27</span><span class="w">    </span><span class="c1"># Linux specific setting to join all network interfaces independend of their link state.</span>
+<span class="linenos">28</span><span class="w">    </span><span class="c1"># Enabling ensures that eCAL processes receive data when they are started before the</span>
+<span class="linenos">29</span><span class="w">    </span><span class="c1"># network devices are up and running.</span>
+<span class="linenos">30</span><span class="w">    </span><span class="nt">join_all_interfaces</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">31</span><span class="w">    </span><span class="c1"># Windows specific setting to enable receiving UDP traffic with the Npcap based receiver</span>
+<span class="linenos">32</span><span class="w">    </span><span class="nt">npcap_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="w">    </span><span class="c1"># Local mode multicast group and ttl</span>
+<span class="linenos">35</span><span class="w">    </span><span class="nt">local</span><span class="p">:</span>
+<span class="linenos">36</span><span class="w">      </span><span class="c1"># Multicast group base. All registration and logging is sent on this address</span>
+<span class="linenos">37</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;127.255.255.255&quot;</span>
+<span class="linenos">38</span><span class="w">      </span><span class="c1"># TTL (hop limit) is used to determine the amount of routers being traversed towards the destination</span>
+<span class="linenos">39</span><span class="w">      </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="w">    </span><span class="nt">network</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">transport_layer-&gt;udp-&gt;network-&gt;ttl</span></code> setting configures the <em>time to live</em> of the UDP datagrams, i.e. the number of hops a datagram can take before it is discarded.

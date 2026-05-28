@@ -64,6 +64,7 @@ Program Listing for File config.h
    
        ECAL_API int                      GetUdpMulticastSndBufSizeBytes       ();
        ECAL_API int                      GetUdpMulticastRcvBufSizeBytes       ();
+       ECAL_API int                      GetMaxUdpDatagramSizeBytes           ();
    
        ECAL_API bool                     IsUdpMulticastJoinAllIfEnabled       ();
    

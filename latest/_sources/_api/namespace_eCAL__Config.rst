@@ -23,6 +23,8 @@ Functions
 
 - :ref:`exhale_function_config_8h_1af5b58da0cab93d96828ae51f56da08c2`
 
+- :ref:`exhale_function_config_8h_1a7fc370f43ff50281aab1200600bdba9b`
+
 - :ref:`exhale_function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b`
 
 - :ref:`exhale_function_config_8h_1a313807e5364233c84ae52d3a2ab10211`

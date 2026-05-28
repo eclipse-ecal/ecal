@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Function eCAL::Registration::GetServerMethodNames &#8212; Eclipse eCAL™</title>
+    <title>Function eCAL::Config::GetMaxUdpDatagramSizeBytes &#8212; Eclipse eCAL™</title>
   
   
   
@@ -46,7 +46,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
     <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_api/function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_api/function_config_8h_1a7fc370f43ff50281aab1200600bdba9b';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.15.4';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-ecal.github.io/ecal/switcher.json';
@@ -56,8 +56,8 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Function eCAL::Registration::GetSubscribedTopicNames" href="function_registration_8h_1add69a1577f5702987d9843ffe794d370.html" />
-    <link rel="prev" title="Function eCAL::Registration::GetServerInfo" href="function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc.html" />
+    <link rel="next" title="Function eCAL::Config::GetRegistrationRefreshMs" href="function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html" />
+    <link rel="prev" title="Function eCAL::Config::GetLoadedEcalIniPath" href="function_config_8h_1af5b58da0cab93d96828ae51f56da08c2.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -273,7 +273,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1ab602f6c8307b53fe6826d7618ac9f465.html">Function eCAL::Config::GetDropOutOfOrderMessages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1a00f593fbed5a932d13d95e5d670fa27d.html">Function eCAL::Config::GetEcalSysFilterExcludeList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1af5b58da0cab93d96828ae51f56da08c2.html">Function eCAL::Config::GetLoadedEcalIniPath</a></li>
-<li class="toctree-l3"><a class="reference internal" href="function_config_8h_1a7fc370f43ff50281aab1200600bdba9b.html">Function eCAL::Config::GetMaxUdpDatagramSizeBytes</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Function eCAL::Config::GetMaxUdpDatagramSizeBytes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html">Function eCAL::Config::GetRegistrationRefreshMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1a313807e5364233c84ae52d3a2ab10211.html">Function eCAL::Config::GetRegistrationTimeoutMs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_config_8h_1a3253931786d5bbb82c458c56d9b2a767.html">Function eCAL::Config::GetShmMonitoringDomain</a></li>
@@ -344,7 +344,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1a17035589529f59e0d6fdc17186b6fc26.html">Function eCAL::Registration::GetPublisherInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1aa9efa915f51aa256cdaac21a977e2338.html">Function eCAL::Registration::GetServerIDs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc.html">Function eCAL::Registration::GetServerInfo</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">Function eCAL::Registration::GetServerMethodNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc.html">Function eCAL::Registration::GetServerMethodNames</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1add69a1577f5702987d9843ffe794d370.html">Function eCAL::Registration::GetSubscribedTopicNames</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ade1ad2a10de5483ff0893e34006f1303.html">Function eCAL::Registration::GetSubscriberIDs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="function_registration_8h_1ad63e05588b1f6436b92cbb34d817ecbf.html">Function eCAL::Registration::GetSubscriberInfo</a></li>
@@ -586,7 +586,7 @@ document.write(`
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc.rst" target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/edit/master/doc/rst/_api/function_config_8h_1a7fc370f43ff50281aab1200600bdba9b.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -603,7 +603,7 @@ document.write(`
       
       
       
-      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2F_api/function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/eclipse-ecal/ecal/issues/new?title=Issue%20on%20page%20%2F_api/function_config_8h_1a7fc370f43ff50281aab1200600bdba9b.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -633,7 +633,7 @@ document.write(`
       
       
       
-      <li><a href="../_sources/_api/function_registration_8h_1a5a44a79cddbcffda747576eee8aa83fc.rst" target="_blank"
+      <li><a href="../_sources/_api/function_config_8h_1a7fc370f43ff50281aab1200600bdba9b.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -717,7 +717,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Function eCAL::Registration::GetServerMethodNames</h1>
+    <h1>Function eCAL::Config::GetMaxUdpDatagramSizeBytes</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -728,7 +728,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-documentation">Function Documentation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE"><code class="docutils literal notranslate"><span class="pre">GetServerMethodNames()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv"><code class="docutils literal notranslate"><span class="pre">GetMaxUdpDatagramSizeBytes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -742,23 +742,17 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="function-ecal-registration-getservermethodnames">
-<span id="exhale-function-registration-8h-1a5a44a79cddbcffda747576eee8aa83fc"></span><h1>Function eCAL::Registration::GetServerMethodNames<a class="headerlink" href="#function-ecal-registration-getservermethodnames" title="Link to this heading">#</a></h1>
+  <section id="function-ecal-config-getmaxudpdatagramsizebytes">
+<span id="exhale-function-config-8h-1a7fc370f43ff50281aab1200600bdba9b"></span><h1>Function eCAL::Config::GetMaxUdpDatagramSizeBytes<a class="headerlink" href="#function-ecal-config-getmaxudpdatagramsizebytes" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_registration.h.html#file-ecal-core-include-ecal-registration-h"><span class="std std-ref">File registration.h</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_ecal_core_include_ecal_config.h.html#file-ecal-core-include-ecal-config-h"><span class="std std-ref">File config.h</span></a></p></li>
 </ul>
 <section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Link to this heading">#</a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE">
-<span id="_CPPv3N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE"></span><span id="_CPPv2N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE"></span><span id="eCAL::Registration::GetServerMethodNames__std::set:SServiceMethod:R"></span><span class="target" id="registration_8h_1a5a44a79cddbcffda747576eee8aa83fc"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Registration</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">GetServerMethodNames</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="structeCAL_1_1Registration_1_1SServiceMethod.html#_CPPv4N4eCAL12Registration14SServiceMethodE" title="eCAL::Registration::SServiceMethod"><span class="n"><span class="pre">SServiceMethod</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">server_method_names_</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE" title="Link to this definition">#</a><br /></dt>
-<dd><p>Get the pairs of service name / method name of all eCAL Servers. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>server_method_names_</strong> – Set to store the service/method names (Set { (ServiceName, MethodName) }). </p>
-</dd>
-</dl>
-</dd></dl>
+<dt class="sig sig-object cpp" id="_CPPv4N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv">
+<span id="_CPPv3N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv"></span><span id="_CPPv2N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv"></span><span id="eCAL::Config::GetMaxUdpDatagramSizeBytes"></span><span class="target" id="config_8h_1a7fc370f43ff50281aab1200600bdba9b"></span><span class="pre">ECAL_API</span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">eCAL</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Config</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">GetMaxUdpDatagramSizeBytes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv" title="Link to this definition">#</a><br /></dt>
+<dd></dd></dl>
 
 </section>
 </section>
@@ -775,20 +769,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="function_registration_8h_1ae4ec2ee57f59859576dcc8e0afc051fc.html"
+       href="function_config_8h_1af5b58da0cab93d96828ae51f56da08c2.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Function eCAL::Registration::GetServerInfo</p>
+        <p class="prev-next-title">Function eCAL::Config::GetLoadedEcalIniPath</p>
       </div>
     </a>
     <a class="right-next"
-       href="function_registration_8h_1add69a1577f5702987d9843ffe794d370.html"
+       href="function_config_8h_1ae2fa1793150cbce526ab0b81e1773f7b.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Function eCAL::Registration::GetSubscribedTopicNames</p>
+        <p class="prev-next-title">Function eCAL::Config::GetRegistrationRefreshMs</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -809,7 +803,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-documentation">Function Documentation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL12Registration20GetServerMethodNamesERNSt3setI14SServiceMethodEE"><code class="docutils literal notranslate"><span class="pre">GetServerMethodNames()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N4eCAL6Config26GetMaxUdpDatagramSizeBytesEv"><code class="docutils literal notranslate"><span class="pre">GetMaxUdpDatagramSizeBytes()</span></code></a></li>
 </ul>
 </li>
 </ul>
