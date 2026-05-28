@@ -219,6 +219,7 @@ void Assign_TransportLayer_Configuration(struct eCAL_TransportLayer_Configuratio
   string_copy_safe(configuration_c_->udp.mask, configuration_.udp.mask.Get().c_str(), sizeof(configuration_c_->udp.mask));
   configuration_c_->udp.send_buffer = configuration_.udp.send_buffer;
   configuration_c_->udp.receive_buffer = configuration_.udp.receive_buffer;
+  configuration_c_->udp.max_datagram_size = configuration_.udp.max_datagram_size;
   configuration_c_->udp.join_all_interfaces = configuration_.udp.join_all_interfaces;
   configuration_c_->udp.npcap_enabled = configuration_.udp.npcap_enabled;
 
@@ -442,6 +443,7 @@ void Assign_TransportLayer_Configuration(eCAL::TransportLayer::Configuration& co
   configuration_.udp.mask = configuration_c_->udp.mask;
   configuration_.udp.send_buffer = configuration_c_->udp.send_buffer;
   configuration_.udp.receive_buffer = configuration_c_->udp.receive_buffer;
+  configuration_.udp.max_datagram_size = configuration_c_->udp.max_datagram_size;
   configuration_.udp.join_all_interfaces = static_cast<bool>(configuration_c_->udp.join_all_interfaces);
   configuration_.udp.npcap_enabled = static_cast<bool>(configuration_c_->udp.npcap_enabled);
 

@@ -55,6 +55,7 @@ namespace eCAL
     attributes.udp.broadcast     = config_.communication_mode == eCAL::eCommunicationMode::local;
     attributes.udp.port          = transport_tlayer_config.udp.port;
     attributes.udp.send_buffer   = transport_tlayer_config.udp.send_buffer;
+    attributes.udp.max_datagram_size = transport_tlayer_config.udp.max_datagram_size;
     
     switch (config_.communication_mode)
     {

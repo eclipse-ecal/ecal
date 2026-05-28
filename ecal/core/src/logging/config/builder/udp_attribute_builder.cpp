@@ -31,6 +31,7 @@ namespace eCAL
         attr.broadcast = sender_attr_.broadcast;
         attr.loopback  = sender_attr_.loopback;
         attr.sndbuf    = sender_attr_.sndbuf;
+        attr.max_datagram_size = sender_attr_.max_datagram_size;
         attr.port      = sender_attr_.port;
         attr.address   = sender_attr_.address;
         attr.ttl       = sender_attr_.ttl;

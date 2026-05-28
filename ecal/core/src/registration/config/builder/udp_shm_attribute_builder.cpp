@@ -31,6 +31,7 @@ namespace eCAL
       sender_attr.broadcast = provider_attr_.udp.broadcast;
       sender_attr.loopback  = provider_attr_.loopback;
       sender_attr.sndbuf    = provider_attr_.udp.sendbuffer;
+      sender_attr.max_datagram_size = provider_attr_.udp.max_datagram_size;
       sender_attr.port      = provider_attr_.udp.port;
       sender_attr.address   = provider_attr_.udp.group;
       sender_attr.ttl       = provider_attr_.udp.ttl;

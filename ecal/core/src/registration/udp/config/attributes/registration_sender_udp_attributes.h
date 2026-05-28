@@ -35,6 +35,7 @@ namespace eCAL
         bool        broadcast;
         bool        loopback;
         int         sndbuf;
+        int         max_datagram_size;
       };
     }
   }

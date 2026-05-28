@@ -35,6 +35,7 @@ namespace eCAL
       attributes.udp_config.loopback     = registration_config.loopback;
       
       attributes.udp_config.sndbuf       = transport_layer_config.udp.send_buffer;
+      attributes.udp_config.max_datagram_size = transport_layer_config.udp.max_datagram_size;
       attributes.udp_config.port         = logging_config.provider.udp_config.port;
       
       switch (config_.communication_mode)

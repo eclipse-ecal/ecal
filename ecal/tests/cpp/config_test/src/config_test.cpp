@@ -48,6 +48,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
   const bool                drop_out_of_order_messages  = true;
   std::string               ip_address                  = "238.200.100.2";
   const int                 upd_snd_buff                = (5242880 + 1024);
+  const unsigned int        max_datagram_size           = 60000U;
 
   // Monitoring options
   const eCAL::Logging::Filter mon_log_filter_con = eCAL::Logging::log_level_warning;
@@ -61,6 +62,7 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
     custom_config.subscriber.drop_out_of_order_messages       = drop_out_of_order_messages;
     custom_config.transport_layer.udp.network.group           = ip_address;
     custom_config.transport_layer.udp.send_buffer             = upd_snd_buff;
+    custom_config.transport_layer.udp.max_datagram_size       = max_datagram_size;
     
     custom_config.logging.provider.console.log_level         = mon_log_filter_con;
 
@@ -86,6 +88,9 @@ TEST(core_cpp_config /*unused*/, user_config_passing /*unused*/)
 
   // Test UDP send buffer assignment, default is 5242880
   EXPECT_EQ(upd_snd_buff, eCAL::GetConfiguration().transport_layer.udp.send_buffer);
+
+  // Test max datagram size assignment, default is 65507
+  EXPECT_EQ(max_datagram_size, eCAL::GetConfiguration().transport_layer.udp.max_datagram_size);
 
   // Test monitoring console log assignment, default is (log_level_info | log_level_warning | log_level_error | log_level_fatal)
   EXPECT_EQ(mon_log_filter_con, eCAL::GetConfiguration().logging.provider.console.log_level);

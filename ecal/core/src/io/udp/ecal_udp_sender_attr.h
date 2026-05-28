@@ -37,6 +37,7 @@ namespace eCAL
       bool        broadcast = false;
       bool        loopback  = true;
       int         sndbuf    = 1024 * 1024;
+      int         max_datagram_size = 64 * 1024 - 8 - 20 - 1; // 65507: max IPv4 UDP payload = 64 KiB - 20 (IP header) - 8 (UDP header) - 1
     };
   }
 }

@@ -220,6 +220,10 @@ namespace eCAL
       ss << R"(    send_buffer: )"                                   << config_.transport_layer.udp.send_buffer                     << "\n";
       ss << R"(    # Receive buffer in bytes)"                                                                                      << "\n";
       ss << R"(    receive_buffer: )"                                << config_.transport_layer.udp.receive_buffer                  << "\n";
+      ss << R"(    # Maximum UDP datagram size in bytes)"                                                                           << "\n";
+      ss << R"(    # Default: 65507 = 64 KiB - 20 (IPv4 header) - 8 (UDP header) - 1)"                                            << "\n";
+      ss << R"(    # This is the maximum payload size for a single UDP datagram imposed by IPv4.)"                                 << "\n";
+      ss << R"(    max_datagram_size: )"                             << config_.transport_layer.udp.max_datagram_size               << "\n";
       ss << R"(    # Linux specific setting to join all network interfaces independend of their link state.)"                       << "\n";
       ss << R"(    # Enabling ensures that eCAL processes receive data when they are started before the)"                           << "\n";
       ss << R"(    # network devices are up and running.)"                                                                          << "\n";

@@ -40,6 +40,7 @@ namespace eCAL
       int            port;
       int            sendbuffer;
       int            receivebuffer;
+      int            max_datagram_size;
       std::string    group;
       int            ttl;
     };

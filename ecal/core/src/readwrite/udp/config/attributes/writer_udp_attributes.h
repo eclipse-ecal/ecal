@@ -36,6 +36,7 @@ namespace eCAL
         bool        broadcast;
         bool        loopback;
         int         send_buffer;
+        int         max_datagram_size;
 
         std::string host_name;
         std::string topic_name;

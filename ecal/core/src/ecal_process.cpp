@@ -187,6 +187,7 @@ namespace eCAL
       sstream << "Network ttl              : " << UDP::GetMulticastTtl() << '\n';
       sstream << "Network sndbuf           : " << GetBufferStr(Config::GetUdpMulticastSndBufSizeBytes()) << '\n';
       sstream << "Network rcvbuf           : " << GetBufferStr(Config::GetUdpMulticastRcvBufSizeBytes()) << '\n';
+      sstream << "Max datagram size        : " << GetBufferStr(Config::GetMaxUdpDatagramSizeBytes()) << '\n';
       sstream << "Multicast cfg version    : v" << static_cast<uint32_t>(Config::GetUdpMulticastConfigVersion()) << '\n';
       sstream << "Multicast group          : " << Config::GetUdpMulticastGroup() << '\n';
       sstream << "Multicast mask           : " << Config::GetUdpMulticastMask() << '\n';

@@ -51,6 +51,7 @@ namespace eCAL
                        
     int                GetUdpMulticastSndBufSizeBytes       () { return GetConfiguration().transport_layer.udp.send_buffer; }
     int                GetUdpMulticastRcvBufSizeBytes       () { return GetConfiguration().transport_layer.udp.receive_buffer; }
+    int                GetMaxUdpDatagramSizeBytes           () { return GetConfiguration().transport_layer.udp.max_datagram_size; }
     bool               IsUdpMulticastJoinAllIfEnabled       () { return GetConfiguration().transport_layer.udp.join_all_interfaces; }
                        
     bool               IsUdpMulticastRecEnabled             () { return GetConfiguration().subscriber.layer.udp.enable; }
