@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <filesystem>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <mutex>
@@ -32,10 +34,12 @@ namespace eCAL
   {
     // Responsible for serializing span and metadata to JSONL files.
     // Separated from CTraceProvider to isolate the I/O concern.
+    // This class is not thread-safe; CTraceProviderDefault handles synchronization and buffering before calling this writer.
     class CTracingWriterJSONL : public TracingWriter
     {
     public:
       CTracingWriterJSONL();
+      CTracingWriterJSONL(const std::string& file_id, std::filesystem::path trace_directory);
       ~CTracingWriterJSONL() override = default;
 
       CTracingWriterJSONL(const CTracingWriterJSONL&)            = delete;
@@ -44,20 +48,21 @@ namespace eCAL
       CTracingWriterJSONL& operator=(CTracingWriterJSONL&&)      = delete;
 
       // Write a batch of spans to the JSONL spans file
-      void WriteSpansToFile(const std::vector<SpanDataVariant>& batch) override;
-
-      // Write a single topic metadata entry to the JSONL metadata file
-      void WriteMetadataToFile(const STopicMetadata& metadata) override;
+      void WriteTraceInfo(const std::vector<TraceInfo>& batch) override;
 
       // File path accessors (path is fixed at construction time)
-      std::string GetSpansFilePath() const;
-      std::string GetTopicMetadataFilePath() const;
+      std::filesystem::path GetSpansFilePath() const;
+      std::filesystem::path GetTopicMetadataFilePath() const;
 
     private:
-      mutable std::mutex spans_mutex_;
-      mutable std::mutex metadata_mutex_;
-      std::string        timestamp_;
-      std::string        trace_dir_;
+      void WriteSpanData(const SpanData& span_data);
+      void WriteTopicMetadata(const STopicMetadata& metadata);
+
+      std::filesystem::path spans_file_path_;
+      std::filesystem::path metadata_file_path_;
+
+      std::ofstream spans_file_;
+      std::ofstream metadata_file_;
     };
   }
 }

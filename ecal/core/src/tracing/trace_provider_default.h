@@ -51,17 +51,19 @@ namespace eCAL
       ~CTraceProviderDefault() override;
 
       // Write span data to buffer (accepts any span type via variant)
-      void WriteSpan(const SpanDataVariant& span_data) override;
+      void WriteSpan(const SpanData& span_data) override;
 
       // metadata — written directly to file (no buffering)
       void WriteMetadata(const STopicMetadata& metadata) override;
 
     private:
+      void WriteTraceInfo(const TraceInfo& info);
+
       CTraceProviderDefault(std::unique_ptr<TracingWriter> writer, size_t batch_size);
       void WriterThreadLoop();
 
       std::atomic<size_t>              batch_size_{kDefaultTracingBatchSize};
-      std::vector<SpanDataVariant>     span_buffer_;
+      std::vector<TraceInfo>           span_buffer_;
       mutable std::mutex               thread_mutex;
       std::condition_variable          write_cv_;
       bool                             stop_thread_{false};
