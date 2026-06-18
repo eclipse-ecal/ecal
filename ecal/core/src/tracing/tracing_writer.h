@@ -34,11 +34,7 @@ namespace eCAL
     public:
       virtual ~TracingWriter() = default;
 
-      // Write a batch of spans (heterogeneous via variant)
-      virtual void WriteSpansToFile(const std::vector<SpanDataVariant>& batch) = 0;
-
-      // Write a single topic metadata entry
-      virtual void WriteMetadataToFile(const STopicMetadata& metadata) = 0;
+      virtual void WriteTraceInfo(const std::vector<TraceInfo>& batch) = 0;
     };
   }
 }

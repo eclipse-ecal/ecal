@@ -42,6 +42,7 @@ namespace eCAL
       }
     }
 
+
     CTraceProviderDefault::CTraceProviderDefault(std::unique_ptr<TracingWriter> writer, size_t batch_size)
       : batch_size_(batch_size), writer_(std::move(writer))
     {
@@ -58,10 +59,20 @@ namespace eCAL
       writer_thread_.join();
     }
 
-    void CTraceProviderDefault::WriteSpan(const SpanDataVariant& span_data)
+    void CTraceProviderDefault::WriteSpan(const SpanData& span_data)
+    {
+      WriteTraceInfo(span_data);
+    }
+
+    void CTraceProviderDefault::WriteMetadata(const STopicMetadata& metadata)
+    {
+      WriteTraceInfo(metadata);
+    }
+
+    void CTraceProviderDefault::WriteTraceInfo(const TraceInfo& info)
     {
       std::lock_guard<std::mutex> lock(thread_mutex);
-      span_buffer_.push_back(span_data);
+      span_buffer_.push_back(info);
       if (span_buffer_.size() >= batch_size_)
       {
         write_cv_.notify_one();
@@ -70,7 +81,7 @@ namespace eCAL
 
     void CTraceProviderDefault::WriterThreadLoop()
     {
-      std::vector<SpanDataVariant> span_flusher;
+      std::vector<TraceInfo> span_flusher;
       while (true)
       {
         {
@@ -87,15 +98,10 @@ namespace eCAL
         }
         if (!span_flusher.empty())
         {
-          writer_->WriteSpansToFile(span_flusher);
+          writer_->WriteTraceInfo(span_flusher);
           span_flusher.clear();
         }
       }
-    }
-
-    void CTraceProviderDefault::WriteMetadata(const STopicMetadata& metadata)
-    {
-      writer_->WriteMetadataToFile(metadata);
     }
   }
 }

@@ -33,81 +33,125 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+namespace {
+
+  template<class... Ts>
+  struct Overloaded : Ts... {
+    using Ts::operator()...;
+  };
+
+  template<class... Ts>
+  Overloaded(Ts...) -> Overloaded<Ts...>;
+
+
+  using namespace eCAL::tracing;
+
+  json toJson(const STopicMetadata& metadata)
+  {
+    json metadata_as_json;
+    metadata_as_json["tracing_version"] = metadata.tracing_version;
+    metadata_as_json["entity_id"] = metadata.entity_id;
+    metadata_as_json["process_id"] = metadata.process_id;
+    metadata_as_json["host_name"] = metadata.host_name;
+    metadata_as_json["topic_name"] = metadata.topic_name;
+    metadata_as_json["encoding"] = metadata.encoding;
+    metadata_as_json["type_name"] = metadata.type_name;
+    metadata_as_json["direction"] = (metadata.direction == topic_direction::publisher) ? "publisher" : "subscriber";
+    return metadata_as_json;
+  }
+
+  json toJson(const SPublisherSpanData& span)
+  {
+    json span_as_json;
+    span_as_json["op_type"]      = static_cast<int>(span.op_type);
+    span_as_json["entity_id"]    = span.entity_id;
+    span_as_json["process_id"]   = span.process_id;
+    span_as_json["payload_size"] = span.payload_size;
+    span_as_json["clock"]        = span.clock;
+    span_as_json["layer"]        = span.layer;
+    span_as_json["start_ns"]     = span.start_ns;
+    span_as_json["end_ns"]       = span.end_ns;
+    return span_as_json;
+  }
+
+  json toJson(const SSubscriberSpanData& span)
+  {
+    json span_as_json;
+    span_as_json["op_type"]      = static_cast<int>(span.op_type);
+    span_as_json["entity_id"]    = span.entity_id;
+    span_as_json["topic_id"]     = span.topic_id;
+    span_as_json["process_id"]   = span.process_id;
+    span_as_json["payload_size"] = span.payload_size;
+    span_as_json["clock"]        = span.clock;
+    span_as_json["layer"]        = span.layer;
+    span_as_json["start_ns"]     = span.start_ns;
+    span_as_json["end_ns"]       = span.end_ns;
+    return span_as_json;
+  }
+
+  std::string GetCurrentTimestamp()
+  {
+    std::time_t now = std::time(nullptr);
+    std::tm* tm_info = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(tm_info, "%Y%m%d_%H%M%S");
+    return oss.str();
+  }
+
+  static int unique_cnt = 0;
+}
+
 namespace eCAL
 {
   namespace tracing
   {
-    static std::string GetCurrentTimestamp()
-    {
-      std::time_t now = std::time(nullptr);
-      std::tm* tm_info = std::localtime(&now);
-      std::ostringstream oss;
-      oss << std::put_time(tm_info, "%Y%m%d_%H%M%S");
-      return oss.str();
-    }
-
     CTracingWriterJSONL::CTracingWriterJSONL()
-      : timestamp_(GetCurrentTimestamp())
-      , trace_dir_(eCAL::Util::GeteCALTraceDir())
-    {}
-
-    std::string CTracingWriterJSONL::GetSpansFilePath() const
+      : CTracingWriterJSONL(std::to_string(eCAL::Process::GetProcessID()) + "_" + std::to_string(++unique_cnt) + "_" + GetCurrentTimestamp(), std::filesystem::path(Util::GeteCALTraceDir()))
     {
-      return trace_dir_ + "/ecal_spans_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    std::string CTracingWriterJSONL::GetTopicMetadataFilePath() const
+
+    CTracingWriterJSONL::CTracingWriterJSONL(const std::string& file_id, std::filesystem::path trace_directory)
+      : spans_file_path_(trace_directory / (std::string("ecal_spans_") + file_id + ".jsonl"))
+      , metadata_file_path_(trace_directory / (std::string("ecal_metadata_") + file_id + ".jsonl"))
+      , spans_file_(spans_file_path_, std::ios::out | std::ios::trunc)
+      , metadata_file_(metadata_file_path_, std::ios::out | std::ios::trunc)
     {
-      return trace_dir_ + "/ecal_topic_metadata_" + std::to_string(eCAL::Process::GetProcessID()) + "_" + timestamp_ + ".jsonl";
     }
 
-    void CTracingWriterJSONL::WriteSpansToFile(const std::vector<SpanDataVariant>& batch)
+    std::filesystem::path CTracingWriterJSONL::GetSpansFilePath() const
+    {
+      return spans_file_path_;
+    }
+
+    std::filesystem::path CTracingWriterJSONL::GetTopicMetadataFilePath() const
+    {
+      return metadata_file_path_;
+    }
+
+
+    void CTracingWriterJSONL::WriteTraceInfo(const std::vector<TraceInfo>& batch)
+    {
+      for (const auto& span_variant : batch)
+      {
+        std::visit(
+          Overloaded{
+            [this](const SpanData& span) { WriteSpanData(span); },
+            [this](const STopicMetadata& metadata) { WriteTopicMetadata(metadata); }
+          },
+          span_variant
+        );
+      }
+    }
+
+    void CTracingWriterJSONL::WriteSpanData(const SpanData& span_data)
     {
       try
       {
-        std::lock_guard<std::mutex> lock(spans_mutex_);
-        std::string filepath = GetSpansFilePath();
-
-        std::ofstream output_file(filepath, std::ios::app);
-        if (output_file.is_open())
+        if (spans_file_.is_open())
         {
-          for (const auto& span_variant : batch)
-          {
-            json span_obj;
-            std::visit([&span_obj](const auto& span)
-            {
-              using T = std::decay_t<decltype(span)>;
-              if constexpr (std::is_same_v<T, SPublisherSpanData>)
-              {
-                span_obj["entity_id"]    = span.entity_id;
-                span_obj["process_id"]   = span.process_id;
-                span_obj["payload_size"] = span.payload_size;
-                span_obj["clock"]        = span.clock;
-                span_obj["layer"]        = span.layer;
-                span_obj["start_ns"]     = span.start_ns;
-                span_obj["end_ns"]       = span.end_ns;
-                span_obj["op_type"]      = span.op_type;
-              }
-              else if constexpr (std::is_same_v<T, SSubscriberSpanData>)
-              {
-                span_obj["entity_id"]    = span.entity_id;
-                span_obj["topic_id"]     = span.topic_id;
-                span_obj["process_id"]   = span.process_id;
-                span_obj["payload_size"] = span.payload_size;
-                span_obj["clock"]        = span.clock;
-                span_obj["layer"]        = span.layer;
-                span_obj["start_ns"]     = span.start_ns;
-                span_obj["end_ns"]       = span.end_ns;
-                span_obj["op_type"]      = span.op_type;
-              }
-            }, span_variant);
-            output_file << span_obj.dump() << "\n";
-          }
-          output_file.close();
-        }
-        else
-        {
-          std::cerr << "Warning: Could not open spans file: " << filepath << std::endl;
+          auto span_obj = std::visit([](const auto& span) { return toJson(span); }, span_data);
+          spans_file_ << span_obj.dump() << "\n";
         }
       }
       catch (const std::exception& e)
@@ -116,37 +160,19 @@ namespace eCAL
       }
     }
 
-    void CTracingWriterJSONL::WriteMetadataToFile(const STopicMetadata& metadata)
+    void CTracingWriterJSONL::WriteTopicMetadata(const STopicMetadata& metadata)
     {
       try
       {
-        std::lock_guard<std::mutex> lock(metadata_mutex_);
-        std::string filepath = GetTopicMetadataFilePath();
-
-        json obj;
-        obj["tracing_version"] = metadata.tracing_version;
-        obj["entity_id"]   = metadata.entity_id;
-        obj["process_id"]  = metadata.process_id;
-        obj["host_name"]   = metadata.host_name;
-        obj["topic_name"]  = metadata.topic_name;
-        obj["encoding"]    = metadata.encoding;
-        obj["type_name"]   = metadata.type_name;
-        obj["direction"]   = (metadata.direction == topic_direction::publisher) ? "publisher" : "subscriber";
-
-        std::ofstream output_file(filepath, std::ios::app);
-        if (output_file.is_open())
+        if (metadata_file_.is_open())
         {
-          output_file << obj.dump() << "\n";
-          output_file.close();
-        }
-        else
-        {
-          std::cerr << "Warning: Could not open topic metadata file: " << filepath << std::endl;
+          auto metadata_json = toJson(metadata);
+          metadata_file_ << metadata_json.dump() << "\n";
         }
       }
       catch (const std::exception& e)
       {
-        std::cerr << "Error writing topic metadata to JSONL: " << e.what() << std::endl;
+        std::cerr << "Error writing metadata to JSONL: " << e.what() << std::endl;
       }
     }
   }
