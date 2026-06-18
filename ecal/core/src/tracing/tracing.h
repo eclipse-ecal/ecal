@@ -38,8 +38,8 @@ namespace eCAL
     // Version of the tracing implementation.
     constexpr const char* kTracingVersion = "1.0.0";
 
-    // Default batch size for span buffering before flushing to backend (jsonl file)
-    constexpr size_t kDefaultTracingBatchSize = 10;
+    // Default batch size for span buffering before flushing to backend
+    constexpr size_t kDefaultTracingBatchSize = 4096;
 
     // Specifies the type of operation being traced
     enum operation_type
@@ -123,6 +123,7 @@ namespace eCAL
 
     // Variant type for buffering heterogeneous span data.
     // Extend this variant when new span types are added (e.g. client/server).
-    using SpanDataVariant = std::variant<SPublisherSpanData, SSubscriberSpanData>;
+    using SpanData = std::variant<SPublisherSpanData, SSubscriberSpanData>;
+    using TraceInfo = std::variant< STopicMetadata, SpanData>;
   }
 }

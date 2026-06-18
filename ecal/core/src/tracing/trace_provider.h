@@ -42,7 +42,7 @@ namespace eCAL
 
       static std::shared_ptr<TraceProvider> Create(const eCAL::Tracing::Configuration& config_);
 
-      virtual void WriteSpan(const SpanDataVariant& span_data) = 0;
+      virtual void WriteSpan(const SpanData& span_data) = 0;
       virtual void WriteMetadata(const STopicMetadata& metadata) = 0;
     };
   }

@@ -80,14 +80,12 @@ inline eCAL::Configuration GetTracingConfiguration()
 class MockTracingWriter : public eCAL::tracing::TracingWriter
 {
 public:
-    void WriteSpansToFile(const std::vector<eCAL::tracing::SpanDataVariant>& batch) override
+    void WriteTraceInfo(const std::vector<eCAL::tracing::TraceInfo>& batch) override
     {
-        span_count_ += batch.size();
-    }
-
-    void WriteMetadataToFile(const eCAL::tracing::STopicMetadata& /*metadata*/) override
-    {
-        metadata_count_++;
+      for (const auto& info : batch)
+      {
+        std::visit([this](const auto& span) { this->Write(span); }, info);
+      }
     }
 
     size_t SpanCount() const
@@ -108,6 +106,16 @@ public:
     }
 
 private:
+    void Write(const eCAL::tracing::SpanData& /*spandata*/)
+    {
+      ++span_count_;
+    }
+
+    void Write(const eCAL::tracing::STopicMetadata& /*metadata*/)
+    {
+      ++metadata_count_;
+    }
+
     mutable std::mutex mutex_;
     std::atomic<size_t> span_count_{0};
     std::atomic<size_t> metadata_count_{0};
@@ -119,14 +127,9 @@ class ProxyTracingWriter : public eCAL::tracing::TracingWriter
 public:
     explicit ProxyTracingWriter(MockTracingWriter& target) : target_(target) {}
 
-    void WriteSpansToFile(const std::vector<eCAL::tracing::SpanDataVariant>& batch) override
+    void WriteTraceInfo(const std::vector<eCAL::tracing::TraceInfo>& batch) override
     {
-        target_.WriteSpansToFile(batch);
-    }
-
-    void WriteMetadataToFile(const eCAL::tracing::STopicMetadata& metadata) override
-    {
-        target_.WriteMetadataToFile(metadata);
+      target_.WriteTraceInfo(batch);
     }
 
 private:
@@ -134,7 +137,7 @@ private:
 };
 
 // Count the number of lines in a file and validate each line is valid JSON.
-inline size_t CountAndValidateJsonlLines(const std::string& filepath)
+inline size_t CountAndValidateJsonlLines(const std::filesystem::path& filepath)
 {
     std::ifstream file(filepath);
     EXPECT_TRUE(file.is_open()) << "Failed to open: " << filepath;
