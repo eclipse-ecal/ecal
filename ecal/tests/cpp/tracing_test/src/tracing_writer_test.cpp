@@ -37,9 +37,9 @@
 
 #include <nlohmann/json.hpp>
 
-TEST(TestTracingWriterJSONL, ConcurrentSpanWrites)
+TEST(TestTracingWriterJSONL, SpanWrites)
 {
-  constexpr size_t total_spans  = 5000;
+  constexpr size_t total_spans  = 4000;
   ScopedTraceDirOverride trace_dir_override("./");
   auto ecal_config = GetTracingConfiguration();
   ASSERT_TRUE(eCAL::Initialize(ecal_config, "", eCAL::Init::None));

@@ -98,7 +98,11 @@ namespace {
     return oss.str();
   }
 
-  static int unique_cnt = 0;
+  std::ofstream CreateWithDirectory(const std::filesystem::path& file_path, std::ios_base::openmode flags)
+  {
+    std::filesystem::create_directories(file_path.parent_path());
+    return std::ofstream(file_path, flags);
+  }
 }
 
 namespace eCAL
@@ -106,7 +110,7 @@ namespace eCAL
   namespace tracing
   {
     CTracingWriterJSONL::CTracingWriterJSONL()
-      : CTracingWriterJSONL(std::to_string(eCAL::Process::GetProcessID()) + "_" + std::to_string(++unique_cnt) + "_" + GetCurrentTimestamp(), std::filesystem::path(Util::GeteCALTraceDir()))
+      : CTracingWriterJSONL(std::to_string(eCAL::Process::GetProcessID()) + "_" + GetCurrentTimestamp(), std::filesystem::path(Util::GeteCALTraceDir()))
     {
     }
 
@@ -114,8 +118,8 @@ namespace eCAL
     CTracingWriterJSONL::CTracingWriterJSONL(const std::string& file_id, std::filesystem::path trace_directory)
       : spans_file_path_(trace_directory / (std::string("ecal_spans_") + file_id + ".jsonl"))
       , metadata_file_path_(trace_directory / (std::string("ecal_metadata_") + file_id + ".jsonl"))
-      , spans_file_(spans_file_path_, std::ios::out | std::ios::trunc)
-      , metadata_file_(metadata_file_path_, std::ios::out | std::ios::trunc)
+      , spans_file_(CreateWithDirectory(spans_file_path_, std::ios::out | std::ios::trunc))
+      , metadata_file_(CreateWithDirectory(metadata_file_path_, std::ios::out | std::ios::trunc))
     {
     }
 

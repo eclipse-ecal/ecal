@@ -206,7 +206,8 @@ namespace eCAL
 
       // create also logs directory
       const std::string log_path = buildPath(path_, ECAL_FOLDER_NAME_LOG);
-      return dirExistsOrCreate(log_path);
+      const std::string traces_path = buildPath(path_, ECAL_FOLDER_NAME_TRACE);
+      return dirExistsOrCreate(log_path) && dirExistsOrCreate(traces_path);
     }
 
     std::string DirManager::findFileInPaths(const std::vector<std::string>& paths_, const std::string& file_name_) const
