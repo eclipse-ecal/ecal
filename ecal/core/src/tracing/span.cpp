@@ -23,7 +23,7 @@
 
 #include <chrono>
 
-using tracing_clock = std::chrono::steady_clock;
+using tracing_clock = std::chrono::system_clock;
 using namespace std::chrono;
 
 namespace eCAL
