@@ -39,7 +39,7 @@ namespace eCAL
     constexpr const char* kTracingVersion = "1.0.0";
 
     // Default batch size for span buffering before flushing to backend
-    constexpr size_t kDefaultTracingBatchSize = 4096;
+    constexpr size_t kDefaultTracingBatchSize = 128;
 
     // Specifies the type of operation being traced
     enum operation_type
