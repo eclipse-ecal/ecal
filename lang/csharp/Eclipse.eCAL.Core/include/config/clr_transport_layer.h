@@ -96,6 +96,7 @@ namespace Eclipse {
           property System::String^ Mask;
           property unsigned int SendBuffer;
           property unsigned int ReceiveBuffer;
+          property unsigned int MaxDatagramSize;
           property bool JoinAllInterfaces;
           property bool NpcapEnabled;
           property TransportLayerUdpMulticastConfiguration^ Network;
@@ -108,6 +109,7 @@ namespace Eclipse {
             Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
             ReceiveBuffer = native_config.receive_buffer;
+            MaxDatagramSize = native_config.max_datagram_size;
             JoinAllInterfaces = native_config.join_all_interfaces;
             NpcapEnabled = native_config.npcap_enabled;
             Network = gcnew TransportLayerUdpMulticastConfiguration(native_config.network);
@@ -121,6 +123,7 @@ namespace Eclipse {
             Mask = Internal::StlStringToString(native_config.mask.Get());
             SendBuffer = native_config.send_buffer;
             ReceiveBuffer = native_config.receive_buffer;
+            MaxDatagramSize = native_config.max_datagram_size;
             JoinAllInterfaces = native_config.join_all_interfaces;
             NpcapEnabled = native_config.npcap_enabled;
             Network = gcnew TransportLayerUdpMulticastConfiguration(native_config.network);
@@ -134,6 +137,7 @@ namespace Eclipse {
             native_config.mask = Internal::StringToStlString(Mask);
             native_config.send_buffer = SendBuffer;
             native_config.receive_buffer = ReceiveBuffer;
+            native_config.max_datagram_size = MaxDatagramSize;
             native_config.join_all_interfaces = JoinAllInterfaces;
             native_config.npcap_enabled = NpcapEnabled;
             native_config.network = Network->ToNative();

@@ -114,6 +114,11 @@ extern "C"
     return eCAL::Config::GetUdpMulticastRcvBufSizeBytes();
   }
 
+  ECALC_API int eCAL_Config_GetMaxUdpDatagramSizeBytes()
+  {
+    return eCAL::Config::GetMaxUdpDatagramSizeBytes();
+  }
+
   ECALC_API int eCAL_Config_IsUdpMulticastJoinAllIfEnabled()
   {
     return static_cast<int>(eCAL::Config::IsUdpMulticastJoinAllIfEnabled());

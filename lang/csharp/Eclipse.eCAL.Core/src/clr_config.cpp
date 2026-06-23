@@ -118,6 +118,10 @@ namespace Eclipse {
           return ::eCAL::Config::GetUdpMulticastRcvBufSizeBytes();
         }
 
+        unsigned int Config::GetMaxUdpDatagramSizeBytes() {
+          return ::eCAL::Config::GetMaxUdpDatagramSizeBytes();
+        }
+
         bool Config::IsUdpMulticastJoinAllIfEnabled() {
           return ::eCAL::Config::IsUdpMulticastJoinAllIfEnabled();
         }

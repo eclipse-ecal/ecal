@@ -89,6 +89,8 @@ TEST_F(config_test_c, TransportLayer)
     EXPECT_EQ(configuration0->transport_layer.udp.send_buffer, eCAL_GetConfiguration()->transport_layer.udp.send_buffer);
     EXPECT_EQ(configuration0->transport_layer.udp.receive_buffer, eCAL_Config_GetUdpMulticastRcvBufSizeBytes());
     EXPECT_EQ(configuration0->transport_layer.udp.receive_buffer, eCAL_GetConfiguration()->transport_layer.udp.receive_buffer);
+    EXPECT_EQ(configuration0->transport_layer.udp.max_datagram_size, eCAL_Config_GetMaxUdpDatagramSizeBytes());
+    EXPECT_EQ(configuration0->transport_layer.udp.max_datagram_size, eCAL_GetConfiguration()->transport_layer.udp.max_datagram_size);
     EXPECT_EQ(configuration0->transport_layer.udp.join_all_interfaces, eCAL_Config_IsUdpMulticastJoinAllIfEnabled());
     EXPECT_EQ(configuration0->transport_layer.udp.join_all_interfaces, eCAL_GetConfiguration()->transport_layer.udp.join_all_interfaces);
     EXPECT_EQ(configuration0->transport_layer.udp.npcap_enabled, eCAL_Config_IsNpcapEnabled());

@@ -59,6 +59,9 @@ namespace eCAL
                   
         unsigned int            send_buffer         { 5242880 }; //!< UDP send buffer in bytes (Default: 5242880)
         unsigned int            receive_buffer      { 5242880 }; //!< UDP receive buffer in bytes (Default: 5242880)
+        unsigned int            max_datagram_size   { 64 * 1024 - 8 - 20 - 1 }; /*!< Maximum UDP datagram size in bytes.
+                                                                                        Default: 65507 = 64 KiB - 20 (IPv4 header) - 8 (UDP header) - 1.
+                                                                                        This is the maximum payload for a single UDP datagram imposed by IPv4. */
         bool                    join_all_interfaces { false };   /*!< Linux specific setting to enable joining multicast groups on all network interfacs
                                                                          independent of their link state. Enabling this makes sure that eCAL processes
                                                                          receive data if they are started before network devices are up and running. (Default: false)*/

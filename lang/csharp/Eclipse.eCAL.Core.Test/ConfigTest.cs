@@ -63,6 +63,7 @@ public class ConfigTest
     config.TransportLayer.Udp.Mask = "255.254.254.242";
     config.TransportLayer.Udp.SendBuffer = 6242880;
     config.TransportLayer.Udp.ReceiveBuffer = 6242881;
+    config.TransportLayer.Udp.MaxDatagramSize = 60000;
     config.TransportLayer.Udp.JoinAllInterfaces = true;
     config.TransportLayer.Udp.NpcapEnabled = true;
     config.TransportLayer.Udp.Local.Group = "129.255.255.254";
@@ -138,6 +139,7 @@ public class ConfigTest
     Assert.AreEqual(config.TransportLayer.Udp.Mask, ecalConfig.TransportLayer.Udp.Mask, "Udp.Mask mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.SendBuffer, ecalConfig.TransportLayer.Udp.SendBuffer, "Udp.SendBuffer mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.ReceiveBuffer, ecalConfig.TransportLayer.Udp.ReceiveBuffer, "Udp.ReceiveBuffer mismatch");
+    Assert.AreEqual(config.TransportLayer.Udp.MaxDatagramSize, ecalConfig.TransportLayer.Udp.MaxDatagramSize, "Udp.MaxDatagramSize mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.JoinAllInterfaces, ecalConfig.TransportLayer.Udp.JoinAllInterfaces, "Udp.JoinAllInterfaces mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.NpcapEnabled, ecalConfig.TransportLayer.Udp.NpcapEnabled, "Udp.NpcapEnabled mismatch");
     Assert.AreEqual(config.TransportLayer.Udp.Local.Group, ecalConfig.TransportLayer.Udp.Local.Group, "Udp.Local.Group mismatch");
@@ -331,6 +333,7 @@ public class ConfigTest
     Assert.AreEqual(ecalConfig.TransportLayer.Udp.Network.Ttl, Config.GetUdpMulticastTtl(), "UdpMulticastTtl");
     Assert.AreEqual(ecalConfig.TransportLayer.Udp.SendBuffer, Config.GetUdpMulticastSndBufSizeBytes(), "UdpMulticastSndBufSizeBytes");
     Assert.AreEqual(ecalConfig.TransportLayer.Udp.ReceiveBuffer, Config.GetUdpMulticastRcvBufSizeBytes(), "UdpMulticastRcvBufSizeBytes");
+    Assert.AreEqual(ecalConfig.TransportLayer.Udp.MaxDatagramSize, Config.GetMaxUdpDatagramSizeBytes(), "GetMaxUdpDatagramSizeBytes");
     Assert.AreEqual(ecalConfig.TransportLayer.Udp.JoinAllInterfaces, Config.IsUdpMulticastJoinAllIfEnabled(), "IsUdpMulticastJoinAllIfEnabled");
     Assert.AreEqual(ecalConfig.Subscriber.Layer.UDP.Enable, Config.IsUdpMulticastRecEnabled(), "IsUdpMulticastRecEnabled");
     Assert.AreEqual(ecalConfig.Subscriber.Layer.SHM.Enable, Config.IsShmRecEnabled(), "IsShmRecEnabled");

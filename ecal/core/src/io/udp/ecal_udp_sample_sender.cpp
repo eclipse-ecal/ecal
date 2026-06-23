@@ -104,8 +104,7 @@ namespace eCAL
       }
 
       // set limit for the data length (maximum size is imposed by the underlying IPv4 protocol)
-      // 64*1024 - 20 /* IP header */ - 8 /* UDP header */ - 1 /* don't ask */
-      m_socket->set_max_udp_datagram_size(64 * 1024 - 8 - 20 - 1);
+      m_socket->set_max_udp_datagram_size(attr_.max_datagram_size);
     }
 
     size_t CSampleSender::Send(const std::string& sample_name_, const std::vector<char>& serialized_sample_)

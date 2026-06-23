@@ -258,6 +258,7 @@ namespace YAML
     node["mask"]                = config_.mask.Get();
     node["send_buffer"]         = config_.send_buffer;
     node["receive_buffer"]      = config_.receive_buffer;
+    node["max_datagram_size"]   = config_.max_datagram_size;
     node["join_all_interfaces"] = config_.join_all_interfaces;
     node["npcap_enabled"]       = config_.npcap_enabled;
     node["network"]             = config_.network;
@@ -276,6 +277,7 @@ namespace YAML
     AssignValue<std::string>(config_.mask, node_, "mask");
     AssignValue<unsigned int>(config_.send_buffer, node_, "send_buffer");
     AssignValue<unsigned int>(config_.receive_buffer, node_, "receive_buffer");
+    AssignValue<unsigned int>(config_.max_datagram_size, node_, "max_datagram_size");
     AssignValue<bool>(config_.join_all_interfaces, node_, "join_all_interfaces");
     AssignValue<bool>(config_.npcap_enabled, node_, "npcap_enabled");
 

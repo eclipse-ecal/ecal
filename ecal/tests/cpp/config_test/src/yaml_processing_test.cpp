@@ -58,6 +58,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     config.transport_layer.udp.mask = "255.254.254.242";
     config.transport_layer.udp.send_buffer = 6242880;
     config.transport_layer.udp.receive_buffer = 6242881;
+    config.transport_layer.udp.max_datagram_size = 60000;
     config.transport_layer.udp.join_all_interfaces = true;
     config.transport_layer.udp.npcap_enabled = true;
     config.transport_layer.udp.local.group = "129.255.255.254";
@@ -122,6 +123,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.transport_layer.udp.mask, config_from_yaml.transport_layer.udp.mask);
     EXPECT_EQ(config.transport_layer.udp.send_buffer, config_from_yaml.transport_layer.udp.send_buffer);
     EXPECT_EQ(config.transport_layer.udp.receive_buffer, config_from_yaml.transport_layer.udp.receive_buffer);
+    EXPECT_EQ(config.transport_layer.udp.max_datagram_size, config_from_yaml.transport_layer.udp.max_datagram_size);
     EXPECT_EQ(config.transport_layer.udp.join_all_interfaces, config_from_yaml.transport_layer.udp.join_all_interfaces);
     EXPECT_EQ(config.transport_layer.udp.npcap_enabled, config_from_yaml.transport_layer.udp.npcap_enabled);
     EXPECT_EQ(config.transport_layer.udp.local.group, config_from_yaml.transport_layer.udp.local.group);
@@ -180,6 +182,7 @@ TEST(core_cpp_config_yaml /*unused*/, yaml_processing_comparison /*unused*/)
     EXPECT_EQ(config.transport_layer.udp.mask, config_from_yaml_config.transport_layer.udp.mask);
     EXPECT_EQ(config.transport_layer.udp.send_buffer, config_from_yaml_config.transport_layer.udp.send_buffer);
     EXPECT_EQ(config.transport_layer.udp.receive_buffer, config_from_yaml_config.transport_layer.udp.receive_buffer);
+    EXPECT_EQ(config.transport_layer.udp.max_datagram_size, config_from_yaml_config.transport_layer.udp.max_datagram_size);
     EXPECT_EQ(config.transport_layer.udp.join_all_interfaces, config_from_yaml_config.transport_layer.udp.join_all_interfaces);
     EXPECT_EQ(config.transport_layer.udp.npcap_enabled, config_from_yaml_config.transport_layer.udp.npcap_enabled);
     EXPECT_EQ(config.transport_layer.udp.local.group, config_from_yaml_config.transport_layer.udp.local.group);
