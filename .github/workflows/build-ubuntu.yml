@@ -39,7 +39,11 @@ jobs:
         )
         specific_packages=()
 
-        if [[ ${{ matrix.os }} == ubuntu-24.04* ]]; then
+        if [[ ${{ matrix.os }} == ubuntu-26.04* ]]; then
+          specific_packages=(
+            qt6-base-dev qt6-svg-dev
+          )
+        elif [[ ${{ matrix.os }} == ubuntu-24.04* ]]; then
           specific_packages=(
             qt6-base-dev qt6-svg-dev
           )
