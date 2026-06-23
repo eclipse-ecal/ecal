@@ -45,3 +45,24 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/io)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
     ${${PROJECT_NAME}_src}
 )
+
+add_executable(ecal_event_ping_app src/event_ping_app.cpp)
+add_executable(ecal_event_pong_app src/event_pong_app.cpp)
+
+target_link_libraries(ecal_event_ping_app
+  PRIVATE
+    ecal_core_private
+    Threads::Threads
+)
+
+target_link_libraries(ecal_event_pong_app
+  PRIVATE
+    ecal_core_private
+    Threads::Threads
+)
+
+ecal_install_gtest(ecal_event_ping_app)
+ecal_install_gtest(ecal_event_pong_app)
+
+set_property(TARGET ecal_event_ping_app PROPERTY FOLDER tests/cpp/io)
+set_property(TARGET ecal_event_pong_app PROPERTY FOLDER tests/cpp/io)
