@@ -15,7 +15,7 @@ All samples written for this chapter can be used across language boundaries.
 This means that a C# binary blob receiver can receive data from C binary blob sender.
 Likewise a Python Protobuf subscriber can receive data from a C# Protobuf publisher (and vice versa).
 
-At eCAL level, all publishers and subscribers send and receive binary data.
+At the eCAL core level, all publishers and subscribers send and receive binary data.
 This basic form of sending data is explained in the section :doc:`pubsub/binary_blob`.
 
 On top of those binary publishers and subscribers, eCAL has implemented (de-)serialization for popular serialization formats for 
