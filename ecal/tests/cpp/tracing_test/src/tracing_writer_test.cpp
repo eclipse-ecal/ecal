@@ -58,7 +58,6 @@ TEST(TestTracingWriterJSONL, SpanWrites)
       eCAL::tracing::SPublisherSpanData span{};
       span.op_type      = eCAL::tracing::operation_type::send;
       span.entity_id    = static_cast<uint64_t>(i);
-      span.process_id   = 1;
       span.payload_size = 64;
       span.clock        = static_cast<long long>(i);
       span.layer        = eCAL::tracing::tl_trace_shm;
@@ -96,6 +95,7 @@ TEST(TestTracingWriterJSONL, MetadataWrites)
       eCAL::tracing::STopicMetadata metadata{};
       metadata.entity_id  = static_cast<uint64_t>(i);
       metadata.process_id = 1;
+      metadata.process_name = "my_process";
       metadata.host_name  = "test_host";
       metadata.topic_name = "topic_" + std::to_string(i);
       metadata.encoding   = "protobuf";
@@ -128,7 +128,6 @@ TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
     eCAL::tracing::SPublisherSpanData span{};
     span.op_type      = eCAL::tracing::operation_type::send;
     span.entity_id    = 42;
-    span.process_id   = 123;
     span.payload_size = 256;
     span.clock        = 7;
     span.layer        = eCAL::tracing::tl_trace_udp;
@@ -152,7 +151,6 @@ TEST(TestTracingWriterJSONL, PublisherSpanJsonFields)
 
     EXPECT_EQ(j.at("op_type"), static_cast<int>(eCAL::tracing::operation_type::send));
     EXPECT_EQ(j.at("entity_id"), 42u);
-    EXPECT_EQ(j.at("process_id"), 123u);
     EXPECT_EQ(j.at("payload_size"), 256u);
     EXPECT_EQ(j.at("clock"), 7);
     EXPECT_EQ(j.at("layer"), static_cast<uint64_t>(eCAL::tracing::tl_trace_udp));
@@ -179,7 +177,6 @@ TEST(TestTracingWriterJSONL, SubscriberSpanJsonFields)
     span.op_type      = eCAL::tracing::operation_type::receive;
     span.entity_id    = 99;
     span.topic_id     = 55;
-    span.process_id   = 456;
     span.payload_size = 512;
     span.clock        = 3;
     span.layer        = eCAL::tracing::tl_trace_tcp;
@@ -204,7 +201,6 @@ TEST(TestTracingWriterJSONL, SubscriberSpanJsonFields)
     EXPECT_EQ(j.at("op_type"), static_cast<int>(eCAL::tracing::operation_type::receive));
     EXPECT_EQ(j.at("entity_id"), 99u);
     EXPECT_EQ(j.at("topic_id"), 55u);
-    EXPECT_EQ(j.at("process_id"), 456u);
     EXPECT_EQ(j.at("payload_size"), 512u);
     EXPECT_EQ(j.at("clock"), 3);
     EXPECT_EQ(j.at("layer"), static_cast<uint64_t>(eCAL::tracing::tl_trace_tcp));
