@@ -87,20 +87,20 @@ namespace eCAL
     struct STopicMetadata
     {
       std::string      tracing_version{kTracingVersion}; // tracing format version
-      uint64_t         entity_id;       // unique entity id
-      int32_t          process_id;      // PID of the owning process
+      uint64_t         entity_id{ 0 };  // unique entity id
+      int32_t          process_id{ 0 }; // PID of the owning process
+      std::string      process_name;    // process name of the owning process
       std::string      host_name;       // host that created the topic
       std::string      topic_name;      // topic name used for pub/sub matching
       std::string      encoding;        // datatype encoding (e.g. protobuf)
       std::string      type_name;       // datatype name
-      topic_direction  direction;       // publisher or subscriber
+      topic_direction  direction{ topic_direction::publisher }; // publisher or subscriber
     };
 
     struct SPublisherSpanData
     {
       operation_type op_type;
       uint64_t       entity_id;
-      uint64_t       process_id;
       size_t         payload_size;
       long long      clock;
       uint64_t       layer;
@@ -113,7 +113,6 @@ namespace eCAL
       operation_type op_type;
       uint64_t       entity_id;
       uint64_t       topic_id;
-      uint64_t       process_id;
       size_t         payload_size;
       long long      clock;
       uint64_t       layer;

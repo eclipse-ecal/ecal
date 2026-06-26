@@ -54,7 +54,6 @@ namespace eCAL
       auto now = tracing_clock::now();
       data.start_ns     = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       data.entity_id    = topic_id.topic_id.entity_id;
-      data.process_id   = topic_id.topic_id.process_id;
       data.payload_size = payload_size;
       data.clock        = clock;
       data.layer        = layer;
@@ -94,7 +93,6 @@ namespace eCAL
       data.start_ns   = duration_cast<nanoseconds>(now.time_since_epoch()).count();
       data.entity_id  = entity_id;
       data.topic_id   = topic_info.topic_id;
-      data.process_id = topic_info.process_id;
       data.payload_size = payload_size;
       data.clock      = clock;
       data.layer      = layer;

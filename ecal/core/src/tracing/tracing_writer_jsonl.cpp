@@ -52,6 +52,7 @@ namespace {
     metadata_as_json["tracing_version"] = metadata.tracing_version;
     metadata_as_json["entity_id"] = metadata.entity_id;
     metadata_as_json["process_id"] = metadata.process_id;
+    metadata_as_json["process_name"] = metadata.process_name;
     metadata_as_json["host_name"] = metadata.host_name;
     metadata_as_json["topic_name"] = metadata.topic_name;
     metadata_as_json["encoding"] = metadata.encoding;
@@ -65,7 +66,6 @@ namespace {
     json span_as_json;
     span_as_json["op_type"]      = static_cast<int>(span.op_type);
     span_as_json["entity_id"]    = span.entity_id;
-    span_as_json["process_id"]   = span.process_id;
     span_as_json["payload_size"] = span.payload_size;
     span_as_json["clock"]        = span.clock;
     span_as_json["layer"]        = span.layer;
@@ -80,7 +80,6 @@ namespace {
     span_as_json["op_type"]      = static_cast<int>(span.op_type);
     span_as_json["entity_id"]    = span.entity_id;
     span_as_json["topic_id"]     = span.topic_id;
-    span_as_json["process_id"]   = span.process_id;
     span_as_json["payload_size"] = span.payload_size;
     span_as_json["clock"]        = span.clock;
     span_as_json["layer"]        = span.layer;
