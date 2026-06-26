@@ -58,7 +58,6 @@ TEST(TestTraceProvider, ConcurrentSpanWrites)
                 eCAL::tracing::SPublisherSpanData span{};
                 span.op_type      = eCAL::tracing::operation_type::send;
                 span.entity_id    = static_cast<uint64_t>(t * spans_per_thread + i);
-                span.process_id   = 1;
                 span.payload_size = 42;
                 span.clock        = static_cast<long long>(i);
                 span.layer        = eCAL::tracing::tl_trace_shm;
