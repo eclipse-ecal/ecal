@@ -146,7 +146,7 @@ namespace eCAL
 
           bool operator<(const EntryInfo& other) const
           {
-            return (RcvTimestamp < other.RcvTimestamp);
+            return std::tie(RcvTimestamp, SndClock) < std::tie(other.RcvTimestamp, other.SndClock);
           }
           //!< @endcond
         };
