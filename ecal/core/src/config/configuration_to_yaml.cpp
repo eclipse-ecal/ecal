@@ -122,8 +122,9 @@ namespace YAML
   Node convert<eCAL::Registration::Local::SHM::Configuration>::encode(const eCAL::Registration::Local::SHM::Configuration& config_)
   {
     Node node;
-    node["domain"]     = config_.domain;
-    node["queue_size"] = config_.queue_size;
+    node["domain"]          = config_.domain;
+    node["queue_size"]      = config_.queue_size;
+    node["receive_poll_ms"] = config_.receive_poll_ms;
     return node;
   }
 
@@ -131,6 +132,7 @@ namespace YAML
   {
     AssignValue<std::string>(config_.domain, node_, "domain");
     AssignValue<size_t>(config_.queue_size, node_, "queue_size");
+    AssignValue<unsigned int>(config_.receive_poll_ms, node_, "receive_poll_ms");
     return true;
   }
   

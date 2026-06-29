@@ -191,6 +191,8 @@ namespace eCAL
       ss << R"(      domain:  )"                                     << quoteString(config_.registration.local.shm.domain)          << "\n";
       ss << R"(      # Queue size of registration events)"                                                                          << "\n";
       ss << R"(      queue_size: )"                                  << config_.registration.local.shm.queue_size                   << "\n";
+      ss << R"(      # Polling period in milliseconds for SHM registration receive loop)"                                          << "\n";
+      ss << R"(      receive_poll_ms: )"                             << config_.registration.local.shm.receive_poll_ms              << "\n";
       ss << R"(    udp:)"                                                                                                           << "\n";
       ss << R"(      # Specify port for local registration traffic)"                                                                << "\n";
       ss << R"(      port: )"                                        << config_.registration.local.udp.port                         << "\n";
