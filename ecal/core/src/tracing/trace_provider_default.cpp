@@ -36,7 +36,7 @@ namespace eCAL
       {
         return Util::CSingleInstanceHelper<CTraceProviderDefault>::Create(std::move(writer), batch_size);
       }
-      catch (const std::exception& e)
+      catch (const std::exception&)
       {
         return nullptr;
       }

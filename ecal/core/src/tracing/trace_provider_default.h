@@ -53,7 +53,7 @@ namespace eCAL
       // Write span data to buffer (accepts any span type via variant)
       void WriteSpan(const SpanData& span_data) override;
 
-      // metadata — written directly to file (no buffering)
+
       void WriteMetadata(const STopicMetadata& metadata) override;
 
     private:
