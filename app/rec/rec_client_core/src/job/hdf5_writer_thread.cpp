@@ -164,7 +164,7 @@ namespace eCAL
           std::unique_lock<decltype(input_mutex_)> input_lock(input_mutex_);
 
           // Wait until something is set to an input variable (frame_buffer_, topic info)
-          input_cv_.wait(input_lock, [this]() { return IsInterrupted() || IsFlushing() || !frame_buffer_.empty() || !new_topic_info_map_available_; });
+          input_cv_.wait(input_lock, [this]() { return IsInterrupted() || IsFlushing() || !frame_buffer_.empty() || new_topic_info_map_available_; });
 
           if (IsInterrupted())
             break;
