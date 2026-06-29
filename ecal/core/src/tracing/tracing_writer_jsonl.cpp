@@ -145,6 +145,16 @@ namespace eCAL
           span_variant
         );
       }
+
+      if (spans_file_.is_open())
+      {
+        spans_file_.flush();
+      }
+
+      if (metadata_file_.is_open())
+      {
+        metadata_file_.flush();
+      }
     }
 
     void CTracingWriterJSONL::WriteSpanData(const SpanData& span_data)
