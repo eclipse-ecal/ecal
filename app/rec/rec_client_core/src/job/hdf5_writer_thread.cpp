@@ -22,7 +22,7 @@
 
 #include <ecal/ecal.h>
 #include <ecal/measurement/base/types.h>
-#include <ecalhdf5/eh5_meas_api_v2.h>
+#include <ecalhdf5/eh5_meas_api_v3.h>
 #include <ecalhdf5/eh5_types.h>
 
 #include "ThreadingUtils/InterruptibleThread.h"
@@ -51,7 +51,7 @@ namespace eCAL
     // Constructor & Destructor
     ///////////////////////////////
 
-    Hdf5WriterThread::Hdf5WriterThread(const JobConfig& job_config, const std::map<std::string, TopicInfo>& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
+    Hdf5WriterThread::Hdf5WriterThread(const JobConfig& job_config, const TopicInfoMap& initial_topic_info_map, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer)
       : InterruptibleThread          ()
       , job_config_                  (job_config)
       , frame_buffer_                (initial_frame_buffer)
@@ -69,7 +69,7 @@ namespace eCAL
         total_size_bytes_ += frame->data_.size();
       }
 
-      hdf5_writer_ = std::make_unique<eCAL::eh5::v2::HDF5Meas>();
+      hdf5_writer_ = std::make_unique<eCAL::eh5::HDF5Meas>();
     }
 
     Hdf5WriterThread::~Hdf5WriterThread()
@@ -111,7 +111,7 @@ namespace eCAL
       }
     }
 
-    void Hdf5WriterThread::SetTopicInfo(std::map<std::string, TopicInfo> topic_info_map)
+    void Hdf5WriterThread::SetTopicInfo(TopicInfoMap topic_info_map)
     {
       std::unique_lock<decltype(input_mutex_)> input_lock(input_mutex_);
       
@@ -157,7 +157,7 @@ namespace eCAL
 
         // Topic info to write to the HDF5 file
         bool set_topic_info_map = false;
-        std::map<std::string, TopicInfo> topic_info_map_to_set; 
+        TopicInfoMap topic_info_map_to_set; 
 
         {
           // Lock the input mutex
@@ -198,8 +198,10 @@ namespace eCAL
 
           for (const auto& topic : topic_info_map_to_set)
           {
+            // convert from eCAL core types to eCAL measurement types before writing to the measurement.
+            eh5::SChannel channel{ topic.first.topic_name, topic.first.topic_id.entity_id };
             eCAL::experimental::measurement::base::DataTypeInformation const topic_info{ topic.second.tinfo_.name, topic.second.tinfo_.encoding, topic.second.tinfo_.descriptor };
-            hdf5_writer_->SetChannelDataTypeInformation(topic.first, topic_info);
+            hdf5_writer_->SetChannelDataTypeInformation(channel, topic_info);
           }
         }
         else if (frame)
@@ -210,14 +212,17 @@ namespace eCAL
             break;
 
           // Write Frame element to HDF5
+          eh5::SWriteEntry entry;
+          // in hdf5, ids are integers, however SEntityIds are not, so we need to convert.
+          entry.channel = eh5::SChannel(frame->topic_id_.topic_name, frame->topic_id_.topic_id.entity_id);
+          entry.data = frame->data_.data();
+          entry.size = frame->data_.size();
+          entry.snd_timestamp = std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count();
+          entry.rcv_timestamp = std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count();
+          entry.clock = frame->clock_;
+
           if (hdf5_writer_->AddEntryToFile(
-            frame->data_.data(),
-            frame->data_.size(),
-            std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_publish_time_.time_since_epoch()).count(),
-            std::chrono::duration_cast<std::chrono::microseconds>(frame->ecal_receive_time_.time_since_epoch()).count(),
-            frame->topic_name_,
-            frame->id_,
-            frame->clock_
+            entry
           ))
           {
             const std::lock_guard<std::mutex> throughput_statistics_lock(throughput_statistics_mutex_);
@@ -306,7 +311,7 @@ namespace eCAL
 #endif // NDEBUG
       std::unique_lock<decltype(hdf5_writer_mutex_)> hdf5_writer_lock(hdf5_writer_mutex_);
 
-      if (hdf5_writer_->Open(hdf5_dir, eCAL::eh5::v2::eAccessType::CREATE))
+      if (hdf5_writer_->Open(hdf5_dir, eCAL::eh5::eAccessType::CREATE))
       {
 #ifndef NDEBUG
         EcalRecLogger::Instance()->debug("Hdf5WriterThread::Open(): Successfully opened HDF5-Writer with path \"" + hdf5_dir + "\"");

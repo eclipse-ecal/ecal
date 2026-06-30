@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include <set>
 #include <map>
 #include <ecal/types.h>
+#include <ecal/pubsub/types.h>
 
 namespace eCAL
 {
@@ -75,5 +76,7 @@ namespace eCAL
 
       std::map<std::string, std::set<std::string>> publishers_;
     };
+
+    using TopicInfoMap = std::map<eCAL::STopicId, TopicInfo>;
   }
 }
