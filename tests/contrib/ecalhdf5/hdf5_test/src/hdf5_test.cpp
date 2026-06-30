@@ -1100,7 +1100,47 @@ TEST(HDF5, TestReaderWriterV5)
   }
 }
 
+TEST(HDF5, HDF5_GetEntriesInfoRange_ReturnsAllEntriesWithIdenticalSendTimestamp)
+{
+  const std::string base_name = "duplicate_send_timestamp";
+  const std::string meas_root_dir = output_dir + "/" + base_name;
 
+  const eCAL::eh5::SChannel channel{ "duplicate_send_timestamp_topic", 1 };
+  const long long duplicated_snd_timestamp = 1234LL;
+
+  std::vector<TestingMeasEntry> meas_entries
+  {
+    TestingMeasEntry{ channel, "first sample",  duplicated_snd_timestamp,   duplicated_snd_timestamp, 0LL, 11LL },
+    TestingMeasEntry{ channel, "second sample", duplicated_snd_timestamp+1, duplicated_snd_timestamp, 0LL, 12LL },
+  };
+
+  {
+    MeasAPI hdf5_writer;
+    CreateMeasurement<MeasAPI, MeasAPIAccess>(hdf5_writer, meas_root_dir, base_name);
+
+    for (const auto& entry : meas_entries)
+    {
+      EXPECT_TRUE(WriteToHDF(hdf5_writer, entry));
+    }
+
+    EXPECT_TRUE(hdf5_writer.Close());
+  }
+
+  {
+    MeasAPI hdf5_reader;
+    EXPECT_TRUE(hdf5_reader.Open(meas_root_dir));
+
+    eCAL::eh5::EntryInfoSet entries_info_set;
+    EXPECT_TRUE(hdf5_reader.GetEntriesInfoRange(channel, duplicated_snd_timestamp, duplicated_snd_timestamp + 1, entries_info_set));
+
+    ASSERT_EQ(entries_info_set.size(), meas_entries.size());
+
+    for (const auto& entry : meas_entries)
+    {
+      ValidateDataInMeasurement(hdf5_reader, entry);
+    }
+  }
+}
 
 
 TEST(HDF5, ParsePrintHex)
