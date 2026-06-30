@@ -6,6 +6,7 @@ set(ecal_submodule_dependency_provider_root_dir ${CMAKE_CURRENT_LIST_DIR})
 set(ecal_submodule_dependencies 
   asio
   CMakeFunctions
+  concurrentqueue
   CURL
   ecaludp
   fineftp

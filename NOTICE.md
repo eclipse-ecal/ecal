@@ -84,6 +84,16 @@ eCAL makes use of the following external components:
   - Git Submodule `/thirdparty/benchmark/benchmark`
   - Testing
 
+### concurrentqueue
+
+- **License**: BSD-2-Clause
+- **Copyright**: Copyright (c) 2013-2016, Cameron Desrochers.
+- **Repository**: https://github.com/cameron314/concurrentqueue
+- **Included in**:
+  - Git Submodule `/thirdparty/concurrentqueue/concurrentqueue`
+  - Windows builds
+  - Linux builds
+
 ### Cap'n Proto
 
 - **License**: MIT
