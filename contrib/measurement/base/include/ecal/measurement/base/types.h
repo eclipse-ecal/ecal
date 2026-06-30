@@ -146,7 +146,10 @@ namespace eCAL
 
           bool operator<(const EntryInfo& other) const
           {
-            return (RcvTimestamp < other.RcvTimestamp);
+            // RcvTimestamp is the primary sorting key, 
+            // If this ties (e.g. discretized timestamps, SndClock is the secondary sorting key. 
+            // This should never tie, but just in case, ID is the tiebraker, as it's guaranteed to be unique in the measurement.
+            return std::tie(RcvTimestamp, SndClock, ID) < std::tie(other.RcvTimestamp, other.SndClock, other.ID);
           }
           //!< @endcond
         };
