@@ -36,7 +36,7 @@ target_link_libraries(${PROJECT_NAME}
     eCAL::protobuf_core
 )
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 
 ecal_install_sample(${PROJECT_NAME})
 
