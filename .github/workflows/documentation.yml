@@ -126,7 +126,7 @@ jobs:
         path: ${{ runner.workspace }}/_build/doc/html.zip
 
     - name: Deploy Documentation
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
