@@ -7,10 +7,10 @@ Edit the documentation
 ======================
 
 This documentation is created with `Sphinx <https://www.sphinx-doc.org/>`_\ .
-Sphinx uses the reStructuredText (RST) markup format and adds some features like cross-referencing.
+Sphinx uses the reStructuredText (RST) markup format and adds features like cross-referencing.
 
 In this tutorial we will teach you how to edit the documentation locally on your PC.
-For that we will use Visual Studio Code with the reStructuredText extension, that will give you a (somewhat) live preview.
+For that we will use Visual Studio Code with Esbonio, which provides Sphinx diagnostics and a live preview.
 
 .. hint::  
    For small changes you can click |fa-github|/|fa-pencil-alt|:guilabel:`suggest edit` button in the top right corner.
@@ -28,7 +28,7 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
 
    https://code.visualstudio.com/
 
-#. Download and install any Python (3.7 and up) and make sure it is added to the ``PATH``
+#. Download and install any Python (3.10 and up) and make sure it is added to the ``PATH``.
 
    - |fa-windows| Windows:
 
@@ -41,64 +41,62 @@ For that we will use Visual Studio Code with the reStructuredText extension, tha
         
         sudo apt install python3 python3-pip python3-wheel
 
-#. Navigate to the eCAL directory and install the python requirements with pip:
+#. Navigate to the eCAL documentation directory and create a Python virtual environment:
 
    - |fa-windows| Windows:
 
      .. code-block:: batch
 
-        pip install wheel esbonio
-        pip install -r doc/requirements.txt
+        cd ecal\doc\rst
+        py -m venv .venv
+        .venv\Scripts\activate
+        python -m pip install --upgrade pip wheel
+        python -m pip install -r ..\requirements.txt
 
    - |fa-ubuntu| Ubuntu:
 
      .. code-block:: bash
      
-        sudo pip3 install -r doc/requirements.txt
-        sudo pip3 install esbonio
-
-     .. tip::
-
-        You can use a python ``venv`` if you like.
-        Just (later) make sure to launch VS Code from the ``venv`` and set your python interpreter to the interpreter from the ``venv``.
-        To check that, press :kbd:`Ctrl` + :kbd:`Shift` + :kbd:`P`, search for ``Python Interpreter`` and select the proper one.
+        cd ecal/doc/rst
+        python3 -m venv .venv
+        source .venv/bin/activate
+        python -m pip install --upgrade pip wheel
+        python -m pip install -r ../requirements.txt
 
 #. Install the VS Code Extensions:
 
    - ``Python`` by Microsoft
-   - ``reStructuredText`` by LeXStudio Inc.
-
-     .. image:: img_documentation/vscode_rst_addon.svg
-        :alt: VS Code reStructuredText extension
+   - ``Esbonio`` by Esbonio Developers
 
 #. Create the :file:`doc/rst/.vscode/settings.json` and paste the following code:
 
    .. code-block:: json
 
       {
-          "esbonio.sphinx.buildDir" : "${workspaceFolder}/_build/html",
-          "esbonio.sphinx.confDir"  : "${workspaceFolder}",
-          "esbonio.sphinx.srcDir"   : "${workspaceFolder}"
+          "esbonio.sphinx.pythonCommand": [
+              "${venv:.venv}"
+          ],
+          "esbonio.sphinx.buildArguments": [
+              "-M",
+              "html",
+              ".",
+              "_build"
+          ]
       }
 
-#. Open the :file:`doc/rst/` directory in VS Code and click on an .rst file of your choice.
-   Make sure that the statusbar displays "Sphinx" *(not docutils)*.
-   If is doesn't, click on it and select "Sphinx".
-   Wait for esbonio to finish building.
+#. Open the :file:`doc/rst/` directory in VS Code and select the Python interpreter from :file:`doc/rst/.venv`.
+   Open an ``.rst`` file and wait for Esbonio to start the Sphinx process.
+
+   .. hint::
+
+      If the preview does not start after changing :file:`settings.json`, press :kbd:`Ctrl` + :kbd:`Shift` + :kbd:`P` and run :guilabel:`Esbonio: Restart Language Server` and :guilabel:`Esbonio: Restart Sphinx Process` from the command palette. 
 
    .. image:: img_documentation/vscode_statusbar.svg
       :alt: VS Code Statusbar with Sphinx and Esbonio
 
-   .. important:: 
-
-      The reStructuredText extension may warn you about Syntax highlighting not being available.
-      Install the extenstion and discard **any** warning it presents you (also check the bell icon in the statusbar).
-
-      It sometimes happens that the extension will not launch, unless you have discarded all warnings.
-
 #. Click the preview button in the upper right corner.
-   The preview will be updated every time you save the .rst file.
-
+   The preview will be updated every time you save the ``.rst`` file.
+ 
    .. image:: img_documentation/vscode_preview_button.svg
       :alt: VS Code Preview button
 
