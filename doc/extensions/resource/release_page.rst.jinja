@@ -140,29 +140,29 @@ eCAL Installer
 |fa-python| Free-threaded Python Binding
 ----------------------------------------
 
-.. list-table:: 
-     :widths: 2 2 6
-     :header-rows: 1
+.. list-table::
+   :widths: 2 2 6
+   :header-rows: 1
 
-     * - OS
+   * - OS
 
-         - Architecture
+     - Architecture
 
-         - Files
+     - Files
 
-     {% set free_threaded_python_binding_grouped_dict = group_asset_list_by_os_and_arch(free_threaded_python_binding_list) -%}
+   {% set free_threaded_python_binding_grouped_dict = group_asset_list_by_os_and_arch(free_threaded_python_binding_list) -%}
 
-     {% for key, value in free_threaded_python_binding_grouped_dict.items() -%}
-     * - {{ get_os_string(value[0], true) }}
+   {% for key, value in free_threaded_python_binding_grouped_dict.items() %}
+   * - {{ get_os_string(value[0], true) }}
 
-         - {{ get_cpu_string(value[0]) }}
+     - {{ get_cpu_string(value[0]) }}
 
-         - {% for asset in value -%}
-             `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} free-threaded (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
+     - {% for asset in value -%}
+       `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} free-threaded (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
 
-             {% endfor -%}
+       {% endfor -%}
 
-     {% endfor -%}
+   {% endfor -%}
 
 {% endif -%}
 
@@ -177,28 +177,28 @@ eCAL Installer
 *PyPy bindings are not compatibly with the regular Python implementation.*
 
 .. list-table:: 
-    :widths: 2 2 6
-    :header-rows: 1
+   :widths: 2 2 6
+   :header-rows: 1
 
-    * - OS
+   * - OS
 
-      - Architecture
+     - Architecture
 
-      - Files
+     - Files
 
-    {% set pypy_binding_grouped_dict = group_asset_list_by_os_and_arch(pypy_binding_list) -%}
+   {% set pypy_binding_grouped_dict = group_asset_list_by_os_and_arch(pypy_binding_list) -%}
 
-    {% for key, value in pypy_binding_grouped_dict.items() %}
-    * - {{ get_os_string(value[0], true) }}
+   {% for key, value in pypy_binding_grouped_dict.items() %}
+   * - {{ get_os_string(value[0], true) }}
 
-      - {{ get_cpu_string(value[0]) }}
+     - {{ get_cpu_string(value[0]) }}
 
-      - {% for asset in value -%}
-         `PyPy {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
+     - {% for asset in value -%}
+       `PyPy {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
 
-        {% endfor -%}
+       {% endfor -%}
 
-    {% endfor -%}
+   {% endfor -%}
 
 {% endif -%}
 
