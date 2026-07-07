@@ -90,8 +90,6 @@ eCAL Installer
 
      - `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314-win_amd64.whl>`__ 
 
-       `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-win_amd64.whl>`__ 
-
        `Python 3.13 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp313-cp313-win_amd64.whl>`__ 
 
        `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp312-cp312-win_amd64.whl>`__ 
@@ -110,8 +108,6 @@ eCAL Installer
      - x64
 
      - `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314-manylinux_2_28_x86_64.whl>`__ 
-
-       `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-manylinux_2_28_x86_64.whl>`__ 
 
        `Python 3.13 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp313-cp313-manylinux_2_28_x86_64.whl>`__ 
 
@@ -132,8 +128,6 @@ eCAL Installer
 
      - `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314-manylinux_2_28_aarch64.whl>`__ 
 
-       `Python 3.14 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-manylinux_2_28_aarch64.whl>`__ 
-
        `Python 3.13 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp313-cp313-manylinux_2_28_aarch64.whl>`__ 
 
        `Python 3.12 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp312-cp312-manylinux_2_28_aarch64.whl>`__ 
@@ -145,6 +139,41 @@ eCAL Installer
        `Python 3.9 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp39-cp39-manylinux_2_28_aarch64.whl>`__ 
 
        `Python 3.8 (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp38-cp38-manylinux_2_28_aarch64.whl>`__ 
+
+       
+|fa-python| Free-threaded Python Binding
+----------------------------------------
+
+.. list-table::
+   :widths: 2 2 6
+   :header-rows: 1
+
+   * - OS
+
+     - Architecture
+
+     - Files
+
+   
+   * - |fa-windows| Windows
+
+     - x64
+
+     - `Python 3.14 free-threaded (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-win_amd64.whl>`__
+
+       
+   * - |fa-linux| Linux (All)
+
+     - x64
+
+     - `Python 3.14 free-threaded (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-manylinux_2_28_x86_64.whl>`__
+
+       
+   * - |fa-linux| Linux (All)
+
+     - ARM64
+
+     - `Python 3.14 free-threaded (.whl) <https://github.com/eclipse-ecal/ecal/releases/download/v6.1.1/eclipse_ecal-6.1.1-cp314-cp314t-manylinux_2_28_aarch64.whl>`__
 
        
 
