@@ -28,7 +28,7 @@ For that we will use Visual Studio Code with Esbonio, which provides Sphinx diag
 
    https://code.visualstudio.com/
 
-#. Download and install any Python (3.9 and up) and make sure it is added to the ``PATH``.
+#. Download and install any Python (3.10 and up) and make sure it is added to the ``PATH``.
 
    - |fa-windows| Windows:
 
