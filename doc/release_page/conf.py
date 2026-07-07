@@ -96,8 +96,8 @@ html_static_path = ['../_static']
 
 html_css_files = [
     'css/bignums.css',                              # Enable the bignum feature from the sphinx-typo3-theme
-    'css/sphinx-book-theme-1.1.2-ecaladdon.css',    # Change colors of the sphinx-book-theme
-    'css/tabs-3.4.5-ecaladdon.css',                 # Change colors of the sphinx-tabs
+    'css/sphinx-book-theme-1.2.0-ecaladdon.css',    # Change colors of the sphinx-book-theme
+    'css/tabs-3.5.0-ecaladdon.css',                 # Change colors of the sphinx-tabs
 ]
 
 html_title = "Eclipse eCAL™"
