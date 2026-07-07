@@ -6,6 +6,7 @@ import github
 import jinja2
 import semantic_version
 from collections import OrderedDict
+from packaging.utils import InvalidWheelFilename, parse_wheel_filename
 
 # This is used for eCAL 5 releases, that had distro-specific python wheels / eggs
 ubuntu_default_python_version_dict = \
@@ -14,6 +15,7 @@ ubuntu_default_python_version_dict = \
     semantic_version.Version("20.4.0"):   semantic_version.Version("3.8.0"),
     semantic_version.Version("22.4.0"):   semantic_version.Version("3.10.0"),
     semantic_version.Version("24.4.0"):   semantic_version.Version("3.12.0"),
+    semantic_version.Version("26.4.0"):   semantic_version.Version("3.14.0"),
 }
 
 # This is used to map Ubuntu codenames to their respective semantic versions.
@@ -128,6 +130,61 @@ def get_cpu_architecture_from_filename_suffix(filename, default_architecture="un
         sys.stderr.write("Warning: Unable to determine CPU Architecture from installer filename: \"" + filename + "\"\n")
         return default_architecture
 
+def get_python_version_from_wheel_interpreter_tag(interpreter_tag):
+    match_result = re.match(r"^([a-z]+)([0-9]+)$", interpreter_tag)
+    if not match_result:
+        return '', semantic_version.Version("0.0.0")
+
+    python_implementation = match_result.group(1)
+    python_version_string = match_result.group(2)
+    python_version_major_string = python_version_string[0]
+    python_version_minor_string = "0"
+    if len(python_version_string) > 1:
+        python_version_minor_string = python_version_string[1:]
+
+    python_version = semantic_version.Version(python_version_major_string + "." + python_version_minor_string + ".0")
+    return python_implementation, python_version
+
+def get_python_binding_properties_from_wheel_filename(filename):
+    python_binding_properties = {
+        'python_version':        semantic_version.Version("0.0.0"),
+        'python_implementation': '',
+        'python_free_threaded':  False,
+    }
+
+    try:
+        _, _, _, wheel_tags = parse_wheel_filename(filename)
+    except InvalidWheelFilename:
+        return python_binding_properties
+
+    for wheel_tag in sorted(wheel_tags, key=lambda x: (x.interpreter, x.abi, x.platform)):
+        python_implementation, python_version = get_python_version_from_wheel_interpreter_tag(wheel_tag.interpreter)
+        if python_implementation:
+            python_binding_properties['python_version']        = python_version
+            python_binding_properties['python_implementation'] = python_implementation
+            python_binding_properties['python_free_threaded']  = python_implementation == 'cp' and re.match(r"^cp[0-9]+t$", wheel_tag.abi) is not None
+            break
+
+    return python_binding_properties
+
+def get_legacy_python_binding_properties_from_wheel_filename(filename):
+    python_binding_properties = {
+        'python_version':        semantic_version.Version("0.0.0"),
+        'python_implementation': '',
+        'python_free_threaded':  False,
+    }
+
+    components = filename[:-4].split('-')
+    # The python version is either index 2 or 3, depending on whether the optional build tag is used.
+    for index in range(2, min(4, len(components))):
+        python_implementation, python_version = get_python_version_from_wheel_interpreter_tag(components[index])
+        if python_implementation:
+            python_binding_properties['python_version']        = python_version
+            python_binding_properties['python_implementation'] = python_implementation
+            break
+
+    return python_binding_properties
+
 
 """
 Retrieves the properties of a given GitHub asset.
@@ -163,6 +220,7 @@ Returns:
             'cpu':                      'amd64 / arm64',
             'python_version':           Semver('3.6.0') (example)
             'python_implementation':    'cp / pp etc.' (i.e. CPython or PyPy)
+            'python_free_threaded':      True / False (Only for free-threaded CPython bindings)
         }
 """
 def get_asset_properties(ecal_version, gh_asset):
@@ -242,19 +300,15 @@ def get_asset_properties(ecal_version, gh_asset):
             sys.stderr.write("Warning: Unable to determine OS of python binding: \"" + asset_properties['filename'] + "\" (from eCAL " + str(ecal_version) + ")\n")
 
         # Get Python version
-        python_version        = semantic_version.Version("0.0.0")
-        python_implementation = ''
-        components = asset_properties['filename'][:-4].split('-')
-        # The python version is either index 2 or 3, depending on whether the optional build tag is used.
-        for index in range(2,4):
-            if re.match(r"[a-z]{2}[0-9]+", components[index]):
-                python_implementation = components[index][:2]
-                python_version_major_string = components[index][2]
-                python_verstion_minor_string = "0"
-                if len(components[index]) > 3:
-                    python_verstion_minor_string = components[index][3:]
-                python_version = semantic_version.Version(python_version_major_string + "." + python_verstion_minor_string + ".0")
-                break
+        if ecal_version >= semantic_version.Version("6.0.0"):
+            python_binding_properties = get_python_binding_properties_from_wheel_filename(asset_properties['filename'])
+            if not python_binding_properties['python_implementation']:
+                python_binding_properties = get_legacy_python_binding_properties_from_wheel_filename(asset_properties['filename'])
+        else:
+            python_binding_properties = get_legacy_python_binding_properties_from_wheel_filename(asset_properties['filename'])
+
+        python_version        = python_binding_properties['python_version']
+        python_implementation = python_binding_properties['python_implementation']
 
         if python_version == semantic_version.Version("0.0.0"):
             sys.stderr.write("Warning: Unable to determine python version: \"" + asset_properties['filename'] + "\" (from eCAL " + str(ecal_version) + ")\n")
@@ -263,6 +317,7 @@ def get_asset_properties(ecal_version, gh_asset):
         
         asset_properties['properties']['python_version']        = python_version
         asset_properties['properties']['python_implementation'] = python_implementation
+        asset_properties['properties']['python_free_threaded']  = python_binding_properties['python_free_threaded']
 
     # Python binding (.egg)
     elif asset_properties['filename'].endswith('.egg'):
@@ -298,6 +353,7 @@ def get_asset_properties(ecal_version, gh_asset):
         
         asset_properties['properties']['python_version']        = python_version
         asset_properties['properties']['python_implementation'] = 'cp'              # The eggs were all CPython
+        asset_properties['properties']['python_free_threaded']  = False
 
         # CPU Architecture was always amd64 back then
         asset_properties['properties']['cpu'] = 'amd64'
@@ -446,6 +502,7 @@ def generate_release_documentation(gh_api_key, index_filepath, release_dir_path)
             # 3. CPU (amd64 > arm64)
             # 4. Python version (descending)
 
+            asset_list.sort(key = lambda x: x['properties'].get('python_free_threaded', False))
             asset_list.sort(key = lambda x: x['properties'].get('python_version', semantic_version.Version("0.0.0")), reverse = True)
             asset_list.sort(key = lambda x: x['properties'].get('os_version', semantic_version.Version("0.0.0")), reverse = True)
             asset_list.sort(key = lambda x: x['properties'].get('cpu', 'unknown'))

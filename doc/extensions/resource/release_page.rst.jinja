@@ -95,7 +95,7 @@ eCAL Installer
 {% endif -%}
 
 {# Get the python bindings from the list -#}
-{% set python_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'cp') | list -%}
+{% set python_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'cp') | selectattr('properties.python_free_threaded', 'equalto', false) | list -%}
 {% set asset_list          = asset_list | reject('in', python_binding_list) | list -%}
 
 
@@ -129,6 +129,40 @@ eCAL Installer
        {% endfor -%}
 
    {% endfor -%}
+
+{% endif -%}
+
+{# Get the free-threaded python bindings from the list -#}
+{% set free_threaded_python_binding_list = asset_list | selectattr('type', 'equalto', 'python_binding') | selectattr('properties.python_implementation', 'equalto', 'cp') | selectattr('properties.python_free_threaded', 'equalto', true) | list -%}
+{% set asset_list                        = asset_list | reject('in', free_threaded_python_binding_list) | list -%}
+
+{% if free_threaded_python_binding_list %}
+|fa-python| Free-threaded Python Binding
+----------------------------------------
+
+.. list-table:: 
+     :widths: 2 2 6
+     :header-rows: 1
+
+     * - OS
+
+         - Architecture
+
+         - Files
+
+     {% set free_threaded_python_binding_grouped_dict = group_asset_list_by_os_and_arch(free_threaded_python_binding_list) -%}
+
+     {% for key, value in free_threaded_python_binding_grouped_dict.items() -%}
+     * - {{ get_os_string(value[0], true) }}
+
+         - {{ get_cpu_string(value[0]) }}
+
+         - {% for asset in value -%}
+             `Python {{ asset['properties']['python_version'].major }}.{{ asset['properties']['python_version'].minor }} free-threaded (.{{ asset['filename'].split('.')[-1] }}) <{{ asset['download_link'] }}>`__
+
+             {% endfor -%}
+
+     {% endfor -%}
 
 {% endif -%}
 

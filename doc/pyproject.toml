@@ -7,6 +7,7 @@ dependencies = [
   "sphinx-tabs == 3.4.7",       # Fixed, as we have custom CSS files that must be updated manually, whenever sphinx-tabs is updated
   "PyGithub",
   "autodoc",
+  "packaging",
   "semantic-version", 
   "exhale",
   "Jinja2",
