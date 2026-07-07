@@ -72,9 +72,9 @@ Functions
 
 - :ref:`exhale_function_namespaceeCAL_1ad1aee2f354dcb72366f8cb6754c8b8ea`
 
-- :ref:`exhale_function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39`
-
 - :ref:`exhale_function_namespaceeCAL_1a30834f2dd3dbab8e0734c79b2aaf9bb4`
+
+- :ref:`exhale_function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39`
 
 - :ref:`exhale_function_namespaceeCAL_1a439b87d67679bce153704bc95d4b30de`
 
