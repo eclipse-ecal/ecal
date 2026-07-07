@@ -14,7 +14,7 @@ option(ECAL_CORE_BUILD_TESTS                             "Build the eCAL google 
 # core internal feature configuration (adapt to your needs)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 option(ECAL_CORE_CONFIGURATION                           "Enables to configure eCAL at runtime via ecal.yaml file"                                               ON)
-option(ECAL_CORE_COMMAND_LINE                            "Enables eCAL application cmd line interfaces"                                                          ON)
+option(ECAL_CORE_COMMAND_LINE                            "Enables eCAL samples that have a command-line interface"                                               ON)
 option(ECAL_CORE_REGISTRATION                            "Enables the eCAL registration layer"                                                                   ON)
 option(ECAL_CORE_MONITORING                              "Enables the eCAL monitoring functionality"                                                             ON)
 option(ECAL_CORE_PUBLISHER                               "Enables the eCAL publisher functionality"                                                              ON)

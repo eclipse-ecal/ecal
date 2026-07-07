@@ -50,10 +50,6 @@ if (ECAL_CORE_CONFIGURATION)
   yaml_cpp_create_compatibility_targets()
 endif()
 
-if (ECAL_CORE_COMMAND_LINE)
-  find_package(tclap          REQUIRED)
-endif()
-
 if (ECAL_CORE_TRANSPORT_TCP)
   find_package(tcp_pubsub 2   REQUIRED)
 endif()
@@ -477,12 +473,6 @@ set(ecal_util_src
     src/util/getenvvar.h
     src/util/counter_cache.h
 )
-if (ECAL_CORE_COMMAND_LINE)
-  list(APPEND ecal_util_src
-      src/util/advanced_tclap_output.cpp
-      src/util/advanced_tclap_output.h
-  )
-endif()
 
 ######################################
 # common
@@ -682,7 +672,6 @@ target_compile_definitions(ecal_core_private
 
 set(ECAL_CORE_FEATURES
   ECAL_CORE_CONFIGURATION
-  ECAL_CORE_COMMAND_LINE
   ECAL_CORE_REGISTRATION
   ECAL_CORE_MONITORING
   ECAL_CORE_PUBLISHER
@@ -715,7 +704,6 @@ target_include_directories(ecal_core_private
 target_link_libraries(ecal_core_private 
   PUBLIC
     $<$<BOOL:${ECAL_CORE_CONFIGURATION}>:yaml-cpp::yaml-cpp>
-    $<$<BOOL:${ECAL_CORE_COMMAND_LINE}>:tclap::tclap>
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp

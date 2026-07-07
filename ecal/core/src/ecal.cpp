@@ -29,10 +29,6 @@
 #include <string>
 #include <vector>
 
-#if ECAL_CORE_COMMAND_LINE
-#include "util/advanced_tclap_output.h"
-#endif
-
 #include <algorithm>
 
 namespace
