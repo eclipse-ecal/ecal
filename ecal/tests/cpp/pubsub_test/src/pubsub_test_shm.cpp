@@ -263,3 +263,80 @@ TEST(core_cpp_pubsub, SubscriberFastReconnectionSHM) {
 
   eCAL::Finalize();
 }
+
+TEST(core_cpp_pubsub, PublisherConfigSHMMemfileMinSizePreventsInitialResize)
+{
+  constexpr int REGISTRATION_REFRESH_MS = 500;
+  constexpr int REGISTRATION_TIMEOUT_MS = 10 * REGISTRATION_REFRESH_MS;
+
+  constexpr size_t GLOBAL_MEMFILE_MIN_SIZE = 4096;
+  constexpr size_t PAYLOAD_SIZE = 666040;
+
+  const std::string topic_name = "publisher_config_shm_memfile_min_size";
+
+  eCAL::Configuration init_config;
+  init_config.publisher.layer.shm.enable = true;
+  init_config.publisher.layer.udp.enable = false;
+  init_config.publisher.layer.tcp.enable = false;
+  init_config.publisher.layer.shm.memfile_min_size_bytes = GLOBAL_MEMFILE_MIN_SIZE;
+
+  init_config.subscriber.layer.shm.enable = true;
+  init_config.subscriber.layer.udp.enable = false;
+  init_config.subscriber.layer.tcp.enable = false;
+
+  init_config.registration.registration_refresh = REGISTRATION_REFRESH_MS;
+  init_config.registration.registration_timeout = REGISTRATION_TIMEOUT_MS;
+  init_config.registration.local.transport_type = eCAL::Registration::Local::eTransportType::shm;
+
+  ASSERT_TRUE(eCAL::Initialize(init_config, "PublisherConfigSHMMemfileMinSizePreventsInitialResize"));
+
+  {
+    std::condition_variable cv;
+    std::mutex cv_mutex;
+    bool received = false;
+    size_t received_size = 0;
+
+    eCAL::CSubscriber subscriber(topic_name);
+    subscriber.SetReceiveCallback(
+      [&](const eCAL::STopicId& /*topic_id_*/,
+        const eCAL::SDataTypeInformation& /*data_type_info_*/,
+        const eCAL::SReceiveCallbackData& data_)
+      {
+        {
+          std::lock_guard<std::mutex> lock(cv_mutex);
+          received = true;
+          received_size = data_.buffer_size;
+        }
+        cv.notify_all();
+      });
+
+    eCAL::Publisher::Configuration publisher_config;
+    publisher_config.layer.shm.enable = true;
+    publisher_config.layer.udp.enable = false;
+    publisher_config.layer.tcp.enable = false;
+    publisher_config.layer.shm.memfile_min_size_bytes = static_cast<unsigned int>(PAYLOAD_SIZE);
+
+    eCAL::CPublisher publisher(topic_name, {}, publisher_config);
+
+    eCAL::Process::SleepMS(3 * REGISTRATION_REFRESH_MS);
+
+    const std::string payload(PAYLOAD_SIZE, 'x');
+
+    EXPECT_TRUE(publisher.Send(payload));
+
+    std::unique_lock<std::mutex> lock(cv_mutex);
+    const bool received_in_time = cv.wait_for(
+      lock,
+      std::chrono::milliseconds(40),
+      [&received]() { return received; });
+
+    EXPECT_TRUE(received_in_time)
+      << "The first large SHM sample was not received quickly. "
+      << "This indicates that the publisher may have resized/rematched instead of using "
+      << "publisher_config.layer.shm.memfile_min_size_bytes.";
+
+    EXPECT_EQ(PAYLOAD_SIZE, received_size);
+  }
+
+  eCAL::Finalize();
+}
