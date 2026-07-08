@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.16)
 # So we name this project, which is also the name of the executable, accordingly.
 project(ecal_hello_world_send_protobuf)
 
-# We set the C++ standard to C++14, which is currently required by eCAL.
-set(CMAKE_CXX_STANDARD 14)
+# We set the C++ standard to C++20, which eCAL is built and tested with.
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Tell CMake to find the eCAL installation and the protobuf library.

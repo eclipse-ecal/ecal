@@ -35,6 +35,16 @@ project(eCAL)
 set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 # --------------------------------------------------------
+# set c++ standard
+# --------------------------------------------------------
+# eCAL is built with C++20 by default. The standard can still be overridden
+# from the command line or a toolchain file (e.g. -DCMAKE_CXX_STANDARD=23).
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+endif()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# --------------------------------------------------------
 # set msvc specific options
 # --------------------------------------------------------
 if(MSVC)

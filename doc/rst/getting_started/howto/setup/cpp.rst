@@ -6,7 +6,7 @@ C/C++ Setup
 
 To set up your environment for C++ development with eCAL, you will need:
 
-- A C++ compiler (e.g., GCC, Clang, or MSVC) compatible with C++14 or newer.
+- A C++ compiler (e.g., GCC, Clang, or MSVC) compatible with C++20 or newer.
 - CMake (version 3.16 or higher) for project configuration and build management.
 - An installed eCAL SDK, as described in the general installation instructions.
 - Optionally, additional libraries such as Protobuf, Cap'n Proto, or FlatBuffers if you plan to use those features.

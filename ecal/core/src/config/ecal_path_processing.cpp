@@ -49,18 +49,26 @@
 namespace
 {
   // Converts a UTF-8 encoded std::string to a std::filesystem::path.
-  // std::filesystem::u8path() is the standard C++17 way to do this correctly
-  // on all platforms, including Windows where path(std::string) uses the ANSI
-  // code page rather than UTF-8.
+  // This is required to do this correctly on all platforms, including Windows
+  // where path(std::string) uses the ANSI code page rather than UTF-8.
   std::filesystem::path utf8ToPath(const std::string& utf8_str_)
   {
+#if defined(__cpp_lib_char8_t)
+    // C++20: std::filesystem::u8path() is deprecated, construct from char8_t
+    return std::filesystem::path(std::u8string(utf8_str_.begin(), utf8_str_.end()));
+#else
+    // C++17
     return std::filesystem::u8path(utf8_str_);
+#endif
   }
 
   // Converts a std::filesystem::path to a UTF-8 encoded std::string.
   std::string pathToUtf8(const std::filesystem::path& p_)
   {
-    return p_.u8string();
+    // C++17: u8string() returns std::string, C++20: it returns std::u8string.
+    // Constructing the result from the iterator range works for both.
+    const auto u8_string = p_.u8string();
+    return std::string(u8_string.begin(), u8_string.end());
   }
 
   // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
@@ -91,7 +99,7 @@ namespace
     }
 
     // Construct a path from the wide string and convert to UTF-8.
-    std::string return_path = std::filesystem::path(path_tmp).u8string();
+    std::string return_path = pathToUtf8(std::filesystem::path(path_tmp));
 
     // Free the memory allocated by SHGetKnownFolderPath
     CoTaskMemFree(path_tmp);

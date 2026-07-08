@@ -10,9 +10,7 @@ If you want to build eCAL yourself, this tutorial may help you with that.
 
 To build eCAL, you will need:
 
-- A **C++17 compliant compiler**, such as Visual Studio 2019 or newer, or GCC 8 or newer.
-  
-  *A C++14 compliant compiler is sufficient, if you only want to build the eCAL Core Library.*
+- A **C++20 compliant compiler**, such as Visual Studio 2019 (v16.11) or newer, or GCC 10 or newer.
 
 - **Qt 5.12 or newer** (Qt6 is supported, too, since eCAL 5.13) for building the eCAL Qt based applications.
 

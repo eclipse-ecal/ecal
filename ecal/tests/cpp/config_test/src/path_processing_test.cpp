@@ -360,7 +360,9 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
 TEST(core_cpp_dir_manager /*unused*/, can_write_to_directory /*unused*/)
 {
   const eCAL::Util::DirManager dir_manager;
-  const std::string temp_dir = std::filesystem::temp_directory_path().u8string();
+  // C++17: u8string() returns std::string, C++20: it returns std::u8string
+  const auto temp_dir_u8 = std::filesystem::temp_directory_path().u8string();
+  const std::string temp_dir(temp_dir_u8.begin(), temp_dir_u8.end());
 
   EXPECT_TRUE(dir_manager.canWriteToDirectory(temp_dir));
   EXPECT_FALSE(dir_manager.canWriteToDirectory("ecal_nonexistent_dir_test_67890"));
@@ -384,7 +386,12 @@ TEST(core_cpp_dir_provider /*unused*/, unique_tmp_dir_returns_valid_dir /*unused
     EXPECT_TRUE(dir_manager.dirExists(unique_dir));
 
     std::error_code ec;
+#if defined(__cpp_lib_char8_t)
+    // C++20: std::filesystem::u8path() is deprecated, construct from char8_t
+    std::filesystem::remove_all(std::filesystem::path(std::u8string(unique_dir.begin(), unique_dir.end())), ec);
+#else
     std::filesystem::remove_all(std::filesystem::u8path(unique_dir), ec);
+#endif
     EXPECT_FALSE(ec) << "Cleanup of unique tmp dir failed: " << ec.message();
   }
 }
