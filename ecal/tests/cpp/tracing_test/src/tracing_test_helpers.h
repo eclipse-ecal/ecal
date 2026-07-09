@@ -19,62 +19,12 @@
 
 #pragma once
 
-#include <ecal/core.h>
-
-#include <tracing/tracing.h>
-#include <tracing/tracing_writer.h>
-
-#include <gtest/gtest.h>
-#include <nlohmann/json.hpp>
+#include <ecal/tracing/types.h>
+#include <ecal/tracing/writer.h>
 
 #include <atomic>
-#include <cstdlib>
-#include <fstream>
 #include <mutex>
-#include <string>
 #include <vector>
-
-class ScopedTraceDirOverride
-{
-public:
-    explicit ScopedTraceDirOverride(const std::string& path)
-    {
-        if (const char* previous_value = std::getenv(kTraceDirEnvVar))
-        {
-            had_previous_value_ = true;
-            previous_value_ = previous_value;
-        }
-
-#ifdef _WIN32
-        _putenv_s(kTraceDirEnvVar, path.c_str());
-#else
-        setenv(kTraceDirEnvVar, path.c_str(), 1);
-#endif
-    }
-
-    ~ScopedTraceDirOverride()
-    {
-#ifdef _WIN32
-        _putenv_s(kTraceDirEnvVar, had_previous_value_ ? previous_value_.c_str() : "");
-#else
-        if (had_previous_value_)
-            setenv(kTraceDirEnvVar, previous_value_.c_str(), 1);
-        else
-            unsetenv(kTraceDirEnvVar);
-#endif
-    }
-
-private:
-    static constexpr const char* kTraceDirEnvVar = "ECAL_TRACE_DIR";
-
-    bool had_previous_value_{false};
-    std::string previous_value_;
-};
-
-inline eCAL::Configuration GetTracingConfiguration()
-{
-    return eCAL::Configuration{};
-}
 
 // Mock writer that counts spans and metadata for test assertions.
 class MockTracingWriter : public eCAL::tracing::TracingWriter
@@ -135,23 +85,4 @@ public:
 private:
     MockTracingWriter& target_;
 };
-
-// Count the number of lines in a file and validate each line is valid JSON.
-inline size_t CountAndValidateJsonlLines(const std::filesystem::path& filepath)
-{
-    std::ifstream file(filepath);
-    EXPECT_TRUE(file.is_open()) << "Failed to open: " << filepath;
-
-    size_t count = 0;
-    std::string line;
-    while (std::getline(file, line))
-    {
-      if (line.empty()) continue;
-      // Every line must be valid JSON — a corrupted/interleaved write would break parsing.
-      EXPECT_NO_THROW(nlohmann::json::parse(line))
-          << "Invalid JSON on line " << (count + 1) << ": " << line;
-      ++count;
-    }
-    return count;
-}
 

@@ -17,20 +17,15 @@
  * ========================= eCAL LICENSE =================================
 */
 
-#include "tracing_writer_jsonl.h"
-
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <cstdlib>
-#include <ctime>
-#include <type_traits>
-
-#include <ecal/process.h>
-#include <ecal/util.h>
+#include <ecal/tracing/writer_jsonl.h>
 
 #include <nlohmann/json.hpp>
+
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <type_traits>
+
 using json = nlohmann::json;
 
 namespace {
@@ -42,7 +37,6 @@ namespace {
 
   template<class... Ts>
   Overloaded(Ts...) -> Overloaded<Ts...>;
-
 
   using namespace eCAL::tracing;
 
@@ -88,15 +82,6 @@ namespace {
     return span_as_json;
   }
 
-  std::string GetCurrentTimestamp()
-  {
-    std::time_t now = std::time(nullptr);
-    std::tm* tm_info = std::localtime(&now);
-    std::ostringstream oss;
-    oss << std::put_time(tm_info, "%Y%m%d_%H%M%S");
-    return oss.str();
-  }
-
   std::ofstream CreateWithDirectory(const std::filesystem::path& file_path, std::ios_base::openmode flags)
   {
     std::filesystem::create_directories(file_path.parent_path());
@@ -108,12 +93,6 @@ namespace eCAL
 {
   namespace tracing
   {
-    CTracingWriterJSONL::CTracingWriterJSONL()
-      : CTracingWriterJSONL(std::to_string(eCAL::Process::GetProcessID()) + "_" + GetCurrentTimestamp(), std::filesystem::path(Util::GeteCALTraceDir()))
-    {
-    }
-
-
     CTracingWriterJSONL::CTracingWriterJSONL(const std::string& file_id, std::filesystem::path trace_directory)
       : spans_file_path_(trace_directory / (std::string("ecal_spans_") + file_id + ".jsonl"))
       , metadata_file_path_(trace_directory / (std::string("ecal_metadata_") + file_id + ".jsonl"))
@@ -131,7 +110,6 @@ namespace eCAL
     {
       return metadata_file_path_;
     }
-
 
     void CTracingWriterJSONL::WriteTraceInfo(const std::vector<TraceInfo>& batch)
     {

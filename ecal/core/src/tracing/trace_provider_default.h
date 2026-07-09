@@ -20,11 +20,13 @@
 #pragma once
 
 #include "trace_provider.h"
-#include "tracing.h"
-#include "tracing_writer.h"
-#include "tracing_writer_jsonl.h"
 #include "util/single_instance_helper.h"
 
+#include <ecal/tracing/types.h>
+#include <ecal/tracing/writer.h>
+#include <ecal/tracing/writer_jsonl.h>
+
+#include <cstddef>
 #include <vector>
 #include <mutex>
 #include <memory>
@@ -36,12 +38,15 @@ namespace eCAL
 {
   namespace tracing
   {
+    constexpr size_t kDefaultTracingBatchSize = 128;
+
     class CTraceProviderDefault : public TraceProvider
     {
       friend class Util::CSingleInstanceHelper<CTraceProviderDefault>;
 
     public:
-      static std::shared_ptr<CTraceProviderDefault> Create(std::unique_ptr<TracingWriter> writer = std::make_unique<CTracingWriterJSONL>(), size_t batch_size = kDefaultTracingBatchSize);
+      static std::shared_ptr<CTraceProviderDefault> Create(std::unique_ptr<TracingWriter> writer, size_t batch_size = kDefaultTracingBatchSize);
+      static std::shared_ptr<CTraceProviderDefault> CreateDefault(size_t batch_size = kDefaultTracingBatchSize);
 
       CTraceProviderDefault(const CTraceProviderDefault&)            = delete;
       CTraceProviderDefault& operator=(const CTraceProviderDefault&) = delete;

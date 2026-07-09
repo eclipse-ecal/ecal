@@ -19,26 +19,21 @@
 
 #pragma once
 
+#include <ecal/tracing/types.h>
+#include <ecal/tracing/writer.h>
+
 #include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <mutex>
-
-#include "tracing_writer.h"
-#include "tracing.h"
 
 namespace eCAL
 {
   namespace tracing
   {
-    // Responsible for serializing span and metadata to JSONL files.
-    // Separated from CTraceProvider to isolate the I/O concern.
-    // This class is not thread-safe; CTraceProviderDefault handles synchronization and buffering before calling this writer.
     class CTracingWriterJSONL : public TracingWriter
     {
     public:
-      CTracingWriterJSONL();
       CTracingWriterJSONL(const std::string& file_id, std::filesystem::path trace_directory);
       ~CTracingWriterJSONL() override = default;
 
@@ -47,10 +42,8 @@ namespace eCAL
       CTracingWriterJSONL(CTracingWriterJSONL&&)                 = delete;
       CTracingWriterJSONL& operator=(CTracingWriterJSONL&&)      = delete;
 
-      // Write a batch of spans to the JSONL spans file
       void WriteTraceInfo(const std::vector<TraceInfo>& batch) override;
 
-      // File path accessors (path is fixed at construction time)
       std::filesystem::path GetSpansFilePath() const;
       std::filesystem::path GetTopicMetadataFilePath() const;
 

@@ -22,7 +22,7 @@
 #include <memory>
 #include <optional>
 
-#include "tracing.h"
+#include <ecal/tracing/types.h>
 
 #include <ecal/types.h>
 #include <serialization/ecal_struct_sample_payload.h>

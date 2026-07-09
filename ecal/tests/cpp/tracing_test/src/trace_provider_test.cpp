@@ -20,7 +20,9 @@
 #include "tracing_test_helpers.h"
 
 #include <tracing/trace_provider_default.h>
-#include <tracing/tracing.h>
+
+#include <ecal/tracing/types.h>
+#include <ecal/tracing/writer.h>
 
 #include <gtest/gtest.h>
 

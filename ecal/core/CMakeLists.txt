@@ -43,7 +43,6 @@ find_package(asio             REQUIRED)
 find_package(Threads          REQUIRED)
 find_package(ecaludp          REQUIRED)
 find_package(protozero        REQUIRED)
-find_package(nlohmann_json    REQUIRED)
 
 if (ECAL_CORE_CONFIGURATION)
   find_package(yaml-cpp       REQUIRED)
@@ -462,16 +461,14 @@ endif()
 # tracing
 ######################################
 set(ecal_tracing_src
-    src/tracing/tracing.h
+    src/tracing/layer_type.cpp
+    src/tracing/layer_type.h
     src/tracing/span.cpp
     src/tracing/span.h
     src/tracing/trace_provider.cpp
     src/tracing/trace_provider.h
     src/tracing/trace_provider_default.cpp
     src/tracing/trace_provider_default.h
-    src/tracing/tracing_writer.h
-    src/tracing/tracing_writer_jsonl.cpp
-    src/tracing/tracing_writer_jsonl.h
 )
 
 ######################################
@@ -726,7 +723,6 @@ target_link_libraries(ecal_core_private
     $<$<BOOL:${ECAL_CORE_TRANSPORT_TCP}>:tcp_pubsub::tcp_pubsub>
     $<$<BOOL:${ECAL_CORE_TIMEPLUGIN}>:ecaltime>
     ecaludp::ecaludp
-    nlohmann_json::nlohmann_json
     ${CMAKE_DL_LIBS}
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:rt>
     $<$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>,$<NOT:$<BOOL:${QNXNTO}>>>:atomic>
@@ -741,6 +737,7 @@ target_link_libraries(ecal_core_private
     asio::asio
     Threads::Threads
     eCAL::ecal-utils
+    eCAL::tracing
   PRIVATE
     # we need this so that e.g. the test can just link ecal_core_private and will get the object files of this library.
     ecal_core_serialization $<TARGET_OBJECTS:ecal_core_serialization>

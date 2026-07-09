@@ -18,13 +18,31 @@
 */
 
 #include "trace_provider_default.h"
-#include "tracing_writer.h"
-#include "tracing_writer_jsonl.h"
 #include "util/single_instance_helper.h"
 
-#include <cstdlib>
+#include <ecal/process.h>
+#include <ecal/tracing/writer.h>
+#include <ecal/tracing/writer_jsonl.h>
+#include <ecal/util.h>
+
 #include <atomic>
+#include <ctime>
+#include <filesystem>
+#include <iomanip>
+#include <sstream>
 #include <thread>
+
+namespace
+{
+  std::string GetCurrentTimestamp()
+  {
+    std::time_t now = std::time(nullptr);
+    std::tm* tm_info = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(tm_info, "%Y%m%d_%H%M%S");
+    return oss.str();
+  }
+}
 
 namespace eCAL
 {
@@ -40,6 +58,12 @@ namespace eCAL
       {
         return nullptr;
       }
+    }
+
+    std::shared_ptr<CTraceProviderDefault> CTraceProviderDefault::CreateDefault(size_t batch_size)
+    {
+      const auto file_id = std::to_string(eCAL::Process::GetProcessID()) + "_" + GetCurrentTimestamp();
+      return Create(std::make_unique<CTracingWriterJSONL>(file_id, std::filesystem::path(Util::GeteCALTraceDir())), batch_size);
     }
 
 

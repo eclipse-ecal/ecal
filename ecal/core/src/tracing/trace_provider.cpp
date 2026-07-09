@@ -28,7 +28,7 @@ namespace eCAL
     {
       if (config_.enabled)
       {
-        return CTraceProviderDefault::Create();
+        return CTraceProviderDefault::CreateDefault();
       }
       return nullptr;
     }

@@ -19,16 +19,14 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
+#include <ecal/tracing/types.h>
 
-#include "tracing.h"
+#include <vector>
 
 namespace eCAL
 {
   namespace tracing
   {
-    // Interface for tracing writers.
     class TracingWriter
     {
     public:

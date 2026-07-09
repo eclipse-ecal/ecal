@@ -20,12 +20,10 @@ project(test_tracing)
 
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-find_package(nlohmann_json REQUIRED)
 
 set(tracing_test_src
   src/tracing_test_helpers.h
   src/trace_provider_test.cpp
-  src/tracing_writer_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${tracing_test_src})
@@ -42,7 +40,6 @@ target_link_libraries(${PROJECT_NAME}
     ecal_core_private
     eCAL::ecal-utils
     Threads::Threads
-    nlohmann_json::nlohmann_json
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
