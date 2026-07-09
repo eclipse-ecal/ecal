@@ -179,7 +179,7 @@ void GroupTreeModel::insertItemIntoGroups(QAbstractTreeItem* item)
       current_group_identifier  = item->data(remaining_sub_groups.front(), (Qt::ItemDataRole)ItemDataRoles::GroupRole); //-V1016
 
       auto subgroup_list = group_item->findChildren(
-            [=](QAbstractTreeItem* child)
+            [current_group_identifier](QAbstractTreeItem* child)
             {
               if (child->type() == (int)TreeItemType::Group)
               {

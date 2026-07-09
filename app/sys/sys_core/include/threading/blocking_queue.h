@@ -53,7 +53,7 @@ public:
    */
   T pop() {
     std::unique_lock<std::mutex> lock(this->m_mutex);
-    this->m_condition.wait(lock, [=] { return !this->m_queue.empty(); });
+    this->m_condition.wait(lock, [this] { return !this->m_queue.empty(); });
     T rc(std::move(this->m_queue.back()));
     this->m_queue.pop_back();
     return rc;
