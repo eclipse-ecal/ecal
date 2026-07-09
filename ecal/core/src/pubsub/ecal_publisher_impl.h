@@ -131,10 +131,11 @@ namespace eCAL
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
     size_t GetConnectionCount();
+    void UpdateSendEnabledLayers();
 
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
@@ -150,12 +151,16 @@ namespace eCAL
     {
       SDataTypeInformation data_type_info;
       SLayerStates         layer_states;
+      TransportLayer::eType selected_layer = TransportLayer::eType::none;
       bool                 state = false;
     };
     using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
     mutable std::mutex                     m_connection_map_mutex;
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
+    std::atomic<bool>                      m_udp_send_enabled{ false };
+    std::atomic<bool>                      m_shm_send_enabled{ false };
+    std::atomic<bool>                      m_tcp_send_enabled{ false };
 
     std::mutex                             m_event_id_callback_mutex;
     PubEventCallbackT                      m_event_id_callback;

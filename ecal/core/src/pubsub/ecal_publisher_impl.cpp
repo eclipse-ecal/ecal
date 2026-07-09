@@ -155,6 +155,10 @@ namespace eCAL
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
 
+    const bool udp_send_enabled = m_udp_send_enabled.load(std::memory_order_relaxed);
+    const bool shm_send_enabled = m_shm_send_enabled.load(std::memory_order_relaxed);
+    const bool tcp_send_enabled = m_tcp_send_enabled.load(std::memory_order_relaxed);
+
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
 #if ECAL_CORE_TRANSPORT_SHM
@@ -162,11 +166,11 @@ namespace eCAL
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
-    allow_zero_copy &= !m_writer_udp;
+    allow_zero_copy &= !(m_writer_udp && udp_send_enabled);
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
     // tcp is active -> no zero copy
-    allow_zero_copy &= !m_writer_tcp;
+    allow_zero_copy &= !(m_writer_tcp && tcp_send_enabled);
 #endif
 
     // create a payload copy for all layer
@@ -186,7 +190,7 @@ namespace eCAL
     // SHM
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm)
+    if (m_writer_shm && shm_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM");
@@ -249,7 +253,7 @@ namespace eCAL
     // UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp)
+    if (m_writer_udp && udp_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::udp");
@@ -298,7 +302,7 @@ namespace eCAL
     // TCP
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp)
+    if (m_writer_tcp && tcp_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Send::TCP");
@@ -406,8 +410,8 @@ namespace eCAL
 #endif
 
     // determine if we need to start a transport layer
-    const TransportLayer::eType layer2activate = DetermineTransportLayer2Start(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
-    switch (layer2activate)
+    const TransportLayer::eType transport_layer_for_subscription = DetermineTransportLayer(pub_layers, sub_layers, m_attributes.host_name == subscription_info_.host_name);
+    switch (transport_layer_for_subscription)
     {
     case TransportLayer::eType::udp_mc:
       StartUdpLayer();
@@ -446,7 +450,7 @@ namespace eCAL
       if (subscription_info_iter == m_connection_map.end())
       {
         // add subscriber to connection map, connection state false
-        m_connection_map[subscription_info_] = SConnection{ data_type_info_, sub_layer_states_, false };
+        m_connection_map[subscription_info_] = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, false };
       }
       else
       {
@@ -461,11 +465,12 @@ namespace eCAL
         }
 
         // update the data type, the layer states and set the state active
-        connection = SConnection{ data_type_info_, sub_layer_states_, true };
+        connection = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, true };
       }
 
       // update connection count
       m_connection_count = GetConnectionCount();
+      UpdateSendEnabledLayers();
     }
 
 
@@ -502,6 +507,7 @@ namespace eCAL
 
       // update connection count
       m_connection_count = GetConnectionCount();
+      UpdateSendEnabledLayers();
     }
 
     // fire disconnect event
@@ -716,6 +722,41 @@ namespace eCAL
     return count;
   }
 
+  void CPublisherImpl::UpdateSendEnabledLayers()
+  {
+    // no need to lock map here for now, map locked by caller
+    bool udp_send_enabled(false);
+    bool shm_send_enabled(false);
+    bool tcp_send_enabled(false);
+
+    for (const auto& sub : m_connection_map)
+    {
+      if (!sub.second.state)
+      {
+        continue;
+      }
+
+      switch (sub.second.selected_layer)
+      {
+      case TransportLayer::eType::udp_mc:
+        udp_send_enabled = true;
+        break;
+      case TransportLayer::eType::shm:
+        shm_send_enabled = true;
+        break;
+      case TransportLayer::eType::tcp:
+        tcp_send_enabled = true;
+        break;
+      default:
+        break;
+      }
+    }
+
+    m_udp_send_enabled.store(udp_send_enabled, std::memory_order_relaxed);
+    m_shm_send_enabled.store(shm_send_enabled, std::memory_order_relaxed);
+    m_tcp_send_enabled.store(tcp_send_enabled, std::memory_order_relaxed);
+  }
+
   bool CPublisherImpl::StartUdpLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
@@ -799,6 +840,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_UDP
     // flag disabled
     m_layers.udp.write_enabled = false;
+    m_udp_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_udp.reset();
@@ -807,6 +849,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_SHM
     // flag disabled
     m_layers.shm.write_enabled = false;
+    m_shm_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_shm.reset();
@@ -815,6 +858,7 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_TCP
     // flag disabled
     m_layers.tcp.write_enabled = false;
+    m_tcp_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_tcp.reset();
@@ -840,7 +884,7 @@ namespace eCAL
     return snd_hash;
   }
 
-  TransportLayer::eType CPublisherImpl::DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
+  TransportLayer::eType CPublisherImpl::DetermineTransportLayer(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_)
   {
     // determine the priority list to use
     const Publisher::Configuration::LayerPriorityVector& layer_priority_vector = same_host_ ? m_attributes.layer_priority_local : m_attributes.layer_priority_remote;
