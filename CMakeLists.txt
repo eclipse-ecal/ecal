@@ -365,6 +365,15 @@ if(ECAL_USE_PROTOBUF)
 endif()
 
 # --------------------------------------------------------
+# ecal tracing
+# --------------------------------------------------------
+if(ECAL_BUILD_TESTS)
+  enable_testing()
+endif()
+
+add_subdirectory(contrib/tracing)
+
+# --------------------------------------------------------
 # ecal core
 # --------------------------------------------------------
 add_subdirectory(ecal)

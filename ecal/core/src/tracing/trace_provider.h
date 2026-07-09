@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "tracing.h"
+#include <ecal/tracing/types.h>
 
 #include <ecal/config/tracing.h>
 

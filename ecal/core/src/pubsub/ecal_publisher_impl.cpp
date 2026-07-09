@@ -46,9 +46,10 @@
 
 #include "registration/ecal_registration_provider.h"
 
-#include "tracing/tracing.h"
 #include "tracing/span.h"
 #include "tracing/trace_provider.h"
+
+#include <ecal/tracing/types.h>
 
 #include <algorithm>
 #include <chrono>

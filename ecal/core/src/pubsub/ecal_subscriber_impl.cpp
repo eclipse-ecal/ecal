@@ -23,9 +23,10 @@
 **/
 
 #include "ecal_subscriber_impl.h"
-#include "tracing/tracing.h"
+#include "tracing/layer_type.h"
 #include "tracing/span.h"
 #include "tracing/trace_provider.h"
+
 #include <ecal/config.h>
 #include <ecal/log.h>
 #include <ecal/process.h>
@@ -397,7 +398,7 @@ namespace eCAL
       m_subscriber_id,
       topic_info_,
       clock_,
-      eCAL::tracing::toTracingLayerType(layer_),
+      tracing::ToTracingLayerType(layer_),
       size_,
       eCAL::tracing::operation_type::receive
     );
@@ -484,7 +485,7 @@ namespace eCAL
             m_subscriber_id,
             topic_info_,
             clock_,
-            eCAL::tracing::toTracingLayerType(layer_),
+            tracing::ToTracingLayerType(layer_),
             size_,
             eCAL::tracing::operation_type::callback_execution
           );

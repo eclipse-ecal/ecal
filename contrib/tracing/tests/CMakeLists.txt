@@ -1,6 +1,6 @@
 # ========================= eCAL LICENSE =================================
 #
-# Copyright (C) 2016 - 2025 Continental Corporation
+# Copyright 2026 AUMOVIO and subsidiaries. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,40 +16,34 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(test_tracing)
+project(test_contrib_tracing)
 
-find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 set(tracing_test_src
   src/tracing_test_helpers.h
-  src/trace_provider_test.cpp
+  src/tracing_writer_test.cpp
 )
 
 ecal_add_gtest(${PROJECT_NAME} ${tracing_test_src})
 
-target_include_directories(${PROJECT_NAME} PRIVATE 
-  $<TARGET_PROPERTY:eCAL::core,INCLUDE_DIRECTORIES>
+target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src
-  ${ECAL_CORE_PROJECT_ROOT}/core/src/serialization
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE 
-    ecal_core_private
-    eCAL::ecal-utils
-    Threads::Threads
+  PRIVATE
+    eCAL::tracing
+    nlohmann_json::nlohmann_json
 )
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE ECAL_CORE_COMMAND_LINE)
-
 ecal_install_gtest(${PROJECT_NAME})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/cpp/tracing)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER tests/contrib/tracing)
 
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
-    ${tracing_test_src}
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES
+  ${tracing_test_src}
 )
