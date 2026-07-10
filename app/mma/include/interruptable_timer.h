@@ -105,7 +105,7 @@ private:
       auto sleep_duration = period_ - (end - start);
 
       std::unique_lock<std::mutex> stopLock(stopMutex);
-      stopCv.wait_for(stopLock, sleep_duration, [=] {return stopping; });
+      stopCv.wait_for(stopLock, sleep_duration, [this] {return stopping; });
     }
   }
   
