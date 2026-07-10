@@ -66,7 +66,7 @@ TaskWidget::TaskWidget(QWidget *parent)
 
   updateTargetCompleter();
   connect(target_completer_, static_cast<void(QCompleter::*)(const QString &)>(&QCompleter::activated),
-    [=]() {targetEditingFinished(); });
+    [this]() {targetEditingFinished(); });
   ui_.target_lineedit->setCompleter(target_completer_);
 
   // Model For the task-tree
