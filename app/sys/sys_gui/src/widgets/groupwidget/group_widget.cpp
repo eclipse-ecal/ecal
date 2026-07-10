@@ -114,7 +114,7 @@ GroupWidget::GroupWidget(GroupEditWidget* group_edit_widget, QWidget *parent)
 
   // Agressivly move the current index back to the name column in order to get proper keyboard search behaviour
   connect(ui_.group_tree->selectionModel(), &QItemSelectionModel::currentChanged,
-    [=](const QModelIndex & current, const QModelIndex & /*previous*/)
+    [this](const QModelIndex & current, const QModelIndex & /*previous*/)
     {
       if ((GroupTreeModel::Columns)(current.column()) != GroupTreeModel::Columns::NAME)
       {
