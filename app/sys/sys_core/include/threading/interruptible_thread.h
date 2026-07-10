@@ -131,7 +131,7 @@ protected:
    */
   void SleepFor(std::chrono::nanoseconds sleep_duration){
     std::unique_lock<std::mutex> interruptLock(m_interruptMutex);
-    m_interruptCv.wait_for(interruptLock, sleep_duration, [=] {return bool(m_isInterrupted); });
+    m_interruptCv.wait_for(interruptLock, sleep_duration, [this] {return bool(m_isInterrupted); });
   }
 
   std::mutex              m_startup_mutex;      /**< A Mutex for thread safe starting of this thread */

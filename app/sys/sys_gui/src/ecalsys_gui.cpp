@@ -121,55 +121,55 @@ EcalsysGui::EcalsysGui(QWidget *parent)
         this->setTheme(Theme::Dark);
     });
 
-  connect(ui_.action_task_add,                   &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->addTask(); });
-  connect(ui_.action_task_edit,                  &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->setEditControlsVisibility(); });
-  connect(ui_.action_task_duplicate,             &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->duplicateSelectedTasks(); });
-  connect(ui_.action_task_remove,                &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->removeSelectedTasks(); });
-  connect(ui_.action_task_start,                 &QAction::triggered, [=]() {task_widget_->startAllTasks(); });
-  connect(ui_.action_task_stop,                  &QAction::triggered, [=]() {task_widget_->stopAllTasks(); });
-  connect(ui_.action_task_restart,               &QAction::triggered, [=]() {task_widget_->restartAllTasks(); });
-  connect(ui_.action_task_start_selected,        &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->startSelectedTasks(); });
-  connect(ui_.action_task_stop_selected,         &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->stopSelectedTasks(); });
-  connect(ui_.action_task_restart_selected,      &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->restartSelectedTasks(); });
+  connect(ui_.action_task_add,                   &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->addTask(); });
+  connect(ui_.action_task_edit,                  &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->setEditControlsVisibility(); });
+  connect(ui_.action_task_duplicate,             &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->duplicateSelectedTasks(); });
+  connect(ui_.action_task_remove,                &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->removeSelectedTasks(); });
+  connect(ui_.action_task_start,                 &QAction::triggered, [this]() {task_widget_->startAllTasks(); });
+  connect(ui_.action_task_stop,                  &QAction::triggered, [this]() {task_widget_->stopAllTasks(); });
+  connect(ui_.action_task_restart,               &QAction::triggered, [this]() {task_widget_->restartAllTasks(); });
+  connect(ui_.action_task_start_selected,        &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->startSelectedTasks(); });
+  connect(ui_.action_task_stop_selected,         &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->stopSelectedTasks(); });
+  connect(ui_.action_task_restart_selected,      &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->restartSelectedTasks(); });
 
-  connect(ui_.action_task_fast_kill,             &QAction::triggered, [=]() {task_widget_->stopAllTasks(false, true); });
-  connect(ui_.action_task_fast_restart,          &QAction::triggered, [=]() {task_widget_->restartAllTasks(false, true); });
-  connect(ui_.action_task_fast_kill_selected,    &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->stopSelectedTasks(false, true); });
-  connect(ui_.action_task_fast_restart_selected, &QAction::triggered, [=]() {ui_.tasks_dockwidget->raise(); task_widget_->restartSelectedTasks(false, true); });
+  connect(ui_.action_task_fast_kill,             &QAction::triggered, [this]() {task_widget_->stopAllTasks(false, true); });
+  connect(ui_.action_task_fast_restart,          &QAction::triggered, [this]() {task_widget_->restartAllTasks(false, true); });
+  connect(ui_.action_task_fast_kill_selected,    &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->stopSelectedTasks(false, true); });
+  connect(ui_.action_task_fast_restart_selected, &QAction::triggered, [this]() {ui_.tasks_dockwidget->raise(); task_widget_->restartSelectedTasks(false, true); });
   for (auto action : ui_.menu_task_target_override->actions())
   {
     if (action->menu())
     {
-      connect(action->menu(), &QMenu::aboutToShow, [=]() {this->updateHostActions(action->menu()); });
+      connect(action->menu(), &QMenu::aboutToShow, [this, action]() {this->updateHostActions(action->menu()); });
     }
   }
-  connect(ui_.menu_task_start_all_on_host,        &QMenu::triggered,   [=](QAction* action) {this->task_widget_->startAllTasks(action->text().toStdString()); });
-  connect(ui_.menu_task_restart_all_on_host,      &QMenu::triggered,   [=](QAction* action) {this->task_widget_->restartAllTasks(true, true, action->text().toStdString()); });
-  connect(ui_.menu_task_start_selected_on_host,   &QMenu::triggered,   [=](QAction* action) {ui_.tasks_dockwidget->raise(); this->task_widget_->startSelectedTasks(action->text().toStdString()); });
-  connect(ui_.menu_task_restart_selected_on_host, &QMenu::triggered,   [=](QAction* action) {ui_.tasks_dockwidget->raise(); this->task_widget_->restartSelectedTasks(true, true, action->text().toStdString()); });
-  connect(ui_.action_task_import_from_cloud,      &QAction::triggered, [=]() {this->showImportFromCloudWindow(); });
-  connect(ui_.action_task_update_from_cloud,      &QAction::triggered, [=]() {task_widget_->updateFromCloud(); });
+  connect(ui_.menu_task_start_all_on_host,        &QMenu::triggered,   [this](QAction* action) {this->task_widget_->startAllTasks(action->text().toStdString()); });
+  connect(ui_.menu_task_restart_all_on_host,      &QMenu::triggered,   [this](QAction* action) {this->task_widget_->restartAllTasks(true, true, action->text().toStdString()); });
+  connect(ui_.menu_task_start_selected_on_host,   &QMenu::triggered,   [this](QAction* action) {ui_.tasks_dockwidget->raise(); this->task_widget_->startSelectedTasks(action->text().toStdString()); });
+  connect(ui_.menu_task_restart_selected_on_host, &QMenu::triggered,   [this](QAction* action) {ui_.tasks_dockwidget->raise(); this->task_widget_->restartSelectedTasks(true, true, action->text().toStdString()); });
+  connect(ui_.action_task_import_from_cloud,      &QAction::triggered, [this]() {this->showImportFromCloudWindow(); });
+  connect(ui_.action_task_update_from_cloud,      &QAction::triggered, [this]() {task_widget_->updateFromCloud(); });
 
-  connect(ui_.action_group_add,                   &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->addGroup(); });
-  connect(ui_.action_group_edit,                  &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->showEditControls(); });
-  connect(ui_.action_group_duplicate,             &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->duplicateSelectedGroups(); });
-  connect(ui_.action_group_remove,                &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->removeSelectedGroups(); });
-  connect(ui_.action_group_start_selected,        &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->startSelectedTasks(); });
-  connect(ui_.action_group_stop_selected,         &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->stopSelectedTasks(); });
-  connect(ui_.action_group_restart_selected,      &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(); });
-  connect(ui_.action_group_fast_kill_selected,    &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->stopSelectedTasks(false, true); });
-  connect(ui_.action_group_fast_restart_selected, &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(false, true); });
+  connect(ui_.action_group_add,                   &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->addGroup(); });
+  connect(ui_.action_group_edit,                  &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->showEditControls(); });
+  connect(ui_.action_group_duplicate,             &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->duplicateSelectedGroups(); });
+  connect(ui_.action_group_remove,                &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->removeSelectedGroups(); });
+  connect(ui_.action_group_start_selected,        &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->startSelectedTasks(); });
+  connect(ui_.action_group_stop_selected,         &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->stopSelectedTasks(); });
+  connect(ui_.action_group_restart_selected,      &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(); });
+  connect(ui_.action_group_fast_kill_selected,    &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->stopSelectedTasks(false, true); });
+  connect(ui_.action_group_fast_restart_selected, &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(false, true); });
   for (auto action : ui_.menu_group_target_override->actions())
   {
     if (action->menu())
     {
-      connect(action->menu(), &QMenu::aboutToShow, [=]() {this->updateHostActions(action->menu()); });
+      connect(action->menu(), &QMenu::aboutToShow, [this, action]() {this->updateHostActions(action->menu()); });
     }
   }
-  connect(ui_.menu_group_start_selected_on_host,   &QMenu::triggered,   [=](QAction* action) {ui_.groups_dockwidget->raise(); group_widget_->startSelectedTasks(action->text().toStdString()); });
-  connect(ui_.menu_group_restart_selected_on_host, &QMenu::triggered,   [=](QAction* action) {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(true, true, action->text().toStdString()); });
-  connect(ui_.action_group_expand,                 &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->expandGroups(); });
-  connect(ui_.action_group_collapse,               &QAction::triggered, [=]() {ui_.groups_dockwidget->raise(); group_widget_->collapseGroups(); });
+  connect(ui_.menu_group_start_selected_on_host,   &QMenu::triggered,   [this](QAction* action) {ui_.groups_dockwidget->raise(); group_widget_->startSelectedTasks(action->text().toStdString()); });
+  connect(ui_.menu_group_restart_selected_on_host, &QMenu::triggered,   [this](QAction* action) {ui_.groups_dockwidget->raise(); group_widget_->restartSelectedTasks(true, true, action->text().toStdString()); });
+  connect(ui_.action_group_expand,                 &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->expandGroups(); });
+  connect(ui_.action_group_collapse,               &QAction::triggered, [this]() {ui_.groups_dockwidget->raise(); group_widget_->collapseGroups(); });
 
   // Special show-console button for Windows
 #ifdef _WIN32

@@ -119,7 +119,7 @@ GroupEditWidget::GroupEditWidget(QWidget *parent)
 
   // Agressivly move the current index back to the name column in order to get proper keyboard search behaviour
   connect(ui_.state_available_tasks_tree->selectionModel(), &QItemSelectionModel::currentChanged,
-    [=](const QModelIndex & current, const QModelIndex & /*previous*/)
+    [this](const QModelIndex & current, const QModelIndex & /*previous*/)
     {
       if ((TaskTreeModel::Columns)(current.column()) != TaskTreeModel::Columns::TASK_NAME)
       {
@@ -129,7 +129,7 @@ GroupEditWidget::GroupEditWidget(QWidget *parent)
     }
   );
   connect(ui_.state_active_tasks_tree->selectionModel(), &QItemSelectionModel::currentChanged,
-    [=](const QModelIndex & current, const QModelIndex & /*previous*/)
+    [this](const QModelIndex & current, const QModelIndex & /*previous*/)
     {
       if (((GroupStateMinTaskStateTreeModel::Columns)(current.column()) != GroupStateMinTaskStateTreeModel::Columns::TASK_NAME)
         && ((GroupStateMinTaskStateTreeModel::Columns)(current.column()) != GroupStateMinTaskStateTreeModel::Columns::SEVERITY)
