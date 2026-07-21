@@ -66,7 +66,7 @@ jobs:
       # Using ccache on Windows requires the Ninja generator
       # This action calls vcvarsall for us to setup the desired toolchain
     - name: Setup MSVC toolchain
-      uses: Chatterino/msvc-dev-cmd@v2
+      uses: step-security/msvc-dev-cmd@v1
       with:
         arch: x64
         toolset: 14.29 # v142 / vs2019
