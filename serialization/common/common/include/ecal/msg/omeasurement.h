@@ -28,8 +28,6 @@ namespace eCAL
     template <typename T, typename Serializer>
     class OMessageChannel
     {
-      friend OMessageChannel CreateChannel(OMeasurement& meas_, const std::string& channel_name_);
-
     public:
       // Should those be private?
       using SerializerT = Serializer;
