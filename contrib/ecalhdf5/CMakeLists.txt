@@ -21,6 +21,27 @@ project(hdf5 LANGUAGES C CXX)
 if(NOT CMAKE_CROSSCOMPILING)
   find_package(HDF5 COMPONENTS C REQUIRED)
   find_package(Threads REQUIRED)
+
+  message(STATUS "HDF5_FOUND=${HDF5_FOUND}")
+message(STATUS "HDF5_VERSION=${HDF5_VERSION}")
+message(STATUS "HDF5_INCLUDE_DIRS=${HDF5_INCLUDE_DIRS}")
+message(STATUS "HDF5_LIBRARIES=${HDF5_LIBRARIES}")
+
+foreach(t
+hdf5::hdf5
+hdf5::hdf5-shared
+hdf5::hdf5-static
+HDF5::hdf5
+HDF5::hdf5-shared
+HDF5::hdf5-static
+HDF5::HDF5
+HDF5::C
+)
+if(TARGET ${t})
+message(STATUS "HDF5 target exists: ${t}")
+endif()
+endforeach()
+  
 else()
   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
   find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
