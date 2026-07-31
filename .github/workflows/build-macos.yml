@@ -25,7 +25,7 @@ jobs:
       run: brew install qt@5
 
     - name: Install Dependencies
-      run: brew install ninja protobuf@29 hdf5@1.10 pkg-config capnp ccache
+      run: brew install ninja protobuf@29 hdf5 pkg-config capnp ccache
 
     - name: Checkout
       uses: actions/checkout@v6
@@ -70,7 +70,6 @@ jobs:
     - name: CMake
       id: cmake-configure
       run: |
-        HDF5_PREFIX="$(brew --prefix hdf5@1.10)"
         QT5_PREFIX="$(brew --prefix qt@5)"
         PB_PREFIX="$(brew --prefix protobuf@29)"
       
