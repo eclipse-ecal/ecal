@@ -104,6 +104,64 @@ namespace
 
 namespace eCAL
 {
+  void CPublisherImpl::SSendLayerConnectionCounters::Increment(TransportLayer::eType layer_)
+  {
+    switch (layer_)
+    {
+    case TransportLayer::eType::udp_mc:
+      udp.fetch_add(1, std::memory_order_relaxed);
+      break;
+    case TransportLayer::eType::shm:
+      shm.fetch_add(1, std::memory_order_relaxed);
+      break;
+    case TransportLayer::eType::tcp:
+      tcp.fetch_add(1, std::memory_order_relaxed);
+      break;
+    default:
+      break;
+    }
+  }
+
+  void CPublisherImpl::SSendLayerConnectionCounters::Decrement(TransportLayer::eType layer_)
+  {
+    switch (layer_)
+    {
+    case TransportLayer::eType::udp_mc:
+      udp.fetch_sub(1, std::memory_order_relaxed);
+      break;
+    case TransportLayer::eType::shm:
+      shm.fetch_sub(1, std::memory_order_relaxed);
+      break;
+    case TransportLayer::eType::tcp:
+      tcp.fetch_sub(1, std::memory_order_relaxed);
+      break;
+    default:
+      break;
+    }
+  }
+
+  void CPublisherImpl::SSendLayerConnectionCounters::Reset()
+  {
+    udp.store(0, std::memory_order_relaxed);
+    shm.store(0, std::memory_order_relaxed);
+    tcp.store(0, std::memory_order_relaxed);
+  }
+
+  bool CPublisherImpl::SSendLayerConnectionCounters::UdpEnabled() const
+  {
+    return (udp.load(std::memory_order_relaxed) > 0);
+  }
+
+  bool CPublisherImpl::SSendLayerConnectionCounters::ShmEnabled() const
+  {
+    return (shm.load(std::memory_order_relaxed) > 0);
+  }
+
+  bool CPublisherImpl::SSendLayerConnectionCounters::TcpEnabled() const
+  {
+    return (tcp.load(std::memory_order_relaxed) > 0);
+  }
+
   CPublisherImpl::CPublisherImpl(const SDataTypeInformation& topic_info_, const eCAL::eCALWriter::SAttributes& attr_, SPublisherGlobalContext global_context_)
     : m_publisher_id(eCAL::Util::GenerateUniqueEntityId())
     , m_topic_info(topic_info_)
@@ -141,6 +199,7 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
       m_connection_map.clear();
+      m_connection_count.store(0, std::memory_order_relaxed);
     }
 
     // mark as no more created
@@ -155,9 +214,9 @@ namespace eCAL
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
 
-    const bool udp_send_enabled = m_udp_send_enabled.load(std::memory_order_relaxed);
-    const bool shm_send_enabled = m_shm_send_enabled.load(std::memory_order_relaxed);
-    const bool tcp_send_enabled = m_tcp_send_enabled.load(std::memory_order_relaxed);
+    const bool udp_send_enabled = m_send_layer_connection_counters.UdpEnabled();
+    const bool shm_send_enabled = m_send_layer_connection_counters.ShmEnabled();
+    const bool tcp_send_enabled = m_send_layer_connection_counters.TcpEnabled();
 
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
@@ -456,21 +515,34 @@ namespace eCAL
       {
         // existing connection, we got the second update now
         auto& connection = subscription_info_iter->second;
+        const bool was_active = connection.state;
 
         // if this connection was inactive before
         // activate it now and flag a new connection finally
-        if (!connection.state)
+        if (!was_active)
         {
           is_new_connection = true;
+          m_connection_count.fetch_add(1, std::memory_order_relaxed);
+          // first active update: selected layer becomes effective for sending
+          connection = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, true };
+          m_send_layer_connection_counters.Increment(connection.selected_layer);
         }
+        else
+        {
+          // selected_layer is expected to stay stable for active eCAL connections
+#ifndef NDEBUG
+          if (connection.selected_layer != transport_layer_for_subscription)
+          {
+            eCAL::Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::ApplySubscriberRegistration - selected transport layer changed unexpectedly for active connection");
+          }
+#endif
 
-        // update the data type, the layer states and set the state active
-        connection = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, true };
+          // keep selected_layer unchanged and refresh metadata/state
+          connection.data_type_info = data_type_info_;
+          connection.layer_states = sub_layer_states_;
+          connection.state = true;
+        }
       }
-
-      // update connection count
-      m_connection_count = GetConnectionCount();
-      UpdateSendEnabledLayers();
     }
 
 
@@ -502,12 +574,18 @@ namespace eCAL
     {
       const std::lock_guard<std::mutex> lock(m_connection_map_mutex);
 
-      // remove key from connection map
-      m_connection_map.erase(subscription_info_);
+      auto subscription_info_iter = m_connection_map.find(subscription_info_);
+      if (subscription_info_iter != m_connection_map.end())
+      {
+        if (subscription_info_iter->second.state)
+        {
+          m_connection_count.fetch_sub(1, std::memory_order_relaxed);
+          m_send_layer_connection_counters.Decrement(subscription_info_iter->second.selected_layer);
+        }
 
-      // update connection count
-      m_connection_count = GetConnectionCount();
-      UpdateSendEnabledLayers();
+        // remove key from connection map
+        m_connection_map.erase(subscription_info_iter);
+      }
     }
 
     // fire disconnect event
@@ -708,55 +786,6 @@ namespace eCAL
     FireEvent(ePublisherEvent::disconnected, subscription_info_, data_type_info_);
   }
 
-  size_t CPublisherImpl::GetConnectionCount()
-  {
-    // no need to lock map here for now, map locked by caller
-    size_t count(0);
-    for (const auto& sub : m_connection_map)
-    {
-      if (sub.second.state)
-      {
-        count++;
-      }
-    }
-    return count;
-  }
-
-  void CPublisherImpl::UpdateSendEnabledLayers()
-  {
-    // no need to lock map here for now, map locked by caller
-    bool udp_send_enabled(false);
-    bool shm_send_enabled(false);
-    bool tcp_send_enabled(false);
-
-    for (const auto& sub : m_connection_map)
-    {
-      if (!sub.second.state)
-      {
-        continue;
-      }
-
-      switch (sub.second.selected_layer)
-      {
-      case TransportLayer::eType::udp_mc:
-        udp_send_enabled = true;
-        break;
-      case TransportLayer::eType::shm:
-        shm_send_enabled = true;
-        break;
-      case TransportLayer::eType::tcp:
-        tcp_send_enabled = true;
-        break;
-      default:
-        break;
-      }
-    }
-
-    m_udp_send_enabled.store(udp_send_enabled, std::memory_order_relaxed);
-    m_shm_send_enabled.store(shm_send_enabled, std::memory_order_relaxed);
-    m_tcp_send_enabled.store(tcp_send_enabled, std::memory_order_relaxed);
-  }
-
   bool CPublisherImpl::StartUdpLayer()
   {
 #if ECAL_CORE_TRANSPORT_UDP
@@ -840,7 +869,6 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_UDP
     // flag disabled
     m_layers.udp.write_enabled = false;
-    m_udp_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_udp.reset();
@@ -849,7 +877,6 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_SHM
     // flag disabled
     m_layers.shm.write_enabled = false;
-    m_shm_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_shm.reset();
@@ -858,11 +885,12 @@ namespace eCAL
 #if ECAL_CORE_TRANSPORT_TCP
     // flag disabled
     m_layers.tcp.write_enabled = false;
-    m_tcp_send_enabled.store(false, std::memory_order_relaxed);
 
     // destroy writer
     m_writer_tcp.reset();
 #endif
+
+  m_send_layer_connection_counters.Reset();
   }
 
   size_t CPublisherImpl::PrepareWrite(long long id_, size_t len_)

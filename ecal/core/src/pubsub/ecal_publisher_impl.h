@@ -130,9 +130,6 @@ namespace eCAL
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
-    size_t GetConnectionCount();
-    void UpdateSendEnabledLayers();
-
     size_t PrepareWrite(long long id_, size_t len_);
 
     TransportLayer::eType DetermineTransportLayer(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
@@ -155,12 +152,26 @@ namespace eCAL
       bool                 state = false;
     };
     using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
+
+    struct SSendLayerConnectionCounters
+    {
+      void Increment(TransportLayer::eType layer_);
+      void Decrement(TransportLayer::eType layer_);
+      void Reset();
+
+      bool UdpEnabled() const;
+      bool ShmEnabled() const;
+      bool TcpEnabled() const;
+
+      std::atomic<size_t> udp{ 0 };
+      std::atomic<size_t> shm{ 0 };
+      std::atomic<size_t> tcp{ 0 };
+    };
+
     mutable std::mutex                     m_connection_map_mutex;
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
-    std::atomic<bool>                      m_udp_send_enabled{ false };
-    std::atomic<bool>                      m_shm_send_enabled{ false };
-    std::atomic<bool>                      m_tcp_send_enabled{ false };
+    SSendLayerConnectionCounters           m_send_layer_connection_counters;
 
     std::mutex                             m_event_id_callback_mutex;
     PubEventCallbackT                      m_event_id_callback;
