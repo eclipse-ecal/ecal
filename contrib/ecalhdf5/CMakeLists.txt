@@ -36,6 +36,8 @@ HDF5::hdf5-shared
 HDF5::hdf5-static
 HDF5::HDF5
 HDF5::C
+hdf5-shared
+hdf5-static
 )
 if(TARGET ${t})
 message(STATUS "HDF5 target exists: ${t}")
