@@ -21,29 +21,6 @@ project(hdf5 LANGUAGES C CXX)
 if(NOT CMAKE_CROSSCOMPILING)
   find_package(HDF5 COMPONENTS C REQUIRED)
   find_package(Threads REQUIRED)
-
-  message(STATUS "HDF5_FOUND=${HDF5_FOUND}")
-message(STATUS "HDF5_VERSION=${HDF5_VERSION}")
-message(STATUS "HDF5_INCLUDE_DIRS=${HDF5_INCLUDE_DIRS}")
-message(STATUS "HDF5_LIBRARIES=${HDF5_LIBRARIES}")
-
-foreach(t
-hdf5::hdf5
-hdf5::hdf5-shared
-hdf5::hdf5-static
-HDF5::hdf5
-HDF5::hdf5-shared
-HDF5::hdf5-static
-HDF5::HDF5
-HDF5::C
-hdf5-shared
-hdf5-static
-)
-if(TARGET ${t})
-message(STATUS "HDF5 target exists: ${t}")
-endif()
-endforeach()
-  
 else()
   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
   find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
@@ -119,47 +96,56 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC eCAL::measurement_base)
-if (${ECAL_LINK_HDF5_SHARED})
-  if (TARGET hdf5::hdf5-shared)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-      hdf5::hdf5-shared
+if(ECAL_LINK_HDF5_SHARED)
+  set(hdf5_target_candidates
+    hdf5::hdf5-shared
+    HDF5::hdf5-shared
+    hdf5-shared
+    HDF5::C
+    HDF5::HDF5
+    hdf5::hdf5
+    HDF5::hdf5
+  )
+else()
+  set(hdf5_target_candidates
+    hdf5::hdf5-static
+    HDF5::hdf5-static
+    hdf5-static
+    HDF5::C
+    HDF5::HDF5
+    hdf5::hdf5
+    HDF5::hdf5
+  )
+endif()
+
+foreach(hdf5_target_candidate IN LISTS hdf5_target_candidates)
+  if(TARGET ${hdf5_target_candidate})
+    set(hdf5_target ${hdf5_target_candidate})
+    break()
+  endif()
+endforeach()
+
+if(hdf5_target)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${hdf5_target})
+
+  if(ECAL_LINK_HDF5_SHARED AND ECAL_DEPLOY_DEPENDENCIES)
+    ecal_resolve_alias_target(${hdf5_target} hdf5_real_target)
+    install(IMPORTED_RUNTIME_ARTIFACTS ${hdf5_real_target}
+      RUNTIME DESTINATION ${eCAL_install_bin_dir}
     )
-    if (ECAL_DEPLOY_DEPENDENCIES)
-      ecal_resolve_alias_target(hdf5::hdf5-shared REAL_TARGET)
-      install(IMPORTED_RUNTIME_ARTIFACTS ${REAL_TARGET} RUNTIME DESTINATION ${eCAL_install_bin_dir})
-    endif()
-  # conan target names are different
-  elseif (TARGET HDF5::C)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-      HDF5::C
-    )
-    if (ECAL_DEPLOY_DEPENDENCIES)
-      ecal_resolve_alias_target(HDF5::C REAL_TARGET)
-      install(IMPORTED_RUNTIME_ARTIFACTS HDF5::C RUNTIME DESTINATION ${eCAL_install_bin_dir})
-    endif()
-  else()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-      ${HDF5_LIBRARIES}
-    )
-    if (ECAL_DEPLOY_DEPENDENCIES)
-      install(FILES ${HDF5_LIBRARIES} DESTINATION ${eCAL_install_bin_dir})
-    endif()
+  endif()
+elseif(ECAL_LINK_HDF5_SHARED)
+  target_include_directories(${PROJECT_NAME} PRIVATE ${HDF5_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${HDF5_LIBRARIES})
+
+  if(ECAL_DEPLOY_DEPENDENCIES)
+    install(FILES ${HDF5_LIBRARIES} DESTINATION ${eCAL_install_bin_dir})
   endif()
 else()
-  if (TARGET hdf5::hdf5-static)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-      hdf5::hdf5-static
-    )
-  # conan target names are different
-  elseif (TARGET HDF5::C)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-      HDF5::C
-    )
-  else()
-    message(FATAL_ERROR "eCAL build configured to link HDF5 statically, however static libs are not available. Consider building with ECAL_LINK_HDF5_SHARED=ON") 
-  endif()
+  message(FATAL_ERROR
+    "eCAL is configured to link HDF5 statically, but no static HDF5 target is available. "
+    "Consider building with ECAL_LINK_HDF5_SHARED=ON."
+  )
 endif()
 
 
