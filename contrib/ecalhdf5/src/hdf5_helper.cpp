@@ -72,13 +72,12 @@ bool ReadStringEntryAsString(hid_t root, const std::string& url, std::string& da
   const auto size = H5Dget_storage_size(dataset_id);
 
   herr_t read_status = -1;
-  if (size >= 0)
-  {
-    data.resize(size);
-    const auto string_data_type = H5Tcopy(H5T_C_S1);
-    H5Tset_size(string_data_type, size);
-    read_status = H5Dread(dataset_id, string_data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, static_cast<void*>(const_cast<char*>(data.data())));
-  }
+  
+  data.resize(size);
+  const auto string_data_type = H5Tcopy(H5T_C_S1);
+  H5Tset_size(string_data_type, size);
+  read_status = H5Dread(dataset_id, string_data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, static_cast<void*>(const_cast<char*>(data.data())));
+
 
   H5Dclose(dataset_id);
   return (read_status >= 0);
@@ -129,11 +128,9 @@ bool ReadBinaryEntryAsString(hid_t root, const std::string& url, std::string& da
   data.resize(size);
 
   herr_t read_status = -1;
-  if (size >= 0)
-  {
-    read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, static_cast<void*>(const_cast<char*>(data.data())));
-  }
 
+  read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, static_cast<void*>(const_cast<char*>(data.data())));
+  
   H5Dclose(dataset_id);
   return (read_status >= 0);
 }
