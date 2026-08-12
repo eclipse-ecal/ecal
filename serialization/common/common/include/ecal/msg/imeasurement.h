@@ -44,8 +44,8 @@ namespace eCAL
       using MessageT = T;
 
       IMessageChannel(IChannel&& binary_channel_)
-        : m_serializer{std::make_shared<Serializer>()}
-        , binary_channel(std::move(binary_channel_))
+        : binary_channel(std::move(binary_channel_))
+        , m_serializer{std::make_shared<Serializer>()}
       {
         // We are trying to create a "strong" type, based on only a channel name
         // There is a good chance, that the created channel does not match the data

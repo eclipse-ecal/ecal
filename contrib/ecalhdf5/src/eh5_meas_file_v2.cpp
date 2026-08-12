@@ -275,14 +275,10 @@ bool eCAL::eh5::HDF5MeasFileV2::GetEntryData(long long entry_id, void* data) con
 
   if (dataset_id < 0) return false;
 
-  auto size = H5Dget_storage_size(dataset_id);
-
   herr_t read_status = -1;
-  if (size >= 0)
-  {
-    read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-  }
 
+  read_status = H5Dread(dataset_id, H5T_NATIVE_UCHAR, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+  
   H5Dclose(dataset_id);
 
   return (read_status >= 0);

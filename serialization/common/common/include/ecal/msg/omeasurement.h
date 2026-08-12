@@ -28,8 +28,6 @@ namespace eCAL
     template <typename T, typename Serializer>
     class OMessageChannel
     {
-      friend OMessageChannel CreateChannel(OMeasurement& meas_, const std::string& channel_name_);
-
     public:
       // Should those be private?
       using SerializerT = Serializer;
@@ -57,11 +55,7 @@ namespace eCAL
         // The way we handle Publishers requires us to do a two pass serialization;
         size_t message_size = m_serializer->MessageSize(entry_.message);
         buffer.resize(message_size);
-        if (message_size == 0)
-        {
-          m_serializer->Serialize(entry_.message, nullptr, 0);
-        }
-        else
+        if (message_size > 0)
         {
           m_serializer->Serialize(entry_.message, static_cast<void*>(&buffer[0]), buffer.size());
         }
