@@ -144,12 +144,19 @@ namespace eCAL
 
     std::vector<char>                      m_payload_buffer;
 
+    enum class eConnectionState
+    {
+      pending,
+      established,
+      closed
+    };
+
     struct SConnection
     {
       SDataTypeInformation data_type_info;
       SLayerStates         layer_states;
       TransportLayer::eType selected_layer = TransportLayer::eType::none;
-      bool                 state = false;
+      eConnectionState     state = eConnectionState::closed;
     };
     using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
 

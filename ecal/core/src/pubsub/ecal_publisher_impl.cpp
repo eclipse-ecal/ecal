@@ -508,40 +508,29 @@ namespace eCAL
 
       if (subscription_info_iter == m_connection_map.end())
       {
-        // add subscriber to connection map, connection state false
-        m_connection_map[subscription_info_] = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, false };
+        m_connection_map[subscription_info_] = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, eConnectionState::pending };
+        m_send_layer_connection_counters.Increment(transport_layer_for_subscription);
       }
       else
       {
-        // existing connection, we got the second update now
         auto& connection = subscription_info_iter->second;
-        const bool was_active = connection.state;
 
-        // if this connection was inactive before
-        // activate it now and flag a new connection finally
-        if (!was_active)
+#ifndef NDEBUG
+        if (connection.selected_layer != transport_layer_for_subscription)
+        {
+          eCAL::Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::ApplySubscriberRegistration - selected transport layer changed unexpectedly for connection");
+        }
+#endif
+
+        if (connection.state == eConnectionState::pending)
         {
           is_new_connection = true;
           m_connection_count.fetch_add(1, std::memory_order_relaxed);
-          // first active update: selected layer becomes effective for sending
-          connection = SConnection{ data_type_info_, sub_layer_states_, transport_layer_for_subscription, true };
-          m_send_layer_connection_counters.Increment(connection.selected_layer);
+          connection.state = eConnectionState::established;
         }
-        else
-        {
-          // selected_layer is expected to stay stable for active eCAL connections
-#ifndef NDEBUG
-          if (connection.selected_layer != transport_layer_for_subscription)
-          {
-            eCAL::Logging::Log(Logging::log_level_warning, m_attributes.topic_name + "::CPublisherImpl::ApplySubscriberRegistration - selected transport layer changed unexpectedly for active connection");
-          }
-#endif
 
-          // keep selected_layer unchanged and refresh metadata/state
-          connection.data_type_info = data_type_info_;
-          connection.layer_states = sub_layer_states_;
-          connection.state = true;
-        }
+        connection.data_type_info = data_type_info_;
+        connection.layer_states = sub_layer_states_;
       }
     }
 
@@ -577,10 +566,16 @@ namespace eCAL
       auto subscription_info_iter = m_connection_map.find(subscription_info_);
       if (subscription_info_iter != m_connection_map.end())
       {
-        if (subscription_info_iter->second.state)
+        auto& connection = subscription_info_iter->second;
+        if (connection.state == eConnectionState::established)
         {
           m_connection_count.fetch_sub(1, std::memory_order_relaxed);
-          m_send_layer_connection_counters.Decrement(subscription_info_iter->second.selected_layer);
+        }
+
+        if (connection.state != eConnectionState::closed)
+        {
+          m_send_layer_connection_counters.Decrement(connection.selected_layer);
+          connection.state = eConnectionState::closed;
         }
 
         // remove key from connection map
@@ -890,7 +885,7 @@ namespace eCAL
     m_writer_tcp.reset();
 #endif
 
-  m_send_layer_connection_counters.Reset();
+    m_send_layer_connection_counters.Reset();
   }
 
   size_t CPublisherImpl::PrepareWrite(long long id_, size_t len_)
