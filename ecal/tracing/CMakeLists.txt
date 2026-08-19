@@ -44,7 +44,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER contrib/tracing)
+set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER ecal/tracing)
 
 if(ECAL_BUILD_TESTS)
   add_subdirectory(tests)
