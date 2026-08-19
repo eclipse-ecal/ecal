@@ -213,10 +213,15 @@ namespace eCAL
   {
     // get payload buffer size (one time, to avoid multiple computations)
     const size_t payload_buf_size(payload_.GetSize());
-
-    const bool udp_send_enabled = m_send_layer_connection_counters.UdpEnabled();
-    const bool shm_send_enabled = m_send_layer_connection_counters.ShmEnabled();
-    const bool tcp_send_enabled = m_send_layer_connection_counters.TcpEnabled();
+#if ECAL_CORE_TRANSPORT_SHM
+    const bool shm_send_enabled = m_writer_shm && m_send_layer_connection_counters.ShmEnabled();
+#endif
+#if ECAL_CORE_TRANSPORT_UDP    
+    const bool udp_send_enabled = m_writer_udp && m_send_layer_connection_counters.UdpEnabled();
+#endif
+#if ECAL_CORE_TRANSPORT_TCP
+    const bool tcp_send_enabled = m_writer_tcp && m_send_layer_connection_counters.TcpEnabled();
+#endif
 
     // are we allowed to perform zero copy writing?
     bool allow_zero_copy(false);
@@ -225,11 +230,11 @@ namespace eCAL
 #endif
 #if ECAL_CORE_TRANSPORT_UDP
     // udp is active -> no zero copy
-    allow_zero_copy &= !(m_writer_udp && udp_send_enabled);
+    allow_zero_copy &= !udp_send_enabled;
 #endif
 #if ECAL_CORE_TRANSPORT_TCP
     // tcp is active -> no zero copy
-    allow_zero_copy &= !(m_writer_tcp && tcp_send_enabled);
+    allow_zero_copy &= !tcp_send_enabled;
 #endif
 
     // create a payload copy for all layer
@@ -249,7 +254,7 @@ namespace eCAL
     // SHM
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_SHM
-    if (m_writer_shm && shm_send_enabled)
+    if (shm_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::SHM");
@@ -312,7 +317,7 @@ namespace eCAL
     // UDP (MC)
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_UDP
-    if (m_writer_udp && udp_send_enabled)
+    if (udp_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Write::udp");
@@ -361,7 +366,7 @@ namespace eCAL
     // TCP
     ////////////////////////////////////////////////////////////////////////////
 #if ECAL_CORE_TRANSPORT_TCP
-    if (m_writer_tcp && tcp_send_enabled)
+    if (tcp_send_enabled)
     {
 #ifndef NDEBUG
       eCAL::Logging::Log(Logging::log_level_debug3, m_attributes.topic_name + "::CPublisherImpl::Send::TCP");
