@@ -119,6 +119,7 @@ eCAL comes with a set of read-to-use tools that will help you with developing, t
 * [ecal-toolbox](https://github.com/mathworks/ecal-toolbox) - Mathworks simulink toolbox for eCAL
 * [ecal-mongraph](https://github.com/ecal-io/ecal-mongraph) - Simple graph visualization for eCAL
 * [ecal-gpsd-client](https://github.com/eclipse-ecal/ecal-gpsd-client) - eCAL gpsd client
+* [ecal-mcp](https://github.com/zpg6/ecal-mcp) - MCP server for eCAL
 
 ## eCAL & Foxglove
 * [ecal-foxglove-bridge](https://github.com/eclipse-ecal/ecal-foxglove-bridge) - Visualize eCAL messages with Foxglove Studio
