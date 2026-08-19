@@ -130,11 +130,9 @@ namespace eCAL
     void FireConnectEvent   (const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
     void FireDisconnectEvent(const SSubscriptionInfo& subscription_info_, const SDataTypeInformation& data_type_info_);
 
-    size_t GetConnectionCount();
-
     size_t PrepareWrite(long long id_, size_t len_);
 
-    TransportLayer::eType DetermineTransportLayer2Start(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
+    TransportLayer::eType DetermineTransportLayer(const std::vector<eTLayerType>& enabled_pub_layer_, const std::vector<eTLayerType>& enabled_sub_layer_, bool same_host_);
     
     int32_t GetFrequency();
 
@@ -146,16 +144,41 @@ namespace eCAL
 
     std::vector<char>                      m_payload_buffer;
 
+    enum class eConnectionState
+    {
+      pending,
+      established,
+      closed
+    };
+
     struct SConnection
     {
       SDataTypeInformation data_type_info;
       SLayerStates         layer_states;
-      bool                 state = false;
+      TransportLayer::eType selected_layer = TransportLayer::eType::none;
+      eConnectionState     state = eConnectionState::closed;
     };
     using SSubscriptionMapT = std::map<SSubscriptionInfo, SConnection>;
+
+    struct SSendLayerConnectionCounters
+    {
+      void Increment(TransportLayer::eType layer_);
+      void Decrement(TransportLayer::eType layer_);
+      void Reset();
+
+      bool UdpEnabled() const;
+      bool ShmEnabled() const;
+      bool TcpEnabled() const;
+
+      std::atomic<size_t> udp{ 0 };
+      std::atomic<size_t> shm{ 0 };
+      std::atomic<size_t> tcp{ 0 };
+    };
+
     mutable std::mutex                     m_connection_map_mutex;
     SSubscriptionMapT                      m_connection_map;
     std::atomic<size_t>                    m_connection_count{ 0 };
+    SSendLayerConnectionCounters           m_send_layer_connection_counters;
 
     std::mutex                             m_event_id_callback_mutex;
     PubEventCallbackT                      m_event_id_callback;
