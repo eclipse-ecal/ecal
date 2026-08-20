@@ -34,6 +34,8 @@
 #include <string>
 #include <utility>
 
+#include <blockingconcurrentqueue.h>
+
 #include <rec_client_core/job_config.h>
 #include <rec_client_core/record_mode.h>
 #include <rec_client_core/state.h>
@@ -54,6 +56,7 @@ namespace eCAL
     class MonitoringThread;
     class AddonManager;
 
+
     struct SubscriberStatisticsEntry
     {
       std::chrono::steady_clock::time_point start_of_statistics;
@@ -63,6 +66,9 @@ namespace eCAL
 
     class EcalRecImpl
     {
+    private:
+      class ReceiveDispatchThread;
+
     public:
       EcalRecImpl();
       ~EcalRecImpl();
@@ -167,6 +173,8 @@ namespace eCAL
       std::unique_ptr<GarbageCollectorTriggerThread> garbage_collector_trigger_thread_; /** frame_buffer_, buffer_writer_threads_, max_pre_buffer_length_ */
       std::unique_ptr<MonitoringThread>              monitoring_thread_;                /** connected_to_ecal_, FilterAvailableTopics_NoLock(hosts_filter_, topic_whitelist_, topic_blacklist_), CreateNewSubscribers_NoLock(subscriber_map_), main_writer_thread_, buffer_writer_threads_ */
 
+      std::unique_ptr<ReceiveDispatchThread>                      receive_dispatch_thread;
+      moodycamel::BlockingConcurrentQueue<std::shared_ptr<Frame>> receive_dispatch_queue_; /* Lock-free queue to keep callbacks busy for the least amount of time */
       // Pre-buffer
       FrameBuffer                                    pre_buffer_;             /** < Thread-safe framebuffer */
 
