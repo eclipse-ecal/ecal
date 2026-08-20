@@ -70,18 +70,7 @@ eCAL::Registration::Sample eCAL::Registration::GetProcessRegisterSample()
     }
     else
     {
-      switch (timegate->GetSyncMode())
-      {
-      case CTimeGate::eTimeSyncMode::realtime:
-        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_realtime;
-        break;
-      case CTimeGate::eTimeSyncMode::replay:
-        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_replay;
-        break;
-      default:
-        process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_none;
-        break;
-      }
+      process_sample_process.time_sync_state = Registration::eTimeSyncState::tsync_realtime;
     }
     process_sample_process.time_sync_module_name = timegate->GetName();
   }
