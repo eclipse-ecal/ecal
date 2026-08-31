@@ -50,7 +50,7 @@ namespace eCAL
     // Constructor & Destructor
     ///////////////////////////////
     public:
-      Hdf5WriterThread(const JobConfig& job_config, const std::map<std::string, TopicInfo>& initial_topic_info_map = {}, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer = {});
+      Hdf5WriterThread(const JobConfig& job_config, const TopicInfoMap& initial_topic_info_map = {}, const std::deque<std::shared_ptr<Frame>>& initial_frame_buffer = {});
 
       ~Hdf5WriterThread();
 
@@ -62,7 +62,7 @@ namespace eCAL
 
       bool AddFrame(const std::shared_ptr<Frame>& frame);
 
-      void SetTopicInfo(std::map<std::string, TopicInfo> topic_info_map); // CALL BY VALUE (-> copy) IS INTENDED!
+      void SetTopicInfo(TopicInfoMap topic_info_map); // CALL BY VALUE (-> copy) IS INTENDED!
 
       void Flush();
 
@@ -100,13 +100,13 @@ namespace eCAL
       size_t                                written_frames_count_;
       std::chrono::steady_clock::time_point first_written_frame_timestamp_;
       std::chrono::steady_clock::time_point last_written_frame_timestamp_;
-      std::map<std::string, TopicInfo>      new_topic_info_map_;                /**< The new topic info map that shall be set to the HDF5 writer */
+      TopicInfoMap                          new_topic_info_map_;                /**< The new topic info map that shall be set to the HDF5 writer */
       bool                                  new_topic_info_map_available_;      /**< Telling that a new topic info map has been set from the outside. */
 
       mutable RecHdf5JobStatus              last_status_;
 
-      mutable std::mutex                                    hdf5_writer_mutex_;
-      std::unique_ptr<eCAL::eh5::v2::HDF5Meas>              hdf5_writer_;
+      mutable std::mutex                    hdf5_writer_mutex_;
+      std::unique_ptr<eCAL::eh5::HDF5Meas>  hdf5_writer_;
 
       std::atomic<bool> flushing_;
 
