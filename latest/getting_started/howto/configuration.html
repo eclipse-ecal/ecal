@@ -201,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../howto.html">7. How-to: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="setup/cpp.html">7.1.1. C/C++ Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="setup/python.html">7.1.2. Python Setup</a></li>
@@ -731,18 +731,18 @@
   <section id="runtime-configuration">
 <span id="getting-started-configuration"></span><h1><span class="section-number">7.4. </span>Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Link to this heading">#</a></h1>
 <p>In eCAL it is also possible to configure the environment at runtime.
-The eCAL API provides a set of structures that reflect the yaml configuration file (<a class="reference internal" href="../../configuration/options.html#configuration-options"><span class="std std-ref">ecal.yaml</span></a>).</p>
+The eCAL API provides a set of structures that reflect the YAML configuration file (<a class="reference internal" href="../../configuration/options.html#configuration-options"><span class="std std-ref">ecal.yaml</span></a>).</p>
 <p>You can pass this configuration structure to <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize()</span></code>.</p>
-<p>But there is more: You can also modifiy the configuration of each publisher and subscriber individually.
+<p>But there is more: You can also modify the configuration of each publisher and subscriber individually.
 This allows you to be more flexible in the design of your application.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Once set and passed to <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize()</span></code>, the configuration is set.
 The getters for the configuration structures, e.g. <code class="docutils literal notranslate"><span class="pre">eCAL::GetConfiguration()</span></code>, return a constant struct.
-So it is has no effect to modify the configuration object without passing it to <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize()</span></code>.</p>
+So, modifying the configuration object without passing it to <code class="docutils literal notranslate"><span class="pre">eCAL::Initialize()</span></code> has no effect.</p>
 </div>
 <p>In our example we will create multiple publishers and subscribers.
-They will communicate on different layers and will not interfere with each other, besides the same topic name.</p>
+They use the same topic name but communicate through different layers, so they do not interfere with one another.</p>
 <section id="cake-publisher">
 <h2><span class="section-number">7.4.1. </span>Cake Publisher<a class="headerlink" href="#cake-publisher" title="Link to this heading">#</a></h2>
 <div class="sphinx-tabs docutils container">

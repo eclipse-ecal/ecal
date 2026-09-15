@@ -199,7 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How-to: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">7.1.1. C/C++ Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="python.html">7.1.2. Python Setup</a></li>
@@ -770,7 +770,7 @@ This means that <code class="docutils literal notranslate"><span class="pre">fin
 <h2><span class="section-number">7.1.1.2. </span>Protobuf entity integration<a class="headerlink" href="#protobuf-entity-integration" title="Link to this heading">#</a></h2>
 <p>When using special serialization protocols like Protobuf, a few more steps are necessary for a proper CMake integration.
 In addition to the previous example, you will need to call <code class="docutils literal notranslate"><span class="pre">find_package(Protobuf</span> <span class="pre">REQUIRED)</span></code>.
-Furthermore you want to handle the generation of the protobuf headers for your language.</p>
+Furthermore, you want to handle the generation of the Protobuf C++ source and header files.</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.16</span><span class="p">)</span>
 
 <span class="c"># This CMakeLists.txt is used to build a protobuf example for eCAL.</span>

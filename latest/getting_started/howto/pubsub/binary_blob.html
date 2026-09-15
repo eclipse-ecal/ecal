@@ -201,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How-to: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
@@ -733,17 +733,17 @@
 <p>After you have learned a lot about the pre-compiled applications that come with eCAL, let’s create our own!
 We will see how to create publisher and subscriber applications that send and receive binary data.
 We will provide samples for all supported programming languages: C++, C, C# and Python.</p>
-<p>The most low level publisher and subscriber objects are the binary ones.
+<p>The most low-level publisher and subscriber objects are the binary ones.
 We will focus on them in this section.
 As we are just sending an arbitrary “blob” of data (filled with random printable characters), the applications are called “blob sender” and “blob receiver”.
-For sending structured / typed data, please refer to the following sections.</p>
+For sending structured or typed data, please refer to the following sections.</p>
 <section id="blob-publisher">
 <h2><span class="section-number">7.2.1.1. </span>Blob Publisher<a class="headerlink" href="#blob-publisher" title="Link to this heading">#</a></h2>
 <p>Let’s begin with the publisher side of our “Blob” application.</p>
 <p>The base initialization of the eCAL publisher is the same in all languages:</p>
 <ol class="arabic simple">
 <li><p>Before you do anything else, you need to initialize eCAL with <code class="docutils literal notranslate"><span class="pre">Initialize(..)</span></code>.</p></li>
-<li><p>Then you create the publisher and send a message in the frequency you want.
+<li><p>Then, create the publisher and send messages at the desired frequency.
 In our example we will send the message every 500 ms in an infinite loop.
 You can add a stop condition to the loop, if you want to send just a limited amount of messages.</p></li>
 <li><p>After you are done with publishing data and you don’t need eCAL anymore, you can call the <code class="docutils literal notranslate"><span class="pre">Finalize()</span></code>
@@ -850,7 +850,7 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos">97</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">// Include the basic eCAL header</span>
+</div><div aria-labelledby="tab-0-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">// Include the basic eCAL header</span>
 <span class="linenos">  2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
 <span class="linenos">  3</span>
 <span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
@@ -1289,7 +1289,7 @@ function to clean up the resources and unregister the process.</p></li>
 <span class="linenos">84</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-1-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">// Include the basic eCAL header</span>
+</div><div aria-labelledby="tab-1-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">// Include the basic eCAL header</span>
 <span class="linenos">  2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
 <span class="linenos">  3</span>
 <span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span><span class="c1"> //memset()</span>

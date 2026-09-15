@@ -201,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../sys.html">6.4.  Sys</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. HowTo: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../howto.html">7. How-to: Writing eCAL Sample Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../setup.html">7.1. Development Setup</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../setup/cpp.html">7.1.1. C/C++ Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../setup/python.html">7.1.2. Python Setup</a></li>
@@ -730,8 +730,8 @@
                   
   <section id="binary-mirror">
 <span id="getting-started-howto-clientserver-binary-mirror"></span><h1><span class="section-number">7.3.1. </span>Binary: Mirror<a class="headerlink" href="#binary-mirror" title="Link to this heading">#</a></h1>
-<p>Under this section you will find a simple example of a client/server application using the eCAL ClientServer API.
-You should be already familiar with the base handling of eCAL from the Publisher/Subscriber samples, so this we will not be covered in detail any more.</p>
+<p>In this section you will find a simple example of a client/server application using the eCAL ClientServer API.
+You should already be familiar with the base handling of eCAL from the Publisher/Subscriber samples, so this will not be covered in detail anymore.</p>
 <section id="mirror-server">
 <h2><span class="section-number">7.3.1.1. </span>Mirror Server<a class="headerlink" href="#mirror-server" title="Link to this heading">#</a></h2>
 <p>A service server is an eCAL instance that is matched to service client instances by their name.
@@ -739,7 +739,7 @@ It can offer multiple methods, which a connected service client can call.
 We will set up a simple server that provides two methods: “echo” and “mirror”.</p>
 <p>The main process is:</p>
 <ul class="simple">
-<li><p>Intialize eCAL</p></li>
+<li><p>Initialize eCAL</p></li>
 <li><p>Create a Service Server</p></li>
 <li><p>For each method, add meta information about that method (such as method name, and types of the request and response) and a callback function to be invoked, when a client calls that method</p></li>
 <li><p>Keep the program running while the service is supposed to be executed</p></li>
@@ -834,7 +834,7 @@ We will set up a simple server that provides two methods: “echo” and “mirr
 <span class="linenos">87</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
+</div><div aria-labelledby="tab-0-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
 <span class="linenos">  2</span>
 <span class="linenos">  3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span><span class="c1"> //printf()</span>
 <span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span><span class="c1"> //memcpy(), memset()</span>
@@ -1215,14 +1215,14 @@ We will set up a simple server that provides two methods: “echo” and “mirr
 </section>
 <section id="mirror-client">
 <h2><span class="section-number">7.3.1.2. </span>Mirror Client<a class="headerlink" href="#mirror-client" title="Link to this heading">#</a></h2>
-<p>The client will have some more logic to take care of, as its possible that multiple servers are running with the same service name.</p>
+<p>The client will have some more logic to take care of, because multiple servers may use the same service name.</p>
 <ul class="simple">
 <li><p>Initialize eCAL</p></li>
 <li><p>Create a service client with the service name and (optionally) register the functions it can call (in this case “echo” and “mirror”)</p></li>
 <li><p>Waiting for a server to be available (this is optional and depends on how you want to design your application)</p></li>
 <li><p>Retrieve all client instances.
 You can also call it directly on the service client, but if you iterate through all client instances, you are more flexible and could filter out instances you don’t want to call.</p></li>
-<li><p>Then we call the methodnames with two different calls: with callback (non blocking) and with response (blocking)</p></li>
+<li><p>Then we call the method names with two different calls: with callback (non-blocking) and with response (blocking)</p></li>
 <li><p>Handle the received data (or error status)</p></li>
 </ul>
 <p>As a little extra we also added a little bit more eCAL state handling as in the previous examples.</p>
@@ -1388,7 +1388,7 @@ You can also call it directly on the service client, but if you iterate through 
 <span class="linenos">159</span><span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-1-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
+</div><div aria-labelledby="tab-1-Qw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-Qw==" name="Qw==" role="tabpanel" tabindex="0"><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/ecal.h&gt;</span>
 <span class="linenos">  2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ecal_c/service/client.h&gt;</span>
 <span class="linenos">  3</span>
 <span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span><span class="c1">  // printf()</span>
