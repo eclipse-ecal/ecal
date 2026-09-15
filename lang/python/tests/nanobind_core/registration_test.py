@@ -18,6 +18,7 @@
 
 import pytest
 import time
+import gc
 import ecal.nanobind_core as ecal_core
 from typing import Tuple
 
@@ -28,10 +29,11 @@ DATATYPE_INFORMATION = ecal_core.DataTypeInformation(
         encoding="raw",
         descriptor=b"")
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def init_ecal():
     ecal_core.initialize("ecal_pytest_registration", ecal_core.init.ALL)
     yield
+    gc.collect()  # Force garbage collection before cleanup
     ecal_core.finalize()
 
 
