@@ -1,7 +1,7 @@
 [project] # Project metadata
 name = "eclipse-ecal"
 readme = "lang/python/README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = [
   "LICENSE.txt",

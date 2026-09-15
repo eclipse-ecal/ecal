@@ -28,7 +28,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.3
         env:
           CIBW_ARCHS: auto64
-          CIBW_BUILD: cp3*-*
+          CIBW_BUILD: cp310-*
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: pytest {project}/lang/python/tests
 
