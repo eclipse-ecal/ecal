@@ -131,4 +131,5 @@ HDF5_EXTERNALLY_CONFIGURED = "ON"
 # architecture changes and causes link errors with Python
 archs = ["auto64"]
 # eCAL has build errors on musl libc
-skip = [ "*-musllinux*" ]
+# eCAL currently does not support free threaded python
+skip = [ "*-musllinux*", "cp3*t-*"  ]
