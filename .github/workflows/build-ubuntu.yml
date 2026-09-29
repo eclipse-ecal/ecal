@@ -121,6 +121,9 @@ jobs:
 
         cmake -S . -B _build -G "Ninja" \
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake \
+        -DCMAKE_CXX_STANDARD=20 \
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+        -DCMAKE_CXX_EXTENSIONS=OFF \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DECAL_USE_HDF5=ON \
         -DECAL_USE_QT=ON \
