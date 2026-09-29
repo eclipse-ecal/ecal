@@ -33,6 +33,7 @@ set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
 project(eCAL)
 set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+include(helper_functions/ecal_helper_functions)
 
 # --------------------------------------------------------
 # set msvc specific options
@@ -69,107 +70,23 @@ endif()
 # Compatibility Options with eCAL 5 CMake Options
 #---------------------------------------------------------
 
-# Legacy Compatibility option for HAS_HDF5
-if(DEFINED HAS_HDF5 AND NOT DEFINED ECAL_USE_HDF5)
-  set(ECAL_USE_HDF5 ${HAS_HDF5})
-  message(WARNING "The option HAS_HDF5 is deprecated and may be removed at any time. Please use ECAL_USE_HDF5 instead.")
-endif()
-
-# Legacy Compatibility option for HAS_QT
-if(DEFINED HAS_QT AND NOT DEFINED ECAL_USE_QT)
-  set(ECAL_USE_QT ${HAS_QT})
-  message(WARNING "The option HAS_QT is deprecated and may be removed at any time. Please use ECAL_USE_QT instead.")
-endif()
-
-# Legacy Compatibility option for HAS_CURL
-if(DEFINED HAS_CURL AND NOT DEFINED ECAL_USE_CURL)
-  set(ECAL_USE_CURL ${HAS_CURL})
-  message(WARNING "The option HAS_CURL is deprecated and may be removed at any time. Please use ECAL_USE_CURL instead.")
-endif()
-
-# Legacy Compatibility option for HAS_FTXUI
-if(DEFINED HAS_FTXUI AND NOT DEFINED ECAL_USE_FTXUI)
-  set(ECAL_USE_FTXUI ${HAS_FTXUI})
-  message(WARNING "The option HAS_FTXUI is deprecated and may be removed at any time. Please use ECAL_USE_FTXUI instead.")
-endif()
-
-# Legacy Compatibility option for HAS_CAPNPROTO
-if(DEFINED HAS_CAPNPROTO AND NOT DEFINED ECAL_USE_CAPNPROTO)
-  set(ECAL_USE_CAPNPROTO ${HAS_CAPNPROTO})
-  message(WARNING "The option HAS_CAPNPROTO is deprecated and may be removed at any time. Please use ECAL_USE_CAPNPROTO instead.")
-endif()
-
-# Legacy Compatibility option for HAS_FLATBUFFERS
-if(DEFINED HAS_FLATBUFFERS AND NOT DEFINED ECAL_USE_FLATBUFFERS)
-  set(ECAL_USE_FLATBUFFERS ${HAS_FLATBUFFERS})
-  message(WARNING "The option HAS_FLATBUFFERS is deprecated and may be removed at any time. Please use ECAL_USE_FLATBUFFERS instead.")
-endif()
-
-# Legacy Compatibility option for HAS_MESSAGEPACK
-if(DEFINED HAS_MESSAGEPACK AND NOT DEFINED ECAL_USE_MESSAGEPACK)
-  set(ECAL_USE_MESSAGEPACK ${HAS_MESSAGEPACK})
-  message(WARNING "The option HAS_MESSAGEPACK is deprecated and may be removed at any time. Please use ECAL_USE_MESSAGEPACK instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_DOCS
-if(DEFINED BUILD_DOCS AND NOT DEFINED ECAL_BUILD_DOCS)
-  set(ECAL_BUILD_DOCS ${BUILD_DOCS})
-  message(WARNING "The option BUILD_DOCS is deprecated and may be removed at any time. Please use ECAL_BUILD_DOCS instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_APPS
-if(DEFINED BUILD_APPS AND NOT DEFINED ECAL_BUILD_APPS)
-  set(ECAL_BUILD_APPS ${BUILD_APPS})
-  message(WARNING "The option BUILD_APPS is deprecated and may be removed at any time. Please use ECAL_BUILD_APPS instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_SAMPLES
-if(DEFINED BUILD_SAMPLES AND NOT DEFINED ECAL_BUILD_SAMPLES)
-  set(ECAL_BUILD_SAMPLES ${BUILD_SAMPLES})
-  message(WARNING "The option BUILD_SAMPLES is deprecated and may be removed at any time. Please use ECAL_BUILD_SAMPLES instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_TIME
-if(DEFINED BUILD_TIME AND NOT DEFINED ECAL_BUILD_TIMEPLUGINS)
-  set(ECAL_BUILD_TIMEPLUGINS ${BUILD_TIME})
-  message(WARNING "The option BUILD_TIME is deprecated and may be removed at any time. Please use ECAL_BUILD_TIMEPLUGINS instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_C_BINDING
-if(DEFINED BUILD_C_BINDING AND NOT DEFINED ECAL_BUILD_C_BINDING)
-  set(ECAL_BUILD_C_BINDING ${BUILD_C_BINDING})
-  message(WARNING "The option BUILD_C_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_C_BINDING instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_PY_BINDING
-if(DEFINED BUILD_PY_BINDING AND NOT DEFINED ECAL_BUILD_PY_BINDING)
-  set(ECAL_BUILD_PY_BINDING ${BUILD_PY_BINDING})
-  message(WARNING "The option BUILD_PY_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_PY_BINDING instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_CSHARP_BINDING
-if(DEFINED BUILD_CSHARP_BINDING AND NOT DEFINED ECAL_BUILD_CSHARP_BINDING)
-  set(ECAL_BUILD_CSHARP_BINDING ${BUILD_CSHARP_BINDING})
-  message(WARNING "The option BUILD_CSHARP_BINDING is deprecated and may be removed at any time. Please use ECAL_BUILD_CSHARP_BINDING instead.")
-endif()
-
-# Legacy Compatibility option for ECAL_NPCAP_SUPPORT
-if(DEFINED ECAL_NPCAP_SUPPORT AND NOT DEFINED ECAL_USE_NPCAP)
-  set(ECAL_USE_NPCAP ${ECAL_NPCAP_SUPPORT})
-  message(WARNING "The option ECAL_NPCAP_SUPPORT is deprecated and may be removed at any time. Please use ECAL_USE_NPCAP instead.")
-endif()
-
-# Legacy Compatibility option for BUILD_ECAL_TESTS
-if(DEFINED BUILD_ECAL_TESTS AND NOT DEFINED ECAL_BUILD_TESTS)
-  set(ECAL_BUILD_TESTS ${BUILD_ECAL_TESTS})
-  message(WARNING "The option BUILD_ECAL_TESTS is deprecated and may be removed at any time. Please use ECAL_BUILD_TESTS instead.")
-endif()
-
-# Legacy Compatibility option for CPACK_PACK_WITH_INNOSETUP
-if(DEFINED CPACK_PACK_WITH_INNOSETUP AND NOT DEFINED ECAL_CPACK_PACK_WITH_INNOSETUP)
-  set(ECAL_CPACK_PACK_WITH_INNOSETUP ${CPACK_PACK_WITH_INNOSETUP})
-  message(WARNING "The option CPACK_PACK_WITH_INNOSETUP is deprecated and may be removed at any time. Please use ECAL_CPACK_PACK_WITH_INNOSETUP instead.")
-endif()
+ecal_map_deprecated_option(HAS_HDF5 ECAL_USE_HDF5)
+ecal_map_deprecated_option(HAS_QT ECAL_USE_QT)
+ecal_map_deprecated_option(HAS_CURL ECAL_USE_CURL)
+ecal_map_deprecated_option(HAS_FTXUI ECAL_USE_FTXUI)
+ecal_map_deprecated_option(HAS_CAPNPROTO ECAL_USE_CAPNPROTO)
+ecal_map_deprecated_option(HAS_FLATBUFFERS ECAL_USE_FLATBUFFERS)
+ecal_map_deprecated_option(HAS_MESSAGEPACK ECAL_USE_MESSAGEPACK)
+ecal_map_deprecated_option(BUILD_DOCS ECAL_BUILD_DOCS)
+ecal_map_deprecated_option(BUILD_APPS ECAL_BUILD_APPS)
+ecal_map_deprecated_option(BUILD_SAMPLES ECAL_BUILD_SAMPLES)
+ecal_map_deprecated_option(BUILD_TIME ECAL_BUILD_TIMEPLUGINS)
+ecal_map_deprecated_option(BUILD_C_BINDING ECAL_BUILD_C_BINDING)
+ecal_map_deprecated_option(BUILD_PY_BINDING ECAL_BUILD_PY_BINDING)
+ecal_map_deprecated_option(BUILD_CSHARP_BINDING ECAL_BUILD_CSHARP_BINDING)
+ecal_map_deprecated_option(ECAL_NPCAP_SUPPORT ECAL_USE_NPCAP)
+ecal_map_deprecated_option(BUILD_ECAL_TESTS ECAL_BUILD_TESTS)
+ecal_map_deprecated_option(CPACK_PACK_WITH_INNOSETUP ECAL_CPACK_PACK_WITH_INNOSETUP)
 
 # --------------------------------------------------------
 # command line build options
@@ -312,7 +229,6 @@ message(STATUS "eCAL version: ${eCAL_VERSION_STRING}")
 message(DEBUG "eCAL git describe tag: ${GIT_DESCRIBE_TAG}")
 
 include(helper_functions/ecal_add_functions)
-include(helper_functions/ecal_helper_functions)
 include(helper_functions/ecal_install_functions)
 
 if(MSVC)
