@@ -78,14 +78,9 @@ if(ECAL_CORE_PUBLISHER AND ECAL_CORE_SUBSCRIBER AND ECAL_CORE_SERVICE AND ECAL_C
 endif()
 
 # pubsub
-if(ECAL_CORE_PUBLISHER)
-  add_subdirectory(cpp/pubsub/binary/blob_send)
-  add_subdirectory(cpp/pubsub/binary/table_send)
-endif()
-
-if(ECAL_CORE_SUBSCRIBER)
-  add_subdirectory(cpp/pubsub/binary/blob_receive)
-  add_subdirectory(cpp/pubsub/binary/table_receive)
+if(ECAL_CORE_PUBLISHER OR ECAL_CORE_SUBSCRIBER)
+  add_subdirectory(cpp/pubsub/blob)
+  add_subdirectory(cpp/pubsub/table)
 endif()
 
 # services
