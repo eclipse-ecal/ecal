@@ -18,29 +18,25 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(math_server)
+project(math)
 
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-set(math_server_src
-    src/math_server.cpp
+set(math_proto
+    ${CMAKE_CURRENT_SOURCE_DIR}/math.proto
 )
 
-set(math_server_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/math.proto
-)
+ecal_add_sample(math_client math_client.cpp)
+PROTOBUF_TARGET_CPP(math_client ${CMAKE_CURRENT_SOURCE_DIR} ${math_proto})
+target_link_libraries(math_client PRIVATE eCAL::protobuf_core)
+target_compile_features(math_client PRIVATE cxx_std_14)
+ecal_install_sample(math_client)
+set_property(TARGET math_client PROPERTY FOLDER samples/cpp/services/math)
 
-ecal_add_sample(${PROJECT_NAME} ${math_server_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${math_server_proto})
-
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::protobuf_core
-)
-
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-
-ecal_install_sample(${PROJECT_NAME})
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/services/math)
+ecal_add_sample(math_server math_server.cpp)
+PROTOBUF_TARGET_CPP(math_server ${CMAKE_CURRENT_SOURCE_DIR} ${math_proto})
+target_link_libraries(math_server PRIVATE eCAL::protobuf_core)
+target_compile_features(math_server PRIVATE cxx_std_14)
+ecal_install_sample(math_server)
+set_property(TARGET math_server PROPERTY FOLDER samples/cpp/services/math)
