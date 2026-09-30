@@ -80,7 +80,8 @@ add_custom_target(documentation_copy_sample_files ALL
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/nanobind_core/pubsub             ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/string/hello
 
   # pubsub protobuf samples
-  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub                ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub/person         ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/person
+  COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/serialization/protobuf/samples/pubsub/dynamic        ${DOC_SOURCE_DIRECTORY}/source_code_samples/cpp/protobuf/dynamic
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/csharp/Eclipse.eCAL.Protobuf.Samples/pubsub     ${DOC_SOURCE_DIRECTORY}/source_code_samples/csharp/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/core/pubsub                      ${DOC_SOURCE_DIRECTORY}/source_code_samples/python_legacy/protobuf/person
   COMMAND cmake -E copy_directory ${ECAL_PROJECT_ROOT}/lang/python/samples/nanobind_core/pubsub             ${DOC_SOURCE_DIRECTORY}/source_code_samples/python/protobuf/person

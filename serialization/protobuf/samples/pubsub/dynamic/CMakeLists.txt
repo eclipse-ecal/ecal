@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,30 +18,20 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(person_receive)
+project(dynamic)
 
 find_package(eCAL REQUIRED)
 find_package(Protobuf REQUIRED)
 
-set(person_receive_src
-    src/person_receive.cpp
-)
+ecal_add_sample(dynamic_receive dynamic_receive.cpp)
+target_include_directories(dynamic_receive PRIVATE .)
+target_link_libraries(dynamic_receive PRIVATE eCAL::protobuf_core)
+target_compile_features(dynamic_receive PRIVATE cxx_std_17)
+ecal_install_sample(dynamic_receive)
+set_property(TARGET dynamic_receive PROPERTY FOLDER samples/cpp/pubsub/protobuf)
 
-set(person_receive_proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/animal.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/house.proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf/person.proto    
-)
-ecal_add_sample(${PROJECT_NAME} ${person_receive_src})
-PROTOBUF_TARGET_CPP(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/protobuf ${person_receive_proto})
-
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    eCAL::protobuf_core
-)
-
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
-
-ecal_install_sample(${PROJECT_NAME})
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER samples/cpp/pubsub/protobuf)
+ecal_add_sample(dynamic_json_receive dynamic_json_receive.cpp)
+target_link_libraries(dynamic_json_receive PRIVATE eCAL::protobuf_core)
+target_compile_features(dynamic_json_receive PRIVATE cxx_std_17)
+ecal_install_sample(dynamic_json_receive)
+set_property(TARGET dynamic_json_receive PROPERTY FOLDER samples/cpp/pubsub/protobuf)
