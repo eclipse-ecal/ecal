@@ -30,7 +30,7 @@ pydata-sphinx-theme==0.16.1; python_version >= "3.11"
 pydata-sphinx-theme==0.15.4; python_version >= "3.10" and python_version < "3.11"
 pygithub==2.9.1
 pygments==2.20.0
-pyjwt[crypto]==2.13.0
+pyjwt[crypto]==2.15.0
 pynacl==1.6.2
 requests==2.34.2
 roman-numerals==4.1.0; python_version >= "3.11"
