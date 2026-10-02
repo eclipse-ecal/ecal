@@ -29,6 +29,7 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <cerrno>
 #include <unistd.h>
 #include <cstdint>
 #include <string>
