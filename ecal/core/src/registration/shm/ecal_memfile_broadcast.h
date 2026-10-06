@@ -27,7 +27,9 @@
 #include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <iomanip>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -52,7 +54,9 @@ namespace eCAL
 
   static inline std::string BuildPayloadMemfileName(const std::string& name, std::uint64_t memfile_id)
   {
-    return name + "_" + std::to_string(memfile_id);
+    std::ostringstream memfile_name;
+    memfile_name << name << "_" << std::hex << memfile_id;
+    return memfile_name.str();
   }
 
   enum class eMemfileBroadcastEventType : std::int32_t
