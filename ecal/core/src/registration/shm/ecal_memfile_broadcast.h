@@ -27,14 +27,16 @@
 #include <chrono>
 #include <cstdint>
 #include <cstring>
+#include <iomanip>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "relocatable_circular_queue.h"
 #include "io/shm/ecal_memfile.h"
 #include "config/attributes/registration_shm_attributes.h"
-
+#include <util/entity_id_generator.h>
 #include <ecal/ecal.h>
 
 namespace eCAL 
@@ -42,17 +44,19 @@ namespace eCAL
   static inline std::int64_t CreateTimestamp()
   {
     const auto time_point = std::chrono::steady_clock::now();
-    return static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(time_point.time_since_epoch()).count());
+    return static_cast<std::int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(time_point.time_since_epoch()).count());
   }
 
   static inline std::uint64_t CreateEventId()
   {
-    return static_cast<std::uint64_t>(CreateTimestamp());
+    return static_cast<std::uint64_t>(Util::GenerateUniqueEntityId());
   }
 
   static inline std::string BuildPayloadMemfileName(const std::string& name, std::uint64_t memfile_id)
   {
-    return name + "_" + std::to_string(memfile_id);
+    std::ostringstream memfile_name;
+    memfile_name << name << "_" << std::hex << memfile_id;
+    return memfile_name.str();
   }
 
   enum class eMemfileBroadcastEventType : std::int32_t
