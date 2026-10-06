@@ -85,6 +85,9 @@ jobs:
 
         cmake %GITHUB_WORKSPACE% -G "Ninja" ^
         -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
+        -DCMAKE_CXX_STANDARD=20 ^
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON ^
+        -DCMAKE_CXX_EXTENSIONS=OFF ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
@@ -126,6 +129,9 @@ jobs:
         cd "${{ runner.workspace }}/_build/complete"
         cmake %GITHUB_WORKSPACE% -G "Ninja" ^
         -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl ^
+        -DCMAKE_CXX_STANDARD=20 ^
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON ^
+        -DCMAKE_CXX_EXTENSIONS=OFF ^
         -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/submodule_dependencies.cmake ^
         -DECAL_USE_HDF5=ON ^
         -DECAL_USE_QT=ON ^
