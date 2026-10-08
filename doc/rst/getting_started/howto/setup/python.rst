@@ -7,10 +7,10 @@ Python Setup
 ==================
 
 While eCAL is written in C++, it also offers a great Python integration.
-In this chapter we show how to setup Python for eCAL.
+In this chapter we show how to set up Python for eCAL.
 
 First, make sure that you have a Python installation on your system.
-We'd recommend making use of Python virtual environments to then install the eCAL Python integration.
+We recommend using a Python virtual environment before installing the eCAL Python integration.
 
 
 * Install Python 3 on your system.
@@ -25,9 +25,9 @@ We'd recommend making use of Python virtual environments to then install the eCA
   
        sudo apt install python3 python3-pip
 
-* Install the eCAL Python integration (eCAL > 6.0.1)
+* Install the eCAL Python integration (eCAL 6.0.1 and later)
 
-  Install eCAL from PyPi, e.g. via pip
+  Install eCAL from PyPI, for example by using pip.
   
   .. code-block:: batch
 
@@ -35,7 +35,7 @@ We'd recommend making use of Python virtual environments to then install the eCA
 
 * Install the eCAL Python integration (prior to eCAL 6.0.1)
 
-  Choose the appropiate version from the :ref:`download_archive` and download the :file:`.whl` file.
+  Choose the appropriate version from the :ref:`download_archive` and download the :file:`.whl` file.
   Open a command prompt in your download directory and install the Python wheel with:
 
   .. code-block:: batch

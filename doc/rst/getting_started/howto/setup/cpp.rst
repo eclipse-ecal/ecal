@@ -35,7 +35,7 @@ Protobuf entity integration
 
 When using special serialization protocols like Protobuf, a few more steps are necessary for a proper CMake integration.
 In addition to the previous example, you will need to call ``find_package(Protobuf REQUIRED)``.
-Furthermore you want to handle the generation of the protobuf headers for your language.
+Furthermore, you want to handle the generation of the Protobuf C++ source and header files.
 
 .. literalinclude:: /source_code_samples/cmake/protobuf/CMakeLists.txt
     :language: cmake
