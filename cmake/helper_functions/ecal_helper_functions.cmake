@@ -16,6 +16,15 @@
 #
 # ========================= eCAL LICENSE =================================
 
+# Map a deprecated CMake option to its replacement unless the replacement was
+# explicitly provided by the user.
+macro(ecal_map_deprecated_option OLD_OPTION NEW_OPTION)
+  if(DEFINED ${OLD_OPTION} AND NOT DEFINED ${NEW_OPTION})
+    set(${NEW_OPTION} "${${OLD_OPTION}}")
+    message(WARNING "The option ${OLD_OPTION} is deprecated and may be removed at any time. Please use ${NEW_OPTION} instead.")
+  endif()
+endmacro()
+
 # This function will set the output names of the target according to eCAL conventions.
 function(ecal_get_platform_toolset)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
