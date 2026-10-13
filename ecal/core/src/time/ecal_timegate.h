@@ -37,9 +37,6 @@ namespace eCAL
   public:
     static std::shared_ptr<CTimeGate> CreateTimegate();
 
-    // TODO: these need to be removed
-    enum eTimeSyncMode { none, realtime, replay };
-
   private:
     CTimeGate(CTimePlugin&& time_plugin, std::string plugin_name);
 
@@ -65,8 +62,6 @@ namespace eCAL
     void SleepForNanoseconds(long long duration_nsecs_);
 
     void GetStatus(int& error_, std::string* status_message_);
-
-    eTimeSyncMode GetSyncMode() { return(eTimeSyncMode::realtime); };
 
     CTimePlugin m_time_plugin;
     std::string m_plugin_name;
