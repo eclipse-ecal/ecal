@@ -30,6 +30,7 @@
 #include <ecal/config/publisher.h>
 #include <ecal/config/subscriber.h>
 #include <ecal/config/time.h>
+#include <ecal/config/tracing.h>
 #include <ecal/types/custom_data_types.h>
 
 
@@ -58,6 +59,7 @@ namespace eCAL
     Time::Configuration           timesync;
     Application::Configuration    application;
     Logging::Configuration        logging;
+    Tracing::Configuration        tracing;
 
     eCommunicationMode            communication_mode { eCommunicationMode::local }; /*!< eCAL components communication mode:
                                                                                            local: local host only communication (default)
