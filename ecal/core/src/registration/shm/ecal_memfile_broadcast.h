@@ -49,14 +49,14 @@ namespace eCAL
 
   static inline std::uint64_t CreateEventId()
   {
+    // TODO: For MacOS, we will need another method to ensure the max file name length (31 chars) is not exceeded. 
+    // For now, we will use the entity id generator to create a unique ID
     return static_cast<std::uint64_t>(Util::GenerateUniqueEntityId());
   }
 
   static inline std::string BuildPayloadMemfileName(const std::string& name, std::uint64_t memfile_id)
   {
-    std::ostringstream memfile_name;
-    memfile_name << name << "_" << std::hex << memfile_id;
-    return memfile_name.str();
+    return name + "_" + std::to_string(memfile_id);
   }
 
   enum class eMemfileBroadcastEventType : std::int32_t
