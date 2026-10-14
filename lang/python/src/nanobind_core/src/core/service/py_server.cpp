@@ -40,11 +40,12 @@ void AddServiceServer(nanobind::module_& m)
         const nb::object& callback_python) {
           eCAL::ServerEventCallbackT event_callback_cpp = nullptr;
           if (!callback_python.is_none()) {
-            event_callback_cpp = [callback_python](const eCAL::SServiceId& service_id,
+            auto callback_ptr = make_gil_safe_shared<nb::object>(callback_python);
+            event_callback_cpp = [callback_ptr](const eCAL::SServiceId& service_id,
               const eCAL::SServerEventCallbackData& data) {
                 try {
                   nb::gil_scoped_acquire acquire;
-                  callback_python(service_id, data);
+                  (*callback_ptr)(service_id, data);
                 }
                 catch (const std::exception& e) {
                   std::cerr << "Error in server event callback: " << e.what() << std::endl;

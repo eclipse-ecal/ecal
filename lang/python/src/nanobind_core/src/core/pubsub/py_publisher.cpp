@@ -24,6 +24,8 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
+#include <helper/make_gil_safe_shared.h>
+
 #include <exception>
 
 namespace nb = nanobind;
@@ -37,11 +39,12 @@ void AddPubsubPublisher(nanobind::module_& module)
         PubEventCallbackT event_callback_cpp = nullptr;
         if (!event_callback_.is_none())
         {
-          event_callback_cpp = [event_callback_](auto&&... args) {
+          auto callback_ptr = make_gil_safe_shared<nb::object>(event_callback_);
+          event_callback_cpp = [callback_ptr](auto&&... args) {
             try {
               nb::gil_scoped_acquire acquire;
               // Call the Python callback, forwarding the arguments.
-              event_callback_(std::forward<decltype(args)>(args)...);
+              (*callback_ptr)(std::forward<decltype(args)>(args)...);
             }
             catch (const std::exception& e)
             {
