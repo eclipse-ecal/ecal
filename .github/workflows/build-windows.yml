@@ -32,7 +32,7 @@ jobs:
       run: choco install doxygen.install --version=1.13.2
 
     - name: Install ccache
-      run: choco install ccache --version=4.11.2
+      run: choco install ccache --version=4.14.1
 
     - name: Checkout
       uses: actions/checkout@v4
