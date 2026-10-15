@@ -54,13 +54,18 @@ namespace
   // code page rather than UTF-8.
   std::filesystem::path utf8ToPath(const std::string& utf8_str_)
   {
+#if defined(__cpp_char8_t)
+    return std::filesystem::path(std::u8string(utf8_str_.begin(), utf8_str_.end()));
+#else
     return std::filesystem::u8path(utf8_str_);
+#endif
   }
 
   // Converts a std::filesystem::path to a UTF-8 encoded std::string.
   std::string pathToUtf8(const std::filesystem::path& p_)
   {
-    return p_.u8string();
+    const auto utf8_path = p_.u8string();
+    return std::string(reinterpret_cast<const char*>(utf8_path.data()), utf8_path.size());
   }
 
   // returns empty if str1_ is empty. otherwise returns str1_ / str2_ (native path separator)
@@ -91,7 +96,7 @@ namespace
     }
 
     // Construct a path from the wide string and convert to UTF-8.
-    std::string return_path = std::filesystem::path(path_tmp).u8string();
+    std::string return_path = pathToUtf8(std::filesystem::path(path_tmp));
 
     // Free the memory allocated by SHGetKnownFolderPath
     CoTaskMemFree(path_tmp);
