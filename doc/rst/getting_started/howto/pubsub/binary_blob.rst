@@ -36,7 +36,7 @@ For simplicity, we will use the same message type in all languages.
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/binary/blob/blob_send/src/blob_send.cpp
+        .. literalinclude:: /source_code_samples/cpp/binary/blob/blob_send.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -74,7 +74,7 @@ For simplicity, we will use the same message type in all languages.
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`blob_send.cpp </source_code_samples/cpp/binary/blob/blob_send/src/blob_send.cpp>`
+    │  └─ |fa-file-alt| :download:`blob_send.cpp </source_code_samples/cpp/binary/blob/blob_send.cpp>`
    │
    ├─ |fa-folder-open| C
    │  └─ |fa-file-alt| :download:`blob_send.c </source_code_samples/c/binary/blob/blob_send/src/blob_send.c>`
@@ -107,7 +107,7 @@ Instead of sending data, a callback function is assigned to the subscriber, whic
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/binary/blob/blob_receive/src/blob_receive.cpp
+        .. literalinclude:: /source_code_samples/cpp/binary/blob/blob_receive.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -145,7 +145,7 @@ Instead of sending data, a callback function is assigned to the subscriber, whic
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`blob_receive.cpp </source_code_samples/cpp/binary/blob/blob_receive/src/blob_receive.cpp>`
+    │  └─ |fa-file-alt| :download:`blob_receive.cpp </source_code_samples/cpp/binary/blob/blob_receive.cpp>`
    │
    ├─ |fa-folder-open| C
    │  └─ |fa-file-alt| :download:`blob_receive.c </source_code_samples/c/binary/blob/blob_receive/src/blob_receive.c>`

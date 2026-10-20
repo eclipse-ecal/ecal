@@ -27,7 +27,7 @@ The main process is:
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/binary/mirror/mirror_server/src/mirror_server.cpp
+        .. literalinclude:: /source_code_samples/cpp/binary/mirror/mirror_server.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -65,7 +65,7 @@ The main process is:
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`mirror_server.cpp </source_code_samples/cpp/binary/mirror/mirror_server/src/mirror_server.cpp>`
+    │  └─ |fa-file-alt| :download:`mirror_server.cpp </source_code_samples/cpp/binary/mirror/mirror_server.cpp>`
    │
    ├─ |fa-folder-open| C
    │  └─ |fa-file-alt| :download:`mirror_server.c </source_code_samples/c/binary/mirror/mirror_server_c/src/mirror_server_c.c>`
@@ -98,7 +98,7 @@ As a little extra we also added a little bit more eCAL state handling as in the 
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/binary/mirror/mirror_client/src/mirror_client.cpp
+        .. literalinclude:: /source_code_samples/cpp/binary/mirror/mirror_client.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -136,7 +136,7 @@ As a little extra we also added a little bit more eCAL state handling as in the 
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`mirror_client.cpp </source_code_samples/cpp/binary/mirror/mirror_client/src/mirror_client.cpp>`
+    │  └─ |fa-file-alt| :download:`mirror_client.cpp </source_code_samples/cpp/binary/mirror/mirror_client.cpp>`
    │
    ├─ |fa-folder-open| C
    │  └─ |fa-file-alt| :download:`mirror_client.c </source_code_samples/c/binary/mirror/mirror_client_c/src/mirror_client_c.c>`
