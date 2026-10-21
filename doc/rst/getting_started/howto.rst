@@ -1,8 +1,8 @@
 .. _getting_started_howto:
 
-========================================
-HowTo: Writing eCAL Sample Applications
-========================================
+=========================================
+How-to: Writing eCAL Sample Applications
+=========================================
 
 You have learned a lot about basic eCAL communication and the eCAL Tools that come with it. 
 Now it is time to write your own eCAL program! This section provides practical guides to help you get started with various aspects of eCAL programming.
@@ -11,7 +11,7 @@ Below is an overview of the topics covered in this section:
 
 - **Setup Prerequisites**: Learn how to set up your environment and prepare your system for eCAL development: :doc:`howto/setup`.
 
-- **Pub/Sub Communication**: Understand how to use the Publish/Subscribe pattern to send and receive data efficiently :doc:`howto/pubsub`.
+- **Pub/Sub Communication**: Understand how to use the Publish/Subscribe pattern to send and receive data efficiently: :doc:`howto/pubsub`.
 
 - **Client-Server Communication**: Explore how to implement request-response workflows using eCAL's client-server communication model: :doc:`howto/clientserver`.
 

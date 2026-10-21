@@ -13,5 +13,5 @@ pdm plugin add export
 pdm export -f requirements --without-hashes > requirements.txt
 ```
 
-This way, newer Python version can use newer Sphinx versions.
+This way, newer Python versions can use newer Sphinx versions.
 
