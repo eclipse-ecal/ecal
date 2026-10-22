@@ -18,7 +18,8 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(time)
+# The target name must not clash with abseil's `time` target; the executable keeps its name.
+project(ecal_time)
 
 find_package(eCAL REQUIRED)
 
@@ -27,6 +28,7 @@ set(time_src
 )
 
 ecal_add_sample(${PROJECT_NAME} ${time_src})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ecal_sample_time)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE eCAL::core)
 

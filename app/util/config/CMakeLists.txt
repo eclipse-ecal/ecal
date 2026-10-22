@@ -16,13 +16,15 @@
 #
 # ========================= eCAL LICENSE =================================
 
-project(config)
+# The target name must not clash with abseil's `config` target; the executable keeps its name.
+project(ecal_config)
 
 set(ecalconfig_src
   src/ecal_config.cpp
 )
 
 ecal_add_app_console(${PROJECT_NAME} ${ecalconfig_src})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ecal_config)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
