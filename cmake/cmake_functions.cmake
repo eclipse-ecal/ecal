@@ -9,6 +9,7 @@ if(WIN32)
   list(APPEND file_list_include
     qt/qt_windeployqt.cmake
     qt/exclusive_command.cmake
+    qt/qt_msvc_path.cmake
   )
 endif()
 
