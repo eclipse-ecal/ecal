@@ -91,7 +91,7 @@ namespace protobuf
         const google::protobuf::EnumDescriptor* edesc = sfdesc->enum_type(0);
         const google::protobuf::FileDescriptor* efdesc = edesc->file();
 
-        if (!HasFile(fset_, efdesc->name()))
+        if (!HasFile(fset_, std::string(efdesc->name())))
         {
           google::protobuf::FileDescriptorProto* epdesc = fset_.add_file();
           efdesc->CopyTo(epdesc);
@@ -104,7 +104,7 @@ namespace protobuf
         const google::protobuf::ServiceDescriptor* svdesc = sfdesc->service(0);
         const google::protobuf::FileDescriptor*    svfdesc = svdesc->file();
 
-        if (!HasFile(fset_, svfdesc->name()))
+        if (!HasFile(fset_, std::string(svfdesc->name())))
         {
           google::protobuf::FileDescriptorProto* svpdesc = fset_.add_file();
           svfdesc->CopyTo(svpdesc);
@@ -112,7 +112,7 @@ namespace protobuf
       }
     }
 
-    if (HasFile(fset_, fdesc->name())) return(true);
+    if (HasFile(fset_, std::string(fdesc->name()))) return(true);
 
     google::protobuf::FileDescriptorProto* pdesc = fset_.add_file();
     fdesc->CopyTo(pdesc);
@@ -140,7 +140,7 @@ namespace protobuf
 
   inline std::string GetProtoMessageTypeName(const google::protobuf::Message& msg_)
   {
-    return msg_.GetTypeName();
+    return std::string(msg_.GetTypeName());
   }
 
   inline std::vector<std::string> GetProtoMessageFieldNames(const std::vector<const google::protobuf::FieldDescriptor*>& fields_)
@@ -149,7 +149,7 @@ namespace protobuf
     std::transform(fields_.begin(), fields_.end(), std::back_inserter(names_vec), 
       [](const google::protobuf::FieldDescriptor* field) 
     {
-      return field->name();
+      return std::string(field->name());
     }
     );
     return names_vec;
@@ -162,7 +162,7 @@ namespace protobuf
     for (int i = 0; i < count; ++i)
     {
       auto field = descriptor->field(i);
-      names_vec.push_back(field->name());
+      names_vec.push_back(std::string(field->name()));
     }
     return names_vec;
   }

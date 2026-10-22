@@ -100,6 +100,7 @@ install.components = ["python"] # CMake component to install
 
 [tool.scikit-build.cmake.define]
 CMAKE_PROJECT_TOP_LEVEL_INCLUDES = "cmake/submodule_dependencies.cmake"
+CMAKE_CXX_STANDARD = "17"
 ECAL_USE_HDF5 = "ON"
 ECAL_USE_QT = "OFF"
 ECAL_USE_CURL = "OFF"

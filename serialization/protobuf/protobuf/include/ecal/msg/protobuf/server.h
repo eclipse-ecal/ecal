@@ -136,7 +136,7 @@ namespace eCAL
         if (!service_)
           throw std::runtime_error("CServiceServer: Null service instance.");
 
-        return service_->GetDescriptor()->full_name();
+        return std::string(service_->GetDescriptor()->full_name());
       }
 
       /**
@@ -154,17 +154,20 @@ namespace eCAL
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          std::string method_name = method_descriptor->name();
+          std::string method_name(method_descriptor->name());
           m_methods[method_name] = method_descriptor;
 
+          const std::string input_type_name(method_descriptor->input_type()->name());
+          const std::string output_type_name(method_descriptor->output_type()->name());
+
           std::string input_type_desc, output_type_desc;
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, method_descriptor->input_type()->name(), input_type_desc, error_s);
-          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, method_descriptor->output_type()->name(), output_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, input_type_name, input_type_desc, error_s);
+          dyn_decoder.GetServiceMessageDescFromType(service_descriptor, output_type_name, output_type_desc, error_s);
 
           SServiceMethodInformation method_info{
             method_name,
-            SDataTypeInformation{method_descriptor->input_type()->name(), "proto", input_type_desc},
-            SDataTypeInformation{method_descriptor->output_type()->name(), "proto", output_type_desc}
+            SDataTypeInformation{input_type_name, "proto", input_type_desc},
+            SDataTypeInformation{output_type_name, "proto", output_type_desc}
           };
 
           SetMethodCallback(method_info,

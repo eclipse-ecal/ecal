@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.24)
 set(ecal_submodule_dependency_provider_root_dir ${CMAKE_CURRENT_LIST_DIR})
 
 set(ecal_submodule_dependencies 
+  absl
   asio
   CMakeFunctions
   CURL
@@ -32,6 +33,11 @@ set(ecal_submodule_dependencies
 set(ecal_inproject_dependencies
   eCAL
 )
+
+# Abseil is only requested by protobuf >= 22. By default we only build it from the submodule
+# if protobuf is built from the submodule, too. A system protobuf brings its own abseil.
+option(ECAL_THIRDPARTY_BUILD_PROTOBUF "Build Protobuf with eCAL" ON)
+option(ECAL_THIRDPARTY_BUILD_ABSL "Build absl with eCAL" ${ECAL_THIRDPARTY_BUILD_PROTOBUF})
 
 macro(ecal_handle_submodule_dependency package_name)
   string(TOUPPER ${package_name} package_name_upper)
