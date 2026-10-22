@@ -52,6 +52,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
 #  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
 #endif()
 
-find_package(CMakeFunctions REQUIRED)
+include("@PACKAGE_eCAL_install_cmake_dir@/cmake_functions.cmake")
 
 find_package(Threads REQUIRED)

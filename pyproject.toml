@@ -60,7 +60,6 @@ sdist.only-include = [
   "serialization/string/",
   "serialization/common/", 
 
-  "thirdparty/cmakefunctions/",
   "thirdparty/ecaludp/",
   "thirdparty/nanobind/",
   "thirdparty/protobuf/",
@@ -111,7 +110,6 @@ ECAL_BUILD_C_BINDING = "OFF"
 ECAL_BUILD_PY_BINDING = "ON"
 BUILD_SHARED_LIBS = "OFF"
 ECAL_INSTALL_SAMPLE_SOURCES = "OFF"
-ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS = "ON"
 ECAL_THIRDPARTY_BUILD_TCP_PUBSUB = "ON"
 ECAL_THIRDPARTY_BUILD_RECYCLE = "ON"
 ECAL_THIRDPARTY_BUILD_PROTOBUF = "ON"

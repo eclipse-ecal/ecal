@@ -17,10 +17,9 @@
 # ========================= eCAL LICENSE =================================
 
 
-set (qt_windeployqt_cmake_path ${CMAKE_CURRENT_LIST_DIR} PARENT_SCOPE)
-
 # Create convenient function to run windeployqt
 function(qt_add_windeployqt_postbuild arguments)
+    set(qt_windeployqt_cmake_path ${CMAKE_CURRENT_FUNCTION_LIST_DIR})
     # Declare windeployqt as executable target
     if(Qt5_FOUND AND WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
         get_target_property(_qt5_qmake_location
