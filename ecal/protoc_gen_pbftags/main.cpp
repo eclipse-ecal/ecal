@@ -58,7 +58,7 @@ namespace {
     return id;
   }
 
-  std::string label_to_string(const FieldDescriptor* f) {
+  std::string get_field_label(const FieldDescriptor* f) {
     if (f->is_required()) return "required";
     if (f->is_repeated()) return "repeated";
     return "optional";
@@ -89,7 +89,7 @@ namespace {
   }
 
   std::string enumerator_name(const FieldDescriptor* f) {
-    std::string label = label_to_string(f);
+    std::string label = get_field_label(f);
     std::string type = field_kind(f);
     std::string name = std::string(f->name()); // already lower_snake in proto
     return sanitize_identifier(label + "_" + type + "_" + name);
