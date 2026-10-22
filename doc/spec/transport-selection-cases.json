@@ -1,0 +1,17 @@
+{
+  "baseline": "29ad9f088a7e262982b0a97d76bb9eb9a5a5cb18",
+  "status": "decision examples; not implementation conformance",
+  "cases": [
+    { "id": "local-default", "requirements": ["TS-001", "TS-003"], "same_host": true, "local": ["shm", "udp_mc", "tcp"], "remote": ["udp_mc", "tcp"], "publisher": ["shm", "udp_mc", "tcp"], "subscriber": ["shm", "udp_mc", "tcp"], "expected": "shm" },
+    { "id": "remote-default", "requirements": ["TS-001", "TS-003"], "same_host": false, "local": ["shm", "udp_mc", "tcp"], "remote": ["udp_mc", "tcp"], "publisher": ["shm", "udp_mc", "tcp"], "subscriber": ["shm", "udp_mc", "tcp"], "expected": "udp_mc" },
+    { "id": "skip-unavailable", "requirements": ["TS-001", "TS-003"], "same_host": true, "local": ["shm", "udp_mc", "tcp"], "remote": [], "publisher": ["shm", "tcp"], "subscriber": ["udp_mc", "tcp"], "expected": "tcp" },
+    { "id": "no-common-layer", "requirements": ["TS-001"], "same_host": true, "local": ["shm", "tcp"], "remote": [], "publisher": ["shm"], "subscriber": ["tcp"], "expected": "none" },
+    { "id": "no-implicit-fallback", "requirements": ["TS-001", "TS-003"], "same_host": true, "local": ["shm"], "remote": [], "publisher": ["tcp"], "subscriber": ["tcp"], "expected": "none" },
+    { "id": "empty-priorities", "requirements": ["TS-001"], "same_host": true, "local": [], "remote": ["tcp"], "publisher": ["tcp"], "subscriber": ["tcp"], "expected": "none" },
+    { "id": "empty-publisher", "requirements": ["TS-001"], "same_host": true, "local": ["tcp"], "remote": [], "publisher": [], "subscriber": ["tcp"], "expected": "none" },
+    { "id": "empty-subscriber", "requirements": ["TS-001"], "same_host": true, "local": ["tcp"], "remote": [], "publisher": ["tcp"], "subscriber": [], "expected": "none" },
+    { "id": "custom-order", "requirements": ["TS-001", "TS-003"], "same_host": true, "local": ["tcp", "shm"], "remote": [], "publisher": ["shm", "tcp"], "subscriber": ["shm", "tcp"], "expected": "tcp" },
+    { "id": "duplicate-preferences", "requirements": ["TS-001", "TS-003"], "same_host": true, "local": ["shm", "shm", "tcp"], "remote": [], "publisher": ["tcp"], "subscriber": ["tcp"], "expected": "tcp" },
+    { "id": "remote-shm-current-helper", "requirements": ["TS-001", "TS-003"], "same_host": false, "local": [], "remote": ["shm", "tcp"], "publisher": ["shm", "tcp"], "subscriber": ["shm", "tcp"], "expected": "shm" }
+  ]
+}

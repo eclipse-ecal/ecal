@@ -27,6 +27,7 @@ add_subdirectory(cpp/process_test)
 add_subdirectory(cpp/descgate_test)
 
 add_subdirectory(cpp/config_test)
+add_subdirectory(cpp/transport_selection_test)
 
 
 if(ECAL_CORE_REGISTRATION)
