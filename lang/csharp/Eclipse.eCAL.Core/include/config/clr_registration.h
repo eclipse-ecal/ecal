@@ -87,23 +87,27 @@ namespace Eclipse {
         public:
           property System::String^ Domain;
           property size_t QueueSize;
+          property unsigned int ReceivePollMs;
 
           RegistrationLocalSHMConfiguration() {
             ::eCAL::Registration::Local::SHM::Configuration native_config;
             Domain = Internal::StlStringToString(native_config.domain);
             QueueSize = native_config.queue_size;
+            ReceivePollMs = native_config.receive_poll_ms;
           }
 
           // Native struct constructor
           RegistrationLocalSHMConfiguration(const ::eCAL::Registration::Local::SHM::Configuration& native_config) {
             Domain = Internal::StlStringToString(native_config.domain);
             QueueSize = native_config.queue_size;
+            ReceivePollMs = native_config.receive_poll_ms;
           }
 
           ::eCAL::Registration::Local::SHM::Configuration ToNative() {
             ::eCAL::Registration::Local::SHM::Configuration native_config;
             native_config.domain = Internal::StringToStlString(Domain);
             native_config.queue_size = QueueSize;
+            native_config.receive_poll_ms = ReceivePollMs;
             return native_config;
           }
         };

@@ -44,8 +44,9 @@ namespace eCAL
       {
         struct Configuration
         {
-          std::string domain     { "ecal_mon" };          //!< Domain name for shared memory based registration (Default: ecal_mon)
-          size_t      queue_size { 1024 };                //!< Queue size of registration events (Default: 1024)
+          std::string  domain           { "ecal_mon" };          //!< Domain name for shared memory based registration (Default: ecal_mon)
+          size_t       queue_size       { 1024 };                //!< Queue size of registration events (Default: 1024)
+          unsigned int receive_poll_ms  { 15U };                 //!< Polling period in ms for receiving shared memory registration events (Default: 15)
         };
       }
 

@@ -40,7 +40,8 @@ void AddConfigRegistration(nanobind::module_& module)
   nb::class_<eCAL::Registration::Local::SHM::Configuration>(module, "LocalSHMConfig")
     .def(nb::init<>())
     .def_rw("domain", &eCAL::Registration::Local::SHM::Configuration::domain)
-    .def_rw("queue_size", &eCAL::Registration::Local::SHM::Configuration::queue_size);
+    .def_rw("queue_size", &eCAL::Registration::Local::SHM::Configuration::queue_size)
+    .def_rw("receive_poll_ms", &eCAL::Registration::Local::SHM::Configuration::receive_poll_ms);
 
   // Local::UDP::Configuration
   nb::class_<eCAL::Registration::Local::UDP::Configuration>(module, "LocalUDPConfig")
