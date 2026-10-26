@@ -35,7 +35,7 @@ pynacl==1.6.2
 requests==2.34.2
 roman-numerals==4.1.0; python_version >= "3.11"
 semantic-version==2.10.0
-setuptools==83.0.0
+setuptools==84.1.0
 six==1.17.0
 snowballstemmer==3.1.1
 soupsieve==2.9
