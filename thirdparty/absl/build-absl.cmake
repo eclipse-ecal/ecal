@@ -4,6 +4,7 @@ include_guard(GLOBAL)
 # Abseil does not name an install component; we put it in its own one to keep it out of the runtime component.
 function(ecal_add_absl)
   set(ABSL_ENABLE_INSTALL ON)
+  set(ABSL_IDE_FOLDER "thirdparty/Abseil")
   set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME absl)
   add_subdirectory("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/absl" "${eCAL_BINARY_DIR}/thirdparty/absl" SYSTEM)
 endfunction()
