@@ -89,9 +89,9 @@ namespace {
   }
 
   std::string enumerator_name(const FieldDescriptor* f) {
-    std::string label = get_field_label(f);
+    const std::string label = get_field_label(f);
     std::string type = field_kind(f);
-    std::string name = std::string(f->name()); // already lower_snake in proto
+    const std::string name = std::string(f->name()); // already lower_snake in proto
     return sanitize_identifier(label + "_" + type + "_" + name);
   }
 
@@ -99,7 +99,7 @@ namespace {
   std::string flattened_msg(const Descriptor* d) {
     std::string s;
     for (const auto* cur = d; cur != nullptr; cur = cur->containing_type()) {
-      std::string part = sanitize_identifier(std::string(cur->name()));
+      const std::string part = sanitize_identifier(std::string(cur->name()));
       s = s.empty() ? part : (part + "_" + s);
     }
     return s;
@@ -110,7 +110,8 @@ namespace {
     std::string s = sanitize_identifier(std::string(e->name()));
     const Descriptor* parent = e->containing_type();
     while (parent) {
-      s = sanitize_identifier(std::string(parent->name())) + "_" + s;
+      s.insert(0, "_");
+      s.insert(0, sanitize_identifier(std::string(parent->name())));
       parent = parent->containing_type();
     }
     return s;

@@ -64,7 +64,7 @@ namespace protobuf
       auto field = descriptor->field(i);
       const std::string field_name(field->name());
       const std::string field_type_name(field->type_name());
-      std::string child_message_name = CreateCompleteMessageName(field_name, complete_message_name);
+      const std::string child_message_name = CreateCompleteMessageName(field_name, complete_message_name);
 
       if (visitor->AcceptMessage(child_message_name))
       {
