@@ -154,7 +154,7 @@ namespace eCAL
         for (int i = 0; i < service_descriptor->method_count(); ++i)
         {
           const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-          std::string method_name(method_descriptor->name());
+          const std::string method_name(method_descriptor->name());
           m_methods[method_name] = method_descriptor;
 
           const std::string input_type_name(method_descriptor->input_type()->name());

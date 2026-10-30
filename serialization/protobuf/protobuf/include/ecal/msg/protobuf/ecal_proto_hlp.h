@@ -162,7 +162,7 @@ namespace protobuf
     for (int i = 0; i < count; ++i)
     {
       auto field = descriptor->field(i);
-      names_vec.push_back(std::string(field->name()));
+      names_vec.emplace_back(field->name());
     }
     return names_vec;
   }
