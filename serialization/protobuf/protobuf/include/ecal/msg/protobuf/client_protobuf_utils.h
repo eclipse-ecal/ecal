@@ -52,7 +52,7 @@ namespace eCAL
     {
       struct U : T {};  // Temporary subclass to access protected GetDescriptor()
       U temp_instance;
-      return temp_instance.GetDescriptor()->full_name();
+      return std::string(temp_instance.GetDescriptor()->full_name());
     }
 
     /**
@@ -81,10 +81,10 @@ namespace eCAL
       for (int i = 0; i < service_descriptor->method_count(); ++i)
       {
         const google::protobuf::MethodDescriptor* method_descriptor = service_descriptor->method(i);
-        const std::string& method_name = method_descriptor->name();
+        const std::string method_name(method_descriptor->name());
 
-        const std::string& request_type_name = method_descriptor->input_type()->name();
-        const std::string& response_type_name = method_descriptor->output_type()->name();
+        const std::string request_type_name(method_descriptor->input_type()->name());
+        const std::string response_type_name(method_descriptor->output_type()->name());
 
         std::string request_type_descriptor;
         std::string response_type_descriptor;

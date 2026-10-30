@@ -213,6 +213,24 @@ if(MSVC)
   endif()
 endif()
 
+# --------------------------------------------------------
+# C++ standard
+# --------------------------------------------------------
+# protobuf and abseil require C++17. Abseil must be consumed with the same C++ standard it was
+# built with (e.g. std::string_view vs. absl::string_view), so the whole project is built with C++17.
+set(_ECAL_MIN_REQUIRED_CXX_STD 17)
+
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD ${_ECAL_MIN_REQUIRED_CXX_STD})
+endif()
+
+if(CMAKE_CXX_STANDARD VERSION_LESS _ECAL_MIN_REQUIRED_CXX_STD)
+  message(FATAL_ERROR "eCAL requires CMAKE_CXX_STANDARD to be at least ${_ECAL_MIN_REQUIRED_CXX_STD} (got: ${CMAKE_CXX_STANDARD})")
+endif()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+message(STATUS "eCAL is using C++ standard ${CMAKE_CXX_STANDARD}")
+
 find_package(CMakeFunctions REQUIRED)
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
@@ -572,6 +590,7 @@ message(STATUS "ECAL_BUILD_TESTS                                    : ${ECAL_BUI
 message(STATUS "ECAL_DEPLOY_DEPENDENCIES                            : ${ECAL_DEPLOY_DEPENDENCIES}")
 message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                         : ${ECAL_INSTALL_SAMPLE_SOURCES}")
 message(STATUS "ECAL_USE_NPCAP                                      : ${ECAL_USE_NPCAP}")
+message(STATUS "ECAL_THIRDPARTY_BUILD_ABSL                          : ${ECAL_THIRDPARTY_BUILD_ABSL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                          : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_BENCHMARK                     : ${ECAL_THIRDPARTY_BUILD_BENCHMARK}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS               : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")

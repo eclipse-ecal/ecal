@@ -116,6 +116,7 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
+        -DCMAKE_CXX_STANDARD=17 ^
         -DECAL_CPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
 
@@ -158,12 +159,24 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Release ^
+        -DCMAKE_CXX_STANDARD=17 ^
         -DECAL_CPACK_PACK_WITH_INNOSETUP=ON
       shell: cmd
 
     - name: Build SDK
       run: cmake --build . --config Debug
       working-directory: ${{ runner.workspace }}/_build/sdk
+
+    - name: SDK Integration test
+      run: |
+        cmake --install "${{ runner.workspace }}/_build/sdk" --prefix "${{ runner.workspace }}/_install/sdk" --config Debug
+        cmake -G "Ninja" ^
+        -S serialization/protobuf/samples/pubsub/person_loopback ^
+        -B _integration_test_build ^
+        -DCMAKE_CONFIGURATION_TYPES="Debug" ^
+        -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/sdk"
+        cmake --build _integration_test_build --config Debug
+      shell: cmd
 
     - name: Build Release
       run: cmake --build . --config Release
@@ -191,6 +204,7 @@ jobs:
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/complete" ^
         -DCMAKE_BUILD_TYPE=Release ^
         -DCMAKE_CONFIGURATION_TYPES=Release ^
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON ^
         -DECAL_CSHARP_BUILD_SAMPLES=ON ^
         -DECAL_CSHARP_BUILD_TESTS=ON ^
         -DECAL_PROJECT_ROOT="${{ github.workspace }}"

@@ -57,6 +57,9 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_USE_CLOCKLOCK_MUTEX``              | ``OFF`` | Use native mutex with monotonic clock (requires glibc >= 2.30)  |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
+| ``ECAL_THIRDPARTY_BUILD_ABSL``            | ``ON``  | Build abseil with eCAL (default follows                         |
+|                                           |         | ``ECAL_THIRDPARTY_BUILD_PROTOBUF``)                             |
++-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_ASIO``            | ``ON``  | Build asio with eCAL                                            |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_BENCHMARK``       | ``ON``  | Build Google Benchmark with eCAL                                |
