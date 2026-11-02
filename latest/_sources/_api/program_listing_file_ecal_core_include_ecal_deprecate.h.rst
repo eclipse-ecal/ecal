@@ -30,6 +30,7 @@ Program Listing for File deprecate.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #include <ecal/defs.h>

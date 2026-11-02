@@ -29,6 +29,7 @@ Program Listing for File core.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #include <ecal/init.h>

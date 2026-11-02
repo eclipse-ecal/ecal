@@ -30,6 +30,7 @@ Program Listing for File ecal.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    // all ecal includes

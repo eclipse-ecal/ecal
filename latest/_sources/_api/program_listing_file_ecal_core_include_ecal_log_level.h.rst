@@ -29,6 +29,7 @@ Program Listing for File log_level.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    namespace eCAL

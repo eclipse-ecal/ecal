@@ -5,7 +5,7 @@ Namespace eCAL
 ==============
 
 
-Process start mode (StartProcess) 
+Process start mode (StartProcess). 
 
 
 
@@ -72,9 +72,9 @@ Functions
 
 - :ref:`exhale_function_namespaceeCAL_1ad1aee2f354dcb72366f8cb6754c8b8ea`
 
-- :ref:`exhale_function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39`
-
 - :ref:`exhale_function_namespaceeCAL_1a30834f2dd3dbab8e0734c79b2aaf9bb4`
+
+- :ref:`exhale_function_namespaceeCAL_1af8f14107926964a1ab750dab13634b39`
 
 - :ref:`exhale_function_namespaceeCAL_1a439b87d67679bce153704bc95d4b30de`
 
@@ -89,6 +89,6 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_namespaceeCAL_1a155b9cd8eddcadca249b6f5bbf7ad583`
+- :ref:`exhale_typedef_namespaceeCAL_1a6fb67034f0a664e0f4b66d0683cf15e7`
 
-- :ref:`exhale_typedef_namespaceeCAL_1a4807caba9c43983d8989737912a00bd7`
+- :ref:`exhale_typedef_namespaceeCAL_1a937f6d7f378129c82ce92c16806c507c`
