@@ -68,6 +68,6 @@ Typedefs
 --------
 
 
-- :ref:`exhale_typedef_registration_8h_1a31559467ff34c4fda47503952f0bf8c6`
+- :ref:`exhale_typedef_registration_8h_1acb31703bfedf4cc336c18613b83d8f50`
 
-- :ref:`exhale_typedef_registration_8h_1a409078e35c152905f1e2300b8a0e6b20`
+- :ref:`exhale_typedef_registration_8h_1ab2b309241555800ed59690a5d8e9e840`

@@ -1,0 +1,14 @@
+.. _exhale_define_os_8h_1a0556b2d6567b59b5904429df606ef931:
+
+Define ECAL_API_CLASS
+=====================
+
+- Defined in :ref:`file_ecal_core_include_ecal_os.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: ECAL_API_CLASS
+   :project: eCAL

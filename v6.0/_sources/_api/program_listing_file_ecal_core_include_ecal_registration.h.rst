@@ -29,6 +29,7 @@ Program Listing for File registration.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #include <ecal/os.h>

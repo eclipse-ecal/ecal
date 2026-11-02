@@ -29,6 +29,7 @@ Program Listing for File log.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #include <ecal/os.h>
