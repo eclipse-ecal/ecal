@@ -200,6 +200,8 @@ file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 message(STATUS "Module Path: ${CMAKE_MODULE_PATH}")
 message(STATUS "Prefix Path: ${CMAKE_PREFIX_PATH}")
 
+include(cmake_functions)
+
 # --------------------------------------------------------
 # detect qt library
 # --------------------------------------------------------
@@ -207,13 +209,10 @@ if(MSVC)
   if (ECAL_USE_QT)
     find_package(QT NAMES Qt6 Qt5 COMPONENTS Core QUIET)
     if (NOT "${QT_FOUND}")
-	  include("cmake/qt_msvc_path.cmake")
       autodetect_qt_msvc_dir()
     endif()
   endif()
 endif()
-
-find_package(CMakeFunctions REQUIRED)
 
 git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
 set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
@@ -530,6 +529,19 @@ install(FILES
   COMPONENT sdk
 )
 
+# Helper functions (protobuf targets, git version, Qt deployment, ...) used by eCALConfig.cmake and the samples
+install(FILES cmake/cmake_functions.cmake
+  DESTINATION ${eCAL_install_cmake_dir}
+  COMPONENT sdk
+)
+foreach(_ecal_cmake_functions_file ${ecal_cmake_functions_files})
+  get_filename_component(_ecal_cmake_functions_dir ${_ecal_cmake_functions_file} DIRECTORY)
+  install(FILES cmake/${_ecal_cmake_functions_file}
+    DESTINATION ${eCAL_install_cmake_dir}/${_ecal_cmake_functions_dir}
+    COMPONENT sdk
+  )
+endforeach()
+
 install(EXPORT eCALCoreTargets
   FILE ${PROJECT_NAME}Targets.cmake
   DESTINATION ${eCAL_install_cmake_dir}
@@ -574,7 +586,6 @@ message(STATUS "ECAL_INSTALL_SAMPLE_SOURCES                         : ${ECAL_INS
 message(STATUS "ECAL_USE_NPCAP                                      : ${ECAL_USE_NPCAP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_ASIO                          : ${ECAL_THIRDPARTY_BUILD_ASIO}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_BENCHMARK                     : ${ECAL_THIRDPARTY_BUILD_BENCHMARK}")
-message(STATUS "ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS               : ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_CURL                          : ${ECAL_THIRDPARTY_BUILD_CURL}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FINEFTP                       : ${ECAL_THIRDPARTY_BUILD_FINEFTP}")
 message(STATUS "ECAL_THIRDPARTY_BUILD_FTXUI                         : ${ECAL_THIRDPARTY_BUILD_FTXUI}")

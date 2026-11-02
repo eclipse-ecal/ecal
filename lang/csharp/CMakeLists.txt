@@ -19,9 +19,14 @@
 # C# build, can be executed standalone against an eCAL installation
 cmake_minimum_required(VERSION 3.15)
 
-find_package(CMakeFunctions CONFIG REQUIRED)
+project(ecal_csharp)
+
+# Provides git_revision_information() and the other helper functions
+find_package(eCAL REQUIRED)
+
 git_revision_information()
 
+# The version is only known after the helper functions are available, which requires an enabled language (Threads).
 project(ecal_csharp
   VERSION "${GIT_REVISION_MAJOR}.${GIT_REVISION_MINOR}.${GIT_REVISION_PATCH}"
 )

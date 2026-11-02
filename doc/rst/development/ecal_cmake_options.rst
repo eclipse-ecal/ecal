@@ -61,8 +61,6 @@ All options can be passed on the command line cmake ``-D<option>=<value>`` or in
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_BENCHMARK``       | ``ON``  | Build Google Benchmark with eCAL                                |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
-| ``ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS`` | ``ON``  | Build CMakeFunctions with eCAL                                  |
-+-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_FINEFTP``         | ``ON``  | Build fineFTP with eCAL                                         |
 +-------------------------------------------+---------+-----------------------------------------------------------------+
 | ``ECAL_THIRDPARTY_BUILD_FTXUI``           | ``ON``  | Build ftxui with eCAL                                           |
