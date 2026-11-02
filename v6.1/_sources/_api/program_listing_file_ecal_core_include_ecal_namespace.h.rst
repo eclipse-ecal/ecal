@@ -29,6 +29,7 @@ Program Listing for File namespace.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #if ECAL_CORE_NAMESPACE_V5_INLINE

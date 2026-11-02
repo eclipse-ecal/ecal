@@ -29,6 +29,7 @@ Program Listing for File process_mode.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    namespace eCAL

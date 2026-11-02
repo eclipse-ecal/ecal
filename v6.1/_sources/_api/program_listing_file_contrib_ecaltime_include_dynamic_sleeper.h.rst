@@ -134,6 +134,7 @@ Program Listing for File dynamic_sleeper.h
    private:
      std::mutex waitMutex;             
      std::condition_variable waitCv;   
+   
      std::mutex modifyTimeMutex;       
      double rate;                      
      long long lastSimTime;            

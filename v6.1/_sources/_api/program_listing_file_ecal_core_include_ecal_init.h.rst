@@ -29,6 +29,7 @@ Program Listing for File init.h
     * ========================= eCAL LICENSE =================================
    */
    
+   
    #pragma once
    
    #include <ecal/config/configuration.h>
