@@ -61,9 +61,9 @@ Defines
 
 - :ref:`exhale_define_os_8h_1af6e423394b69677025cd7997c3566d77`
 
-- :ref:`exhale_define_os_8h_1a0556b2d6567b59b5904429df606ef931`
-
 - :ref:`exhale_define_os_8h_1afc0d02175308ccac5bdfb04fa38fe7b7`
+
+- :ref:`exhale_define_os_8h_1a0556b2d6567b59b5904429df606ef931`
 
 - :ref:`exhale_define_os_8h_1a546b32f89f9cf15da312d39f6252f29e`
 
