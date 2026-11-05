@@ -6,8 +6,8 @@
 Binary: Mirror
 ==============
 
-Under this section you will find a simple example of a client/server application using the eCAL ClientServer API.
-You should be already familiar with the base handling of eCAL from the Publisher/Subscriber samples, so this we will not be covered in detail any more.
+In this section you will find a simple example of a client/server application using the eCAL ClientServer API.
+You should already be familiar with the base handling of eCAL from the Publisher/Subscriber samples, so this will not be covered in detail anymore.
 
 Mirror Server
 =============
@@ -18,7 +18,7 @@ We will set up a simple server that provides two methods: "echo" and "mirror".
 
 The main process is:
 
-- Intialize eCAL
+- Initialize eCAL
 - Create a Service Server
 - For each method, add meta information about that method (such as method name, and types of the request and response) and a callback function to be invoked, when a client calls that method
 - Keep the program running while the service is supposed to be executed
@@ -35,7 +35,7 @@ The main process is:
     .. group-tab:: C
 
         .. literalinclude:: /source_code_samples/c/binary/mirror/mirror_server_c/src/mirror_server_c.c
-            :language: cpp
+            :language: c
             :linenos:
             :lines: 20-
 
@@ -82,14 +82,14 @@ The main process is:
 Mirror Client
 =============
 
-The client will have some more logic to take care of, as its possible that multiple servers are running with the same service name.
+The client will have some more logic to take care of, because multiple servers may use the same service name.
 
 - Initialize eCAL
 - Create a service client with the service name and (optionally) register the functions it can call (in this case "echo" and "mirror")
 - Waiting for a server to be available (this is optional and depends on how you want to design your application)
 - Retrieve all client instances.
   You can also call it directly on the service client, but if you iterate through all client instances, you are more flexible and could filter out instances you don't want to call.
-- Then we call the methodnames with two different calls: with callback (non blocking) and with response (blocking)
+- Then we call the method names with two different calls: with callback (non-blocking) and with response (blocking)
 - Handle the received data (or error status)
 
 As a little extra we also added a little bit more eCAL state handling as in the previous examples.
@@ -106,7 +106,7 @@ As a little extra we also added a little bit more eCAL state handling as in the 
     .. group-tab:: C
 
         .. literalinclude:: /source_code_samples/c/binary/mirror/mirror_client_c/src/mirror_client_c.c
-            :language: cpp
+            :language: c
             :linenos:
             :lines: 20-
 

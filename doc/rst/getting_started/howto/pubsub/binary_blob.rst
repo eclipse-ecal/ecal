@@ -10,10 +10,10 @@ After you have learned a lot about the pre-compiled applications that come with 
 We will see how to create publisher and subscriber applications that send and receive binary data.
 We will provide samples for all supported programming languages: C++, C, C# and Python.
 
-The most low level publisher and subscriber objects are the binary ones.
+The most low-level publisher and subscriber objects are the binary ones.
 We will focus on them in this section.
 As we are just sending an arbitrary "blob" of data (filled with random printable characters), the applications are called "blob sender" and "blob receiver".
-For sending structured / typed data, please refer to the following sections.
+For sending structured or typed data, please refer to the following sections.
 
 
 Blob Publisher
@@ -24,7 +24,7 @@ Let's begin with the publisher side of our "Blob" application.
 The base initialization of the eCAL publisher is the same in all languages:
 
 1. Before you do anything else, you need to initialize eCAL with ``Initialize(..)``.
-2. Then you create the publisher and send a message in the frequency you want.
+2. Then, create the publisher and send messages at the desired frequency.
    In our example we will send the message every 500 ms in an infinite loop.
    You can add a stop condition to the loop, if you want to send just a limited amount of messages.
 3. After you are done with publishing data and you don't need eCAL anymore, you can call the ``Finalize()`` 
@@ -44,7 +44,7 @@ For simplicity, we will use the same message type in all languages.
     .. group-tab:: C
 
         .. literalinclude:: /source_code_samples/c/binary/blob/blob_send/src/blob_send.c
-            :language: cpp
+            :language: c
             :linenos:
             :lines: 20-
 
@@ -115,7 +115,7 @@ Instead of sending data, a callback function is assigned to the subscriber, whic
     .. group-tab:: C
 
         .. literalinclude:: /source_code_samples/c/binary/blob/blob_receive/src/blob_receive.c
-            :language: cpp
+            :language: c
             :linenos:
             :lines: 20-
 
