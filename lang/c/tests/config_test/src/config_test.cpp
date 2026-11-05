@@ -63,6 +63,7 @@ TEST_F(config_test_c, Registration)
     EXPECT_STREQ(configuration0->registration.shm_transport_domain, eCAL_GetConfiguration()->registration.shm_transport_domain);
     EXPECT_EQ(configuration0->registration.local.shm.queue_size, eCAL_Config_GetShmMonitoringQueueSize());
     EXPECT_EQ(configuration0->registration.local.shm.queue_size, eCAL_GetConfiguration()->registration.local.shm.queue_size);
+    EXPECT_EQ(configuration0->registration.local.shm.receive_poll_ms, eCAL_GetConfiguration()->registration.local.shm.receive_poll_ms);
     EXPECT_STREQ(configuration0->registration.local.shm.domain, eCAL_Config_GetShmMonitoringDomain());
     EXPECT_STREQ(configuration0->registration.local.shm.domain, eCAL_GetConfiguration()->registration.local.shm.domain);
 

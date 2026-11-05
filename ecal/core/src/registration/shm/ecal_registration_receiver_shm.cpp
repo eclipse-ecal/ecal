@@ -53,7 +53,7 @@ namespace eCAL
     m_memfile_broadcast_reader->Bind(m_memfile_broadcast.get());
 
     m_memfile_broadcast_reader_thread = std::make_unique<CCallbackThread>(std::bind(&CRegistrationReceiverSHM::Receive, this));
-    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(Config::GetRegistrationRefreshMs() / 2));
+    m_memfile_broadcast_reader_thread->start(std::chrono::milliseconds(attr_.receive_poll_ms));
   }
 
   CRegistrationReceiverSHM::~CRegistrationReceiverSHM()

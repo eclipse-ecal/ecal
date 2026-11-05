@@ -41,6 +41,7 @@ namespace eCAL
 
     attr.shm.domain        = reg_config.local.shm.domain;
     attr.shm.queue_size    = reg_config.local.shm.queue_size;
+    attr.shm.receive_poll_ms = reg_config.local.shm.receive_poll_ms;
      
     switch (config_.communication_mode)
     {
