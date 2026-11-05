@@ -35,16 +35,16 @@ As the sender and receiver need the same .proto files, we place them in a separa
 .. parsed-literal::
    
    |fa-folder-open| Person Protobuf File
-   ├─ |fa-file-alt| :download:`person.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto>`
+    ├─ |fa-file-alt| :download:`person.proto </source_code_samples/cpp/protobuf/person/person.proto>`
    │
-   ├─ |fa-file-alt| :download:`animal.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/animal.proto>`
+    ├─ |fa-file-alt| :download:`animal.proto </source_code_samples/cpp/protobuf/person/animal.proto>`
    │
-   └─ |fa-file-alt| :download:`house.proto </source_code_samples/cpp/protobuf/person/person_send/src/protobuf/house.proto>`
+    └─ |fa-file-alt| :download:`house.proto </source_code_samples/cpp/protobuf/person/house.proto>`
 
 
 Let's start with the :file:`protobuf/person.proto` file!
 
-.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/person.proto
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/person.proto
    :language: protobuf
    :linenos:
    :lines: 20-
@@ -52,12 +52,12 @@ Let's start with the :file:`protobuf/person.proto` file!
 As you can see, the ``person.proto`` file imports also other message definitions: ``animal.proto`` and ``house.proto``.
 So we need them as well. The definitions are straight forward. For more information about protobuf, please refer to the detailed official documentation.
 
-.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/animal.proto
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/animal.proto
    :language: protobuf
    :linenos:
    :lines: 20-
 
-.. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/protobuf/house.proto
+.. literalinclude:: /source_code_samples/cpp/protobuf/person/house.proto
    :language: protobuf
    :linenos:
    :lines: 20-
@@ -75,7 +75,7 @@ The main differences to the string publisher are:
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send/src/person_send.cpp
+        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_send.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -105,7 +105,7 @@ The main differences to the string publisher are:
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`person_send.cpp </source_code_samples/cpp/protobuf/person/person_send/src/person_send.cpp>`
+    │  └─ |fa-file-alt| :download:`person_send.cpp </source_code_samples/cpp/protobuf/person/person_send.cpp>`
    │
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`person_send_csharp.cs </source_code_samples/csharp/protobuf/person/person_send_csharp.cs>`
@@ -126,7 +126,7 @@ For the subscriber the same changes apply as for the publisher.
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_receive/src/person_receive.cpp
+        .. literalinclude:: /source_code_samples/cpp/protobuf/person/person_receive.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -157,7 +157,7 @@ For the subscriber the same changes apply as for the publisher.
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/person_receive/src/person_receive.cpp>`
+    │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/person_receive.cpp>`
    │
    ├─ |fa-folder-open| C#
    │  └─ |fa-file-alt| :download:`person_receive_csharp.cs </source_code_samples/csharp/protobuf/person/person_receive_csharp.cs>`
@@ -184,7 +184,7 @@ Progress on this feature can be tracked in the following `GitHub issue <https://
 
     .. group-tab:: C++
 
-        .. literalinclude:: /source_code_samples/cpp/protobuf/person/proto_dyn_rec/src/proto_dyn_rec.cpp
+        .. literalinclude:: /source_code_samples/cpp/protobuf/dynamic/dynamic_receive.cpp
             :language: cpp
             :linenos:
             :lines: 20-
@@ -201,7 +201,7 @@ Progress on this feature can be tracked in the following `GitHub issue <https://
 
    |fa-folder-open|
    ├─ |fa-folder-open| C++
-   │  └─ |fa-file-alt| :download:`person_receive.cpp </source_code_samples/cpp/protobuf/person/proto_dyn_rec/src/proto_dyn_rec.cpp>`
+    │  └─ |fa-file-alt| :download:`dynamic_receive.cpp </source_code_samples/cpp/protobuf/dynamic/dynamic_receive.cpp>`
    │
    └─ |fa-folder-open| Python
       └─ |fa-file-alt| :download:`person_receive.py </source_code_samples/python/protobuf/person/nb_protobuf_dynamic_person_receive.py>`      
