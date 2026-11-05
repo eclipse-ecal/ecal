@@ -22,6 +22,11 @@ cmake_minimum_required(VERSION 3.13)
 set(ECAL_CORE_PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 # --------------------------------------------------------
+# tracing
+# --------------------------------------------------------
+add_subdirectory(tracing)
+
+# --------------------------------------------------------
 # core
 # --------------------------------------------------------
 add_subdirectory(core)

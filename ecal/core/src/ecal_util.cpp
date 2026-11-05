@@ -46,6 +46,11 @@ namespace eCAL
       return eCAL::Config::GeteCALLogDirImpl();
     }
 
+    std::string GeteCALTraceDir()
+    {
+      return eCAL::Config::GeteCALTraceDirImpl();
+    }
+
 #if ECAL_CORE_MONITORING
     // take monitoring snapshot
     static Monitoring::SMonitoring GetMonitoring()

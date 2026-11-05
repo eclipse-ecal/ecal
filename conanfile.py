@@ -17,6 +17,7 @@ class eCALConan(ConanFile):
     def requirements(self):
         self.requires("hdf5/1.10.6")
         self.requires("protobuf/3.17.1")
+        self.requires("nlohmann_json/3.11.2")
         self.requires("libcurl/7.78.0")
         self.requires("qt/5.15.2")
         self.requires("spdlog/1.9.2")
@@ -51,6 +52,6 @@ class eCALConan(ConanFile):
         else:
             tc.variables["Protobuf_PROTOC_EXECUTABLE"] = os.path.join(self.deps_cpp_info["protobuf"].rootpath, "bin", "protoc")
         tc.generate()
-        
-        
-       
+
+
+

@@ -14,6 +14,7 @@ set(ecal_submodule_dependencies
   HDF5
   #libssh2
   nanobind
+  nlohmann_json
   Protobuf
   protozero
   qwt
