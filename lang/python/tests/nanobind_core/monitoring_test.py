@@ -17,6 +17,7 @@
 # ========================= eCAL LICENSE =================================
 
 import os
+import gc
 from time import sleep
 
 import pytest
@@ -29,11 +30,12 @@ ServiceClient            = ecal_core.ServiceClient
 
 UNIT_NAME = "Monitoring Python Test"
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def init_ecal():
     ecal_core.initialize(UNIT_NAME, ecal_core.init.ALL)
     sleep(2)  # allow registration to propagate
     yield
+    gc.collect()  # Force garbage collection before cleanup
     ecal_core.finalize()
 
 

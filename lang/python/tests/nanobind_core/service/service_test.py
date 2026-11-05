@@ -19,13 +19,15 @@
 import time
 import pytest
 import threading
+import gc
 
 import ecal.nanobind_core as ecal_core
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def init_ecal():
     ecal_core.initialize("ecal_pytest_services", ecal_core.init.ALL)
     yield
+    gc.collect()  # Force garbage collection before cleanup
     ecal_core.finalize()
 
 # Aliases for readability
@@ -203,7 +205,7 @@ def test_client_server_call_instances_with_response():
     client = create_client(svc_name)
 
     # give eCAL a moment to wire up
-    time.sleep(2)
+    time.sleep(3)
 
     # Check both sides report connected
     assert server_1.is_connected() 
@@ -234,7 +236,7 @@ def test_client_server_call_instances_with_callback():
     client = create_client(svc_name)
 
     # give eCAL a moment to wire up
-    time.sleep(2)
+    time.sleep(3)
 
     # Check both sides report connected
     assert server_1.is_connected() 
@@ -272,7 +274,7 @@ def test_client_server_call_instances_with_callback_async():
     client = create_client(svc_name)
 
     # give eCAL a moment to wire up
-    time.sleep(2)
+    time.sleep(3)
 
     # Check both sides report connected
     assert server_1.is_connected() 

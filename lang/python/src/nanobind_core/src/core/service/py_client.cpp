@@ -44,11 +44,12 @@ void AddServiceClient(nanobind::module_& m)
         // Wrap optional Python callback
         eCAL::ClientEventCallbackT event_callback_cpp = nullptr;
         if (!callback_python.is_none()) {
-          event_callback_cpp = [callback_python](const eCAL::SServiceId& sid,
+          auto callback_ptr = make_gil_safe_shared<nb::object>(callback_python);
+          event_callback_cpp = [callback_ptr](const eCAL::SServiceId& sid,
             const eCAL::SClientEventCallbackData& data) {
               try {
                 nb::gil_scoped_acquire acquire;
-                callback_python(sid, data);
+                (*callback_ptr)(sid, data);
               }
               catch (const std::exception& e) {
                 std::cerr << "Client event callback error: " << e.what() << std::endl;
