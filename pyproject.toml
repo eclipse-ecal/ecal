@@ -37,6 +37,7 @@ dependencies = [
 
 [tool.hatch.version]
 source = "vcs"
+raw-options = { version_scheme = "no-guess-dev" }
 
 [tool.hatch.build.targets]
 # Files to include in the source archive to build from
