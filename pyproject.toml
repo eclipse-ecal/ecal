@@ -60,9 +60,9 @@ sdist.only-include = [
   "serialization/string/",
   "serialization/common/", 
 
+  "thirdparty/absl/",
   "thirdparty/ecaludp/",
   "thirdparty/nanobind/",
-  "thirdparty/absl/",
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/tclap/",
