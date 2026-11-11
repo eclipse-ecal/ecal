@@ -27,7 +27,7 @@
 #include <nanobind/stl/pair.h>
 
 #include <helper/bytestring_property.h>
-#include <helper/make_gil_safe_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -70,7 +70,7 @@ void AddServiceClientInstance(nanobind::module_& m)
         const nb::bytes& python_request,
         const nb::callable& python_callback,
         int timeout_ms) {
-          auto python_callback_pointer = make_gil_safe_shared<nb::callable>(python_callback);
+          auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(python_callback);
           eCAL::ResponseCallbackT cpp_callback = [python_callback_pointer](const eCAL::SServiceResponse& resp) {
             nb::gil_scoped_acquire acquire;
             try { (*python_callback_pointer)(resp); }
@@ -95,7 +95,7 @@ void AddServiceClientInstance(nanobind::module_& m)
         const std::string& method_name,
         const nb::bytes& python_request,
         const nb::callable& python_callback) {
-          auto python_callback_pointer = make_gil_safe_shared<nb::callable>(python_callback);
+          auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(python_callback);
           eCAL::ResponseCallbackT cpp_callback = [python_callback_pointer](const eCAL::SServiceResponse& resp) {
             nb::gil_scoped_acquire acquire;
             try { (*python_callback_pointer)(resp); }

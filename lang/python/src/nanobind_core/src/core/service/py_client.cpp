@@ -26,8 +26,7 @@
 #include <nanobind/stl/tuple.h>
 
 #include <helper/bytestring_property.h>
-#include <helper/make_gil_safe_shared.h>
-#include <helper/make_gil_released_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -44,7 +43,7 @@ void AddServiceClient(nanobind::module_& m)
         // Wrap optional Python callback
         eCAL::ClientEventCallbackT event_callback_cpp = nullptr;
         if (!callback_python.is_none()) {
-          auto callback = make_gil_safe_shared(callback_python);
+          auto callback = make_shared_with_gil_acquired_on_delete(callback_python);
           event_callback_cpp = [callback](const eCAL::SServiceId& sid,
             const eCAL::SClientEventCallbackData& data) {
               try {
@@ -56,7 +55,7 @@ void AddServiceClient(nanobind::module_& m)
               }
           };
         }
-        return make_gil_released_shared<eCAL::CServiceClient>(service_name, methods, event_callback_cpp);
+        return make_shared_with_gil_released_on_construct_and_delete<eCAL::CServiceClient>(service_name, methods, event_callback_cpp);
       }),
       nb::arg("service_name"),
       nb::arg("methods") = eCAL::ServiceMethodInformationSetT(),
@@ -78,7 +77,7 @@ void AddServiceClient(nanobind::module_& m)
         std::vector<std::shared_ptr<eCAL::CClientInstance>> result;
         result.reserve(instances.size());
         for (auto& instance : instances)
-          result.push_back(make_gil_released_shared<eCAL::CClientInstance>(std::move(instance)));
+          result.push_back(make_shared_with_gil_released_on_construct_and_delete<eCAL::CClientInstance>(std::move(instance)));
         return result;
       },
       "Return a list of ClientInstance objects for all matching service servers.")
@@ -112,7 +111,7 @@ void AddServiceClient(nanobind::module_& m)
         const nb::callable& python_callback,
         int timeout_ms) -> bool
       {
-        auto python_callback_pointer = make_gil_safe_shared<nb::callable>(python_callback);
+        auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(python_callback);
         eCAL::ResponseCallbackT cb = [python_callback_pointer](const eCAL::SServiceResponse& resp) {
           try {
             nb::gil_scoped_acquire acquire;
@@ -138,7 +137,7 @@ void AddServiceClient(nanobind::module_& m)
           const nb::bytes& request,
           const nb::callable& python_callback) -> bool
         {
-          auto python_callback_pointer = make_gil_safe_shared<nb::callable>(python_callback);
+          auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(python_callback);
           eCAL::ResponseCallbackT cb = [python_callback_pointer](const eCAL::SServiceResponse& resp) {
           try {
             nb::gil_scoped_acquire acquire;

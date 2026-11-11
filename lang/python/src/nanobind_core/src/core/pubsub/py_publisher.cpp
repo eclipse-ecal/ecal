@@ -24,8 +24,7 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
-#include <helper/make_gil_safe_shared.h>
-#include <helper/make_gil_released_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 #include <exception>
 
@@ -40,7 +39,7 @@ void AddPubsubPublisher(nanobind::module_& module)
         PubEventCallbackT event_callback_cpp = nullptr;
         if (!event_callback_.is_none())
         {
-          auto callback = make_gil_safe_shared(event_callback_);
+          auto callback = make_shared_with_gil_acquired_on_delete(event_callback_);
           event_callback_cpp = [callback](auto&&... args) {
             try {
               nb::gil_scoped_acquire acquire;
@@ -53,7 +52,7 @@ void AddPubsubPublisher(nanobind::module_& module)
             }
           };
         }
-        return make_gil_released_shared<CPublisher>(topic_name, datatype_info, event_callback_cpp, config_);
+        return make_shared_with_gil_released_on_construct_and_delete<CPublisher>(topic_name, datatype_info, event_callback_cpp, config_);
       }),
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),

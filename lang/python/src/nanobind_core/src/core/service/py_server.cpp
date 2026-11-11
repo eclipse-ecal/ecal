@@ -26,8 +26,7 @@
 #include <nanobind/stl/tuple.h>
 
 #include <helper/bytestring_property.h>
-#include <helper/make_gil_safe_shared.h>
-#include <helper/make_gil_released_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -40,7 +39,7 @@ void AddServiceServer(nanobind::module_& m)
         const nb::object& callback_python) {
           eCAL::ServerEventCallbackT event_callback_cpp = nullptr;
           if (!callback_python.is_none()) {
-            auto callback = make_gil_safe_shared(callback_python);
+            auto callback = make_shared_with_gil_acquired_on_delete(callback_python);
             event_callback_cpp = [callback](const eCAL::SServiceId& service_id,
               const eCAL::SServerEventCallbackData& data) {
                 try {
@@ -53,7 +52,7 @@ void AddServiceServer(nanobind::module_& m)
             };
           }
 
-          return make_gil_released_shared<eCAL::CServiceServer>(service_name, event_callback_cpp);
+          return make_shared_with_gil_released_on_construct_and_delete<eCAL::CServiceServer>(service_name, event_callback_cpp);
       }),
       nb::arg("service_name"),
       nb::arg("event_callback") = nb::none(),
@@ -64,7 +63,7 @@ void AddServiceServer(nanobind::module_& m)
         const eCAL::SServiceMethodInformation& method_info,
         const nb::callable& py_callback) {
           // Wrap the Python callback
-          std::shared_ptr<nb::callable> python_callback_pointer = make_gil_safe_shared<nb::callable>(py_callback);
+          std::shared_ptr<nb::callable> python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(py_callback);
 
           auto wrapped_callback = [python_callback_pointer](
             const eCAL::SServiceMethodInformation& cpp_info,

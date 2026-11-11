@@ -23,8 +23,7 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
-#include <helper/make_gil_safe_shared.h>
-#include <helper/make_gil_released_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 #include <exception>
 
@@ -40,7 +39,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
         SubEventCallbackT event_callback_cpp = nullptr;
         if (!event_callback_.is_none())
         {
-          auto callback = make_gil_safe_shared(event_callback_);
+          auto callback = make_shared_with_gil_acquired_on_delete(event_callback_);
           event_callback_cpp = [callback](auto&&... args) {
             try {
               nb::gil_scoped_acquire acquire;
@@ -53,7 +52,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
             }
           };
         }
-        return make_gil_released_shared<CSubscriber>(topic_name, datatype_info, event_callback_cpp, config_);
+        return make_shared_with_gil_released_on_construct_and_delete<CSubscriber>(topic_name, datatype_info, event_callback_cpp, config_);
       }),
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),
@@ -67,7 +66,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
         // We use a shared pointer of the callback, because this way the reference count does not have to be
         // increased when we set the callback. Because we cannot hold the GIL when we set the callback, du to potential deadlocks
         // also we need to make sure that the GIL is held whenever the callback is destroyed
-        auto python_callback_pointer = make_gil_safe_shared<nb::callable>(py_callback);
+        auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(py_callback);
         auto wrapped_callback = [python_callback_pointer](auto&&... args) {
           try {
             nb::gil_scoped_acquire acquire;
