@@ -27,6 +27,7 @@
 
 #include <helper/bytestring_property.h>
 #include <helper/make_gil_safe_shared.h>
+#include <helper/make_gil_released_shared.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -34,17 +35,17 @@ using namespace nb::literals;
 void AddServiceServer(nanobind::module_& m)
 {
   nb::class_<eCAL::CServiceServer>(m, "ServiceServer", "Service server for handling RPC calls in eCAL.")
-    .def("__init__",
-      [](eCAL::CServiceServer* self,
-        nb::str service_name,
+    .def(nb::new_(
+      [](const std::string& service_name,
         const nb::object& callback_python) {
           eCAL::ServerEventCallbackT event_callback_cpp = nullptr;
           if (!callback_python.is_none()) {
-            event_callback_cpp = [callback_python](const eCAL::SServiceId& service_id,
+            auto callback = make_gil_safe_shared(callback_python);
+            event_callback_cpp = [callback](const eCAL::SServiceId& service_id,
               const eCAL::SServerEventCallbackData& data) {
                 try {
                   nb::gil_scoped_acquire acquire;
-                  callback_python(service_id, data);
+                  (*callback)(service_id, data);
                 }
                 catch (const std::exception& e) {
                   std::cerr << "Error in server event callback: " << e.what() << std::endl;
@@ -52,8 +53,8 @@ void AddServiceServer(nanobind::module_& m)
             };
           }
 
-          new (self) eCAL::CServiceServer(service_name.c_str(), event_callback_cpp);
-      },
+          return make_gil_released_shared<eCAL::CServiceServer>(service_name, event_callback_cpp);
+      }),
       nb::arg("service_name"),
       nb::arg("event_callback") = nb::none(),
       "Create a service server with an optional event callback.")
@@ -98,6 +99,7 @@ void AddServiceServer(nanobind::module_& m)
 
     .def("remove_method_callback",
       &eCAL::CServiceServer::RemoveMethodCallback,
+      nb::call_guard<nb::gil_scoped_release>(),
       nb::arg("method"),
       "Remove a previously registered method callback.")
 

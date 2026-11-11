@@ -27,6 +27,7 @@
 
 #include <helper/bytestring_property.h>
 #include <helper/make_gil_safe_shared.h>
+#include <helper/make_gil_released_shared.h>
 
 namespace nb = nanobind;
 using namespace nb::literals;
@@ -35,29 +36,28 @@ void AddServiceClient(nanobind::module_& m)
 {
   nb::class_<eCAL::CServiceClient>(m, "ServiceClient", "Wrapper for eCAL service client.")
     // Expose constructor with optional method set and event callback
-    .def("__init__",
-      [](eCAL::CServiceClient* self,
-        nb::str service_name,
+    .def(nb::new_(
+      [](const std::string& service_name,
         const eCAL::ServiceMethodInformationSetT& methods,
         const nb::object& callback_python)
       {
         // Wrap optional Python callback
         eCAL::ClientEventCallbackT event_callback_cpp = nullptr;
         if (!callback_python.is_none()) {
-          event_callback_cpp = [callback_python](const eCAL::SServiceId& sid,
+          auto callback = make_gil_safe_shared(callback_python);
+          event_callback_cpp = [callback](const eCAL::SServiceId& sid,
             const eCAL::SClientEventCallbackData& data) {
               try {
                 nb::gil_scoped_acquire acquire;
-                callback_python(sid, data);
+                (*callback)(sid, data);
               }
               catch (const std::exception& e) {
                 std::cerr << "Client event callback error: " << e.what() << std::endl;
               }
           };
         }
-        // Placement-new
-        new (self) eCAL::CServiceClient(service_name.c_str(), methods, event_callback_cpp);
-      },
+        return make_gil_released_shared<eCAL::CServiceClient>(service_name, methods, event_callback_cpp);
+      }),
       nb::arg("service_name"),
       nb::arg("methods") = eCAL::ServiceMethodInformationSetT(),
       nb::arg("event_callback") = nb::none(),
@@ -69,7 +69,18 @@ void AddServiceClient(nanobind::module_& m)
       "Use for infinite timeout in call methods.")
 
     .def("get_client_instances",
-      &eCAL::CServiceClient::GetClientInstances,
+      [](const eCAL::CServiceClient& self) {
+        std::vector<eCAL::CClientInstance> instances;
+        {
+          nb::gil_scoped_release release;
+          instances = self.GetClientInstances();
+        }
+        std::vector<std::shared_ptr<eCAL::CClientInstance>> result;
+        result.reserve(instances.size());
+        for (auto& instance : instances)
+          result.push_back(make_gil_released_shared<eCAL::CClientInstance>(std::move(instance)));
+        return result;
+      },
       "Return a list of ClientInstance objects for all matching service servers.")
 
     .def("call_with_response",
@@ -79,11 +90,12 @@ void AddServiceClient(nanobind::module_& m)
         int timeout_ms) -> nb::object
       {
         eCAL::ServiceResponseVecT resp_vec;
+        const auto cpp_request = nb_bytes_to_std_string(request);
         bool ok = false;
         {
           // Release the GIL during the potentially long C++ call
           nb::gil_scoped_release release;
-          ok = self.CallWithResponse(method_name, nb_bytes_to_std_string(request), resp_vec, timeout_ms);
+          ok = self.CallWithResponse(method_name, cpp_request, resp_vec, timeout_ms);
         }
         if (ok) return nb::cast(resp_vec);
         return nb::none();
@@ -110,8 +122,9 @@ void AddServiceClient(nanobind::module_& m)
             std::cerr << "Response callback error: " << e.what() << std::endl;
           }
         };
+        const auto cpp_request = nb_bytes_to_std_string(request);
         nb::gil_scoped_release release;
-        return self.CallWithCallback(method_name, nb_bytes_to_std_string(request), cb, timeout_ms);
+        return self.CallWithCallback(method_name, cpp_request, cb, timeout_ms);
       },
       nb::arg("method_name"),
       nb::arg("request"),
@@ -135,8 +148,9 @@ void AddServiceClient(nanobind::module_& m)
             std::cerr << "Async response callback error: " << e.what() << std::endl;
           }
         };
+        const auto cpp_request = nb_bytes_to_std_string(request);
         nb::gil_scoped_release release;
-        return self.CallWithCallbackAsync(method_name, nb_bytes_to_std_string(request), cb);
+        return self.CallWithCallbackAsync(method_name, cpp_request, cb);
       },
       nb::arg("method_name"),
       nb::arg("request"),
@@ -153,5 +167,6 @@ void AddServiceClient(nanobind::module_& m)
 
     .def("is_connected",
       &eCAL::CServiceClient::IsConnected,
+      nb::call_guard<nb::gil_scoped_release>(),
       "Return True if at least one server instance is connected.");
 }

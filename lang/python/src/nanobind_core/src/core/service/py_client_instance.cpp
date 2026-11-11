@@ -39,7 +39,7 @@ void AddServiceClientInstance(nanobind::module_& m)
     "Handle to a specific eCAL service client instance.  \n"
     "Cannot be constructed directly from Python; you get it from the ServiceClient API."
     )
-    // No .def(nb::init<…>()) here! -  Class shall not be constructible from Python
+    // No .def(nb::init<ï¿½>()) here! -  Class shall not be constructible from Python
 
     .def("call_with_response",
       [](eCAL::CClientInstance& self,
@@ -116,6 +116,7 @@ void AddServiceClientInstance(nanobind::module_& m)
 
     .def("is_connected",
       &eCAL::CClientInstance::IsConnected,
+      nb::call_guard<nb::gil_scoped_release>(),
       "Check whether this client instance is connected.")
 
     .def("get_client_id",
