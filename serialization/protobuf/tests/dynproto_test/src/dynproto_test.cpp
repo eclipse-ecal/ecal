@@ -46,7 +46,7 @@ TEST(contrib, dynproto)
   ///////////////////////////////////////////////
   // this is the message type string
   ///////////////////////////////////////////////
-  std::string topic_type = person.GetTypeName();
+  std::string topic_type = std::string(person.GetTypeName());
   EXPECT_NE(0, static_cast<int>(topic_type.size()));
 
   // kill namespace and proto: prefix
@@ -166,6 +166,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
     ref_ptr->ListFields(msg_, &field_v);
     for(auto field : field_v)
     {
+      const std::string field_name(field->name());
       const google::protobuf::FieldDescriptor::CppType fdt = field->cpp_type();
       switch(fdt)
       {
@@ -175,12 +176,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedInt32(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetInt32(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetInt32(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_INT64:      // TYPE_INT64, TYPE_SINT64, TYPE_SFIXED64
@@ -189,12 +190,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedInt64(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetInt64(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetInt64(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_UINT32:     // TYPE_UINT32, TYPE_FIXED32
@@ -203,12 +204,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt32(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedUInt32(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetUInt32(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetUInt32(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_UINT64:     // TYPE_UINT64, TYPE_FIXED64
@@ -217,12 +218,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedUInt64(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedUInt64(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetUInt64(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetUInt64(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_DOUBLE:     // TYPE_DOUBLE
@@ -231,12 +232,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedDouble(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedDouble(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetDouble(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetDouble(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_FLOAT:      // TYPE_FLOAT
@@ -245,12 +246,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedFloat(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedFloat(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetFloat(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetFloat(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_BOOL:       // TYPE_BOOL
@@ -259,12 +260,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedBool(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedBool(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetBool(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetBool(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_ENUM:       // TYPE_ENUM
@@ -273,12 +274,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedEnum(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedEnum(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetEnum(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetEnum(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_STRING:     // TYPE_STRING, TYPE_BYTES
@@ -287,12 +288,12 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           int fsize = ref_ptr->FieldSize(msg_, field);
           for(int fnum = 0; fnum < fsize; ++fnum)
           {
-            ProcProtoType(prefix_, field->name(), ref_ptr->GetRepeatedString(msg_, field, fnum), fnum);
+            ProcProtoType(prefix_, field_name, ref_ptr->GetRepeatedString(msg_, field, fnum), fnum);
           }
         }
         else
         {
-          ProcProtoType(prefix_, field->name(), ref_ptr->GetString(msg_, field), 0);
+          ProcProtoType(prefix_, field_name, ref_ptr->GetString(msg_, field), 0);
         }
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE:    // TYPE_MESSAGE, TYPE_GROUP
@@ -303,7 +304,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
             for(int fnum = 0; fnum < fsize; ++fnum)
             {
               const google::protobuf::Message& msg = ref_ptr->GetRepeatedMessage(msg_, field, fnum);
-              std::string prefix = field->name();
+              std::string prefix = field_name;
               prefix += "[";
               prefix += std::to_string(fnum);
               prefix += "]";
@@ -314,7 +315,7 @@ void ProcProtoMsg(const google::protobuf::Message& msg_, const std::string& pref
           else
           {
             const google::protobuf::Message& msg = ref_ptr->GetMessage(msg_, field);
-            std::string prefix = field->name();
+            std::string prefix = field_name;
             if(!prefix_.empty()) prefix = prefix_ + "." + prefix;
             ProcProtoMsg(msg, prefix);
           }
