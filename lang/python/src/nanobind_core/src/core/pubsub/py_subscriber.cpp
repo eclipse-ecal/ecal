@@ -23,7 +23,7 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
-#include <helper/make_gil_safe_shared.h>
+#include <helper/gil_safe_pointers.h>
 
 #include <exception>
 
@@ -34,16 +34,17 @@ void AddPubsubSubscriber(nanobind::module_& module)
 {
     // Define Subscriber class
   nb::class_<CSubscriber>(module, "Subscriber")
-    .def("__init__", [](CSubscriber* t, nb::str topic_name, const SDataTypeInformation& datatype_info, const Subscriber::Configuration& config_, const nb::object& event_callback_)
+    .def(nb::new_([](const std::string& topic_name, const SDataTypeInformation& datatype_info, const Subscriber::Configuration& config_, const nb::object& event_callback_)
       { 
         SubEventCallbackT event_callback_cpp = nullptr;
         if (!event_callback_.is_none())
         {
-          event_callback_cpp = [event_callback_](auto&&... args) {
+          auto callback = make_shared_with_gil_acquired_on_delete(event_callback_);
+          event_callback_cpp = [callback](auto&&... args) {
             try {
               nb::gil_scoped_acquire acquire;
               // Call the Python callback, forwarding the arguments.
-              event_callback_(std::forward<decltype(args)>(args)...);
+              (*callback)(std::forward<decltype(args)>(args)...);
             }
             catch (const std::exception& e)
             {
@@ -51,8 +52,8 @@ void AddPubsubSubscriber(nanobind::module_& module)
             }
           };
         }
-        new (t) CSubscriber(topic_name.c_str(), datatype_info, event_callback_cpp, config_);
-      },
+        return make_shared_with_gil_released_on_construct_and_delete<CSubscriber>(topic_name, datatype_info, event_callback_cpp, config_);
+      }),
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),
       nb::arg("config") = GetSubscriberConfiguration(),
@@ -65,7 +66,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
         // We use a shared pointer of the callback, because this way the reference count does not have to be
         // increased when we set the callback. Because we cannot hold the GIL when we set the callback, du to potential deadlocks
         // also we need to make sure that the GIL is held whenever the callback is destroyed
-        auto python_callback_pointer = make_gil_safe_shared<nb::callable>(py_callback);
+        auto python_callback_pointer = make_shared_with_gil_acquired_on_delete<nb::callable>(py_callback);
         auto wrapped_callback = [python_callback_pointer](auto&&... args) {
           try {
             nb::gil_scoped_acquire acquire;
@@ -83,6 +84,7 @@ void AddPubsubSubscriber(nanobind::module_& module)
       },
       nb::arg("callback"))
     .def("remove_receive_callback", &CSubscriber::RemoveReceiveCallback,
+      nb::call_guard<nb::gil_scoped_release>(),
       "Remove a previously set receive callback.")
     .def("get_publisher_count", &CSubscriber::GetPublisherCount,
       "Get the number of connected publishers.")

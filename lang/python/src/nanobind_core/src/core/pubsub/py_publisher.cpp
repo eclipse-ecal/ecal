@@ -24,6 +24,8 @@
 #include <nanobind/stl/function.h>
 #include <nanobind/stl/string.h>
 
+#include <helper/gil_safe_pointers.h>
+
 #include <exception>
 
 namespace nb = nanobind;
@@ -33,15 +35,16 @@ void AddPubsubPublisher(nanobind::module_& module)
 {
   // Define CPublisher class
   nb::class_<CPublisher>(module, "Publisher")
-    .def("__init__", [](CPublisher* t, nb::str topic_name, const SDataTypeInformation& datatype_info, const Publisher::Configuration& config_, const nb::object& event_callback_) { 
+    .def(nb::new_([](const std::string& topic_name, const SDataTypeInformation& datatype_info, const Publisher::Configuration& config_, const nb::object& event_callback_) {
         PubEventCallbackT event_callback_cpp = nullptr;
         if (!event_callback_.is_none())
         {
-          event_callback_cpp = [event_callback_](auto&&... args) {
+          auto callback = make_shared_with_gil_acquired_on_delete(event_callback_);
+          event_callback_cpp = [callback](auto&&... args) {
             try {
               nb::gil_scoped_acquire acquire;
               // Call the Python callback, forwarding the arguments.
-              event_callback_(std::forward<decltype(args)>(args)...);
+              (*callback)(std::forward<decltype(args)>(args)...);
             }
             catch (const std::exception& e)
             {
@@ -49,8 +52,8 @@ void AddPubsubPublisher(nanobind::module_& module)
             }
           };
         }
-        new (t) CPublisher(topic_name.c_str(), datatype_info, event_callback_cpp, config_);
-      },
+        return make_shared_with_gil_released_on_construct_and_delete<CPublisher>(topic_name, datatype_info, event_callback_cpp, config_);
+      }),
       nb::arg("topic_name"),
       nb::arg("data_type_info") = SDataTypeInformation(),
       nb::arg("config") = GetPublisherConfiguration(),
