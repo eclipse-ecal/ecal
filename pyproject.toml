@@ -62,6 +62,7 @@ sdist.only-include = [
 
   "thirdparty/ecaludp/",
   "thirdparty/nanobind/",
+  "thirdparty/absl/",
   "thirdparty/protobuf/",
   "thirdparty/recycle/",
   "thirdparty/tclap/",

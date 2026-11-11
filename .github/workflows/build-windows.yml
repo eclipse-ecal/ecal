@@ -171,6 +171,7 @@ jobs:
         cmake -G "Ninja" ^
         -S serialization/protobuf/samples/pubsub/person_loopback ^
         -B _integration_test_build ^
+        -DCMAKE_BUILD_TYPE=Debug ^
         -DCMAKE_CONFIGURATION_TYPES="Debug" ^
         -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/_install/sdk"
         cmake --build _integration_test_build --config Debug
