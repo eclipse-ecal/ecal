@@ -31,7 +31,7 @@ protobuf
 
    * - **Upstream version** [#upstreamversion]_
 
-     - `v3.11.4 <https://github.com/protocolbuffers/protobuf/tree/v3.11.4>`_
+     - `v36.2 <https://github.com/protocolbuffers/protobuf/tree/v36.2>`_
 
    * - **Integration**
 
