@@ -1,8 +1,9 @@
 set(Protobuf_PROTOC_EXECUTABLE protoc)
-set(Protobuf_VERSION 3.11.4)
-set(Protobuf_VERSION_MAJOR 3)
-set(Protobuf_VERSION_MINOR 11)
-set(Protobuf_VERSION_PATCH 4)
+# Protobuf v36.2 reports its C++ runtime version as 7.36.2. Protobuf >= 22 requires abseil, >= 30 requires C++17.
+set(Protobuf_VERSION 7.36.2)
+set(Protobuf_VERSION_MAJOR 7)
+set(Protobuf_VERSION_MINOR 36)
+set(Protobuf_VERSION_PATCH 2)
 
 include_guard(GLOBAL)
 
@@ -11,6 +12,9 @@ set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "My option" FORCE)
 if(UNIX)
   set(protobuf_BUILD_SHARED_LIBS ON CACHE BOOL "My option" FORCE)
 endif()
+
+# Abseil must come from the abseil provider (submodule or system), never from a download.
+set(protobuf_LOCAL_DEPENDENCIES_ONLY ON CACHE BOOL "Do not download protobuf dependencies" FORCE)
 
 if(MSVC)
   message(STATUS "supress thirdparty warnings for windows platform ..")
@@ -23,10 +27,7 @@ if(MSVC)
 endif()
 
 ecal_disable_all_warnings()
-ecal_variable_push(CMAKE_POLICY_VERSION_MINIMUM)
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/protobuf/cmake" "${eCAL_BINARY_DIR}/thirdparty/protobuf" SYSTEM)
-ecal_variable_pop(CMAKE_POLICY_VERSION_MINIMUM)
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/protobuf" "${eCAL_BINARY_DIR}/thirdparty/protobuf" SYSTEM)
 ecal_restore_warning_level()
 
 if (NOT TARGET protobuf::libprotobuf)
