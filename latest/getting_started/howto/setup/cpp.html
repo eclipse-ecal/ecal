@@ -731,7 +731,7 @@
 <h1><span class="section-number">7.1.1. </span>C/C++ Setup<a class="headerlink" href="#c-c-setup" title="Link to this heading">#</a></h1>
 <p>To set up your environment for C++ development with eCAL, you will need:</p>
 <ul class="simple">
-<li><p>A C++ compiler (e.g., GCC, Clang, or MSVC) compatible with C++14 or newer.</p></li>
+<li><p>A C++ compiler (e.g., GCC, Clang, or MSVC) compatible with C++17 or newer.</p></li>
 <li><p>CMake (version 3.16 or higher) for project configuration and build management.</p></li>
 <li><p>An installed eCAL SDK, as described in the general installation instructions.</p></li>
 <li><p>Optionally, additional libraries such as Protobuf, Cap’n Proto, or FlatBuffers if you plan to use those features.</p></li>
@@ -777,8 +777,8 @@ Furthermore, you want to handle the generation of the Protobuf C++ source and he
 <span class="c"># So we name this project, which is also the name of the executable, accordingly.</span>
 <span class="nb">project</span><span class="p">(</span><span class="s">ecal_hello_world_send_protobuf</span><span class="p">)</span>
 
-<span class="c"># We set the C++ standard to C++14, which is currently required by eCAL.</span>
-<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">14</span><span class="p">)</span>
+<span class="c"># We set the C++ standard to C++17, which is currently required by eCAL.</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">17</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
 
 <span class="c"># Tell CMake to find the eCAL installation and the protobuf library.</span>
