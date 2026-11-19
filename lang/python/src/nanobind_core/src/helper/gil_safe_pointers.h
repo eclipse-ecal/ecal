@@ -18,14 +18,16 @@
 */
 
 /**
- * @file   helper/make_gil_safe_shared.h
- * @brief  Create GIL safe shared pointer that will aquire GIL before deleting object.
+ * @file   helper/gil_safe_pointers.h
+ * @brief  Shared pointers with GIL-aware construction and deletion.
 **/
 
 #pragma once
 
-#include <nanobind/nanobind.h>
+#include <nanobind/stl/shared_ptr.h>
+
 #include <memory>
+#include <utility>
 
 
 /**
@@ -35,9 +37,12 @@
  * @tparam T  The nanobind object type (e.g. nb::callable, nb::object, ...)
  * @param  obj The object to wrap.
  * @return A shared_ptr<T> whose custom deleter holds the GIL before deleting.
+ *
+ * Call with the GIL held. The last reference may be dropped on any thread
+ * while the interpreter is running.
  */
 template <typename T>
-std::shared_ptr<T> make_gil_safe_shared(T obj) {
+std::shared_ptr<T> make_shared_with_gil_acquired_on_delete(T obj) {
   // allocate on the heap so we control deletion
   return std::shared_ptr<T>(
     new T(std::move(obj)),
@@ -47,4 +52,25 @@ std::shared_ptr<T> make_gil_safe_shared(T obj) {
       delete p;
     }
   );
+}
+
+/**
+ * @brief Construct and delete a native object with the GIL released.
+ *
+ * Call with the GIL held, after converting Python arguments. Python must own
+ * the returned pointer and drop its last reference with the GIL held.
+ * Native construction and destruction may wait for callbacks that need the GIL.
+ */
+template <typename T, typename... Args>
+std::shared_ptr<T> make_shared_with_gil_released_on_construct_and_delete(Args&&... args)
+{
+  T* object;
+  {
+    nanobind::gil_scoped_release release;
+    object = new T(std::forward<Args>(args)...);
+  }
+  return std::shared_ptr<T>(object, [](T* pointer) {
+    nanobind::gil_scoped_release release;
+    delete pointer;
+  });
 }
