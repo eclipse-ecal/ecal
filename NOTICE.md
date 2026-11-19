@@ -63,6 +63,18 @@ permitted.
 
 eCAL makes use of the following external components:
 
+### abseil
+
+- **License**: Apache-2.0
+- **Copyright**: None
+- **Homepage**: https://abseil.io/
+- **Repository**: https://github.com/abseil/abseil-cpp
+- **Included in**:
+  - Git Submodule `/thirdparty/absl/absl`
+  - Windows builds
+  - Linux builds
+  - Python wheels
+
 ### asio
 
 - **License**: BSL-1.0
