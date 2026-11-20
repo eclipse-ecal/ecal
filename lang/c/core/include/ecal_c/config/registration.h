@@ -37,6 +37,7 @@ struct eCAL_Registration_Local_SHM_Configuration
 {
   const char* domain; //!< Domain name for shared memory based registration (Default: ecal_mon)
   size_t queue_size; //!< Queue size of registration events (Default: 1024)
+  unsigned int receive_poll_ms; //!< Polling period in ms for receiving shared memory registration events (Default: 15)
 };
 
 struct eCAL_Registration_Local_UDP_Configuration
