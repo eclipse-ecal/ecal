@@ -43,6 +43,21 @@ using ::testing::NiceMock;
 
 namespace
 {
+  std::string pathToUtf8(const std::filesystem::path& path_)
+  {
+    const auto utf8_path = path_.u8string();
+    return std::string(reinterpret_cast<const char*>(utf8_path.data()), utf8_path.size());
+  }
+
+  std::filesystem::path utf8ToPath(const std::string& utf8_path_)
+  {
+#if defined(__cpp_char8_t)
+    return std::filesystem::path(std::u8string(utf8_path_.begin(), utf8_path_.end()));
+#else
+    return std::filesystem::u8path(utf8_path_);
+#endif
+  }
+
   // get the path separator from the current OS (win: "\\", unix: "/")
   const std::string path_separator(1, EcalUtils::Filesystem::NativeSeparator());
 }
@@ -360,7 +375,7 @@ TEST(core_cpp_path_processing /*unused*/, ecal_log_order_test /*unused*/)
 TEST(core_cpp_dir_manager /*unused*/, can_write_to_directory /*unused*/)
 {
   const eCAL::Util::DirManager dir_manager;
-  const std::string temp_dir = std::filesystem::temp_directory_path().u8string();
+  const std::string temp_dir = pathToUtf8(std::filesystem::temp_directory_path());
 
   EXPECT_TRUE(dir_manager.canWriteToDirectory(temp_dir));
   EXPECT_FALSE(dir_manager.canWriteToDirectory("ecal_nonexistent_dir_test_67890"));
@@ -384,7 +399,7 @@ TEST(core_cpp_dir_provider /*unused*/, unique_tmp_dir_returns_valid_dir /*unused
     EXPECT_TRUE(dir_manager.dirExists(unique_dir));
 
     std::error_code ec;
-    std::filesystem::remove_all(std::filesystem::u8path(unique_dir), ec);
+    std::filesystem::remove_all(utf8ToPath(unique_dir), ec);
     EXPECT_FALSE(ec) << "Cleanup of unique tmp dir failed: " << ec.message();
   }
 }
