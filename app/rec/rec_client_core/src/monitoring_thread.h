@@ -1,6 +1,6 @@
 /* ========================= eCAL LICENSE =================================
  *
- * Copyright (C) 2016 - 2019 Continental Corporation
+ * Copyright (C) 2016 - 2025 Continental Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 #include <ThreadingUtils/InterruptibleLoopThread.h>
 
 #include <map>
-
+#include <ecal/types.h>
 #include "rec_client_core/topic_info.h"
 
 namespace eCAL
@@ -37,18 +37,18 @@ namespace eCAL
       MonitoringThread(EcalRecImpl& recorder);
       ~MonitoringThread();
 
-      TopicInfo GetTopicInfo(const std::string& topic_name) const;
+      TopicInfo GetTopicInfo(const STopicId& topic) const;
 
-      std::map<std::string, TopicInfo> GetTopicInfoMap() const;
+      TopicInfoMap GetTopicInfoMap() const;
 
     protected:
       void Loop() override;
 
     private:
-      EcalRecImpl&                          recorder_;
+      EcalRecImpl&                       recorder_;
 
       mutable std::mutex                 monitoring_mutex_;
-      std::map<std::string, TopicInfo>   topic_info_map_;
+      TopicInfoMap                       topic_info_map_;
     };
   }
 }
