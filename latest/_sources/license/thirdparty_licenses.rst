@@ -24,6 +24,12 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
      - License
 
+   * - :ref:`abseil <thirdparty_licenses_abseil>`
+
+     - None
+
+     - Apache-2.0
+
    * - :ref:`asio <thirdparty_licenses_asio>`
 
      - Copyright (c) 2003-2025 Christopher M. Kohlhoff (chris at kohlhoff dot com)
@@ -201,6 +207,8 @@ Some dependencies, like GoogleTest, are not used in our officially distributed b
 
 .. toctree::
    :hidden:
+
+   thirdparty_licenses/abseil
 
    thirdparty_licenses/asio
 
