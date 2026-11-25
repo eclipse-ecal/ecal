@@ -378,16 +378,16 @@ namespace eCAL
       short win_state = 0;
       switch (process_mode_)
       {
-      case 0:
+      case eCAL::Process::eStartMode::normal:
         win_state = SW_SHOW;
         break;
-      case 1:
+      case eCAL::Process::eStartMode::hidden:
         win_state = SW_HIDE;
         break;
-      case 2:
+      case eCAL::Process::eStartMode::minimized:
         win_state = SW_MINIMIZE;
         break;
-      case 3:
+      case eCAL::Process::eStartMode::maximized:
         win_state = SW_MAXIMIZE;
         break;
       default:
