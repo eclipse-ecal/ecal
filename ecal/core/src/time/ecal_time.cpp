@@ -45,8 +45,11 @@ namespace eCAL
       {
         return timegate->GetName();
       }
+      else
 #endif
-      return CLocalTimeProvider::GetName();
+      {
+        return CLocalTimeProvider::GetName();
+      }
     }
 
     long long GetMicroSeconds()
@@ -57,8 +60,11 @@ namespace eCAL
       {
         return timegate->GetMicroSeconds();
       }
+      else
 #endif
-      return CLocalTimeProvider::GetMicroseconds();
+      {
+        return CLocalTimeProvider::GetMicroseconds();
+      }
     }
 
     long long GetNanoSeconds()
@@ -69,8 +75,11 @@ namespace eCAL
       {
         return timegate->GetNanoSeconds();
       }
+      else
 #endif
-      return CLocalTimeProvider::GetNanoSeconds();
+      {
+        return CLocalTimeProvider::GetNanoSeconds();
+      }
     }
 
     bool SetNanoSeconds(long long time_)
@@ -81,8 +90,11 @@ namespace eCAL
       {
         return timegate->SetNanoSeconds(time_);
       }
+      else
 #endif
-      return CLocalTimeProvider::SetNanoSeconds(time_);
+      {
+        return CLocalTimeProvider::SetNanoSeconds(time_);
+      }
     }
 
     bool IsSynchronized()
@@ -93,8 +105,11 @@ namespace eCAL
       {
         return timegate->IsSynchronized();
       }
+      else
 #endif
-      return CLocalTimeProvider::IsSynchronized();
+      {
+        return CLocalTimeProvider::IsSynchronized();
+      }
     }
 
     bool IsMaster()
@@ -105,8 +120,11 @@ namespace eCAL
       {
         return timegate->IsMaster();
       }
+      else
 #endif
-      return CLocalTimeProvider::IsMaster();
+      {
+        return CLocalTimeProvider::IsMaster();
+      }
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
@@ -117,8 +135,11 @@ namespace eCAL
       {
         timegate->SleepForNanoseconds(duration_nsecs_);
       }
+      else
 #endif
-      CLocalTimeProvider::SleepForNanoseconds(duration_nsecs_);
+      {
+        CLocalTimeProvider::SleepForNanoseconds(duration_nsecs_);
+      }
     }
 
     void GetStatus(int& error_, std::string* const status_message_)
