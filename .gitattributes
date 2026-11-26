@@ -1,2 +1,5 @@
 # Force LF line endings for all files ending with pbftag.h
 *.pbftags.h text eol=lf
+
+# Shell scripts used by GitHub Actions must keep LF line endings (also on Windows runners)
+.github/**/*.sh text eol=lf

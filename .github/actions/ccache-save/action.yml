@@ -1,45 +1,43 @@
 name: 'Save ccache cache'
-description: 'Saves the ccache cache'
+description: >-
+  Prunes the compilation cache to the entries used in this job, prints statistics and
+  saves the full cache (default branch / support/*) or the pull request delta, if the
+  build produced enough new results. Older caches of the same kind on the same ref are
+  deleted afterwards, which requires the 'actions: write' permission.
+  Must run after ccache-prepare in the same job.
 
 inputs:
-  key:
-    description: 'An explicit key for saving the cache'
-    required: true
-  cache-dir:
-    description: 'Directory the compilation cache is stored in'
-    default: ${GITHUB_WORKSPACE}/.ccache
+  github-token:
+    description: 'Token used to delete superseded caches'
+    default: ${{ github.token }}
     required: false
 
 runs:
   using: composite
   steps:
-
-    # Keep only entries used (hit or written) during this job, so the saved
-    # cache contains exactly the current working set.
-    - name: Clear cache entries not used in this job
-      run: |
-        age=3600
-        if [ -n "${CCACHE_JOB_START}" ]; then
-          age=$(( $(date +%s) - CCACHE_JOB_START + 300 ))
-        fi
-        ccache --evict-older-than "${age}s"
+    - name: Prune cache and show statistics
       shell: bash
-
-    - name: Show stats, then zero
       run: |
-        ccache --show-stats --verbose
-        ccache --zero-stats
-        if [ -f "${CCACHE_LOGFILE}" ]; then
-          echo "Most frequent reasons for uncacheable calls:"
-          grep -hiE "unsupported|not supported|too hard" "${CCACHE_LOGFILE}" \
-            | sed -E 's/^\[[^]]*\] *//' | grep -vE "^(Command line|Source file|Object file|Detected input file|Writing to)" \
-            | sort | uniq -c | sort -rn | head -n 20 || true
-          rm -f "${CCACHE_LOGFILE}"
-        fi
-      shell: bash
+        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" fix-ownership
+        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" evict
+        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" stats
 
-    - name: Save ccache cache
+    - name: Compare with base cache
+      id: diff
+      shell: bash
+      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" diff
+
+    - name: Save cache
+      id: save
+      if: ${{ steps.diff.outputs.save == 'true' }}
       uses: actions/cache/save@v5
       with:
-        path: ${{ inputs.cache-dir }}
-        key: ${{ inputs.key }}
+        path: ${{ steps.diff.outputs.path }}
+        key: ${{ env.CCACHE_GHA_SAVE_KEY }}
+
+    - name: Delete superseded caches
+      if: ${{ steps.save.outcome == 'success' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" cleanup

@@ -1,48 +1,90 @@
 name: 'Prepare for ccache use'
-description: 'Sets up ccache environment variables and GitHub actions cache'
+description: >-
+  Installs a pinned ccache, restores the compilation cache and sets up the environment
+  (CCACHE_*, CMAKE_<LANG>_COMPILER_LAUNCHER). Pushes to the default branch and support/*
+  use a full cache, pull requests restore their base branch cache plus a PR-specific delta.
+  See ../ccache-common/ccache-gha.sh for details. Use together with ccache-save.
 
 inputs:
   key-root:
-    description: 'Root of the cache key to use'
+    description: 'Root of the cache key, unique per job configuration (e.g. OS / toolchain)'
     required: true
   cache-dir:
     description: 'Directory to store the compilation cache in'
-    default: ${GITHUB_WORKSPACE}/.ccache
+    default: ${{ github.workspace }}/.ccache
     required: false
   max-size:
     description: 'Maximum size of the compilation cache (e.g. 500M, 2G)'
     default: 500M
     required: false
+  min-new-entries:
+    description: 'Only save the cache if the build produced at least this many new results'
+    default: '20'
+    required: false
+  install:
+    description: 'Install the pinned ccache version. Set to false if ccache is already available.'
+    default: 'true'
+    required: false
+
 outputs:
-  cache-primary-key:
-    description: 'A resolved cache key for which cache match was attempted'
-    value: ${{ steps.cache-restore.outputs.cache-primary-key }}
+  mode:
+    description: 'Caching mode: full, delta or restore-only'
+    value: ${{ steps.setup.outputs.mode }}
+  bin-dir:
+    description: 'Directory containing the installed ccache executable (e.g. to mount it into a container)'
+    value: ${{ steps.install.outputs.bin-dir }}
 
 runs:
   using: composite
   steps:
-    - run: |
-        _ccache_settings="
-        CCACHE_BASEDIR=${GITHUB_WORKSPACE}
-        CCACHE_DIR=${{ inputs.cache-dir }}
-        CCACHE_COMPRESS=true
-        CCACHE_COMPRESSLEVEL=6
-        CCACHE_MAXSIZE=${{ inputs.max-size }}
-        CCACHE_COMPILERCHECK=content
-        CCACHE_JOB_START=$(date +%s)
-        CCACHE_LOGFILE=${RUNNER_TEMP}/ccache.log
-        CMAKE_C_COMPILER_LAUNCHER=ccache
-        CMAKE_CXX_COMPILER_LAUNCHER=ccache
-        "
-        echo "Using ccache variables: ${_ccache_settings}"
-        echo "${_ccache_settings}" >> $GITHUB_ENV
+    - name: Install ccache
+      id: install
+      if: ${{ inputs.install == 'true' }}
       shell: bash
+      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" install "${RUNNER_TEMP}/ccache-bin"
 
-    - name: Restore ccache cache
-      id: cache-restore
+    - name: Determine cache mode and keys
+      id: setup
+      shell: bash
+      env:
+        KEY_ROOT: ${{ inputs.key-root }}
+        CACHE_DIR: ${{ inputs.cache-dir }}
+        MIN_NEW_ENTRIES: ${{ inputs.min-new-entries }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" setup
+
+    - name: Restore base cache
       uses: actions/cache/restore@v5
       with:
         path: ${{ inputs.cache-dir }}
-        key: ${{ inputs.key-root }}-ccache-${{ github.run_id }}
+        key: ${{ steps.setup.outputs.full-key }}
         restore-keys: |
-          ${{ inputs.key-root }}-ccache-
+          ${{ steps.setup.outputs.full-prefix }}
+          ${{ steps.setup.outputs.default-prefix }}
+
+    - name: Configure ccache and snapshot the base cache
+      shell: bash
+      env:
+        CACHE_DIR: ${{ inputs.cache-dir }}
+        MAX_SIZE: ${{ inputs.max-size }}
+      run: |
+        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" configure
+        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" snapshot
+
+    - name: Restore pull request delta cache
+      if: ${{ steps.setup.outputs.mode == 'delta' }}
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ steps.setup.outputs.delta-path }}
+        key: ${{ steps.setup.outputs.delta-key }}
+        restore-keys: |
+          ${{ steps.setup.outputs.delta-prefix }}
+
+    - name: Apply pull request delta cache
+      if: ${{ steps.setup.outputs.mode == 'delta' }}
+      shell: bash
+      env:
+        CACHE_DIR: ${{ inputs.cache-dir }}
+        DELTA_DIR: ${{ steps.setup.outputs.delta-path }}
+      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" apply-delta

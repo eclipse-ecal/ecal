@@ -1,21 +1,31 @@
 name: Build Windows
 
 on:
+  # Other branches are built via (draft) pull requests, which reuse the caches of their base branch
   push:
-  pull_request:
     branches:
       - master
+      - 'support/**'
+    tags:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
 env:
   IS_JENKINS_SIGNING_ALLOWED: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
-  # Never cancel runs on master / support branches (benchmarks, signed installers, cache producers)
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/support/')) }}
+  # Only superseded pull request runs are cancelled (pushes produce benchmarks, installers and caches)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-windows:
     runs-on: windows-2022
+
+    permissions:
+      contents: read
+      actions: write # delete superseded caches
 
     env:
       # enable starting Qt GUI Applications
@@ -35,9 +45,6 @@ jobs:
     - name: Install doxygen
       # Pin to latest doxygen version.
       run: choco install doxygen.install --version=1.13.2
-
-    - name: Install ccache
-      run: choco install ccache --version=4.14.1
 
     - name: Checkout
       uses: actions/checkout@v6
@@ -77,11 +84,9 @@ jobs:
         toolset: 14.29 # v142 / vs2019
 
     - name: Prepare ccache and restore cache
-      id: ccache_cache-restore
       uses: ./.github/actions/ccache-prepare
       with:
-        key-root: windows-2022-v2
-        cache-dir: ${{ github.workspace }}/.ccache
+        key-root: windows-2022
         max-size: 2G
 
     - name: CMake SDK
@@ -192,13 +197,8 @@ jobs:
 
     - name: Save ccache cache to GitHub
       uses: ./.github/actions/ccache-save
-      with:
-        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
-        cache-dir: ${{ github.workspace }}/.ccache
-      # Always save cache if configure succeeded (even if the build failed).
-      # The Windows cache is large and PR caches are only visible to their own PR, so only
-      # push runs save to stay within the repository cache quota. PRs restore the base branch cache.
-      if: ${{ always() && steps.cmake-configure.outcome == 'success' && github.event_name == 'push' }}
+      # Always save cache if configure succeeded (even if the build failed)
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
     - name: Create eCAL install tree for for C# bindings
       run: |

@@ -1,16 +1,27 @@
 name: Build Ubuntu
 
 on:
+  # Other branches are built via (draft) pull requests, which reuse the caches of their base branch
   push:
+    branches:
+      - master
+      - 'support/**'
+    tags:
+      - '**'
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
-  # Never cancel runs on master / support branches (benchmarks, cache producers)
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/support/')) }}
+  # Only superseded pull request runs are cancelled (pushes produce benchmarks and caches)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-ubuntu:
+
+    permissions:
+      contents: read
+      actions: write # delete superseded caches
 
     strategy:
       fail-fast: false
@@ -31,7 +42,7 @@ jobs:
     - name: Install Dependencies
       run: |
         common_packages=(
-          ccache ninja-build
+          ninja-build
           doxygen graphviz
           libcurl4-openssl-dev
           libprotobuf-dev libprotoc-dev protobuf-compiler
@@ -115,11 +126,9 @@ jobs:
         pip install -r "$GITHUB_WORKSPACE/doc/requirements.txt"
 
     - name: Prepare ccache and restore cache
-      id: ccache_cache-restore
       uses: ./.github/actions/ccache-prepare
       with:
         key-root: ${{ matrix.os }}
-        cache-dir: ${{ github.workspace }}/.ccache
 
     - name: CMake
       id: cmake-configure
@@ -172,9 +181,6 @@ jobs:
 
     - name: Save ccache cache to GitHub
       uses: ./.github/actions/ccache-save
-      with:
-        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
-        cache-dir: ${{ github.workspace }}/.ccache
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 

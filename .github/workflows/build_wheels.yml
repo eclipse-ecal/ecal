@@ -1,21 +1,27 @@
 name: Build Wheels
 
 on:
+  # Other branches are built via (draft) pull requests, which reuse the caches of their base branch
   push:
+    branches:
+      - master
+      - 'support/**'
+    tags:
+      - '**'
   pull_request:
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/support/')) }}
-
-env:
-  CCACHE_VERSION: 4.14.1
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: write # delete superseded caches
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, ubuntu-24.04-arm]
@@ -31,30 +37,6 @@ jobs:
         run: |
           git submodule update --init
 
-      # The same static ccache binary is used on the host (cache maintenance) and
-      # mounted into the manylinux build container (compilation).
-      - name: Install ccache (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          arch="$(uname -m)"
-          case "${arch}" in
-            x86_64)  sha256=fa1443c9fbea879c9bff6619d1284eda3102992e91831b9f6e546879972195cc ;;
-            aarch64) sha256=265d687c6d84a96cef851b57f804b21fc8268e53bfbc468441d029a5f7000a10 ;;
-            *) echo "Unsupported architecture ${arch}"; exit 1 ;;
-          esac
-          name="ccache-${CCACHE_VERSION}-linux-${arch}-musl-static"
-          curl -fsSL -o "${RUNNER_TEMP}/${name}.tar.xz" \
-            "https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/${name}.tar.xz"
-          echo "${sha256}  ${RUNNER_TEMP}/${name}.tar.xz" | sha256sum -c -
-          mkdir -p "${RUNNER_TEMP}/ccache-bin" "${RUNNER_TEMP}/ccache"
-          tar -xJf "${RUNNER_TEMP}/${name}.tar.xz" -C "${RUNNER_TEMP}/ccache-bin" --strip-components=1 "${name}/ccache"
-          echo "${RUNNER_TEMP}/ccache-bin" >> "${GITHUB_PATH}"
-
-      - name: Install ccache (Windows)
-        if: runner.os == 'Windows'
-        run: choco install ccache --version=${{ env.CCACHE_VERSION }}
-
       # ccache requires the Ninja generator on Windows, which requires the MSVC environment
       - name: Setup MSVC toolchain (Windows)
         if: runner.os == 'Windows'
@@ -68,7 +50,7 @@ jobs:
         run: echo "CMAKE_GENERATOR=Ninja" >> "${GITHUB_ENV}"
 
       - name: Prepare ccache and restore cache
-        id: ccache_cache-restore
+        id: ccache
         uses: ./.github/actions/ccache-prepare
         with:
           key-root: wheels-${{ matrix.os }}
@@ -76,40 +58,26 @@ jobs:
           max-size: 1G
 
       - name: Build wheels
-        id: build-wheels
         uses: pypa/cibuildwheel@v3.3
         env:
           CIBW_ARCHS: auto64
           CIBW_BUILD: cp3*-*
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: pytest {project}/lang/python/tests
-          # Linux builds run inside a container: mount ccache and its cache directory.
-          # On Windows, the ccache settings from the prepare step are inherited from the job environment.
-          CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ runner.temp }}/ccache:/ccache --volume ${{ runner.temp }}/ccache-bin:/ccache-bin"
+          # Linux builds run inside a container: mount ccache and its cache directory. The cache
+          # settings are stored in the cache's ccache.conf by ccache-prepare.
+          # On Windows, the environment set by ccache-prepare is inherited from the job.
+          CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ runner.temp }}/ccache:/ccache --volume ${{ steps.ccache.outputs.bin-dir }}:/ccache-bin"
           CIBW_ENVIRONMENT_LINUX: >-
             PATH=/ccache-bin:$PATH
             CCACHE_DIR=/ccache
             CCACHE_BASEDIR=/project
-            CCACHE_COMPRESS=true
-            CCACHE_COMPRESSLEVEL=6
-            CCACHE_MAXSIZE=1G
-            CCACHE_COMPILERCHECK=content
             CMAKE_C_COMPILER_LAUNCHER=ccache
             CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-      # The container writes the cache as root
-      - name: Fix ccache ownership (Linux)
-        if: ${{ always() && runner.os == 'Linux' }}
-        shell: bash
-        run: sudo chown -R "$(id -u):$(id -g)" "${{ runner.temp }}/ccache"
-
       - name: Save ccache cache to GitHub
         uses: ./.github/actions/ccache-save
-        with:
-          key: ${{ steps.ccache_cache-restore.outputs.cache-primary-key }}
-          cache-dir: ${{ runner.temp }}/ccache
-        # Only push runs save, to stay within the repository cache quota. PRs restore the base branch cache.
-        if: ${{ always() && steps.build-wheels.outcome != 'skipped' && github.event_name == 'push' }}
+        if: ${{ always() && steps.ccache.outcome == 'success' }}
 
       - uses: actions/upload-artifact@v7
         with:
