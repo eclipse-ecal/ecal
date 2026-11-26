@@ -9,6 +9,10 @@ inputs:
     description: 'Directory to store the compilation cache in'
     default: ${GITHUB_WORKSPACE}/.ccache
     required: false
+  max-size:
+    description: 'Maximum size of the compilation cache (e.g. 500M, 2G)'
+    default: 500M
+    required: false
 outputs:
   cache-primary-key:
     description: 'A resolved cache key for which cache match was attempted'
@@ -19,11 +23,14 @@ runs:
   steps:
     - run: |
         _ccache_settings="
-        CCACHE_BASE_DIR=${GITHUB_WORKSPACE}
+        CCACHE_BASEDIR=${GITHUB_WORKSPACE}
         CCACHE_DIR=${{ inputs.cache-dir }}
         CCACHE_COMPRESS=true
         CCACHE_COMPRESSLEVEL=6
-        CCACHE_MAXSIZE=100M
+        CCACHE_MAXSIZE=${{ inputs.max-size }}
+        CCACHE_COMPILERCHECK=content
+        CCACHE_JOB_START=$(date +%s)
+        CCACHE_LOGFILE=${RUNNER_TEMP}/ccache.log
         CMAKE_C_COMPILER_LAUNCHER=ccache
         CMAKE_CXX_COMPILER_LAUNCHER=ccache
         "

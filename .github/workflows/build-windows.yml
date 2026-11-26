@@ -8,6 +8,11 @@ on:
 env:
   IS_JENKINS_SIGNING_ALLOWED: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  # Never cancel runs on master / support branches (benchmarks, signed installers, cache producers)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/support/')) }}
+
 jobs:
   build-windows:
     runs-on: windows-2022
@@ -75,8 +80,9 @@ jobs:
       id: ccache_cache-restore
       uses: ./.github/actions/ccache-prepare
       with:
-        key-root: windows-2019
+        key-root: windows-2022-v2
         cache-dir: ${{ github.workspace }}/.ccache
+        max-size: 2G
 
     - name: CMake SDK
       run: |
@@ -115,6 +121,9 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
+        -DCMAKE_POLICY_DEFAULT_CMP0141=NEW ^
+        -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded ^
+        -Dprotobuf_ALLOW_CCACHE=ON ^
         -DCMAKE_CXX_STANDARD=17 ^
         -DECAL_CPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
@@ -186,8 +195,10 @@ jobs:
       with:
         key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
         cache-dir: ${{ github.workspace }}/.ccache
-      # Always save cache if configure succeeded (even if the build failed)
-      if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
+      # Always save cache if configure succeeded (even if the build failed).
+      # The Windows cache is large and PR caches are only visible to their own PR, so only
+      # push runs save to stay within the repository cache quota. PRs restore the base branch cache.
+      if: ${{ always() && steps.cmake-configure.outcome == 'success' && github.event_name == 'push' }}
 
     - name: Create eCAL install tree for for C# bindings
       run: |

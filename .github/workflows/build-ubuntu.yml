@@ -4,13 +4,20 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  # Never cancel runs on master / support branches (benchmarks, cache producers)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/support/')) }}
+
 jobs:
   build-ubuntu:
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04, ubuntu-26.04-arm, ubuntu-24.04-arm, ubuntu-22.04-arm]
+        # Pull requests build a reduced matrix (oldest + newest x86_64, one arm64).
+        # Pushes build the full matrix.
+        os: ${{ fromJSON(github.event_name == 'pull_request' && '["ubuntu-22.04", "ubuntu-26.04", "ubuntu-24.04-arm"]' || '["ubuntu-26.04", "ubuntu-24.04", "ubuntu-22.04", "ubuntu-26.04-arm", "ubuntu-24.04-arm", "ubuntu-22.04-arm"]') }}
 
     runs-on: ${{ matrix.os }}
 

@@ -14,14 +14,28 @@ runs:
   using: composite
   steps:
 
-    - name: Clear old cache entries
-      run: ccache --evict-older-than 3600s
+    # Keep only entries used (hit or written) during this job, so the saved
+    # cache contains exactly the current working set.
+    - name: Clear cache entries not used in this job
+      run: |
+        age=3600
+        if [ -n "${CCACHE_JOB_START}" ]; then
+          age=$(( $(date +%s) - CCACHE_JOB_START + 300 ))
+        fi
+        ccache --evict-older-than "${age}s"
       shell: bash
 
     - name: Show stats, then zero
       run: |
-        ccache --show-stats
+        ccache --show-stats --verbose
         ccache --zero-stats
+        if [ -f "${CCACHE_LOGFILE}" ]; then
+          echo "Most frequent reasons for uncacheable calls:"
+          grep -hiE "unsupported|not supported|too hard" "${CCACHE_LOGFILE}" \
+            | sed -E 's/^\[[^]]*\] *//' | grep -vE "^(Command line|Source file|Object file|Detected input file|Writing to)" \
+            | sort | uniq -c | sort -rn | head -n 20 || true
+          rm -f "${CCACHE_LOGFILE}"
+        fi
       shell: bash
 
     - name: Save ccache cache
