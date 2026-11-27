@@ -44,8 +44,11 @@ namespace eCAL
       {
         return timegate->GetName();
       }
+      else
 #endif
-      return empty_string;
+      {
+        return empty_string;
+      }
     }
 
     long long GetMicroSeconds()
@@ -56,9 +59,12 @@ namespace eCAL
       {
         return timegate->GetMicroSeconds();
       }
+      else
 #endif
-      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-      return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+      {
+        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+      }
     }
 
     long long GetNanoSeconds()
@@ -69,9 +75,12 @@ namespace eCAL
       {
         return timegate->GetNanoSeconds();
       }
+      else
 #endif
-      const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-      return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
+      {
+        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        return(std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count());
+      }
     }
 
     bool SetNanoSeconds(long long time_)
@@ -82,9 +91,12 @@ namespace eCAL
       {
         return timegate->SetNanoSeconds(time_);
       }
+      else
 #endif
-      (void)time_;
-      return false;
+      {
+        (void)time_;
+        return false;
+      }
     }
 
     bool IsSynchronized()
@@ -95,8 +107,11 @@ namespace eCAL
       {
         return timegate->IsSynchronized();
       }
+      else
 #endif
-      return false;
+      {
+        return false;
+      }
     }
 
     bool IsMaster()
@@ -107,8 +122,11 @@ namespace eCAL
       {
         return timegate->IsMaster();
       }
+      else
 #endif
-      return false;
+      {
+        return false;
+      }
     }
     
     void SleepForNanoseconds(long long duration_nsecs_)
@@ -119,8 +137,11 @@ namespace eCAL
       {
         timegate->SleepForNanoseconds(duration_nsecs_);
       }
+      else
 #endif
-      eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
+      {
+        eCAL::Process::SleepFor(std::chrono::nanoseconds(duration_nsecs_));
+      }
     }
 
     void GetStatus(int& error_, std::string* const status_message_)
