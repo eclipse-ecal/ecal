@@ -16,7 +16,9 @@
 #
 # ========================= eCAL LICENSE =================================
 
-"""Tests for ccache_gha.py. Run with: python -m unittest discover .github/actions/ccache-common"""
+"""Tests for ccache_gha.py. Run with: python -m unittest discover -s .github/actions/ccache-common
+
+Also run in CI by .github/workflows/test-ccache-actions.yml."""
 
 import os
 import subprocess
