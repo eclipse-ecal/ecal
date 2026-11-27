@@ -53,12 +53,14 @@ void AddCore(nb::module_& m)
   // Overload 1: Initialize using unit name and component flags.
   m.def("initialize",
     nb::overload_cast<const std::string&, unsigned int>(&eCAL::Initialize),
+    nb::call_guard<nb::gil_scoped_release>(),
     "Initialize the eCAL API.",
     "unit_name"_a = "", "components"_a = eCAL::Init::Default);
 
   // Overload 2: Initialize using a configuration object, unit name and component flags.
   m.def("initialize",
     nb::overload_cast<eCAL::Configuration&, const std::string&, unsigned int>(&eCAL::Initialize),
+    nb::call_guard<nb::gil_scoped_release>(),
     "Initialize the eCAL API with a configuration object.",
     "config"_a, "unit_name"_a = "", "components"_a = eCAL::Init::Default);
 
@@ -67,7 +69,11 @@ void AddCore(nb::module_& m)
   //-------------------------------------------------------------------------
   m.def("finalize",
     &eCAL::Finalize,
+    nb::call_guard<nb::gil_scoped_release>(),
     "Finalize the eCAL API.");
+
+  // Stop native threads and destroy Python callbacks before interpreter teardown.
+  nb::module_::import_("atexit").attr("register")(m.attr("finalize"));
 
   //-------------------------------------------------------------------------
   // IsInitialized functions
@@ -90,4 +96,3 @@ void AddCore(nb::module_& m)
     &eCAL::Ok,
     "Return True if eCAL is in proper state.");
 }
-
