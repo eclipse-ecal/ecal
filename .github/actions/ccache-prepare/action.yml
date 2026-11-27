@@ -3,7 +3,7 @@ description: >-
   Installs a pinned ccache, restores the compilation cache and sets up the environment
   (CCACHE_*, CMAKE_<LANG>_COMPILER_LAUNCHER). Pushes to the default branch and support/*
   use a full cache, pull requests restore their base branch cache plus a PR-specific delta.
-  See ../ccache-common/ccache-gha.sh for details. Use together with ccache-save.
+  See ../ccache-common/ccache_gha.py for details. Use together with ccache-save.
 
 inputs:
   key-root:
@@ -37,11 +37,18 @@ outputs:
 runs:
   using: composite
   steps:
+    # python3 can be a Microsoft Store stub on Windows
+    - name: Locate Python
+      shell: bash
+      run: |
+        if [ "${RUNNER_OS}" = "Windows" ]; then python=python; else python=python3; fi
+        echo "CCACHE_GHA_PYTHON=$(command -v "${python}")" >> "${GITHUB_ENV}"
+
     - name: Install ccache
       id: install
       if: ${{ inputs.install == 'true' }}
       shell: bash
-      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" install "${RUNNER_TEMP}/ccache-bin"
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" install "${RUNNER_TEMP}/ccache-bin"'
 
     - name: Determine cache mode and keys
       id: setup
@@ -52,7 +59,7 @@ runs:
         MIN_NEW_ENTRIES: ${{ inputs.min-new-entries }}
         DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
-      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" setup
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" setup'
 
     - name: Restore base cache
       uses: actions/cache/restore@v5
@@ -69,8 +76,8 @@ runs:
         CACHE_DIR: ${{ inputs.cache-dir }}
         MAX_SIZE: ${{ inputs.max-size }}
       run: |
-        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" configure
-        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" snapshot
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" configure
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" snapshot
 
     - name: Restore pull request delta cache
       if: ${{ steps.setup.outputs.mode == 'delta' }}
@@ -87,4 +94,4 @@ runs:
       env:
         CACHE_DIR: ${{ inputs.cache-dir }}
         DELTA_DIR: ${{ steps.setup.outputs.delta-path }}
-      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" apply-delta
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" apply-delta'

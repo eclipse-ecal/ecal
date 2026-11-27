@@ -18,14 +18,14 @@ runs:
     - name: Prune cache and show statistics
       shell: bash
       run: |
-        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" fix-ownership
-        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" evict
-        bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" stats
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" fix-ownership
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" evict
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" stats
 
     - name: Compare with base cache
       id: diff
       shell: bash
-      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" diff
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" diff'
 
     - name: Save cache
       id: save
@@ -40,4 +40,4 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github-token }}
-      run: bash "${GITHUB_ACTION_PATH}/../ccache-common/ccache-gha.sh" cleanup
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" cleanup'
