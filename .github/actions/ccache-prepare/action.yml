@@ -18,7 +18,7 @@ inputs:
     default: 500M
     required: false
   min-new-entries:
-    description: 'Only save the cache if the build produced at least this many new results'
+    description: 'Only save the cache if the build produced at least this many new cache entries'
     default: '20'
     required: false
   install:

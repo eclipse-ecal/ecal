@@ -28,7 +28,7 @@
 #   restore-only Anything else (tags, workflow_dispatch, ...): restores the default branch
 #                cache, never saves.
 # In full and delta mode, nothing is saved if the job produced fewer than MIN_NEW_ENTRIES
-# new results compared to the restored cache (base + delta).
+# new cache entries compared to the restored cache (base + delta).
 
 set -euo pipefail
 export LC_ALL=C
@@ -49,9 +49,10 @@ sha256_check() { # <sha256> <file>
 set_output() { echo "$1=$2" >> "${GITHUB_OUTPUT}"; }
 set_env()    { echo "$1=$2" >> "${GITHUB_ENV}"; }
 
-# Prints one line per cache entry: "<path><TAB><fingerprint>", sorted.
-# Result files (*R) are content addressed by their name, so their fingerprint is "-".
-# All other files (manifests, ...) can change in place and are fingerprinted by content.
+# Prints one line per cache entry: "<path><TAB><sha1 of content>", sorted.
+# Since ccache 4.10, entry files are named by their key only, so result files and
+# manifests can't be told apart by name. Manifests can change in place, so all entries
+# are fingerprinted by content.
 list_entries() { # <cache dir>
   local dir="$1"
   [ -d "${dir}" ] || return 0
@@ -59,15 +60,15 @@ list_entries() { # <cache dir>
   command -v sha1sum >/dev/null 2>&1 || sha1="shasum"
   (
     cd "${dir}"
-    local filter=(-type f ! -name stats ! -name '*.lock' ! -name ccache.conf ! -name CACHEDIR.TAG ! -path './tmp/*')
-    find . "${filter[@]}" -name '*R' | awk '{ print $0 "\t-" }'
-    find . "${filter[@]}" ! -name '*R' -exec "${sha1}" {} + \
+    find . -type f ! -name stats ! -name '*.lock' ! -name '.*' ! -name ccache.conf ! -name CACHEDIR.TAG \
+      ! -path './tmp/*' ! -path './lock/*' -exec "${sha1}" {} + \
       | awk '{ h = $1; sub(/^[0-9a-f]+ [ *]/, ""); print $0 "\t" h }'
   ) | sort
 }
 
-count_results() { # <list file>
-  grep -c $'\t-$' "$1" || true
+# Counts entries of <current list> whose path is not in <previous list>.
+count_new_entries() { # <previous list> <current list>
+  comm -13 <(cut -f1 "$1") <(cut -f1 "$2") | wc -l | tr -d ' '
 }
 
 # ---------------------------------------------------------------------------------------
@@ -177,7 +178,7 @@ cmd_snapshot() {
   local state_dir="${RUNNER_TEMP}/ccache-gha"
   mkdir -p "${state_dir}"
   list_entries "${CACHE_DIR}" > "${state_dir}/base.list"
-  log "restored base cache: $(count_results "${state_dir}/base.list") results, $(wc -l < "${state_dir}/base.list" | tr -d ' ') files"
+  log "restored base cache: $(wc -l < "${state_dir}/base.list" | tr -d ' ') entries"
 }
 
 # Merges a restored delta into the cache directory.
@@ -227,7 +228,7 @@ cmd_stats() {
 }
 
 # Compares the cache with the restored state and decides whether saving is worthwhile:
-# at least MIN_NEW_ENTRIES new results compared to what was restored (base + delta).
+# at least MIN_NEW_ENTRIES new entries compared to what was restored (base + delta).
 # In delta mode, stages all entries that are new or changed compared to the base.
 cmd_diff() {
   local mode="${CCACHE_GHA_MODE}"
@@ -242,17 +243,17 @@ cmd_diff() {
   list_entries "${CCACHE_GHA_CACHE_PATH}" > "${current_list}"
   comm -13 "${base_list}" "${current_list}" > "${changed_list}"
 
-  local new_results changed_files
-  new_results=$(comm -13 "${restored_list}" "${current_list}" | grep -c $'\t-$' || true)
+  local new_entries changed_files
+  new_entries=$(count_new_entries "${restored_list}" "${current_list}")
   changed_files=$(wc -l < "${changed_list}" | tr -d ' ')
-  log "${new_results} new results in this job, ${changed_files} files differ from the base cache"
+  log "${new_entries} new entries in this job, ${changed_files} entries differ from the base cache"
 
   local save="true"
   if [ "${mode}" = "restore-only" ]; then
     log "mode restore-only: not saving"
     save="false"
-  elif [ "${new_results}" -lt "${CCACHE_GHA_MIN_NEW}" ]; then
-    log "fewer than ${CCACHE_GHA_MIN_NEW} new results: not saving"
+  elif [ "${new_entries}" -lt "${CCACHE_GHA_MIN_NEW}" ]; then
+    log "fewer than ${CCACHE_GHA_MIN_NEW} new entries: not saving"
     save="false"
   fi
 

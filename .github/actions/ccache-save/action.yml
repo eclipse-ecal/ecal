@@ -2,7 +2,7 @@ name: 'Save ccache cache'
 description: >-
   Prunes the compilation cache to the entries used in this job, prints statistics and
   saves the full cache (default branch / support/*) or the pull request delta, if the
-  build produced enough new results. Older caches of the same kind on the same ref are
+  build produced enough new cache entries. Older caches of the same kind on the same ref are
   deleted afterwards, which requires the 'actions: write' permission.
   Must run after ccache-prepare in the same job.
 
