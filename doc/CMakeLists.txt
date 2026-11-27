@@ -146,7 +146,7 @@ set(DOXYGEN_EXAMPLE_RECURSIVE    YES)
 set(DOXYGEN_FILE_PATTERNS        "*.h")
 set(DOXYGEN_RECURSIVE            NO)
 set(DOXYGEN_OUTPUT_DIRECTORY     ${DOC_SOURCE_DIRECTORY})
-set(DOXYGEN_XML_OUTPUT           ${DOC_SOURCE_DIRECTORY}/_doxygen)
+set(DOXYGEN_XML_OUTPUT           _doxygen)
 set(DOXYGEN_DISTRIBUTE_GROUP_DOC NO)
 
 # Allow @experimental to be used in headers to mark an API as experimental and add it to a list of
@@ -203,7 +203,7 @@ add_custom_target(documentation_sphinx ALL
         -q -b html -j auto
         -c "${DOC_SOURCE_DIRECTORY}"
         -d "${SPHINX_CACHE_DIR}"
-        -Dbreathe_projects.eCAL=${DOXYGEN_XML_OUTPUT}
+        "-Dbreathe_projects.eCAL=${DOC_SOURCE_DIRECTORY}/${DOXYGEN_XML_OUTPUT}"
         "${DOC_SOURCE_DIRECTORY}"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx"
