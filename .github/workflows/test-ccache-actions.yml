@@ -1,0 +1,44 @@
+name: Test ccache actions
+
+on:
+  push:
+    branches:
+      - master
+      - 'support/**'
+    paths:
+      - '.github/actions/ccache-*/**'
+      - '.github/workflows/test-ccache-actions.yml'
+  pull_request:
+    paths:
+      - '.github/actions/ccache-*/**'
+      - '.github/workflows/test-ccache-actions.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github
+
+      # Same interpreter selection as ccache-prepare (python3 can be a Microsoft Store stub on Windows)
+      - name: Run unit tests
+        shell: bash
+        run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then python=python; else python=python3; fi
+          "${python}" --version
+          "${python}" -m unittest discover -s .github/actions/ccache-common -v

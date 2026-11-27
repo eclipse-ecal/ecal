@@ -1,31 +1,43 @@
 name: 'Save ccache cache'
-description: 'Saves the ccache cache'
+description: >-
+  Prunes the compilation cache to the entries used in this job, prints statistics and
+  saves the full cache (default branch / support/*) or the pull request delta, if the
+  build produced enough new cache entries. Older caches of the same kind on the same ref are
+  deleted afterwards, which requires the 'actions: write' permission.
+  Must run after ccache-prepare in the same job.
 
 inputs:
-  key:
-    description: 'An explicit key for saving the cache'
-    required: true
-  cache-dir:
-    description: 'Directory the compilation cache is stored in'
-    default: ${GITHUB_WORKSPACE}/.ccache
+  github-token:
+    description: 'Token used to delete superseded caches'
+    default: ${{ github.token }}
     required: false
 
 runs:
   using: composite
   steps:
-
-    - name: Clear old cache entries
-      run: ccache --evict-older-than 3600s
+    - name: Prune cache and show statistics
       shell: bash
-
-    - name: Show stats, then zero
       run: |
-        ccache --show-stats
-        ccache --zero-stats
-      shell: bash
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" fix-ownership
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" evict
+        "${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" stats
 
-    - name: Save ccache cache
+    - name: Compare with base cache
+      id: diff
+      shell: bash
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" diff'
+
+    - name: Save cache
+      id: save
+      if: ${{ steps.diff.outputs.save == 'true' }}
       uses: actions/cache/save@v5
       with:
-        path: ${{ inputs.cache-dir }}
-        key: ${{ inputs.key }}
+        path: ${{ steps.diff.outputs.path }}
+        key: ${{ env.CCACHE_GHA_SAVE_KEY }}
+
+    - name: Delete superseded caches
+      if: ${{ steps.save.outcome == 'success' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: '"${CCACHE_GHA_PYTHON}" "${GITHUB_ACTION_PATH}/../ccache-common/ccache_gha.py" cleanup'
