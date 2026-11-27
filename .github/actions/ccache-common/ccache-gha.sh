@@ -49,6 +49,15 @@ sha256_check() { # <sha256> <file>
 set_output() { echo "$1=$2" >> "${GITHUB_OUTPUT}"; }
 set_env()    { echo "$1=$2" >> "${GITHUB_ENV}"; }
 
+# GNU tar on Windows runners (Git Bash) doesn't accept Windows paths such as D:\a\_temp
+posix_path() {
+  if command -v cygpath >/dev/null 2>&1; then
+    cygpath -u "$1"
+  else
+    echo "$1"
+  fi
+}
+
 # Prints one line per cache entry: "<path><TAB><sha1 of content>", sorted.
 # Since ccache 4.10, entry files are named by their key only, so result files and
 # manifests can't be told apart by name. Manifests can change in place, so all entries
@@ -263,7 +272,7 @@ cmd_diff() {
     rm -rf "${path}"
     mkdir -p "${path}"
     if [ "${save}" = "true" ]; then
-      ( cd "${CCACHE_GHA_CACHE_PATH}" && cut -f1 "${changed_list}" | tar -cf - -T - ) | tar -xf - -C "${path}"
+      ( cd "${CCACHE_GHA_CACHE_PATH}" && cut -f1 "${changed_list}" | tar -cf - -T - ) | tar -xf - -C "$(posix_path "${path}")"
       log "delta size: $(du -sh "${path}" | cut -f1)"
     fi
   fi
