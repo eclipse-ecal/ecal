@@ -1,16 +1,32 @@
 name: Build Windows
 
 on:
+  # Other branches are built via (draft) pull requests, which reuse the caches of their base branch
   push:
-  pull_request:
     branches:
       - master
+      - 'support/**'
+    tags:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
 env:
   IS_JENKINS_SIGNING_ALLOWED: true
+
+concurrency:
+  # Superseded pull request runs are cancelled. Every push gets its own group (run_id), so pushes
+  # are never cancelled or dropped from the queue (benchmarks, installers and caches).
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-windows:
     runs-on: windows-2022
+
+    permissions:
+      contents: read
+      actions: write # delete superseded caches
 
     env:
       # enable starting Qt GUI Applications
@@ -30,9 +46,6 @@ jobs:
     - name: Install doxygen
       # Pin to latest doxygen version.
       run: choco install doxygen.install --version=1.13.2
-
-    - name: Install ccache
-      run: choco install ccache --version=4.14.1
 
     - name: Checkout
       uses: actions/checkout@v6
@@ -72,11 +85,10 @@ jobs:
         toolset: 14.29 # v142 / vs2019
 
     - name: Prepare ccache and restore cache
-      id: ccache_cache-restore
       uses: ./.github/actions/ccache-prepare
       with:
-        key-root: windows-2019
-        cache-dir: ${{ github.workspace }}/.ccache
+        key-root: windows-2022
+        max-size: 2G
 
     - name: CMake SDK
       run: |
@@ -115,6 +127,9 @@ jobs:
         -DBUILD_SHARED_LIBS=OFF ^
         -DCMAKE_PREFIX_PATH="%ProgramFiles%/Cap'n Proto/lib/cmake/CapnProto" ^
         -DCMAKE_BUILD_TYPE=Debug ^
+        -DCMAKE_POLICY_DEFAULT_CMP0141=NEW ^
+        -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded ^
+        -Dprotobuf_ALLOW_CCACHE=ON ^
         -DCMAKE_CXX_STANDARD=17 ^
         -DECAL_CPACK_PACK_WITH_INNOSETUP=OFF
       shell: cmd
@@ -183,9 +198,6 @@ jobs:
 
     - name: Save ccache cache to GitHub
       uses: ./.github/actions/ccache-save
-      with:
-        key: ${{steps.ccache_cache-restore.outputs.cache-primary-key}}
-        cache-dir: ${{ github.workspace }}/.ccache
       # Always save cache if configure succeeded (even if the build failed)
       if: ${{ always() && steps.cmake-configure.outcome == 'success' }}
 
