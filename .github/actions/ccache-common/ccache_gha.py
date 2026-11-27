@@ -373,18 +373,21 @@ def cmd_diff(_: argparse.Namespace) -> None:
     restored = load_snapshot("restored.json") or base
     save, changed = decide_save(mode, base, restored, take_snapshot(cache_dir), int(env("CCACHE_GHA_MIN_NEW")))
 
-    path = cache_dir
+    # actions/cache derives the cache version from the literal path string, so the path must be
+    # passed on exactly as it was used for restoring (Path() would normalize "/" to "\" on Windows)
+    save_path = env("CCACHE_GHA_CACHE_PATH")
     if mode == "delta":
-        path = Path(env("CCACHE_GHA_DELTA_PATH"))
-        shutil.rmtree(path, ignore_errors=True)
-        path.mkdir(parents=True)
+        save_path = env("CCACHE_GHA_DELTA_PATH")
+        delta_dir = Path(save_path)
+        shutil.rmtree(delta_dir, ignore_errors=True)
+        delta_dir.mkdir(parents=True)
         if save:
-            copy_entries(cache_dir, path, changed)
-            size = sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
+            copy_entries(cache_dir, delta_dir, changed)
+            size = sum(f.stat().st_size for f in delta_dir.rglob("*") if f.is_file())
             log(f"delta size: {size / 1e6:.1f} MB")
 
     set_output("save", "true" if save else "false")
-    set_output("path", str(path))
+    set_output("path", save_path)
 
 
 def superseded_cache_ids(caches: List[dict], saved_key: str) -> Optional[List[int]]:

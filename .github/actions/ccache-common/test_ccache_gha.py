@@ -121,6 +121,14 @@ class DeltaTest(CacheTestCase):
         self.assertEqual(outputs["save"], "true")
         self.assertEqual(outputs["path"], str(self.cache))
 
+    def test_save_path_is_passed_on_unchanged(self) -> None:
+        # Must match the restore path literally, e.g. "D:\a\ecal\ecal/.ccache" on Windows
+        cache_path = f"{self.tmp}/cache"
+        delta_path = f"{self.tmp}/ccache-delta"
+        with mock.patch.dict(os.environ, {"CCACHE_GHA_CACHE_PATH": cache_path, "CCACHE_GHA_DELTA_PATH": delta_path}):
+            self.assertEqual(self.diff("full")["path"], cache_path)
+            self.assertEqual(self.diff("delta")["path"], delta_path)
+
     def test_restore_only_never_saves(self) -> None:
         ccache_gha.cmd_snapshot(None)
         for i in range(5):
