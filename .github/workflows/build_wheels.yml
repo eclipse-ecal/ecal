@@ -1,14 +1,29 @@
 name: Build Wheels
 
 on:
+  # Other branches are built via (draft) pull requests, which reuse the caches of their base branch
   push:
+    branches:
+      - master
+      - 'support/**'
+    tags:
+      - '**'
   pull_request:
   workflow_dispatch:
+
+concurrency:
+  # Superseded pull request runs are cancelled. Every push gets its own group (run_id), so pushes
+  # are never cancelled or dropped from the queue.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: write # delete superseded caches
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, ubuntu-24.04-arm]
@@ -24,6 +39,26 @@ jobs:
         run: |
           git submodule update --init
 
+      # ccache requires the Ninja generator on Windows, which requires the MSVC environment
+      - name: Setup MSVC toolchain (Windows)
+        if: runner.os == 'Windows'
+        uses: step-security/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Use Ninja generator (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo "CMAKE_GENERATOR=Ninja" >> "${GITHUB_ENV}"
+
+      - name: Prepare ccache and restore cache
+        id: ccache
+        uses: ./.github/actions/ccache-prepare
+        with:
+          key-root: wheels-${{ matrix.os }}
+          cache-dir: ${{ runner.temp }}/ccache
+          max-size: 1G
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3
         env:
@@ -31,6 +66,20 @@ jobs:
           CIBW_BUILD: cp3*-*
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: pytest {project}/lang/python/tests
+          # Linux builds run inside a container: mount ccache and its cache directory. The cache
+          # settings are stored in the cache's ccache.conf by ccache-prepare.
+          # On Windows, the environment set by ccache-prepare is inherited from the job.
+          CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ runner.temp }}/ccache:/ccache --volume ${{ steps.ccache.outputs.bin-dir }}:/ccache-bin"
+          CIBW_ENVIRONMENT_LINUX: >-
+            PATH=/ccache-bin:$PATH
+            CCACHE_DIR=/ccache
+            CCACHE_BASEDIR=/project
+            CMAKE_C_COMPILER_LAUNCHER=ccache
+            CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Save ccache cache to GitHub
+        uses: ./.github/actions/ccache-save
+        if: ${{ always() && steps.ccache.outcome == 'success' }}
 
       - uses: actions/upload-artifact@v7
         with:
