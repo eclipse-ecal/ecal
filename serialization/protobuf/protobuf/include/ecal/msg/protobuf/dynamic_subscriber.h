@@ -39,8 +39,8 @@ namespace eCAL
     **/
     using CDynamicSubscriber = CMessageSubscriber<std::shared_ptr<google::protobuf::Message>, internal::ProtobufDynamicDeserializer<eCAL::SDataTypeInformation>>;
 
-    /** @example proto_dyn_rec.cpp
-    * This is an example how to use eCAL::protobuf::CDynamicSubscriber to receive dynamic protobuf data with eCAL. To receive the data, see @ref proto_dyn_rec.cpp .
+    /** @example dynamic_receive.cpp
+    * This is an example how to use eCAL::protobuf::CDynamicSubscriber to receive dynamic protobuf data with eCAL. To receive the data, see @ref dynamic_receive.cpp .
     */
   }
 }
