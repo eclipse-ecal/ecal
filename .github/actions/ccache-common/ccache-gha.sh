@@ -272,15 +272,29 @@ cmd_diff() {
 }
 
 # Deletes older caches with the same prefix on the current ref, keeping the one just saved.
+# actions/cache/save only warns if the upload fails, so nothing is deleted unless the new
+# cache is actually listed on this ref.
 # Inputs (env): GH_TOKEN
 cmd_cleanup() {
-  local ids id
-  if ! ids=$(gh cache list --repo "${GITHUB_REPOSITORY}" --ref "${GITHUB_REF}" --key "${CCACHE_GHA_SAVE_PREFIX}" \
-               --limit 100 --json id,key --jq ".[] | select(.key != \"${CCACHE_GHA_SAVE_KEY}\") | .id"); then
+  local entries id key found="false" old_ids=()
+  if ! entries=$(gh cache list --repo "${GITHUB_REPOSITORY}" --ref "${GITHUB_REF}" --key "${CCACHE_GHA_SAVE_PREFIX}" \
+                   --limit 100 --json id,key --jq '.[] | "\(.id)\t\(.key)"'); then
     warn "could not list old caches (missing 'actions: write' permission?)"
     return 0
   fi
-  for id in ${ids}; do
+  while IFS=$'\t' read -r id key; do
+    [ -n "${id}" ] || continue
+    if [ "${key}" = "${CCACHE_GHA_SAVE_KEY}" ]; then
+      found="true"
+    else
+      old_ids+=("${id}")
+    fi
+  done <<< "${entries}"
+  if [ "${found}" != "true" ]; then
+    warn "saved cache ${CCACHE_GHA_SAVE_KEY} not found on ${GITHUB_REF}, keeping older caches"
+    return 0
+  fi
+  for id in ${old_ids[@]+"${old_ids[@]}"}; do
     if gh cache delete "${id}" --repo "${GITHUB_REPOSITORY}" >/dev/null; then
       log "deleted old cache ${id}"
     else
