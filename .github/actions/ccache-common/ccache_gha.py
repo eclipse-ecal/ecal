@@ -391,21 +391,24 @@ def cmd_diff(_: argparse.Namespace) -> None:
 
 
 def superseded_cache_ids(caches: List[dict], saved_key: str) -> Optional[List[int]]:
-    """IDs of caches to delete, or None if the saved cache is not listed.
+    """IDs of caches created before the saved one, or None if the saved cache is not listed.
 
     actions/cache/save only warns if the upload fails, so nothing must be deleted unless
-    the new cache actually exists."""
-    if not any(cache["key"] == saved_key for cache in caches):
+    the new cache actually exists. Pushes run in parallel and may finish in any order, so
+    caches newer than the saved one are never deleted. createdAt values are ISO 8601 UTC
+    timestamps in the same format, so they sort correctly as strings."""
+    saved = next((cache for cache in caches if cache["key"] == saved_key), None)
+    if saved is None:
         return None
-    return [cache["id"] for cache in caches if cache["key"] != saved_key]
+    return [cache["id"] for cache in caches if cache["createdAt"] < saved["createdAt"]]
 
 
 def cmd_cleanup(_: argparse.Namespace) -> None:
-    """Deletes older caches with the same prefix on the current ref, keeping the one just saved."""
+    """Deletes caches with the same prefix on the current ref that are older than the one just saved."""
     repo, ref = env("GITHUB_REPOSITORY"), env("GITHUB_REF")
     saved_key = env("CCACHE_GHA_SAVE_KEY")
     listing = run("gh", "cache", "list", "--repo", repo, "--ref", ref, "--key", env("CCACHE_GHA_SAVE_PREFIX"),
-                  "--limit", "100", "--json", "id,key", check=False, capture=True)
+                  "--limit", "100", "--json", "id,key,createdAt", check=False, capture=True)
     if listing.returncode != 0:
         warn("could not list old caches (missing 'actions: write' permission?)")
         return

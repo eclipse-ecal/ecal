@@ -12,8 +12,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
-  # Only superseded pull request runs are cancelled (pushes produce benchmarks and caches)
+  # Superseded pull request runs are cancelled. Every push gets its own group (run_id), so pushes
+  # are never cancelled or dropped from the queue (benchmarks and caches).
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:

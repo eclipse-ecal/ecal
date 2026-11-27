@@ -151,17 +151,28 @@ class ModeTest(unittest.TestCase):
                 self.assertEqual(ccache_gha.determine_mode(event, ref, "master"), expected)
 
 
+def cache(cache_id: int, key: str, created: str) -> dict:
+    return {"id": cache_id, "key": key, "createdAt": f"2026-11-27T{created}Z"}
+
+
 class CleanupTest(unittest.TestCase):
     def test_superseded_caches(self) -> None:
-        caches = [{"id": 1, "key": "k-1"}, {"id": 2, "key": "k-2"}, {"id": 3, "key": "k-0"}]
+        caches = [cache(1, "k-1", "10:00:00"), cache(2, "k-2", "11:00:00"), cache(3, "k-0", "09:00:00")]
         self.assertEqual(ccache_gha.superseded_cache_ids(caches, "k-2"), [1, 3])
 
+    def test_newer_caches_from_parallel_runs_are_kept(self) -> None:
+        # k-2 finished last, but k-3 from a newer push was saved after it
+        caches = [cache(1, "k-1", "10:00:00"), cache(2, "k-2", "11:00:00"), cache(3, "k-3", "11:05:00")]
+        self.assertEqual(ccache_gha.superseded_cache_ids(caches, "k-2"), [1])
+
     def test_nothing_deleted_if_saved_cache_is_missing(self) -> None:
-        self.assertIsNone(ccache_gha.superseded_cache_ids([{"id": 1, "key": "k-1"}], "k-2"))
+        self.assertIsNone(ccache_gha.superseded_cache_ids([cache(1, "k-1", "10:00:00")], "k-2"))
         self.assertIsNone(ccache_gha.superseded_cache_ids([], "k-2"))
 
     def test_cleanup_deletes_only_superseded(self) -> None:
-        listing = subprocess.CompletedProcess([], 0, stdout='[{"id": 1, "key": "k-1"}, {"id": 2, "key": "k-2"}]')
+        listing = subprocess.CompletedProcess([], 0, stdout=(
+            '[{"id": 1, "key": "k-1", "createdAt": "2026-11-27T10:00:00Z"},'
+            ' {"id": 2, "key": "k-2", "createdAt": "2026-11-27T11:00:00Z"}]'))
         deleted = subprocess.CompletedProcess([], 0, stdout="")
         environment = {"GITHUB_REPOSITORY": "o/r", "GITHUB_REF": "refs/heads/master",
                        "CCACHE_GHA_SAVE_KEY": "k-2", "CCACHE_GHA_SAVE_PREFIX": "k-"}
